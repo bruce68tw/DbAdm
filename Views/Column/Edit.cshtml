@@ -1,0 +1,16 @@
+﻿@*using Resources*@
+@{
+    //var cols = new int[] { 12, 2, 3 };
+}
+
+<form id='eform' class='xg-form'>
+    @await Component.InvokeAsync("XiHide", new { fid = "Id" })
+    @await Component.InvokeAsync("XiRead", new { title = "專案代碼", fid = "ProjectCode" })
+    @await Component.InvokeAsync("XiRead", new { title = "資料表", fid = "TableCode" })
+    @await Component.InvokeAsync("XiRead", new { title = "欄位", fid = "Code" })
+    @await Component.InvokeAsync("XiText", new { title = "欄位名稱", fid = "Name", maxLen = 30, required = true })
+    @await Component.InvokeAsync("XiRead", new { title = "資料型態", fid = "DataType" })
+    @await Component.InvokeAsync("XiCheck", new { title = "資料狀態", fid = "Status", isCheck = true, value = "1", label = "啟用" })
+    @await Component.InvokeAsync("XiText", new { title = "說明", fid = "Note", maxLen = 30 })
+</form>
+@await Component.InvokeAsync("XgSaveBack")

@@ -1,0 +1,139 @@
+{{#unless AuthType0}}
+using Base.Enums;
+{{/unless}}
+using Base.Models;
+using Base.Services;
+using BaseWeb.Services;
+{{#unless AuthType0}}
+using BaseWeb.Attributes;
+{{/unless}}
+using {{Project}}.Services;
+{{#if HasFile}}
+using Microsoft.AspNetCore.Http;
+{{/if}}
+using Microsoft.AspNetCore.Mvc;
+{{#if HasFile}}
+using System.Collections.Generic;
+{{/if}}
+
+namespace {{Project}}.Controllers
+{
+    {{#if AuthType1}}
+    [XgProgAuth]
+    {{/if}}
+    public class {{ProgCode}}Controller : Controller
+    {
+        {{#if AuthType2}}
+        [XgProgAuth(CrudFunEnum.Read)]
+        {{/if}}
+        public ActionResult Read()
+        {
+	        {{#if ReadSelectCols}}
+			//for read view
+		        {{#each ReadSelectCols}}
+			ViewBag.{{this}} = _Code.Get{{this}}();
+		        {{/each}}
+	        {{/if}}
+	        {{#if EditSelectCols}}
+			//for edit view
+		        {{#each EditSelectCols}}
+			ViewBag.{{this}} = _Code.Get{{this}}();
+		        {{/each}}
+	        {{/if}}
+            return View();
+        }
+
+        public ActionResult Edit()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        {{#if AuthType2}}
+        [XgProgAuth(CrudFunEnum.Read)]
+        {{/if}}
+        public ContentResult GetPage(DtDto dt)
+        {
+            return Content(new {{ProgCode}}Read().GetPage(dt).ToString(), _Web.AppJson);
+        }
+
+        [HttpPost]
+        {{#if AuthType2}}
+        [XgProgAuth(CrudFunEnum.View)]
+        {{/if}}
+        public ContentResult GetJson(string key)
+        {
+            return Content(new {{ProgCode}}Edit().GetJson(key).ToString(), _Web.AppJson);
+        }
+
+        [HttpPost]
+        {{#if AuthType2}}
+        [XgProgAuth(CrudFunEnum.Update)]
+        {{/if}}
+        public JsonResult SetStatus(string key, bool status)
+        {
+            return Json(_Db.SetRowStatus("dbo.[{{ProgCode}}]", "Id", key, status));
+        }
+
+        {{#if HasFile}}
+        [HttpPost]
+            {{#if AuthType2}}
+        [XgProgAuth(CrudFunEnum.Create)]
+            {{/if}}
+        //TODO: add your code, tSn_fid ex: t03_FileName
+        public JsonResult Create(string json, List<IFormFile> t03_FileName)
+        {
+            return Json(new {{ProgCode}}Edit().CreateAsnyc(_Json.StrToJson(json), t03_FileName));
+        }
+
+        [HttpPost]
+            {{#if AuthType2}}
+        [XgProgAuth(CrudFunEnum.Update)]
+            {{/if}}
+        //TODO: add your code, tSn_fid ex: t03_FileName
+        public JsonResult Update(string key, string json, List<IFormFile> t03_FileName)
+        {
+            return Json(new {{ProgCode}}Edit().UpdateAsnyc(key, _Json.StrToJson(json), t03_FileName));
+        }
+
+        //TODO: add your code
+        //get file/image
+            {{#if AuthType2}}
+        [XgProgAuth(CrudFunEnum.View)]
+            {{/if}}
+        public FileContentResult GetFile(string table, string fid, string key)
+        {
+            var path = _File.GetFirstPath(_Xp.GetDirUserLicence(), "FileName_" + key, _Xp.NoImagePath);
+            return _WebFile.EchoImage(path);
+        }
+        {{else}}
+        [HttpPost]
+            {{#if AuthType2}}
+        [XgProgAuth(CrudFunEnum.Create)]
+            {{/if}}
+        public JsonResult Create(string json)
+        {
+            return Json(new {{ProgCode}}Edit().Create(_Json.StrToJson(json)));
+        }
+
+        [HttpPost]
+            {{#if AuthType2}}
+        [XgProgAuth(CrudFunEnum.Update)]
+            {{/if}}
+        public JsonResult Update(string key, string json)
+        {
+            return Json(new {{ProgCode}}Edit().Update(key, _Json.StrToJson(json)));
+        }
+        {{/if}}
+
+        [HttpPost]
+        {{#if AuthType2}}
+        [XgProgAuth(CrudFunEnum.Delete)]
+        {{/if}}
+        public JsonResult Delete(string key)
+        {
+            return Json(new {{ProgCode}}Edit().Delete(key));
+        }
+
+    }//class
+}

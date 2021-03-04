@@ -1,0 +1,17 @@
+﻿{
+	"processing": "Processing...",
+	"lengthMenu": "Show _MENU_ entries",
+	"zeroRecords": "",
+	"info": ", Showing _START_ to _END_ of _TOTAL_ entries",
+	"infoEmpty": "Showing 0 entries",
+	"infoFiltered": "",
+	"infoPostFix": "",
+	"search": "Search:",
+	"emptyTable": "",
+	"paginate": {
+		"first":    "|&lt;",
+		"previous": "&lt;",
+		"next":     "&gt;",
+		"last":     "&gt;|"
+	}
+}

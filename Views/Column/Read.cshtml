@@ -1,0 +1,48 @@
+﻿@using Base.Models
+@{
+    //var cols = new int[] { 12, 2, 3 };
+}
+
+<script src="~/js/view/Column.js"></script>
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "欄位維護" } })
+<div class="xp-prog">
+    <!-- read form-->
+    <div id="divRead">
+        <!-- condition -->
+        <form id='rform' class='xg-form'>
+            <div class="row">
+                @await Component.InvokeAsync("XiSelect", new { title = "專案", fid = "ProjectId", rows = (List<IdStrDto>)ViewBag.Projects, inRow = true })
+                @await Component.InvokeAsync("XgFindTbar")
+            </div>
+            @await Component.InvokeAsync("XiText", new { title = "資料表", fid = "TableCode", maxLen = 30 })
+            @await Component.InvokeAsync("XiText", new { title = "欄位", fid = "Code", maxLen = 30 })
+        </form>
+
+        <!-- result list -->
+        <table id="table1" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>專案</th>
+                    <th>資料表</th>
+                    <th>欄位</th>
+                    <th>欄位名稱</th>
+                    <th>資料型態</th>
+                    <th width='80px'>維護功能</th>
+                    <th width='60px'>資料狀態</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!--edit form-->
+    <div id="divEdit" class="xg-hide">
+        <partial name="Edit" />
+    </div>
+</div>

@@ -1,0 +1,39 @@
+﻿
+//pubild client resource
+var R0 = {
+	/*
+    fieldRequired: '這個欄位不可空白。',
+    //saveOk: 'Save Record(s) Successfully',
+    //deleteOk: 'Delete Record(s) Successfully',
+    saveOk: 'Your changes have been saved successfully',
+    deleteOk: 'Successfully deleted',
+	*/
+    //dateFormat: 'yyyy/mm/dd',
+    locale: 'en-US',
+
+    //編輯時的 date format , 使用 bootstrap-datepicker, 格式必須配合後端的 _Date.FrontToBack()
+    //配合 Moment.js
+    dateEditFormat: 'YYYY/MM/DD',
+    //顯示時的 date format
+    dateShowFormat: 'YYYY年MM月DD日',
+    //datetime format(只有顯示)
+    dtFormat: 'YYYY/MM/DD hh:mm:ss',
+
+    updateOk: '資料更新完成。',
+    saveOk: 'Save Successfully',
+
+    uploadFileNotBig: '上傳檔案不可大於{0}M !',
+    uploadFileNotMatch: '上傳檔案種類不符合 !',
+
+    //validation message
+    fieldRequired: '欄位不可空白。',
+
+    //button label
+    btnMsgOk: '確定',
+    btnAnsYes: '確定',
+    ansNoBtn: '取消',
+
+    create: 'Create',
+    update: 'Update',
+
+};

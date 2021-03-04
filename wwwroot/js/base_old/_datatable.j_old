@@ -1,0 +1,227 @@
+﻿
+/*
+ 使用 jQuery dataTables
+ */
+var _datatable = {
+
+    //=== 中間傳遞變數 (private) ===    
+    _findJson: {},  //查詢條件
+    //條件下的資料筆數, -1表示會重新計算筆數, 欄位名稱配合 jQuery DataTables
+    _recordsFiltered: -1,
+    _showSuccess: false, //是否顯示查詢成功訊息, default false
+
+    //是否顯示查詢成功訊息
+    //showSuccess: true,
+
+    //get/set _findJson
+    getFindJson: function (dt) {
+        //return _datatable._findJson;
+        return dt.findJson;
+    },
+    setFindJson: function (dt, json) {
+        //_datatable._findJson = json;
+        dt.findJson = json;
+    },
+
+    /*
+    //get/set _recordsFiltered
+    getRecordsFiltered: function (dt) {
+        //return _datatable._recordsFiltered;
+        return dt.recordsFiltered;
+    },
+    setRecordsFiltered: function (rows) {
+        if (rows === undefined || rows === null)
+            rows = -1;
+        _recordsFiltered = rows;
+    },
+    */
+    /*
+    resetRecordsFiltered: function (dt) {
+        //_datatable._recordsFiltered = -1;
+        dt.recordsFiltered = -1;
+    },
+    */
+
+    //設定筆數, 如果無傳入參數, 表示重新計算
+    setCount: function (dt) {
+        var rows = (dt === undefined) ? -1 : dt.recordsFiltered;
+        _datatable._recordsFiltered = rows;
+    },
+
+    //find rows
+    find: function(dt, json, search) {
+        //_datatable.setFindJson(dt, json);   //設定查詢條件
+        _datatable._findJson = json;
+        _datatable.setCount();   //重新計算條件下的筆數
+
+        //trigger dataTables search event
+        search = search || '';
+        dt.datatable.search(search).draw();
+    },
+
+    //用相同的條件再查詢一次, 用於資料更新之後
+    //showSuccess: 預設不顯示 "查詢成功" 訊息
+    reload: function (dt, showSuccess) {
+        _datatable._showSuccess = (showSuccess === undefined) ? false : showSuccess;
+        _datatable._findJson = dt.findJson;
+        _datatable.setCount();
+        dt.datatable.search('').draw();
+    },
+
+    /**
+     * @description initial datatable(use jquery datatables)
+     * @param id: datatable div id.
+     * @param url: server action
+     * //@param cols: 如果指定欄位id, 則後端必須傳回 List model/object(不可用json), 否則會出現 error !!
+     *    如果只有一個欄位在組資料時容易出錯, 所以後端傳回 List<KeyModel> 比較好 !!
+     * //@param showCorner: (true)是否顯示4個角落的元件
+     * @param config: custom config
+     * //@param ajaxConfig: ajax config
+     * @param fnSuccess: 查詢成功時的callback, 如果空白, 則顯示成功訊息
+     * @param toolbar: toolbar
+     */
+    init: function (selector, url, inputConfig, findJson, fnSuccess, toolbar) {
+
+        //initial
+        findJson = findJson || {};
+        _datatable._findJson = {};
+        _datatable._recordsFiltered = -1;   //切換畫面時重新計算筆數
+
+        //initial global variables, -1表示後端必須讀取資料筆數 !!
+        //_fun.data.recordsFiltered = -1;
+
+        //default config for dataTables
+        var config = {
+            processing: false,  //使用自定義的處理中訊息
+            serverSide: true,   //server pagination
+            jQueryUI: false,    //可載入Jquery UI主題  
+            //stateSave: true,    //
+            //ordering: false,
+
+            filter: false,      //搜尋            
+            paginate: true,     //翻頁功能            
+            lengthChange: true, //改變每頁顯示數據數量            
+            info: true,         //顯示表格的相關資訊，包括當前頁面紀錄，以及總記錄頁面數量。
+            sorting: [],        //default not sorting, 否則datatable會使用第一個欄位排序 !!
+
+            pagingType: "full_numbers",
+
+            //多國語
+            language: {
+                url: "../Locale/" + R0.locale + "/dataTables.txt",
+            },
+
+            //自訂工具列
+            dom: 'l<"toolbar">frtip',
+
+            //dataTables完成初始化之後會呼叫這個函式
+            //1.增加 toolbar button list if need
+            //2.改變查詢欄位的行為, 按下 enter 時才執行查詢
+            initComplete: function (settings, json) {
+                //1.toolbar
+                if (toolbar)
+                    $(this).closest('.dataTables_wrapper').find('div.toolbar').html(toolbar);
+
+                //check filter existed
+                var filter = $(selector + "_filter input");
+                if (filter.length > 0) {
+                    //2.unbind first
+                    filter.unbind();
+
+                    //bind key enter for quick search
+                    var api = this.api();
+                    filter.bind('keyup', function (e) {
+                        if (e.keyCode == 13) {
+                            //set global, recount rows
+                            //_datatable._recordsFiltered = -1;
+                            _datatable.setCount();
+
+                            //run search
+                            api.search(this.value).draw();     //must draw() !!
+                        }
+                    });
+                } else {
+                    //console.log('no dataTables filter !!');
+                    //return;
+                }
+            },
+
+            //ajax config
+            ajax: {
+                //=== datatables property start ===
+                //增加傳入一個參數到後端: recordsFiltered, 如果此欄位為-1, 則表示後端要重新計算筆數
+                data: function (arg) {
+                    arg.recordsFiltered = _datatable._recordsFiltered;
+                    arg.findJson = _json.toStr(_datatable._findJson);    //以字串型式傳入
+                },
+                /*
+                dataSrc: function (result) {
+                    //set global
+                    _fun.data.recordsFiltered = result.recordsFiltered;
+                    return result.data;
+                },
+                */
+                //=== datatables property end ===
+
+                //=== jQuery ajax property below ===
+                url: url,       //server side action
+                type: 'POST',
+                dataType: 'json',
+
+                //on success
+                //cannot use success, see dataTables document !!
+                dataSrc: function (result) {
+                    //data is mapping to backend ErrorModel
+                    if (result.ErrorMsg != null && result.ErrorMsg != "") {
+                        _tool.msg(result.ErrorMsg);
+                        result.recordsFiltered = 0;
+                        _datatable._recordsFiltered = 0;
+                        return [];  //no null, or jquery will get wrong !!
+
+                    } else {
+                        //set global
+                        _datatable._recordsFiltered = result.recordsFiltered;
+
+                        if (fnSuccess) {
+                            fnSuccess(result);
+                        } else if (result.data == null || result.data.length == 0) {
+                            _tool.alert('此條件無任何資料。', 'R');
+                            return [];
+                        } else {
+                            if (_datatable._showSuccess)
+                                //not show msg
+                                //_tool.alert('查詢成功。');
+                            _datatable._showSuccess = true;  //reset to true
+                            return result.data;
+                        }
+                    }
+                },
+
+                //on error
+                error: function (xhr, ajaxOptions, thrownError) {
+                    _tool.hideWait();
+                    _tool.msg('資料錯誤。');
+                    if (xhr != null) {
+                        console.log("status" + xhr.status);
+                        console.log(thrownError);
+                    }
+                },
+            },
+        };
+
+        //add custom config
+        if (inputConfig)
+            config = _json.addJson(inputConfig, config);
+        //if (ajaxConfig)
+        //    config.ajax = _json.addJson(config.ajax, ajaxConfig);
+
+        //before/after ajax call, show/hide waiting msg
+        var dt = $(selector);
+        dt.on('preXhr.dt', function (e, settings, data) { _tool.showWait(); });
+        dt.on('xhr.dt', function (e, settings, data) { _tool.hideWait(); });
+
+        //.DataTables() will return DataTable API instance, but .dataTable() only return jQuery object !!
+        return { datatable: dt.DataTable(config), findJson: {} };
+    },
+
+}; //class

@@ -1,0 +1,211 @@
+﻿
+var _me = {
+
+    //dt: null,    //datatable instance
+
+    //element to jquery object
+    //divRead: null,
+    //formFind: null,
+    //divEdit: null,
+    //formEdit: null,
+
+    //初始化
+    //add page on click
+    init: function () {
+
+        //把 html element 對應到 jquery object
+        _me.divRead = $('#divRead');
+        //_me.divFind = $('#divFind');
+        _me.formFind = $('#formFind');
+        _me.divEdit = $('#divEdit');
+        _me.formEdit = $('#formEdit');
+        _me.divUsers = $('#_Users');
+        _me.divProgs = $('#_Progs');
+
+        //datatable config
+        var config = {
+            dom: _crud.dtDom,
+            filter: false,  //關閉文字搜尋欄位
+            //columns 數必須與 datatables ui 一致
+            columns: [
+                { data: '_Fun' },
+                { data: 'Name' },
+                { data: 'Sort' },
+                { data: 'Status' },
+            ],
+            //客製化欄位
+            columnDefs: [                        
+                _crud.dtProp,
+                { targets: [0], render: function (data, type, full, meta) {
+                    return _crud.dtCheck1(full.Id);
+                }},
+                { targets: [1], render: function (data, type, full, meta) {
+                    return _str.format('<a href="javascript:_me.onClickLink(\'{0}\');">{1}</a>', full.Id, data);
+                }},
+                { targets: [3], render: function (data, type, full, meta) {
+                    return _crud.dtSetStatus(full.Id, data);
+                }},
+            ],
+        };
+
+        //初始化 datatable, table id和action必須對應正確
+        _me.dt = _datatable.init('#table1', 'GetPage', config);
+        _prog.setReadTitle();
+        //_check.init(_me.formEdit);
+    },
+
+    //點選查詢資料功能
+    onClickFind: function () {
+        _datatable.find(_me.dt, _form.toJson(_me.formFind));
+    },
+
+    clearUsers: function () {
+        //_check.setO(_me.divUsers.find(':checkbox'), 0);
+        _me.divUsers.html('');
+    },
+    clearProgs: function () {
+        var box = _me.divProgs;
+        _check.setO(box.find(':checkbox'), 0);
+        _text.setO(box.find('[data-id=FunExt]'), 0);
+    },
+
+    //點選新增按鈕, 開啟新增畫面
+    onClickAdd: function () {
+        _crud.setEditMode(true);
+        _form.reset(_me.formEdit);
+        _form.swap(_me.divEdit);
+        _me.clearUsers();
+    },
+
+    //點選link, 開啟修改畫面
+    onClickLink: function (id) {
+        _crud.setEditMode(false);
+        _ajax.getJson('GetRow', { key: id }, function (data) {
+            //單筆
+            _form.swap(_me.divEdit);
+            _form.readJson(_me.formEdit, data);
+
+            //多筆-user
+            _me.clearUsers();
+            if (data._Users != '') {
+                var rows = data._Users.split(',');
+                for (var i = 0; i < rows.length; i++) {
+                    //var obj = _me.divUsers.find('[value=' + rows[i] + ']');
+                    //_check.setO(obj, 1);
+                    var values = rows[i].split(_str.colSep);
+                    _me.divUsers.append(_me.renderUser(values));
+                }
+            }
+
+            //多筆-prog
+            _me.clearProgs();
+            var progs = data._Progs;
+            if (progs != null && progs.length > 0) {
+                var fm = _me.divProgs;
+                for (var i = 0; i < progs.length; i++) {
+                    var row = progs[i];
+                    var tr = fm.find('[data-id=' + row.ProgId + ']');
+                    var funs = tr.data('funs'); //fun list: CUDX
+
+                    //set fields value
+                    _check.setD('_Fun', 1, tr);
+                    _check.setD('FunCreate', row.FunCreate, tr);
+                    _check.setD('FunUpdate', row.FunUpdate, tr);
+                    _check.setD('FunDelete', row.FunDelete, tr);
+                    _text.setD('FunExt', row.FunExt, tr);
+
+                    //set fields status
+                    _check.setStatusD('FunCreate', (funs.indexOf('C') >= 0), tr);
+                    _check.setStatusD('FunUpdate', (funs.indexOf('U') >= 0), tr);
+                    _check.setStatusD('FunDelete', (funs.indexOf('D') >= 0), tr);
+                    _text.setStatusD('FunExt', (funs.indexOf('X') >= 0), tr);
+                }
+            }
+        });
+    },
+
+    //click show OpenUser modal
+    onClickOpenUser: function () {
+        if (_me.ou == null)
+            _me.ou = _openUser.init(_me.ouOnClickOk);
+        _openUser.show(_me.ou);
+    },
+    //open user onclick ok button
+    //ids[i]包含Id,Name,Account
+    ouOnClickOk: function (ids) {
+        var box = _me.divUsers;
+        for (var i = 0; i < ids.length; i++) {
+            var values = ids[i].split(_str.colSep);
+            //如果已經存在, 則設定 checked
+            var obj = _obj.getV(values[0], box);
+            if (obj.length > 0)
+                _check.setO(obj, 1);
+            else
+                //如果不存在, 則新增一筆, 加上 xu-user class !!
+                box.append(_me.renderUser(values));
+        }
+    },
+
+    renderUser: function (values) {
+        return _check.render('UserId', values[0], true, values[1] + '(' + values[2] + ')', true, 'xu-user');
+    },
+
+    //return bool
+    checkInput: function (fm, row) {
+        var fm = _me.formEdit;
+        if (!_form.checkEmpty(fm, row))
+            return false;
+
+        //case of ok
+        return true;
+    },
+
+    //點選儲存功能
+    onClickSave: function () {
+        //check input
+        var fm = _me.formEdit;
+        var row = _form.toJson(fm);
+        if (!_me.checkInput(fm, row))
+            return;
+
+        //多筆-user
+        var len = 0;
+        var users = [];
+        _me.divUsers.find(':checkbox').each(function () {
+            var obj = $(this);
+            if (_check.checkedO(obj)) {
+                users[len] = { _fun: 'A', UserId: _check.getO(obj) };
+                len++;
+            }
+        });
+
+        //多筆-prog
+        var len = 0;
+        var progs = [];
+        _me.divProgs.find('tr').each(function () {
+            var tr = $(this);
+            //var obj = $(this);
+            if (_check.checkedD('_Fun', tr)) {
+                var funs = tr.data('funs'); //fun list: CUDX
+                progs[len] = {
+                    _fun: 'A',
+                    ProgId: tr.data('id'),
+                    FunCreate: (funs.indexOf('C') >= 0) ? _check.getD('FunCreate', tr) : 0,
+                    FunUpdate: (funs.indexOf('U') >= 0) ? _check.getD('FunUpdate', tr) : 0,
+                    FunDelete: (funs.indexOf('D') >= 0) ? _check.getD('FunDelete', tr) : 0,
+                    FunExt: (funs.indexOf('X') >= 0) ? _text.getD('FunExt', tr) : 0,
+                };
+                len++;
+            }
+        });
+
+        var rows = [row, users, progs];
+
+        //save: ajax call
+        _ajax.getJson('SaveRows', { isNew: _me.isNew, rows: _json.toStr(rows) }, function (data) {
+            _xp.afterSave();
+        });
+    },
+
+}; //class
+

@@ -1,0 +1,17 @@
+﻿{
+	"processing": "資料讀取中...",
+	"lengthMenu": "每頁顯示 _MENU_ 筆",
+	"zeroRecords": "",
+	"info": ", 第 _START_ 至 _END_ 筆, 總共 _TOTAL_ 筆",
+	"infoEmpty": "共 0 筆",
+	"infoFiltered": "",
+	"infoPostFix": "",
+	"search": "搜尋",
+	"emptyTable": "",
+	"paginate": {
+		"first":    "|&lt;",
+		"previous": "&lt;",
+		"next":     "&gt;",
+		"last":     "&gt;|"
+	}
+}

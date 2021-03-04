@@ -1,0 +1,55 @@
+﻿
+/*
+    使用: https://github.com/uxsolutions/bootstrap-datepicker/blob/master/docs/index.rst
+*/
+/*
+.xg-date {
+    width: 150px;
+    padding: 0px;
+    border-radius: 4px;
+}
+    .xg-date input {
+        border-right-width: 0;
+    }
+*/
+
+.xg-date {
+    width: 180px;
+    /*position: relative;*/
+}
+
+    .xg-date input {
+        border-radius: 4px !important;
+    }
+
+    .xg-date .input-group-addon {
+        z-index: 1000;
+        position: relative;
+        top: 7px;
+        right: 40px;
+    }
+
+    /* date icon */
+    .xg-date span {
+        z-index: 1100;
+        position: absolute;
+        top: 8px;
+        right: 5px;
+    }
+
+    /*
+    .xg-date input {
+        border-right-width: 0;
+    }
+
+    .xg-date .fa-calendar-o {
+        cursor: pointer;
+        border-left-width: 0;
+        border-right-width: 0;
+    }
+
+    .xg-date .fa-calendar {
+        cursor: pointer;
+        border-left-width: 0;
+    }
+    */

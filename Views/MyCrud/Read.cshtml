@@ -1,0 +1,47 @@
+﻿<script src="~/js/view/MyCrud.js"></script>
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "CRUD維護" } })
+<div class="xp-prog">
+    <!-- read form-->
+    <div id="divRead">
+        <!-- condition -->
+        <form id='rform' class='xg-form' style="margin-bottom:0;">
+            <div class="row">
+                @await Component.InvokeAsync("XiSelect", new { title = "專案", fid = "ProjectId2", rows = (List<IdStrDto>)ViewBag.Projects, inRow = true })
+                @await Component.InvokeAsync("XgFindTbar")
+            </div>
+            @await Component.InvokeAsync("XiText", new { title = "資料表", fid = "Name" })
+        </form>
+
+        <!-- other functions -->
+        <div class="xg-btns-box">
+            @await Component.InvokeAsync("XgCreate", new { fnOnClick = "_me.onCreate()" })
+            <button type="button" class="btn xg-btn" onclick="_me.onGenCrud()">產生CRUD</button>
+        </div>
+
+        <!-- result list -->
+        <table id="table1" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th width="60px" class="xg-center">選取</th>
+                    <th>專案</th>
+                    <th>功能代碼</th>
+                    <th width='80px'>維護功能</th>
+                    <th width='60px' class="xg-center">資料狀態</th>
+                    <th width='100px'>建立日期</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- edit form-->
+    <div id="divEdit" class="xg-hide">
+        <partial name="Edit" />
+    </div>
+</div>

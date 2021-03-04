@@ -1,0 +1,124 @@
+﻿/**
+ * 處理編輯畫面的多筆資料, 
+ * 把部分 EditMany.js 抽離出來給其他程式共用
+ * 
+ */
+var _editMany = {
+
+    //舊資料存在 data 屬性, 內容必須與 EditMany.DataOld 相同
+    DataOld: '_old',
+
+    /**
+     * get row(json) by tr object
+     * trObj {object} tr object
+     * fidTypes {string array} field info array
+     * return {json} one row
+     */ 
+    getRow: function (trObj, fidTypes) {
+        fidTypes = fidTypes || _editMany.getFidTypes(trObj);
+        var row = {};
+        for (var i = 0; i < fidTypes.length; i=i+2) {
+            fid = fidTypes[i];
+            obj = _editMany.trFindFid(trObj, fid);
+            row[fid] = _input.getByType(obj, fidTypes[i + 1], trObj);
+        }
+        return row;
+    },
+
+    /**
+     * get old value (get data-old value)
+     */
+    getOld: function (obj) {
+        return obj.data(this.DataOld);
+    },
+
+    trFindFid: function (trObj, fid) {
+        return trObj.find('[data-id=' + fid + ']');
+    },
+
+    /**
+     * get field info array by box object & row filter
+     * box {object} form/div container
+     * trFilter {string} (optional 'tr')
+     * return json array
+     */
+    getFidTypesByBox: function (box, trFilter) {
+        trFilter = trFilter || 'tr';
+        var trObj = box.find(trFilter + ':first');
+        return _editMany.getFidTypes(trObj);
+    },
+
+    /**
+     * get field info array: 0:id, 1:type
+     * param {object} trObj
+     * return {string array}
+     */ 
+    getFidTypes: function (trObj) {
+        var fidTypes = [];
+        trObj.find('[data-id]').each(function (i, item) {
+            var obj = $(item);
+            var j = i * 2;
+            fidTypes[j] = obj.data('id');
+            fidTypes[j + 1] = _input.getType(obj);
+        });
+        return fidTypes;
+    },
+
+    /**
+     * 判斷是否有任何資料被異動
+     * box {object} form/div container
+     * fidTypes {string array} (optional) field info array
+     * trFilter {string} (optional 'tr')
+     * return {json array}
+     */
+    isChanged: function (box, fidTypes, trFilter) {
+        trFilter = trFilter || 'tr';
+        fidTypes = fidTypes || _editMany.getFidTypesByBox(box, trFilter);
+
+        var diff = false;
+        box.find(trFilter).each(function (i, item) {
+            var tr = $(item);
+            var fid, value, obj;
+            for (var j = 0; j < fidTypes.length; j = j + 2) {
+                fid = fidTypes[j];
+                obj = _editMany.trFindFid(tr, fid);
+                value = _input.getByType(obj, fidTypes[j + 1], tr);
+                //如果使用完全比對, 字串和數字會不相等!!
+                if (value != _input.getOld(obj)) {
+                    diff = true;
+                    return false;   //break
+                }
+            }
+        });
+        return diff;
+    },
+
+    /**
+     * get rows
+     * box {object} container
+     * fidTypes {json array} field info array
+     * trFilter {string} (optional) tr filter, default to 'tr'
+     * return {json array}
+     */
+    getRows: function (box, fidTypes, trFilter) {
+        trFilter = trFilter || 'tr';
+
+        var rows = [];  //return rows
+        var infoLen = fidTypes.length;
+        box.find(trFilter).each(function (i, item) {
+            var tr = $(item);
+            var fid, obj;
+            var row = {};
+            for (var j = 0; j < infoLen; j=j+2) {
+                fid = fidTypes[j];
+                obj = _editMany.trFindFid(tr, fid);
+                row[fid] = _input.getByType(obj, fidTypes[j + 1], tr);
+            }
+
+            rows.push(row);
+        });
+
+        return rows;
+    },
+
+}; //class

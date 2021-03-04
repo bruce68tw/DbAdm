@@ -1,0 +1,43 @@
+using Base.Enums;
+using Base.Models;
+using Base.Services;
+{{#if HasExport}}
+using BaseWeb.Services;
+{{/if}}
+using Newtonsoft.Json.Linq;
+
+namespace {{Project}}.Services
+{
+    public class {{ProgCode}}Read
+    {
+        private ReadDto dto = new ReadDto()
+        {
+            ReadSql = @"
+{{ReadSql}}
+",
+		{{#if TableAs}}
+			TableAs = "{{TableAs}}",
+		{{/if}}
+		{{#if RsItemStrs}}
+            Items = new [] {
+			{{#each RsItemStrs}}
+                {{this}}
+			{{/each}}
+            },
+		{{/if}}
+        };
+
+        public JObject GetPage(DtDto dt)
+        {
+            return new CrudRead().GetPage(dto, dt);
+        }
+
+	{{#if HasExport}}
+        public void Export(JObject cond)
+        {
+            _WebExcel.ScreenByCrud(dto, cond, "{{ProgCode}}", _Locale.GetFilePath("{{ProgCode}}.xlsx"), 1);
+        }
+
+	{{/if}}
+    } //class
+}

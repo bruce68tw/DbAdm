@@ -1,0 +1,181 @@
+﻿
+var _me = {
+
+    /*
+    dt: null,    //datatable instance
+    //element to jquery object
+    divRead: null,
+    //divFind: null,
+    //formFind: null,
+    divEdit: null,
+    formEdit: null,
+    */
+
+    //初始化
+    //add page on click
+    init: function () {
+
+        //把 html element 對應到 jquery object
+        _me.divRead = $('#divRead');
+        //_me.divFind = $('#divFind');
+        //_me.formFind = $('#formFind');
+        _me.divEdit = $('#divEdit');
+        _me.formEdit = $('#formEdit');
+        _me.divRoles = $('#_Roles');
+
+        //datatable config
+        var config = {
+            dom: _crud.dtDom,
+            filter: false,  //關閉文字搜尋欄位
+            //columns 數必須與 datatables ui 一致
+            columns: [
+                { data: '_Fun' },
+                { data: 'GroupName' },
+                { data: 'ProgId' },
+                { data: 'Name' },
+                { data: 'Sort' },
+                { data: 'Status' },
+            ],
+            //客製化欄位
+            columnDefs: [                        
+                _crud.dtProp,
+                { targets: [0], render: function (data, type, full, meta) {
+                    return _crud.dtCheck1(full.Id);
+                }},
+                { targets: [3], render: function (data, type, full, meta) {
+                    return _str.format('<a href="javascript:_me.onClickLink(\'{0}\');">{1}</a>', full.Id, data);
+                }},
+                { targets: [5], render: function (data, type, full, meta) {
+                    return _crud.dtSetStatus(full.Id, data);
+                }},
+            ],
+        };
+
+        //初始化 datatable, table id和action必須對應正確
+        _me.dt = _datatable.init('#table1', 'GetPage', config);
+        _prog.setReadTitle();
+        //_check.init(_me.formEdit);
+    },
+
+    /*
+    //點選查詢資料功能
+    onClickFind: function () {
+        _datatable.find(_me.dt, _form.toJson(_me.formFind));
+    },
+    */
+
+    
+
+    clearRoles: function () {
+        var box = _me.divRoles;
+        _check.setO(box.find(':checkbox'), 0);
+        _text.setO(box.find('[data-id=FunExt]'), 0);
+    },
+
+    //點選新增按鈕, 開啟新增畫面
+    onClickAdd: function () {
+        _crud.setEditMode(true);
+        _form.reset(_me.formEdit);
+        _form.swap(_me.divEdit);
+        _me.clearRoles();
+    },
+
+    //點選link, 開啟修改畫面
+    onClickLink: function (id) {
+        _crud.setEditMode(false);
+        _ajax.getJson('GetRow', { key: id }, function (data) {
+            //單筆
+            _form.swap(_me.divEdit);
+            _form.readJson(_me.formEdit, data);
+
+            /*
+            var funCreate = (data.FunCreate == 1);
+            var funUpdate = (data.FunUpdate == 1);
+            var funDelete = (data.FunDelete == 1);
+            var funExt = (data.FunExt == 1);
+            */
+
+            //顯示多筆
+            _me.clearRoles();
+            var roles = data._Roles;
+            if (roles != null && roles.length > 0) {
+                for (var i = 0; i < roles.length; i++) {
+                    var row = roles[i];
+                    var tr = _me.divRoles.find('[data-id=' + row.RoleId + ']');
+                    _check.setD('_Fun', 1, tr);
+                    _check.setD('FunCreate', row.FunCreate, tr);
+                    _check.setD('FunUpdate', row.FunUpdate, tr);
+                    _check.setD('FunDelete', row.FunDelete, tr);
+                    _text.setD('FunExt', row.FunExt, tr);
+                }
+            }
+
+            //設定多筆區域的 checkbox status
+            var fm = _me.divRoles;
+            _check.setStatusD('FunCreate', (data.FunCreate == 1), fm);
+            _check.setStatusD('FunUpdate', (data.FunUpdate == 1), fm);
+            _check.setStatusD('FunDelete', (data.FunDelete == 1), fm);
+            _text.setStatusD('FunExt', (data.FunExt == 1), fm);
+        });
+    },
+
+    //click編輯畫面的功能 checkbox
+    onClickFun(me, status) {
+        //me = $(me);
+        //var dataId = me.data('id');
+        //var status = _check.checkedO(me);
+        //_me.divRoles.find()
+        _check.setStatusD(_obj.getId($(me)), status, _me.divRoles);
+    },
+
+    //return bool
+    checkInput: function (fm, row) {
+        var fm = _me.formEdit;
+        if (!_form.checkEmpty(fm, row))
+            return false;
+
+        //case of ok
+        return true;
+    },
+
+    //點選儲存功能
+    onClickSave: function () {
+        //check input
+        var fm = _me.formEdit;
+        var row = _form.toJson(fm);
+        if (!_me.checkInput(fm, row))
+            return;
+
+        //功能有無權限
+        var funCreate = (row.FunCreate == 1);
+        var funUpdate = (row.FunUpdate == 1);
+        var funDelete = (row.FunDelete == 1);
+        var funExt = (row.FunExt  == 1);
+
+        //多筆區域
+        var len = 0;
+        var roles = [];
+        _me.divRoles.find('tr').each(function () {
+            var tr = $(this);
+            if (_check.checkedD('_Fun', tr)) {
+                roles[len] = {
+                    _fun: 'A',
+                    RoleId: tr.data('id'),
+                    FunCreate: funCreate ? _check.getD('FunCreate', tr) : 0,
+                    FunUpdate: funUpdate ? _check.getD('FunUpdate', tr) : 0,
+                    FunDelete: funDelete ? _check.getD('FunDelete', tr) : 0,
+                    FunExt: funExt ? _text.getD('FunExt', tr) : 0,
+                };
+                len++;
+            }
+        });
+        var rows = [row, roles];
+
+        //save: ajax call
+        _ajax.getJson('SaveRows', { isNew: _me.isNew, rows: _json.toStr(rows) }, function (data) {
+            _xp.afterSave();
+        });
+    },
+
+}; //class
+

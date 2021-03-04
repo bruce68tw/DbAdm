@@ -1,0 +1,121 @@
+﻿
+/*=== checkbox, radio, 使用 pure css, 無js ===*/
+.xg-check, .xg-radio {
+    display: inline-block;
+    position: relative;
+    margin-top: 10px;
+    padding: 0 10px 0 25px; /* for label pos */
+}
+    /*
+    .xg-check.xg-in-dt, .xg-radio.xg-in-dt {
+        margin-top: 10px;
+        padding-left: 25px;
+    }
+    */
+
+/* hide 原本的 input element */
+.xg-check > input, .xg-radio > input {
+    display: none;
+}
+
+/* checkbox元件, span 為實際顯示的方框/圓鈕 */
+.xg-check > span, .xg-radio > span {	
+	cursor: pointer;
+    position: absolute;
+	padding: 0;
+    top: 0;
+    left: 0;
+
+    content: '';
+	display: inline-block;
+	vertical-align: middle;
+	width: 19px;
+	height: 19px;
+	background: white;
+    border: 1px solid #ccc;
+	margin-right: 0px;
+}
+
+    /* for datatable checkbox, no label */
+    .xg-check.xg-no-label > span, .xg-radio.xg-no-label > span {
+        top: 0 !important;
+        left: 0 !important;
+    }
+
+/* radio 圓框 */
+.xg-radio > span {
+    border-radius: 50% !important;
+}
+
+/*
+.xg-check.xd-center, .xg-radio.xd-center {	
+    padding:0;
+}
+*/
+
+/* 在 datatable裡面有時會置中 
+.xg-check.xd-center > span, .xg-radio.xd-center > span {	
+	cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+    padding:0;
+    margin:0;
+}
+*/
+
+    /* checkbox方框 style (span:before) 
+.xg-check > span:before {
+	content: '';
+	display: inline-block;
+	vertical-align: middle;
+	width: 19px;
+	height: 19px;
+	background: white;
+    border: 1px solid #ccc;
+	margin-right: 0px;
+}
+*/
+
+/* checkbox 勾選符號 (span:after) */
+.xg-check > input:checked + span:after {
+	content: '';
+	position: absolute;
+    height: 10px;
+    width: 5px;
+    border: solid #666;
+    border-width: 0 2px 2px 0;	
+	transform: rotate(45deg);
+	top: 3px;
+	left: 7px;
+}
+
+/* radio 勾選符號 (span:after) */
+.xg-radio > input:checked + span:after {
+    content: '';
+    position: absolute;
+    height: 6px;
+    width: 6px;        
+    top: 6px;
+    left: 6px;    
+    border-radius: 50%;
+    background: #666;    
+}   
+
+/* disable時的style */
+.xg-check > input:disabled + span, .xg-radio > input:disabled + span {
+    /*color: #b8b8b8;*/
+    background: #e9ecef;
+    cursor: auto;
+}
+
+
+/* datatable header上的delete all checkbox */
+.xg-check.xg-delete-all {
+    padding-left: 15px;
+}
+
+.xg-delete-all-btn {
+    margin-top: -2px;
+    padding: 2px 3px 2px 0;
+    background: red;
+}

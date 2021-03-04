@@ -1,0 +1,1206 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?xl9hnx');
+  src:  url('fonts/icomoon.eot?xl9hnx#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?xl9hnx') format('truetype'),
+    url('fonts/icomoon.woff?xl9hnx') format('woff'),
+    url('fonts/icomoon.svg?xl9hnx#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-info:before {
+  content: "\e900";
+}
+.icon-to-list:before {
+  content: "\f148";
+}
+.icon-mail:before {
+  content: "\f003";
+}
+.icon-home:before {
+  content: "\f015";
+}
+.icon-print:before {
+  content: "\f02f";
+}
+.icon-pen:before {
+  content: "\f040";
+}
+.icon-eye:before {
+  content: "\f06f";
+}
+.icon-save:before {
+  content: "\f0c8";
+}
+.icon-left2:before {
+  content: "\f100";
+}
+.icon-right2:before {
+  content: "\f101";
+}
+.icon-left:before {
+  content: "\f104";
+}
+.icon-right:before {
+  content: "\f105";
+}
+.icon-up:before {
+  content: "\f106";
+}
+.icon-down:before {
+  content: "\f107";
+}
+.icon-open:before {
+  content: "\f115";
+}
+.icon-pdf:before {
+  content: "\f1c1";
+}
+.icon-word:before {
+  content: "\f1c2";
+}
+.icon-excel:before {
+  content: "\f1c3";
+}
+.icon-facebook:before {
+  content: "\f230";
+}
+.icon-user:before {
+  content: "\f2c0";
+}
+.icon-find:before {
+  content: "\f002";
+}
+.icon-times:before {
+  content: "\f00d";
+}
+.icon-find2:before {
+  content: "\f00e";
+}
+.icon-plus:before {
+  content: "\f067";
+}
+.icon-calendar:before {
+  content: "\e953";
+}
+
+
+/*animation*/
+.xg-fade.hide {
+    display: none;
+}
+
+
+
+/* 用在 form裡面的 button */
+.xg-small-btn {
+    padding: 2px 5px;
+}
+
+/* 功能按鈕, 空白則為 basic button */
+.xg-fun-btn {    
+}
+
+/* look like link */
+.xg-link-btn {
+    background: none !important;
+    color: inherit;
+    border: none;
+    padding: 0 !important;
+    font: inherit;
+    /*border is optional*/
+    border-bottom: 1px solid #444;
+    cursor: pointer;
+}
+
+.xg-btns-box {
+    padding: 3px 0 3px 0;
+    display: flex;  /* 間距會變小 */
+}
+
+/* 功能按鈕, 空白則為 basic button */
+/* size and gray */
+.xg-btn {
+    padding: .25rem .5rem;
+    margin-right: 3px;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.xg-btn-size {
+    padding: .25rem .5rem;
+    margin-right: 3px;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+}
+
+.xg-btn-gray {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* table row button */
+.xg-row-btn {
+}
+
+/*=== checkbox, radio, 使用 pure css, 無js ===*/
+.xg-check, .xg-radio {
+    display: inline-block;
+    position: relative;
+    margin-top: 10px;
+    padding: 0 10px 0 25px; /* for label pos */
+}
+    /*
+    .xg-check.xg-in-dt, .xg-radio.xg-in-dt {
+        margin-top: 10px;
+        padding-left: 25px;
+    }
+    */
+
+/* hide 原本的 input element */
+.xg-check > input, .xg-radio > input {
+    display: none;
+}
+
+/* checkbox元件, span 為實際顯示的方框/圓鈕 */
+.xg-check > span, .xg-radio > span {	
+	cursor: pointer;
+    position: absolute;
+	padding: 0;
+    top: 0;
+    left: 0;
+
+    content: '';
+	display: inline-block;
+	vertical-align: middle;
+	width: 19px;
+	height: 19px;
+	background: white;
+    border: 1px solid #ccc;
+	margin-right: 0px;
+}
+
+    /* for datatable checkbox, no label */
+    .xg-check.xg-no-label > span, .xg-radio.xg-no-label > span {
+        top: 0 !important;
+        left: 0 !important;
+    }
+
+/* radio 圓框 */
+.xg-radio > span {
+    border-radius: 50% !important;
+}
+
+/*
+.xg-check.xd-center, .xg-radio.xd-center {	
+    padding:0;
+}
+*/
+
+/* 在 datatable裡面有時會置中 
+.xg-check.xd-center > span, .xg-radio.xd-center > span {	
+	cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+    padding:0;
+    margin:0;
+}
+*/
+
+    /* checkbox方框 style (span:before) 
+.xg-check > span:before {
+	content: '';
+	display: inline-block;
+	vertical-align: middle;
+	width: 19px;
+	height: 19px;
+	background: white;
+    border: 1px solid #ccc;
+	margin-right: 0px;
+}
+*/
+
+/* checkbox 勾選符號 (span:after) */
+.xg-check > input:checked + span:after {
+	content: '';
+	position: absolute;
+    height: 10px;
+    width: 5px;
+    border: solid #666;
+    border-width: 0 2px 2px 0;	
+	transform: rotate(45deg);
+	top: 3px;
+	left: 7px;
+}
+
+/* radio 勾選符號 (span:after) */
+.xg-radio > input:checked + span:after {
+    content: '';
+    position: absolute;
+    height: 6px;
+    width: 6px;        
+    top: 6px;
+    left: 6px;    
+    border-radius: 50%;
+    background: #666;    
+}   
+
+/* disable時的style */
+.xg-check > input:disabled + span, .xg-radio > input:disabled + span {
+    /*color: #b8b8b8;*/
+    background: #e9ecef;
+    cursor: auto;
+}
+
+
+/* datatable header上的delete all checkbox */
+.xg-check.xg-delete-all {
+    padding-left: 15px;
+}
+
+.xg-delete-all-btn {
+    margin-top: -2px;
+    padding: 2px 3px 2px 0;
+    background: red;
+}
+
+/*
+    使用: https://github.com/uxsolutions/bootstrap-datepicker/blob/master/docs/index.rst
+*/
+/*
+.xg-date {
+    width: 150px;
+    padding: 0px;
+    border-radius: 4px;
+}
+    .xg-date input {
+        border-right-width: 0;
+    }
+*/
+
+.xg-date {
+    width: 180px;
+    /*position: relative;*/
+}
+
+    .xg-date input {
+        border-radius: 4px !important;
+    }
+
+    .xg-date .input-group-addon {
+        z-index: 1000;
+        position: relative;
+        top: 7px;
+        right: 40px;
+    }
+
+    /* date icon */
+    .xg-date span {
+        z-index: 1100;
+        position: absolute;
+        top: 8px;
+        right: 5px;
+    }
+
+    /*
+    .xg-date input {
+        border-right-width: 0;
+    }
+
+    .xg-date .fa-calendar-o {
+        cursor: pointer;
+        border-left-width: 0;
+        border-right-width: 0;
+    }
+
+    .xg-date .fa-calendar {
+        cursor: pointer;
+        border-left-width: 0;
+    }
+    */
+
+/* jquery validate error label */
+span.error {
+    color: red;
+    margin-bottom: 0 !important;
+}
+
+.xg-err {
+    /*border: #5b48e5;
+    border-style: solid;
+    border-width: thin;*/
+    border: 1px solid #FF8B55 !important;
+    /*border-style: solid !important;
+    border-width: thin !important;*/
+}
+
+/*  */
+.xg-errlab {
+    text-align: left;
+    font-size: 14px;
+    font-weight: lighter;
+    color: red;
+    display: none;
+}
+
+/* (+)相鄰選擇器, 
+  1.與 xg-error2 相鄰的 error label 要顯示 
+  2.在 xg-error2box 裡面的 error label 要顯示 
+.xg-error + .xg-errorlabel, .xg-errorbox + .xg-errorlabel {
+    display: block !important;
+}
+*/
+
+/* 在 xg-error2box 裡面的 input 要顯示錯誤框 */
+/*.xg-errorbox > input,
+.xg-errorbox > button, .xg-errorbox div.xg-icheck {
+    border: 1px solid #FF8B55 !important;
+}
+*/
+
+/* file url */
+.xg-file-box div a:first-child {
+    color: blue;
+}
+
+/* note */
+.xg-file-box div:nth-child(3) {
+    color: red;
+    font-size: 12px;
+}
+
+/* toolbar */
+
+/* find form toolbar */
+.xg-find-tbar {
+    padding-top: 8px;
+}
+
+
+/* form with line */
+.xg-lineform {
+    font-size: 15px;
+    border-color: #ddd;
+    border-style: solid;
+    border-width: 1px 1px 0 1px; 
+    border-radius: 4px;
+}
+
+    .xg-lineform .xg-row {
+        min-height: 53px;
+        margin: 0;
+        border-bottom: solid 1px #f0f0f0;
+    }
+
+    .xg-lineform .xg-label {
+        background: #eee;
+        padding: 14px 5px 0 15px;
+        border-right: solid 1px #ddd;
+        border-bottom: solid 1px #ddd;
+    }
+
+    .xg-lineform .xg-input {
+        padding-top: 7px;
+        /*border-bottom: solid 1px #f0f0f0;*/
+    }
+
+    /* 在輸入欄位(右邊)的label*/
+    .xg-lineform .xi-read {
+        border: none;
+        padding-left: 0;
+    }
+
+/* form without line */
+.xg-form {
+    font-size: 15px;
+    border: none;
+    margin-bottom: 20px;
+}
+
+    .xg-form .xg-row {
+        /*min-height: 53px;*/
+        margin: 0;
+        border: none;
+    }
+
+    .xg-form .xg-label {
+        padding: 14px 5px 0 15px;
+        border: none;
+        text-align: right;
+    }
+
+    .xg-form .xg-input {
+        padding-top: 7px;
+    }
+
+    /* 在輸入欄位(右邊)的label*/
+    .xg-form .xi-read {
+        padding-left: 0;
+        border: none;
+        margin: 0;
+    }
+
+
+.xg-block-label {
+    margin: 3px 3px;
+}
+
+
+.xg-leftmenu {
+    margin-left: 0;
+    padding: 0;
+
+    /*min-width: 250px;
+    max-width: 300px;*/
+    width: 250px;
+    height: 100%;
+    /*font-size: 14px;*/
+    /*margin: 0;*/
+
+    border-style: solid;
+    border-color: #CCC;
+    border-width: 0 1px 0 0;
+    background: #FFFFFF;
+    transition: 0.5s;
+    z-index: 1000;
+}
+
+.xg-leftmenu.xg-close {
+    transition: 0.5s;
+    margin-left: -250px;
+}
+/*
+.xg-leftmenu.xg-close span, 
+.xg-leftmenu.xg-close .xg-arrow {
+    display: none;
+    transition: 0.5s;
+}
+*/
+
+/* menu item */
+.xg-leftmenu li {
+    /*text-indent: 0;*/
+    line-height: 42px;
+    border-bottom: solid 1px #E5E5E5;
+    /*color: #fff;*/
+}
+
+/* 文字 */
+.xg-leftmenu a {
+    display: block; /* 選取的有效寬度為100% */
+    font-size: 15px;
+    color: #555 !important;
+
+}
+    .xg-leftmenu a:hover {
+        cursor: pointer;
+        text-decoration: none; /* remove underline */
+        color: #EDD8E7 !important;
+        background: #333237;
+    }
+
+.xg-leftmenu a:hover i {
+    color: #EDD8E7;
+    background: #333237;
+}
+
+/* icon */
+.xg-leftmenu i {
+    margin-right: 10px;
+    padding-left: 12px;
+    /*color: #fff;*/
+    width: 25px;    /* 讓文字對齊 */
+}
+
+.xg-leftmenu .xg-arrow:before {
+    float: right;
+    margin-right: 20px;
+    font-family: FontAwesome;
+    content: "\f107";   /* down arrow */
+}
+.xg-leftmenu .xg-arrow.xg-open:before {
+    content: "\f106";   /* up arrow */
+}
+
+.xg-leftmenu-panel {
+    list-style: none;
+    /*
+    -moz-padding-start: 0;
+    -webkit-padding-start: 0;
+    -khtml-padding-start: 0;
+    -o-padding-start: 0;
+    padding-start: 0;
+    */
+    padding: 0;
+    background: #DAF8FF;
+}
+
+.xg-leftmenu-panel li {
+    border: none;
+}
+
+/* sub menu text */
+.xg-leftmenu-panel a {
+    /*font-size: 15px;
+    color: #fff;*/
+    padding-left: 22px;
+}
+
+
+/*
+.xg-modal .modal-dialog {
+    min-width: 200px;
+}
+*/
+
+.xg-modal .modal-header {
+    /*height: 10px;*/
+    border-bottom: 1px solid #eee;
+    padding: 9px 15px 9px 19px;
+}
+
+.xg-modal .modal-title {
+    font-size: 16px;
+    color: #3e8cc6;
+}
+
+.xg-modal .modal-body {
+    font-size: 16px;
+    padding: 20px 15px 15px 15px;
+}
+
+.xg-modal .modal-footer {
+    border: none;
+    padding: 0 20px 10px;
+}
+
+
+/* file url */
+.xg-edit-table td {
+    border-top: none;
+    border-bottom: none;
+}
+
+
+/*
+  包含: 
+  1.xg-table
+  2.xg-table裡面的輸入元件
+  3.jQuery dataTables
+*/
+.xg-table {
+    width: 100% !important;
+    font-size: 15px;
+    /*table-layout: fixed;*/
+}
+
+    /*
+.xg-table td {
+    vertical-align: middle;
+    height: 32px;
+}
+*/
+
+    /*
+    .xg-table td .xg-input-box{
+        height: 100%;
+    }
+    */
+
+    .xg-table tr:hover {
+        background: #F6F6F6;
+    }
+
+    /*.xg-table thead th {*/
+    .xg-table th {
+        background: #eee;
+        border-width: 0 1px 0 0 !important;
+        /*
+    border-top: none !important;
+    border-bottom: none !important;
+    border-bottom-width: 1px !important;
+    border-left-width: 0;
+    */
+        vertical-align: middle !important;
+        /*padding-top: 3px;
+    padding-bottom: 3px;
+    height: 48px !important;*/
+        text-align: center !important;
+    }
+
+        .xg-table th:last-child {
+            border-right-width: 0 !important;
+        }
+
+    .xg-table tbody td {
+        vertical-align: middle !important;
+        /*padding-top: 3px;
+    padding-bottom: 3px;
+    height: 48px !important;*/
+        border-width: 1px 1px 0 0 !important;
+        /*border-bottom-width: 0;
+    border-left-width: 0;*/
+    }
+
+    .xg-table.xg-no-hline td {
+        border-top: none;
+        border-bottom: none;
+    }
+
+/*
+.xg-table th .xg-check {
+    top: -6px !important;
+    left: -3px !important;
+}
+.xg-table tbody .xg-check {
+    top: -8px !important;
+}
+*/
+
+/* table v scroll */
+.xg-table-vscroll tbody {
+  display:block;
+  overflow-y:scroll;
+}
+
+.xg-table-vscroll tr {
+  display:flex;
+}
+
+.xg-table .xg-check > span, .xg-table .xg-radio > span {
+    top: -10px !important;
+    left: 8px !important;
+}
+
+/* toolbar */
+
+/* row list toolbar */
+.xg-list-tbar {
+    padding: 3px 0 3px 0;
+}
+
+
+/* bootstrap alert */
+#xgAlert {
+    position: fixed; 
+    top: 3px; 
+    right: 3px; 
+    width: auto;
+    z-index: 9999; 
+    border-radius: 5px
+}
+#xgAlert1 {
+    position: fixed; 
+    top: 3px; 
+    right: 3px; 
+    width: auto;
+    z-index: 9999; 
+    border-radius: 5px
+}
+
+
+/* 處理中訊息 */
+.xg-wait22 {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba(2, 18, 23, 0.6)
+                url('/Images/loading2.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+#xgWait {
+    display: none;  
+    position: fixed;
+    top: 33%;
+    left: 50%;
+}
+
+.xg-msg .modal-dialog {
+    min-width: 280px;
+    max-width: 480px;
+}
+.xg-msg .modal-header {
+    /*height: 10px;*/
+    border-bottom: none;
+    padding: 9px 15px 9px 19px;
+    background-color: none;
+}
+/*
+.xg-msg .modal-title {
+    font-size: 16px;
+    color: #3e8cc6;
+}
+*/
+.xg-msg .modal-body {
+    font-size: 16px;
+    padding: 10px 20px 30px 20px;
+}
+.xg-msg .modal-footer {
+    border-bottom: none;
+    padding: 10px;
+}
+
+/*
+#xgArea .modal-dialog {
+    width: 480px;
+}
+*/
+
+/*
+#xgWait2 i {  
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}
+
+#xgWait2:before {
+  content: "\f110";
+  font-family: FontAwesome;
+  font-size: 20px;
+  position: absolute;
+  top: 0; 
+}
+*/
+
+/* When the body has the wait class, we turn
+   the scrollbar off with overflow:hidden */
+body.xg-show-wait {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the wait class, our
+   modal element will be visible */
+body.xg-show-wait .xg-wait {
+    display: block;
+}
+
+
+/* 切換畫面, ex: Read, Edit */
+.xg-swap {
+    display: none;
+}
+
+.xg-swap.xg-active {
+    display: block;
+}
+
+.xg-inline {
+    display: inline-block;
+}
+
+/* title required sign */
+.xg-required {
+    color: red;
+    font-weight: bold;
+}
+
+.xg-left {
+    text-align: left;
+}
+.xg-center {
+    text-align: center;
+}
+.xg-right {
+    text-align: right;
+}
+
+/* 查詢畫面, 使用 $.slideToggle() */
+.xg-find-form {
+    display: none;
+    padding: 10px 0 10px 0;
+}
+
+/* 初始狀態為開啟, toggle會加上 open class */
+.xg-find-form.open {
+    /*display: none;*/
+    padding: 10px 0 10px 0;
+}
+
+/* prog path, razor 只支援 inline style */
+.xg-prog-path {
+    height: 38px;
+    padding: 8px 16px;
+    font-size: 16px;
+    color: gray;
+}
+
+@charset "utf-8";
+
+/* === 修改預設 style === */
+body {
+    /*padding-top: 50px;*/
+    padding-bottom: 20px;
+    font-size: 14px !important;
+}
+
+body, label {
+    color: #424243;
+    font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
+}
+
+/* button 和後面的 icon 的間距*/
+.btn > i {
+    padding-left: 3px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.btn {
+    font-size: 14px;
+}
+
+/* table button with link style */
+.btn-link {
+    padding: 0 !important;
+}
+
+.table-condensed {
+    font-size: 14px;
+}
+
+/* 縮小欄位高度, 38 -> 36 */
+.form-control, select.form-control {
+    height: 36px !important;
+    /*padding: 3px 6px !important;*/
+}
+
+textarea.form-control {
+    height: auto !important;
+}
+
+/* modal */
+/* background-color 會覆蓋 border-radius 效果 */
+/*
+.modal-header {
+    padding: 10px;
+    border-bottom: 1px solid #e5e5e5;
+    background-color: #eee; 
+}
+*/
+
+/* 筆數起迄&合計 */
+.dataTables_info {
+    padding-top: 6px !important;
+}
+
+.dataTables_wrapper {
+    padding: 0;
+}
+
+    .dataTables_wrapper .dataTables_length, .dataTables_info, .toolbar {
+        float: left;
+    }
+
+
+/* change sorting icon to font-awesome
+    see: https://datatables.net/blog/2014-06-06
+*/
+table.dataTable thead th {
+    position: relative;
+    background-image: none !important; /* Remove the DataTables bootstrap integration styling */
+}
+
+    /* sun add, 否則會出現2個icon !! */
+    table.dataTable thead th.sorting:before,
+    table.dataTable thead th.sorting_asc:before,
+    table.dataTable thead th.sorting_desc:before {
+        display: none;
+    }
+
+    table.dataTable thead th.sorting:after,
+    table.dataTable thead th.sorting_asc:after,
+    table.dataTable thead th.sorting_desc:after {
+        position: absolute;
+        top: 15px; /* sun: 12 -> 15 */
+        right: 8px;
+        display: block;
+        font-family: FontAwesome;
+    }
+
+    table.dataTable thead th.sorting:after {
+        content: "\f0dc";
+        opacity: 0.2;
+        /*color: #ddd;
+        font-size: 0.8em;
+        padding-top: 0.12em;*/
+    }
+
+    table.dataTable thead th.sorting_asc:after {
+        content: "\f0de";
+        opacity: 0.8;
+    }
+
+    table.dataTable thead th.sorting_desc:after {
+        content: "\f0dd";
+        opacity: 0.8;
+    }
+
+
+.datepicker {
+    z-index: 9999 !important;
+}
+
+/*日曆按鈕*/
+/*
+.datepicker table tr td.active, .datepicker table tr td.active.disabled, .datepicker table tr td.active.disabled:hover, .datepicker table tr td.active:hover {
+    background-color: #006dcc;
+    background-image: -moz-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: -ms-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#23c6c8),to(#1ab394));
+    background-image: -webkit-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: -o-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);
+    border-color: #1ab394 #1ab394 #002a80;
+    border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) rgba(0,0,0,.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+}
+
+.datepicker {
+    min-width: 135px;
+    position: relative;
+}
+.datepicker .input-group-addon {
+    padding-left: 0;
+    padding-right: 5px;
+}
+.datepicker input {
+    border-right-width: 0;
+}
+.datepicker .fa-calendar-o {
+    cursor: pointer;
+    border-left-width: 0;
+    border-right-width: 0;
+}
+.datepicker .fa-calendar {
+    cursor: pointer;
+    border-left-width: 0;
+}
+*/
+.fa {
+    font-size: larger;
+    /*color: white;*/
+}
+
+
+
+/* prog path, razor 只支援 inline style */
+.xp-prog-path {
+    height: 43px;
+    /*border-bottom: 1px solid #E5E5E5;*/
+}
+.xp-prog-path ul {
+    padding: 10px 0 10px 10px;
+    font-size: 15px;
+    color: #a5a5a5;
+    background: none;
+}
+
+.xp-prog-title {
+    padding: 10px 0 10px 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.xp-prog {
+    /*padding: 10px;
+    width: 100%;*/
+    /*border: 1px solid #ddd!important;
+    border-radius: 4px;
+    margin: 10px 15px 10px 15px;*/
+    margin: 5px 15px 10px 15px;
+    padding: 15px;
+    border: 1px solid #ddd!important;
+    border-radius: 4px;
+}
+
+.xp-toolbar {
+    /*padding: 0 2px 0 2px;*/
+    margin-bottom: 5px;
+}
+
+/* 以下移除 */
+/* 查詢畫面欄位label */
+.xp-find-label {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.xp-find-form {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    /* border: 1px solid lightgray; */
+}
+/* 查詢畫面的查詢按鈕 */
+.xp-find-btn {
+    text-align: right;
+}
+.xp-find-btn button {
+    margin-right: 10px;
+}
+
+/* === 專案 class === */
+/* 查詢畫面輸入欄位外框 */
+
+/* CRUD form title */
+.xp-form-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* form group title */
+.xp-group-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: red;
+    margin-bottom: 10px;
+}
+
+.xp-group-item {
+    padding-left: 10px;
+}
+
+.xp-row-gap {
+    height: 15px;
+}
+
+/* red btn */
+.xp-btn-red {
+    color: white;
+    background-color: #DA1826;
+}
+.xp-btn-lightred {
+    color: white;
+    background-color: #E98B93 ;
+}
+/* blue btn */
+.xp-btn-blue {
+    color: white;
+    background-color: blue;
+}
+.xp-btn-lightblue {
+    color: white;
+    background-color: #B6D3EA;
+}
+/* green btn */
+.xp-btn-green {
+    color: white;
+    background-color: green;
+}
+/* purple btn */
+.xp-btn-purple {
+    color: white;
+    background-color: purple;
+}
+
+/* horizontal line */
+.xp-line {
+    border-color: darkgray;
+}
+
+/* datatable toolbar button */
+.xp-dt-btn {
+    margin-left: 10px;
+}
+
+/*
+.xg-radio label, .xg-check label {
+}
+*/
+
+/* here!! 修正日期欄位位置 */
+.xp-tmp-date-fix {
+    position: relative;
+    top: -12px;
+}
+
+/* horizontal line */
+/*
+.side-nav {
+    height: 100%;
+    width: 100%;
+    position:absolute;
+    transition: 0.5s;
+}
+.main-content {
+  -webkit-flex: 6;
+      -ms-flex: 6;
+          flex: 6;
+  position: relative;
+  padding: 15px 30px 15px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #F3F3F3;
+  width: 80%;
+  left: 200px;
+}
+*/
+
+
+/*=== 暫解 ===*/
+.dataTables_info {
+    /*padding-top: 2px !important;*/
+}
+
+
+.xp-datatable {
+
+}
+
+.xp-datatable thead tr th {
+    background: #eee;
+}
+    
+
+.dt-center {
+    text-align: center;
+}
+
+.xp-tr-btn {
+    margin: 1px;
+    padding: 2px 5px;
+    /*width: 60px;*/
+}
+
+/* font icon(icomoom) */
+[class^="icon-"], [class*=" icon-"] {
+    padding: 3px;
+}

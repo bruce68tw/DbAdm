@@ -1,0 +1,51 @@
+﻿<script src="~/js/view/Table.js"></script>
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "資料表維護" } })
+<div class="xp-prog">
+    <!-- read form-->
+    <div id="divRead">
+        <!-- condition -->
+        <form id='rform' class='xg-form' style="margin-bottom:0;">
+            <div class="row">
+                @await Component.InvokeAsync("XiSelect", new { title = "專案", fid = "ProjectId", rows = (List<IdStrDto>)ViewBag.Projects, inRow = true })
+                @await Component.InvokeAsync("XgFindTbar", new { isHorizontal = true, hasReset = true, hasFind2 = true })
+            </div>
+            @await Component.InvokeAsync("XiText", new { title = "資料表", fid = "Code", maxLen = 30 })
+        </form>
+        <form id='rform2' class='xg-form'>
+            @await Component.InvokeAsync("XiText", new { title = "資料表名稱", fid = "Name", maxLen = 30 })
+        </form>
+
+        <div class='xg-btns-box'>
+            @await Component.InvokeAsync("XgCreate")
+            @await Component.InvokeAsync("XgExport")
+            <button type="button" class="btn xg-btn" onclick="_me.onGenWord()">產生Word文件</button>
+        </div>
+
+        <!-- result list -->
+        <table id="table1" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th width="60px">選取</th>
+                    <th>專案</th>
+                    <th>資料庫</th>
+                    <th>資料表</th>
+                    <th>資料表名稱</th>
+                    <th width='80px'>維護功能</th>
+                    <th width='60px'>資料狀態</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- edit form-->
+    <div id="divEdit" class="xg-hide">
+        <partial name="Edit" />
+    </div>
+</div>

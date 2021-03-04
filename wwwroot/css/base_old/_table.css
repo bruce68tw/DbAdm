@@ -1,0 +1,97 @@
+﻿
+/* file url */
+.xg-edit-table td {
+    border-top: none;
+    border-bottom: none;
+}
+
+
+/*
+  包含: 
+  1.xg-table
+  2.xg-table裡面的輸入元件
+  3.jQuery dataTables
+*/
+.xg-table {
+    width: 100% !important;
+    font-size: 15px;
+    /*table-layout: fixed;*/
+}
+
+    /*
+.xg-table td {
+    vertical-align: middle;
+    height: 32px;
+}
+*/
+
+    /*
+    .xg-table td .xi-border{
+        height: 100%;
+    }
+    */
+
+    .xg-table tr:hover {
+        background: #F6F6F6;
+    }
+
+    /*.xg-table thead th {*/
+    .xg-table th {
+        background: #eee;
+        border-width: 0 1px 0 0 !important;
+        /*
+    border-top: none !important;
+    border-bottom: none !important;
+    border-bottom-width: 1px !important;
+    border-left-width: 0;
+    */
+        vertical-align: middle !important;
+        /*padding-top: 3px;
+    padding-bottom: 3px;
+    height: 48px !important;*/
+        text-align: center !important;
+    }
+
+        .xg-table th:last-child {
+            border-right-width: 0 !important;
+        }
+
+    .xg-table tbody td {
+        vertical-align: middle !important;
+        /*padding-top: 3px;
+    padding-bottom: 3px;
+    height: 48px !important;*/
+        border-width: 1px 1px 0 0 !important;
+        /*border-bottom-width: 0;
+    border-left-width: 0;*/
+    }
+
+    .xg-table.xg-no-hline td {
+        border-top: none;
+        border-bottom: none;
+    }
+
+/*
+.xg-table th .xg-check {
+    top: -6px !important;
+    left: -3px !important;
+}
+.xg-table tbody .xg-check {
+    top: -8px !important;
+}
+*/
+
+/* table v scroll */
+.xg-table-vscroll tbody {
+  display:block;
+  overflow-y:scroll;
+}
+
+.xg-table-vscroll tr {
+  display:flex;
+}
+
+.xg-table .xg-check > span, .xg-table .xg-radio > span {
+    top: -10px !important;
+    left: 8px !important;
+}

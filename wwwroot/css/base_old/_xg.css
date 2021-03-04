@@ -1,0 +1,49 @@
+﻿
+/* 切換畫面, ex: Read, Edit */
+.xg-swap {
+    display: none;
+}
+
+.xg-swap.xg-active {
+    display: block;
+}
+
+.xg-inline {
+    display: inline-block;
+}
+
+/* title required sign */
+.xg-required {
+    color: red;
+    font-weight: bold;
+}
+
+.xg-left {
+    text-align: left;
+}
+.xg-center {
+    text-align: center;
+}
+.xg-right {
+    text-align: right;
+}
+
+/* 查詢畫面, 使用 $.slideToggle() */
+.xg-find-form {
+    display: none;
+    padding: 10px 0 10px 0;
+}
+
+/* 初始狀態為開啟, toggle會加上 open class */
+.xg-find-form.open {
+    /*display: none;*/
+    padding: 10px 0 10px 0;
+}
+
+/* prog path, razor 只支援 inline style */
+.xg-prog-path {
+    height: 38px;
+    padding: 8px 16px;
+    font-size: 16px;
+    color: gray;
+}
