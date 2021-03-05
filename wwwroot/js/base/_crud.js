@@ -32,16 +32,38 @@ var _crud = {
 
     /**
      * checkbox for multiple select
-     * param value {string} checkbox value
-     * param editable {bool} (optional true)
-     * param fid {string} (optional '_check1') data-fid value
+     * param value {string} [1] checkbox value
+     * param editable {bool} [true]
+     * //param fid {string} [_icheck.check0Id] data-fid value
      */
+    dtCheck0: function (value, editable) {
+        //debugger;
+        if (_str.isEmpty(value))
+            value = 1;
+
+        //attr
+        var attr = "data-fid='" + _icheck.check0Id + "'" +
+            " data-value='" + value + "'";
+        if (editable === false)
+            attr += ' readonly';
+        //if (checked)
+        //    attr += ' checked';
+
+        //xg-no-label for checked sign position
+        return "" +
+            "<label class='xi-check xg-no-label'>" +
+            "   <input " + attr + " type='checkbox'>" +
+            "   <span></span>" +
+            "</label>";
+    },
+    /*
     dtCheck0: function (value, editable, fid) {
         if (editable === undefined)
             editable = true;
         fid = fid || _icheck.check0Id;
         return _icheck.render2(0, fid, value, false, '', editable);
     },
+    */
 
     //??
     dtRadio1: function (value, editable) {
@@ -66,6 +88,12 @@ var _crud = {
         }
         //??
         return _icheck.render2(0, '', 1, checked, '', true, '', "onclick=" + fnOnClick);
+    },
+
+    dtStatusName: function (value) {
+        return (value == '1')
+            ? '<div>' + _BR.StatusYes + '</div>'
+            : '<div class="text-danger">' + _BR.StatusNo + '</div>';
     },
 
     /**

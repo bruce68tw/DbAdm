@@ -16,13 +16,13 @@ var _me = {
 			columnDefs: [
                 _crud.dtColConfig,
 				{ targets: [0], render: function (data, type, full, meta) {
-					return _icheck.dtCheck0(full.Id);
+					return _crud.dtCheck0(full.Id);
 				}},
                 { targets: [5], render: function (data, type, full, meta) {
                     return _crud.dtCrudFun(full.Id, full.Name, true, true, false);
                 }},
 				{ targets: [6], render: function (data, type, full, meta) {
-					return _crud.dtSetStatus(full.Id, data);
+					return _crud.dtStatusName(data);
 				}},
 			],
         };

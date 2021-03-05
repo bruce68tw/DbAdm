@@ -8,6 +8,10 @@ var _BR = {
     //no second
     UiDt2Format: 'YYYY/MM/DD HH:mm',
 
+    //row status
+    StatusYes: '正常',
+    StatusNo: '停用',
+
     //check input
     InputWrong: '輸入錯誤。',
 

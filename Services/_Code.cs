@@ -7,15 +7,6 @@ namespace DbAdm.Services
     //與下拉欄位有關
     public static class _Code
     {
-        /*
-        //mapping to Code.Type
-        public const string QitemOp = "QitemOp";
-        public const string RitemType = "RitemType";
-        public const string InputType = "InputType";
-        public const string CheckType = "CheckType";
-        public const string AuthType = "AuthType";
-        */
-
         public static List<IdStrDto> TableToCodes(string table, Db db = null)
         {
             var sql = $@"
@@ -71,7 +62,7 @@ order by Code
         {
             var sql = string.Format(@"
 select 
-    Code as Id, Name as Str
+    Value as Id, Name as Str
 from dbo.Code
 where Type='{0}'
 order by Sort

@@ -54,25 +54,6 @@ var _icheck = $.extend({}, _ibase, {
         //return (obj.next().find(':after').length > 0);
     },
 
-    dtCheck0: function (value, checked) {
-        //debugger;
-        if (_str.isEmpty(value))
-            value = 1;
-
-        //attr
-        var attr = "data-fid='" + _icheck.check0Id + "'" +
-            " data-value='" + value + "'";            
-        if (checked)
-            attr += ' checked';
-
-        //xg-no-label for checked sign position
-        return "" +
-            "<label class='xi-check xg-no-label'>" +
-            "   <input " + attr + " type='checkbox'>" +
-            "   <span></span>" +
-            "</label>";
-    },
-
     /**
      * get checked checkebox data-value string array
      * form {object} container

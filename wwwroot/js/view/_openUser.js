@@ -43,7 +43,7 @@ var _openUser = {
                     //多選或單選
                     var value = _str.colsToStr(full.Id, full.Name, full.Account);
                     return ou.isRows
-                        ? _iCheck.dtCheck0(value)
+                        ? _crud.dtCheck0(value)
                         : _crud.dtRadio1(value);
                 }},
             ],

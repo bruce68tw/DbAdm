@@ -500,6 +500,12 @@ namespace DbAdm.Services
                 }}}},", i);
                     break;
 
+                case RitemTypeEstr.StatusName:
+                    str = string.Format(@"{{ targets: [{0}], render: function (data, type, full, meta) {{
+                    return _crud.dtStatusName(data);
+                }}}},", i);
+                    break;
+
                 case RitemTypeEstr.UserDefined:
                     str = string.Format(@"{{ targets: [{0}], render: function (data, type, full, meta) {{
                     //TODO: add your code

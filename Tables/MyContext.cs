@@ -40,17 +40,15 @@ namespace DbAdm.Tables
         {
             modelBuilder.Entity<Code>(entity =>
             {
-                entity.HasKey(e => new { e.Type, e.Code1 })
-                    .HasName("PK__Code");
+                entity.HasKey(e => new { e.Type, e.Value });
 
                 entity.Property(e => e.Type)
-                    .HasMaxLength(10)
+                    .HasMaxLength(20)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Code1)
+                entity.Property(e => e.Value)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasColumnName("Code");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Ext)
                     .HasMaxLength(30)
