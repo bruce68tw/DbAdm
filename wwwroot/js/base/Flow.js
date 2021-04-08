@@ -276,7 +276,6 @@ function Flow(boxId, mNode, mLine) {
                 //var node = $(params.el);
                 var pos = $(params.el).position();
                 _form.loadJson(nodeObj, { PosX: pos.left, PosY: pos.top });
-                //this.mNode.setRow(node.data(_fun.Fid), { PosX: pos.left, PosY: pos.top });
             },
         });
 
@@ -326,12 +325,14 @@ function Flow(boxId, mNode, mLine) {
      * param rows {jsons} node rows
      */
     this.loadNodes = function (json) {
+        this.reset();
+
         //stop drawing
         jsPlumb.setSuspendDrawing(true);
 
         //empty all nodes first
         var box = this.divFlowBox;
-        box.find(this.NodeFilter).remove();
+        //box.find(this.NodeFilter).remove();
 
         //set nodes class
         var rows = _crud.getJsonRows(json);
@@ -359,10 +360,12 @@ function Flow(boxId, mNode, mLine) {
         //stop drawing
         jsPlumb.setSuspendDrawing(true);
 
+        /*
         //empty jsplumb lines
         var conns = this.plumb.getAllConnections();   //for in did not work !!
         for (var i = 0; i < conns.length; i++)
             this.plumb.deleteConnection(conns[i]);
+        */
 
         //render jsplumb line
         var rows = _crud.getJsonRows(json);
@@ -628,6 +631,24 @@ function Flow(boxId, mNode, mLine) {
     };
     //#endregion (line function)
 
+    this.reset = function () {
+        //below method not working !!
+        //jsPlumb.deleteEveryEndpoint();
+        //jsPlumb.removeAllEndpoints();
+        //jsPlumb.detachEveryConnection();
+        //jsPlumb.reset();
+
+        //reset lines
+        var conns = this.plumb.getAllConnections();   //for in did not work !!
+        var len = conns.length;
+        for (var i = len - 1; i >= 0; i--)
+            this.plumb.deleteConnection(conns[i]);        
+
+        //reset nodes
+        var box = this.divFlowBox;
+        box.find(this.NodeFilter).remove();
+    };
+
     /**
      * show popup menu for node(normal, auto)/line
      * param elm {element} node element or connection
@@ -885,7 +906,6 @@ function Flow(boxId, mNode, mLine) {
 
         //set new value
         var row = _form.toJson(this.eformNode);
-        //this.mNode.setRow(nodeObj.data(_fun.Fid), row);
 
         //update node display name
         var nodeObj = $(this.nowElm);
@@ -936,7 +956,6 @@ function Flow(boxId, mNode, mLine) {
         //var line = conn.getParameters();    //model
         var line = this.connToLine(conn);
         _form.loadJson(line, row);
-        //this.mLine.setRow(line[_fun.Fid], row);
 
         //change line label
         var prop = this.getLineProp(condStr)

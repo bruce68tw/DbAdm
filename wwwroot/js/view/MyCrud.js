@@ -45,7 +45,8 @@ var _me = {
         _me.eitemChdIdx = 0;    //child index of Eitem
 
         //custom function
-        _me.edit0.fnAfterLoadJson = _me.edit0_afterLoadJson;
+        //_me.edit0.fnAfterLoadJson = _me.edit0_afterLoadJson;
+        _me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;        
         _me.edit0.fnWhenSave = _me.edit0_whenSave;
         //
         _me.mEtable.fnLoadJson = _me.mEtable_loadJson;
@@ -104,10 +105,14 @@ var _me = {
     },
 
     //設定 etable TableId(dropdown)
-    edit0_afterLoadJson: function (json) {
+    //edit0_afterLoadJson: function (json) {
+    edit0_afterOpenEdit: function (fun, json) {
+        if (fun == _fun.FunC)
+            return;
+
         //設定 tables list, 非同步, 傳入 function parameter 
         _me.onChangeProject(function () {
-            _me.edit0_afterLoadJson2(json);
+            _me.edit0_afterOpenEdit2(json);
         });
 
         //reset
@@ -115,7 +120,8 @@ var _me = {
     },
 
     //called by edit0_afterLoadRow()
-    edit0_afterLoadJson2: function (json) {
+    //edit0_afterLoadJson2: function (json) {
+    edit0_afterOpenEdit2: function (json) {
         //設定 form0 tableId select 欄位
         //var form = _crud.getEform0();
         //_iselect.set(_me.TableId, json[_me.TableId], form);
@@ -125,6 +131,7 @@ var _me = {
         var navLen = (navRows == null) ? 0 : navRows.length;
         for (var i = 0; i < navLen; i++) {
             //set dropdown source
+            //debugger;
             var tabObj = _me.getEtableTab(i);
             _iselect.setItems(_me.TableId, _me.tables, tabObj);
 
@@ -347,6 +354,7 @@ var _me = {
                 //    _iselect.set(_me.TableId, tableId, form);
 
                 //set item modal tables
+                //debugger;
                 var obj = _obj.get(_me.TableId, _me.modalItems);
                 _iselect.setItemsO(obj, _me.tables);
                 _iselect.setO(obj, '');
@@ -490,6 +498,7 @@ var _me = {
         var json = { Index: index };
         var newTab = $(Mustache.render(_me.tplTabEtable, json));
         _me.mEtable.boxSetNewId(newTab);    //set new row key !!
+        //debugger;
         _iselect.setItems(_me.TableId, _me.tables, newTab); //set dropdown source
         _me.tabEtable.append(newTab);
 
@@ -515,7 +524,7 @@ var _me = {
             return;
 
         //confirm
-        debugger;
+        //debugger;
         _tool.ans('是否移除畫面資料?', function () {
             var nav = _me.getEtableNav();
             var tab = _me.getEtableTab();

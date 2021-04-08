@@ -32,13 +32,11 @@ order by Id
         //get code table rows for 下拉式欄位
         public static List<IdStrDto> SqlToCodes(string sql, Db db = null)
         {
-            var emptyDb = (db == null);
-            if (emptyDb)
-                db = new Db();
+            var emptyDb = false;
+            _Fun.CheckOpenDb(ref db, ref emptyDb);
 
             var rows = db.GetModels<IdStrDto>(sql);
-            if (emptyDb)
-                db.Dispose();
+            _Fun.CheckCloseDb(db, emptyDb);
             return rows;
         }
 

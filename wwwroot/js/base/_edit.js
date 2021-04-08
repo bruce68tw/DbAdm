@@ -59,8 +59,10 @@ var _edit = {
                 continue;
 
             fid = fidTypes[j];
-            obj = _obj.get(fid, box);
-            value = _input.getO(obj, ftype);
+            obj = (ftype === 'radio')
+                ? _iradio.getObj(fid, box)
+                : _obj.get(fid, box);
+            value = _input.getO(obj, box, ftype);
             //如果使用完全比對, 字串和數字會不相等!!
             if (value != obj.data(_edit.DataOld)) {
                 row[fid] = value;
@@ -84,8 +86,7 @@ var _edit = {
         box.find(_fun.fidFilter()).each(function (i, item) {
             var obj = $(item);
             var j = i * 2;
-            fidTypes[j] = obj.data(_fun.Fid);
-            //fidTypes[j] = _obj.getName(obj);
+            fidTypes[j] = _fun.getFid(obj);
             fidTypes[j + 1] = _input.getType(obj);
         });
         me.fidTypes = fidTypes;
@@ -103,7 +104,7 @@ var _edit = {
         //var me = this;  //use outside .each()
         me.fileFids = [];      //upload file fid array
         box.find('[data-type=file]').each(function (index, item) {
-            me.fileFids[index] = $(item).data(_fun.Fid);
+            me.fileFids[index] = _fun.getFid($(item));
         });
         me.fileLen = me.fileFids.length;
         me.hasFile = me.fileFids.length > 0; //has input file or not

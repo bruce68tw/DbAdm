@@ -1,8 +1,4 @@
-﻿@*using Resources*@
-@{
-    //var cols = new int[] { 12, 2, 3 };
-}
-
+﻿
 <form id='eform' class='xg-form'>
     @await Component.InvokeAsync("XiHide", new { fid = "Id" })
     @await Component.InvokeAsync("XiRead", new { title = "專案代碼", fid = "ProjectCode" })

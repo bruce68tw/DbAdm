@@ -174,7 +174,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
             obj = _obj.get(fid, trObj);
-            row[fid] = _input.getO(obj, this.fidTypes[i + 1]);
+            row[fid] = _input.getO(obj, trObj, this.fidTypes[i + 1]);
         }
         return row;
     };
@@ -273,7 +273,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
                 fid = me.fidTypes[j];
                 obj = _obj.get(fid, tr);
-                value = _input.getO(obj, ftype);
+                value = _input.getO(obj, tr, ftype);
                 //if totally compare, string is not equal to numeric !!
                 if (value != _edit.getOld(obj)) {
                     diffRow[fid] = value;
@@ -464,10 +464,11 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         if (_str.isEmpty(sortFid))
             return;
 
+        var me = this;
         rowsBox = this.getRowsBox(rowsBox);
         rowsBox.find(_fun.fidFilter(sortFid)).each(function (i, item) {
             //this did not work in this loop !!
-            _itext.set(sortFid, i, $(item));
+            _itext.set(sortFid, i, $(item).closest(me.rowFilter));
         });
     };
 

@@ -35,8 +35,8 @@ var _me = {
     {{#if HasFile}}
     //TODO: add your code
     //onclick viewFile, called by XiFile component
-    onViewFile: function (elm) {
-        _me.mUserLicense.onViewImage('', '', elm);
+    onViewFile: function (fid, elm) {
+        _me.mUserLicense.onViewImage('', fid, elm);
     },
 
     {{/if}}

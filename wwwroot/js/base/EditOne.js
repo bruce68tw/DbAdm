@@ -7,7 +7,8 @@
  * 
  * custom function called by _crud.js
  *   //void fnAfterLoadJson(json)
- *   void fnAfterOpenEdit(fun, json)
+ *   void fnAfterOpenEdit(fun, json): called after open edit form
+ *   void fnAfterSwap(readMode): called after _crud.swap()
  *   error fnWhenSave()
  *   void fnAfterSave()
  *   

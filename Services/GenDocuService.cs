@@ -1,6 +1,5 @@
 ﻿using Base.Services;
 using BaseWeb.Services;
-using DbAdm.Models;
 using DocumentFormat.OpenXml.Packaging;
 using System.Collections.Generic;
 using System.IO;
@@ -17,10 +16,17 @@ namespace DbAdm.Services
         /// <param name="tableIds"></param>
         public void Run(string projectId, string[] tableIds = null)
         {
-            #region check template file
+            //check input
             var error = "";
+            if (string.IsNullOrEmpty(projectId) && (tableIds == null || tableIds.Length == 0))
+            {
+                error = "ProjectId & TableIds are need.";
+                goto lab_error;
+            }
+
+            #region check template file
             //var locale = _Fun.GetLocale();
-            var tplPath = _Fun.DirRoot + "_template\\Table.docx";
+            var tplPath = _Xp.GetTpl("Table.docx");
             if (!File.Exists(tplPath))
             {
                 error = "no file " + tplPath;
@@ -28,57 +34,44 @@ namespace DbAdm.Services
             }
             #endregion
 
-            #region column rows & check empty
-            var args = new List<object>();
-            var sql = @"
-select 
-    p.Code as ProjectCode,
-	t.Code as TableCode, t.Name as TableName,
-	c.Code, c.Name, c.DataType,
-	c.Nullable, c.DefaultValue, c.Note,
-	c.Sort
-from dbo.[Column] c
-inner join dbo.[Table] t on c.TableId=t.Id
-inner join dbo.[Project] p on t.ProjectId=p.Id
-where 1=1
-";
-            #endregion
+            #region read column rows
+            var db = _Xp.GetDb();
+            var query = (from c in db.Column
+                         join t in db.Table on c.TableId equals t.Id
+                         join p in db.Project on t.ProjectId equals p.Id
+                         select new { c, t, p }
+                         );
 
-            #region sql 加上 projectId & tableIds 條件
-            var hasCond = false;
-            if (!_Str.IsEmpty(projectId))
-            {
-                sql += "and t.ProjectId=@_ProjectId ";
-                args.Add("_ProjectId");
-                args.Add(projectId);
-                hasCond = true;
-            }
-            if (tableIds != null && tableIds.Count() > 0)
-            {
-                var cond = _Sql.SqlAddIn("TableId", tableIds, ref args);
-                sql += "and t.Id in (" + cond + ")";
-                hasCond = true;
-            }
-            if (!hasCond)
-            {
-                error = "ProjectId & TableIds are need.";
-                goto lab_error;
-            }
-            #endregion
+            //add where condition
+            if (!string.IsNullOrEmpty(projectId))
+                query = query.Where(a => a.t.ProjectId == projectId);
+            if (tableIds != null && tableIds.Length > 0)
+                query = query.Where(a => tableIds.Contains(a.t.Id));
 
-            #region 讀取db
-            var cols = _Db.GetModels<ColumnDto>(sql, args);
-            if (cols == null)
-            {
-                error = "No col rows found";
-                goto lab_error;
-            }
-
-            //has code, name
-            var tables = cols
+            var tables = query
+                .Select(a => new
+                {
+                    ProjectCode = a.p.Code,
+                    TableCode = a.t.Code,
+                    TableName = a.t.Name,
+                    a.c.Code,
+                    a.c.Name,
+                    a.c.DataType,
+                    Nullable = a.c.Nullable ? "Y" : "",
+                    a.c.DefaultValue,
+                    a.c.Note,
+                    S=a.c.Sort,
+                })
+                .ToList()
                 .GroupBy(a => new { a.ProjectCode, a.TableCode, a.TableName })
-                .OrderBy(a => a.Key.TableName)
-                .Select(a => new { a.Key.ProjectCode, a.Key.TableCode, a.Key.TableName })
+                .OrderBy(a => a.Key.TableCode)
+                .Select(a => new 
+                { 
+                    a.Key.ProjectCode, 
+                    a.Key.TableCode, 
+                    a.Key.TableName,
+                    Cols = a.OrderBy(b => b.S).ToList(),
+                })
                 .ToList();
 
             var tableLen = tables.Count;
@@ -89,47 +82,25 @@ where 1=1
             }
             #endregion
 
-            #region prepare stream
+            #region ms stream for echo
             var ms = new MemoryStream();
             var tplBytes = File.ReadAllBytes(tplPath);
-            ms.Write(tplBytes, 0, (int)tplBytes.Length);
+            ms.Write(tplBytes, 0, tplBytes.Length);
 
-            //see: _Word.cs DataIntoStream()
-            //stream -> docx
-            //using (var docx = WordprocessingDocument.Create(ms, WordprocessingDocumentType.Document))
+            //binding stream && docx
             using (var docx = WordprocessingDocument.Open(ms, true))
             {
-                //call delegate if need
-                var mainPart = docx.MainDocumentPart;
-
-                //=== 2.do single row start ===
-                //read template file
-                var fileTpl = "";
-                using (var sr = new StreamReader(mainPart.GetStream()))
-                {
-                    fileTpl = sr.ReadToEnd();
-                }
-
-                //set project name
-                //fileTpl = fileTpl.Replace("[ProjectCode]", tables[0].ProjectCode);
+                //initial && read template file
+                var wordSet = new WordSetService(docx);
+                var mainTpl = wordSet.GetMainStr();
 
                 //get word body start/end pos
-                const string bodyStartTag = "<w:body>";
-                const string bodyEndTag = "</w:body>";
-                var bodyStartTagLen = bodyStartTag.Length;
-                var bodyEndTagLen = bodyEndTag.Length;
-                int bodyStart = 0, bodyEnd = 0;
-                var bodyTpl = _Word.GetRangeStr(ref bodyStart, ref bodyEnd, fileTpl, "", "", bodyStartTag, bodyEndTag);
+                int bodyStart = 0, bodyEnd = 0; //no start/end tag
+                var bodyTpl = wordSet.GetBodyTpl(mainTpl, ref bodyStart, ref bodyEnd);
 
-                //adjust bodyTpl, remove start/end tag
-                bodyTpl = bodyTpl.Substring(bodyStartTagLen, bodyTpl.Length - bodyStartTagLen - bodyEndTagLen);
-                //bodyStart += bodyStartTagLen;
-                //bodyEnd -= bodyEndTagLen;
-
-                //get rows template string
-                const string midTag = "[!]";
+                //get row template string
                 int rowStart = 0, rowEnd = 0;
-                var rowTpl = _Word.GetRangeStr(ref rowStart, ref rowEnd, bodyTpl, midTag).Replace(midTag, "");
+                var rowTpl = wordSet.GetRowTpl(bodyTpl, ref rowStart, ref rowEnd);
                 if (rowTpl == "")
                 {
                     error = "can not find rowTpl String.";
@@ -137,68 +108,43 @@ where 1=1
                 }
 
                 //columns loop
-                //var oldTable = "";
-                var rowLeft = bodyTpl.Substring(0, rowStart);
-                var fileStr = "";
-                //var tableLen = tables.Count();
+                var bodyLeft = bodyTpl.Substring(0, rowStart);
+                var bodyRight = bodyTpl.Substring(rowEnd);
+                var fileStr = "";   //file string to echo
                 for (var i = 0; i < tableLen; i++)
                 {
-                    //new page: 
-                    //do multiple rows first
+                    //file add table string
                     var tableCode = tables[i].TableCode;
-                    var tableCols = cols
-                        .Where(a => a.TableCode == tableCode)
-                        .OrderBy(a => a.Sort)
-                        .ToList();
-                    var rowStr = "";
-                    foreach (var col in tableCols)
-                    {
-                        //[S] for Sort, make it shorter for fit word cell
-                        rowStr += rowTpl
-                            .Replace("[S]", col.Sort.ToString())
-                            .Replace("[Code]", col.Code)
-                            .Replace("[Name]", col.Name)
-                            .Replace("[DataType]", col.DataType)
-                            .Replace("[Nullable]", col.Nullable ? "Y" : "")
-                            .Replace("[DefaultValue]", col.DefaultValue)
-                            .Replace("[Note]", col.Note);
-                    }
-
-                    //add into fileStr
-                    fileStr += rowLeft.Replace("[Table]", tableCode + "(" + tables[i].TableName + ")") +
-                        rowStr +
-                        bodyTpl.Substring(rowEnd + 6);
+                    var tableCols = tables[i].Cols;
+                    fileStr += bodyLeft.Replace("[Table]", tableCode + "(" + tables[i].TableName + ")") +
+                        _Word.TplFillRows(rowTpl, tableCols) +
+                        bodyRight;
 
                     //add page break if need
                     if (i < tableLen - 1)
-                        fileStr += _Word.PageBreak;
+                        fileStr += wordSet.GetPageBreak();
                 }
 
-                fileStr = fileTpl.Substring(0, bodyStart) +
-                    bodyStartTag +
+                fileStr = mainTpl.Substring(0, bodyStart) +
                     fileStr +
-                    bodyEndTag +
-                    fileTpl.Substring(bodyEnd + bodyEndTagLen);
-                //string to docx stream, must use FileMode.Create, or target file can not open !!
-                using (var sw = new StreamWriter(mainPart.GetStream(FileMode.Create)))
-                {
-                    sw.Write(fileStr);
-                    //sw.Write(tplStr);
-                }
+                    mainTpl.Substring(bodyEnd + 1);
+
+                //write string into docx
+                wordSet.WriteMainStr(fileStr);
 
                 //Debug.Assert(IsDocxValid(doc), "Invalid File!");
                 //no save, but can debug !!
                 //mainPart.Document.Save();
                 //return;
             }
-            #endregion
 
             //echo stream to file
-            _WebWord.EchoStream(ms, "Table.docx");
+            _Web.StreamToScreen(ms, "Table.docx");
             return;
+            #endregion
 
-            lab_error:
-            _Log.Error("TableService.cs GenWord() failed: " + error);
+        lab_error:
+            _Log.Error("GenDocuService.cs Run() failed: " + error);
             return;
         }
 

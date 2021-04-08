@@ -1,7 +1,7 @@
 var _me = {
 
     init: function () {        
-        //datatable config
+        //設定 jQuery Datatables 組態
         var config = {
             dom: _crud.dtDom,
             columns: [
@@ -24,7 +24,7 @@ var _me = {
             ],
         };
 
-        //init crud
+        //初始化 crud
         _crud.init(config); 
     },
 

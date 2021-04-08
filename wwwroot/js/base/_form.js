@@ -11,7 +11,7 @@ var _form = {
         var json = {};
         form.find(_fun.fidFilter()).filter(':not([data-type=read])').each(function () {
             var obj = $(this);
-            json[obj.data(_fun.Fid)] = _input.getO(obj);            
+            json[_fun.getFid(obj)] = _input.getO(obj, form);            
         });
         return json;
 
@@ -279,7 +279,7 @@ var _form = {
         var ok = true;
         box.find('.' + _fun.XdRequired).each(function () {
             var me = $(this);
-            if (_str.isEmpty(_input.getO(me))) {
+            if (_str.isEmpty(_input.getO(me, box))) {
                 ok = false;
                 //me.addClass(_fun.errCls);
                 var id = _obj.getId(me);

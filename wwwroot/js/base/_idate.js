@@ -16,7 +16,7 @@ var _idate = $.extend({}, _ibase, {
      */
     setO: function (obj, value) {
         //obj.val(_date.jsToUiDate(value));
-        _idate._boxSetDate(_idate._elmToBox(obj), value);
+        this._boxSetDate(this._elmToBox(obj), value);
     },
 
     setEditO: function (obj, status) {
@@ -30,10 +30,10 @@ var _idate = $.extend({}, _ibase, {
      */ 
     init: function (box, fid) {
         var obj = _str.isEmpty(fid)
-            ? $(_idate.BoxFilter)
-            : _obj.get(fid, box).closet(_idate.BoxFilter);
+            ? $(this.BoxFilter)
+            : _obj.get(fid, box).closet(this.BoxFilter);
         if (obj.length > 0)
-            _idate.initO(obj);
+            this.initO(obj);
     },
 
     //initial by object(s)
@@ -66,19 +66,19 @@ var _idate = $.extend({}, _ibase, {
     /*
     //for 多筆區域
     initByBox: function (box, fnOnChange) {
-        _idate.initO(box.find(_idate.BoxFilter), fnOnChange);
+        this.initO(box.find(this.BoxFilter), fnOnChange);
     },
     */
 
     //show/hide datepicker
     onToggle: function (btn) {
         //$(btn).parent().parent().find('input').trigger('focus');
-        _idate._elmToBox(btn).datepicker('show');
+        this._elmToBox(btn).datepicker('show');
     },
 
     //reset value
     onReset: function (btn) {
-        _idate._boxSetDate(_idate._elmToBox(btn), '');
+        this._boxSetDate(this._elmToBox(btn), '');
     },    
 
 
@@ -88,7 +88,7 @@ var _idate = $.extend({}, _ibase, {
      * return {object}
      */
     _elmToBox: function (elm) {
-        return $(elm).closest(_idate.BoxFilter);
+        return $(elm).closest(this.BoxFilter);
     },
 
     _boxSetDate: function (box, date) {

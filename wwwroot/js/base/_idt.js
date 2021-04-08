@@ -6,12 +6,12 @@ var _idt = $.extend({}, _idate, {
 
     //=== get/set start ===
     getO: function (obj) {        
-        var date = _date.uiToJsDate(_idate.getO(_idt._boxGetDate(obj)));
+        var date = _date.uiToJsDate(_idate.getO(this._boxGetDate(obj)));
         return _str.isEmpty(date)
             ? ''
             : date + ' ' +
-                _iselect.getO(_idt._boxGetHour(obj)) + ':' +
-                _iselect.getO(_idt._boxGetMin(obj));
+                _iselect.getO(this._boxGetHour(obj)) + ':' +
+                _iselect.getO(this._boxGetMin(obj));
     },
 
     /**
@@ -30,15 +30,15 @@ var _idt = $.extend({}, _idate, {
             hour = parseInt(_str.getMid(value, ' ', ':'));
             min = parseInt(_str.getMid(value, ':', ':'));
         }
-        _idate.setO(_idt._boxGetDate(obj), date);
-        _iselect.setO(_idt._boxGetHour(obj), hour);
-        _iselect.setO(_idt._boxGetMin(obj), min);
+        _idate.setO(this._boxGetDate(obj), date);
+        _iselect.setO(this._boxGetHour(obj), hour);
+        _iselect.setO(this._boxGetMin(obj), min);
     },
 
     setEditO: function (obj, status) {
-        _idate.setEditO(_idt._boxGetDate(obj), status);
-        _iselect.setEditO(_idt._boxGetHour(obj), status);
-        _iselect.setEditO(_idt._boxGetMin(obj), status);
+        _idate.setEditO(this._boxGetDate(obj), status);
+        _iselect.setEditO(this._boxGetHour(obj), status);
+        _iselect.setEditO(this._boxGetMin(obj), status);
     },
 
     /**

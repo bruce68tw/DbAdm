@@ -324,9 +324,7 @@ var _chart = {
 
 }; //class
 /**
- * note:
- *   1.reserved function:
- *     a.fnAfterSwap(readMode): called after _crud.swap()
+ * crud function
  */
 var _crud = {
 
@@ -359,7 +357,7 @@ var _crud = {
      * checkbox for multiple select
      * param value {string} [1] checkbox value
      * param editable {bool} [true]
-     * //param fid {string} [_icheck.check0Id] data-fid value
+     * //param fid {string} [_icheck.Check0Id] data-fid value
      */
     dtCheck0: function (value, editable) {
         //debugger;
@@ -367,7 +365,7 @@ var _crud = {
             value = 1;
 
         //attr
-        var attr = "data-fid='" + _icheck.check0Id + "'" +
+        var attr = "data-fid='" + _icheck.Check0Id + "'" +
             " data-value='" + value + "'";
         if (editable === false)
             attr += ' readonly';
@@ -385,7 +383,7 @@ var _crud = {
     dtCheck0: function (value, editable, fid) {
         if (editable === undefined)
             editable = true;
-        fid = fid || _icheck.check0Id;
+        fid = fid || _icheck.Check0Id;
         return _icheck.render2(0, fid, value, false, '', editable);
     },
     */
@@ -394,7 +392,7 @@ var _crud = {
     dtRadio1: function (value, editable) {
         if (editable === undefined)
             editable = true;
-        return _iradio.render(_icheck.check0Id, '', false, value, editable);
+        return _iradio.render(_icheck.Check0Id, '', false, value, editable);
     },
 
     /**
@@ -590,11 +588,11 @@ var _crud = {
      */
     onCreate: function () {
         var fun = _fun.FunC;
+        _crud.swap(false);  //call first
         _prog.setPath(fun);
         _crud.setEditStatus(fun);
         _crud.resetForm(_me.edit0);
-        _crud.swap(false);
-        _crud.afterOpenEdit(fun, null);
+        _crud._afterOpenEdit(fun, null);
     },
 
     /**
@@ -622,11 +620,11 @@ var _crud = {
         //_crud.toUpdateMode(key);
         _ajax.getJson('GetJson', { key: key }, function (data) {
             //to edit(U/V) mode
+            _crud.swap(false);  //call first
             _prog.setPath(funType);
             _crud.setEditStatus(funType);
             _crud.loadJson(data);
-            _crud.afterOpenEdit(funType, data);
-            _crud.swap(false);  //call last
+            _crud._afterOpenEdit(funType, data);
         });
     },
 
@@ -684,7 +682,7 @@ var _crud = {
     },
 
     //call fnAfterOpenEdit() if existed
-    afterOpenEdit: function (fun, json) {
+    _afterOpenEdit: function (fun, json) {
         var edit = _me.edit0;
         if (_fun.hasValue(edit.fnAfterOpenEdit))
             edit.fnAfterOpenEdit(fun, json);
@@ -1100,9 +1098,14 @@ var _crud = {
         _crud.swap(true);
     },
 
+    /**
+     * call fnAfterSwap if existed
+     * param toRead {bool} to read mode or not
+     */
     _afterSwap: function (toRead) {
-        if (_me.fnAfterSwap !== undefined)
-            _me.fnAfterSwap(toRead);
+        var edit = _me.edit0;
+        if (_fun.hasValue(edit.fnAfterSwap))
+            edit.fnAfterSwap(toRead);
     },
 
     /**
@@ -1328,8 +1331,10 @@ var _edit = {
                 continue;
 
             fid = fidTypes[j];
-            obj = _obj.get(fid, box);
-            value = _input.getO(obj, ftype);
+            obj = (ftype === 'radio')
+                ? _iradio.getObj(fid, box)
+                : _obj.get(fid, box);
+            value = _input.getO(obj, box, ftype);
             //如果使用完全比對, 字串和數字會不相等!!
             if (value != obj.data(_edit.DataOld)) {
                 row[fid] = value;
@@ -1353,8 +1358,7 @@ var _edit = {
         box.find(_fun.fidFilter()).each(function (i, item) {
             var obj = $(item);
             var j = i * 2;
-            fidTypes[j] = obj.data(_fun.Fid);
-            //fidTypes[j] = _obj.getName(obj);
+            fidTypes[j] = _fun.getFid(obj);
             fidTypes[j + 1] = _input.getType(obj);
         });
         me.fidTypes = fidTypes;
@@ -1372,7 +1376,7 @@ var _edit = {
         //var me = this;  //use outside .each()
         me.fileFids = [];      //upload file fid array
         box.find('[data-type=file]').each(function (index, item) {
-            me.fileFids[index] = $(item).data(_fun.Fid);
+            me.fileFids[index] = _fun.getFid($(item));
         });
         me.fileLen = me.fileFids.length;
         me.hasFile = me.fileFids.length > 0; //has input file or not
@@ -1524,7 +1528,7 @@ var _form = {
         var json = {};
         form.find(_fun.fidFilter()).filter(':not([data-type=read])').each(function () {
             var obj = $(this);
-            json[obj.data(_fun.Fid)] = _input.getO(obj);            
+            json[_fun.getFid(obj)] = _input.getO(obj, form);            
         });
         return json;
 
@@ -1792,7 +1796,7 @@ var _form = {
         var ok = true;
         box.find('.' + _fun.XdRequired).each(function () {
             var me = $(this);
-            if (_str.isEmpty(_input.getO(me))) {
+            if (_str.isEmpty(_input.getO(me, box))) {
                 ok = false;
                 //me.addClass(_fun.errCls);
                 var id = _obj.getId(me);
@@ -1846,7 +1850,7 @@ var _formData = {
 var _fun = {
 
     //=== constant start(大camel) ===
-    Fid: 'fid',            //data-fid
+    //Fid: 'name',            //data-fid
 
     //for moment.js
     //JsDateFormat: 'YYYY/MM/DD',
@@ -1886,6 +1890,11 @@ var _fun = {
         _ajax.getStr('../Fun/Hello', null, function (msg) {
             alert('OK');
         });
+    },
+
+    //get fid
+    getFid: function (obj) {
+        return obj.data('fid');
     },
 
     /**
@@ -2056,6 +2065,45 @@ var _helper = {
         return _str.trim(attr);
     },
 };
+/*
+ * handle html data
+ */
+var _html = {
+    //*** 必要屬性 or 函式 ***
+    //get locale code
+    encodeRow: function (row, fields) {
+        for (var i = 0; i < fields.length; i++) {
+            var id = fields[i];
+            row[id] = _html.encode(row[id]);
+        }
+        return row;
+    },
+
+    //see: https://stackoverflow.com/questions/14346414/how-do-you-do-html-encode-using-javascript
+    encode: function (value) {
+        return $('<div/>').text(value).html();
+    },
+
+    decode: function(value){
+        return $('<div/>').html(value).text();
+    },
+
+    //?? 更新html欄位內容, 讀取 text()
+    update: function(id, box) {
+        var filter = '#' + id;
+        var obj = (box === undefined) ? $(filter) : box.find(filter);
+        //obj.text(value);
+        //obj.summernote('code', $(filter).text());
+        //debugger;
+        obj.summernote('code', obj.text());
+    },
+	//??
+    updates: function (ids, box) {
+        for (var i = 0; i < ids.length; i++)
+            _html.update(ids[i], box);
+    },
+    
+};
 
 //base class of all input field
 //must loaded first, or will got error !!
@@ -2068,22 +2116,23 @@ var _ibase = {
      * return {string}
      */ 
     get: function (fid, box) {
-        return _ibase.getO(_obj.get(fid, box));
+        return this.getO(_obj.get(fid, box));
     },
     //get value by filter
     getF: function (ft, box) {
-        return _ibase.getO(_obj.getF(ft, box));
+        return this.getO(_obj.getF(ft, box));
     },
-    /*
-    //get value by name
-    getN: function (fid, box) {
-        return _ibase.getO(_obj.getN(fid, box));
-    },
-    */
     //get value by object
     getO: function (obj) {
         return obj.val();
     },
+
+    /*
+    //get value by name
+    getN: function (fid, box) {
+        return this.getO(_obj.getN(fid, box));
+    },
+    */
 
     //get input border for show red border
     //default return this, drive class could rewrite.
@@ -2093,35 +2142,35 @@ var _ibase = {
 
     //set value
     set: function (fid, value, box) {
-        _ibase.setO(_obj.get(fid, box), value)
+        this.setO(_obj.get(fid, box), value)
     },
     setF: function (ft, value, box) {
-        _ibase.setO(_obj.getF(ft, box), value)
+        this.setO(_obj.getF(ft, box), value)
     },
-    /*
-    setN: function (fid, value, box) {
-        _ibase.setO(_obj.getN(fid, box), value)
-    },
-    */
     setO: function (obj, value) {
         obj.val(value);
     },
+    /*
+    setN: function (fid, value, box) {
+        this.setO(_obj.getN(fid, box), value)
+    },
+    */
 
     //set edit status
     setEdit: function (fid, status, box) {
-        _ibase.setEditO(_obj.get(fid, box), status);
+        this.setEditO(_obj.get(fid, box), status);
     },
     setEditF: function (ft, status, box) {
-        _ibase.setEditO(_obj.getF(ft, box), status);
+        this.setEditO(_obj.getF(ft, box), status);
     },
-    /*
-    setEditN: function (fid, status, box) {
-        _ibase.setEditO(_obj.getN(fid, box), status);
-    },
-    */
     setEditO: function (obj, status) {
         obj.prop('readonly', !status);
     },
+    /*
+    setEditN: function (fid, status, box) {
+        this.setEditO(_obj.getN(fid, box), status);
+    },
+    */
 
 };//class
 //for checkbox(use html checkbox)
@@ -2130,7 +2179,7 @@ var _icheck = $.extend({}, _ibase, {
     /**
      * default data-fid attribute value for multiple selection
      */
-    check0Id: '_check0',
+    Check0Id: '_check0',
 
     /**
      * (override)get data-value, not checked status !!, return '0' if unchecked.
@@ -2160,14 +2209,14 @@ var _icheck = $.extend({}, _ibase, {
      * get checked status by fid
      */
     checked: function (fid, form) {
-        return _icheck.checkedO(_obj.get(fid, form));
+        return this.checkedO(_obj.get(fid, form));
     },
 
     /**
      * get checked status by filter
      */
     checkedF: function (filter, form) {
-        return _icheck.checkedO(_obj.getF(filter, form));
+        return this.checkedO(_obj.getF(filter, form));
     },
 
     /**
@@ -2175,7 +2224,7 @@ var _icheck = $.extend({}, _ibase, {
      */
     checkedO: function (obj) {
         //檢查:after虛擬類別是否存在
-        //return (_icheck.getO(obj) == 1);
+        //return (this.getO(obj) == 1);
         return obj.is(':checked');
         //return (obj.next().find(':after').length > 0);
     },
@@ -2187,7 +2236,7 @@ var _icheck = $.extend({}, _ibase, {
      * return {string array}
      */ 
     getCheckeds: function (form, fid) {
-        fid = fid || _icheck.check0Id;
+        fid = fid || this.Check0Id;
         var ary = [];
         _obj.getF(_fun.fidFilter(fid) + ':checked', form).each(function (i) {
             ary[i] = $(this).data('value');
@@ -2205,10 +2254,10 @@ var _icheck = $.extend({}, _ibase, {
         if (_str.isEmpty(rows))
             return;
 
-        fid = fid || _icheck.check0Id;
+        fid = fid || this.Check0Id;
         for (var i = 0; i < rows.length; i++) {
             var obj = form.find('[data-value=' + rows[i][fid] + ']');
-            _icheck.setO(obj, 1);
+            this.setO(obj, 1);
         }
     },
      */
@@ -2229,15 +2278,15 @@ var _icolor = {
     },
 
     get: function (fid, form) {
-        return _icolor.getO(_obj.get(fid, form));
+        return this.getO(_obj.get(fid, form));
     },
     //value by filter
     getF: function (filter, form) {
-        return _icolor.getO(_obj.getF(filter, form));
+        return this.getO(_obj.getF(filter, form));
     },
     //value by object
     getO: function (obj) {
-        return _icolor.rgbToHex(obj.find('i').css('background-color'));
+        return this.rgbToHex(obj.find('i').css('background-color'));
     },
 
     //convert jquery RGB color to hex(has #)
@@ -2290,7 +2339,7 @@ var _idate = $.extend({}, _ibase, {
      */
     setO: function (obj, value) {
         //obj.val(_date.jsToUiDate(value));
-        _idate._boxSetDate(_idate._elmToBox(obj), value);
+        this._boxSetDate(this._elmToBox(obj), value);
     },
 
     setEditO: function (obj, status) {
@@ -2304,10 +2353,10 @@ var _idate = $.extend({}, _ibase, {
      */ 
     init: function (box, fid) {
         var obj = _str.isEmpty(fid)
-            ? $(_idate.BoxFilter)
-            : _obj.get(fid, box).closet(_idate.BoxFilter);
+            ? $(this.BoxFilter)
+            : _obj.get(fid, box).closet(this.BoxFilter);
         if (obj.length > 0)
-            _idate.initO(obj);
+            this.initO(obj);
     },
 
     //initial by object(s)
@@ -2340,19 +2389,19 @@ var _idate = $.extend({}, _ibase, {
     /*
     //for 多筆區域
     initByBox: function (box, fnOnChange) {
-        _idate.initO(box.find(_idate.BoxFilter), fnOnChange);
+        this.initO(box.find(this.BoxFilter), fnOnChange);
     },
     */
 
     //show/hide datepicker
     onToggle: function (btn) {
         //$(btn).parent().parent().find('input').trigger('focus');
-        _idate._elmToBox(btn).datepicker('show');
+        this._elmToBox(btn).datepicker('show');
     },
 
     //reset value
     onReset: function (btn) {
-        _idate._boxSetDate(_idate._elmToBox(btn), '');
+        this._boxSetDate(this._elmToBox(btn), '');
     },    
 
 
@@ -2362,7 +2411,7 @@ var _idate = $.extend({}, _ibase, {
      * return {object}
      */
     _elmToBox: function (elm) {
-        return $(elm).closest(_idate.BoxFilter);
+        return $(elm).closest(this.BoxFilter);
     },
 
     _boxSetDate: function (box, date) {
@@ -2378,12 +2427,12 @@ var _idt = $.extend({}, _idate, {
 
     //=== get/set start ===
     getO: function (obj) {        
-        var date = _date.uiToJsDate(_idate.getO(_idt._boxGetDate(obj)));
+        var date = _date.uiToJsDate(_idate.getO(this._boxGetDate(obj)));
         return _str.isEmpty(date)
             ? ''
             : date + ' ' +
-                _iselect.getO(_idt._boxGetHour(obj)) + ':' +
-                _iselect.getO(_idt._boxGetMin(obj));
+                _iselect.getO(this._boxGetHour(obj)) + ':' +
+                _iselect.getO(this._boxGetMin(obj));
     },
 
     /**
@@ -2402,15 +2451,15 @@ var _idt = $.extend({}, _idate, {
             hour = parseInt(_str.getMid(value, ' ', ':'));
             min = parseInt(_str.getMid(value, ':', ':'));
         }
-        _idate.setO(_idt._boxGetDate(obj), date);
-        _iselect.setO(_idt._boxGetHour(obj), hour);
-        _iselect.setO(_idt._boxGetMin(obj), min);
+        _idate.setO(this._boxGetDate(obj), date);
+        _iselect.setO(this._boxGetHour(obj), hour);
+        _iselect.setO(this._boxGetMin(obj), min);
     },
 
     setEditO: function (obj, status) {
-        _idate.setEditO(_idt._boxGetDate(obj), status);
-        _iselect.setEditO(_idt._boxGetHour(obj), status);
-        _iselect.setEditO(_idt._boxGetMin(obj), status);
+        _idate.setEditO(this._boxGetDate(obj), status);
+        _iselect.setEditO(this._boxGetHour(obj), status);
+        _iselect.setEditO(this._boxGetMin(obj), status);
     },
 
     /**
@@ -2508,7 +2557,7 @@ var _ifile = $.extend({}, _ibase, {
 
     setO: function (obj, value) {
         obj.val(value);     //set hidden input value
-        _ifile._elmToLink(obj).text(value);  //set link show text
+        this._elmToLink(obj).text(value);  //set link show text
     },
     //=== overwrite end ===
 
@@ -2522,7 +2571,7 @@ var _ifile = $.extend({}, _ibase, {
      */
     dataAddFile: function (data, fid, serverFid, box) {
         var obj = _obj.get(fid, box);
-        var file = _ifile._getUploadFile(_ifile._elmToFile(obj));
+        var file = this._getUploadFile(this._elmToFile(obj));
         var hasFile = (file != null);
         if (hasFile)
             data.append(serverFid, file);
@@ -2531,18 +2580,18 @@ var _ifile = $.extend({}, _ibase, {
 
     //=== event start ===
     onOpenFile: function (btn) {
-        var file = _ifile._elmToFile(btn);
+        var file = this._elmToFile(btn);
         file.focus().trigger('click'); //focus first !!
     },
 
     //file: input element
     onChangeFile: function (file) {
         //case of empty file
-        var obj = _ifile._elmToObj(file);
+        var obj = this._elmToObj(file);
         var fileObj = $(file);
         var value = file.value; //full path
         if (_str.isEmpty(value)) {
-            _ifile.setO(obj, '');
+            this.setO(obj, '');
             return;
         }
 
@@ -2567,11 +2616,11 @@ var _ifile = $.extend({}, _ibase, {
         }
 
         //case ok
-        _ifile.setO(obj, _file.getFileName(value));
+        this.setO(obj, _file.getFileName(value));
     },
 
     onDeleteFile: function (btn) {
-        _ifile.setO(_ifile.elmToObj(btn), '');
+        this.setO(this.elmToObj(btn), '');
     },
     //=== event end ===
 
@@ -2579,12 +2628,12 @@ var _ifile = $.extend({}, _ibase, {
     zz_init: function(fid, path, form) {
         var fileObj = _obj.get(fid, form);
         fileObj.val('');
-        //_ifile.setFun(fileObj, ''); //set fun to empty
-        //_ifile.setPathByFile(fileObj, path);
+        //this.setFun(fileObj, ''); //set fun to empty
+        //this.setPathByFile(fileObj, path);
 
         /*
         //file element 要 reset
-        var file = _obj.getF(_ifile.fileF(id), form);
+        var file = _obj.getF(this.fileF(id), form);
         //var $el = $('#example-file');
         file.wrap('<form>').closest('form').get(0).reset();
         file.unwrap();
@@ -2603,15 +2652,15 @@ var _ifile = $.extend({}, _ibase, {
     },
     //get file object
     _elmToFile: function (elm) {
-        return _ifile._boxGetFile(_ifile._elmToBox(elm));
+        return this._boxGetFile(this._elmToBox(elm));
     },
     //get input object
     _elmToObj: function (elm) {
-        return _ifile._boxGetObj(_ifile._elmToBox(elm));
+        return this._boxGetObj(this._elmToBox(elm));
     },
     //get link object
     _elmToLink: function (elm) {
-        return _ifile._boxGetLink(_ifile._elmToBox(elm));
+        return this._boxGetLink(this._elmToBox(elm));
     },
 
     /**
@@ -2637,7 +2686,7 @@ var _ifile = $.extend({}, _ibase, {
 
 }); //class
 /*
- 處理 html 欄位, 使用 summernote !!
+ * html input, use summernote !!
  */
 var _ihtml = {
     //see: https://stackoverflow.com/questions/14346414/how-do-you-do-html-encode-using-javascript
@@ -2679,14 +2728,14 @@ var _ilinkFile = {
 
     //value by fid
     get: function (fid, form) {
-        return _ilinkFile.getO(_obj.get(fid, form));   //use data-fid
+        return this.getO(_obj.get(fid, form));   //use data-fid
     },
     //value by object
     getO: function (obj) {
         return obj.text();
     },
     set: function (fid, value, form) {
-        _ilinkFile.setO(_obj.get(fid, form), value);   //use data-fid
+        this.setO(_obj.get(fid, form), value);   //use data-fid
     },
     setO: function (obj, value) {
         obj.text(value);
@@ -2702,35 +2751,25 @@ var _ilinkFile = {
  */
 var _input = {
 
-    /*
-    //get object
-    getObj: function (fid, box) {
-        var obj = _obj.get(fid, box);
-        if (obj.length == 0)
-            obj = _obj.getD(fid, box);   //iRead use data-fid
-        return obj;
-    },
-    */
-
     //get input value by data-fid
     get: function (fid, box) {
-        return _input.getO(_obj.get(fid, box));
+        return _input.getO(_obj.get(fid, box), box);
     },
 
     /**
      * get input value by object
      * param obj {object}
-     * param type {string} optional, data-type
+     * param type {string} (optional) data-type
      * return input value
      */ 
-    getO: function (obj, type) {
+    getO: function (obj, box, type) {
         type = type || _input.getType(obj);
         switch (type) {
             case 'check':
                 return _icheck.getO(obj);
             case 'radio':
                 //obj is array now !!
-                return _iradio.getO(obj);
+                return _iradio.getO(obj, box);
             case 'textarea':
                 //must set html !!
                 return _itextarea.getO(obj);
@@ -2753,7 +2792,7 @@ var _input = {
     },
 
     set: function (fid, value, box) {
-        _input.setO(_obj.get(fid, box), value);
+        _input.setO(_obj.get(fid, box), value, box);
     },
 
     /**
@@ -2762,7 +2801,7 @@ var _input = {
      * param value {object}
      * param type {string} optional, data-type
      */ 
-    setO: function (obj, value, type) {
+    setO: function (obj, value, box, type) {
         type = type || _input.getType(obj);
         switch (type) {
             case 'check':
@@ -2771,7 +2810,7 @@ var _input = {
             case 'radio':
                 //此時 obj 為 array
                 value = value || '0';
-                _iradio.setOs(obj, value);
+                _iradio.setO(obj, value, box);
                 break;
             case 'textarea':
                 //重要!! 要設定它的 html 屬性!!
@@ -2838,28 +2877,6 @@ var _input = {
         label.text(msg);
         label.show();
         //_form.scrollTopError();
-    },
-     */
-
-    /**
-     * get input value by type
-     * param obj {object}
-     * param type {string} field type
-     * param box {object} (optional) for radio only
-     * return {object} input value
-    getByType: function (obj, type, box) {
-        switch (type) {
-            case 'check':
-                return _icheck.getO(obj);
-            case 'radio':
-                return _iradio.getO(obj, box);
-            //TODO: summernote
-            //case 'textarea':
-            //    return obj.html();   //html !!
-            default:
-                //同時適用select option
-                return obj.val();
-        }
     },
      */
 
@@ -2996,42 +3013,38 @@ var _iradio = $.extend({}, _ibase, {
 
     //=== get ===
     get: function (fid, box) {
-        return _iradio.getOs(_obj.get(fid, box));
+        return _iradio._getByName(fid, box);
     },
-    //obj 為單筆object
+    //obj could be multiple
     getO: function (obj, box) {
-        return obj.val();
-        /*
-        if (obj.length == 1)
-            obj = _obj.get(_obj.getName(obj), box);
-        return _iradio._getO(obj);
-        */
+        return _iradio._getByName(_obj.getName(obj), box);
     },
-    //get value by objects
-    getOs: function (objs) {
-        //use filter !!
-        return objs.filter(':checked').val();
+
+    //get checked object
+    getObj: function (fid, box) {
+        return _obj.getF('[name=' + fid + ']:checked', box);
+    },
+
+    //get data-value by checked name
+    _getByName: function (name, box) {
+        return _iradio.getObj(name, box).data('value');
     },
 
     //=== set ===
     //改成用name來查欄位
     set: function (fid, value, box) {
-        _iradio.setOs(_obj.get(fid, box), value);
+        _iradio._setByName(fid, value, box);
     },
-    //obj 為單筆object
+    
     //setO: function (obj, value, box) {
-    setO: function (obj) {
-        obj.prop('checked', true);
-        /*
-        if (obj.length == 1)
-            obj = _obj.getN(_obj.getName(obj), box);
-        return _iradio._setO(obj, value);
-        */
+    setO: function (obj, value, box) {
+        _iradio._setByName(_obj.getName(obj), value, box);
     },
-    //set value by objects
-    setOs: function (objs, value) {
-        //use filter !!
-        objs.filter('[value=' + value + ']').prop('checked', true);
+
+    //set checked status by name & data-value
+    _setByName: function (name, value, box) {
+        var obj2 = _obj.getF('[name=' + name + '][data-value=' + value + ']', box);
+        obj2.prop('checked', true);
     },
 
     //set status by name
@@ -3133,21 +3146,21 @@ var _iread = {
 
     //value by fid
     get: function (fid, form) {
-        return _iread.getO(_obj.get(fid, form));   //use data-fid
+        return this.getO(_obj.get(fid, form));   //use data-fid
     },
     //value by filter
     getF: function (filter, form) {
-        return _iread.getO(_obj.getF(filter, form));
+        return this.getO(_obj.getF(filter, form));
     },
     //value by object
     getO: function (obj) {
         return obj.text();
     },
     set: function (fid, value, form) {
-        _iread.setO(_obj.get(fid, form), value);   //use data-fid
+        this.setO(_obj.get(fid, form), value);   //use data-fid
     },
     setF: function (filter, value, form) {
-        _iread.setO(_obj.getF(filter, form), value)
+        this.setO(_obj.getF(filter, form), value)
     },
     setO: function (obj, value) {
         obj.text(value);
@@ -3186,7 +3199,7 @@ var _iselect = $.extend({}, _ibase, {
 
     //get selected index(base 0)
     getIndex: function (fid, box) {
-        return _iselect.getIndexO(_obj.get(fid, box));
+        return this.getIndexO(_obj.get(fid, box));
     },
     getIndexO: function (obj) {
         return obj.prop('selectedIndex');
@@ -3194,7 +3207,7 @@ var _iselect = $.extend({}, _ibase, {
 
     //get options count
     getCount: function (fid, box) {
-        return _iselect.getCountO(_obj.get(fid, box));
+        return this.getCountO(_obj.get(fid, box));
     },
     getCountO: function (obj) {
         return obj.find('option').length;
@@ -3202,7 +3215,7 @@ var _iselect = $.extend({}, _ibase, {
 
     //set by index(base 0)
     setIndex: function (fid, idx, box) {
-        _iselect.setIndexO(_obj.get(fid, box), idx);
+        this.setIndexO(_obj.get(fid, box), idx);
     },
     setIndexO: function (obj, idx) {
         obj.find('option').eq(idx).prop('selected', true);
@@ -3211,7 +3224,7 @@ var _iselect = $.extend({}, _ibase, {
     //傳回選取的欄位的文字
     getText: function (fid, box) {
         var obj = _obj.get(fid, box);
-        return _iselect.getTextO(obj);
+        return this.getTextO(obj);
     },
     getTextO: function (obj) {
         return obj.find('option:selected').text();
@@ -3229,11 +3242,11 @@ var _iselect = $.extend({}, _ibase, {
     //items: 來源array, 欄位為:Id,Str
     setItems: function (fid, items, box) {
         var obj = _obj.get(fid, box);
-        _iselect.setItemsO(obj, items);
+        this.setItemsO(obj, items);
     },
     setItemsF: function (filter, items, box) {
         var obj = _obj.getF(filter, box);
-        _iselect.setItemsO(obj, items);
+        this.setItemsO(obj, items);
     },
     //by object
     setItemsO: function (obj, items) {
@@ -3276,7 +3289,7 @@ var _iselect = $.extend({}, _ibase, {
     //fids: 欄位名稱 array
     valuesToJson: function (json, fids, box) {
         for (var i = 0; i < fids.length; i++)
-            json[fids[i]] = _iselect.get(fids[i], box);
+            json[fids[i]] = this.get(fids[i], box);
         return json;
     },
 
@@ -3299,7 +3312,7 @@ var _iselect = $.extend({}, _ibase, {
 
         //選取第0筆
         if (len > 0)
-            _iselect.setIndexO(obj, 0);
+            this.setIndexO(obj, 0);
     },
 
 }); //class
@@ -3307,46 +3320,6 @@ var _iselect = $.extend({}, _ibase, {
 //擴充_ibase屬性, 使用jQuery
 //https://stackoverflow.com/questions/10744552/extending-existing-singleton
 var _itext = $.extend({}, _ibase, {
-
-    /** 
-     for 多筆資料only, 配合jquery validate
-     產生 input text html 內容, 與後端 XiTextHelper 一致
-     validate使用name屬性, 必須唯一, 所以加上rowNo參數
-     @param {int} rowNo row no
-     @param {string} fid data-id
-     @param {string} value value
-     @param {int} maxLen 字串長度限制, default 0(表示不限制)
-     @param {bool} required default false, 是否為必填
-     @param {bool} editable default true, 是否可編輯
-     @param {string} extClass extend class
-     @param {string} extProp extend property, 可以放onChange
-     @return {string} html string.
-    */
-    /*
-    render: function (rowNo, fid, value, type, maxLen, required, editable, extClass, extProp) {
-        //default value
-        rowNo = rowNo || 0;
-        fid = fid || '';
-        value = value || '';
-        maxLen = maxLen || 0;
-        type = _var.emptyToValue(type, 'text');
-        required = required || false;
-        editable = editable || true;
-        extClass = extClass || '';
-        extProp = extProp || '';
-
-        //attr
-        var attr = _helper.getBaseProp(rowNo, fid, value, type, required, editable, extProp);
-        if (maxLen > 0)
-            attr += " maxlength='" + maxLen + "'";
-        if (extProp != '')
-            attr += " style='" + extProp + "'"; 
-        if (attr != '')
-            attr = ' ' + attr;
-        var html = "<input{0} data-val='true' class='form-control {1}'>";
-        return _str.format(html, attr, extClass);
-    },
-    */
 
     //add input mask
     //use jquery maskedinput
@@ -3361,18 +3334,20 @@ var _itext = $.extend({}, _ibase, {
 }); //class
 
 
-//textarea欄位, 如果為 html 內容, 則必須再呼叫 _ihtml.js 功能 !!
+//for textarea input
 var _itextarea = $.extend({}, _ibase, {
 
+    /*
     getO: function (obj) {
-        return obj.html();
-        //return obj.val();
+        //return obj.html();
+        return obj.val();
     },
 
     setO: function (obj, value) {
-        obj.html(value);
-        //obj.val(value);
+        //obj.html(value);
+        obj.val(value);
     },
+    */
 
 }); //class
 
@@ -3681,18 +3656,13 @@ var _obj = {
     },
 
     /**
-     * for none input object
-     * get object by id for none input field, like button
-     */
-    getById: function (id, box) {
-        return _obj.getF('#' + id, box);
-    },
-
-    /**
      * get object by filter string
      */
     getF: function (ft, box) {
-        return box.find(ft);
+        var obj = box.find(ft);
+        if (obj == null)
+            _log.info('_obj.js getF() found none. (filter=' + ft + ')');
+        return obj;
     },
 
     /**
@@ -3714,6 +3684,14 @@ var _obj = {
      */
     getV: function (val, box) {
         return _obj.getF('[value=' + val + ']', box);
+    },
+
+    /**
+     * for none input object
+     * get object by id for none input field, like button
+     */
+    getById: function (id, box) {
+        return _obj.getF('#' + id, box);
     },
 
     //以下function都傳入object
@@ -4662,7 +4640,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
             obj = _obj.get(fid, trObj);
-            row[fid] = _input.getO(obj, this.fidTypes[i + 1]);
+            row[fid] = _input.getO(obj, trObj, this.fidTypes[i + 1]);
         }
         return row;
     };
@@ -4761,7 +4739,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
                 fid = me.fidTypes[j];
                 obj = _obj.get(fid, tr);
-                value = _input.getO(obj, ftype);
+                value = _input.getO(obj, tr, ftype);
                 //if totally compare, string is not equal to numeric !!
                 if (value != _edit.getOld(obj)) {
                     diffRow[fid] = value;
@@ -4952,10 +4930,11 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         if (_str.isEmpty(sortFid))
             return;
 
+        var me = this;
         rowsBox = this.getRowsBox(rowsBox);
         rowsBox.find(_fun.fidFilter(sortFid)).each(function (i, item) {
             //this did not work in this loop !!
-            _itext.set(sortFid, i, $(item));
+            _itext.set(sortFid, i, $(item).closest(me.rowFilter));
         });
     };
 
@@ -5030,7 +5009,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
  * 
  * custom function called by _crud.js
  *   //void fnAfterLoadJson(json)
- *   void fnAfterOpenEdit(fun, json)
+ *   void fnAfterOpenEdit(fun, json): called after open edit form
+ *   void fnAfterSwap(readMode): called after _crud.swap()
  *   error fnWhenSave()
  *   void fnAfterSave()
  *   
@@ -5428,7 +5408,6 @@ function Flow(boxId, mNode, mLine) {
                 //var node = $(params.el);
                 var pos = $(params.el).position();
                 _form.loadJson(nodeObj, { PosX: pos.left, PosY: pos.top });
-                //this.mNode.setRow(node.data(_fun.Fid), { PosX: pos.left, PosY: pos.top });
             },
         });
 
@@ -5478,12 +5457,14 @@ function Flow(boxId, mNode, mLine) {
      * param rows {jsons} node rows
      */
     this.loadNodes = function (json) {
+        this.reset();
+
         //stop drawing
         jsPlumb.setSuspendDrawing(true);
 
         //empty all nodes first
         var box = this.divFlowBox;
-        box.find(this.NodeFilter).remove();
+        //box.find(this.NodeFilter).remove();
 
         //set nodes class
         var rows = _crud.getJsonRows(json);
@@ -5511,10 +5492,12 @@ function Flow(boxId, mNode, mLine) {
         //stop drawing
         jsPlumb.setSuspendDrawing(true);
 
+        /*
         //empty jsplumb lines
         var conns = this.plumb.getAllConnections();   //for in did not work !!
         for (var i = 0; i < conns.length; i++)
             this.plumb.deleteConnection(conns[i]);
+        */
 
         //render jsplumb line
         var rows = _crud.getJsonRows(json);
@@ -5780,6 +5763,24 @@ function Flow(boxId, mNode, mLine) {
     };
     //#endregion (line function)
 
+    this.reset = function () {
+        //below method not working !!
+        //jsPlumb.deleteEveryEndpoint();
+        //jsPlumb.removeAllEndpoints();
+        //jsPlumb.detachEveryConnection();
+        //jsPlumb.reset();
+
+        //reset lines
+        var conns = this.plumb.getAllConnections();   //for in did not work !!
+        var len = conns.length;
+        for (var i = len - 1; i >= 0; i--)
+            this.plumb.deleteConnection(conns[i]);        
+
+        //reset nodes
+        var box = this.divFlowBox;
+        box.find(this.NodeFilter).remove();
+    };
+
     /**
      * show popup menu for node(normal, auto)/line
      * param elm {element} node element or connection
@@ -6037,7 +6038,6 @@ function Flow(boxId, mNode, mLine) {
 
         //set new value
         var row = _form.toJson(this.eformNode);
-        //this.mNode.setRow(nodeObj.data(_fun.Fid), row);
 
         //update node display name
         var nodeObj = $(this.nowElm);
@@ -6088,7 +6088,6 @@ function Flow(boxId, mNode, mLine) {
         //var line = conn.getParameters();    //model
         var line = this.connToLine(conn);
         _form.loadJson(line, row);
-        //this.mLine.setRow(line[_fun.Fid], row);
 
         //change line label
         var prop = this.getLineProp(condStr)
@@ -6205,13 +6204,16 @@ var _openUser = {
         _datatable.find(ou.dt, null, _iText.get('Name', box));
     },
 
-    //user click [選取]按鈕
+    /**
+     * user click [選取]按鈕
+     * param ou {object} open user variables
+     */ 
     onClickOk: function (ou) {
         var box = $(ou.filter);
         //var fn = ou.boxId + 'OnClickOk';  //要callback的函數名稱 !!
         if (ou.isRows) {
             //多選
-            var keys = _iCheck.getCheckeds(box, _iCheck.check0Id);
+            var keys = _iCheck.getCheckeds(box, _icheck.Check0Id);
             if (keys.length == 0) {
                 _tool.msg('請先選取資料。');
             } else {
@@ -6242,7 +6244,7 @@ var _xp = {
     temp: {},
 
     //initial application
-    initApp: function () {
+    init: function () {
         //debugger;
         //_locale.getBaseR0(locale);
         _leftmenu.init();

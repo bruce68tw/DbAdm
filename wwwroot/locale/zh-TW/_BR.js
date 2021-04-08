@@ -18,6 +18,7 @@ var _BR = {
     //for crud form
     Create: '新增',
     Update: '修改',
+    View: '檢視',
     UpdateOk: '資料更新完成。',
     DeleteOk: '資料刪除完成。',
     SaveOk: '資料儲存完成。',

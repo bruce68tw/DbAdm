@@ -1,6 +1,6 @@
+using Base.Enums;
 using Base.Models;
 using Base.Services;
-using BaseWeb.Services;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -29,7 +29,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         public ContentResult GetPage(DtDto dt)
         {
-            return Content(new MyCrudRead().GetPage(dt).ToString(), _Web.AppJson);
+            return Content(new MyCrudRead().GetPage(dt).ToString(), ContentTypeEstr.Json);
         }
         #endregion
 
@@ -45,7 +45,7 @@ namespace DbAdm.Controllers
         //傳回json必須用ContentResult (JsonResult用來傳回model)
         public ContentResult GetJson(string key)
         {
-            return Content(new MyCrudEdit().GetJson(key).ToString(), _Web.AppJson);
+            return Content(new MyCrudEdit().GetJson(key).ToString(), ContentTypeEstr.Json);
         }
 
 
@@ -86,7 +86,7 @@ namespace DbAdm.Controllers
         {
             //var tableId = _Datatable.GetFindValue(dt, "tableId");
             var rows = new ColumnService().GetRows(tableId);
-            return Content(rows == null ? "" : rows.ToString(), _Web.AppJson);
+            return Content(rows == null ? "" : rows.ToString(), ContentTypeEstr.Json);
         }
 
         #endregion

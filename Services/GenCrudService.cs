@@ -204,6 +204,7 @@ namespace DbAdm.Services
             var etables = _etables.Where(a => a.CrudId == crudId).ToList();
 
             #region set crud.RsItemStrs && IsGroup, IsGroupStart, IsGroupEnd
+            var listTypes = new List<string>() { InputTypeEstr.Select, InputTypeEstr.Radio };
             var fitemLen = (fitems == null) ? 0 : fitems.Count;
             int i;
             if (fitemLen > 0)
@@ -236,7 +237,7 @@ namespace DbAdm.Services
 
                 //set ReadSelectCols
                 crud.ReadSelectCols = fitems
-                    .Where(a => a.InputType == InputTypeEstr.Select)
+                    .Where(a => listTypes.Contains(a.InputType))
                     .Select(a => a.InputData)
                     .Distinct()
                     .ToList();
@@ -347,7 +348,7 @@ namespace DbAdm.Services
 
             //set EditSelectCols(ReadSelectCols already done)
             crud.EditSelectCols = _eitems
-                .Where(a => a.InputType == InputTypeEstr.Select &&
+                .Where(a => listTypes.Contains(a.InputType) &&
                     !crud.ReadSelectCols.Contains(a.InputData))
                 .Select(a => a.InputData)
                 .Distinct()
@@ -642,6 +643,19 @@ namespace DbAdm.Services
                         GetCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
+                            //KeyValue("value", "1", true),
+                            ViewInRow(item.IsGroup),
+                            ViewLabel(item.InputData)) +
+                        GetCompEnd();
+                    break;
+
+                case InputTypeEstr.Radio:
+                    center = true;
+                    str = GetCompStart("XiRadios") +
+                        GetCols(
+                            ViewTitle(name),
+                            ViewFid(item.Fid),
+                            ViewSelectRows(item),
                             //KeyValue("value", "1", true),
                             ViewInRow(item.IsGroup),
                             ViewLabel(item.InputData)) +

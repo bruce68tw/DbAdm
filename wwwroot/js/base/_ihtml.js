@@ -1,5 +1,5 @@
 ﻿/*
- 處理 html 欄位, 使用 summernote !!
+ * html input, use summernote !!
  */
 var _ihtml = {
     //see: https://stackoverflow.com/questions/14346414/how-do-you-do-html-encode-using-javascript

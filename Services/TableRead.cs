@@ -43,9 +43,11 @@ order by p.Id, a.Name
             return new CrudRead().GetPage(dto, dt);
         }
 
+        //¶×¥X excel
         public void Export(JObject cond)
         {
-            _WebExcel.ScreenByCrud(dto, cond, "Table", _Locale.GetFilePath("Table.xlsx"), 1);
+            _WebExcel.ExportByRead(dto, cond, "Table.xlsx", _Xp.GetTpl("Table.xlsx"), 1);
+            //_WebExcel.ReadToScreen(dto, cond, "Table.xlsx");
         }
 
     } //class

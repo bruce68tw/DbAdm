@@ -53,20 +53,23 @@
   <ItemGroup>
     <Content Include="Views\Shared\_Layout.cshtml_old" />
     <Content Include="_template\Table.docx" />
+    <Content Include="_template\Table.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
-    <PackageReference Include="Handlebars.Net" Version="2.0.1" />
+    <PackageReference Include="Handlebars.Net" Version="2.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -98,9 +101,9 @@
     <None Include="wwwroot\locale\zh-TW\_BR.js" />
     <None Include="wwwroot\locale\zh-TW\summernote.j_old" />
     <None Include="wwwroot\locale\zh-TW\summernoteExt.j_old" />
-    <None Include="wwwroot\locale\zh-TW\Table - 複製.xlsx" />
-    <None Include="wwwroot\locale\zh-TW\Table.xlsx" />
     <None Include="wwwroot\locale\zh-TW\validate.js" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

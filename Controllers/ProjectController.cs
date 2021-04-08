@@ -1,6 +1,6 @@
+using Base.Enums;
 using Base.Models;
 using Base.Services;
-using BaseWeb.Services;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +18,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         public ContentResult GetPage(DtDto dt)
         {
-            return Content(new ProjectRead().GetPage(dt).ToString(), _Web.AppJson);
+            return Content(new ProjectRead().GetPage(dt).ToString(), ContentTypeEstr.Json);
         }
 
         [HttpPost]
@@ -43,7 +43,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         public ContentResult GetJson(string key)
         {
-            return Content(new ProjectEdit().GetJson(key).ToString(), _Web.AppJson);
+            return Content(new ProjectEdit().GetJson(key).ToString(), ContentTypeEstr.Json);
         }
 
         [HttpPost]

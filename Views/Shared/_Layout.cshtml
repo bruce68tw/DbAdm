@@ -8,10 +8,10 @@
     var min = "";
     var menus = new List<MenuDto>()
     {
-        new MenuDto() { Icon = "fa-dashboard", Name = "專案管理", Url = "../Project/Read" },
-        new MenuDto() { Icon = "fa-users", Name = "資料表管理", Url = "../Table/Read" },
-        new MenuDto() { Icon = "fa-newspaper-o", Name = "欄位管理", Url = "../Column/Read" },
-        new MenuDto() { Icon = "fa-newspaper-o", Name = "CRUD管理", Url = "../MyCrud/Read" },
+        new MenuDto() { Icon = "fa-dashboard", Name = "專案維護", Url = "../Project/Read" },
+        new MenuDto() { Icon = "fa-users", Name = "資料表維護", Url = "../Table/Read" },
+        new MenuDto() { Icon = "fa-newspaper-o", Name = "欄位維護", Url = "../Column/Read" },
+        new MenuDto() { Icon = "fa-newspaper-o", Name = "CRUD維護", Url = "../MyCrud/Read" },
     };
 }
 
@@ -41,14 +41,14 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <link rel="stylesheet" href="~/css/lib@(min).css?Ver=@(_Xp.LibVer)" />
-    <link rel="stylesheet" href="~/css/my@(min).css?ver=@(_Xp.MyVer)" />
+    <link rel="stylesheet" href="~/css/my@(min).css?ver=@(_Xp.SiteVer)" />
     @RenderSection("styles", required: false)
 
     <script src="~/js/lib@(min).js?Ver=@(_Xp.LibVer)"></script>
 
     <!-- for debug/production mode -->
     <environment include="Production">
-        <script src="~/js/my@(min).js?ver=@(_Xp.MyVer)"></script>
+        <script src="~/js/my@(min).js?ver=@(_Xp.SiteVer)"></script>
     </environment>
     <environment include="Development">
         <!-- tail ver will load failed !! -->
@@ -56,7 +56,7 @@
         <script asp-src-include="~/js/view/_*.js"></script>
     </environment>
 
-    <script src="~/js/zh-TW@(min).js?ver=@(_Xp.MyVer)"></script>
+    <script src="~/js/zh-TW@(min).js?ver=@(_Xp.SiteVer)"></script>
     @RenderSection("scripts", required: false)
 
     <!-- 必須放在前面 -->
@@ -67,7 +67,7 @@
             _fun.locale = 'zh-TW';
             /**/
             //alert('locale=' + _fun.locale);
-            _xp.initApp();
+            _xp.init();
         });
     </script>
 </head>

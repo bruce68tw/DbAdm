@@ -7,7 +7,8 @@ namespace DbAdm.Services
 {
     public class ColumnEdit
     {
-        private EditDto GetModel()
+        //設定編輯欄位
+        private EditDto GetDto()
         {
             return new EditDto()
             {                
@@ -24,6 +25,7 @@ namespace DbAdm.Services
             };
         }
 
+        //傳回一筆資料
         public JObject GetJson(string key)
         {
             return _Db.GetJson(@"
@@ -37,20 +39,22 @@ where c.Id=@Id
 ", new List<object>() { "Id", key });
         }
 
-        //key為空白表示新增資料
+        //儲存新增的資料
         public ResultDto Create(JObject json)
         {            
-            return new CrudEdit(GetModel()).Create(json);
+            return new CrudEdit(GetDto()).Create(json);
         }
 
+        //儲存修改的資料
         public ResultDto Update(string key, JObject json)
         {
-            return new CrudEdit(GetModel()).Update(key, json);
+            return new CrudEdit(GetDto()).Update(key, json);
         }
 
+        //刪除一筆資料
         public ResultDto Delete(string key)
         {
-            return new CrudEdit(GetModel()).Delete(key);
+            return new CrudEdit(GetDto()).Delete(key);
         }
 
     } //class

@@ -93,13 +93,16 @@ var _openUser = {
         _datatable.find(ou.dt, null, _iText.get('Name', box));
     },
 
-    //user click [選取]按鈕
+    /**
+     * user click [選取]按鈕
+     * param ou {object} open user variables
+     */ 
     onClickOk: function (ou) {
         var box = $(ou.filter);
         //var fn = ou.boxId + 'OnClickOk';  //要callback的函數名稱 !!
         if (ou.isRows) {
             //多選
-            var keys = _iCheck.getCheckeds(box, _iCheck.check0Id);
+            var keys = _iCheck.getCheckeds(box, _icheck.Check0Id);
             if (keys.length == 0) {
                 _tool.msg('請先選取資料。');
             } else {

@@ -11,18 +11,13 @@ var _obj = {
     },
 
     /**
-     * for none input object
-     * get object by id for none input field, like button
-     */
-    getById: function (id, box) {
-        return _obj.getF('#' + id, box);
-    },
-
-    /**
      * get object by filter string
      */
     getF: function (ft, box) {
-        return box.find(ft);
+        var obj = box.find(ft);
+        if (obj == null)
+            _log.info('_obj.js getF() found none. (filter=' + ft + ')');
+        return obj;
     },
 
     /**
@@ -44,6 +39,14 @@ var _obj = {
      */
     getV: function (val, box) {
         return _obj.getF('[value=' + val + ']', box);
+    },
+
+    /**
+     * for none input object
+     * get object by id for none input field, like button
+     */
+    getById: function (id, box) {
+        return _obj.getF('#' + id, box);
     },
 
     //以下function都傳入object

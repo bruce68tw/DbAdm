@@ -6,9 +6,9 @@ namespace DbAdm.Services
     //project service
     public static class _Xp
     {
-        //public const string MyVer = "20201228f";     //for my.js/css
-        public static string MyVer = _Date.NowSecStr();
-        public const string LibVer = "20201228b";    //for lib.js/css
+        //public const string SiteVer = "20201228f";     //for my.js/css
+        public static string SiteVer = _Date.NowSecStr();
+        public const string LibVer = "20210312a";    //for lib.js/css
 
         //constant
         //upload file max size(MB)
@@ -17,7 +17,12 @@ namespace DbAdm.Services
         public static MyContext GetDb()
         {
             return new MyContext();
-        }        
+        }
+
+        public static string GetTpl(string fileName)
+        {
+            return _Fun.DirRoot + "_template\\" + fileName;
+        }
         
 
         //1:繁中, 2:英文, 3:簡中

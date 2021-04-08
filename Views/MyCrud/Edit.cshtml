@@ -211,7 +211,7 @@
                         <th>資料型態</th>
                         @*@await Component.InvokeAsync("XgTh", new { title = "欄位種類", tip = "若為下拉欄位, 則必須填欄位資料" })*@
                         <th>欄位種類</th>
-                        @await Component.InvokeAsync("XgTh", new { title = "欄位資料", tip = "下拉欄位:資料來源, checkbox:label, 唯讀:fid" })
+                        @await Component.InvokeAsync("XgTh", new { title = "欄位資料", tip = "下拉欄位/Radio:資料來源, checkbox:label, 唯讀:fid" })
                         <th>必填</th>
                         <th>新增</th>
                         <th>修改</th>
@@ -304,12 +304,6 @@
         data-datatype='{{DataType}}'>
         <td>
             @await Component.InvokeAsync("XiCheck", new { fid = "_check0" })
-            <!--
-            <label class='xi-check'>
-                <input name='check0' type='checkbox'>
-                <span></span>
-            </label>
-            -->
         </td>
         <td>{{Code}}</td>
         <td>{{Name}}</td>

@@ -12,9 +12,9 @@
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "欄位維護" } })
 <div class="xp-prog">
-    <!-- read form-->
+    <!-- 查詢畫面 -->
     <div id="divRead">
-        <!-- condition -->
+        <!-- 查詢條件 -->
         <form id='rform' class='xg-form'>
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new { title = "專案", fid = "ProjectId", rows = (List<IdStrDto>)ViewBag.Projects, inRow = true })
@@ -24,7 +24,7 @@
             @await Component.InvokeAsync("XiText", new { title = "欄位", fid = "Code", maxLen = 30 })
         </form>
 
-        <!-- result list -->
+        <!-- 查詢結果 -->
         <table id="table1" class="table table-bordered xg-table" cellspacing="0">
             <thead>
                 <tr>

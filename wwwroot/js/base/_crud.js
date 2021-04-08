@@ -1,7 +1,5 @@
 ﻿/**
- * note:
- *   1.reserved function:
- *     a.fnAfterSwap(readMode): called after _crud.swap()
+ * crud function
  */
 var _crud = {
 
@@ -34,7 +32,7 @@ var _crud = {
      * checkbox for multiple select
      * param value {string} [1] checkbox value
      * param editable {bool} [true]
-     * //param fid {string} [_icheck.check0Id] data-fid value
+     * //param fid {string} [_icheck.Check0Id] data-fid value
      */
     dtCheck0: function (value, editable) {
         //debugger;
@@ -42,7 +40,7 @@ var _crud = {
             value = 1;
 
         //attr
-        var attr = "data-fid='" + _icheck.check0Id + "'" +
+        var attr = "data-fid='" + _icheck.Check0Id + "'" +
             " data-value='" + value + "'";
         if (editable === false)
             attr += ' readonly';
@@ -60,7 +58,7 @@ var _crud = {
     dtCheck0: function (value, editable, fid) {
         if (editable === undefined)
             editable = true;
-        fid = fid || _icheck.check0Id;
+        fid = fid || _icheck.Check0Id;
         return _icheck.render2(0, fid, value, false, '', editable);
     },
     */
@@ -69,7 +67,7 @@ var _crud = {
     dtRadio1: function (value, editable) {
         if (editable === undefined)
             editable = true;
-        return _iradio.render(_icheck.check0Id, '', false, value, editable);
+        return _iradio.render(_icheck.Check0Id, '', false, value, editable);
     },
 
     /**
@@ -265,11 +263,11 @@ var _crud = {
      */
     onCreate: function () {
         var fun = _fun.FunC;
+        _crud.swap(false);  //call first
         _prog.setPath(fun);
         _crud.setEditStatus(fun);
         _crud.resetForm(_me.edit0);
-        _crud.swap(false);
-        _crud.afterOpenEdit(fun, null);
+        _crud._afterOpenEdit(fun, null);
     },
 
     /**
@@ -297,11 +295,11 @@ var _crud = {
         //_crud.toUpdateMode(key);
         _ajax.getJson('GetJson', { key: key }, function (data) {
             //to edit(U/V) mode
+            _crud.swap(false);  //call first
             _prog.setPath(funType);
             _crud.setEditStatus(funType);
             _crud.loadJson(data);
-            _crud.afterOpenEdit(funType, data);
-            _crud.swap(false);  //call last
+            _crud._afterOpenEdit(funType, data);
         });
     },
 
@@ -359,7 +357,7 @@ var _crud = {
     },
 
     //call fnAfterOpenEdit() if existed
-    afterOpenEdit: function (fun, json) {
+    _afterOpenEdit: function (fun, json) {
         var edit = _me.edit0;
         if (_fun.hasValue(edit.fnAfterOpenEdit))
             edit.fnAfterOpenEdit(fun, json);
@@ -775,9 +773,14 @@ var _crud = {
         _crud.swap(true);
     },
 
+    /**
+     * call fnAfterSwap if existed
+     * param toRead {bool} to read mode or not
+     */
     _afterSwap: function (toRead) {
-        if (_me.fnAfterSwap !== undefined)
-            _me.fnAfterSwap(toRead);
+        var edit = _me.edit0;
+        if (_fun.hasValue(edit.fnAfterSwap))
+            edit.fnAfterSwap(toRead);
     },
 
     /**

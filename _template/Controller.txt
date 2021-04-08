@@ -54,7 +54,7 @@ namespace {{Project}}.Controllers
         {{/if}}
         public ContentResult GetPage(DtDto dt)
         {
-            return Content(new {{ProgCode}}Read().GetPage(dt).ToString(), _Web.AppJson);
+            return Content(new {{ProgCode}}Read().GetPage(dt).ToString(), ContentTypeEstr.Json);
         }
 
         [HttpPost]
@@ -63,7 +63,7 @@ namespace {{Project}}.Controllers
         {{/if}}
         public ContentResult GetJson(string key)
         {
-            return Content(new {{ProgCode}}Edit().GetJson(key).ToString(), _Web.AppJson);
+            return Content(new {{ProgCode}}Edit().GetJson(key).ToString(), ContentTypeEstr.Json);
         }
 
         [HttpPost]
@@ -103,7 +103,7 @@ namespace {{Project}}.Controllers
             {{/if}}
         public FileContentResult GetFile(string table, string fid, string key)
         {
-            var path = _File.GetFirstPath(_Xp.GetDirUserLicence(), "FileName_" + key, _Xp.NoImagePath);
+            var path = _File.GetFirstPath(_Xp.GetDirUserLicence(), $"{fid}_{key}", _Xp.NoImagePath);
             return _WebFile.EchoImage(path);
         }
         {{else}}

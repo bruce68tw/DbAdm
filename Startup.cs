@@ -1,9 +1,11 @@
 using Base.Enums;
 using Base.Models;
 using Base.Services;
+using DbAdm.Tables;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,31 +27,35 @@ namespace DbAdm
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //use newtonSoft for json serialize for controller
-            services.AddControllers()
-                .AddNewtonsoftJson(options =>
+            //use newtonSoft & pascal case json
+            services.AddControllers().AddNewtonsoftJson(options =>
                 {
-                    //use pascal case json
                     options.UseMemberCasing();
                 });
 
-            services.AddControllersWithViews()
-                .AddJsonOptions(options =>
-                {
-                    //use pascal case json
+            //use pascal case json
+            services.AddControllersWithViews().AddJsonOptions(options =>
+                {                    
                     options.JsonSerializerOptions.PropertyNamingPolicy = null;
                 });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            //locale & user info for base component
-            services.AddSingleton<IBaseResService, BaseResService>();
-            services.AddSingleton<IBaseUserService, BaseUserService>();
-
             //appSettings "FunConfig" section -> _Fun.Config
             var config = new ConfigDto();
             Configuration.GetSection("FunConfig").Bind(config);
             _Fun.Config = config;
+
+            //5.avoid CS1030
+            services.AddDbContext<MyContext>(options =>
+            {
+                options.UseSqlServer(config.Db);
+                //options.UseSqlServer(Configuration.GetConnectionString("Db"));
+            });
+
+            //locale & user info for base component
+            services.AddSingleton<IBaseResService, BaseResService>();
+            services.AddSingleton<IBaseUserService, BaseUserService>();
 
             //ado.net for mssql
             services.AddTransient<DbConnection, SqlConnection>();

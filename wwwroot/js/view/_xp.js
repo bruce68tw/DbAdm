@@ -4,7 +4,7 @@
     temp: {},
 
     //initial application
-    initApp: function () {
+    init: function () {
         //debugger;
         //_locale.getBaseR0(locale);
         _leftmenu.init();

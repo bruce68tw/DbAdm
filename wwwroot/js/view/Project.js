@@ -43,7 +43,7 @@
         });
     },
 
-    //import excel into Db
+    //generate docx file
     onGenWord: function (id) {
         _tool.ans("是否產生Word文件?", function () {
             window.location = 'GenWord?id=' + id;

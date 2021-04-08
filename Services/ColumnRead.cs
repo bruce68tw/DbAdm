@@ -23,8 +23,7 @@ Order by p.Id, t.Id, c.Sort
             Items = new [] {
                 new QitemDto { Fid = "ProjectId", Col = "t.ProjectId" },
                 new QitemDto { Fid = "TableCode", Col = "t.Code", Op = ItemOpEstr.Like },
-                new QitemDto { Fid = "Name", Op = ItemOpEstr.Like },
-                new QitemDto { Fid = "Status" },
+                new QitemDto { Fid = "Code", Op = ItemOpEstr.Like },
             },
         };
 

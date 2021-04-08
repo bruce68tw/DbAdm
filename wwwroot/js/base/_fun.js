@@ -3,7 +3,7 @@
 var _fun = {
 
     //=== constant start(大camel) ===
-    Fid: 'fid',            //data-fid
+    //Fid: 'name',            //data-fid
 
     //for moment.js
     //JsDateFormat: 'YYYY/MM/DD',
@@ -43,6 +43,11 @@ var _fun = {
         _ajax.getStr('../Fun/Hello', null, function (msg) {
             alert('OK');
         });
+    },
+
+    //get fid
+    getFid: function (obj) {
+        return obj.data('fid');
     },
 
     /**

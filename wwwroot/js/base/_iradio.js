@@ -6,42 +6,38 @@ var _iradio = $.extend({}, _ibase, {
 
     //=== get ===
     get: function (fid, box) {
-        return _iradio.getOs(_obj.get(fid, box));
+        return _iradio._getByName(fid, box);
     },
-    //obj 為單筆object
+    //obj could be multiple
     getO: function (obj, box) {
-        return obj.val();
-        /*
-        if (obj.length == 1)
-            obj = _obj.get(_obj.getName(obj), box);
-        return _iradio._getO(obj);
-        */
+        return _iradio._getByName(_obj.getName(obj), box);
     },
-    //get value by objects
-    getOs: function (objs) {
-        //use filter !!
-        return objs.filter(':checked').val();
+
+    //get checked object
+    getObj: function (fid, box) {
+        return _obj.getF('[name=' + fid + ']:checked', box);
+    },
+
+    //get data-value by checked name
+    _getByName: function (name, box) {
+        return _iradio.getObj(name, box).data('value');
     },
 
     //=== set ===
     //改成用name來查欄位
     set: function (fid, value, box) {
-        _iradio.setOs(_obj.get(fid, box), value);
+        _iradio._setByName(fid, value, box);
     },
-    //obj 為單筆object
+    
     //setO: function (obj, value, box) {
-    setO: function (obj) {
-        obj.prop('checked', true);
-        /*
-        if (obj.length == 1)
-            obj = _obj.getN(_obj.getName(obj), box);
-        return _iradio._setO(obj, value);
-        */
+    setO: function (obj, value, box) {
+        _iradio._setByName(_obj.getName(obj), value, box);
     },
-    //set value by objects
-    setOs: function (objs, value) {
-        //use filter !!
-        objs.filter('[value=' + value + ']').prop('checked', true);
+
+    //set checked status by name & data-value
+    _setByName: function (name, value, box) {
+        var obj2 = _obj.getF('[name=' + name + '][data-value=' + value + ']', box);
+        obj2.prop('checked', true);
     },
 
     //set status by name

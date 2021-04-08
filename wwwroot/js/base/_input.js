@@ -7,35 +7,25 @@
  */
 var _input = {
 
-    /*
-    //get object
-    getObj: function (fid, box) {
-        var obj = _obj.get(fid, box);
-        if (obj.length == 0)
-            obj = _obj.getD(fid, box);   //iRead use data-fid
-        return obj;
-    },
-    */
-
     //get input value by data-fid
     get: function (fid, box) {
-        return _input.getO(_obj.get(fid, box));
+        return _input.getO(_obj.get(fid, box), box);
     },
 
     /**
      * get input value by object
      * param obj {object}
-     * param type {string} optional, data-type
+     * param type {string} (optional) data-type
      * return input value
      */ 
-    getO: function (obj, type) {
+    getO: function (obj, box, type) {
         type = type || _input.getType(obj);
         switch (type) {
             case 'check':
                 return _icheck.getO(obj);
             case 'radio':
                 //obj is array now !!
-                return _iradio.getO(obj);
+                return _iradio.getO(obj, box);
             case 'textarea':
                 //must set html !!
                 return _itextarea.getO(obj);
@@ -58,7 +48,7 @@ var _input = {
     },
 
     set: function (fid, value, box) {
-        _input.setO(_obj.get(fid, box), value);
+        _input.setO(_obj.get(fid, box), value, box);
     },
 
     /**
@@ -67,7 +57,7 @@ var _input = {
      * param value {object}
      * param type {string} optional, data-type
      */ 
-    setO: function (obj, value, type) {
+    setO: function (obj, value, box, type) {
         type = type || _input.getType(obj);
         switch (type) {
             case 'check':
@@ -76,7 +66,7 @@ var _input = {
             case 'radio':
                 //此時 obj 為 array
                 value = value || '0';
-                _iradio.setOs(obj, value);
+                _iradio.setO(obj, value, box);
                 break;
             case 'textarea':
                 //重要!! 要設定它的 html 屬性!!
@@ -143,28 +133,6 @@ var _input = {
         label.text(msg);
         label.show();
         //_form.scrollTopError();
-    },
-     */
-
-    /**
-     * get input value by type
-     * param obj {object}
-     * param type {string} field type
-     * param box {object} (optional) for radio only
-     * return {object} input value
-    getByType: function (obj, type, box) {
-        switch (type) {
-            case 'check':
-                return _icheck.getO(obj);
-            case 'radio':
-                return _iradio.getO(obj, box);
-            //TODO: summernote
-            //case 'textarea':
-            //    return obj.html();   //html !!
-            default:
-                //同時適用select option
-                return obj.val();
-        }
     },
      */
 
