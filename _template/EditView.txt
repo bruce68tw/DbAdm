@@ -1,7 +1,3 @@
-@{ 
-    var cols = _Fun.DefHCols;
-}
-
 <form id='eform' class='xg-form'>
 {{#each MainTable.HideViewStrs}}
 	{{this}}

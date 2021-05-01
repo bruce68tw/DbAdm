@@ -188,8 +188,8 @@
             <div class="row">
                 <div class="col-md-6">
                     @await Component.InvokeAsync("XiSelect", new { title = "資料表", fid = "TableId", required = true, cols = cols2, fnOnChange = "_me.onChangeNowTable({{Index}})" })
-                    @await Component.InvokeAsync("XiText", new { title = "主Key欄位", fid = "Kid", maxLen = 10, required = true, cols = cols2 })
-                    @await Component.InvokeAsync("XiText", new { title = "對應欄位", fid = "MapFid", maxLen = 10, cols = cols2, tip = "2nd Table則為必填" })
+                    @await Component.InvokeAsync("XiText", new { title = "主Key欄位", fid = "PkeyFid", maxLen = 10, required = true, cols = cols2 })
+                    @await Component.InvokeAsync("XiText", new { title = "外Key欄位", fid = "FkeyFid", maxLen = 10, cols = cols2, tip = "2nd Table則為必填" })
                 </div>
                 <div class="col-md-6">
                     @await Component.InvokeAsync("XiText", new { title = "資料排序", fid = "OrderBy", maxLen = 10, cols = cols2, tip = "不含 order by 關鍵字" })
@@ -219,7 +219,7 @@
                         <th>預設</th>
                         <th>驗証方式</th>
                         <th>驗証資料</th>
-                        @await Component.InvokeAsync("XgTh", new { title = "位置", tip = "欄位值相同會排在同一列" })
+                        @await Component.InvokeAsync("XgTh", new { title = "群組", tip = "欄位值相同會排在同一列" })
                         <th class="xu-layout">佈局</th>
                         <th class="xu-width">寬度</th>
                         <th>操作</th>

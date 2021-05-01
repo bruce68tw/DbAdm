@@ -11,6 +11,7 @@ var _BR = {
     //row status
     StatusYes: '正常',
     StatusNo: '停用',
+    Yes: '是',
 
     //check input
     InputWrong: '輸入錯誤。',

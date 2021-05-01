@@ -133,8 +133,8 @@ namespace DbAdm.Services
                             CrudId = e.CrudId,
                             TableCode = t.Code,
                             TableName = t.Name,
-                            PkeyFid = e.Kid,
-                            FkeyFid = e.MapFid,
+                            PkeyFid = e.PkeyFid,
+                            FkeyFid = e.FkeyFid,
                             HasCol4 = (e.Col4 == "1"),
                             HalfWidth = e.HalfWidth,
                             OrderBy = e.OrderBy,
@@ -189,7 +189,7 @@ namespace DbAdm.Services
         /// <returns></returns>
         private async Task<bool> GenByCrudIdAsync(string crudId)
         {
-            //get crud
+            #region 1.check & get crud related rows
             var error = "";
             var crud = _cruds.FirstOrDefault(a => a.Id == crudId);
             if (crud == null)
@@ -202,8 +202,9 @@ namespace DbAdm.Services
             var fitems = _qitems.Where(a => a.CrudId == crudId).ToList();
             var ritems = _ritems.Where(a => a.CrudId == crudId).ToList();
             var etables = _etables.Where(a => a.CrudId == crudId).ToList();
+            #endregion
 
-            #region set crud.RsItemStrs && IsGroup, IsGroupStart, IsGroupEnd
+            #region 2.set fields: crud.RsItemStrs && IsGroup, IsGroupStart, IsGroupEnd
             var listTypes = new List<string>() { InputTypeEstr.Select, InputTypeEstr.Radio };
             var fitemLen = (fitems == null) ? 0 : fitems.Count;
             int i;
@@ -304,7 +305,7 @@ namespace DbAdm.Services
             }
             #endregion
 
-            #region set crud.Ritems, crud.JsColDefStrs
+            #region 3.set fields: crud.Ritems, crud.JsColDefStrs
             //set ritems(result items)
             var hasRitem = (ritems != null && ritems.Count > 0);
             if (hasRitem)
@@ -346,15 +347,16 @@ namespace DbAdm.Services
             }
             #endregion
 
-            //set EditSelectCols(ReadSelectCols already done)
+            #region 4.set fields: EditSelectCols(ReadSelectCols already done)
             crud.EditSelectCols = _eitems
                 .Where(a => listTypes.Contains(a.InputType) &&
                     !crud.ReadSelectCols.Contains(a.InputData))
                 .Select(a => a.InputData)
                 .Distinct()
                 .ToList();
+            #endregion
 
-            #region set crud.MainTable, crud.ChildTables
+            #region 5.set fields crud.MainTable, crud.ChildTables
             //set etable.Eitems
             var etableLen = etables.Count;
             for (i = 0; i < etableLen; i++)
@@ -429,14 +431,12 @@ namespace DbAdm.Services
             }
             #endregion
 
-            #region generate crud files
-            var multiEdit = (etables.Count > 1);
-            //var tplTail = multiEdit ? "2" : "1";
+            //generate crud files
+            var isManyEdit = (etables.Count > 1);
             var projectPath = _Str.AddAntiSlash(crud.ProjectPath);
             for (i = 0; i < _crudFileLen; i = i + 3)
             {
-                //read template file to string
-                //var tplFile = _tplDir + _crudFiles[i].Replace(CrudTplTail, tplTail);
+                #region 6.read template file to string
                 var tplFile = _tplDir + _crudFiles[i];
                 var tplStr = await _File.ToStrAsync(tplFile);
                 if (tplStr == null)
@@ -444,26 +444,25 @@ namespace DbAdm.Services
                     _Log.Error("no template file: " + tplFile + "," + "??");
                     goto lab_error;
                 }
+                #endregion
 
-                //mustache replace
+                //7.template string replace
                 var mustache = Handlebars.Compile(tplStr);
                 var result = HttpUtility.HtmlDecode(mustache(crud));
 
-                //if file existed, return false
+                #region 8.rename existed file if need
                 var tableCode = crud.ProgCode;
                 var toDir = projectPath + _Str.AddAntiSlash(_crudFiles[i + 1]).Replace(CrudProg, tableCode);
                 var toFile = toDir + _crudFiles[i + 2].Replace(CrudProg, tableCode);
                 //var toFile = _File.GetNextFileName(toDir + _crudFiles[i + 2].Replace(CrudTable, tableName), true);
                 if (File.Exists(toFile))
                     File.Copy(toFile, _File.GetNextFileName(toFile, true));
-
-                //create folder
-                _File.MakeDir(toDir);
-
-                //save file
+                #endregion 
+                
+                //9.save file
+                _File.MakeDir(toDir);   //create folder when need
                 await _File.StrToFileAsync(result, toFile);
             }//for
-            #endregion
 
             //case of ok
             return true;

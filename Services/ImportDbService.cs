@@ -6,13 +6,13 @@ using System.Data.SqlClient;
 
 namespace DbAdm.Services
 {
-    public class ProjectService
+    public class ImportDbService
     {
-        public ResultDto Import(string projectId)
+        public ResultDto Run(string projectId)
         {
             var error = new ResultDto();
 
-            //get connectStr
+            #region get dbo.Project row
             var db = new Db();
             Db dbSrc = null;
             var project = db.GetJson(string.Format(@"
@@ -38,14 +38,9 @@ where Id='{0}'
                 error.ErrorMsg = "Project.ConnectStr is wrong.";                
                 goto lab_exit;
             }
+            #endregion
 
-            //truncate tmpTable, tmpColumn first
-            /*
-            db.Update(@"
-truncate table dbo.tmpTable; 
-truncate table dbo.tmpColumn; 
-");
-*/
+            #region 1.create temp table: #tmpTable, #tmpColumn
             db.ExecSql(@"
 CREATE TABLE #tmpTable(
     Code varchar(30) NOT NULL primary key,
@@ -61,8 +56,9 @@ CREATE TABLE #tmpColumn(
 	Note nvarchar(100) NULL
 );
 CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
+            #endregion
 
-            //(bulk copy)src tables -> tmpTable
+            #region 2.write #tmpTable(from Information_Schema.Tables)
             //欄位順序必須與Db相同
             var dbName = project["DbName"].ToString();
             var reader = dbSrc.GetReader(string.Format(@"
@@ -99,8 +95,9 @@ ORDER BY t.table_name
                     reader.Close();
                 }
             }
+            #endregion
 
-            //(bulk copy)src columns -> tmpColumn
+            #region 3.write #tmpColumn(from Information_Schema.Columns)
             reader = dbSrc.GetReader(string.Format(@"
 SELECT 
     Code=column_name, 
@@ -139,8 +136,9 @@ ORDER BY table_name, ORDINAL_POSITION
                     reader.Close();
                 }
             }
+            #endregion
 
-            //=== table start ===
+            #region 4.insert/update dbo.Table from #tmpTable
             //get rows for insert new 
             var tables = db.GetJsons(string.Format(@"
 select Code, Note
@@ -172,9 +170,9 @@ from dbo.[Table] a
 left outer join #tmpTable t on t.Code=a.Code
 where a.ProjectId='{0}'
 ", projectId));
+            #endregion
 
-
-            //=== column start ===
+            #region 5.insert/update dbo.Column from #tmpColumn
             //get rows for insert new 
             var cols = db.GetJsons(string.Format(@"
 select
@@ -240,17 +238,11 @@ inner join dbo.[Table] t on t.Id=c.TableId
 inner join #tmpColumn tc on t.Code=tc.TableCode and c.Code=tc.Code
 where t.projectId='{0}'
 ", projectId));
+            #endregion
 
-            lab_exit:
+        lab_exit:
             if (dbSrc != null)
                 dbSrc.Dispose();
-
-            /*
-            db.Update(@"
-truncate table #tmpTable; 
-truncate table #tmpColumn; 
-");
-            */
 
             db.Dispose();
             return error;

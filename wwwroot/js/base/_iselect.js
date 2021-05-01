@@ -30,7 +30,7 @@ var _iselect = $.extend({}, _ibase, {
 
     //get selected index(base 0)
     getIndex: function (fid, box) {
-        return this.getIndexO(_obj.get(fid, box));
+        return _iselect.getIndexO(_obj.get(fid, box));
     },
     getIndexO: function (obj) {
         return obj.prop('selectedIndex');
@@ -38,7 +38,7 @@ var _iselect = $.extend({}, _ibase, {
 
     //get options count
     getCount: function (fid, box) {
-        return this.getCountO(_obj.get(fid, box));
+        return _iselect.getCountO(_obj.get(fid, box));
     },
     getCountO: function (obj) {
         return obj.find('option').length;
@@ -46,7 +46,7 @@ var _iselect = $.extend({}, _ibase, {
 
     //set by index(base 0)
     setIndex: function (fid, idx, box) {
-        this.setIndexO(_obj.get(fid, box), idx);
+        _iselect.setIndexO(_obj.get(fid, box), idx);
     },
     setIndexO: function (obj, idx) {
         obj.find('option').eq(idx).prop('selected', true);
@@ -55,7 +55,7 @@ var _iselect = $.extend({}, _ibase, {
     //傳回選取的欄位的文字
     getText: function (fid, box) {
         var obj = _obj.get(fid, box);
-        return this.getTextO(obj);
+        return _iselect.getTextO(obj);
     },
     getTextO: function (obj) {
         return obj.find('option:selected').text();
@@ -73,11 +73,11 @@ var _iselect = $.extend({}, _ibase, {
     //items: 來源array, 欄位為:Id,Str
     setItems: function (fid, items, box) {
         var obj = _obj.get(fid, box);
-        this.setItemsO(obj, items);
+        _iselect.setItemsO(obj, items);
     },
     setItemsF: function (filter, items, box) {
         var obj = _obj.getF(filter, box);
-        this.setItemsO(obj, items);
+        _iselect.setItemsO(obj, items);
     },
     //by object
     setItemsO: function (obj, items) {
@@ -120,7 +120,7 @@ var _iselect = $.extend({}, _ibase, {
     //fids: 欄位名稱 array
     valuesToJson: function (json, fids, box) {
         for (var i = 0; i < fids.length; i++)
-            json[fids[i]] = this.get(fids[i], box);
+            json[fids[i]] = _iselect.get(fids[i], box);
         return json;
     },
 
@@ -143,7 +143,7 @@ var _iselect = $.extend({}, _ibase, {
 
         //選取第0筆
         if (len > 0)
-            this.setIndexO(obj, 0);
+            _iselect.setIndexO(obj, 0);
     },
 
 }); //class

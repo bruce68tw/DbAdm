@@ -2,7 +2,7 @@
 /**
  * checkbox, radio, use pure css, no js
  */
-.xi-check, .xg-radio {
+.xi-check {
     display: inline-block;
     position: relative;
     margin-top: 10px;
@@ -16,12 +16,12 @@
     */
 
 /* hide original input element */
-.xi-check > input, .xg-radio > input {
+.xi-check > input {
     display: none;
 }
 
 /* checkbox, span is square/round checked sign */
-.xi-check > span, .xg-radio > span {	
+.xi-check > span {	
 	cursor: pointer;
     position: absolute;
 	padding: 0;
@@ -39,13 +39,13 @@
 }
 
     /* for datatable checkbox, no label */
-    .xi-check.xg-no-label > span, .xg-radio.xg-no-label > span {
+    .xi-check.xg-no-label > span {
         top: 0 !important;
         left: 0 !important;
     }
 
 /* radio sign box */
-.xg-radio > span {
+.xi-rspan {
     border-radius: 50% !important;
 }
 
@@ -79,7 +79,7 @@
 */
 
 /* checkbox checked sign (span:after) */
-.xi-check > input:checked + span:after {
+.xi-check > input:checked + .xi-cspan:after {
 	content: '';
 	position: absolute;
     height: 10px;
@@ -92,19 +92,19 @@
 }
 
 /* radio checked sign (span:after) */
-.xg-radio > input:checked + span:after {
+.xi-check > input:checked + .xi-rspan:after {
     content: '';
     position: absolute;
     height: 6px;
-    width: 6px;        
+    width: 6px;
     top: 6px;
-    left: 6px;    
+    left: 6px;
     border-radius: 50%;
-    background: #666;    
+    background: #666;
 }   
 
 /* disabled style */
-.xi-check > input:disabled + span, .xg-radio > input:disabled + span {
+.xi-check > input:disabled + span {
     /*color: #b8b8b8;*/
     background: #e9ecef;
     cursor: auto;

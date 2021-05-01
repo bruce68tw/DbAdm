@@ -16,12 +16,12 @@ namespace DbAdm.Controllers
             using (var db = new Db())
             {
                 //讀取專案欄位(下拉式)來源資料
-                ViewBag.Projects = _Code.GetProjects(db);
-                ViewBag.RitemTypes = _Code.GetRitemTypes(db);
-                ViewBag.InputTypes = _Code.GetInputTypes(db);
-                ViewBag.CheckTypes = _Code.GetCheckTypes(db);
-                ViewBag.QitemOps = _Code.GetQitemOps(db);
-                ViewBag.AuthTypes = _Code.GetAuthTypes(db);
+                ViewBag.Projects = _XpCode.GetProjects(db);
+                ViewBag.RitemTypes = _XpCode.GetRitemTypes(db);
+                ViewBag.InputTypes = _XpCode.GetInputTypes(db);
+                ViewBag.CheckTypes = _XpCode.GetCheckTypes(db);
+                ViewBag.QitemOps = _XpCode.GetQitemOps(db);
+                ViewBag.AuthTypes = _XpCode.GetAuthTypes(db);
                 return View();
             }
         }

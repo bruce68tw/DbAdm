@@ -14,7 +14,8 @@ namespace DbAdm.Controllers
         #region Read View
         public ActionResult Read()
         {
-            ViewBag.Projects = _Code.GetProjects(); //dropdown
+            ViewBag.Projects = _XpCode.GetProjects(); //dropdown
+            ViewBag.YesNos = _XpCode.GetYesNos();
             return View();
         }
 
@@ -31,11 +32,6 @@ namespace DbAdm.Controllers
         #endregion
 
         #region Edit View
-        public ActionResult Edit()
-        {
-            return View();
-        }
-        
         public ContentResult GetJson(string key)
         {
             return Content(new TableEdit().GetJson(key).ToString(), ContentTypeEstr.Json);
@@ -67,7 +63,7 @@ namespace DbAdm.Controllers
         public void GenWord(string keys)
         {
             var tableIds = keys.Split(',');
-            new GenDocuService().Run("", tableIds);
+            new GenWordService().Run("", tableIds);
         }
 
         public async Task GenCrudAsync(string keys)

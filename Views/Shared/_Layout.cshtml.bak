@@ -1,27 +1,21 @@
-﻿@using BaseWeb.Models
+﻿@using Base.Models
 @using DbAdm.Services
 
 @{
     //var locale = _Locale.GetLocale();
     //var locale = "zh-TW";
+    //var min = ".min";
+    var min = "";
     var menus = new List<MenuDto>()
     {
-        new MenuDto() { Icon = "fa-dashboard", Name = "專案管理", Url = "../Project/Read" },
-        new MenuDto() { Icon = "fa-users", Name = "資料表管理", Url = "../Table/Read" },
-        new MenuDto() { Icon = "fa-newspaper-o", Name = "欄位管理", Url = "../Column/Read" },
-        new MenuDto() { Icon = "fa-newspaper-o", Name = "CRUD管理", Url = "../MyCrud/Read" },
+        new MenuDto() { Icon = "fa-dashboard", Name = "專案維護", Url = "../Project/Read" },
+        new MenuDto() { Icon = "fa-users", Name = "資料表維護", Url = "../Table/Read" },
+        new MenuDto() { Icon = "fa-newspaper-o", Name = "欄位維護", Url = "../Column/Read" },
+        new MenuDto() { Icon = "fa-newspaper-o", Name = "CRUD維護", Url = "../MyCrud/Read" },
     };
 }
 
 <style>
-    /*
-    #_Top {
-        color: #E7FFFF;
-        background: #438EB9;
-        height: 45px;
-    }
-    */
-
     .xu-body {
         display: inline-block;
         width: 100%;
@@ -35,16 +29,26 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>資料庫文件系統</title>
+    <title>@_Fun.Config.SystemName</title>
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <link rel="stylesheet" href="~/css/lib.css?Ver=@(_Xp.Ver)" />
-    <link rel="stylesheet" href="~/css/site.css?ver=@(_Xp.Ver)" />
+    <link rel="stylesheet" href="~/css/lib@(min).css?Ver=@(_Xp.LibVer)" />
+    <link rel="stylesheet" href="~/css/my@(min).css?ver=@(_Xp.SiteVer)" />
     @RenderSection("styles", required: false)
 
-    <script src="~/js/lib.js?Ver=@(_Xp.Ver)"></script>
-    <script src="~/js/site.js?ver=@(_Xp.Ver)"></script>
-    <script src="~/locale/zh-TW.js?ver=@(_Xp.Ver)"></script>
+    <script src="~/js/lib@(min).js?Ver=@(_Xp.LibVer)"></script>
+
+    <!-- for debug/production mode -->
+    <environment include="Production">
+        <script src="~/js/my@(min).js?ver=@(_Xp.SiteVer)"></script>
+    </environment>
+    <environment include="Development">
+        <!-- tail ver will load failed !! -->
+        <script asp-src-include="~/js/base/*.js"></script>
+        <script asp-src-include="~/js/view/_*.js"></script>
+    </environment>
+
+    <script src="~/js/zh-TW@(min).js?ver=@(_Xp.SiteVer)"></script>
     @RenderSection("scripts", required: false)
 
     <!-- 必須放在前面 -->
@@ -55,7 +59,7 @@
             _fun.locale = 'zh-TW';
             /**/
             //alert('locale=' + _fun.locale);
-            _xp.initApp();
+            _xp.init();
         });
     </script>
 </head>

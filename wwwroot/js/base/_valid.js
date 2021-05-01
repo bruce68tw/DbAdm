@@ -2,46 +2,64 @@
 //use jquery validation
 var _valid = {
 
+    //error & valid calss same to jquer validate
+    errorClass: 'error',
+    //validClass: 'valid',
+
     /**
      * initial
      * param form {object}
      * param inputCfg {json} config
      */
-    init: function (form, inputCfg) {
+    init: function (form) {
 
         //remove data first
         form.removeData('validator');
-        form.removeData('unobtrusiveValidation');
+        //form.removeData('unobtrusiveValidation');
 
         //default config
+        //this keyword not work inside !!
         var config = {
             /*
-            unhighlight: function (element, errorClass, validClass) {
-                var me = $(element);
+            unhighlight: function (elm, errorClass, validClass) {
+                var me = $(elm);
                 me.data('edit', 1);    //註記此欄位有異動
             }
             */
-            ignore: '',
+            ignore: '',     //xiFile has hidden input need validate
             errorElement: 'span',
+            //onclick: false, //checkbox, radio, and select
             /*
-            highlight: function (element) {
-                _valid.getInputBox(element).addClass(_fun.errCls);
+            highlight: function (elm) {
+                _valid._getError(elm).addClass(_valid.errorClass);
+                return false;
             },
-            unhighlight: function (element) {
-                _valid.getInputBox(element).removeClass(_fun.errCls);
+            unhighlight: function (elm) {
+                _valid._getError(elm).removeClass(_valid.errorClass);
+                return false;
             },
-            //errorClass: 'label label-danger',
-            errorPlacement: function (error, element) {
-                error.insertAfter(_valid.getInputBox(element).parent());
-            }
             */
+            //errorClass: 'label label-danger',
+            errorPlacement: function (error, elm) {
+                error.insertAfter(_valid._getBox(elm));
+                return false;
+            }
         };
 
         //加入外部傳入的自定義組態
-        if (inputCfg)
-            config = _json.copy(inputCfg, config);
+        //if (inputCfg)
+        //    config = _json.copy(inputCfg, config);
 
         return form.validate(config);
+    },
+
+    _getBox: function (elm) {
+        return $(elm).closest('.xi-box');
+    },
+
+    //get error object
+    _getError: function (elm) {
+        return _valid._getBox(elm).next();
     },
 
     /**

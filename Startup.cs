@@ -27,21 +27,22 @@ namespace DbAdm
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //use newtonSoft & pascal case json
+            //1.use newtonSoft & pascal case json
             services.AddControllers().AddNewtonsoftJson(options =>
                 {
                     options.UseMemberCasing();
                 });
 
-            //use pascal case json
+            //2.use pascal case json
             services.AddControllersWithViews().AddJsonOptions(options =>
                 {                    
                     options.JsonSerializerOptions.PropertyNamingPolicy = null;
                 });
 
+            //3.http context
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            //appSettings "FunConfig" section -> _Fun.Config
+            //4.appSettings "FunConfig" section -> _Fun.Config
             var config = new ConfigDto();
             Configuration.GetSection("FunConfig").Bind(config);
             _Fun.Config = config;
@@ -53,15 +54,15 @@ namespace DbAdm
                 //options.UseSqlServer(Configuration.GetConnectionString("Db"));
             });
 
-            //locale & user info for base component
+            //6.locale & user info for base component
             services.AddSingleton<IBaseResService, BaseResService>();
             services.AddSingleton<IBaseUserService, BaseUserService>();
 
-            //ado.net for mssql
+            //7.ado.net for mssql
             services.AddTransient<DbConnection, SqlConnection>();
             services.AddTransient<DbCommand, SqlCommand>();
 
-            //initial _Fun by mssql
+            //8.initial _Fun by mssql
             IServiceProvider di = services.BuildServiceProvider();
             _Fun.Init(di, DbTypeEnum.MSSql);
         }
@@ -69,6 +70,9 @@ namespace DbAdm
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //set global
+            _Fun.IsDebug = env.IsDevelopment();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

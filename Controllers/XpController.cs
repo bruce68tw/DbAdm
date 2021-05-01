@@ -10,12 +10,12 @@ namespace DbAdm.Controllers
         //id: project Id
         public JsonResult GetProjects()
         {
-            return Json(_Code.GetProjects());
+            return Json(_XpCode.GetProjects());
         }
 
         public JsonResult GetTables(string projectId)
         {
-            return Json(_Code.GetTables(projectId));
+            return Json(_XpCode.GetTables(projectId));
         }
 
     }//class

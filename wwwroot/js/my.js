@@ -376,7 +376,7 @@ var _crud = {
         return "" +
             "<label class='xi-check xg-no-label'>" +
             "   <input " + attr + " type='checkbox'>" +
-            "   <span></span>" +
+            "   <span class='xi-cspan'></span>" +
             "</label>";
     },
     /*
@@ -417,6 +417,10 @@ var _crud = {
         return (value == '1')
             ? '<div>' + _BR.StatusYes + '</div>'
             : '<div class="text-danger">' + _BR.StatusNo + '</div>';
+    },
+
+    dtYesEmpty: function (value) {
+        return (value == '1') ? _BR.Yes : '';
     },
 
     /**
@@ -493,7 +497,10 @@ var _crud = {
         _prog.init();   //prog path
     },
 
-    //initial forms(recursive)
+    /**
+     * initial forms(recursive)
+     * param edit {object} EditOne/EditMany object
+     */
     initForm: function (edit) {
         if (edit.eform == null)
             return;
@@ -949,25 +956,48 @@ var _crud = {
         //debugger;
         $.each(obj, function (key, value) {
             if (value === null) {
-                //null才需要清除, 空白不必 !!
+                //delete only null, empty is not !!
                 delete obj[key];
             } else if (_json.isKeyValue(value)) {
                 _crud._removeNull(level+1, value);
             } else if ($.isArray(value)) {
+                //check
+                var len = value.length;
+                if (len == 0) {
+                    delete obj[key];
+                    return; //continue
+                }
+
+                //case of string array
+                if (!_json.isKeyValue(value[0])) {
+                    var isEmpty = true;
+                    for (var i = 0; i < len; i++) {
+                        if (!_str.isEmpty(value[i])) {
+                            isEmpty = false;
+                            break;
+                        }
+                    }
+                    if (isEmpty)
+                        delete obj[key];
+                    return; //continue
+                }
+
+                //case of json array
                 $.each(value, function (k, v) {
                     _crud._removeNull(level + 1, v);
 
                     if (_json.isEmpty(v))
                         v = null;
                 });
+
+                //check json and remove if need
                 var isEmpty = true;
-                var len = value.length;
-                //從陣列後面開始處理
+                //from end
                 for (var i=len - 1; i>=0; i--) {
                     if (!_json.isEmpty(value[i])) {
                         isEmpty = false;
                     } else if (isEmpty) {
-                        //刪除陣列元素
+                        //delete array element
                         delete value[i];
                     } else {
                         value[i] = null;
@@ -975,11 +1005,6 @@ var _crud = {
                 }
                 if (isEmpty)
                     delete obj[key];
-            /*
-            } else {
-                if (key.substr(0, 2) === '__')
-                    delete obj[key];
-            */
             }
         });
     },
@@ -1205,6 +1230,17 @@ var _date = {
     },
 
     /**
+     * timeStamp to ui datetime string
+     * param ts {string} timeStamp value, unit is second, convert to mini second
+     * return {string}
+     */
+    tsToUiDt: function (ts) {
+        return (ts == '')
+            ? ''
+            : moment(parseInt(ts) * 1000).format(_BR.UiDtFormat);
+    },
+
+    /**
      * get hour string from datetime string
      * param dts {string} datetime string
      * return {string}
@@ -1415,6 +1451,7 @@ var _edit = {
      * param key {string}
      */
     isNewKey: function (key) {
+        key = key.toString();   //convert to string for checking
         return (key.length <= 3);
     },
 
@@ -1859,11 +1896,10 @@ var _fun = {
     //input field error validation, need match server side _Web.cs
     //jsPath: '../Scripts/',      //js path for load
     //errTail: '_err',            //error label 欄位id後面會加上這個字元
-    XdRequired: 'xd-required',
+    //XdRequired: 'xd-required',
 
-    //??
-    errCls: 'xg-error',           //欄位驗証錯誤時會加上這個 class name
-    errLabCls: 'xg-error-label',     //error label 的 class name
+    //errCls: 'xg-error',           //欄位驗証錯誤時會加上這個 class name
+    //errLabCls: 'xg-error-label',     //error label 的 class name
     //errBoxCls: 'xg-errorbox', //??_box欄位驗証錯誤時會加上這個 class name
 
     //constant for mapping to backend
@@ -1876,14 +1912,14 @@ var _fun = {
 
 
     //variables
-    locale: 'zh-TW',
+    locale: 'zh-TW',    //now locale, _Layout.cshmlt will set
     maxFileSize: 50971520,  //upload file limit(50M)
 
     //mid variables
-    data: {},
+    //data: {},
 
     //variables ??
-    isCheck: true,
+    //isCheck: true,
 
     //後端必須實作 Fun/Test()
     onHello: function () {
@@ -1892,7 +1928,11 @@ var _fun = {
         });
     },
 
-    //get fid
+    /**
+     * get data-fid of object
+     * param obj {object}
+     * return fid string
+     */
     getFid: function (obj) {
         return obj.data('fid');
     },
@@ -1914,8 +1954,13 @@ var _fun = {
     },
     */
 
-    default: function (val, val0) {
-        return (val == null) ? val0 : val;
+    /**
+     * get default value if need
+     * param val {object} checked value
+     * param defVal {object} default value to return if need
+     */
+    default: function (val, defVal) {
+        return (val == null) ? defVal : val;
     },
 
     hasValue: function (obj) {
@@ -1931,9 +1976,9 @@ var _fun = {
         });
     },
 
+    //#region remark code
     /*
       ??
-    */
     xgTextBoxValid: function (obj, Regex) {
         var parent = obj.parentNode;
         if (Regex == "") {
@@ -1956,9 +2001,7 @@ var _fun = {
         }
     },
 
-    /*
      ??
-    */
     xgCheckfn: function () {
         _fun.isCheck = true;
         var Inputs = document.getElementsByClassName('xg-textbox');
@@ -1978,13 +2021,12 @@ var _fun = {
         return _fun.isCheck;
     },
 
-    /**
+    //
      multiple checkbox onclick event
      params
        me : this component
        fid: field id 
        value: field value
-     */
     //onClickCheckMulti: function (me, fid, value, separator, onClickFn) {
     zz_onChangeMultiCheck: function (me, fid) {
 
@@ -2016,7 +2058,7 @@ var _fun = {
             onClickFn(me, $(me).val());
 
     },
-
+    */
  
     /**
      * 傳回錯誤訊息(多國語)
@@ -2045,6 +2087,7 @@ var _fun = {
     //    var field = $('#' + fid);
     //    return (field.length == 0) ? '' : field.val().join(separator);
     //},
+    //#endregion
 
 };//class
 
@@ -2194,7 +2237,7 @@ var _icheck = $.extend({}, _ibase, {
      */
     setO: function (obj, value) {
         //obj.val(value);
-        var status = (value == '1' || value == 'True' || value == true);
+        var status = !(value == null || value == '0' || value == 'False' || value == false);
         obj.prop('checked', status);
     },
 
@@ -2209,14 +2252,14 @@ var _icheck = $.extend({}, _ibase, {
      * get checked status by fid
      */
     checked: function (fid, form) {
-        return this.checkedO(_obj.get(fid, form));
+        return _icheck.checkedO(_obj.get(fid, form));
     },
 
     /**
      * get checked status by filter
      */
     checkedF: function (filter, form) {
-        return this.checkedO(_obj.getF(filter, form));
+        return _icheck.checkedO(_obj.getF(filter, form));
     },
 
     /**
@@ -2224,7 +2267,7 @@ var _icheck = $.extend({}, _ibase, {
      */
     checkedO: function (obj) {
         //檢查:after虛擬類別是否存在
-        //return (this.getO(obj) == 1);
+        //return (_icheck.getO(obj) == 1);
         return obj.is(':checked');
         //return (obj.next().find(':after').length > 0);
     },
@@ -2236,7 +2279,7 @@ var _icheck = $.extend({}, _ibase, {
      * return {string array}
      */ 
     getCheckeds: function (form, fid) {
-        fid = fid || this.Check0Id;
+        fid = fid || _icheck.Check0Id;
         var ary = [];
         _obj.getF(_fun.fidFilter(fid) + ':checked', form).each(function (i) {
             ary[i] = $(this).data('value');
@@ -2254,10 +2297,10 @@ var _icheck = $.extend({}, _ibase, {
         if (_str.isEmpty(rows))
             return;
 
-        fid = fid || this.Check0Id;
+        fid = fid || _icheck.Check0Id;
         for (var i = 0; i < rows.length; i++) {
             var obj = form.find('[data-value=' + rows[i][fid] + ']');
-            this.setO(obj, 1);
+            _icheck.setO(obj, 1);
         }
     },
      */
@@ -2278,15 +2321,15 @@ var _icolor = {
     },
 
     get: function (fid, form) {
-        return this.getO(_obj.get(fid, form));
+        return _icolor.getO(_obj.get(fid, form));
     },
     //value by filter
     getF: function (filter, form) {
-        return this.getO(_obj.getF(filter, form));
+        return _icolor.getO(_obj.getF(filter, form));
     },
     //value by object
     getO: function (obj) {
-        return this.rgbToHex(obj.find('i').css('background-color'));
+        return _icolor.rgbToHex(obj.find('i').css('background-color'));
     },
 
     //convert jquery RGB color to hex(has #)
@@ -2322,6 +2365,7 @@ var _icolor = {
 
 }; //class
 //for date input (bootstrap-datepicker)
+//_idt drive from _idate
 var _idate = $.extend({}, _ibase, {
 
     //constant
@@ -2339,7 +2383,7 @@ var _idate = $.extend({}, _ibase, {
      */
     setO: function (obj, value) {
         //obj.val(_date.jsToUiDate(value));
-        this._boxSetDate(this._elmToBox(obj), value);
+        _idate._boxSetDate(_idate._elmToBox(obj), _date.jsToUiDate(value));
     },
 
     setEditO: function (obj, status) {
@@ -2353,10 +2397,10 @@ var _idate = $.extend({}, _ibase, {
      */ 
     init: function (box, fid) {
         var obj = _str.isEmpty(fid)
-            ? $(this.BoxFilter)
-            : _obj.get(fid, box).closet(this.BoxFilter);
+            ? box.find(_idate.BoxFilter)
+            : _obj.get(fid, box).closet(_idate.BoxFilter);
         if (obj.length > 0)
-            this.initO(obj);
+            _idate.initO(obj);
     },
 
     //initial by object(s)
@@ -2371,7 +2415,7 @@ var _idate = $.extend({}, _ibase, {
             showOnFocus: false,
             //startDate: '-3d'            
         }).on('changeDate', function (e) {
-            //$(this).datepicker('hide');
+            //$(_idate).datepicker('hide');
             //傳入 fid, value
             /* temp remark
             if (fnOnChange !== undefined) {
@@ -2389,19 +2433,19 @@ var _idate = $.extend({}, _ibase, {
     /*
     //for 多筆區域
     initByBox: function (box, fnOnChange) {
-        this.initO(box.find(this.BoxFilter), fnOnChange);
+        _idate.initO(box.find(_idate.BoxFilter), fnOnChange);
     },
     */
 
     //show/hide datepicker
     onToggle: function (btn) {
         //$(btn).parent().parent().find('input').trigger('focus');
-        this._elmToBox(btn).datepicker('show');
+        _idate._elmToBox(btn).datepicker('show');
     },
 
     //reset value
     onReset: function (btn) {
-        this._boxSetDate(this._elmToBox(btn), '');
+        _idate._boxSetDate(_idate._elmToBox(btn), '');
     },    
 
 
@@ -2411,7 +2455,7 @@ var _idate = $.extend({}, _ibase, {
      * return {object}
      */
     _elmToBox: function (elm) {
-        return $(elm).closest(this.BoxFilter);
+        return $(elm).closest(_idate.BoxFilter);
     },
 
     _boxSetDate: function (box, date) {
@@ -2427,12 +2471,12 @@ var _idt = $.extend({}, _idate, {
 
     //=== get/set start ===
     getO: function (obj) {        
-        var date = _date.uiToJsDate(_idate.getO(this._boxGetDate(obj)));
+        var date = _date.uiToJsDate(_idate.getO(_idt._boxGetDate(obj)));
         return _str.isEmpty(date)
             ? ''
             : date + ' ' +
-                _iselect.getO(this._boxGetHour(obj)) + ':' +
-                _iselect.getO(this._boxGetMin(obj));
+                _iselect.getO(_idt._boxGetHour(obj)) + ':' +
+                _iselect.getO(_idt._boxGetMin(obj));
     },
 
     /**
@@ -2447,19 +2491,20 @@ var _idt = $.extend({}, _idate, {
             hour = 0;
             min = 0;
         } else {
-            date = _date.jsToUiDate(value);
+            //date = _date.jsToUiDate(value);
+            date = value;   //_idate will set
             hour = parseInt(_str.getMid(value, ' ', ':'));
             min = parseInt(_str.getMid(value, ':', ':'));
         }
-        _idate.setO(this._boxGetDate(obj), date);
-        _iselect.setO(this._boxGetHour(obj), hour);
-        _iselect.setO(this._boxGetMin(obj), min);
+        _idate.setO(_idt._boxGetDate(obj), date);
+        _iselect.setO(_idt._boxGetHour(obj), hour);
+        _iselect.setO(_idt._boxGetMin(obj), min);
     },
 
     setEditO: function (obj, status) {
-        _idate.setEditO(this._boxGetDate(obj), status);
-        _iselect.setEditO(this._boxGetHour(obj), status);
-        _iselect.setEditO(this._boxGetMin(obj), status);
+        _idate.setEditO(_idt._boxGetDate(obj), status);
+        _iselect.setEditO(_idt._boxGetHour(obj), status);
+        _iselect.setEditO(_idt._boxGetMin(obj), status);
     },
 
     /**
@@ -2557,7 +2602,7 @@ var _ifile = $.extend({}, _ibase, {
 
     setO: function (obj, value) {
         obj.val(value);     //set hidden input value
-        this._elmToLink(obj).text(value);  //set link show text
+        _ifile._elmToLink(obj).text(value);  //set link show text
     },
     //=== overwrite end ===
 
@@ -2571,7 +2616,7 @@ var _ifile = $.extend({}, _ibase, {
      */
     dataAddFile: function (data, fid, serverFid, box) {
         var obj = _obj.get(fid, box);
-        var file = this._getUploadFile(this._elmToFile(obj));
+        var file = _ifile.getUploadFile(_ifile._elmToFile(obj));
         var hasFile = (file != null);
         if (hasFile)
             data.append(serverFid, file);
@@ -2580,18 +2625,18 @@ var _ifile = $.extend({}, _ibase, {
 
     //=== event start ===
     onOpenFile: function (btn) {
-        var file = this._elmToFile(btn);
+        var file = _ifile._elmToFile(btn);
         file.focus().trigger('click'); //focus first !!
     },
 
     //file: input element
     onChangeFile: function (file) {
         //case of empty file
-        var obj = this._elmToObj(file);
+        var obj = _ifile._elmToObj(file);
         var fileObj = $(file);
         var value = file.value; //full path
         if (_str.isEmpty(value)) {
-            this.setO(obj, '');
+            _ifile.setO(obj, '');
             return;
         }
 
@@ -2616,11 +2661,11 @@ var _ifile = $.extend({}, _ibase, {
         }
 
         //case ok
-        this.setO(obj, _file.getFileName(value));
+        _ifile.setO(obj, _file.getFileName(value));
     },
 
     onDeleteFile: function (btn) {
-        this.setO(this.elmToObj(btn), '');
+        _ifile.setO(_ifile._elmToObj(btn), '');
     },
     //=== event end ===
 
@@ -2628,12 +2673,12 @@ var _ifile = $.extend({}, _ibase, {
     zz_init: function(fid, path, form) {
         var fileObj = _obj.get(fid, form);
         fileObj.val('');
-        //this.setFun(fileObj, ''); //set fun to empty
-        //this.setPathByFile(fileObj, path);
+        //_ifile.setFun(fileObj, ''); //set fun to empty
+        //_ifile.setPathByFile(fileObj, path);
 
         /*
         //file element 要 reset
-        var file = _obj.getF(this.fileF(id), form);
+        var file = _obj.getF(_ifile.fileF(id), form);
         //var $el = $('#example-file');
         file.wrap('<form>').closest('form').get(0).reset();
         file.unwrap();
@@ -2648,19 +2693,19 @@ var _ifile = $.extend({}, _ibase, {
      * return {object} file box object
      */
     _elmToBox: function (elm) {
-        return $(elm).closest('.xi-file');
+        return $(elm).closest('.xi-box');
     },
     //get file object
     _elmToFile: function (elm) {
-        return this._boxGetFile(this._elmToBox(elm));
+        return _ifile._boxGetFile(_ifile._elmToBox(elm));
     },
     //get input object
     _elmToObj: function (elm) {
-        return this._boxGetObj(this._elmToBox(elm));
+        return _ifile._boxGetObj(_ifile._elmToBox(elm));
     },
     //get link object
     _elmToLink: function (elm) {
-        return this._boxGetLink(this._elmToBox(elm));
+        return _ifile._boxGetLink(_ifile._elmToBox(elm));
     },
 
     /**
@@ -2679,7 +2724,10 @@ var _ifile = $.extend({}, _ibase, {
     },
 
     //border get uploaded file, return null if empty
-    _getUploadFile: function (fileObj) {
+    getUploadFile: function (fileObj) {
+        if (fileObj.length == 0)
+            return null;
+
         var files = fileObj.get(0).files;
         return (files.length > 0) ? files[0] : null;
     },
@@ -2688,7 +2736,90 @@ var _ifile = $.extend({}, _ibase, {
 /*
  * html input, use summernote !!
  */
-var _ihtml = {
+var _ihtml = $.extend({}, _ibase, {
+
+    //constant
+    //BoxFilter: '.date',
+
+    getO: function (obj) {
+        //return obj.html();
+        //return obj.val();
+        return obj.summernote('code');
+    },
+
+    setO: function (obj, value) {
+        //value = $('<div/>').html(value).text(); //decode
+        obj.summernote('code', value);
+        //obj.html(value);
+        //obj.val(value);
+    },
+
+    /**
+     * init html editor
+     * param obj {objects} html input object array
+     * param prog {string} program code
+     * param height {int} input height(px)
+     * param fnFileName {function} 傳回filename後面部分字串
+     */
+    init: function (box, prog, height, fnFileName) {
+        height = height || 250;
+        box.find('[data-type=html]').summernote({
+            height: height,
+            //new version use callbacks
+            callbacks: {
+                onImageUpload: function (files) {
+                    var editor = $(this);   //summernote instance !!
+                    var data = new FormData();
+                    data.append('file', files[0]);
+                    //fileName for file name
+                    var fileName = (fnFileName === undefined)
+                        ? prog + '_' + _obj.getFid($(this).closest('textarea'))
+                        : fnFileName();
+                    data.append('fileName', fileName);
+                    $.ajax({
+                        data: data,
+                        type: "POST",
+                        url: "../Image/Upload",
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (url) {
+                            //create image element & add into editor
+                            var image = document.createElement('img');
+                            image.src = url;
+                            //new version syntax !!
+                            editor.summernote('insertNode', image);
+                        }
+                    });
+                },
+            },
+
+            //=== add image ext attr start ===
+            popover: {
+                image: [
+                    ['custom', ['imageAttributes']],
+                    ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+                    ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                    ['remove', ['removeMedia']]
+                ],
+            },
+            lang: _fun.locale,
+            imageAttributes: {
+                imageDialogLayout: 'default', // default|horizontal
+                icon: '<i class="note-icon-pencil"/>',
+                removeEmpty: false // true = remove attributes | false = leave empty if present
+            },
+            displayFields: {
+                imageBasic: true,  // show/hide Title, Source, Alt fields
+                imageExtra: false, // show/hide Alt, Class, Style, Role fields
+                linkBasic: false,   // show/hide URL and Target fields for link
+                linkExtra: false   // show/hide Class, Rel, Role fields for link
+            },
+            //=== add image ext attr start ===
+
+        });
+    },
+
     //see: https://stackoverflow.com/questions/14346414/how-do-you-do-html-encode-using-javascript
     encode: function (value) {
         return $('<div/>').text(value).html();
@@ -2721,7 +2852,7 @@ var _ihtml = {
             _ihtml.update(fids[i], box);
     },
     
-};
+}); //class
 
 //link file
 var _ilinkFile = {
@@ -2765,24 +2896,26 @@ var _input = {
     getO: function (obj, box, type) {
         type = type || _input.getType(obj);
         switch (type) {
+            case 'text':
+                return _itext.getO(obj);
             case 'check':
                 return _icheck.getO(obj);
             case 'radio':
-                //obj is array now !!
                 return _iradio.getO(obj, box);
-            case 'textarea':
-                //must set html !!
-                return _itextarea.getO(obj);
             case 'select':
                 return _iselect.getO(obj);
-            case 'file':
-                return _ifile.getO(obj);
-            case 'read':
-                return _iread.getO(obj);
             case 'date':
                 return _idate.getO(obj);
             case 'dt':
                 return _idt.getO(obj);
+            case 'file':
+                return _ifile.getO(obj);
+            case 'textarea':
+                return _itextarea.getO(obj);
+            case 'html':
+                return _ihtml.getO(obj);
+            case 'read':
+                return _iread.getO(obj);
             case 'linkFile':
                 return _ilinkFile.getO(obj);
             default:
@@ -2804,6 +2937,9 @@ var _input = {
     setO: function (obj, value, box, type) {
         type = type || _input.getType(obj);
         switch (type) {
+            case 'text':
+                _itext.setO(obj, value);
+                break;
             case 'check':
                 _icheck.setO(obj, value);
                 break;
@@ -2812,30 +2948,33 @@ var _input = {
                 value = value || '0';
                 _iradio.setO(obj, value, box);
                 break;
-            case 'textarea':
-                //重要!! 要設定它的 html 屬性!!
-                value = _ihtml.decode(value);
-                obj.html(value);
-                obj.val(value);     //也要設定這個屬性 !!
-                //obj.text(value);
-                break;
             case 'select':
                 _iselect.setO(obj, value);
-                break;
-            case 'file':
-                _ifile.setO(obj, value);
-                break;
-            case 'read':
-                //debugger;
-                var format = obj.data('format');
-                if (!_str.isEmpty(format) && !_str.isEmpty(_BR[format]))
-                    value = _date.jsToFormat(value, _BR[format]);
-                _iread.setO(obj, value);
                 break;
             case 'date':
                 return _idate.setO(obj, value);
             case 'dt':
                 return _idt.setO(obj, value);
+            case 'file':
+                _ifile.setO(obj, value);
+                break;
+            case 'textarea':
+                //value = _ihtml.decode(value);
+                //obj.html(value);
+                _itextarea.setO(obj, value);
+                break;
+            case 'html':
+                _ihtml.setO(obj, value);
+                //value = _ihtml.decode(value);
+                //obj.html(value);
+                //obj.val(value);     //也要設定這個屬性 !!
+                break;
+            case 'read':
+                var format = obj.data('format');
+                if (!_str.isEmpty(format) && !_str.isEmpty(_BR[format]))
+                    value = _date.jsToFormat(value, _BR[format]);
+                _iread.setO(obj, value);
+                break;
             case 'linkFile':
                 return _ilinkFile.setO(obj, value);
             default:
@@ -3112,9 +3251,9 @@ var _iradio = $.extend({}, _ibase, {
     */
     render: function (fid, label, checked, value, editable, extClass, extProp) {
         var html = "" +
-            "<label class='xg-radio {0}'>" +
+            "<label class='xi-check {0}'>" +
             "   <input type='radio'{1}>{2}" +
-            "   <span></span>" +
+            "   <span class='xi-rspan'></span>" +
             "</label>";
 
         //adjust
@@ -3146,21 +3285,21 @@ var _iread = {
 
     //value by fid
     get: function (fid, form) {
-        return this.getO(_obj.get(fid, form));   //use data-fid
+        return _iread.getO(_obj.get(fid, form));   //use data-fid
     },
     //value by filter
     getF: function (filter, form) {
-        return this.getO(_obj.getF(filter, form));
+        return _iread.getO(_obj.getF(filter, form));
     },
     //value by object
     getO: function (obj) {
         return obj.text();
     },
     set: function (fid, value, form) {
-        this.setO(_obj.get(fid, form), value);   //use data-fid
+        _iread.setO(_obj.get(fid, form), value);   //use data-fid
     },
     setF: function (filter, value, form) {
-        this.setO(_obj.getF(filter, form), value)
+        _iread.setO(_obj.getF(filter, form), value)
     },
     setO: function (obj, value) {
         obj.text(value);
@@ -3199,7 +3338,7 @@ var _iselect = $.extend({}, _ibase, {
 
     //get selected index(base 0)
     getIndex: function (fid, box) {
-        return this.getIndexO(_obj.get(fid, box));
+        return _iselect.getIndexO(_obj.get(fid, box));
     },
     getIndexO: function (obj) {
         return obj.prop('selectedIndex');
@@ -3207,7 +3346,7 @@ var _iselect = $.extend({}, _ibase, {
 
     //get options count
     getCount: function (fid, box) {
-        return this.getCountO(_obj.get(fid, box));
+        return _iselect.getCountO(_obj.get(fid, box));
     },
     getCountO: function (obj) {
         return obj.find('option').length;
@@ -3215,7 +3354,7 @@ var _iselect = $.extend({}, _ibase, {
 
     //set by index(base 0)
     setIndex: function (fid, idx, box) {
-        this.setIndexO(_obj.get(fid, box), idx);
+        _iselect.setIndexO(_obj.get(fid, box), idx);
     },
     setIndexO: function (obj, idx) {
         obj.find('option').eq(idx).prop('selected', true);
@@ -3224,7 +3363,7 @@ var _iselect = $.extend({}, _ibase, {
     //傳回選取的欄位的文字
     getText: function (fid, box) {
         var obj = _obj.get(fid, box);
-        return this.getTextO(obj);
+        return _iselect.getTextO(obj);
     },
     getTextO: function (obj) {
         return obj.find('option:selected').text();
@@ -3242,11 +3381,11 @@ var _iselect = $.extend({}, _ibase, {
     //items: 來源array, 欄位為:Id,Str
     setItems: function (fid, items, box) {
         var obj = _obj.get(fid, box);
-        this.setItemsO(obj, items);
+        _iselect.setItemsO(obj, items);
     },
     setItemsF: function (filter, items, box) {
         var obj = _obj.getF(filter, box);
-        this.setItemsO(obj, items);
+        _iselect.setItemsO(obj, items);
     },
     //by object
     setItemsO: function (obj, items) {
@@ -3289,7 +3428,7 @@ var _iselect = $.extend({}, _ibase, {
     //fids: 欄位名稱 array
     valuesToJson: function (json, fids, box) {
         for (var i = 0; i < fids.length; i++)
-            json[fids[i]] = this.get(fids[i], box);
+            json[fids[i]] = _iselect.get(fids[i], box);
         return json;
     },
 
@@ -3312,7 +3451,7 @@ var _iselect = $.extend({}, _ibase, {
 
         //選取第0筆
         if (len > 0)
-            this.setIndexO(obj, 0);
+            _iselect.setIndexO(obj, 0);
     },
 
 }); //class
@@ -4162,46 +4301,64 @@ var _tool = {
 //use jquery validation
 var _valid = {
 
+    //error & valid calss same to jquer validate
+    errorClass: 'error',
+    //validClass: 'valid',
+
     /**
      * initial
      * param form {object}
      * param inputCfg {json} config
      */
-    init: function (form, inputCfg) {
+    init: function (form) {
 
         //remove data first
         form.removeData('validator');
-        form.removeData('unobtrusiveValidation');
+        //form.removeData('unobtrusiveValidation');
 
         //default config
+        //this keyword not work inside !!
         var config = {
             /*
-            unhighlight: function (element, errorClass, validClass) {
-                var me = $(element);
+            unhighlight: function (elm, errorClass, validClass) {
+                var me = $(elm);
                 me.data('edit', 1);    //註記此欄位有異動
             }
             */
-            ignore: '',
+            ignore: '',     //xiFile has hidden input need validate
             errorElement: 'span',
+            //onclick: false, //checkbox, radio, and select
             /*
-            highlight: function (element) {
-                _valid.getInputBox(element).addClass(_fun.errCls);
+            highlight: function (elm) {
+                _valid._getError(elm).addClass(_valid.errorClass);
+                return false;
             },
-            unhighlight: function (element) {
-                _valid.getInputBox(element).removeClass(_fun.errCls);
+            unhighlight: function (elm) {
+                _valid._getError(elm).removeClass(_valid.errorClass);
+                return false;
             },
-            //errorClass: 'label label-danger',
-            errorPlacement: function (error, element) {
-                error.insertAfter(_valid.getInputBox(element).parent());
-            }
             */
+            //errorClass: 'label label-danger',
+            errorPlacement: function (error, elm) {
+                error.insertAfter(_valid._getBox(elm));
+                return false;
+            }
         };
 
         //加入外部傳入的自定義組態
-        if (inputCfg)
-            config = _json.copy(inputCfg, config);
+        //if (inputCfg)
+        //    config = _json.copy(inputCfg, config);
 
         return form.validate(config);
+    },
+
+    _getBox: function (elm) {
+        return $(elm).closest('.xi-box');
+    },
+
+    //get error object
+    _getError: function (elm) {
+        return _valid._getBox(elm).next();
     },
 
     /**
@@ -4469,18 +4626,18 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
  * notice:
  *   1.set data-fkeyFid when save
  *   
- * param kid {string} pkey field id(single key)
- * param eformId {string} edit form id
+ * param kid {string} (required) pkey field id(single key)
+ * param eformId {string} (optional) edit form id
  *   if not empty, system will load UI & prepare save rows
  *     and rows container tag is fixed to 'tbody'
  *   if empty, you could write below custom functions:
- *     1.void fnLoadJson(json): necessary
+ *     1.void fnLoadJson(json): necessary, show form
  *     2.json fnGetUpdJson(upKey): necessary
- *     3.bool fnValid(): optional
- * param tplRowId {string} row template id, required
- * param sortFid {string} (optional) sort fid for sorting function
- * param rowFilter {string} (optional 'tr') filter for find row object
+ *     3.bool fnValid(): (optional) validate check
+ * param tplRowId {string} (optional) row template id for load row & render row.
+ * param rowFilter {string} (optional) filter for find row object
  *   1.inside element -> row(onDeleteRow), 2.rowsBox -> row(getUpdRows)
+ * param sortFid {string} (optional) sort fid for sorting function
  * return {EditMany}
  */
 function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
@@ -4494,14 +4651,17 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         this.DataFkeyFid = '_fkeyfid';  //data field for fkey fid
 
         this.kid = kid;
-        this.tplRow = $('#' + tplRowId).html();
-        this.sortFid = sortFid;
+        this.hasTplRow = !_str.isEmpty(tplRowId);
         this.hasRowFilter = !_str.isEmpty(rowFilter);
         this.rowFilter = rowFilter;
+        this.sortFid = sortFid;
 
-        var rowObj = $(this.tplRow);
-        _edit.setFidTypeVars(this, rowObj);
-        _edit.setFileVars(this, rowObj);
+        if (this.hasTplRow) {
+            this.tplRow = $('#' + tplRowId).html();
+            var rowObj = $(this.tplRow);
+            _edit.setFidTypeVars(this, rowObj);
+            _edit.setFileVars(this, rowObj);
+        }
 
         //has edit form or not
         this.hasEform = !_str.isEmpty(eformId);
@@ -4535,6 +4695,10 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
         //reset variables
         this.newIndex = 0;
+        this.resetDeleted();
+    };
+
+    this.resetDeleted = function () {
         this.deletedRows = [];
     };
 
@@ -4554,12 +4718,79 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * load json rows into UI by userRole mode(urm)
+     * param json {json} 
+     */
+    this.urmLoadJson = function (json, rowsBox, fids) {
+        //reset form first
+        var objs = rowsBox.find(':checkbox');
+        _icheck.setO(objs, 0);
+        objs.data('key', '');
+
+        //check
+        var rows = _crud.getJsonRows(json);
+        if (rows == null)
+            return;
+
+        //set checked sign & old value
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var obj = rowsBox.find(_fun.fidFilter(row[fids[1]]));   //fid map to dataFid
+            _icheck.setO(obj, 1);
+            obj.data('key', row[fids[0]]);
+        }
+    };
+
+    /**
+     * get upd json by UserRole mode(urm)
+     * param upKey {string} up key
+     * param rowsBox {object} rows box
+     * param keyFid {string} key fid, ex: UserId
+     * param dataFid {string} data fid, ex: RoleId
+     * return {json} modified columns only
+     */
+    this.urmGetUpdJson = function (upKey, rowsBox, fids) {
+        var json = {};
+        var rows = [];
+        var me = this;
+        var newIdx = 0;
+        this.resetDeleted();    //reset first
+        rowsBox.find(':checkbox').each(function () {
+            var obj = $(this);
+            var key = obj.data('key');
+            if (_str.isEmpty(key)) {
+                if (_icheck.checkedO(obj)) {
+                    //new row
+                    var row = {};
+                    row[fids[0]] = ++newIdx;
+                    row[fids[1]] = _icheck.getO(obj);
+                    me.rowSetFkey(row, upKey);  //set foreign key value
+                    rows[rows.length] = row;
+                }
+            } else {
+                if (!_icheck.checkedO(obj)) {
+                    //delete row
+                    me.deleteRow(key);
+                }
+            }
+        });
+
+        if (rows.length > 0)
+            json[_crud.Rows] = rows;
+        json[_crud.Deletes] = this.getDeletedStr();
+        return json;
+    },
+
+    /**
      * load row by row box(container), also set old value
      * param rowBox {object}
      * param row {json}
      * param index {int}
      */
     this.loadRow = function (rowBox, row, index) {
+        if (!this.checkTplRow())
+            return;
+
         var form = $(Mustache.render(this.tplRow, { Index: index }));
         _form.loadJson(form, row);   //use name field
 
@@ -4579,6 +4810,9 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param rows {jsons}
      */ 
     this.loadRows = function (rowsBox, rows, reset) {
+        if (!this.checkTplRow())
+            return;
+
         //reset if need
         if (reset === undefined)
             reset = true;
@@ -4653,6 +4887,14 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         return false;
     };
 
+    this.checkTplRow = function () {
+        if (this.hasTplRow)
+            return true;
+
+        _log.error('EditMany.js this.tplRow is empty.');
+        return false;
+    };
+
     /**
      * get row box by inside element/object
      * param elm {element/object}
@@ -4685,7 +4927,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         rowsBox = this.getRowsBox(rowsBox);
         var json = {};
         json[_crud.Rows] = this.getUpdRows(upKey, rowsBox);
-        json[_crud.Deletes] = this.getDeletedRows();
+        json[_crud.Deletes] = this.getDeletedStr();
         return json;
     };
 
@@ -4765,9 +5007,9 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
     /** 
      * get deleted rows(key array "string" !!)
-     * return empty if empty.
+     * return {string} null for empty.
      */ 
-    this.getDeletedRows = function () {
+    this.getDeletedStr = function () {
         return (this.deletedRows.length === 0)
             ? null : this.deletedRows.join();
     };    
@@ -4807,12 +5049,12 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param rowBox {object} (optional) row box object
      */ 
     this.deleteRow = function (key, rowBox) {
-        var rows = this.deletedRows;
+        var deletes = this.deletedRows;
         var found = false;
-        var rowLen = rows.length;
+        var rowLen = deletes.length;
         for (var i = 0; i < rowLen; i++) {
             //do nothing if existed
-            if (rows[i][this.kid] === key) {
+            if (deletes[i][this.kid] === key) {
                 found = true;
                 break;
             }
@@ -4820,7 +5062,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
         //add deleted[]
         if (!found)
-            rows[rowLen] = key;
+            deletes[rowLen] = key;
 
         //remove UI row if need
         if (_obj.isExist(rowBox))
@@ -4845,6 +5087,9 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * return {object} row object
      */ 
     this.renderRow = function (rowsBox, row) {
+        if (!this.checkTplRow())
+            return;
+
         rowsBox = this.getRowsBox(rowsBox);
         var obj = $(Mustache.render(this.tplRow, row));
         _form.loadJson(obj, row);
@@ -4890,22 +5135,22 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param row {json}
      * param fkeyFid {string}
      */
-    this.rowSetFkeyFid = function (row, fkeyFid) {
+    this.rowSetFkey = function (row, fkey) {
         if (row != null && this.isNewRow(row))
-            row[this.DataFkeyFid] = fkeyFid;
+            row[this.DataFkeyFid] = fkey;
     };
 
     /**
      * rows set fkey value
      * param rows {jsons}
-     * param fkeyFid {string}
+     * param fkeyFid {string} fkey value
      */
-    this.rowsSetFkeyFid = function (rows, fkeyFid) {
+    this.rowsSetFkey = function (rows, fkey) {
         if (rows != null) {
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
                 if (row != null && this.isNewRow(row))
-                    row[this.DataFkeyFid] = fkeyFid;
+                    row[this.DataFkeyFid] = fkey;
             }
         }
     };

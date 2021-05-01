@@ -13,15 +13,15 @@ var _icolor = {
     },
 
     get: function (fid, form) {
-        return this.getO(_obj.get(fid, form));
+        return _icolor.getO(_obj.get(fid, form));
     },
     //value by filter
     getF: function (filter, form) {
-        return this.getO(_obj.getF(filter, form));
+        return _icolor.getO(_obj.getF(filter, form));
     },
     //value by object
     getO: function (obj) {
-        return this.rgbToHex(obj.find('i').css('background-color'));
+        return _icolor.rgbToHex(obj.find('i').css('background-color'));
     },
 
     //convert jquery RGB color to hex(has #)

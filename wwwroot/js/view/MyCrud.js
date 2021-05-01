@@ -249,7 +249,7 @@ var _me = {
             //etable
             var form = $(item);
             rows[i] = _edit.getUpdRow(_me.mEtable.kid, _me.mEtable.fidTypes, form); //edit table
-            _me.mEtable.rowSetFkeyFid(rows[i], upKey);
+            _me.mEtable.rowSetFkey(rows[i], upKey);
 
             //eitems
             var upKey2 = _iselect.get('Id', form);
@@ -266,8 +266,8 @@ var _me = {
         });
         return {
             _rows: rows,
-            _deletes: _me.mEtable.getDeletedRows(),
-            _childs: [{ _rows: eitems, _deletes: _me.mEitem.getDeletedRows()}],
+            _deletes: _me.mEtable.getDeletedStr(),
+            _childs: [{ _rows: eitems, _deletes: _me.mEitem.getDeletedStr()}],
         };
     },
 

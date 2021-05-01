@@ -18,7 +18,6 @@ namespace DbAdm.Tables
         {
         }
 
-        public virtual DbSet<Code> Code { get; set; }
         public virtual DbSet<Column> Column { get; set; }
         public virtual DbSet<Crud> Crud { get; set; }
         public virtual DbSet<CrudEitem> CrudEitem { get; set; }
@@ -27,6 +26,7 @@ namespace DbAdm.Tables
         public virtual DbSet<CrudRitem> CrudRitem { get; set; }
         public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<Table> Table { get; set; }
+        public virtual DbSet<XpCode> XpCode { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,29 +39,6 @@ namespace DbAdm.Tables
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
-
-            modelBuilder.Entity<Code>(entity =>
-            {
-                entity.HasKey(e => new { e.Type, e.Value });
-
-                entity.Property(e => e.Type)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Value)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Ext)
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(30);
-
-                entity.Property(e => e.Note).HasMaxLength(255);
-            });
 
             modelBuilder.Entity<Column>(entity =>
             {
@@ -201,16 +178,16 @@ namespace DbAdm.Tables
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Kid)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.MapFid)
+                entity.Property(e => e.FkeyFid)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.OrderBy)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PkeyFid)
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -363,6 +340,29 @@ namespace DbAdm.Tables
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<XpCode>(entity =>
+            {
+                entity.HasKey(e => new { e.Type, e.Value });
+
+                entity.Property(e => e.Type)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Value)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Ext)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(30);
+
+                entity.Property(e => e.Note).HasMaxLength(255);
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -19,11 +19,11 @@ from dbo.Crud c
 join dbo.Project p on p.Id=c.ProjectId
 order by p.Id, c.Id desc
 ",
-            TableAs = "a",
+            TableAs = "c",
             Items = new [] {
                 new QitemDto { Fid = "ProjectId" },
                 new QitemDto { Fid = "ProgCode", Op = ItemOpEstr.Like },
-                new QitemDto { Fid = "Status" },
+                //new QitemDto { Fid = "Status" },
             },
         };
 

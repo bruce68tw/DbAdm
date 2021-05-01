@@ -7,16 +7,16 @@ using System.Linq;
 
 namespace DbAdm.Services
 {
-    public class GenDocuService
+    public class GenWordService
     {
         /// <summary>
-        /// 在畫面上直接產生word檔 for db文件
+        /// generate database word document
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="tableIds"></param>
         public void Run(string projectId, string[] tableIds = null)
         {
-            //check input
+            #region check input & template file
             var error = "";
             if (string.IsNullOrEmpty(projectId) && (tableIds == null || tableIds.Length == 0))
             {
@@ -24,7 +24,6 @@ namespace DbAdm.Services
                 goto lab_error;
             }
 
-            #region check template file
             //var locale = _Fun.GetLocale();
             var tplPath = _Xp.GetTpl("Table.docx");
             if (!File.Exists(tplPath))
@@ -34,7 +33,7 @@ namespace DbAdm.Services
             }
             #endregion
 
-            #region read column rows
+            #region 1.read column rows & group by
             var db = _Xp.GetDb();
             var query = (from c in db.Column
                          join t in db.Table on c.TableId equals t.Id
@@ -60,7 +59,8 @@ namespace DbAdm.Services
                     Nullable = a.c.Nullable ? "Y" : "",
                     a.c.DefaultValue,
                     a.c.Note,
-                    S=a.c.Sort,
+                    //docx template file use "S" as field name for less space !!
+                    S = a.c.Sort,
                 })
                 .ToList()
                 .GroupBy(a => new { a.ProjectCode, a.TableCode, a.TableName })
@@ -82,7 +82,7 @@ namespace DbAdm.Services
             }
             #endregion
 
-            #region ms stream for echo
+            //get memory stream & download file
             var ms = new MemoryStream();
             var tplBytes = File.ReadAllBytes(tplPath);
             ms.Write(tplBytes, 0, tplBytes.Length);
@@ -90,7 +90,7 @@ namespace DbAdm.Services
             //binding stream && docx
             using (var docx = WordprocessingDocument.Open(ms, true))
             {
-                //initial && read template file
+                #region 2.get body/row template string
                 var wordSet = new WordSetService(docx);
                 var mainTpl = wordSet.GetMainStr();
 
@@ -106,45 +106,51 @@ namespace DbAdm.Services
                     error = "can not find rowTpl String.";
                     goto lab_error;
                 }
+                #endregion
 
-                //columns loop
+                //table list loop
                 var bodyLeft = bodyTpl.Substring(0, rowStart);
                 var bodyRight = bodyTpl.Substring(rowEnd);
                 var fileStr = "";   //file string to echo
                 for (var i = 0; i < tableLen; i++)
                 {
-                    //file add table string
+                    #region 3.get table string
                     var tableCode = tables[i].TableCode;
                     var tableCols = tables[i].Cols;
                     fileStr += bodyLeft.Replace("[Table]", tableCode + "(" + tables[i].TableName + ")") +
                         _Word.TplFillRows(rowTpl, tableCols) +
                         bodyRight;
+                    #endregion
 
-                    //add page break if need
+                    #region 4.add page break if need
                     if (i < tableLen - 1)
                         fileStr += wordSet.GetPageBreak();
+                    #endregion
                 }
 
+                #region 5.get file string
                 fileStr = mainTpl.Substring(0, bodyStart) +
                     fileStr +
                     mainTpl.Substring(bodyEnd + 1);
 
                 //write string into docx
                 wordSet.WriteMainStr(fileStr);
+                #endregion
 
+                #region remark code
                 //Debug.Assert(IsDocxValid(doc), "Invalid File!");
                 //no save, but can debug !!
                 //mainPart.Document.Save();
                 //return;
+                #endregion
             }
 
-            //echo stream to file
+            //download file
             _Web.StreamToScreen(ms, "Table.docx");
             return;
-            #endregion
 
         lab_error:
-            _Log.Error("GenDocuService.cs Run() failed: " + error);
+            _Log.Error("GenWordService.cs Run() failed: " + error);
             return;
         }
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DbAdm.Tables
 {
-    public partial class Code
+    public partial class XpCode
     {
         public string Type { get; set; }
         public string Value { get; set; }

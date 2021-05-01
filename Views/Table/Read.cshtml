@@ -19,6 +19,7 @@
         </form>
         <form id='rform2' class='xg-form'>
             @await Component.InvokeAsync("XiText", new { title = "資料表名稱", fid = "Name", maxLen = 30 })
+            @await Component.InvokeAsync("XiSelect", new { title = "異動記錄", fid = "TranLog", rows = (List<IdStrDto>)ViewBag.YesNos })
         </form>
 
         <div class='xg-btns-box'>
@@ -36,6 +37,7 @@
                     <th>資料庫</th>
                     <th>資料表</th>
                     <th>資料表名稱</th>
+                    <th width='60px'>異動記錄</th>
                     <th width='80px'>維護功能</th>
                     <th width='60px'>資料狀態</th>
                 </tr>

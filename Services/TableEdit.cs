@@ -18,6 +18,7 @@ namespace DbAdm.Services
                     new EitemDto { Fid = "ProjectId" },
                     new EitemDto { Fid = "Code" },
                     new EitemDto { Fid = "Name" },
+                    new EitemDto { Fid = "TranLog" },
                     new EitemDto { Fid = "Note" },
                     new EitemDto { Fid = "Status" },
                 },

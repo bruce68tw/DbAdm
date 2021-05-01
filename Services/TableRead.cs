@@ -13,7 +13,7 @@ namespace DbAdm.Services
         {
             ReadSql = @"
 select 
-    a.Id, a.Code, a.Name, a.Status, 
+    a.*, 
     p.Code as ProjectCode, p.DbName
 from dbo.[Table] a
 inner join dbo.Project p on p.Id=a.ProjectId
@@ -32,6 +32,7 @@ order by p.Id, a.Name
                 new QitemDto { Fid = "ProjectId" },
                 new QitemDto { Fid = "Code", Op = ItemOpEstr.Like },
                 new QitemDto { Fid = "Name", Op = ItemOpEstr.Like2 },
+                new QitemDto { Fid = "TranLog" },
                 new QitemDto { Fid = "Status" },
             },
         };

@@ -105,9 +105,9 @@ var _iradio = $.extend({}, _ibase, {
     */
     render: function (fid, label, checked, value, editable, extClass, extProp) {
         var html = "" +
-            "<label class='xg-radio {0}'>" +
+            "<label class='xi-check {0}'>" +
             "   <input type='radio'{1}>{2}" +
-            "   <span></span>" +
+            "   <span class='xi-rspan'></span>" +
             "</label>";
 
         //adjust

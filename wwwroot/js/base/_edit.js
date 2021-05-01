@@ -143,6 +143,7 @@ var _edit = {
      * param key {string}
      */
     isNewKey: function (key) {
+        key = key.toString();   //convert to string for checking
         return (key.length <= 3);
     },
 

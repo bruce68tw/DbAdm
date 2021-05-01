@@ -17,8 +17,9 @@
                 { targets: [2], render: function (data, type, full, meta) {
                     var html = '' +
                         '<a href="javascript:_me.onImport(\'{0}\');">{1}</a> | ' +
-                        '<a href="javascript:_me.onGenWord(\'{0}\');">{2}</a>'; 
-                    return _str.format(html, full.Id, "匯入DB", "產生Word文件");
+                        '<a href="javascript:_me.onGenWord(\'{0}\');">{2}</a> | ' +
+                        '<a href="javascript:_me.onGenLogSql(\'{0}\');">{3}</a>'; 
+                    return _str.format(html, full.Id, '匯入DB', '產生Word文件', '產生異動Sql檔');
                 }},
                 { targets: [3], render: function (data, type, full, meta) {
                     return _crud.dtCrudFun(full.Id, full.Name, true, true, false);
@@ -47,6 +48,13 @@
     onGenWord: function (id) {
         _tool.ans("是否產生Word文件?", function () {
             window.location = 'GenWord?id=' + id;
+        });
+    },
+
+    //generate tranlog sql file
+    onGenLogSql: function (id) {
+        _tool.ans("是否產生異動Sql檔?", function () {
+            window.location = 'GenLogSql?id=' + id;
         });
     },
 

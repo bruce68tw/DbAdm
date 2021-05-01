@@ -87,6 +87,17 @@ var _date = {
     },
 
     /**
+     * timeStamp to ui datetime string
+     * param ts {string} timeStamp value, unit is second, convert to mini second
+     * return {string}
+     */
+    tsToUiDt: function (ts) {
+        return (ts == '')
+            ? ''
+            : moment(parseInt(ts) * 1000).format(_BR.UiDtFormat);
+    },
+
+    /**
      * get hour string from datetime string
      * param dts {string} datetime string
      * return {string}

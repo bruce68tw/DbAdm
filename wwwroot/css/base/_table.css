@@ -86,7 +86,7 @@
 }
 
 /* TODO: ?? */
-.xg-table .xi-check > span, .xg-table .xg-radio > span {
+.xg-table .xi-check > span {
     top: -10px !important;
     left: 8px !important;
 }

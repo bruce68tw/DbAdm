@@ -21,11 +21,13 @@ namespace DbAdm.Controllers
             return Content(new ProjectRead().GetPage(dt).ToString(), ContentTypeEstr.Json);
         }
 
+        /*
         [HttpPost]
         public JsonResult SetStatus(string key, bool status)
         {
             return Json(_Db.SetRowStatus("dbo.Project", "Id", key, status));
         }
+        */
 
         [HttpPost]
         public JsonResult Delete(string key)
@@ -35,11 +37,6 @@ namespace DbAdm.Controllers
         #endregion
 
         #region Edit View
-        public ActionResult Edit()
-        {
-            return View();
-        }
-
         [HttpPost]
         public ContentResult GetJson(string key)
         {
@@ -53,23 +50,29 @@ namespace DbAdm.Controllers
         }
         public JsonResult Update(string key, string json)
         {
-            //return Json(new ProjectEdit().Update(key, _Json.StrToJson(json)));
-            var result = new ProjectEdit().Update(key, _Json.StrToJson(json));
-            return Json(result);
-            //return Content(_Model.ToJsonStr(result));
+            return Json(new ProjectEdit().Update(key, _Json.StrToJson(json)));
         }
         #endregion
 
+        //import db schema into system
         //id: project Id
         public JsonResult Import(string id)
         {
-            return Json(new ProjectService().Import(id));
+            return Json(new ImportDbService().Run(id));
         }
 
+        //generate word file
         //id: project Id
         public void GenWord(string id)
         {
-            new GenDocuService().Run(id);
+            new GenWordService().Run(id);
+        }
+
+        //generate tran log sql file
+        //id: project Id
+        public void GenLogSql(string id)
+        {
+            new GenLogSqlService().Run(id);
         }
 
     }//class

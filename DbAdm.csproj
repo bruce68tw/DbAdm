@@ -47,11 +47,9 @@
     <None Remove="Services\zz_MyProfile0Service.cs_old" />
     <None Remove="Services\zz__Session.cs_old" />
     <None Remove="Services\_ProgPath.cs_old" />
-    <None Remove="Views\Shared\_Layout.cshtml_old" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Views\Shared\_Layout.cshtml_old" />
     <Content Include="_template\Table.docx" />
     <Content Include="_template\Table.xlsx" />
   </ItemGroup>

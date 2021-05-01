@@ -13,7 +13,7 @@ var _ifile = $.extend({}, _ibase, {
 
     setO: function (obj, value) {
         obj.val(value);     //set hidden input value
-        this._elmToLink(obj).text(value);  //set link show text
+        _ifile._elmToLink(obj).text(value);  //set link show text
     },
     //=== overwrite end ===
 
@@ -27,7 +27,7 @@ var _ifile = $.extend({}, _ibase, {
      */
     dataAddFile: function (data, fid, serverFid, box) {
         var obj = _obj.get(fid, box);
-        var file = this._getUploadFile(this._elmToFile(obj));
+        var file = _ifile.getUploadFile(_ifile._elmToFile(obj));
         var hasFile = (file != null);
         if (hasFile)
             data.append(serverFid, file);
@@ -36,18 +36,18 @@ var _ifile = $.extend({}, _ibase, {
 
     //=== event start ===
     onOpenFile: function (btn) {
-        var file = this._elmToFile(btn);
+        var file = _ifile._elmToFile(btn);
         file.focus().trigger('click'); //focus first !!
     },
 
     //file: input element
     onChangeFile: function (file) {
         //case of empty file
-        var obj = this._elmToObj(file);
+        var obj = _ifile._elmToObj(file);
         var fileObj = $(file);
         var value = file.value; //full path
         if (_str.isEmpty(value)) {
-            this.setO(obj, '');
+            _ifile.setO(obj, '');
             return;
         }
 
@@ -72,11 +72,11 @@ var _ifile = $.extend({}, _ibase, {
         }
 
         //case ok
-        this.setO(obj, _file.getFileName(value));
+        _ifile.setO(obj, _file.getFileName(value));
     },
 
     onDeleteFile: function (btn) {
-        this.setO(this.elmToObj(btn), '');
+        _ifile.setO(_ifile._elmToObj(btn), '');
     },
     //=== event end ===
 
@@ -84,12 +84,12 @@ var _ifile = $.extend({}, _ibase, {
     zz_init: function(fid, path, form) {
         var fileObj = _obj.get(fid, form);
         fileObj.val('');
-        //this.setFun(fileObj, ''); //set fun to empty
-        //this.setPathByFile(fileObj, path);
+        //_ifile.setFun(fileObj, ''); //set fun to empty
+        //_ifile.setPathByFile(fileObj, path);
 
         /*
         //file element 要 reset
-        var file = _obj.getF(this.fileF(id), form);
+        var file = _obj.getF(_ifile.fileF(id), form);
         //var $el = $('#example-file');
         file.wrap('<form>').closest('form').get(0).reset();
         file.unwrap();
@@ -104,19 +104,19 @@ var _ifile = $.extend({}, _ibase, {
      * return {object} file box object
      */
     _elmToBox: function (elm) {
-        return $(elm).closest('.xi-file');
+        return $(elm).closest('.xi-box');
     },
     //get file object
     _elmToFile: function (elm) {
-        return this._boxGetFile(this._elmToBox(elm));
+        return _ifile._boxGetFile(_ifile._elmToBox(elm));
     },
     //get input object
     _elmToObj: function (elm) {
-        return this._boxGetObj(this._elmToBox(elm));
+        return _ifile._boxGetObj(_ifile._elmToBox(elm));
     },
     //get link object
     _elmToLink: function (elm) {
-        return this._boxGetLink(this._elmToBox(elm));
+        return _ifile._boxGetLink(_ifile._elmToBox(elm));
     },
 
     /**
@@ -135,7 +135,10 @@ var _ifile = $.extend({}, _ibase, {
     },
 
     //border get uploaded file, return null if empty
-    _getUploadFile: function (fileObj) {
+    getUploadFile: function (fileObj) {
+        if (fileObj.length == 0)
+            return null;
+
         var files = fileObj.get(0).files;
         return (files.length > 0) ? files[0] : null;
     },

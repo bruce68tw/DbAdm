@@ -14,7 +14,7 @@ namespace DbAdm.Controllers
         public ActionResult Read()
         {
             //讀取專案欄位(下拉式)來源資料
-            ViewBag.Projects = _Code.GetProjects();
+            ViewBag.Projects = _XpCode.GetProjects();
             return View();
         }
 

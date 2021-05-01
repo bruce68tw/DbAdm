@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace DbAdm.Services
 {
     //與下拉欄位有關
-    public static class _Code
+    public static class _XpCode
     {
         public static List<IdStrDto> TableToCodes(string table, Db db = null)
         {
@@ -42,7 +42,7 @@ order by Id
 
         public static List<IdStrDto> GetTables(string projectId, Db db = null)
         {
-            if (string.IsNullOrEmpty(projectId) || !_Str.CheckKeyRule(projectId, "_Code.cs GetTables() projectId is wrong: " + projectId))
+            if (string.IsNullOrEmpty(projectId) || !_Str.CheckKeyRule(projectId, "_XpCode.cs GetTables() projectId is wrong: " + projectId))
                 return null;
 
             var sql = string.Format(@"
@@ -61,7 +61,7 @@ order by Code
             var sql = string.Format(@"
 select 
     Value as Id, Name as Str
-from dbo.Code
+from dbo.XpCode
 where Type='{0}'
 order by Sort
 ", type);
@@ -91,6 +91,14 @@ order by Sort
         public static List<IdStrDto> GetAuthTypes(Db db = null)
         {
             return GetCodes("AuthType", db);
+        }
+
+        public static List<IdStrDto> GetYesNos()
+        {
+            return new List<IdStrDto>() {
+                new IdStrDto(){ Id = "1", Str = "是" },
+                new IdStrDto(){ Id = "0", Str = "否" },
+            };
         }
 
         /*

@@ -31,20 +31,15 @@ namespace {{Project}}.Controllers
 	        {{#if ReadSelectCols}}
 			//for read view
 		        {{#each ReadSelectCols}}
-			ViewBag.{{this}} = _Code.Get{{this}}();
+			ViewBag.{{this}} = _XpCode.Get{{this}}();
 		        {{/each}}
 	        {{/if}}
 	        {{#if EditSelectCols}}
 			//for edit view
 		        {{#each EditSelectCols}}
-			ViewBag.{{this}} = _Code.Get{{this}}();
+			ViewBag.{{this}} = _XpCode.Get{{this}}();
 		        {{/each}}
 	        {{/if}}
-            return View();
-        }
-
-        public ActionResult Edit()
-        {
             return View();
         }
 

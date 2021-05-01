@@ -2,28 +2,17 @@
 @using DbAdm.Services
 
 @{
-    //var locale = _Locale.GetLocale();
-    //var locale = "zh-TW";
-    //var min = ".min";
-    var min = "";
+    var min = _Fun.IsDebug ? "" : ".min";   //min js 
     var menus = new List<MenuDto>()
     {
-        new MenuDto() { Icon = "fa-dashboard", Name = "專案維護", Url = "../Project/Read" },
-        new MenuDto() { Icon = "fa-users", Name = "資料表維護", Url = "../Table/Read" },
-        new MenuDto() { Icon = "fa-newspaper-o", Name = "欄位維護", Url = "../Column/Read" },
-        new MenuDto() { Icon = "fa-newspaper-o", Name = "CRUD維護", Url = "../MyCrud/Read" },
+        new MenuDto() { Name = "專案維護", Url = "/Project/Read" },
+        new MenuDto() { Name = "資料表維護", Url = "/Table/Read" },
+        new MenuDto() { Name = "欄位維護", Url = "/Column/Read" },
+        new MenuDto() { Name = "CRUD維護", Url = "/MyCrud/Read" },
     };
 }
 
 <style>
-    /*
-    #_Top {
-        color: #E7FFFF;
-        background: #438EB9;
-        height: 45px;
-    }
-    */
-
     .xu-body {
         display: inline-block;
         width: 100%;
@@ -40,13 +29,15 @@
     <title>@_Fun.Config.SystemName</title>
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+    <!-- css -->
     <link rel="stylesheet" href="~/css/lib@(min).css?Ver=@(_Xp.LibVer)" />
     <link rel="stylesheet" href="~/css/my@(min).css?ver=@(_Xp.SiteVer)" />
     @RenderSection("styles", required: false)
 
+    <!-- js: lib -->
     <script src="~/js/lib@(min).js?Ver=@(_Xp.LibVer)"></script>
 
-    <!-- for debug/production mode -->
+    <!-- js: this site, check debug/production mode !! -->
     <environment include="Production">
         <script src="~/js/my@(min).js?ver=@(_Xp.SiteVer)"></script>
     </environment>
@@ -56,17 +47,15 @@
         <script asp-src-include="~/js/view/_*.js"></script>
     </environment>
 
+    <!-- js: local -->
     <script src="~/js/zh-TW@(min).js?ver=@(_Xp.SiteVer)"></script>
+
     @RenderSection("scripts", required: false)
 
-    <!-- 必須放在前面 -->
+    <!-- put here !! -->
     <script type="text/javascript">
         $(function () {
-            //_locale_ 為 global variables, client基本元件會用到, 必須先設定 !!
-            /**/
             _fun.locale = 'zh-TW';
-            /**/
-            //alert('locale=' + _fun.locale);
             _xp.init();
         });
     </script>
@@ -78,16 +67,16 @@
 
     @* set height=100% in parent , so that menu be fine for ie & firefox !! *@
     <div class="d-flex align-items-stretch" style="height:100%">
-        <!-- Menu -->
+        <!-- left menu -->
         @await Component.InvokeAsync("XgLeftMenu", new { rows = menus })
 
-        <!-- Work Area -->
+        <!-- work area -->
         <div class="xu-body">
             @RenderBody()
         </div>
     </div>
 
-    <!-- public component(must await !!) -->
+    <!-- tool component -->
     @await Component.InvokeAsync("XgTool")
 
 </body>

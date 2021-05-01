@@ -1,0 +1,74 @@
+﻿
+//use Parsley.js
+var _valid = {
+
+    //error & valid calss same to jquer validate
+    errorClass: 'error',
+    //validClass: 'valid',
+
+    /**
+     * initial
+     * param form {object}
+     * param inputCfg {json} config
+     */
+    init: function (form) {
+
+        //remove data first
+        //form.removeData('validator');
+        //form.removeData('unobtrusiveValidation');
+
+        form.parsley()
+            .on('field:success', function () {
+                _valid._getError(this).removeClass(_valid.errorClass);
+            })
+            .on('field:error', function () {
+                _valid._getError(this).addClass(_valid.errorClass);
+                return false;
+            });
+
+        //default config
+        //this keyword not work inside !!
+        var config = {
+            /*
+            unhighlight: function (elm, errorClass, validClass) {
+                var me = $(elm);
+                me.data('edit', 1);    //註記此欄位有異動
+            }
+            */
+            //ignore: '',
+            errorElement: 'span',
+            onclick: false, //checkbox, radio, and select
+            /*
+            */
+            highlight: function (elm) {
+                _valid._getError(elm).addClass(_valid.errorClass);
+                return false;
+            },
+            unhighlight: function (elm) {
+                _valid._getError(elm).removeClass(_valid.errorClass);
+                return false;
+            },
+            //errorClass: 'label label-danger',
+            errorPlacement: function (error, elm) {
+                error.insertAfter(_valid._getBox(elm));
+                return false;
+            }
+        };
+
+        //加入外部傳入的自定義組態
+        //if (inputCfg)
+        //    config = _json.copy(inputCfg, config);
+
+        return form.validate(config);
+    },
+
+    _getBox: function (elm) {
+        return $(elm).closest('.xi-box');
+    },
+
+    //get error object
+    _getError: function (elm) {
+        return _valid._getBox(elm).next();
+    },
+
+}; //class

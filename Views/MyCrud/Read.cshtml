@@ -5,7 +5,7 @@
     });
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "CRUD管理" } })
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "CRUD維護" } })
 <div class="xp-prog">
     <!-- read form-->
     <div id="divRead">
@@ -15,11 +15,11 @@
                 @await Component.InvokeAsync("XiSelect", new { title = "專案", fid = "ProjectId2", rows = (List<IdStrDto>)ViewBag.Projects, inRow = true })
                 @await Component.InvokeAsync("XgFindTbar")
             </div>
-            @await Component.InvokeAsync("XiText", new { title = "資料表", fid = "Name" })
+            @await Component.InvokeAsync("XiText", new { title = "功能代碼", fid = "ProgCode" })
         </form>
 
         <!-- other functions -->
-        <div class="xg-btns-box">
+        <div class="xg-btns-box" style="margin-top:5px;">
             @await Component.InvokeAsync("XgCreate", new { fnOnClick = "_me.onCreate()" })
             <button type="button" class="btn xg-btn" onclick="_me.onGenCrud()">產生CRUD</button>
         </div>
