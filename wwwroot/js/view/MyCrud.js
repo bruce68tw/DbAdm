@@ -76,7 +76,7 @@ var _me = {
         _me.divItemsBody = _me.modalItems.find('tbody');
         _me.tplItemTr = $('#tplItemTr').html();   //tpl of modal item row
 
-        //變數
+        //variables
         _me.ritemTableId = '';  //now ritem table Id
         _me.tables = [];        //for table dropdownlist
         _me.etableLen = 0;      //edit table count(累加)
@@ -86,7 +86,7 @@ var _me = {
         _me.swapEitemCols();
 	},
 
-    //reset eitem columns: 重新show/hide eitem layoutcols, width 欄位
+    //reset eitem columns: re show/hide eitem layoutcols, width property
     swapEitemCols: function () {
         $('.xu-edit').each(function (idx, item) {
             var me = $(item);
@@ -104,13 +104,13 @@ var _me = {
         return _iselect.get('ProjectId', _crud.getEform0());
     },
 
-    //設定 etable TableId(dropdown)
+    //set etable TableId(dropdown)
     //edit0_afterLoadJson: function (json) {
     edit0_afterOpenEdit: function (fun, json) {
         if (fun == _fun.FunC)
             return;
 
-        //設定 tables list, 非同步, 傳入 function parameter 
+        //set tables list, async call, send function parameter 
         _me.onChangeProject(function () {
             _me.edit0_afterOpenEdit2(json);
         });
@@ -122,11 +122,11 @@ var _me = {
     //called by edit0_afterLoadRow()
     //edit0_afterLoadJson2: function (json) {
     edit0_afterOpenEdit2: function (json) {
-        //設定 form0 tableId select 欄位
+        //set form0 tableId select 欄位
         //var form = _crud.getEform0();
         //_iselect.set(_me.TableId, json[_me.TableId], form);
 
-        //設定 tabEtable(s) tableId select 欄位
+        //set tabEtable(s) tableId select 欄位
         var navRows = _crud.getChildRows(json, _me.etableChdIdx);
         var navLen = (navRows == null) ? 0 : navRows.length;
         for (var i = 0; i < navLen; i++) {
@@ -143,7 +143,7 @@ var _me = {
         }
     },
 
-    //設定sort
+    //set sort
     edit0_whenSave: function () {
 
         //qitem set sort
@@ -327,7 +327,7 @@ var _me = {
     onCreate: function () {
         _crud.onCreate();
 
-        //初始化 master edit
+        //init master edit
         _me.resetEdits();
         //_me.addEdit();
     },
@@ -488,7 +488,7 @@ var _me = {
     },
 
     //onclick add on (edit)nav
-    //必須設定 id=new index
+    //must set id=new index
     onEtableAdd: function () {
         
         _me.etableNavRemoveAct();
@@ -524,7 +524,6 @@ var _me = {
             return;
 
         //confirm
-        //debugger;
         _tool.ans('是否移除畫面資料?', function () {
             var nav = _me.getEtableNav();
             var tab = _me.getEtableTab();

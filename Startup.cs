@@ -1,11 +1,11 @@
 using Base.Enums;
 using Base.Models;
 using Base.Services;
-using DbAdm.Tables;
+using BaseWeb.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,44 +27,39 @@ namespace DbAdm
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //1.use newtonSoft & pascal case json
-            services.AddControllers().AddNewtonsoftJson(options =>
-                {
-                    options.UseMemberCasing();
-                });
+            //1.config MVC
+            services.AddControllersWithViews()
+                //view Localization
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                //use pascal for newtonSoft json
+                .AddNewtonsoftJson(options => { options.UseMemberCasing(); })
+                //use pascal for MVC json
+                .AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; });
 
-            //2.use pascal case json
-            services.AddControllersWithViews().AddJsonOptions(options =>
-                {                    
-                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                });
+            //2.set Resources path
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             //3.http context
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            //4.appSettings "FunConfig" section -> _Fun.Config
+            //4.user info for base component
+            services.AddSingleton<IBaseUserService, BaseUserService>();
+
+            //5.ado.net for mssql
+            services.AddTransient<DbConnection, SqlConnection>();
+            services.AddTransient<DbCommand, SqlCommand>();
+
+            //6.appSettings "FunConfig" section -> _Fun.Config
             var config = new ConfigDto();
             Configuration.GetSection("FunConfig").Bind(config);
             _Fun.Config = config;
 
-            //5.avoid CS1030
-            services.AddDbContext<MyContext>(options =>
-            {
-                options.UseSqlServer(config.Db);
-                //options.UseSqlServer(Configuration.GetConnectionString("Db"));
-            });
-
-            //6.locale & user info for base component
-            services.AddSingleton<IBaseResService, BaseResService>();
-            services.AddSingleton<IBaseUserService, BaseUserService>();
-
-            //7.ado.net for mssql
-            services.AddTransient<DbConnection, SqlConnection>();
-            services.AddTransient<DbCommand, SqlCommand>();
-
-            //8.initial _Fun by mssql
+            //7.initial _Fun by mssql
             IServiceProvider di = services.BuildServiceProvider();
             _Fun.Init(di, DbTypeEnum.MSSql);
+
+            //8.set locale
+            _Locale.SetCulture(_Fun.Config.Locale);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

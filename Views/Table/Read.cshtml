@@ -1,45 +1,94 @@
-﻿<script src="~/js/view/Table.js"></script>
+﻿@inject IHtmlLocalizer<DbAdm.R0> R
+
 <script type="text/javascript">
     $(function () {
         _me.init();
     });
+
+    var _me = {
+        init: function () {
+            //datatable config
+            var config = {
+                dom: _crud.dtDom,
+                columns: [
+                    { data: '_F1' },
+                    { data: 'ProjectCode' },
+                    { data: 'DbName' },
+                    { data: 'Code' },
+                    { data: 'Name' },
+                    { data: 'TranLog' },
+                    { data: '_CrudFun' },
+                    { data: 'Status' },
+                ],
+                columnDefs: [
+                    _crud.dtColConfig,
+                    { targets: [0], render: function (data, type, full, meta) {
+                        return _crud.dtCheck0(full.Id);
+                    }},
+                    { targets: [5], render: function (data, type, full, meta) {
+                        return _crud.dtYesEmpty(data);
+                    }},
+                    { targets: [6], render: function (data, type, full, meta) {
+                        return _crud.dtCrudFun(full.Id, full.Name, true, true, false);
+                    }},
+                    { targets: [7], render: function (data, type, full, meta) {
+                        return _crud.dtStatusName(data);
+                    }},
+                ],
+            };
+
+            //初始化 crud
+            _me.mCol = new EditMany('Id', 'eformCol', 'tplCol', 'tr');   //多筆
+            _crud.init(config, [null, _me.mCol]);
+        },
+
+        //generate Word document
+        onGenWord: function () {
+            var values = _icheck.getCheckeds(_me.divRead);
+            if (values.length > 0)
+                window.location = 'GenWord?keys=' + values.join(',');
+            else
+                _tool.msg(R.selectRow);
+        },
+
+    }; //class
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "資料表維護" } })
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R["MenuTable"].Value } })
 <div class="xp-prog">
     <!-- read form-->
     <div id="divRead">
         <!-- condition -->
-        <form id='rform' class='xg-form' style="margin-bottom:0;">
+        <form id='rform' class='xg-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new { title = "專案", fid = "ProjectId", rows = (List<IdStrDto>)ViewBag.Projects, inRow = true })
+                @await Component.InvokeAsync("XiSelect", new { title = R["Project"].Value, fid = "ProjectId", rows = (List<IdStrDto>)ViewBag.Projects, inRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new { isHorizontal = true, hasReset = true, hasFind2 = true })
             </div>
-            @await Component.InvokeAsync("XiText", new { title = "資料表", fid = "Code", maxLen = 30 })
+            @await Component.InvokeAsync("XiText", new { title = R["Table"].Value, fid = "Code", maxLen = 30 })
         </form>
         <form id='rform2' class='xg-form'>
-            @await Component.InvokeAsync("XiText", new { title = "資料表名稱", fid = "Name", maxLen = 30 })
-            @await Component.InvokeAsync("XiSelect", new { title = "異動記錄", fid = "TranLog", rows = (List<IdStrDto>)ViewBag.YesNos })
+            @await Component.InvokeAsync("XiText", new { title = R["TableName"].Value, fid = "Name", maxLen = 30 })
+            @await Component.InvokeAsync("XiSelect", new { title = R["TranLog"].Value, fid = "TranLog", rows = (List<IdStrDto>)ViewBag.YesNos })
         </form>
 
-        <div class='xg-btns-box'>
+        <div class='xg-btns-box' style="margin-top:5px;">
             @await Component.InvokeAsync("XgCreate")
             @await Component.InvokeAsync("XgExport")
-            <button type="button" class="btn xg-btn" onclick="_me.onGenWord()">產生Word文件</button>
+            <button type="button" class="btn xg-btn" onclick="_me.onGenWord()">@R["GenDocu"]</button>
         </div>
 
         <!-- result list -->
         <table id="table1" class="table table-bordered xg-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th width="60px">選取</th>
-                    <th>專案</th>
-                    <th>資料庫</th>
-                    <th>資料表</th>
-                    <th>資料表名稱</th>
-                    <th width='60px'>異動記錄</th>
-                    <th width='80px'>維護功能</th>
-                    <th width='60px'>資料狀態</th>
+                    <th width="60px">@R["Select"]</th>
+                    <th>@R["Project"]</th>
+                    <th>@R["DbName"]</th>
+                    <th>@R["Table"]</th>
+                    <th>@R["TableName"]</th>
+                    <th width='60px'>@R["TranLog"]</th>
+                    <th width='80px'>@R["Crud"]</th>
+                    <th width='60px'>@R["Status"]</th>
                 </tr>
             </thead>
             <tbody></tbody>

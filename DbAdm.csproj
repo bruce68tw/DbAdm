@@ -47,16 +47,21 @@
     <None Remove="Services\zz_MyProfile0Service.cs_old" />
     <None Remove="Services\zz__Session.cs_old" />
     <None Remove="Services\_ProgPath.cs_old" />
+    <None Remove="_template\en-US\Table.docx" />
+    <None Remove="_template\zh-CN\Table.docx" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="_template\Table.docx" />
+    <Content Include="_template\en-US\Table.docx" />
+    <Content Include="_template\zh-CN\Table.docx" />
+    <Content Include="_template\zh-TW\Table.docx" />
     <Content Include="_template\Table.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="Handlebars.Net" Version="2.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.4" />
@@ -83,16 +88,14 @@
     <None Include="Views\Project\Edit.cshtml" />
     <None Include="Views\Project\Read.cshtml" />
     <None Include="wwwroot\css\icomoon.css" />
-    <None Include="wwwroot\locale\en-US\BaseR0.json_old" />
-    <None Include="wwwroot\locale\en-US\dataTables.txt" />
-    <None Include="wwwroot\locale\en-US\R0.j_old" />
-    <None Include="wwwroot\locale\en-US\RB.js" />
-    <None Include="wwwroot\locale\en-US\Table.docx" />
-    <None Include="wwwroot\locale\zh-CN\datepicker.zh-CN.js" />
-    <None Include="wwwroot\locale\zh-CN\R.js" />
-    <None Include="wwwroot\locale\zh-CN\R.js_old" />
-    <None Include="wwwroot\locale\zh-CN\summernote.js" />
+    <None Include="wwwroot\locale\en-US\bootstrap-datepicker.js" />
+    <None Include="wwwroot\locale\en-US\Table.docx_old" />
+    <None Include="wwwroot\locale\en-US\validate.j_old" />
+    <None Include="wwwroot\locale\en-US\_BR.js" />
+    <None Include="wwwroot\locale\zh-CN\bootstrap-datepicker.js" />
+    <None Include="wwwroot\locale\zh-CN\summernote.j_old" />
     <None Include="wwwroot\locale\zh-CN\validate.js" />
+    <None Include="wwwroot\locale\zh-CN\_BR.js" />
     <None Include="wwwroot\locale\zh-TW\bootstrap-datepicker.js" />
     <None Include="wwwroot\locale\zh-TW\calendar.j_old" />
     <None Include="wwwroot\locale\zh-TW\dataTables.txt" />

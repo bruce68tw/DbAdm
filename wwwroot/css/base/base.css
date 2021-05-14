@@ -14,5 +14,5 @@ body, label {
 
 /* button 和後面的 icon 的間距*/
 .btn > i {
-    padding-left: 1px;
+    padding-left: 3px;
 }

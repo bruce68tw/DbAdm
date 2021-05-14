@@ -15,7 +15,6 @@ namespace DbAdm.Controllers
         {
             using (var db = new Db())
             {
-                //讀取專案欄位(下拉式)來源資料
                 ViewBag.Projects = _XpCode.GetProjects(db);
                 ViewBag.RitemTypes = _XpCode.GetRitemTypes(db);
                 ViewBag.InputTypes = _XpCode.GetInputTypes(db);
@@ -34,20 +33,18 @@ namespace DbAdm.Controllers
         #endregion
 
         #region Edit View
-        BaseResDto _baseInfo;
-        public ActionResult Edit(
-            IBaseResService baseInfoService)
+        //BaseResDto _baseInfo;
+        public ActionResult Edit()
         {
-            _baseInfo = baseInfoService.GetData();
+            //_baseInfo = baseInfoService.GetData();
             return View();
         }
         
-        //傳回json必須用ContentResult (JsonResult用來傳回model)
+        //ContentResult for newton json, (JsonResult for model)
         public ContentResult GetJson(string key)
         {
             return Content(new MyCrudEdit().GetJson(key).ToString(), ContentTypeEstr.Json);
         }
-
 
         public JsonResult SetStatus(string key, bool status)
         {

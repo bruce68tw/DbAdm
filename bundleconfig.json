@@ -62,8 +62,7 @@
     "inputFiles": [
       "wwwroot/locale/zh-TW/*.js"
     ]
-  }
-  /*
+  },
   {
     "outputFileName": "wwwroot/js/zh-CN.js",
     "inputFiles": [
@@ -76,5 +75,4 @@
       "wwwroot/locale/en-US/*.js"
     ]
   }
-  */
 ]

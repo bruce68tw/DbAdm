@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace DbAdm.Services
 {
-    public class GenWordService
+    public class GenDocuService
     {
         /// <summary>
         /// generate database word document
@@ -25,7 +25,7 @@ namespace DbAdm.Services
             }
 
             //var locale = _Fun.GetLocale();
-            var tplPath = _Xp.GetTpl("Table.docx");
+            var tplPath = _Xp.GetTpl("Table.docx", true);
             if (!File.Exists(tplPath))
             {
                 error = "no file " + tplPath;

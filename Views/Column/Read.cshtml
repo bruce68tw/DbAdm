@@ -1,7 +1,4 @@
-﻿@using Base.Models
-@{
-    //var cols = new int[] { 12, 2, 3 };
-}
+﻿@inject IHtmlLocalizer<DbAdm.R0> R
 
 <script src="~/js/view/Column.js"></script>
 <script type="text/javascript">
@@ -10,31 +7,28 @@
     });
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "欄位維護" } })
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R["MenuColumn"].Value } })
 <div class="xp-prog">
-    <!-- 查詢畫面 -->
     <div id="divRead">
-        <!-- 查詢條件 -->
         <form id='rform' class='xg-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new { title = "專案", fid = "ProjectId", rows = (List<IdStrDto>)ViewBag.Projects, inRow = true })
+                @await Component.InvokeAsync("XiSelect", new { title = R["Project"].Value, fid = "ProjectId", rows = (List<IdStrDto>)ViewBag.Projects, inRow = true })
                 @await Component.InvokeAsync("XgFindTbar")
             </div>
-            @await Component.InvokeAsync("XiText", new { title = "資料表", fid = "TableCode", maxLen = 30 })
-            @await Component.InvokeAsync("XiText", new { title = "欄位", fid = "Code", maxLen = 30 })
+            @await Component.InvokeAsync("XiText", new { title = R["Table"].Value, fid = "TableCode", maxLen = 30 })
+            @await Component.InvokeAsync("XiText", new { title = R["Column"].Value, fid = "Code", maxLen = 30 })
         </form>
 
-        <!-- 查詢結果 -->
         <table id="table1" class="table table-bordered xg-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th>專案</th>
-                    <th>資料表</th>
-                    <th>欄位</th>
-                    <th>欄位名稱</th>
-                    <th>資料型態</th>
-                    <th width='80px'>維護功能</th>
-                    <th width='60px'>資料狀態</th>
+                    <th>@R["Project"]</th>
+                    <th>@R["Table"]</th>
+                    <th>@R["Column"]</th>
+                    <th>@R["ColName"]</th>
+                    <th>@R["DataType"]</th>
+                    <th width='80px'>@R["Crud"]</th>
+                    <th width='60px'>@R["Status"]</th>
                 </tr>
             </thead>
             <tbody></tbody>

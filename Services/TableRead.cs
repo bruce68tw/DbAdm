@@ -47,7 +47,7 @@ order by p.Id, a.Name
         //¶×¥X excel
         public void Export(JObject cond)
         {
-            _WebExcel.ExportByRead(dto, cond, "Table.xlsx", _Xp.GetTpl("Table.xlsx"), 1);
+            _WebExcel.ExportByRead(dto, cond, "Table.xlsx", _Xp.GetTpl("Table.xlsx", false), 1);
             //_WebExcel.ReadToScreen(dto, cond, "Table.xlsx");
         }
 

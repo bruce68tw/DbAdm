@@ -1,14 +1,18 @@
 ﻿@using Base.Models
 @using DbAdm.Services
+@inject IHtmlLocalizer<DbAdm.R0> R
 
 @{
-    var min = _Fun.IsDebug ? "" : ".min";   //min js 
+    _Fun.Config.SystemName = R["SystemName"].Value;
+    var locale = _Fun.GetLocaleByUser();
+    //_Locale.SetCulture(locale);
+    var min = _Fun.IsDebug ? "" : ".min";   //min js
     var menus = new List<MenuDto>()
     {
-        new MenuDto() { Name = "專案維護", Url = "/Project/Read" },
-        new MenuDto() { Name = "資料表維護", Url = "/Table/Read" },
-        new MenuDto() { Name = "欄位維護", Url = "/Column/Read" },
-        new MenuDto() { Name = "CRUD維護", Url = "/MyCrud/Read" },
+        new MenuDto() { Name = R["MenuProject"].Value, Url = "/Project/Read" },
+        new MenuDto() { Name = R["MenuTable"].Value, Url = "/Table/Read" },
+        new MenuDto() { Name = R["MenuColumn"].Value, Url = "/Column/Read" },
+        new MenuDto() { Name = R["MenuCrud"].Value, Url = "/MyCrud/Read" },
     };
 }
 
@@ -48,14 +52,14 @@
     </environment>
 
     <!-- js: local -->
-    <script src="~/js/zh-TW@(min).js?ver=@(_Xp.SiteVer)"></script>
+    <script src="~/js/@(locale+min).js?ver=@(_Xp.SiteVer)"></script>
 
     @RenderSection("scripts", required: false)
 
     <!-- put here !! -->
     <script type="text/javascript">
         $(function () {
-            _fun.locale = 'zh-TW';
+            _fun.locale = '@(locale)';
             _xp.init();
         });
     </script>

@@ -1,0 +1,27 @@
+﻿{
+  "BtnCreate": "Create",
+  "BtnAddRow": "Add Row",
+  "BtnFind": "Find",
+  "BtnFind2": "Expand",
+  "BtnSave": "Save",
+  "BtnToRead": "Previous",
+  "BtnExport": "Export",
+  "BtnReset": "Reset",
+  "BtnOpen": "Open",
+	
+  "BtnYes": "Yes",
+  "BtnCancel": "Cancel",
+  "BtnClose": "Close",
+
+  /* front dt format pass to c# */
+  "FrontDtFormat": "yyyy/MM/dd HH:mm:ss",
+
+  "PlsSelect": "-Select-",
+  "TipDeleteRow": "Delete this Row",
+
+  "NoProgAuth": "You have not access right, Please connect Admin.",
+  "NotLogin": "Please Login First.",
+
+  "Required": "Required",
+  "StrLen": "String too long({0})"
+}

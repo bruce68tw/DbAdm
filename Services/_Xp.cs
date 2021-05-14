@@ -8,7 +8,7 @@ namespace DbAdm.Services
     {
         //public const string SiteVer = "20201228f";     //for my.js/css
         public static string SiteVer = _Date.NowSecStr();
-        public const string LibVer = "20210312a";    //for lib.js/css
+        public const string LibVer = "20210505c";    //for lib.js/css
 
         //constant
         //upload file max size(MB)
@@ -19,15 +19,15 @@ namespace DbAdm.Services
             return new MyContext();
         }
 
-        public static string GetTpl(string fileName)
+        public static string GetTpl(string fileName, bool hasLocale)
         {
-            return _Fun.DirRoot + "_template\\" + fileName;
+            var dir = _Fun.DirRoot + "_template\\";
+            if (hasLocale)
+                dir += _Fun.GetLocaleByUser() + "\\";
+            return dir + fileName;
         }
         
 
-        //1:繁中, 2:英文, 3:簡中
-        //private static string[] Langs = new string[] { "zh-TW", "en-US", "zh-CN" };
-        //get locale no
         /*
         public static SessionModel GetSession()
         {

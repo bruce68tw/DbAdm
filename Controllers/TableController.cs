@@ -11,7 +11,6 @@ namespace DbAdm.Controllers
     //[Permission(Prog = _Prog.Course)]
     public class TableController : Controller
     {
-        #region Read View
         public ActionResult Read()
         {
             ViewBag.Projects = _XpCode.GetProjects(); //dropdown
@@ -29,9 +28,7 @@ namespace DbAdm.Controllers
         {
             new TableRead().Export(_Json.StrToJson(cond));
         }
-        #endregion
 
-        #region Edit View
         public ContentResult GetJson(string key)
         {
             return Content(new TableEdit().GetJson(key).ToString(), ContentTypeEstr.Json);
@@ -55,7 +52,6 @@ namespace DbAdm.Controllers
         {
             return Json(new TableEdit().Update(key, _Json.StrToJson(json)));
         }
-        #endregion
 
         #region others
         //generate database document in word type
@@ -63,7 +59,7 @@ namespace DbAdm.Controllers
         public void GenWord(string keys)
         {
             var tableIds = keys.Split(',');
-            new GenWordService().Run("", tableIds);
+            new GenDocuService().Run("", tableIds);
         }
 
         public async Task GenCrudAsync(string keys)

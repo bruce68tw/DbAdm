@@ -23,7 +23,7 @@ namespace DbAdm.Services
             }
 
             #region check template file
-            var filePath = _Xp.GetTpl("TranLog.sql");
+            var filePath = _Xp.GetTpl("TranLog.sql", false);
             var tplLog = _File.ToStr(filePath);
             if (string.IsNullOrEmpty(tplLog))
             {

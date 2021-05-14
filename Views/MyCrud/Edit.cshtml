@@ -1,5 +1,6 @@
-﻿@using Base.Models
-@using Base.Services
+﻿@inject IHtmlLocalizer<DbAdm.R0> R0
+@inject IViewLocalizer R
+
 @{
     var cols2 = "4,6";     //2 columns per row
 }
@@ -13,7 +14,7 @@
     #tableItem th:nth-child(2), #tableItem td:nth-child(2) {
         flex-basis: 200px;
     }
-    /* 取餘下寬度 */
+    /* get remain width */
     #tableItem th:nth-child(3), #tableItem td:nth-child(3) {
         flex-grow: 1;
     }
@@ -26,43 +27,43 @@
     <div class="row">
         <!-- left columns -->
         <div class="col-md-6">
-            @await Component.InvokeAsync("XiSelect", new { title = "專案", fid = "ProjectId", rows = (List<IdStrDto>)ViewBag.Projects, required = true, cols = cols2, fnOnChange = "_me.onChangeProject()" })
-            @await Component.InvokeAsync("XiText", new { title = "功能代碼", fid = "ProgCode", maxLen = 30, required = true, cols = cols2 })
-            @await Component.InvokeAsync("XiText", new { title = "功能名稱", fid = "ProgName", maxLen = 30, required = true, cols = cols2 })
+            @await Component.InvokeAsync("XiSelect", new { title = R0["Project"].Value, fid = "ProjectId", rows = (List<IdStrDto>)ViewBag.Projects, required = true, cols = cols2, fnOnChange = "_me.onChangeProject()" })
+            @await Component.InvokeAsync("XiText", new { title = R0["ProgCode"].Value, fid = "ProgCode", maxLen = 30, required = true, cols = cols2 })
+            @await Component.InvokeAsync("XiText", new { title = R0["ProgName"].Value, fid = "ProgName", maxLen = 30, required = true, cols = cols2 })
 
             <div class="row">
-                <div class="col-md-4 xg-label">查詢功能</div>
+                <div class="col-md-4 xg-label">@R["FunRead"]</div>
                 <div class="col-md-8" style="padding-top:5px;">
-                    @await Component.InvokeAsync("XiCheck", new { fid = "HasExport", isCheck = true, label = "匯出" })
-                    @await Component.InvokeAsync("XiCheck", new { fid = "HasReset", isCheck = true, label = "重設" })
+                    @await Component.InvokeAsync("XiCheck", new { fid = "HasExport", isCheck = true, label = R["Export"].Value })
+                    @await Component.InvokeAsync("XiCheck", new { fid = "HasReset", isCheck = true, label = R["Reset"].Value })
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 xg-label">維護功能</div>
+                <div class="col-md-4 xg-label">@R["FunEdit"]</div>
                 <div class="col-md-8" style="padding-top:5px;">
-                    @await Component.InvokeAsync("XiCheck", new { fid = "HasCreate", isCheck = true, label = "新增" })
-                    @await Component.InvokeAsync("XiCheck", new { fid = "HasUpdate", isCheck = true, label = "修改" })
-                    @await Component.InvokeAsync("XiCheck", new { fid = "HasDelete", isCheck = true, label = "刪除" })
-                    @await Component.InvokeAsync("XiCheck", new { fid = "HasView", isCheck = true, label = "檢視" })
+                    @await Component.InvokeAsync("XiCheck", new { fid = "HasCreate", isCheck = true, label = R["Create"].Value })
+                    @await Component.InvokeAsync("XiCheck", new { fid = "HasUpdate", isCheck = true, label = R["Update"].Value })
+                    @await Component.InvokeAsync("XiCheck", new { fid = "HasDelete", isCheck = true, label = R["Delete"].Value })
+                    @await Component.InvokeAsync("XiCheck", new { fid = "HasView", isCheck = true, label = R["View"].Value })
                 </div>
             </div>
-            @await Component.InvokeAsync("XiCheck", new { title = "資料狀態", fid = "Status", isCheck = true, label = "啟用", cols = cols2 })
+            @await Component.InvokeAsync("XiCheck", new { title = R0["Status"].Value, fid = "Status", isCheck = true, label = R0["Active"].Value, cols = cols2 })
         </div>
 
         <!-- right columns -->
         <div class="col-md-6">
-            @await Component.InvokeAsync("XiSelect", new { title = "權限種類", fid = "AuthType", rows = (List<IdStrDto>)ViewBag.AuthTypes, required = true, cols = cols2 })
-            @await Component.InvokeAsync("XiRadios", new { title = "查詢Label位置", fid = "LabelHori", rows = _Str.ToIdStrs("1,水平,0,垂直"), cols = cols2 })
-            @await Component.InvokeAsync("XiText", new { title = "資料表別名", fid = "TableAs", maxLen = 10, cols = cols2, tip = "table alias name" })
-            @await Component.InvokeAsync("XiTextArea", new { title = "讀取資料 Sql", fid = "ReadSql", cols = "4,8", rowsCount = 5 })
+            @await Component.InvokeAsync("XiSelect", new { title = R["AuthType"].Value, fid = "AuthType", rows = (List<IdStrDto>)ViewBag.AuthTypes, required = true, cols = cols2 })
+            @await Component.InvokeAsync("XiRadios", new { title = R["RlabelPos"].Value, fid = "LabelHori", rows = _Str.ToIdStrs("1," + R["Hori"].Value + ",0," + R["Verti"].Value), cols = cols2 })
+            @await Component.InvokeAsync("XiText", new { title = R["TableAs"].Value, fid = "TableAs", maxLen = 10, cols = cols2, tip = R["TipTableAs"].Value })
+            @await Component.InvokeAsync("XiTextArea", new { title = R["ReadSql"].Value, fid = "ReadSql", cols = "4,8", rowsCount = 5 })
         </div>
     </div>
 </form>
 
 <!-- find buttons -->
 <div class="xg-btns-box">
-    <span class="xg-block-label">查詢條件欄位</span>
-    <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("Q")'>選取欄位</button>
+    <span class="xg-block-label">@R["Qitem"]</span>
+    <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("Q")'>@R["GetItem"]</button>
 </div>
 
 <!-- find field -->
@@ -70,27 +71,27 @@
     <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
         <thead>
             <tr>
-                <th>欄位</th>
-                <th>欄位名稱</th>
-                <th>欄位類別</th>
-                <th>資料表別名</th>
-                <th>欄位種類</th>
-                <th>欄位資料</th>
-                <th>比對方式</th>
-                <th>其他屬性</th>
-                @await Component.InvokeAsync("XgTh", new { title = "起迄", tip = "是否包含起迄欄位, 通常用於日期欄位" })
-                @await Component.InvokeAsync("XgTh", new { title = "群組", tip = "相同的群組將排在同一列" })
-                @await Component.InvokeAsync("XgTh", new { title = "佈局", tip = "Label,欄位寬度(逗號分隔)" })
-                @await Component.InvokeAsync("XgTh", new { title = "進階", tip = "以下為進階查詢畫面欄位" })
-                <th>操作</th>
+                <th>@R0["Column"]</th>
+                <th>@R0["ColName"]</th>
+                <th>@R0["DataType"]</th>
+                <th>@R["TableAs"]</th>
+                <th>@R["InputType"]</th>
+                <th>@R["InputData"]</th>
+                <th>@R["OpType"]</th>
+                <th>@R["OtherAttr"]</th>
+                @await Component.InvokeAsync("XgTh", new { title = R["StartEnd"].Value, tip = R["TipStartEnd"].Value })
+                @await Component.InvokeAsync("XgTh", new { title = R["Group"].Value, tip = R["TipGroup"].Value })
+                @await Component.InvokeAsync("XgTh", new { title = R["Layout"].Value, tip = R["TipLayout"].Value })
+                @await Component.InvokeAsync("XgTh", new { title = R["Find2"].Value, tip = R["TipFind2"].Value })
+                <th>@R0["Crud"]</th>
             </tr>
         </thead>
-        <!-- body 搭配 tplQitem -->
+        <!-- body match tplQitem -->
         <tbody id="divQitemBody"></tbody>
     </table>
 </form>
 
-<!--template: 編輯畫面 Qitem -->
+<!--template: edit form Qitem -->
 <script id="tplQitem" type="text/template">
     <tr class="xu-tr">
         @await Component.InvokeAsync("XiHide", new { fid = "Id" })
@@ -110,29 +111,29 @@
         <td width="60px">@await Component.InvokeAsync("XiText", new { fid = "PosGroup" })</td>
         <td width="80px">@await Component.InvokeAsync("XiText", new { fid = "LayoutCols" })</td>
         <td width="60px" class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "IsFind2" })</td>
-        <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mQitem" })</td>        
+        <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mQitem" })</td>
     </tr>
 </script>
 
-<!-- 查詢結果欄位button -->
+<!-- query result buttons -->
 <div class="xg-btns-box">
-    <span class="xg-block-label">查詢結果欄位</span>
+    <span class="xg-block-label">@R["Ritem"]</span>
     @await Component.InvokeAsync("XgAddRow", "_me.onRitemAdd()")
-    <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("R")'>選取欄位</button>
+    <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("R")'>@R["GetItem"]</button>
 </div>
 
 
-<!-- 查詢結果欄位 -->
+<!-- query result fields -->
 <form id='eformRitem' class='xg-form' style="border:none">
     <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
         <thead>
             <tr>
-                <th>欄位</th>
-                <th>欄位名稱</th>
-                @await Component.InvokeAsync("XgTh", new { title = "欄位寬度(px)", tip = "0或空白表示寬度為自動調整" })
-                <th>欄位種類</th>
-                <th>欄位資料</th>
-                <th>操作</th>
+                <th>@R0["Column"]</th>
+                <th>@R0["ColName"]</th>
+                @await Component.InvokeAsync("XgTh", new { title = R["Width"].Value, tip = R["TipWidth"].Value })
+                <th>@R["InputType"]</th>
+                <th>@R["InputData"]</th>
+                <th>@R0["Crud"]</th>
             </tr>
         </thead>
         <!-- body 搭配 tplRitem -->
@@ -140,7 +141,7 @@
     </table>
 </form>
 
-<!--template: 編輯畫面 Ritem -->
+<!--template: eidt form Ritem -->
 <script id="tplRitem" type="text/template">
     <tr class="xu-tr">
         @await Component.InvokeAsync("XiHide", new { fid = "Id" })
@@ -149,27 +150,27 @@
 
         <td width="180px">@await Component.InvokeAsync("XiText", new { fid = "ColumnCode" })</td>
         <td width="180px">@await Component.InvokeAsync("XiText", new { fid = "Name" })</td>
-        <td width="100px">@await Component.InvokeAsync("XiNum", new { fid = "Width" })</td>        
+        <td width="100px">@await Component.InvokeAsync("XiNum", new { fid = "Width" })</td>
         <td width="250px">@await Component.InvokeAsync("XiSelect", new { fid = "RitemType", rows = (List<IdStrDto>)ViewBag.RitemTypes })</td>
         <td>@await Component.InvokeAsync("XiText", new { fid = "ExtInfo" })</td>
         <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mRitem" })</td>
     </tr>
 </script>
 
-<!-- Table編輯畫面 nav/tab/buttons -->
+<!-- Table edit form nav/tab/buttons -->
 <div class="xg-btns-box">
-    <span class="xg-block-label">編輯畫面</span>
-    <button type='button' class='btn xg-btn' onclick='_me.onEtableAdd()'>新增</button>
-    <button type='button' class='btn xg-btn' onclick='_me.onEtableDelete()'>刪除</button>
-    <button type='button' class='btn xg-btn' onclick='_me.onEtableLeft()'>左移</button>
-    <button type='button' class='btn xg-btn' onclick='_me.onEtableRight()'>右移</button>
+    <span class="xg-block-label">@R["EditForm"]</span>
+    <button type='button' class='btn xg-btn' onclick='_me.onEtableAdd()'>@R["Create"]</button>
+    <button type='button' class='btn xg-btn' onclick='_me.onEtableDelete()'>@R["Delete"]</button>
+    <button type='button' class='btn xg-btn' onclick='_me.onEtableLeft()'>@R["MoveLeft"]</button>
+    <button type='button' class='btn xg-btn' onclick='_me.onEtableRight()'>@R["MoveRight"]</button>
 </div>
 <ul class="nav nav-tabs" id="navEtable"></ul>
 <div class="tab-content" id="tabEtable"></div>
 
 @await Component.InvokeAsync("XgSaveBack")
 
-<!-- template: 編輯畫面 nav, 使用 index 來串聯 nav tab -->
+<!-- template: eidt form nav, use index to connect nav tab -->
 <script id="tplNavEtable" type="text/template">
     <li class='nav-item' data-index='{{Index}}'>
         <a class='nav-link' data-toggle='tab' href='#divEtable{{Index}}' onclick='_me.onEtableNav({{Index}})'>
@@ -177,7 +178,7 @@
     </li>
 </script>
 
-<!-- template: CrudEdit 編輯畫面 tab, 佈局/寬度 2個欄位為動態切換 -->
+<!-- template: CrudEdit edit form tab, layout/width fields are dynamic switch -->
 <script id="tplTabEtable" type="text/template">
     <div class="tab-pane xu-edit" id="divEtable{{Index}}">
         <!-- xg-form also for myCrud.js -->
@@ -187,42 +188,41 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    @await Component.InvokeAsync("XiSelect", new { title = "資料表", fid = "TableId", required = true, cols = cols2, fnOnChange = "_me.onChangeNowTable({{Index}})" })
-                    @await Component.InvokeAsync("XiText", new { title = "主Key欄位", fid = "PkeyFid", maxLen = 10, required = true, cols = cols2 })
-                    @await Component.InvokeAsync("XiText", new { title = "外Key欄位", fid = "FkeyFid", maxLen = 10, cols = cols2, tip = "2nd Table則為必填" })
+                    @await Component.InvokeAsync("XiSelect", new { title = R0["Table"].Value, fid = "TableId", required = true, cols = cols2, fnOnChange = "_me.onChangeNowTable({{Index}})" })
+                    @await Component.InvokeAsync("XiText", new { title = R["Pkey"].Value, fid = "PkeyFid", maxLen = 10, required = true, cols = cols2 })
+                    @await Component.InvokeAsync("XiText", new { title = R["Fkey"].Value, fid = "FkeyFid", maxLen = 10, cols = cols2, tip = R["TipFkey"].Value })
                 </div>
                 <div class="col-md-6">
-                    @await Component.InvokeAsync("XiText", new { title = "資料排序", fid = "OrderBy", maxLen = 10, cols = cols2, tip = "不含 order by 關鍵字" })
-                    @await Component.InvokeAsync("XiCheck", new { title = "Column 4", fid = "Col4", label = "是", cols = cols2, tip = "Creator, Created, Reviser, Revised 4個欄位" })
-                    @await Component.InvokeAsync("XiCheck", new { title = "一半寬度", fid = "HalfWidth", label = "是", cols = cols2, tip = "Child Etable only" })
+                    @await Component.InvokeAsync("XiText", new { title = R["DataSort"].Value, fid = "OrderBy", maxLen = 10, cols = cols2, tip = R["TipDataSort"].Value })
+                    @await Component.InvokeAsync("XiCheck", new { title = R["Col4"].Value, fid = "Col4", label = R0["Yes"].Value, cols = cols2, tip = R["TipCol4"].Value })
+                    @await Component.InvokeAsync("XiCheck", new { title = R["HalfWidth"].Value, fid = "HalfWidth", label = R0["Yes"].Value, cols = cols2, tip = R["TipHalfWidth"].Value })
                 </div>
             </div>
         </form>
 
         <div class="xg-btns-box">
-            <span class="xg-block-label">編輯欄位</span>
-            <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("E")'>選取欄位</button>
+            <span class="xg-block-label">@R["Eitem"]</span>
+            <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("E")'>@R["GetItem"]</button>
         </div>
         <form class="xu-form2">
             <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>欄位<br>欄位名稱</th>
-                        <th>資料型態</th>
-                        @*@await Component.InvokeAsync("XgTh", new { title = "欄位種類", tip = "若為下拉欄位, 則必須填欄位資料" })*@
-                        <th>欄位種類</th>
-                        @await Component.InvokeAsync("XgTh", new { title = "欄位資料", tip = "下拉欄位/Radio:資料來源, checkbox:label, 唯讀:fid" })
-                        <th>必填</th>
-                        <th>新增</th>
-                        <th>修改</th>
-                        <th>提示</th>
-                        <th>預設</th>
-                        <th>驗証方式</th>
-                        <th>驗証資料</th>
-                        @await Component.InvokeAsync("XgTh", new { title = "群組", tip = "欄位值相同會排在同一列" })
-                        <th class="xu-layout">佈局</th>
-                        <th class="xu-width">寬度</th>
-                        <th>操作</th>
+                        <th>@R0["Column"]<br>@R0["ColName"]</th>
+                        <th>@R0["DataType"]</th>
+                        <th>@R["InputType"]</th>
+                        @await Component.InvokeAsync("XgTh", new { title = R["InputData"].Value, tip = R["TipInputData"].Value })
+                        <th>@R["Required"]</th>
+                        <th>@R["Create"]</th>
+                        <th>@R["Update"]</th>
+                        <th>@R["Hint"]</th>
+                        <th>@R0["Default"]</th>
+                        <th>@R["ValidType"]</th>
+                        <th>@R["ValidData"]</th>
+                        @await Component.InvokeAsync("XgTh", new { title = R["Group"].Value, tip = R["TipGroup"].Value })
+                        <th class="xu-layout">@R["Layout"]</th>
+                        <th class="xu-width">@R["Width"]</th>
+                        <th>@R0["Crud"]</th>
                     </tr>
                 </thead>
                 <!-- tbody tr 內容為 tplEitemTr -->
@@ -232,7 +232,7 @@
     </div>
 </script>
 
-<!-- template: 編輯畫面 Eitem, xu-tr for myCrud.js, 顯示欄位用mustache render的方式填入 -->
+<!-- template: edit form Eitem, xu-tr for myCrud.js, show fields use mustache render to fill -->
 <script id="tplEitemTr" type="text/template">
     <tr class="xu-tr">
         @await Component.InvokeAsync("XiHide", new { fid = "Id", value = "{{Id}}" })
@@ -252,18 +252,18 @@
         <td width="90px">@await Component.InvokeAsync("XiText", new { fid = "CheckData" })</td>
         <td width="60px">@await Component.InvokeAsync("XiText", new { fid = "PosGroup" })</td>
         <td width="80px" class="xu-layout">@await Component.InvokeAsync("XiText", new { fid = "LayoutCols" })</td>
-        <td width="80px" class="xu-width">@await Component.InvokeAsync("XiNum", new { fid = "Width" })</td>        
+        <td width="80px" class="xu-width">@await Component.InvokeAsync("XiNum", new { fid = "Width" })</td>
         <td width="95px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mEitem" })</td>
     </tr>
 </script>
 
-<!-- 多筆 row template, 必須設定寬度, Nullable欄位先設定 false(再由前端設定) -->
-<!-- modal: Read item, 多個畫面共用 -->
+<!-- multiple row template, must set width, Nullable set false first then front side will set it -->
+<!-- modal: Read item, shared -->
 <div id="modalItems" class="modal fade xg-modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content" style="width:560px; height:520px;">
             <div class="modal-header">
-                <div class="modal-title">選取查詢欄位</div>
+                <div class="modal-title">@R["GetQitem"]</div>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -275,7 +275,7 @@
                         @await Component.InvokeAsync("XiSelect", new { fid = "TableId", rows = (List<IdStrDto>)ViewBag.Tables, fnOnChange = "_me.onChangeItemTable(this)" })
                     </div>
                     <div class="col-md-4 xg-right">
-                        <button type="button" class="btn btn-primary" onclick="_me.onItemModalOk()">確定</button>
+                        <button type="button" class="btn btn-primary" onclick="_me.onItemModalOk()">@R["Sure"]</button>
                     </div>
                 </div>
 
@@ -283,12 +283,12 @@
                 <table id="tableItem" class="table table-bordered xg-table xg-table-vscroll" cellspacing="0" style="width:100%">
                     <thead>
                         <tr>
-                            <th>選取</th>
-                            <th>欄位</th>
-                            <th>欄位名稱</th>
+                            <th>@R0["Select"]</th>
+                            <th>@R0["Column"]</th>
+                            <th>@R0["ColName"]</th>
                         </tr>
                     </thead>
-                    <!-- 搭配 tplItemTr -->
+                    <!-- match tplItemTr -->
                     <tbody style="height:315px"></tbody>
                 </table>
             </div>
@@ -296,7 +296,7 @@
     </div>
 </div>
 
-<!-- template: modal Items list row, data 屬性不區分大小寫 !! -->
+<!-- template: modal Items list row, data property is case insense !! -->
 <script id="tplItemTr" type="text/template">
     <tr data-id='{{Id}}'
         data-code='{{Code}}'

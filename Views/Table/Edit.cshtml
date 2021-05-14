@@ -1,14 +1,12 @@
-﻿@{
-    //var cols = new int[] { 12, 2, 3 };
-}
+﻿@inject IHtmlLocalizer<DbAdm.R0> R
 
 <form id='eform' class='xg-form'>
     @await Component.InvokeAsync("XiHide", new { fid = "Id" })
-    @await Component.InvokeAsync("XiSelect", new { title = "功能名稱", fid = "ProjectId", value = "", rows = (List<IdStrDto>)ViewBag.Projects, required = true })
-    @await Component.InvokeAsync("XiText", new { title = "資料表", fid = "Code", value = "", maxLen = 30, required = true })
-    @await Component.InvokeAsync("XiText", new { title = "資料表名稱", fid = "Name", value = "", maxLen = 30, required = true })
-    @await Component.InvokeAsync("XiCheck", new { title = "異動記錄", fid = "TranLog", value = "1", label = "是" })
-    @await Component.InvokeAsync("XiCheck", new { title = "資料狀態", fid = "Status", isCheck = true, value = "1", label = "啟用" })
+    @await Component.InvokeAsync("XiSelect", new { title = R["Project"].Value, fid = "ProjectId", value = "", rows = (List<IdStrDto>)ViewBag.Projects, required = true })
+    @await Component.InvokeAsync("XiText", new { title = R["Table"].Value, fid = "Code", value = "", maxLen = 30, required = true })
+    @await Component.InvokeAsync("XiText", new { title = R["TableName"].Value, fid = "Name", value = "", maxLen = 30, required = true })
+    @await Component.InvokeAsync("XiCheck", new { title = R["TranLog"].Value, fid = "TranLog", value = "1", label = R["Yes"].Value })
+    @await Component.InvokeAsync("XiCheck", new { title = R["Status"].Value, fid = "Status", isCheck = true, value = "1", label = R["Active"].Value })
 </form>
 
 <div class='xg-btns-box'>
@@ -18,15 +16,15 @@
     <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
         <thead>
             <tr>
-                @await Component.InvokeAsync("XgTh", new { title = "欄位", required = true })
-                @await Component.InvokeAsync("XgTh", new { title = "欄位名稱", required = true })
-                @await Component.InvokeAsync("XgTh", new { title = "資料型態", required = true })
-                <th width="60px">可空值</th>
-                <th width="120px">預設值</th>
-                <th width="80px">排序</th>
-                <th>說明</th>
-                <th width="60px">維護功能</th>
-                <th width="60px">資料狀態</th>
+                @await Component.InvokeAsync("XgTh", new { title = R["Column"].Value, required = true })
+                @await Component.InvokeAsync("XgTh", new { title = R["ColName"].Value, required = true })
+                @await Component.InvokeAsync("XgTh", new { title = R["DataType"].Value, required = true })
+                <th width="60px">@R["Nullable"]</th>
+                <th width="120px">@R["Default"]</th>
+                <th width="80px">@R["Sort"]</th>
+                <th>@R["Note"]</th>
+                <th width="60px">@R["Crud"]</th>
+                <th width="60px">@R["Status"]</th>
             </tr>
         </thead>
 

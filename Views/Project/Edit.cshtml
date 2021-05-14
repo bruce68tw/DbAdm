@@ -1,14 +1,14 @@
-﻿@{
-    //var shortCols = "2,4";
+﻿@inject IHtmlLocalizer<DbAdm.R0> R
+@{
     var longCols = "2,10";
 }
 
 <form class='xg-form' id='eform'>
     @await Component.InvokeAsync("XiHide", new { fid = "Id" })
-    @await Component.InvokeAsync("XiText", new { title = "專案代碼", fid = "Code", value = "", maxLen = 30, required = true })
-    @await Component.InvokeAsync("XiText", new { title = "資料庫", fid = "DbName", value = "", maxLen = 30, required = true })
-    @await Component.InvokeAsync("XiCheck", new { title = "資料狀態", fid = "Status", isCheck = true, value = "1", label = "啟用" })
-    @await Component.InvokeAsync("XiText", new { title = "專案路徑", fid = "ProjectPath", maxLen = 255, required = true, cols = longCols })
-    @await Component.InvokeAsync("XiText", new { title = "DB連線字串", fid = "ConnectStr", maxLen = 255, required = true, cols = longCols })
+    @await Component.InvokeAsync("XiText", new { title = R["ProjectCode"].Value, fid = "Code", value = "", maxLen = 30, required = true })
+    @await Component.InvokeAsync("XiText", new { title = R["DbName"].Value, fid = "DbName", value = "", maxLen = 30, required = true })
+    @await Component.InvokeAsync("XiCheck", new { title = R["Status"].Value, fid = "Status", isCheck = true, value = "1", label = R["Active"].Value })
+    @await Component.InvokeAsync("XiText", new { title = R["ProjectPath"].Value, fid = "ProjectPath", maxLen = 255, required = true, cols = longCols })
+    @await Component.InvokeAsync("XiText", new { title = R["ConnectStr"].Value, fid = "ConnectStr", maxLen = 255, required = true, cols = longCols })
 </form>
 @await Component.InvokeAsync("XgSaveBack")

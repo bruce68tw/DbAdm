@@ -448,7 +448,7 @@ path, .jtk-endpoint { cursor:pointer; }
 .xg-form {
     font-size: 15px;
     border: none;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
     .xg-form .xg-row {
@@ -1001,7 +1001,7 @@ body, label {
 
 /* button 和後面的 icon 的間距*/
 .btn > i {
-    padding-left: 1px;
+    padding-left: 3px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 

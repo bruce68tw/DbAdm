@@ -1,0 +1,17 @@
+﻿{
+	"processing": "资料读取中...",
+	"lengthMenu": "每页显示 _MENU_ 笔",
+	"zeroRecords": "",
+	"info": ", 第 _START_ 至 _END_ 笔, 总共 _TOTAL_ 笔",
+	"infoEmpty": "共 0 笔",
+	"infoFiltered": "",
+	"infoPostFix": "",
+	"search": "搜寻",
+	"emptyTable": "",
+	"paginate": {
+		"first": "|&lt;",
+		"previous": "&lt;",
+		"next": "&gt;",
+		"last": "&gt;|"
+	}
+}
