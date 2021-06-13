@@ -17,7 +17,8 @@ namespace DbAdm.Controllers
             {
                 ViewBag.Projects = _XpCode.GetProjects(db);
                 ViewBag.RitemTypes = _XpCode.GetRitemTypes(db);
-                ViewBag.InputTypes = _XpCode.GetInputTypes(db);
+                ViewBag.QitemTypes = _XpCode.GetQitemTypes(db);
+                ViewBag.EitemTypes = _XpCode.GetEitemTypes(db);
                 ViewBag.CheckTypes = _XpCode.GetCheckTypes(db);
                 ViewBag.QitemOps = _XpCode.GetQitemOps(db);
                 ViewBag.AuthTypes = _XpCode.GetAuthTypes(db);
@@ -32,14 +33,7 @@ namespace DbAdm.Controllers
         }
         #endregion
 
-        #region Edit View
-        //BaseResDto _baseInfo;
-        public ActionResult Edit()
-        {
-            //_baseInfo = baseInfoService.GetData();
-            return View();
-        }
-        
+        #region Edit View        
         //ContentResult for newton json, (JsonResult for model)
         public ContentResult GetJson(string key)
         {

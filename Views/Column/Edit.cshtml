@@ -1,5 +1,7 @@
-﻿@inject IHtmlLocalizer<DbAdm.R0> R
+﻿@* 1.locale *@
+@inject IHtmlLocalizer<DbAdm.R0> R
 
+@* 2.input *@
 <form id='eform' class='xg-form'>
     @await Component.InvokeAsync("XiHide", new { fid = "Id" })
     @await Component.InvokeAsync("XiRead", new { title = R["ProjectCode"].Value, fid = "ProjectCode" })
@@ -10,4 +12,6 @@
     @await Component.InvokeAsync("XiCheck", new { title = R["Status"].Value, fid = "Status", isCheck = true, value = "1", label = R["Active"].Value })
     @await Component.InvokeAsync("XiText", new { title = R["Note"].Value, fid = "Note", maxLen = 30 })
 </form>
+
+@* 3.Save & Back buttons *@
 @await Component.InvokeAsync("XgSaveBack")

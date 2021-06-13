@@ -7,13 +7,12 @@ namespace DbAdm.Services
 {
     public class ColumnEdit
     {
-        //設定編輯欄位
         private EditDto GetDto()
         {
             return new EditDto()
             {                
                 Table = "dbo.[Column]",
-                PkeyFid = "Id",   //primary key 欄位id
+                PkeyFid = "Id",
                 Col4 = null,
                 Items = new EitemDto[] {
                     new EitemDto() { Fid = "Id" },
@@ -25,36 +24,37 @@ namespace DbAdm.Services
             };
         }
 
-        //傳回一筆資料
         public JObject GetJson(string key)
         {
             return _Db.GetJson(@"
-Select 
+select 
     p.Code as ProjectCode, t.Code as TableCode,
     c.*
-From dbo.[Column] c
-inner join dbo.[Table] t on t.Id=c.TableId
-inner join dbo.Project p on p.Id=t.ProjectId
+from dbo.[Column] c
+join dbo.[Table] t on t.Id=c.TableId
+join dbo.Project p on p.Id=t.ProjectId
 where c.Id=@Id
 ", new List<object>() { "Id", key });
         }
 
-        //儲存新增的資料
         public ResultDto Create(JObject json)
         {            
-            return new CrudEdit(GetDto()).Create(json);
+            return Service().Create(json);
         }
 
-        //儲存修改的資料
         public ResultDto Update(string key, JObject json)
         {
-            return new CrudEdit(GetDto()).Update(key, json);
+            return Service().Update(key, json);
         }
 
-        //刪除一筆資料
         public ResultDto Delete(string key)
         {
-            return new CrudEdit(GetDto()).Delete(key);
+            return Service().Delete(key);
+        }
+
+        private CrudEdit Service()
+        {
+            return new CrudEdit(GetDto());
         }
 
     } //class

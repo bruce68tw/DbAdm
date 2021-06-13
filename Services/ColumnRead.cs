@@ -7,7 +7,7 @@ namespace DbAdm.Services
 {
     public class ColumnRead
     {
-        private ReadDto model = new ReadDto()
+        private ReadDto dto = new ReadDto()
         {
             ReadSql = @"
 Select 
@@ -27,11 +27,9 @@ Order by p.Id, t.Id, c.Sort
             },
         };
 
-        //傳回一頁資料列
         public JObject GetPage(DtDto dt)
         {
-            //呼叫公用類別 CrudRead
-            return new CrudRead().GetPage(model, dt);
+            return new CrudRead().GetPage(dto, dt);
         }        
 
     } //class

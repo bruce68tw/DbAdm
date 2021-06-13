@@ -3,7 +3,6 @@ var _me = {
     init: function () {
 		//datatable config
 		var config = {
-			dom: _crud.dtDom,
 			columns: [
                 { data: '_F1' },
                 { data: 'ProjectCode' },
@@ -13,7 +12,6 @@ var _me = {
                 { data: 'Created' },
 			],
 			columnDefs: [
-                _crud.dtColConfig,
 				{ targets: [0], render: function (data, type, full, meta) {
                     return _crud.dtCheck0(full.Id);
 				}},

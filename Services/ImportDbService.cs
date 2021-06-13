@@ -12,7 +12,7 @@ namespace DbAdm.Services
         {
             var error = new ResultDto();
 
-            #region get dbo.Project row
+            #region 1.get dbo.Project row
             var db = new Db();
             Db dbSrc = null;
             var project = db.GetJson(string.Format(@"
@@ -40,7 +40,7 @@ where Id='{0}'
             }
             #endregion
 
-            #region 1.create temp table: #tmpTable, #tmpColumn
+            #region 2.create temp table: #tmpTable, #tmpColumn
             db.ExecSql(@"
 CREATE TABLE #tmpTable(
     Code varchar(30) NOT NULL primary key,
@@ -58,7 +58,7 @@ CREATE TABLE #tmpColumn(
 CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
             #endregion
 
-            #region 2.write #tmpTable(from Information_Schema.Tables)
+            #region 3.write #tmpTable(from Information_Schema.Tables)
             //欄位順序必須與Db相同
             var dbName = project["DbName"].ToString();
             var reader = dbSrc.GetReader(string.Format(@"
@@ -97,7 +97,7 @@ ORDER BY t.table_name
             }
             #endregion
 
-            #region 3.write #tmpColumn(from Information_Schema.Columns)
+            #region 4.write #tmpColumn(from Information_Schema.Columns)
             reader = dbSrc.GetReader(string.Format(@"
 SELECT 
     Code=column_name, 
@@ -138,7 +138,7 @@ ORDER BY table_name, ORDINAL_POSITION
             }
             #endregion
 
-            #region 4.insert/update dbo.Table from #tmpTable
+            #region 5.insert/update dbo.Table from #tmpTable
             //get rows for insert new 
             var tables = db.GetJsons(string.Format(@"
 select Code, Note
@@ -172,7 +172,7 @@ where a.ProjectId='{0}'
 ", projectId));
             #endregion
 
-            #region 5.insert/update dbo.Column from #tmpColumn
+            #region 6.insert/update dbo.Column from #tmpColumn
             //get rows for insert new 
             var cols = db.GetJsons(string.Format(@"
 select

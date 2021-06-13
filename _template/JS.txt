@@ -3,14 +3,12 @@ var _me = {
     init: function () {        
         //datatable config
         var config = {
-            dom: _crud.dtDom,
             columns: [
 			{{#Ritems}}
                 { data: '{{ColumnCode}}' },
 			{{/Ritems}}
             ],
             columnDefs: [
-                _crud.dtColConfig,
 			{{#each JsColDefStrs}}
 				{{this}}
 			{{/each}}

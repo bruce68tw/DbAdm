@@ -448,7 +448,7 @@ path, .jtk-endpoint { cursor:pointer; }
 .xg-form {
     font-size: 15px;
     border: none;
-    margin-bottom: 0px;
+    /*margin-bottom: 0px;*/
 }
 
     .xg-form .xg-row {
@@ -853,6 +853,15 @@ input[type=number] {
     left: 8px !important;
 }
 
+tr input {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+}
+tr select {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+}
+
 /* toolbar */
 
 /* row list toolbar */
@@ -985,6 +994,28 @@ body.xg-show-wait .xg-wait {
     color: gray;
 }
 
+.xg-h10 {
+    height: 10px !important;
+}
+
+.xg-mt0 {
+    margin-top: 0 !important;
+}
+.xg-mt5 {
+    margin-top: 5px !important;
+}
+.xg-mt10 {
+    margin-top: 10px !important;
+}
+.xg-mb0 {
+    margin-bottom: 0 !important;
+}
+
+/* match datepicker.css .date setting, for keep input width same to date at query form */
+.xg-date-w {
+    width: 180px !important;
+}
+
 @charset "utf-8";
 
 /* === 修改預設 style === */
@@ -1043,6 +1074,18 @@ textarea.form-control {
     background-color: #eee; 
 }
 */
+
+/* placeholder color */
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: lightgrey !important;
+    opacity: 1; /* Firefox */
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: lightgrey !important;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: lightgrey !important;
+}
 
 /* 筆數起迄&合計 */
 .dataTables_info {

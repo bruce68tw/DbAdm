@@ -8,7 +8,7 @@ namespace DbAdm.Services
     {
         //public const string SiteVer = "20201228f";     //for my.js/css
         public static string SiteVer = _Date.NowSecStr();
-        public const string LibVer = "20210505c";    //for lib.js/css
+        public const string LibVer = "20210530a";    //for lib.js/css
 
         //constant
         //upload file max size(MB)

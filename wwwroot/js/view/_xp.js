@@ -1,12 +1,7 @@
 ﻿var _xp = {
 
-    //middle variables
-    temp: {},
-
     //initial application
     init: function () {
-        //debugger;
-        //_locale.getBaseR0(locale);
         _leftmenu.init();
         _pjax.init('.xu-body');
         _tool.init();

@@ -160,7 +160,7 @@
     <value>Note</value>
   </data>
   <data name="ImportDb" xml:space="preserve">
-    <value>Import DB</value>
+    <value>Import DB Schema</value>
   </data>
   <data name="GenLogSql" xml:space="preserve">
     <value>Generate Log Sql</value>

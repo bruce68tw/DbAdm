@@ -68,14 +68,27 @@ order by Sort
             return SqlToCodes(sql, db);
         }
 
+        public static List<IdStrDto> GetQitemTypes(Db db = null)
+        {
+            var sql = @"
+select 
+    Value as Id, Name as Str
+from dbo.XpCode
+where Type='EitemType'
+and Ext='Q'
+order by Sort
+";
+            return SqlToCodes(sql, db);
+        }
+
         public static List<IdStrDto> GetRitemTypes(Db db = null)
         {
             return GetCodes("RitemType", db);
         }
 
-        public static List<IdStrDto> GetInputTypes(Db db = null)
+        public static List<IdStrDto> GetEitemTypes(Db db = null)
         {
-            return GetCodes("InputType", db);
+            return GetCodes("EitemType", db);
         }
 
         public static List<IdStrDto> GetCheckTypes(Db db = null)

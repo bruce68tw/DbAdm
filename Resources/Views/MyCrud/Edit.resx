@@ -154,10 +154,10 @@
   <data name="Verti" xml:space="preserve">
     <value>Vertical</value>
   </data>
-  <data name="InputData" xml:space="preserve">
+  <data name="ItemData" xml:space="preserve">
     <value>Input Data</value>
   </data>
-  <data name="InputType" xml:space="preserve">
+  <data name="ItemType" xml:space="preserve">
     <value>Input Type</value>
   </data>
   <data name="Layout" xml:space="preserve">
@@ -171,9 +171,6 @@
   </data>
   <data name="OpType" xml:space="preserve">
     <value>Operate Type</value>
-  </data>
-  <data name="OtherAttr" xml:space="preserve">
-    <value>Other Attribute</value>
   </data>
   <data name="Pkey" xml:space="preserve">
     <value>Primary Key</value>
@@ -217,7 +214,7 @@
   <data name="TipGroup" xml:space="preserve">
     <value>Same Group will be Same Row</value>
   </data>
-  <data name="TipInputData" xml:space="preserve">
+  <data name="TipItemDataE" xml:space="preserve">
     <value>Selectd/Radio:Data Source, Checkbox:Label, Show:Fid</value>
   </data>
   <data name="TipLayout" xml:space="preserve">
@@ -246,5 +243,17 @@
   </data>
   <data name="Width" xml:space="preserve">
     <value>Width(px)</value>
+  </data>
+  <data name="TipItemDataQ" xml:space="preserve">
+    <value>Selectd/Radio:Data Source, Checkbox:Label</value>
+  </data>
+  <data name="TipReadSql" xml:space="preserve">
+    <value>Must has order by string</value>
+  </data>
+  <data name="TipHalfWidth" xml:space="preserve">
+    <value>Multiple edit form use half width</value>
+  </data>
+  <data name="TipCol4" xml:space="preserve">
+    <value>Has Creator,Created,Reviser,Revised or not</value>
   </data>
 </root>

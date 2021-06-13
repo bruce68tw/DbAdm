@@ -19,12 +19,20 @@ var _prog = {
      * set program path
      * param fun {string} fun mode
      */
-    setPath: function (fun) {
+    setPath: function (fun, updName) {
         var name = (fun == _fun.FunC) ? _BR.Create :
-            (fun == _fun.FunU) ? _BR.Update :
             (fun == _fun.FunV) ? _BR.View :
-            '??';
-        _prog.me.text(_prog.oriPath + '-' + name);
+            (fun != _fun.FunU) ? '??' :
+            _str.isEmpty(updName) ? _BR.Update :
+            updName;
+        _prog.setFunName(name);
     },
 
+    /**
+     * set fun name
+     * param name {string} fun name
+     */
+    setFunName: function (name) {
+        _prog.me.text(_prog.oriPath + '-' + name);
+    },
 };

@@ -28,7 +28,6 @@ var _openUser = {
 
         //datatable config
         var config = {
-            dom: _crud.dtDom,
             filter: true,  //範本: 開啟文字搜尋欄位(使用自訂欄位) !!
             //columns 數必須與 datatables ui 一致
             columns: [

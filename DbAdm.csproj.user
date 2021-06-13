@@ -4,4 +4,9 @@
     <ShowAllFiles>false</ShowAllFiles>
     <NameOfLastUsedPublishProfile>FolderProfile</NameOfLastUsedPublishProfile>
   </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Views\MyCrud\Edit.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

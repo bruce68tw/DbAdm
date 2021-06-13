@@ -10,8 +10,8 @@ namespace DbAdm.Tables
         public string Id { get; set; }
         public string EtableId { get; set; }
         public string ColumnId { get; set; }
-        public string InputType { get; set; }
-        public string InputData { get; set; }
+        public string EitemType { get; set; }
+        public string ItemData { get; set; }
         public bool Required { get; set; }
         public bool HasCreate { get; set; }
         public bool HasUpdate { get; set; }

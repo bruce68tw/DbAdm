@@ -16,7 +16,7 @@ namespace DbAdm.Services
         /// <param name="tableIds"></param>
         public void Run(string projectId, string[] tableIds = null)
         {
-            #region check input & template file
+            #region 1.check input & template file
             var error = "";
             if (string.IsNullOrEmpty(projectId) && (tableIds == null || tableIds.Length == 0))
             {
@@ -33,7 +33,7 @@ namespace DbAdm.Services
             }
             #endregion
 
-            #region 1.read column rows & group by
+            #region 2.read column rows & group by
             var db = _Xp.GetDb();
             var query = (from c in db.Column
                          join t in db.Table on c.TableId equals t.Id
@@ -82,15 +82,16 @@ namespace DbAdm.Services
             }
             #endregion
 
-            //get memory stream & download file
+            #region 3.get memory stream for download file
             var ms = new MemoryStream();
             var tplBytes = File.ReadAllBytes(tplPath);
             ms.Write(tplBytes, 0, tplBytes.Length);
+            #endregion
 
             //binding stream && docx
             using (var docx = WordprocessingDocument.Open(ms, true))
             {
-                #region 2.get body/row template string
+                #region 4.get body/row template string
                 var wordSet = new WordSetService(docx);
                 var mainTpl = wordSet.GetMainStr();
 
@@ -114,7 +115,7 @@ namespace DbAdm.Services
                 var fileStr = "";   //file string to echo
                 for (var i = 0; i < tableLen; i++)
                 {
-                    #region 3.get table string
+                    #region 5.get table string
                     var tableCode = tables[i].TableCode;
                     var tableCols = tables[i].Cols;
                     fileStr += bodyLeft.Replace("[Table]", tableCode + "(" + tables[i].TableName + ")") +
@@ -122,13 +123,13 @@ namespace DbAdm.Services
                         bodyRight;
                     #endregion
 
-                    #region 4.add page break if need
+                    #region 6.add page break if need
                     if (i < tableLen - 1)
                         fileStr += wordSet.GetPageBreak();
                     #endregion
                 }
 
-                #region 5.get file string
+                #region 7.get file string
                 fileStr = mainTpl.Substring(0, bodyStart) +
                     fileStr +
                     mainTpl.Substring(bodyEnd + 1);
@@ -137,7 +138,7 @@ namespace DbAdm.Services
                 wordSet.WriteMainStr(fileStr);
                 #endregion
 
-                #region remark code
+                #region remark testing code
                 //Debug.Assert(IsDocxValid(doc), "Invalid File!");
                 //no save, but can debug !!
                 //mainPart.Document.Save();
@@ -145,7 +146,7 @@ namespace DbAdm.Services
                 #endregion
             }
 
-            //download file
+            //8.download file
             _Web.StreamToScreen(ms, "Table.docx");
             return;
 

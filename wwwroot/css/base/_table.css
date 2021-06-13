@@ -90,3 +90,12 @@
     top: -10px !important;
     left: 8px !important;
 }
+
+tr input {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+}
+tr select {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+}

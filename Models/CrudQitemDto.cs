@@ -5,6 +5,8 @@
     {
         //base
         public string CrudId { get; set; }
+        //public string QitemType { get; set; }
+
         public bool IsFind2 { get; set; }   //for copy to FitemDto
         public string Op { get; set; }
 

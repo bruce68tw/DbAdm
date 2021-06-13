@@ -5,13 +5,14 @@ namespace DbAdm.Models
     //for Gen Crud
     public class CrudDto
     {
-        //base-crud
+        //base crud
         public string Id { get; set; }
         public string Project { get; set; }     //project code
         public string ProjectPath { get; set; }
         public string ProgCode { get; set; }    //program code
         public string ProgName { get; set; } 
-        //base-read
+
+        //base read
         public string ReadSql { get; set; }
         public string TableAs { get; set; }
         public bool LabelHori { get; set; }
@@ -37,14 +38,14 @@ namespace DbAdm.Models
 
         //extend
         public bool HasFitemCols { get; set; }    //whether fitmem has default cols
-        public List<string> RsItemStrs { get; set; }       
+        public List<string> RsItemStrs { get; set; }       //read service item string
         public List<string> JsColDefStrs { get; set; }     //js column define string
         public string ManyTables { get; set; }             //list of ", _me.mXXX" 
 
         public List<string> ReadSelectCols { get; set; }    //read view select cols
         public List<string> EditSelectCols { get; set; }    //edit view select cols
 
-        //find
+        //file
         public bool HasFile { get; set; }
 
         //crud.AuthType == 0,1,2

@@ -31,22 +31,27 @@ namespace DbAdm.Controllers
 
         public ContentResult GetJson(string key)
         {
-            return Content(new ColumnEdit().GetJson(key).ToString(), ContentTypeEstr.Json, Encoding.UTF8);
+            return Content(Service().GetJson(key).ToString(), ContentTypeEstr.Json, Encoding.UTF8);
         }
 
         public JsonResult Create(string json)
         {
-            return Json(new ColumnEdit().Create(_Json.StrToJson(json)));
+            return Json(Service().Create(_Json.StrToJson(json)));
         }
 
         public JsonResult Update(string key, string json)
         {
-            return Json(new ColumnEdit().Update(key, _Json.StrToJson(json)));
+            return Json(Service().Update(key, _Json.StrToJson(json)));
         }
 
         public JsonResult Delete(string key)
         {
-            return Json(new ColumnEdit().Delete(key));
+            return Json(Service().Delete(key));
+        }
+
+        private ColumnEdit Service()
+        {
+            return new ColumnEdit();
         }
 
     }//class

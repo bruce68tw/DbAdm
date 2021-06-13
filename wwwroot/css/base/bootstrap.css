@@ -38,3 +38,15 @@ textarea.form-control {
     background-color: #eee; 
 }
 */
+
+/* placeholder color */
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: lightgrey !important;
+    opacity: 1; /* Firefox */
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: lightgrey !important;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: lightgrey !important;
+}

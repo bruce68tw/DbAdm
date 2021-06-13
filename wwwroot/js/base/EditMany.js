@@ -75,6 +75,9 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         this.resetDeleted();
     };
 
+    /**
+     * reset deleted rows
+     */
     this.resetDeleted = function () {
         this.deletedRows = [];
     };
@@ -95,7 +98,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * load json rows into UI by userRole mode(urm)
+     * load json rows into UI by UserRole Mode(urm)
      * param json {json} 
      */
     this.urmLoadJson = function (json, rowsBox, fids) {

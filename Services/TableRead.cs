@@ -8,7 +8,6 @@ namespace DbAdm.Services
 {
     public class TableRead
     {
-        //設定查詢 sql 和查詢欄位
         private ReadDto dto = new ReadDto()
         {
             ReadSql = @"
@@ -37,18 +36,15 @@ order by p.Id, a.Name
             },
         };
 
-        //傳回一頁資料列
         public JObject GetPage(DtDto dt)
         {
-            //呼叫公用類別 CrudRead
             return new CrudRead().GetPage(dto, dt);
         }
 
-        //匯出 excel
+        //export excel
         public void Export(JObject cond)
         {
             _WebExcel.ExportByRead(dto, cond, "Table.xlsx", _Xp.GetTpl("Table.xlsx", false), 1);
-            //_WebExcel.ReadToScreen(dto, cond, "Table.xlsx");
         }
 
     } //class

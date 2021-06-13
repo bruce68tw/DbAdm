@@ -15,14 +15,15 @@ var _crud = {
 
     //=== jQuery datatables(dt) start ===
     /**
-     * datatable layout
+     * default datatable layout
+     * toolbar layout:l(length),f(filter),r(processing),t(table),i(info),p(page)
      */
     dtDom: '<"toolbar">t<li>p',
 
     /**
-     * datatable column config
+     * default datatable column define
      */ 
-    dtColConfig: {
+    dtColDef: {
         className: 'xg-center',
         orderable: false,
         targets: '_all',
@@ -121,14 +122,15 @@ var _crud = {
     //=== jQuery datatables end ===    
 
     /**
-     * initial, 傳入簡化的edits[]
-     * dtConfig {Object} datatables config
-     * edits {Array} 維護畫面設定{object},
-     *   1.null: 表示單一table, 固定捉取eform
-     *   2.多個edit object, 如果第一個陣列為null, 則使用new EditOne()
+     * initial CRUD
+     * param dtConfig {Object} datatables config
+     * param edits {object Array} for edit form
+     *   1.null: means one table, get eform
+     *   2.many edit object, if ary0 is null, then call new EditOne()
+     * param updName {string} update name, default to _BR.Update
      */
-    init: function (dtConfig, edits) {
-        //set _me.edits[]
+    init: function (dtConfig, edits, updName) {
+        //#region 1.set _me.edits[]
         var Childs = _crud.Childs;  //constant
         var edit0 = null;  //master edit object
         if (edits == null) {
@@ -144,32 +146,38 @@ var _crud = {
                     edit0[Childs][i - 1] = edits[i];
             }
         }
+        //#endregion
 
-        //set variables
-        //_me.row = null; //edit0時從後端傳回
+        //#region 2.set instance variables
         _me.nowFun = '';    //now fun of edit0 form
+        _me.updName = updName;
         _me.divRead = $('#divRead');
-        //_me.divReadTool = $('#divReadTool');
         _me.divEdit = $('#divEdit');
-        _me.rform = $('#rform');
-        _me.rform2 = $('#rform2');
+        _me.rform = $('#formRead');
+        if (_me.rform.length === 0)
+            _me.rform = null;
+        _me.rform2 = $('#formRead2');
         if (_me.rform2.length === 0)
             _me.rform2 = null;
-        //_me.eform = $('#eform');
+        if (_me.rform != null)
+            _idate.init(_me.rform);
+        if (_me.rform2 != null)
+            _idate.init(_me.rform2);
 
         _me.edit0 = edit0;
         _me.hasChild = (_fun.hasValue(_me.edit0[Childs]) && _me.edit0[Childs].length > 0);
         //_me.editLen = _me.edits.length;
 
-        //initial forms(recursive)
-        _crud.initForm(_me.edit0);
-
         //for xgOpenModal
         _me.modal = null;
+        //#endregion
 
-        //table div id固定為 table1, 後端固定呼叫 GetPage
-        _me.dt = new Datatable('#table1', 'GetPage', dtConfig);
+        //3.initial forms(recursive)
+        _crud.initForm(_me.edit0);
         _prog.init();   //prog path
+
+        //4.Create Datatable object
+        _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig);
     },
 
     /**
@@ -293,7 +301,7 @@ var _crud = {
         _crud.getJsonAndSetMode(key, _fun.FunV);
     },
 
-    getJsonAndSetMode: function (key, funType) {
+    getJsonAndSetMode: function (key, fun) {
         if (_str.isEmpty(key)) {
             _log.error('error: key is empty !');
             return;
@@ -301,18 +309,23 @@ var _crud = {
 
         //_crud.toUpdateMode(key);
         _ajax.getJson('GetJson', { key: key }, function (data) {
-            //to edit(U/V) mode
-            _crud.swap(false);  //call first
-            _prog.setPath(funType);
-            _crud.setEditStatus(funType);
-            _crud.loadJson(data);
-            _crud._afterOpenEdit(funType, data);
+            _crud.toEditMode(fun, data);
         });
+    },
+
+    //to edit(U/V) mode
+    toEditMode: function (fun, data) {
+        _crud.swap(false);  //call first
+        _prog.setPath(fun, _me.updName);
+        _crud.loadJson(data);   //load first
+        _crud.setEditStatus(fun);
+        _crud._afterOpenEdit(fun, data);
     },
 
     //set edit form status
     //fun: C,U,V
     setEditStatus: function (fun) {
+        //debugger;
         var isView = (fun == _fun.FunV);
         var run = (_me.nowFun == _fun.FunV && !isView) ? true :
             (_me.nowFun != _fun.FunV && isView) ? true :
@@ -476,12 +489,20 @@ var _crud = {
         return data;
     },
 
-    //傳入edit
+    /**
+     * get edit child len
+     * param edit {object} edit object
+     */ 
     getEditChildLen: function (edit) {
         var fid = _crud.Childs;
         return (edit[fid] == null) ? 0 : edit[fid].length; 
     },
-    //傳入edit
+
+    /**
+     * get edit child
+     * param edit {object} edit object
+     * param childIdx {int} child index, base 0
+     */ 
     getEditChild: function (edit, childIdx) {
         return edit[_crud.Childs][childIdx];
     },
@@ -570,8 +591,8 @@ var _crud = {
     */
 
     /**
-     * on click save, 有上傳檔案時, 後端參數名稱固定為T(n)+FieldName
-     * 傳送到後端的資料包含以下欄位:  
+     * on click save, when upload file, server side file variable is t(n)_FieldName
+     * below variables are sent to backend:  
      *   key, row(包含_childs, _deletes, _fileNo), files
      */
     onSave: function () {
@@ -625,7 +646,7 @@ var _crud = {
         }
     },
 
-    //recursive remove null
+    //recursive remove null for json object
     //level: for debug
     _removeNull: function (level, obj) {
         //debugger;
@@ -685,7 +706,7 @@ var _crud = {
     },
 
     /**
-     * 展開查詢畫面的額外欄位
+     * after save
      * data: ResultDto
      */
     afterSave: function (data) {

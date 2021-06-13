@@ -174,10 +174,10 @@
   <data name="Verti" xml:space="preserve">
     <value>垂直</value>
   </data>
-  <data name="InputData" xml:space="preserve">
+  <data name="ItemData" xml:space="preserve">
     <value>欄位資料</value>
   </data>
-  <data name="InputType" xml:space="preserve">
+  <data name="ItemType" xml:space="preserve">
     <value>欄位種類</value>
   </data>
   <data name="Layout" xml:space="preserve">
@@ -191,9 +191,6 @@
   </data>
   <data name="OpType" xml:space="preserve">
     <value>比對方式</value>
-  </data>
-  <data name="OtherAttr" xml:space="preserve">
-    <value>其他屬性</value>
   </data>
   <data name="Pkey" xml:space="preserve">
     <value>主Key欄位</value>
@@ -237,7 +234,7 @@
   <data name="TipGroup" xml:space="preserve">
     <value>相同的群組將排在同一列</value>
   </data>
-  <data name="TipInputData" xml:space="preserve">
+  <data name="TipItemDataE" xml:space="preserve">
     <value>下拉欄位/Radio:資料來源, checkbox:label, 唯讀:fid</value>
   </data>
   <data name="TipLayout" xml:space="preserve">
@@ -247,7 +244,7 @@
     <value>是否包含起迄欄位, 通常用於日期欄位</value>
   </data>
   <data name="TipTableAs" xml:space="preserve">
-    <value>table alias name</value>
+    <value>資料表別名</value>
   </data>
   <data name="TipWidth" xml:space="preserve">
     <value>0或空白表示寬度為自動調整</value>
@@ -266,5 +263,17 @@
   </data>
   <data name="Width" xml:space="preserve">
     <value>寬度(px)</value>
+  </data>
+  <data name="TipItemDataQ" xml:space="preserve">
+    <value>下拉欄位/Radio:資料來源, checkbox:label</value>
+  </data>
+  <data name="TipReadSql" xml:space="preserve">
+    <value>必須包含 order by 字串</value>
+  </data>
+  <data name="TipHalfWidth" xml:space="preserve">
+    <value>多筆編輯畫面使用一半寬度</value>
+  </data>
+  <data name="TipCol4" xml:space="preserve">
+    <value>是否有 Creator,Created,Reviser,Revised</value>
   </data>
 </root>

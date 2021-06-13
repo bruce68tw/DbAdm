@@ -137,9 +137,9 @@ namespace DbAdm.Tables
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.InputData).HasMaxLength(50);
+                entity.Property(e => e.ItemData).HasMaxLength(50);
 
-                entity.Property(e => e.InputType)
+                entity.Property(e => e.EitemType)
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -219,15 +219,11 @@ namespace DbAdm.Tables
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ExtInfo)
+                entity.Property(e => e.ItemData)
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
-                entity.Property(e => e.InputData)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.InputType)
+                entity.Property(e => e.QitemType)
                     .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
@@ -270,10 +266,6 @@ namespace DbAdm.Tables
                 entity.Property(e => e.CrudId)
                     .IsRequired()
                     .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ExtInfo)
-                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Name)

@@ -1,34 +1,33 @@
 ﻿
 /**
- * 建立 jQuery dataTables
- * selector {string} datatable selector
- * url {string} backend action url
- * dtConfig {json} datatables config
- * findJson {json} 初始化時的查詢條件
- * fnOk {function}: 查詢成功時的callback, 如果空白, 則顯示成功訊息
- * tbarHtml {string}: datatable toolbar html for 增加額外的功能按鈕
+ * create jQuery dataTables object
+ * param selector {string} datatable selector
+ * param url {string} backend action url
+ * param dtConfig {json} datatables config
+ * param findJson {json} (optional) find condition when initial
+ * param fnOk {function} (optional) callback after query ok, if empty then show successful msg
+ * param tbarHtml {string} (optional) datatable toolbar html for extra button
  */
 function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 
     //public property 
-    this.dt = null;             //datatable object
-    this.findJson = findJson;   //查詢條件
-    //this.findStr = '';          //快速查詢字串    
-    this.recordsFiltered = -1;  //查詢筆數, -1表重新計算, 名稱配合DataTables
-    this.defaultShowOk = true;  //是否顯示查詢成功訊息, default value
+    this.dt = null;             //jquery datatables object
+    this.findJson = findJson;   //find condition
+    this.recordsFiltered = -1;  //found count, -1 for recount, name map to DataTables
+    this.defaultShowOk = true;  //whethor show find ok msg, default value
 
     //private
-    //從上次查詢的頁次開始, false(查詢), true(儲存後重整UI)
+    //keep start row idx, false(find), true(save reload)
     this._keepStart = false;
 
-    //記錄目前的開始行數, 因為在 ajax.dataSrc() 無法得到(會得0)
+    //now start row idx, coz ajax.dataSrc() always get 0 !!
     this._start = 0;
 
-    //(目前)是否顯示查詢成功訊息
+    //(now)show find ok msg or not
     this._nowShowOk = this.defaultShowOk;      
         
     /**
-     * 重新計算筆數
+     * reset found count
      */ 
     this.resetCount = function () {
         //var count = reset ? -1 : this.dt.recordsFiltered;
@@ -36,16 +35,14 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
     };
 
     /**
-     * 查詢資料
-     * findJson {json} 查詢條件
-     * search {string} 搜尋字串
+     * find rows
+     * param findJson {json} find condition
      */
     this.find = function (findJson) {
 
-        //debugger;
         this.findJson = findJson;
         //this.findStr = findStr || '';
-        this.resetCount();   //重新計算條件下的筆數
+        this.resetCount();   //recount first
 
         //trigger dataTables search event
         //this.dt.search(this.findStr).draw();
@@ -53,12 +50,12 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
     };
 
     /**
-     * 用相同的條件再查詢一次, 用於資料更新之後
-     * 不顯示 "查詢成功" 訊息
+     * refind with same condition for refresh form
+     * not show find ok msg
      */ 
     this.reload = function () {
         this._keepStart = true;
-        this._nowShowOk = false;  //不顯示成功訊息
+        this._nowShowOk = false;  //not show find ok msg
         this.find(this.findJson);
     };
 
@@ -69,29 +66,29 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
         
         //default config for dataTables
         var config = {
-            processing: false,  //使用自定義的處理中訊息
+            processing: false,  //use custom processing msg
             serverSide: true,   //server pagination
-            jQueryUI: false,    //可載入Jquery UI主題  
-            //stateSave: true,    //
-            //ordering: false,
-            filter: false,      //搜尋            
-            paginate: true,     //翻頁功能            
-            lengthChange: true, //改變每頁顯示數據數量            
-            info: true,         //顯示表格的相關資訊，包括當前頁面紀錄，以及總記錄頁面數量。
-            sorting: [],        //default not sorting, 否則datatable會使用第一個欄位排序 !!
+            jQueryUI: false,
+            filter: false,      //find string            
+            paginate: true,     //paging          
+            lengthChange: true, //set page rows
+            info: true,         //show page info, include now page, total pages
+            sorting: [],        //default not sorting, or datatable will sort by first column !!
             pagingType: "full_numbers",
+            //stateSave: true,
+            //ordering: false,
 
-            //多國語
+            //locale
             language: {
                 url: "../locale/" + _fun.locale + "/dataTables.txt",
             },
 
-            //自訂工具列
-            dom: 'l<"toolbar">frtip',
+            //default toolbar layout
+            dom: _crud.dtDom,
 
-            //dataTables完成初始化之後會呼叫這個函式
-            //1.增加 toolbar button list if need
-            //2.改變查詢欄位的行為, 按下 enter 時才執行查詢
+            //call after dataTables initialize
+            //1.add toolbar button list if need
+            //2.change find action: find after enter !!
             initComplete: function (settings, json) {
                 //1.toolbar
                 if (tbarHtml)
@@ -119,7 +116,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
                 }
             }.bind(this),
 
-            //ajax config(不是標準的 jquery ajax !!)
+            //ajax config(not standard jquery ajax !!)
             //me: this,
             ajax: {
                 //config
@@ -127,22 +124,19 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
                 type: 'POST',
                 dataType: 'json',
 
-                //增加傳入參數 for datatables
+                //add input parameter for datatables
                 data: function (arg) {
-                    //debugger;
-                    arg.findJson = _json.toStr(this.findJson);    //以字串型式傳入
+                    arg.findJson = _json.toStr(this.findJson);    //string type
                     arg.recordsFiltered = this.recordsFiltered;
                     if (this._keepStart)
                         arg.start = this._start;
                 }.bind(this),                
 
-                //on success
-                //cannot use success, see dataTables document !!
+                //on success (cannot use success event), see DataTables document !!
                 dataSrc: function (result) {
                     this._start = this.dt.page.info().start;
                     this._keepStart = false; //reset
 
-                    //debugger;
                     //data is mapping to backend ErrorModel
                     if (result.ErrorMsg != null && result.ErrorMsg != "") {
                         _tool.msg(result.ErrorMsg);
@@ -170,7 +164,6 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 
                 //on error
                 error: function (xhr, ajaxOptions, thrownError) {
-                    //debugger;
                     _tool.hideWait();
                     _tool.msg('Datatable.js error.');
                     if (xhr != null) {
@@ -181,20 +174,26 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
             },
         };
 
-        //add custom config
-        if (dtConfig)
+        //add custom columnDefs
+        if (dtConfig) {
+            if (!_var.isEmpty(dtConfig.columnDefs)) {
+                var colDefs = dtConfig.columnDefs;
+                colDefs[colDefs.length] = _crud.dtColDef;
+            }
             config = _json.copy(dtConfig, config);
+        }
         
         //before/after ajax call, show/hide waiting msg
         var dt = $(selector);
         dt.on('preXhr.dt', function (e, settings, data) { _tool.showWait(); });
         dt.on('xhr.dt', function (e, settings, data) { _tool.hideWait(); });
         this.dt = dt.DataTable(config);
+
         //.DataTables() will return DataTable API instance, but .dataTable() only return jQuery object !!
         //return { datatable: dt.DataTable(config), findJson: {} };
     };
 
-    //必須放最後面
+    //must put last
     this.init(selector, url, dtConfig, fnOk, tbarHtml);
 
 } //class

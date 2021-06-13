@@ -54,8 +54,8 @@
         <div class="col-md-6">
             @await Component.InvokeAsync("XiSelect", new { title = R["AuthType"].Value, fid = "AuthType", rows = (List<IdStrDto>)ViewBag.AuthTypes, required = true, cols = cols2 })
             @await Component.InvokeAsync("XiRadios", new { title = R["RlabelPos"].Value, fid = "LabelHori", rows = _Str.ToIdStrs("1," + R["Hori"].Value + ",0," + R["Verti"].Value), cols = cols2 })
-            @await Component.InvokeAsync("XiText", new { title = R["TableAs"].Value, fid = "TableAs", maxLen = 10, cols = cols2, tip = R["TipTableAs"].Value })
-            @await Component.InvokeAsync("XiTextArea", new { title = R["ReadSql"].Value, fid = "ReadSql", cols = "4,8", rowsCount = 5 })
+            @await Component.InvokeAsync("XiText", new { title = R["TableAs"].Value, fid = "TableAs", maxLen = 10, cols = cols2, labelTip = R["TipTableAs"].Value })
+            @await Component.InvokeAsync("XiTextArea", new { title = R["ReadSql"].Value, fid = "ReadSql", required = true, labelTip = R["TipReadSql"].Value, cols = "4,8", rowsCount = 5 })
         </div>
     </div>
 </form>
@@ -75,10 +75,9 @@
                 <th>@R0["ColName"]</th>
                 <th>@R0["DataType"]</th>
                 <th>@R["TableAs"]</th>
-                <th>@R["InputType"]</th>
-                <th>@R["InputData"]</th>
+                <th>@R["ItemType"]</th>
+                @await Component.InvokeAsync("XgTh", new { title = R["ItemData"].Value, tip = R["TipItemDataQ"].Value })
                 <th>@R["OpType"]</th>
-                <th>@R["OtherAttr"]</th>
                 @await Component.InvokeAsync("XgTh", new { title = R["StartEnd"].Value, tip = R["TipStartEnd"].Value })
                 @await Component.InvokeAsync("XgTh", new { title = R["Group"].Value, tip = R["TipGroup"].Value })
                 @await Component.InvokeAsync("XgTh", new { title = R["Layout"].Value, tip = R["TipLayout"].Value })
@@ -103,12 +102,12 @@
         <td>{{Name}}</td>
         <td width="120px">{{DataType}}</td>
         <td width="80px">@await Component.InvokeAsync("XiText", new { fid = "TableAs" })</td>
-        <td width="200px">@await Component.InvokeAsync("XiSelect", new { fid = "InputType", rows = (List<IdStrDto>)ViewBag.InputTypes })</td>
-        <td width="90px">@await Component.InvokeAsync("XiText", new { fid = "InputData" })</td>
-        <td width="150px">@await Component.InvokeAsync("XiSelect", new { fid = "Op", rows = (List<IdStrDto>)ViewBag.QitemOps })</td>
-        <td width="100px">@await Component.InvokeAsync("XiText", new { fid = "ExtInfo" })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new { fid = "QitemType", rows = (List<IdStrDto>)ViewBag.QitemTypes })</td>
+        <td>@await Component.InvokeAsync("XiText", new { fid = "ItemData" })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new { fid = "Op", rows = (List<IdStrDto>)ViewBag.QitemOps })</td>
+        @*<td>@await Component.InvokeAsync("XiText", new { fid = "ExtInfo" })</td>*@
         <td width="60px" class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "IsRange" })</td>
-        <td width="60px">@await Component.InvokeAsync("XiText", new { fid = "PosGroup" })</td>
+        <td width="80px">@await Component.InvokeAsync("XiText", new { fid = "PosGroup" })</td>
         <td width="80px">@await Component.InvokeAsync("XiText", new { fid = "LayoutCols" })</td>
         <td width="60px" class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "IsFind2" })</td>
         <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mQitem" })</td>
@@ -122,7 +121,6 @@
     <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("R")'>@R["GetItem"]</button>
 </div>
 
-
 <!-- query result fields -->
 <form id='eformRitem' class='xg-form' style="border:none">
     <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
@@ -131,8 +129,8 @@
                 <th>@R0["Column"]</th>
                 <th>@R0["ColName"]</th>
                 @await Component.InvokeAsync("XgTh", new { title = R["Width"].Value, tip = R["TipWidth"].Value })
-                <th>@R["InputType"]</th>
-                <th>@R["InputData"]</th>
+                <th>@R["ItemType"]</th>
+                @*await Component.InvokeAsync("XgTh", new { title = R["ItemData"].Value, tip = R["TipItemDataR"].Value })*@
                 <th>@R0["Crud"]</th>
             </tr>
         </thead>
@@ -148,11 +146,11 @@
         @await Component.InvokeAsync("XiHide", new { fid = "CrudId" })
         @await Component.InvokeAsync("XiHide", new { fid = "Sort" })
 
-        <td width="180px">@await Component.InvokeAsync("XiText", new { fid = "ColumnCode" })</td>
-        <td width="180px">@await Component.InvokeAsync("XiText", new { fid = "Name" })</td>
+        <td>@await Component.InvokeAsync("XiText", new { fid = "ColumnCode" })</td>
+        <td>@await Component.InvokeAsync("XiText", new { fid = "Name" })</td>
         <td width="100px">@await Component.InvokeAsync("XiNum", new { fid = "Width" })</td>
-        <td width="250px">@await Component.InvokeAsync("XiSelect", new { fid = "RitemType", rows = (List<IdStrDto>)ViewBag.RitemTypes })</td>
-        <td>@await Component.InvokeAsync("XiText", new { fid = "ExtInfo" })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new { fid = "RitemType", rows = (List<IdStrDto>)ViewBag.RitemTypes })</td>
+        @*<td>@await Component.InvokeAsync("XiText", new { fid = "ExtInfo" })</td>*@
         <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mRitem" })</td>
     </tr>
 </script>
@@ -190,12 +188,12 @@
                 <div class="col-md-6">
                     @await Component.InvokeAsync("XiSelect", new { title = R0["Table"].Value, fid = "TableId", required = true, cols = cols2, fnOnChange = "_me.onChangeNowTable({{Index}})" })
                     @await Component.InvokeAsync("XiText", new { title = R["Pkey"].Value, fid = "PkeyFid", maxLen = 10, required = true, cols = cols2 })
-                    @await Component.InvokeAsync("XiText", new { title = R["Fkey"].Value, fid = "FkeyFid", maxLen = 10, cols = cols2, tip = R["TipFkey"].Value })
+                    @await Component.InvokeAsync("XiText", new { title = R["Fkey"].Value, fid = "FkeyFid", maxLen = 10, cols = cols2, labelTip = R["TipFkey"].Value })
                 </div>
                 <div class="col-md-6">
-                    @await Component.InvokeAsync("XiText", new { title = R["DataSort"].Value, fid = "OrderBy", maxLen = 10, cols = cols2, tip = R["TipDataSort"].Value })
-                    @await Component.InvokeAsync("XiCheck", new { title = R["Col4"].Value, fid = "Col4", label = R0["Yes"].Value, cols = cols2, tip = R["TipCol4"].Value })
-                    @await Component.InvokeAsync("XiCheck", new { title = R["HalfWidth"].Value, fid = "HalfWidth", label = R0["Yes"].Value, cols = cols2, tip = R["TipHalfWidth"].Value })
+                    @await Component.InvokeAsync("XiText", new { title = R["DataSort"].Value, fid = "OrderBy", maxLen = 10, cols = cols2, labelTip = R["TipDataSort"].Value })
+                    @await Component.InvokeAsync("XiCheck", new { title = R["Col4"].Value, fid = "Col4", label = R0["Yes"].Value, cols = cols2, labelTip = R["TipCol4"].Value })
+                    @await Component.InvokeAsync("XiCheck", new { title = R["HalfWidth"].Value, fid = "HalfWidth", label = R0["Yes"].Value, cols = cols2, labelTip = R["TipHalfWidth"].Value })
                 </div>
             </div>
         </form>
@@ -210,8 +208,8 @@
                     <tr>
                         <th>@R0["Column"]<br>@R0["ColName"]</th>
                         <th>@R0["DataType"]</th>
-                        <th>@R["InputType"]</th>
-                        @await Component.InvokeAsync("XgTh", new { title = R["InputData"].Value, tip = R["TipInputData"].Value })
+                        <th>@R["ItemType"]</th>
+                        @await Component.InvokeAsync("XgTh", new { title = R["ItemData"].Value, tip = R["TipItemDataE"].Value })
                         <th>@R["Required"]</th>
                         <th>@R["Create"]</th>
                         <th>@R["Update"]</th>
@@ -220,7 +218,8 @@
                         <th>@R["ValidType"]</th>
                         <th>@R["ValidData"]</th>
                         @await Component.InvokeAsync("XgTh", new { title = R["Group"].Value, tip = R["TipGroup"].Value })
-                        <th class="xu-layout">@R["Layout"]</th>
+                        <!-- xu-layout, xu-width for control show/hide -->
+                        @await Component.InvokeAsync("XgTh", new { title = R["Layout"].Value, tip = R["TipLayout"].Value, extClass = "xu-layout" })
                         <th class="xu-width">@R["Width"]</th>
                         <th>@R0["Crud"]</th>
                     </tr>
@@ -241,8 +240,8 @@
 
         <td>{{Code}}<br>{{Name}}</td>
         <td width="100px">{{DataType}}</td>
-        <td width="120px">@await Component.InvokeAsync("XiSelect", new { fid = "InputType", rows = (List<IdStrDto>)ViewBag.InputTypes, required = true })</td>
-        <td width="90px">@await Component.InvokeAsync("XiText", new { fid = "InputData" })</td>
+        <td width="120px">@await Component.InvokeAsync("XiSelect", new { fid = "EitemType", rows = (List<IdStrDto>)ViewBag.EitemTypes, required = true })</td>
+        <td width="90px">@await Component.InvokeAsync("XiText", new { fid = "ItemData" })</td>
         <td width="50px" class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "Required" })</td>
         <td width="50px" class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "HasCreate", isCheck = true })</td>
         <td width="50px" class="xg-center">@await Component.InvokeAsync("XiCheck", new { fid = "HasUpdate", isCheck = true })</td>

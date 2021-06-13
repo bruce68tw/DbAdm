@@ -175,7 +175,7 @@
     <value>產生異動Sql</value>
   </data>
   <data name="ImportDb" xml:space="preserve">
-    <value>匯入資料庫結構</value>
+    <value>匯入結構</value>
   </data>
   <data name="TranLog" xml:space="preserve">
     <value>異動記錄</value>

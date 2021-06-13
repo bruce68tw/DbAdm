@@ -1,15 +1,13 @@
-﻿
-//SPA pjax
+﻿//SPA pjax
 var _pjax = {
 
     /**
      * initial
-     * param {string} filter : filter of pjax container, ex: '.xu-body'
+     * param {string} boxFt : box(container) filter, ex: '.xu-body'
      */
-    init: function (filter) {
-        //box = box || '.xd-body';
+    init: function (boxFt) {
         //if skip 'POST', it will trigger twice !!
-        $(document).pjax('[data-pjax]', filter, { type: 'POST' });
+        $(document).pjax('[data-pjax]', boxFt, { type: 'POST' });
 
         /*
         $(document).on('ready pjax:success', box, function () {

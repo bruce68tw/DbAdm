@@ -9,7 +9,6 @@
         init: function () {
             //datatable config
             var config = {
-                dom: _crud.dtDom,
                 columns: [
                     { data: '_F1' },
                     { data: 'ProjectCode' },
@@ -21,7 +20,6 @@
                     { data: 'Status' },
                 ],
                 columnDefs: [
-                    _crud.dtColConfig,
                     { targets: [0], render: function (data, type, full, meta) {
                         return _crud.dtCheck0(full.Id);
                     }},
@@ -37,8 +35,8 @@
                 ],
             };
 
-            //初始化 crud
-            _me.mCol = new EditMany('Id', 'eformCol', 'tplCol', 'tr');   //多筆
+            //init crud
+            _me.mCol = new EditMany('Id', 'eformCol', 'tplCol', 'tr');
             _crud.init(config, [null, _me.mCol]);
         },
 
@@ -59,14 +57,14 @@
     <!-- read form-->
     <div id="divRead">
         <!-- condition -->
-        <form id='rform' class='xg-form'>
+        <form id='formRead' class='xg-form xg-mb0'>
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new { title = R["Project"].Value, fid = "ProjectId", rows = (List<IdStrDto>)ViewBag.Projects, inRow = true })
-                @await Component.InvokeAsync("XgFindTbar", new { isHorizontal = true, hasReset = true, hasFind2 = true })
+                @await Component.InvokeAsync("XgFindTbar", new { hasReset = true, hasFind2 = true })
             </div>
             @await Component.InvokeAsync("XiText", new { title = R["Table"].Value, fid = "Code", maxLen = 30 })
         </form>
-        <form id='rform2' class='xg-form'>
+        <form id='formRead2' class='xg-form'>
             @await Component.InvokeAsync("XiText", new { title = R["TableName"].Value, fid = "Name", maxLen = 30 })
             @await Component.InvokeAsync("XiSelect", new { title = R["TranLog"].Value, fid = "TranLog", rows = (List<IdStrDto>)ViewBag.YesNos })
         </form>
@@ -78,7 +76,7 @@
         </div>
 
         <!-- result list -->
-        <table id="table1" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
             <thead>
                 <tr>
                     <th width="60px">@R["Select"]</th>

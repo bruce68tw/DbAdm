@@ -19,7 +19,7 @@
 <div class="xp-prog">
     <div id="divRead">
 	{{#if HasFindForm}}
-		<form id='rform' class='xg-form' style="margin-bottom:0;">
+		<form id='formRead' class='xg-form' style="margin-bottom:0;">
 	{{#Fitems}}
 		{{#if IsGroupStart}}
 			<div class="row">
@@ -36,7 +36,7 @@
         </form>
 	{{/if}}
 	{{#if HasFind2Form}}
-        <form id='rform2' class='xg-form'>
+        <form id='formRead2' class='xg-form'>
 	{{#F2items}}
 		{{#if IsGroupStart}}
 			<div class="row">
@@ -61,7 +61,7 @@
 			@await Component.InvokeAsync("XgExport")
 		{{/if}}
         </div>
-        <table id="table1" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
             <thead>
                 <tr>
 				{{#Ritems}}

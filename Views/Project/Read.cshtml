@@ -9,7 +9,6 @@
         init: function () {
             //datatable config
             var config = {
-                dom: _crud.dtDom,
                 columns: [
                     { data: 'Code' },
                     { data: 'DbName' },
@@ -18,7 +17,6 @@
                     { data: 'Status' },
                 ],
                 columnDefs: [
-                    _crud.dtColConfig,
                     { targets: [2], render: function (data, type, full, meta) {
                         var html = '' +
                             '<a href="javascript:_me.onImport(\'{0}\');">{1}</a> | ' +
@@ -73,7 +71,7 @@
         <div class='xg-btns-box'>
             @await Component.InvokeAsync("XgCreate")
         </div>
-        <table id="table1" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["Project"]</th>
