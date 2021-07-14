@@ -1,15 +1,13 @@
-using Base.Enums;
 using Base.Models;
 using Base.Services;
+using BaseWeb.Controllers;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DbAdm.Controllers
 {
     //[Permission(Prog = _Prog.Course)]
-    public class TableController : Controller
+    public class TableController : MyController
     {
         public ActionResult Read()
         {
@@ -21,19 +19,26 @@ namespace DbAdm.Controllers
         [HttpPost]
         public ContentResult GetPage(DtDto dt)
         {
-            return Content(new TableRead().GetPage(dt).ToString(), ContentTypeEstr.Json);
+            return JsonToCnt(new TableRead().GetPage(Ctrl, dt));
         }
 
-        public void Export(string cond)
+        private TableEdit EditService()
         {
-            new TableRead().Export(_Json.StrToJson(cond));
+            return new TableEdit(Ctrl);
         }
 
-        public ContentResult GetJson(string key)
+        [HttpPost]
+        public ContentResult GetUpdateJson(string key)
         {
-            return Content(new TableEdit().GetJson(key).ToString(), ContentTypeEstr.Json);
+            return JsonToCnt(EditService().GetUpdateJson(key));
         }
-                
+
+        [HttpPost]
+        public ContentResult GetViewJson(string key)
+        {
+            return JsonToCnt(EditService().GetViewJson(key));
+        }
+
         /*
         public JsonResult SetStatus(string key, bool status)
         {
@@ -43,16 +48,21 @@ namespace DbAdm.Controllers
 
         public JsonResult Delete(string key)
         {
-            return Json(new TableEdit().Delete(key));
+            return Json(EditService().Delete(key));
         }
 
         public JsonResult Create(string json)
         {
-            return Json(new TableEdit().Create(_Json.StrToJson(json)));
+            return Json(EditService().Create(_Json.StrToJson(json)));
         }
         public JsonResult Update(string key, string json)
         {
-            return Json(new TableEdit().Update(key, _Json.StrToJson(json)));
+            return Json(EditService().Update(key, _Json.StrToJson(json)));
+        }
+
+        public void Export(string find)
+        {
+            new TableRead().Export(Ctrl, _Json.StrToJson(find));
         }
 
         //generate database document in word type

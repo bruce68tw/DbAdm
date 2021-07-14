@@ -4,9 +4,9 @@
 
 @{
     _Fun.Config.SystemName = R["SystemName"].Value;
-    var locale = _Fun.GetLocaleByUser();
+    var locale = _Locale.GetLocaleByUser();
     //_Locale.SetCulture(locale);
-    var min = _Fun.IsDebug() ? "" : ".min";   //min js
+    var min = _Fun.IsDebug ? "" : ".min";   //min js
     var menus = new List<MenuDto>()
     {
         new MenuDto() { Name = R["MenuProject"].Value, Url = "/Project/Read" },

@@ -93,7 +93,7 @@ namespace DbAdm.Services
             {
                 #region 4.get body/row template string
                 var wordSet = new WordSetService(docx);
-                var mainTpl = wordSet.GetMainStr();
+                var mainTpl = wordSet.GetMainPartStr();
 
                 //get word body start/end pos
                 int bodyStart = 0, bodyEnd = 0; //no start/end tag
@@ -135,7 +135,7 @@ namespace DbAdm.Services
                     mainTpl.Substring(bodyEnd + 1);
 
                 //write string into docx
-                wordSet.WriteMainStr(fileStr);
+                wordSet.SetMainPartStr(fileStr);
                 #endregion
 
                 #region remark testing code
@@ -147,11 +147,11 @@ namespace DbAdm.Services
             }
 
             //8.download file
-            _Web.StreamToScreen(ms, "Table.docx");
+            _Web.ExportByStream(ms, "Table.docx");
             return;
 
         lab_error:
-            _Log.Error("GenWordService.cs Run() failed: " + error);
+            _Log.Error("GenDocuService.cs Run() failed: " + error);
             return;
         }
 

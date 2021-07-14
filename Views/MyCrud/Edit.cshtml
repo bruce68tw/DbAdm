@@ -55,7 +55,7 @@
             @await Component.InvokeAsync("XiSelect", new { title = R["AuthType"].Value, fid = "AuthType", rows = (List<IdStrDto>)ViewBag.AuthTypes, required = true, cols = cols2 })
             @await Component.InvokeAsync("XiRadios", new { title = R["RlabelPos"].Value, fid = "LabelHori", rows = _Str.ToIdStrs("1," + R["Hori"].Value + ",0," + R["Verti"].Value), cols = cols2 })
             @await Component.InvokeAsync("XiText", new { title = R["TableAs"].Value, fid = "TableAs", maxLen = 10, cols = cols2, labelTip = R["TipTableAs"].Value })
-            @await Component.InvokeAsync("XiTextArea", new { title = R["ReadSql"].Value, fid = "ReadSql", required = true, labelTip = R["TipReadSql"].Value, cols = "4,8", rowsCount = 5 })
+            @await Component.InvokeAsync("XiTextarea", new { title = R["ReadSql"].Value, fid = "ReadSql", required = true, labelTip = R["TipReadSql"].Value, cols = "4,8", rowsCount = 5 })
         </div>
     </div>
 </form>

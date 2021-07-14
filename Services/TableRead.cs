@@ -36,15 +36,15 @@ order by p.Id, a.Name
             },
         };
 
-        public JObject GetPage(DtDto dt)
+        public JObject GetPage(string ctrl, DtDto dt)
         {
-            return new CrudRead().GetPage(dto, dt);
+            return new CrudRead().GetPage(ctrl, dto, dt);
         }
 
         //export excel
-        public void Export(JObject cond)
+        public void Export(string ctrl, JObject find)
         {
-            _WebExcel.ExportByRead(dto, cond, "Table.xlsx", _Xp.GetTpl("Table.xlsx", false), 1);
+            _WebExcel.ExportByRead(ctrl, dto, find, "Table.xlsx", _Xp.GetTpl("Table.xlsx", false), 1);
         }
 
     } //class

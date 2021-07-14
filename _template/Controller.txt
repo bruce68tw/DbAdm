@@ -96,7 +96,7 @@ namespace {{Project}}.Controllers
             {{#if AuthType2}}
         [XgProgAuth(CrudFunEnum.View)]
             {{/if}}
-        public FileContentResult GetFile(string table, string fid, string key)
+        public FileContentResult ViewFile(string table, string fid, string key)
         {
             var path = _File.GetFirstPath(_Xp.GetDirUserLicence(), $"{fid}_{key}", _Xp.NoImagePath);
             return _WebFile.EchoImage(path);

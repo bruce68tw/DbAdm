@@ -33,9 +33,9 @@ namespace {{Project}}.Services
         }
 
 	{{#if HasExport}}
-        public void Export(JObject cond)
+        public void Export(JObject find)
         {
-            _WebExcel.ScreenByCrud(dto, cond, "{{ProgCode}}", _Locale.GetFilePath("{{ProgCode}}.xlsx"), 1);
+            _WebExcel.ScreenByCrud(dto, find, "{{ProgCode}}", _Locale.GetFilePath("{{ProgCode}}.xlsx"), 1);
         }
 
 	{{/if}}

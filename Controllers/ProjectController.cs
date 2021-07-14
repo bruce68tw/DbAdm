@@ -1,13 +1,13 @@
-using Base.Enums;
 using Base.Models;
 using Base.Services;
+using BaseWeb.Controllers;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DbAdm.Controllers
 {
     //[Permission(Prog = _Prog.Course)]
-    public class ProjectController : Controller
+    public class ProjectController : MyController
     {
         public ActionResult Read()
         {
@@ -17,29 +17,40 @@ namespace DbAdm.Controllers
         [HttpPost]
         public ContentResult GetPage(DtDto dt)
         {
-            return Content(new ProjectRead().GetPage(dt).ToString(), ContentTypeEstr.Json);
+            return JsonToCnt(new ProjectRead().GetPage(Ctrl, dt));
+        }
+
+        private ProjectEdit EditService()
+        {
+            return new ProjectEdit(Ctrl);
         }
 
         [HttpPost]
         public JsonResult Delete(string key)
         {
-            return Json(new ProjectEdit().Delete(key));
+            return Json(EditService().Delete(key));
         }
 
         [HttpPost]
-        public ContentResult GetJson(string key)
+        public ContentResult GetUpdateJson(string key)
         {
-            return Content(new ProjectEdit().GetJson(key).ToString(), ContentTypeEstr.Json);
+            return JsonToCnt(EditService().GetUpdateJson(key));
+        }
+
+        [HttpPost]
+        public ContentResult GetViewJson(string key)
+        {
+            return JsonToCnt(EditService().GetViewJson(key));
         }
 
         [HttpPost]
         public JsonResult Create(string json)
         {
-            return Json(new ProjectEdit().Create(_Json.StrToJson(json)));
+            return Json(EditService().Create(_Json.StrToJson(json)));
         }
         public JsonResult Update(string key, string json)
         {
-            return Json(new ProjectEdit().Update(key, _Json.StrToJson(json)));
+            return Json(EditService().Update(key, _Json.StrToJson(json)));
         }
 
         //import db schema into system

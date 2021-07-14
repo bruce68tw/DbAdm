@@ -613,7 +613,7 @@ namespace DbAdm.Services
                 case QEitemTypeEstr.TextArea:
                 case QEitemTypeEstr.Password:
                     var compType = (item.ItemType == QEitemTypeEstr.TextArea) 
-                        ? "XiTextArea" : "XiText";
+                        ? "XiTextarea" : "XiText";
                     str = GetCompStart(compType) + 
                         GetCols(
                             ViewTitle(name),

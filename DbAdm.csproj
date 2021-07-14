@@ -47,6 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Controllers\MyController.cs_old" />
     <None Remove="Models\CrudFitemDto.cs_old" />
     <None Remove="Models\SessionModel.cs_old" />
     <None Remove="Services\GenCrudService.cs_bak" />

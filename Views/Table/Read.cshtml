@@ -59,14 +59,14 @@
         <!-- condition -->
         <form id='formRead' class='xg-form xg-mb0'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new { title = R["Project"].Value, fid = "ProjectId", rows = (List<IdStrDto>)ViewBag.Projects, inRow = true })
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new { hasReset = true, hasFind2 = true })
             </div>
-            @await Component.InvokeAsync("XiText", new { title = R["Table"].Value, fid = "Code", maxLen = 30 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Table"].Value, Fid = "Code", MaxLen = 30 })
         </form>
         <form id='formRead2' class='xg-form'>
-            @await Component.InvokeAsync("XiText", new { title = R["TableName"].Value, fid = "Name", maxLen = 30 })
-            @await Component.InvokeAsync("XiSelect", new { title = R["TranLog"].Value, fid = "TranLog", rows = (List<IdStrDto>)ViewBag.YesNos })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableName"].Value, Fid = "Name", MaxLen = 30 })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["TranLog"].Value, Fid = "TranLog", Rows = (List<IdStrDto>)ViewBag.YesNos })
         </form>
 
         <div class='xg-btns-box' style="margin-top:5px;">

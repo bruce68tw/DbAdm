@@ -13,9 +13,6 @@
   "BtnCancel": "Cancel",
   "BtnClose": "Close",
 
-  /* front dt format pass to c# */
-  "FrontDtFormat": "yyyy/MM/dd HH:mm:ss",
-
   "PlsSelect": "-Select-",
   "TipDeleteRow": "Delete this Row",
 

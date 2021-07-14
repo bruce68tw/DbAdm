@@ -1,18 +1,18 @@
 using Base.Models;
 using Base.Services;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 
 namespace DbAdm.Services
 {
-    public class ProjectEdit
+    public class ProjectEdit : MyEdit
     {
-        private EditDto GetDto()
+        public ProjectEdit(string ctrl) : base(ctrl) { }
+
+        override public EditDto GetDto()
         {
             return new EditDto
             {
                 Table = "dbo.Project",
-                PkeyFid = "Id",   //primary key 欄位id
+                PkeyFid = "Id",   //primary key
                 Col4 = null,
                 Items = new[] {
                     new EitemDto { Fid = "Id" },
@@ -25,55 +25,6 @@ namespace DbAdm.Services
                 },
             };
         }
-
-        private CrudEdit Service()
-        {
-            return new CrudEdit(GetDto());
-        }
-
-        public JObject GetJson(string key)
-        {
-            return Service().GetJson(key);
-        }
-
-        //key為空白表示新增資料
-        public ResultDto Create(JObject json)
-        {
-            return Service().Create(json);
-        }
-        public ResultDto Update(string key, JObject json)
-        {
-            //return Service().Update(key, json);
-            var result = Service().Update(key, json);
-            return result;
-        }
-
-        public ResultDto Delete(string key)
-        {
-            return Service().Delete(key);
-        }
-
-        /*
-        public ErrorDto Delete(string key)
-        {
-            var sql = @"
-delete c
-from dbo.[Column] c 
-inner join dbo.[Table] t on c.TableId=t.Id
-where t.ProjectId=@Id;
-
-delete dbo.[Table]
-where ProjectId=@Id;
-
-delete dbo.[Project]
-where Id=@Id;
-";
-            return _Db.Update(sql, new List<object>() { "Id", key })
-                ? null
-                : new ErrorDto() { Msg = "Delete Failed." };
-            //return new CrudEdit(_crud).DeleteRow(key);
-        }
-        */
 
     } //class
 }

@@ -13,9 +13,6 @@
   "BtnCancel": "取消",
   "BtnClose": "关闭",
 
-  /* front dt format pass to c# */
-  "FrontDtFormat": "yyyy/MM/dd HH:mm:ss",
-
   "PlsSelect": "-请选取-",
   "TipDeleteRow": "删除此笔资料",
 

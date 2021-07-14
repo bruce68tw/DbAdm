@@ -1,14 +1,13 @@
-using Base.Enums;
 using Base.Models;
 using Base.Services;
+using BaseWeb.Controllers;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
 
 namespace DbAdm.Controllers
 {
     //[Permission(Prog = _Prog.Course)]
-    public class ColumnController : Controller
+    public class ColumnController : MyController
     {
         public ActionResult Read()
         {
@@ -19,7 +18,12 @@ namespace DbAdm.Controllers
         [HttpPost]
         public ContentResult GetPage(DtDto dt)
         {
-            return Content(new ColumnRead().GetPage(dt).ToString(), ContentTypeEstr.Json, Encoding.UTF8);
+            return JsonToCnt(new ColumnRead().GetPage(Ctrl, dt));
+        }
+
+        private ColumnEdit EditService()
+        {
+            return new ColumnEdit(Ctrl);
         }
 
         /*
@@ -29,30 +33,32 @@ namespace DbAdm.Controllers
         }
 		*/
 
-        public ContentResult GetJson(string key)
+        [HttpPost]
+        public ContentResult GetUpdateJson(string key)
         {
-            return Content(Service().GetJson(key).ToString(), ContentTypeEstr.Json, Encoding.UTF8);
+            return JsonToCnt(EditService().GetUpdateJson(key));
+        }
+
+        [HttpPost]
+        public ContentResult GetViewJson(string key)
+        {
+            return JsonToCnt(EditService().GetViewJson(key));
         }
 
         public JsonResult Create(string json)
         {
-            return Json(Service().Create(_Json.StrToJson(json)));
+            return Json(EditService().Create(_Json.StrToJson(json)));
         }
 
         public JsonResult Update(string key, string json)
         {
-            return Json(Service().Update(key, _Json.StrToJson(json)));
+            return Json(EditService().Update(key, _Json.StrToJson(json)));
         }
 
         public JsonResult Delete(string key)
         {
-            return Json(Service().Delete(key));
-        }
-
-        private ColumnEdit Service()
-        {
-            return new ColumnEdit();
-        }
+            return Json(EditService().Delete(key));
+        }        
 
     }//class
 }

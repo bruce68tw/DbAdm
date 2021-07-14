@@ -96,7 +96,7 @@ namespace DbAdm.Services
 
             //echo stream to file
             writer.Flush();
-            _Web.StreamToScreen(ms, tables[0].DbName + "_TranLog.sql");
+            _Web.ExportByStream(ms, tables[0].DbName + "_TranLog.sql");
             return;
             #endregion
 

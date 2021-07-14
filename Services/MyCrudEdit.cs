@@ -1,13 +1,14 @@
 using Base.Models;
 using Base.Services;
-using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
 {
-    public class MyCrudEdit
+    public class MyCrudEdit : MyEdit
     {
-        private EditDto GetDto() {
-            //蝴臔4tables
+        public MyCrudEdit(string ctrl) : base(ctrl) { }
+
+        override public EditDto GetDto() {
+            //4 tables
             return new EditDto
             {
                 Table = "dbo.Crud",
@@ -34,7 +35,7 @@ namespace DbAdm.Services
                 {
                     new EditDto
                     {
-                        //场child readSql常ㄏノ in 粂猭
+                        //all child readSql use 'in'
                         ReadSql = @"
 select a.*,
 	c.Code, c.Name, c.DataType
@@ -66,7 +67,6 @@ order by a.Sort
                     },
                     new EditDto
                     {
-                        //场child readSql常ㄏノ in 粂猭
                         ReadSql = @"
 select a.*
 from dbo.CrudRitem a
@@ -140,51 +140,13 @@ order by a.Sort
                                     new EitemDto { Fid = "Width" },
                                     new EitemDto { Fid = "CheckType" },
                                     new EitemDto { Fid = "CheckData" },
-                                    new EitemDto { Fid = "Sort" },    //狠砞﹚
+                                    new EitemDto { Fid = "Sort" },    //by backend
                                 },
                             },
                         },
                     },
                 },
             };      
-        }
-
-        private CrudEdit Service()
-        {
-            return new CrudEdit(GetDto());
-        }
-
-        public JObject GetJson(string key)
-        {
-            return Service().GetJson(key);
-        }
-
-        public ResultDto Create(JObject json)
-        {
-            #region check input
-            //Etableぃ狡
-            #endregion
-
-            return Service().Create(json);
-        }
-
-        public ResultDto Update(string key, JObject json)
-        {
-            return Service().Update(key, json);
-        }
-
-        /*
-        //return error msg if any
-        private string WhenSave(bool isNew, JObject row)
-        {
-            //case of ok
-            return "";
-        }
-        */
-
-        public ResultDto Delete(string key)
-        {
-            return Service().Delete(key);
         }
 
     } //class

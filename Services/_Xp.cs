@@ -1,4 +1,5 @@
 ﻿using Base.Services;
+using BaseWeb.Services;
 using DbAdm.Tables;
 
 namespace DbAdm.Services
@@ -23,7 +24,7 @@ namespace DbAdm.Services
         {
             var dir = _Fun.DirRoot + "_template\\";
             if (hasLocale)
-                dir += _Fun.GetLocaleByUser() + "\\";
+                dir += _Locale.GetLocaleByUser() + "\\";
             return dir + fileName;
         }
         

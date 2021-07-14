@@ -1,6 +1,7 @@
 using Base.Enums;
 using Base.Models;
 using Base.Services;
+using BaseWeb.Controllers;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace DbAdm.Controllers
 {
     //[Permission(Prog = _Prog.Course)]
-    public class MyCrudController : Controller
+    public class MyCrudController : MyController
     {
         #region Read View
         public ActionResult Read()
@@ -29,34 +30,47 @@ namespace DbAdm.Controllers
         [HttpPost]
         public ContentResult GetPage(DtDto dt)
         {
-            return Content(new MyCrudRead().GetPage(dt).ToString(), ContentTypeEstr.Json);
+            return JsonToCnt(new MyCrudRead().GetPage(Ctrl, dt));
         }
         #endregion
 
-        #region Edit View        
-        //ContentResult for newton json, (JsonResult for model)
-        public ContentResult GetJson(string key)
+        private MyCrudEdit EditService()
         {
-            return Content(new MyCrudEdit().GetJson(key).ToString(), ContentTypeEstr.Json);
+            return new MyCrudEdit(Ctrl);
         }
 
+        #region Edit View        
+        [HttpPost]
+        public ContentResult GetUpdateJson(string key)
+        {
+            return JsonToCnt(EditService().GetUpdateJson(key));
+        }
+
+        [HttpPost]
+        public ContentResult GetViewJson(string key)
+        {
+            return JsonToCnt(EditService().GetViewJson(key));
+        }
+
+        /*
         public JsonResult SetStatus(string key, bool status)
         {
             return Json(_Db.SetRowStatus("dbo.Crud", "Id", key, status));
         }
+        */
 
         public JsonResult Delete(string key)
         {
-            return Json(new MyCrudEdit().Delete(key));
+            return Json(EditService().Delete(key));
         }
 
         public JsonResult Create(string json)
         {
-            return Json(new MyCrudEdit().Create(_Json.StrToJson(json)));
+            return Json(EditService().Create(_Json.StrToJson(json)));
         }
         public JsonResult Update(string key, string json)
         {
-            return Json(new MyCrudEdit().Update(key, _Json.StrToJson(json)));
+            return Json(EditService().Update(key, _Json.StrToJson(json)));
         }
         #endregion
 
@@ -79,7 +93,6 @@ namespace DbAdm.Controllers
             var rows = new ColumnService().GetRows(tableId);
             return Content(rows == null ? "" : rows.ToString(), ContentTypeEstr.Json);
         }
-
         #endregion
 
     }//class
