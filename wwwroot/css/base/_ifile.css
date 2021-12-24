@@ -1,0 +1,15 @@
+﻿
+/* file url */
+.xi-file-box div a:first-child {
+    color: blue;
+}
+
+/* note ?? */
+.xi-file-box div:nth-child(3) {
+    color: red;
+    font-size: 12px;
+}
+
+.xi-file {
+    margin-bottom: 0 !important;
+}

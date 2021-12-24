@@ -1,0 +1,19 @@
+﻿
+/* toolbar */
+
+/* find form toolbar */
+.xg-find-tbar {
+    padding-top: 8px;
+}
+
+/* find form, use $.slideToggle() */
+.xg-find-form {
+    display: none;
+    padding: 10px 0 10px 0;
+}
+
+    /* init to open status, toggle will add open class */
+    .xg-find-form.open {
+        /*display: none;*/
+        padding: 10px 0 10px 0;
+    }

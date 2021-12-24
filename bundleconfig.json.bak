@@ -1,0 +1,78 @@
+[
+  {
+    "outputFileName": "wwwroot/css/lib.css",
+    "inputFiles": [
+      "wwwroot/css/lib/bootstrap-4.4.1.css",
+      "wwwroot/css/lib/dataTables.bootstrap4-1.10.19.css",
+      "wwwroot/css/lib/bootstrap-datepicker-1.9.css"
+    ]
+  },
+
+  {
+    "outputFileName": "wwwroot/css/my.css",
+    "inputFiles": [
+      /* bundler will change fonts path in css file, must pust fonts under css folder !!*/
+      "wwwroot/css/icomoon.css",
+      "wwwroot/css/base/*.css",
+      "wwwroot/css/view/_xp.css"
+    ]
+  },
+
+  {
+    "outputFileName": "wwwroot/js/lib.js",
+    "inputFiles": [
+      "wwwroot/js/lib/jquery-3.4.1.js",
+      /* load validate first, or cause error(but min not), 1.19.3 not need unobtrusive */
+      "wwwroot/js/lib/jquery.validate-1.19.3.js",
+      /*"wwwroot/js/lib/jquery.validate.unobtrusive-3.2.11.js",*/
+      "wwwroot/js/lib/bootstrap.bundle-4.4.1.js",
+      /* use jquery.dataTables, dataTables.bootstrap4 !! */
+      "wwwroot/js/lib/jquery.dataTables-1.10.19.js",
+      "wwwroot/js/lib/dataTables.bootstrap4-1.10.19.js",
+      /* pjax must remark 716,716 lines */
+      "wwwroot/js/lib/jquery.pjax-2.0.1.js",
+      "wwwroot/js/lib/bootstrap-datepicker-1.9.js",
+      "wwwroot/js/lib/modernizr-2.8.3.js",
+      "wwwroot/js/lib/moment-2.24.js",
+      "wwwroot/js/lib/mustache-3.1.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": false
+    },
+    "sourceMap": false
+  },
+
+  {
+    "outputFileName": "wwwroot/js/my.js",
+    "inputFiles": [
+      "wwwroot/js/base/*.js",
+      "wwwroot/js/view/_*.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": false
+    },
+    "sourceMap": false
+  },
+
+  /* locale */
+  {
+    "outputFileName": "wwwroot/js/zh-TW.js",
+    "inputFiles": [
+      "wwwroot/locale/zh-TW/*.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/zh-CN.js",
+    "inputFiles": [
+      "wwwroot/locale/zh-CN/*.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/en-US.js",
+    "inputFiles": [
+      "wwwroot/locale/en-US/*.js"
+    ]
+  }
+]

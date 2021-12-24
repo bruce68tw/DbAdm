@@ -1,0 +1,84 @@
+﻿
+/* prog path, razor only support inline style */
+.xg-prog-path {
+    height: 38px;
+    padding: 8px 16px;
+    font-size: 16px;
+    color: gray;
+}
+
+/* form with line */
+.xg-lineform {
+    font-size: 15px;
+    border-color: #ddd;
+    border-style: solid;
+    border-width: 1px 1px 0 1px; 
+    border-radius: 4px;
+}
+
+    .xg-lineform .xg-row {
+        min-height: 53px;
+        margin: 0;
+        border-bottom: solid 1px #f0f0f0;
+    }
+
+    .xg-lineform .xg-label {
+        background: #eee;
+        padding: 14px 5px 0 15px;
+        border-right: solid 1px #ddd;
+        border-bottom: solid 1px #ddd;
+    }
+
+    .xg-lineform .xg-input {
+        padding-top: 7px;
+        /*border-bottom: solid 1px #f0f0f0;*/
+    }
+
+/* form without line */
+.xg-form {
+    /*font size same to .form-control*/
+    font-size: 16px;
+    border: none;
+    /*margin-bottom: 0px;*/
+}
+
+    .xg-form .xg-row {
+        /*min-height: 53px;*/
+        margin: 0;
+        border: none;
+    }
+
+    .xg-form .xg-label {
+        padding: 14px 5px 0 15px;
+        border: none;
+        text-align: right;
+    }
+
+    .xg-form .xg-input {
+        padding-top: 7px;
+        min-height: 43px;
+    }
+
+.xg-hide {
+    display: none;
+}
+
+.xg-inline {
+    display: inline-block;
+}
+
+/* title required sign */
+.xg-required {
+    color: red;
+    font-weight: bold;
+}
+
+/* match datepicker.css .date setting, for keep input width same to date at query form */
+.xg-date-w {
+    width: 180px !important;
+}
+
+/* animation */
+.xg-fade.hide {
+    display: none;
+}

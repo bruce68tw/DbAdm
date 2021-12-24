@@ -1,0 +1,57 @@
+﻿
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.btn {
+    font-size: 14px;
+}
+
+/* table button with link style */
+.btn-link {
+    padding: 0 !important;
+}
+
+.table-condensed {
+    font-size: 14px;
+}
+
+/* change height, 38 -> 36 */
+.form-control, select.form-control {
+    font-size: 16px !important;
+    height: 36px !important;
+    /*padding: 3px 6px !important;*/
+}
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #eee !important;
+    }
+
+textarea.form-control {
+    height: auto !important;
+}
+
+/* modal */
+/* background-color 會覆蓋 border-radius 效果 */
+/*
+.modal-header {
+    padding: 10px;
+    border-bottom: 1px solid #e5e5e5;
+    background-color: #eee; 
+}
+*/
+
+/* placeholder color */
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: lightgrey !important;
+    opacity: 1; /* Firefox */
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: lightgrey !important;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: lightgrey !important;
+}

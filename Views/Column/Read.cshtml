@@ -1,0 +1,58 @@
+﻿@* 1.locale *@
+@inject IHtmlLocalizer<DbAdm.R0> R
+
+@* 2.load js and initial *@
+<script src="~/js/view/Column.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //debugger;
+        _me.init();
+    });
+</script>
+
+@* 3.program name *@
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R["MenuColumn"].Value } })
+
+<div class="xp-prog">
+    <div id="divRead">
+        @* 4.first query area *@
+        <form id='formRead' class='xg-form xg-mb0'>
+            <div class="row">
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, InRow = true })
+
+                @* 5.toolbar *@
+                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true, HasFind2 = true })
+            </div>
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Table"].Value, Fid = "TableCode", MaxLen = 30 })
+        </form>
+
+        @* 6.second query area *@
+        <form id='formRead2' class='xg-form xg-mb0'>
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Column"].Value, Fid = "Code", MaxLen = 30 })
+        </form>
+        <div class="xg-h10"></div>
+
+        @* 7.query result table header *@
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>@R["Project"]</th>
+                    <th>@R["Table"]</th>
+                    <th>@R["Column"]</th>
+                    <th>@R["ColName"]</th>
+                    <th>@R["DataType"]</th>
+                    <th width='80px'>@R["Crud"]</th>
+                    <th width='60px'>@R["Status"]</th>
+                </tr>
+            </thead>
+
+            @* 8.query result table rows *@
+            <tbody></tbody>
+        </table>
+    </div>
+
+    @* 8.edit form *@
+    <div id="divEdit" class="xg-hide">
+        <partial name="Edit" />
+    </div>
+</div>

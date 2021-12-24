@@ -1,0 +1,33 @@
+﻿
+.xg-left {
+    text-align: left;
+}
+.xg-center {
+    text-align: center;
+}
+.xg-right {
+    text-align: right;
+}
+
+.xg-h10 {
+    height: 10px !important;
+}
+
+.xg-mt0 {
+    margin-top: 0 !important;
+}
+.xg-mt5 {
+    margin-top: 5px !important;
+}
+.xg-mt10 {
+    margin-top: 10px !important;
+}
+.xg-mb0 {
+    margin-bottom: 0 !important;
+}
+.xg-mb5 {
+    margin-bottom: 5px !important;
+}
+.xg-mb10 {
+    margin-bottom: 10px !important;
+}

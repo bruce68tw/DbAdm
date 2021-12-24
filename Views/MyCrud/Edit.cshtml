@@ -1,0 +1,316 @@
+﻿@inject IHtmlLocalizer<DbAdm.R0> R0
+@inject IViewLocalizer R
+
+@{
+    var cols2 = "4,6";     //2 columns per row
+}
+
+<style>
+    /* set scroll table column width(base 1) */
+    #tableItem th:nth-child(1), #tableItem td:nth-child(1) {
+        flex-basis: 60px;
+    }
+
+    #tableItem th:nth-child(2), #tableItem td:nth-child(2) {
+        flex-basis: 200px;
+    }
+    /* get remain width */
+    #tableItem th:nth-child(3), #tableItem td:nth-child(3) {
+        flex-grow: 1;
+    }
+</style>
+
+<!-- main table edit form -->
+<form id='eform' class='xg-form'>
+    @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+
+    <div class="row">
+        <!-- left columns -->
+        <div class="col-md-6">
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Project"].Value, Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, Required = true, Cols = cols2, FnOnChange = "_me.onChangeProject()" })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgCode"].Value, Fid = "ProgCode", MaxLen = 30, Required = true, Cols = cols2 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgName"].Value, Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols2 })
+
+            <div class="row">
+                <div class="col-md-4 xg-label">@R["FunRead"]</div>
+                <div class="col-md-8" style="padding-top:5px;">
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasExport", IsCheck = true, Label = R["Export"].Value })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasReset", IsCheck = true, Label = R["Reset"].Value })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 xg-label">@R["FunEdit"]</div>
+                <div class="col-md-8" style="padding-top:5px;">
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasCreate", IsCheck = true, Label = R["Create"].Value })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasUpdate", IsCheck = true, Label = R["Update"].Value })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasDelete", IsCheck = true, Label = R["Delete"].Value })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasView", IsCheck = true, Label = R["View"].Value })
+                </div>
+            </div>
+            @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R0["Status"].Value, Fid = "Status", IsCheck = true, Label = R0["Active"].Value, Cols = cols2 })
+        </div>
+
+        <!-- right columns -->
+        <div class="col-md-6">
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["AuthType"].Value, Fid = "AuthType", Rows = (List<IdStrDto>)ViewBag.AuthTypes, Required = true, Cols = cols2 })
+            @await Component.InvokeAsync("XiRadio", new XiRadioDto { Title = R["RlabelPos"].Value, Fid = "LabelHori", Rows = _Str.ToIdStrs("1," + R["Hori"].Value + ",0," + R["Verti"].Value), Cols = cols2 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableAs"].Value, Fid = "TableAs", MaxLen = 10, Cols = cols2, LabelTip = R["TipTableAs"].Value })
+            @await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Title = R["ReadSql"].Value, Fid = "ReadSql", Required = true, LabelTip = R["TipReadSql"].Value, Cols = "4,8", RowsCount = 5 })
+        </div>
+    </div>
+</form>
+
+<!-- find buttons -->
+<div class="xg-btns-box">
+    <span class="xg-block-label">@R["Qitem"]</span>
+    <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("Q")'>@R["GetItem"]</button>
+</div>
+
+<!-- find field -->
+<form id='eformQitem' class='xg-form' style="border:none">
+    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+        <thead>
+            <tr>
+                <th>@R0["Column"]</th>
+                <th>@R0["ColName"]</th>
+                <th>@R0["DataType"]</th>
+                <th>@R["TableAs"]</th>
+                <th>@R["ItemType"]</th>
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["ItemData"].Value, Tip = R["TipItemDataQ"].Value })
+                <th>@R["OpType"]</th>
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["StartEnd"].Value, Tip = R["TipStartEnd"].Value })
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Group"].Value, Tip = R["TipGroup"].Value })
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Layout"].Value, Tip = R["TipLayout"].Value })
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Find2"].Value, Tip = R["TipFind2"].Value })
+                <th>@R0["Crud"]</th>
+            </tr>
+        </thead>
+        <!-- body match tplQitem -->
+        <tbody id="divQitemBody"></tbody>
+    </table>
+</form>
+
+<!--template: edit form Qitem -->
+<script id="tplQitem" type="text/template">
+    <tr class="xu-tr">
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "CrudId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "ColumnId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort" })
+
+        <td>{{Code}}</td>
+        <td>{{Name}}</td>
+        <td width="120px">{{DataType}}</td>
+        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "TableAs" })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "QitemType", 
+           Rows = (List<IdStrDto>)ViewBag.QitemTypes, AddEmptyRow = false, Value = "T" })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "Op",
+           Rows = (List<IdStrDto>)ViewBag.QitemOps,
+           AddEmptyRow = false,
+           Value = "Equal"
+       })</td>
+        @*<td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ExtInfo" })</td>*@
+        <td width="60px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsRange" })</td>
+        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PosGroup" })</td>
+        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LayoutCols" })</td>
+        <td width="60px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsFind2" })</td>
+        <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mQitem" })</td>
+    </tr>
+</script>
+
+<!-- query result buttons -->
+<div class="xg-btns-box">
+    <span class="xg-block-label">@R["Ritem"]</span>
+    @await Component.InvokeAsync("XgAddRow", "_me.onRitemAdd()")
+    <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("R")'>@R["GetItem"]</button>
+</div>
+
+<!-- query result fields -->
+<form id='eformRitem' class='xg-form' style="border:none">
+    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+        <thead>
+            <tr>
+                <th>@R0["Column"]</th>
+                <th>@R0["ColName"]</th>
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Width"].Value, Tip = R["TipWidth"].Value })
+                <th>@R["ItemType"]</th>
+                @*await Component.InvokeAsync("XgTh", new XgThDto { Title = R["ItemData"].Value, Tip = R["TipItemDataR"].Value })*@
+                <th>@R0["Crud"]</th>
+            </tr>
+        </thead>
+        <!-- body 搭配 tplRitem -->
+        <tbody id="divRitemBody"></tbody>
+    </table>
+</form>
+
+<!--template: eidt form Ritem -->
+<script id="tplRitem" type="text/template">
+    <tr class="xu-tr">
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "CrudId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort" })
+
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ColumnCode" })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Name" })</td>
+        <td width="100px">@await Component.InvokeAsync("XiInt", new XiIntDto { Fid = "Width" })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "RitemType", Rows = (List<IdStrDto>)ViewBag.RitemTypes, AddEmptyRow = false, Value = "0" })</td>
+        @*<td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ExtInfo" })</td>*@
+        <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mRitem" })</td>
+    </tr>
+</script>
+
+<!-- Table edit form nav/tab/buttons -->
+<div class="xg-btns-box">
+    <span class="xg-block-label">@R["EditForm"]</span>
+    <button type='button' class='btn xg-btn' onclick='_me.onEtableAdd()'>@R["Create"]</button>
+    <button type='button' class='btn xg-btn' onclick='_me.onEtableDelete()'>@R["Delete"]</button>
+    <button type='button' class='btn xg-btn' onclick='_me.onEtableLeft()'>@R["MoveLeft"]</button>
+    <button type='button' class='btn xg-btn' onclick='_me.onEtableRight()'>@R["MoveRight"]</button>
+</div>
+<ul class="nav nav-tabs" id="navEtable"></ul>
+<div class="tab-content" id="tabEtable"></div>
+
+@await Component.InvokeAsync("XgSaveBack")
+
+<!-- template: edit form nav, use index to connect nav tab -->
+<script id="tplNavEtable" type="text/template">
+    <li class='nav-item' data-index='{{Index}}'>
+        <a class='nav-link' data-toggle='tab' href='#divEtable{{Index}}' onclick='_me.onEtableNav({{Index}})'>
+        </a>
+    </li>
+</script>
+
+<!-- template: CrudEdit edit form tab, layout/width fields are dynamic switch -->
+<script id="tplTabEtable" type="text/template">
+    <div class="tab-pane xu-edit" id="divEtable{{Index}}">
+        <!-- xg-form also for myCrud.js -->
+        <form class='xg-form' data-index="{{Index}}" style="border:none; margin-top: 10px;">
+            @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+            @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort" })
+
+            <div class="row">
+                <div class="col-md-6">
+                    @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Table"].Value, Fid = "TableId", Required = true, Cols = cols2, FnOnChange = "_me.onChangeNowTable({{Index}})" })
+                    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Pkey"].Value, Fid = "PkeyFid", MaxLen = 10, Required = true, Cols = cols2 })
+                    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Fkey"].Value, Fid = "FkeyFid", MaxLen = 10, Cols = cols2, LabelTip = R["TipFkey"].Value })
+                </div>
+                <div class="col-md-6">
+                    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["DataSort"].Value, Fid = "OrderBy", MaxLen = 10, Cols = cols2, LabelTip = R["TipDataSort"].Value })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["Col4"].Value, Fid = "Col4", Label = R0["Yes"].Value, Cols = cols2, LabelTip = R["TipCol4"].Value })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["HalfWidth"].Value, Fid = "HalfWidth", Label = R0["Yes"].Value, Cols = cols2, LabelTip = R["TipHalfWidth"].Value })
+                </div>
+            </div>
+        </form>
+
+        <div class="xg-btns-box">
+            <span class="xg-block-label">@R["Eitem"]</span>
+            <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("E")'>@R["GetItem"]</button>
+        </div>
+        <form class="xu-form2">
+            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>@R0["Column"]/@R0["ColName"]<br>@R0["DataType"]</th>
+                        <th>@R["ItemType"]</th>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["ItemData"].Value, Tip = R["TipItemDataE"].Value })
+                        <th>@R["Required"]</th>
+                        <th>@R["Create"]</th>
+                        <th>@R["Update"]</th>
+                        <th>@R["Hint"]</th>
+                        <th>@R0["Default"]</th>
+                        <th>@R["ValidType"]</th>
+                        <th>@R["ValidData"]</th>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Group"].Value, Tip = R["TipGroup"].Value })
+                        <!-- xu-layout, xu-width for control show/hide -->
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Layout"].Value, Tip = R["TipLayout"].Value, ExtClass = "xu-layout" })
+                        <th class="xu-width">@R["Width"]</th>
+                        <th>@R0["Crud"]</th>
+                    </tr>
+                </thead>
+                <!-- tbody tr 內容為 tplEitemTr -->
+                <tbody></tbody>
+            </table>
+        </form>
+    </div>
+</script>
+
+<!-- template: edit form Eitem, xu-tr for myCrud.js, show fields use mustache render to fill -->
+<script id="tplEitemTr" type="text/template">
+    <tr class="xu-tr">
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id", Value = "{{Id}}" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "ColumnId", Value = "{{ColumnId}}" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort", Value = "{{Sort}}" })
+
+        <td>{{Code}}/{{Name}}<br>{{DataType}}</td>
+        <td width="120px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "EitemType",
+                         Rows = (List<IdStrDto>)ViewBag.EitemTypes, Required = true,
+                         AddEmptyRow = false, Value = "T"
+                     })</td>
+        <td width="90px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
+        <td width="50px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Required" })</td>
+        <td width="50px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasCreate", IsCheck = true })</td>
+        <td width="50px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasUpdate", IsCheck = true })</td>
+        <td width="110px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PlaceHolder" })</td>
+        <td width="70px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue" })</td>
+        <td width="110px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "CheckType", Value = "0", Rows = (List<IdStrDto>)ViewBag.CheckTypes, Required = true, AddEmptyRow = false })</td>
+        <td width="90px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "CheckData" })</td>
+        <td width="60px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PosGroup" })</td>
+        <td width="80px" class="xu-layout">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LayoutCols" })</td>
+        <td width="80px" class="xu-width">@await Component.InvokeAsync("XiInt", new XiIntDto { Fid = "Width" })</td>
+        <td width="95px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mEitem" })</td>
+    </tr>
+</script>
+
+<!-- multiple row template, must set width, Nullable set false first then front side will set it -->
+<!-- modal: Read item, shared -->
+<div id="modalItems" class="modal fade xg-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:560px; height:520px;">
+            <div class="modal-header">
+                <div class="modal-title">@R["GetQitem"]</div>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row xg-row" style="margin:5px 5px">
+                    <div class="col-md-2 xg-right" style="padding-top: 6px;">
+                        Table
+                    </div>
+                    <div class="col-md-6">
+                        @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "TableId", Rows = (List<IdStrDto>)ViewBag.Tables, FnOnChange = "_me.onChangeItemTable(this)" })
+                    </div>
+                    <div class="col-md-4 xg-right">
+                        <button type="button" class="btn btn-primary" onclick="_me.onItemModalOk()">@R["Sure"]</button>
+                    </div>
+                </div>
+
+                <!-- query result list -->
+                <table id="tableItem" class="table table-bordered xg-table xg-table-vscroll" cellspacing="0" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>@R0["Select"]</th>
+                            <th>@R0["Column"]</th>
+                            <th>@R0["ColName"]</th>
+                        </tr>
+                    </thead>
+                    <!-- match tplItemTr -->
+                    <tbody style="height:315px"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- template: modal Items list row, data property is case insense !! -->
+<script id="tplItemTr" type="text/template">
+    <tr data-id='{{Id}}'
+        data-code='{{Code}}'
+        data-name='{{Name}}'
+        data-datatype='{{DataType}}'>
+        <td>
+            @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "_check0" })
+        </td>
+        <td>{{Code}}</td>
+        <td>{{Name}}</td>
+    </tr>
+</script>

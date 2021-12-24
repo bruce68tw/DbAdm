@@ -1,0 +1,29 @@
+﻿@charset "utf-8";
+
+body {
+    /*padding-top: 50px;*/
+    padding-bottom: 20px;
+    font-size: 14px !important;
+}
+
+body, label {
+    color: #424243;
+    font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
+}
+
+/* space in button & icon */
+.btn > i {
+    padding-left: 3px;
+}
+
+/* icomoon spinner */
+@keyframes anim-rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+}
+.spinner {
+    vertical-align: middle;
+    display: inline-block;
+    font-size: 2em;
+    animation: anim-rotate 2s infinite steps(12);
+}

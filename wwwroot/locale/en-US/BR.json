@@ -1,0 +1,24 @@
+﻿{
+  "BtnCreate": "Create",
+  "BtnAddRow": "Add Row",
+  "BtnFind": "Find",
+  "BtnFind2": "Expand",
+  "BtnSave": "Save",
+  "BtnToRead": "Previous",
+  "BtnExport": "Export",
+  "BtnReset": "Reset",
+  "BtnOpen": "Open",
+
+  "BtnYes": "Yes",
+  "BtnCancel": "Cancel",
+  "BtnClose": "Close",
+
+  "PlsSelect": "-Select-",
+  "TipDeleteRow": "Delete this Row",
+
+  "NoAuthProg": "You have not access right, Please connect Admin.",
+  "NotLogin": "Please Login First.",
+
+  "Required": "Required",
+  "StrLen": "String too long({0})"
+}

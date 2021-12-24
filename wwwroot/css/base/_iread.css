@@ -1,0 +1,13 @@
+﻿
+/* 在輸入欄位(右邊)的label*/
+.xg-lineform .xi-read {
+    border: none;
+    padding-left: 0;
+}
+
+/* 在輸入欄位(右邊)的label*/
+.xg-form .xi-read {
+    padding-left: 0;
+    border: none;
+    margin: 0;
+}

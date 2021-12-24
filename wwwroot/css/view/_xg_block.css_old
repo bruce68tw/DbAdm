@@ -1,0 +1,109 @@
+﻿
+/* 要切換的畫面, ex: Read, Edit */
+.xg-swap {
+    display: none;
+}
+
+.xg-swap.xg-active {
+    display: block;
+}
+
+.xg-inline {
+    display: inline-block;
+}
+
+
+/*=== checkbox, radio, 使用 pure css, 無js ===*/
+/* hide 原本的 element */
+.xg-check, .xg-radio {
+    display: none;
+}
+
+/* 相鄰的 label 為實際顯示的 element(必須設定 for='[id]') */
+.xg-check + label, .xg-radio + label {
+	position: relative;
+	cursor: pointer;
+	padding: 0;
+}
+
+/* 方框 */
+.xg-check + label:before, .xg-radio + label:before {
+	content: '';
+	margin-right: 0px;
+	display: inline-block;
+	vertical-align: text-top;
+	width: 19px;
+	height: 19px;
+	background: white;
+    border: 1px solid #ccc;
+}
+
+/* 勾選時的方框, 暫不設style */
+.xg-check:checked + label, .xg-radio:checked + label {
+    /*background-color: #f00;
+	color: #fff;*/
+}
+
+/* 勾選符號 */
+.xg-check:checked + label:after, .xg-radio:checked + label:after {
+	content: '';
+	position: absolute;
+	top: 5px;
+	left: 7px;
+    width: 5px;
+    height: 10px;
+    border: solid #666;
+    border-width: 0 2px 2px 0;	
+	transform: rotate(45deg);
+}
+
+/* disable時的style */
+.xg-check:disabled + label {
+	color: #b8b8b8;
+	cursor: auto;
+}
+.xg-check:disabled + label:before {
+	box-shadow: none;
+	background: #ddd;
+}
+
+/*
+.xg-check:hover + label:before {
+	background: #f35429;
+}
+
+.xg-check:focus + label:before {
+	box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+}
+*/
+/*=== end of checkbox, radio */
+
+/*
+@media print {
+    body > * {
+        display: none;
+    }
+
+    body > .xg-print {
+        display: block;
+    }
+
+}
+*/
+
+/* https://stackoverflow.com/questions/468881/print-div-id-printarea-div-only */
+/*
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #_divPrint, #_divPrint * {
+    visibility: visible;
+  }
+  #_divPrint {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+*/

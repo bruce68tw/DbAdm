@@ -1,0 +1,15 @@
+﻿namespace DbAdmin.Models
+{
+    //for Gen Crud
+    public class CrudFitemDto
+    {
+        //public bool IsFind2 { get; set; }
+        public string ViewStr { get; set; }
+        public bool IsGroup { get; set; }       //是否為同一列
+        public bool IsGroupStart { get; set; }  //同一列開始
+        public bool IsGroupEnd { get; set; }    //同一列結束
+
+        public string InputType { get; set; }
+
+    }
+}

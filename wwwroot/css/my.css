@@ -1,0 +1,1449 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?9ftoua');
+  src:  url('fonts/icomoon.eot?9ftoua#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?9ftoua') format('truetype'),
+    url('fonts/icomoon.woff?9ftoua') format('woff'),
+    url('fonts/icomoon.svg?9ftoua#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="ico-"], [class*=" ico-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ico-date:before {
+  content: "\f073";
+}
+.ico-find:before {
+  content: "\f002";
+}
+.ico-delete:before {
+  content: "\f00d";
+}
+.ico-find2:before {
+  content: "\f00e";
+}
+.ico-plus:before {
+  content: "\f067";
+}
+.ico-info:before {
+  content: "\e900";
+}
+.ico-back:before {
+  content: "\f148";
+}
+.ico-mail:before {
+  content: "\f003";
+}
+.ico-home:before {
+  content: "\f015";
+}
+.ico-print:before {
+  content: "\f02f";
+}
+.ico-pen:before {
+  content: "\f040";
+}
+.ico-eye:before {
+  content: "\f06f";
+}
+.ico-save:before {
+  content: "\f0c8";
+}
+.ico-first:before {
+  content: "\f100";
+}
+.ico-last:before {
+  content: "\f101";
+}
+.ico-prev:before {
+  content: "\f104";
+}
+.ico-next:before {
+  content: "\f105";
+}
+.ico-up:before {
+  content: "\f106";
+}
+.ico-down:before {
+  content: "\f107";
+}
+.ico-open:before {
+  content: "\f115";
+}
+.ico-pdf:before {
+  content: "\f1c1";
+}
+.ico-word:before {
+  content: "\f1c2";
+}
+.ico-excel:before {
+  content: "\f1c3";
+}
+.ico-facebook:before {
+  content: "\f230";
+}
+.ico-user:before {
+  content: "\f2c0";
+}
+.ico-reset:before {
+  content: "\f01e";
+}
+.ico-exit:before {
+  content: "\ea14";
+}
+.ico-spin:before {
+  content: "\e97c";
+}
+
+
+/* 用在 form裡面的 button */
+.xg-small-btn {
+    padding: 2px 5px;
+}
+
+/* 功能按鈕, 空白則為 basic button */
+.xg-fun-btn {    
+}
+
+/* look like link */
+.xg-link-btn {
+    background: none !important;
+    color: inherit;
+    border: none;
+    padding: 0 !important;
+    font: inherit;
+    /*border is optional*/
+    border-bottom: 1px solid #444;
+    cursor: pointer;
+}
+
+.xg-btns-box {
+    padding: 3px 0 3px 0;
+    display: flex;  /* 間距會變小 */
+}
+
+/* 功能按鈕, 空白則為 basic button */
+/* size and gray */
+.xg-btn {
+    padding: .25rem .5rem;
+    margin-right: 3px;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.xg-btn-size {
+    padding: .25rem .5rem;
+    margin-right: 3px;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+}
+
+.xg-btn-gray {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* table row button */
+.xg-row-btn {
+}
+
+/* jquery validate error label */
+span.error {
+    color: red;
+    margin-bottom: 0 !important;
+}
+
+.xg-err {
+    /*border: #5b48e5;
+    border-style: solid;
+    border-width: thin;*/
+    border: 1px solid #FF8B55 !important;
+    /*border-style: solid !important;
+    border-width: thin !important;*/
+}
+
+/*  */
+.xg-errlab {
+    text-align: left;
+    font-size: 14px;
+    font-weight: lighter;
+    color: red;
+    display: none;
+}
+
+/* (+)相鄰選擇器, 
+  1.與 xg-error2 相鄰的 error label 要顯示 
+  2.在 xg-error2box 裡面的 error label 要顯示 
+.xg-error + .xg-errorlabel, .xg-errorbox + .xg-errorlabel {
+    display: block !important;
+}
+*/
+
+/* 在 xg-error2box 裡面的 input 要顯示錯誤框 */
+/*.xg-errorbox > input,
+.xg-errorbox > button, .xg-errorbox div.xg-icheck {
+    border: 1px solid #FF8B55 !important;
+}
+*/
+
+/* toolbar */
+
+/* find form toolbar */
+.xg-find-tbar {
+    padding-top: 8px;
+}
+
+/* find form, use $.slideToggle() */
+.xg-find-form {
+    display: none;
+    padding: 10px 0 10px 0;
+}
+
+    /* init to open status, toggle will add open class */
+    .xg-find-form.open {
+        /*display: none;*/
+        padding: 10px 0 10px 0;
+    }
+
+/*
+.jtk-demo-main {
+    background-color: transparent;
+    font-family: Arial,sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    max-width:1500px;
+    position: relative;
+    margin-top:98px;
+}
+
+.jtk-demo-canvas {
+    margin-left: 160px;
+    height:750px;
+    max-height:700px;
+    border:1px solid #CCC;
+    background-color:white;
+}
+
+.canvas-wide {
+    margin-left:0;
+}
+*/
+
+.xf-line-label {
+    -webkit-transition: background-color 0.25s ease-in;
+    -moz-transition: background-color 0.25s ease-in;
+    transition: background-color 0.25s ease-in;
+    background-color: white;
+    opacity: 0.8;
+    padding: 0.3em;
+    border-radius: 0.5em;
+    /*border: 1px solid #346789;*/
+    cursor: pointer;
+}
+
+
+.zz_demo {
+    /* for IE10+ touch devices */
+    touch-action:none;
+}
+
+.xf-node {
+    padding: 12px 18px 12px 12px;
+    position: absolute;
+    z-index: 4;
+    border: 1px solid #2e6f9a;
+    box-shadow: 2px 2px 19px #e0e0e0;
+    -o-box-shadow: 2px 2px 19px #e0e0e0;
+    -webkit-box-shadow: 2px 2px 19px #e0e0e0;
+    -moz-box-shadow: 2px 2px 19px #e0e0e0;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    opacity: 0.8;
+    cursor: move;
+    background-color: white;
+    font-size: 13px;
+    -webkit-transition: background-color 0.25s ease-in;
+    -moz-transition: background-color 0.25s ease-in;
+    transition: background-color 0.25s ease-in;
+}
+
+.xf-node:hover {
+    background-color: #5c96bc;
+    color: white;
+}
+
+.xf-node.xf-start-node {
+    border-color: red;
+}
+.xf-node.xf-end-node {
+    border-color: red;
+    border-radius: 50%;
+    padding: 12px;
+    width: 45px;
+    height: 45px;
+}
+    .xf-node.xf-end-node .xd-name {
+        margin-left: -2px !important;
+    }
+    .xf-node.xf-end-node .xf-ep {
+        display: none !important;
+    }
+
+/*
+.xf-node.xf-auto-node {
+    border: 3px solid gray;
+    border-radius: 0;
+}
+*/
+
+/*
+.aLabel {
+    -webkit-transition: background-color 0.25s ease-in;
+    -moz-transition: background-color 0.25s ease-in;
+    transition: background-color 0.25s ease-in;
+}
+.aLabel {
+    background-color: white;
+    opacity: 0.8;
+    padding: 0.3em;
+    border-radius: 0.5em;
+    border: 1px solid #346789;
+    cursor: pointer;
+}
+*/
+
+/*
+.xf-line-label.jtk-hover, .jtk-source-hover, .jtk-target-hover {
+    background-color: #1e8151;
+    color: white;
+}
+*/
+
+/* end point, class name fix to xf-ep !! */
+.xf-ep {
+    position: absolute;
+    bottom: 37%;
+    right: 5px;
+    width: 1em;
+    height: 1em;
+    background-color: orange;
+    cursor: pointer;
+    box-shadow: 0 0 2px black;
+    -webkit-transition: -webkit-box-shadow 0.25s ease-in;
+        -moz-transition: -moz-box-shadow 0.25s ease-in;
+        transition: box-shadow 0.25s ease-in;
+}
+
+.xf-ep:hover {
+    box-shadow: 0 0 6px black;
+}
+
+.zz_statemachine-demo .jtk-endpoint {
+    z-index: 3;
+}
+
+/* no used
+#opened {
+    left: 10em;
+    top: 5em;
+}
+
+#phone1 {
+    left: 35em;
+    top: 12em;
+    width: 7em;
+}
+
+#inperson {
+    left: 12em;
+    top: 23em;
+}
+
+#phone2 {
+    left: 28em;
+    top: 24em;
+}
+
+#rejected {
+    left: 10em;
+    top: 35em;
+}
+*/
+
+.dragHover {
+    border: 2px solid orange;
+}
+
+path, .jtk-endpoint { cursor:pointer; }
+
+/* context menu */
+/* The whole thing */
+.xf-menu {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid #CCC;
+    white-space: nowrap;
+    font-family: sans-serif;
+    background: #FFF;
+    color: #333;
+    border-radius: 5px;
+    padding: 0;
+    min-width: 100px;
+}
+
+/* Each of the items in the list */
+.xf-menu li {
+    padding: 6px 15px;
+    cursor: pointer;
+    list-style-type: none;
+    transition: all .3s ease;
+}
+
+.xf-menu li:hover {
+    background-color: #DEF;
+}
+
+/* prog path, razor only support inline style */
+.xg-prog-path {
+    height: 38px;
+    padding: 8px 16px;
+    font-size: 16px;
+    color: gray;
+}
+
+/* form with line */
+.xg-lineform {
+    font-size: 15px;
+    border-color: #ddd;
+    border-style: solid;
+    border-width: 1px 1px 0 1px; 
+    border-radius: 4px;
+}
+
+    .xg-lineform .xg-row {
+        min-height: 53px;
+        margin: 0;
+        border-bottom: solid 1px #f0f0f0;
+    }
+
+    .xg-lineform .xg-label {
+        background: #eee;
+        padding: 14px 5px 0 15px;
+        border-right: solid 1px #ddd;
+        border-bottom: solid 1px #ddd;
+    }
+
+    .xg-lineform .xg-input {
+        padding-top: 7px;
+        /*border-bottom: solid 1px #f0f0f0;*/
+    }
+
+/* form without line */
+.xg-form {
+    /*font size same to .form-control*/
+    font-size: 16px;
+    border: none;
+    /*margin-bottom: 0px;*/
+}
+
+    .xg-form .xg-row {
+        /*min-height: 53px;*/
+        margin: 0;
+        border: none;
+    }
+
+    .xg-form .xg-label {
+        padding: 14px 5px 0 15px;
+        border: none;
+        text-align: right;
+    }
+
+    .xg-form .xg-input {
+        padding-top: 7px;
+        min-height: 43px;
+    }
+
+.xg-hide {
+    display: none;
+}
+
+.xg-inline {
+    display: inline-block;
+}
+
+/* title required sign */
+.xg-required {
+    color: red;
+    font-weight: bold;
+}
+
+/* match datepicker.css .date setting, for keep input width same to date at query form */
+.xg-date-w {
+    width: 180px !important;
+}
+
+/* animation */
+.xg-fade.hide {
+    display: none;
+}
+
+/**
+ * checkbox, radio, use pure css, no js
+ */
+.xi-check {
+    display: inline-block;
+    position: relative;
+    margin-top: 8px;
+    padding: 0 10px 0 25px; /* for label pos */
+}
+    /*
+    .xi-check.xg-in-dt, .xg-radio.xg-in-dt {
+        margin-top: 10px;
+        padding-left: 25px;
+    }
+    */
+
+/* hide original input element */
+.xi-check > input {
+    display: none;
+}
+
+/* checkbox, span is square/round checked sign */
+.xi-check > span {	
+	cursor: pointer;
+    position: absolute;
+	padding: 0;
+    top: 0;
+    left: 0;
+
+    content: '';
+	display: inline-block;
+	vertical-align: middle;
+	width: 19px;
+	height: 19px;
+	background: white;
+    border: 1px solid #ccc;
+	margin-right: 0px;
+}
+
+    /* for datatable checkbox, no label */
+    .xi-check.xg-no-label > span {
+        top: 0 !important;
+        left: 0 !important;
+    }
+
+/* radio sign box */
+.xi-rspan {
+    border-radius: 50% !important;
+}
+
+/*
+.xi-check.xd-center, .xg-radio.xd-center {	
+    padding:0;
+}
+*/
+
+/* 在 datatable裡面有時會置中 
+.xi-check.xd-center > span, .xg-radio.xd-center > span {	
+	cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+    padding:0;
+    margin:0;
+}
+*/
+
+    /* checkbox方框 style (span:before) 
+.xi-check > span:before {
+	content: '';
+	display: inline-block;
+	vertical-align: middle;
+	width: 19px;
+	height: 19px;
+	background: white;
+    border: 1px solid #ccc;
+	margin-right: 0px;
+}
+*/
+
+/* checkbox checked sign (span:after) */
+.xi-check > input:checked + .xi-cspan:after {
+	content: '';
+	position: absolute;
+    height: 10px;
+    width: 5px;
+    border: solid #666;
+    border-width: 0 2px 2px 0;	
+	transform: rotate(45deg);
+	top: 3px;
+	left: 7px;
+}
+
+/* radio checked sign (span:after) */
+.xi-check > input:checked + .xi-rspan:after {
+    content: '';
+    position: absolute;
+    height: 6px;
+    width: 6px;
+    top: 6px;
+    left: 6px;
+    border-radius: 50%;
+    background: #666;
+}   
+
+/* disabled style */
+.xi-check > input:disabled + span {
+    /*color: #b8b8b8;*/
+    background: #eee;
+    cursor: auto;
+}
+
+
+/* datatable header delete all checkbox */
+.xi-check.xg-delete-all {
+    padding-left: 15px;
+}
+
+.xg-delete-all-btn {
+    margin-top: -2px;
+    padding: 2px 3px 2px 0;
+    background: red;
+}
+
+/* file url */
+.xi-file-box div a:first-child {
+    color: blue;
+}
+
+/* note ?? */
+.xi-file-box div:nth-child(3) {
+    color: red;
+    font-size: 12px;
+}
+
+.xi-file {
+    margin-bottom: 0 !important;
+}
+
+/* number input */
+/* hide stepper: Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* hide stepper: Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* 在輸入欄位(右邊)的label*/
+.xg-lineform .xi-read {
+    border: none;
+    padding-left: 0;
+}
+
+/* 在輸入欄位(右邊)的label*/
+.xg-form .xi-read {
+    padding-left: 0;
+    border: none;
+    margin: 0;
+}
+
+
+.xg-block-label {
+    margin: 3px 3px;
+}
+
+/* main form */
+
+.xg-top {
+    color: #EAFFFF;
+    background: #28C2FE;
+    height: 45px;
+    border-bottom: 1px solid #CCC;
+}
+
+    .xg-top li {
+        margin: auto 5px;
+    }
+
+    .xg-top i {
+        font-size: 20px;
+    }
+
+.xg-leftmenu {
+    margin-left: 0;
+    padding: 0;
+    /*min-width: 250px;
+    max-width: 300px;*/
+    width: 250px;
+    height: 100%;
+    /*font-size: 14px;*/
+    /*margin: 0;*/
+    background: #FFFFFF;
+    transition: 0.5s;
+    z-index: 1000;
+}
+
+.xg-leftmenu.xg-close {
+    transition: 0.5s;
+    margin-left: -250px;
+}
+/*
+.xg-leftmenu.xg-close span, 
+.xg-leftmenu.xg-close .xg-arrow {
+    display: none;
+    transition: 0.5s;
+}
+*/
+
+/* menu item */
+.xg-leftmenu li {
+    /*text-indent: 0;*/
+    line-height: 42px;
+    border-bottom: solid 1px #E5E5E5;
+    /*color: #fff;*/
+}
+
+/* 文字 */
+.xg-leftmenu a {
+    display: block; /* 選取的有效寬度為100% */
+    font-size: 15px;
+    color: #555 !important;
+
+}
+    .xg-leftmenu a:hover {
+        cursor: pointer;
+        text-decoration: none; /* remove underline */
+        color: #EDD8E7 !important;
+        background: #333237;
+    }
+
+.xg-leftmenu a:hover i {
+    color: #EDD8E7;
+    background: #333237;
+}
+
+/* icon */
+.xg-leftmenu i {
+    margin-right: 10px;
+    padding-left: 12px;
+    /*color: #fff;*/
+    width: 25px;    /* 讓文字對齊 */
+}
+
+    .xg-leftmenu .xg-arrow:before {
+        float: right;
+        margin-right: 20px;
+        font-family: 'icomoon';
+        content: "\f107"; /* down arrow */
+    }
+.xg-leftmenu .xg-arrow.xg-open:before {
+    content: "\f106";   /* up arrow */
+}
+
+.xg-leftmenu-panel {
+    list-style: none;
+    /*
+    -moz-padding-start: 0;
+    -webkit-padding-start: 0;
+    -khtml-padding-start: 0;
+    -o-padding-start: 0;
+    padding-start: 0;
+    */
+    padding: 0;
+    background: #DAF8FF;
+}
+
+.xg-leftmenu-panel li {
+    border: none;
+}
+
+/* sub menu text */
+.xg-leftmenu-panel a {
+    /*font-size: 15px;
+    color: #fff;*/
+    padding-left: 22px;
+}
+
+/* program area */
+.xg-body {
+    display: inline-block;
+    width: 100%;
+    height: 100vh;
+    vertical-align: top;
+    transition: 0.5s;
+    border-left: 1px solid #CCC;
+}
+
+
+/*
+.xg-modal .modal-dialog {
+    min-width: 200px;
+}
+*/
+
+.xg-modal .modal-header {
+    /*height: 10px;*/
+    border-bottom: 1px solid #eee;
+    padding: 9px 15px 9px 19px;
+}
+
+.xg-modal .modal-title {
+    font-size: 16px;
+    color: #3e8cc6;
+}
+
+.xg-modal .modal-body {
+    font-size: 16px;
+    padding: 20px 15px 15px 15px;
+}
+
+.xg-modal .modal-footer {
+    border: none;
+    padding: 0 20px 10px;
+}
+
+
+.xg-left {
+    text-align: left;
+}
+.xg-center {
+    text-align: center;
+}
+.xg-right {
+    text-align: right;
+}
+
+.xg-h10 {
+    height: 10px !important;
+}
+
+.xg-mt0 {
+    margin-top: 0 !important;
+}
+.xg-mt5 {
+    margin-top: 5px !important;
+}
+.xg-mt10 {
+    margin-top: 10px !important;
+}
+.xg-mb0 {
+    margin-bottom: 0 !important;
+}
+.xg-mb5 {
+    margin-bottom: 5px !important;
+}
+.xg-mb10 {
+    margin-bottom: 10px !important;
+}
+
+
+/* file url */
+.xg-edit-table td {
+    border-top: none;
+    border-bottom: none;
+}
+
+
+/*
+  包含: 
+  1.xg-table
+  2.xg-table裡面的輸入元件
+  3.jQuery dataTables
+*/
+.xg-table {
+    width: 100% !important;
+    font-size: 15px;
+    /*table-layout: fixed;*/
+}
+
+    /*
+.xg-table td {
+    vertical-align: middle;
+    height: 32px;
+}
+*/
+
+    .xg-table tr:hover {
+        background: #F6F6F6;
+    }
+
+    /*.xg-table thead th {*/
+    .xg-table th {
+        background: #eee;
+        border-width: 0 1px 0 0 !important;
+        /*
+    border-top: none !important;
+    border-bottom: none !important;
+    border-bottom-width: 1px !important;
+    border-left-width: 0;
+    */
+        vertical-align: middle !important;
+        /*padding-top: 3px;
+    padding-bottom: 3px;
+    height: 48px !important;*/
+        text-align: center !important;
+    }
+
+        .xg-table th:last-child {
+            border-right-width: 0 !important;
+        }
+
+    .xg-table tbody td {
+        vertical-align: middle !important;
+        /*padding-top: 3px;
+    padding-bottom: 3px;
+    height: 48px !important;*/
+        border-width: 1px 1px 0 0 !important;
+        /*border-bottom-width: 0;
+    border-left-width: 0;*/
+    }
+
+    .xg-table.xg-no-hline td {
+        border-top: none;
+        border-bottom: none;
+    }
+
+/*
+.xg-table th .xi-check {
+    top: -6px !important;
+    left: -3px !important;
+}
+.xg-table tbody .xi-check {
+    top: -8px !important;
+}
+*/
+
+/* table v scroll */
+.xg-table-vscroll tbody {
+  display:block;
+  overflow-y:scroll;
+}
+
+.xg-table-vscroll tr {
+  display:flex;
+}
+
+/* TODO: ?? */
+.xg-table .xi-check > span {
+    top: -10px !important;
+    left: 8px !important;
+}
+
+tr input {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+}
+tr select {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+}
+
+/* bootstrap alert */
+#xgAlert {
+    position: fixed; 
+    top: 3px; 
+    right: 3px; 
+    width: auto;
+    z-index: 9999; 
+    border-radius: 5px
+}
+
+/*
+#xgWait {
+    display: none;  
+    position: fixed;
+    top: 33%;
+    left: 50%;
+}
+*/
+
+/* xg-msg for both xgMsg & xgAns */
+.xg-msg .modal-dialog {
+    min-width: 280px;
+    max-width: 480px;
+}
+.xg-msg .modal-header {
+    border-bottom: none;
+    padding: 9px 15px 9px 19px;
+    background-color: none;
+}
+.xg-msg .modal-body {
+    font-size: 16px;
+    padding: 10px 20px 30px 20px;
+}
+.xg-msg .modal-footer {
+    border-bottom: none;
+    padding: 10px;
+}
+
+/*
+#xgArea .modal-dialog {
+    width: 480px;
+}
+*/
+
+#xgImage .modal-body {
+    padding: 3px;
+}
+#xgImage .modal-footer {
+    border: none;
+    padding: 5px;
+}
+#xgImage img {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    width: auto;
+}
+
+/* When the body has the wait class, we turn
+   the scrollbar off with overflow:hidden */
+body.xg-show-wait {
+    overflow: hidden;
+}
+
+/* Anytime the body has the wait class, our
+   modal element will be visible */
+body.xg-show-wait .xg-wait {
+    display: block;
+}
+
+
+/* toolbar */
+
+/* row list toolbar */
+.xg-list-tbar {
+    padding: 3px 0 3px 0;
+}
+
+@charset "utf-8";
+
+body {
+    /*padding-top: 50px;*/
+    padding-bottom: 20px;
+    font-size: 14px !important;
+}
+
+body, label {
+    color: #424243;
+    font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
+}
+
+/* space in button & icon */
+.btn > i {
+    padding-left: 3px;
+}
+
+/* icomoon spinner */
+@keyframes anim-rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+}
+.spinner {
+    vertical-align: middle;
+    display: inline-block;
+    font-size: 2em;
+    animation: anim-rotate 2s infinite steps(12);
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.btn {
+    font-size: 14px;
+}
+
+/* table button with link style */
+.btn-link {
+    padding: 0 !important;
+}
+
+.table-condensed {
+    font-size: 14px;
+}
+
+/* change height, 38 -> 36 */
+.form-control, select.form-control {
+    font-size: 16px !important;
+    height: 36px !important;
+    /*padding: 3px 6px !important;*/
+}
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #eee !important;
+    }
+
+textarea.form-control {
+    height: auto !important;
+}
+
+/* modal */
+/* background-color 會覆蓋 border-radius 效果 */
+/*
+.modal-header {
+    padding: 10px;
+    border-bottom: 1px solid #e5e5e5;
+    background-color: #eee; 
+}
+*/
+
+/* placeholder color */
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: lightgrey !important;
+    opacity: 1; /* Firefox */
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: lightgrey !important;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: lightgrey !important;
+}
+
+/* 筆數起迄&合計 */
+.dataTables_info {
+    padding-top: 6px !important;
+}
+
+.dataTables_wrapper {
+    padding: 0;
+}
+
+    .dataTables_wrapper .dataTables_length, .dataTables_info, .toolbar {
+        float: left;
+    }
+
+
+/* change sorting icon to font-awesome
+    see: https://datatables.net/blog/2014-06-06
+*/
+table.dataTable thead th {
+    position: relative;
+    background-image: none !important; /* Remove the DataTables bootstrap integration styling */
+}
+
+    /* sun add, 否則會出現2個icon !! */
+    table.dataTable thead th.sorting:before,
+    table.dataTable thead th.sorting_asc:before,
+    table.dataTable thead th.sorting_desc:before {
+        display: none;
+    }
+
+    table.dataTable thead th.sorting:after,
+    table.dataTable thead th.sorting_asc:after,
+    table.dataTable thead th.sorting_desc:after {
+        position: absolute;
+        top: 15px; /* sun: 12 -> 15 */
+        right: 8px;
+        display: block;
+        font-family: FontAwesome;
+    }
+
+    table.dataTable thead th.sorting:after {
+        content: "\f0dc";
+        opacity: 0.2;
+        /*color: #ddd;
+        font-size: 0.8em;
+        padding-top: 0.12em;*/
+    }
+
+    table.dataTable thead th.sorting_asc:after {
+        content: "\f0de";
+        opacity: 0.8;
+    }
+
+    table.dataTable thead th.sorting_desc:after {
+        content: "\f0dd";
+        opacity: 0.8;
+    }
+
+
+/* use bootstrap datepicker */
+.datepicker {
+    z-index: 9999 !important;
+}
+
+/*日曆按鈕*/
+/*
+.datepicker table tr td.active, .datepicker table tr td.active.disabled, .datepicker table tr td.active.disabled:hover, .datepicker table tr td.active:hover {
+    background-color: #006dcc;
+    background-image: -moz-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: -ms-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#23c6c8),to(#1ab394));
+    background-image: -webkit-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: -o-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);
+    border-color: #1ab394 #1ab394 #002a80;
+    border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) rgba(0,0,0,.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+}
+
+.datepicker {
+    min-width: 135px;
+    position: relative;
+}
+.datepicker .input-group-addon {
+    padding-left: 0;
+    padding-right: 5px;
+}
+.datepicker input {
+    border-right-width: 0;
+}
+.datepicker .fa-calendar-o {
+    cursor: pointer;
+    border-left-width: 0;
+    border-right-width: 0;
+}
+.datepicker .fa-calendar {
+    cursor: pointer;
+    border-left-width: 0;
+}
+*/
+
+
+.date {
+    width: 180px;
+    /*position: relative;*/
+}
+
+    .date input {
+        border-radius: 4px !important;
+    }
+
+    .date .input-group-addon {
+        z-index: 500;
+        position: relative;
+        top: 7px;
+        right: 40px;
+    }
+
+    /* date icon */
+    .date span {
+        z-index: 510;
+        position: absolute;
+        top: 8px;
+        right: 5px;
+    }
+
+.note-toolbar {
+    background: #eee !important;
+}
+
+.note-editable[contenteditable=false] {
+    background: #eee !important;
+}
+
+
+/* prog path, razor 只支援 inline style */
+.xp-prog-path {
+    height: 43px;
+    /*border-bottom: 1px solid #E5E5E5;*/
+}
+.xp-prog-path ul {
+    padding: 10px 0 10px 10px;
+    font-size: 15px;
+    color: #a5a5a5;
+    background: none;
+}
+
+.xp-prog-title {
+    padding: 10px 0 10px 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.xp-prog {
+    /*padding: 10px;
+    width: 100%;*/
+    /*border: 1px solid #ddd!important;
+    border-radius: 4px;
+    margin: 10px 15px 10px 15px;*/
+    margin: 5px 15px 10px 15px;
+    padding: 15px;
+    border: 1px solid #ddd!important;
+    border-radius: 4px;
+}
+
+.xp-toolbar {
+    /*padding: 0 2px 0 2px;*/
+    margin-bottom: 5px;
+}
+
+/* 以下移除 */
+/* 查詢畫面欄位label */
+.xp-find-label {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.xp-find-form {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    /* border: 1px solid lightgray; */
+}
+/* 查詢畫面的查詢按鈕 */
+.xp-find-btn {
+    text-align: right;
+}
+.xp-find-btn button {
+    margin-right: 10px;
+}
+
+/* === 專案 class === */
+/* 查詢畫面輸入欄位外框 */
+
+/* CRUD form title */
+.xp-form-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* form group title */
+.xp-group-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: red;
+    margin-bottom: 10px;
+}
+
+.xp-group-item {
+    padding-left: 10px;
+}
+
+.xp-row-gap {
+    height: 15px;
+}
+
+/* red btn */
+.xp-btn-red {
+    color: white;
+    background-color: #DA1826;
+}
+.xp-btn-lightred {
+    color: white;
+    background-color: #E98B93 ;
+}
+/* blue btn */
+.xp-btn-blue {
+    color: white;
+    background-color: blue;
+}
+.xp-btn-lightblue {
+    color: white;
+    background-color: #B6D3EA;
+}
+/* green btn */
+.xp-btn-green {
+    color: white;
+    background-color: green;
+}
+/* purple btn */
+.xp-btn-purple {
+    color: white;
+    background-color: purple;
+}
+
+/* horizontal line */
+.xp-line {
+    border-color: darkgray;
+}
+
+/* datatable toolbar button */
+.xp-dt-btn {
+    margin-left: 10px;
+}
+
+/* here!! 修正日期欄位位置 */
+.xp-tmp-date-fix {
+    position: relative;
+    top: -12px;
+}
+
+/* horizontal line */
+/*
+.side-nav {
+    height: 100%;
+    width: 100%;
+    position:absolute;
+    transition: 0.5s;
+}
+.main-content {
+  -webkit-flex: 6;
+      -ms-flex: 6;
+          flex: 6;
+  position: relative;
+  padding: 15px 30px 15px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #F3F3F3;
+  width: 80%;
+  left: 200px;
+}
+*/
+
+
+/*=== 暫解 ===*/
+.dataTables_info {
+    /*padding-top: 2px !important;*/
+}
+
+
+.xp-datatable {
+
+}
+
+.xp-datatable thead tr th {
+    background: #eee;
+}
+    
+
+.dt-center {
+    text-align: center;
+}
+
+.xp-tr-btn {
+    margin: 1px;
+    padding: 2px 5px;
+    /*width: 60px;*/
+}
+
+/* font icon(icomoom) */
+[class^="ico-"], [class*=" ico-"] {
+    padding: 1px;
+}

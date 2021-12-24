@@ -1,0 +1,112 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>6b53b027-76c0-4cf7-b55a-c17f2031c2ba</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\css_old\**" />
+    <Compile Remove="wwwroot\js_old\**" />
+    <Compile Remove="wwwroot\locale_old\**" />
+    <Compile Remove="_data\**" />
+    <Compile Remove="_log\**" />
+    <Compile Remove="_source\**" />
+    <Compile Remove="_source_old\**" />
+    <Compile Remove="_sql\**" />
+    <Content Remove="wwwroot\css_old\**" />
+    <Content Remove="wwwroot\js_old\**" />
+    <Content Remove="wwwroot\locale_old\**" />
+    <Content Remove="_data\**" />
+    <Content Remove="_log\**" />
+    <Content Remove="_source\**" />
+    <Content Remove="_source_old\**" />
+    <Content Remove="_sql\**" />
+    <EmbeddedResource Remove="wwwroot\css_old\**" />
+    <EmbeddedResource Remove="wwwroot\js_old\**" />
+    <EmbeddedResource Remove="wwwroot\locale_old\**" />
+    <EmbeddedResource Remove="_data\**" />
+    <EmbeddedResource Remove="_log\**" />
+    <EmbeddedResource Remove="_source\**" />
+    <EmbeddedResource Remove="_source_old\**" />
+    <EmbeddedResource Remove="_sql\**" />
+    <None Remove="wwwroot\css_old\**" />
+    <None Remove="wwwroot\js_old\**" />
+    <None Remove="wwwroot\locale_old\**" />
+    <None Remove="_data\**" />
+    <None Remove="_log\**" />
+    <None Remove="_source\**" />
+    <None Remove="_source_old\**" />
+    <None Remove="_sql\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig_old.json" />
+    <Content Remove="wwwroot\js\base\_crud.j_old" />
+    <Content Remove="wwwroot\js\base\_datatable.j_old" />
+    <Content Remove="wwwroot\js\base\_editMany.j_old" />
+    <Content Remove="wwwroot\js\base\_multi.j_old" />
+    <Content Remove="wwwroot\js\base\_text.j_old" />
+    <Content Remove="wwwroot\js\base\_valid.j_old" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Controllers\MyController.cs_old" />
+    <None Remove="Models\CrudFitemDto.cs_old" />
+    <None Remove="Models\ErrorViewModel.cs_old" />
+    <None Remove="Models\SessionModel.cs_old" />
+    <None Remove="Services\GenCrudService.cs_bak" />
+    <None Remove="Services\zz_MyProfile0Service.cs_old" />
+    <None Remove="Services\zz__Session.cs_old" />
+    <None Remove="Services\_ProgPath.cs_old" />
+    <None Remove="Views\Shared\Error.cshtml_old" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<Content Include="_template\**" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Views\Shared\Error.cshtml_old" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="Handlebars.Net" Version="2.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Base\BaseWeb\BaseWeb.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Column\Edit.cshtml" />
+    <None Include="Views\Column\Read.cshtml" />
+    <None Include="Views\MyCrud\Edit.cshtml" />
+    <None Include="Views\MyCrud\Read.cshtml" />
+    <None Include="Views\Project\Edit.cshtml" />
+    <None Include="Views\Project\Read.cshtml" />
+    <None Include="wwwroot\css\icomoon.css" />
+    <None Include="wwwroot\locale\en-US\bootstrap-datepicker.js" />
+    <None Include="wwwroot\locale\en-US\_BR.js" />
+    <None Include="wwwroot\locale\zh-CN\bootstrap-datepicker.js" />
+    <None Include="wwwroot\locale\zh-CN\validate.js" />
+    <None Include="wwwroot\locale\zh-CN\_BR.js" />
+    <None Include="wwwroot\locale\zh-TW\bootstrap-datepicker.js" />
+    <None Include="wwwroot\locale\zh-TW\dataTables.txt" />
+    <None Include="wwwroot\locale\zh-TW\_BR.js" />
+    <None Include="wwwroot\locale\zh-TW\summernote.j_old" />
+    <None Include="wwwroot\locale\zh-TW\validate.js" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+</Project>

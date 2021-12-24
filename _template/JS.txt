@@ -1,0 +1,41 @@
+var _me = {
+
+    init: function () {        
+        //datatable config
+        var config = {
+            columns: [
+			{{#Ritems}}
+                { data: '{{ColumnCode}}' },
+			{{/Ritems}}
+            ],
+            columnDefs: [
+			{{#each JsColDefStrs}}
+				{{this}}
+			{{/each}}
+            ],
+        };
+
+        //initial
+	{{#if ChildTables}}
+		{{#ChildTables}}
+            {{#if SortFid}}
+        _me.m{{TableCode}} = new EditMany('{{PkeyFid}}', 'eform{{TableCode}}', 'tpl{{TableCode}}', 'tr', '{{SortFid}}');
+            {{else}}
+        _me.m{{TableCode}} = new EditMany('{{PkeyFid}}', 'eform{{TableCode}}', 'tpl{{TableCode}}', 'tr');
+            {{/if}}
+		{{/ChildTables}}
+		_crud.init(config, [null, {{ManyTables}}]);
+	{{else}}
+		_crud.init(config);
+	{{/if}}          
+    },
+
+    {{#if HasFile}}
+    //TODO: add your code
+    //onclick viewFile, called by XiFile component
+    onViewFile: function (table, fid, elm) {
+        _me.mUserLicense.onViewFile(table, fid, elm);
+    },
+
+    {{/if}}
+}; //class

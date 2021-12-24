@@ -1,0 +1,92 @@
+﻿@inject IHtmlLocalizer<DbAdm.R0> R
+
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+
+    var _me = {
+        init: function () {
+            //datatable config
+            var config = {
+                columns: [
+                    { data: 'Code' },
+                    { data: 'DbName' },
+                    { data: '_Fun' },
+                    { data: '_Crud' },
+                    { data: 'Status' },
+                ],
+                columnDefs: [
+                    { targets: [2], render: function (data, type, full, meta) {
+                        var html = '' +
+                            '<a href="javascript:_me.onImport(\'{0}\');">{1}</a> | ' +
+                            '<a href="javascript:_me.onGenWord(\'{0}\');">{2}</a> | ' +
+                            '<a href="javascript:_me.onGenLogSql(\'{0}\');">{3}</a>';
+                        return _str.format(html, full.Id, '@R["ImportDb"]', '@R["GenDocu"]', '@R["GenLogSql"]');
+                    }},
+                    { targets: [3], render: function (data, type, full, meta) {
+                        return _crud.dtCrudFun(full.Id, full.Name, true, true, false);
+                    }},
+                    { targets: [4], render: function (data, type, full, meta) {
+                        return _crud.dtStatusName(data);
+                    }},
+                ],
+            };
+
+            //initial
+            _crud.init(config);
+        },
+
+        //import excel into Db
+        onImport: function (id) {
+            _me.prjId = id;
+            _tool.ans('@R["SureImportDb"]', function () {
+                _ajax.getJson('Import', { id: _me.prjId }, function (data) {
+                    _tool.msg(_BR.Done);
+                });
+            });
+        },
+
+        //generate docx file
+        onGenWord: function (id) {
+            _tool.ans('@R["SureGenDocu"]', function () {
+                window.location = 'GenWord?id=' + id;
+            });
+        },
+
+        //generate tranlog sql file
+        onGenLogSql: function (id) {
+            _tool.ans('@R["SureGenLogSql"]', function () {
+                window.location = 'GenLogSql?id=' + id;
+            });
+        },
+
+    }; //class
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new string[] { R["MenuProject"].Value })
+<div class="xp-prog">
+    <!-- read form-->
+    <div id="divRead">
+        <div class='xg-btns-box'>
+            @await Component.InvokeAsync("XgCreate")
+        </div>
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>@R["Project"]</th>
+                    <th>@R["DbName"]</th>
+                    <th>@R["Fun"]</th>
+                    <th width='80px'>@R["Crud"]</th>
+                    <th width='60px'>@R["Status"]</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- edit form -->
+    <div id="divEdit" class="xg-hide">
+        <partial name="Edit" />
+    </div>
+</div>

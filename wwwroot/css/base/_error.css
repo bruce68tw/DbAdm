@@ -1,0 +1,39 @@
+﻿
+/* jquery validate error label */
+span.error {
+    color: red;
+    margin-bottom: 0 !important;
+}
+
+.xg-err {
+    /*border: #5b48e5;
+    border-style: solid;
+    border-width: thin;*/
+    border: 1px solid #FF8B55 !important;
+    /*border-style: solid !important;
+    border-width: thin !important;*/
+}
+
+/*  */
+.xg-errlab {
+    text-align: left;
+    font-size: 14px;
+    font-weight: lighter;
+    color: red;
+    display: none;
+}
+
+/* (+)相鄰選擇器, 
+  1.與 xg-error2 相鄰的 error label 要顯示 
+  2.在 xg-error2box 裡面的 error label 要顯示 
+.xg-error + .xg-errorlabel, .xg-errorbox + .xg-errorlabel {
+    display: block !important;
+}
+*/
+
+/* 在 xg-error2box 裡面的 input 要顯示錯誤框 */
+/*.xg-errorbox > input,
+.xg-errorbox > button, .xg-errorbox div.xg-icheck {
+    border: 1px solid #FF8B55 !important;
+}
+*/

@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AuthType" xml:space="preserve">
+    <value>Authorize Type</value>
+  </data>
+  <data name="Col4" xml:space="preserve">
+    <value>Column 4</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="DataSort" xml:space="preserve">
+    <value>Data Sort</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="EditForm" xml:space="preserve">
+    <value>Edit Form</value>
+  </data>
+  <data name="Eitem" xml:space="preserve">
+    <value>Edit Item</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Find2" xml:space="preserve">
+    <value>Advance</value>
+  </data>
+  <data name="Fkey" xml:space="preserve">
+    <value>Forgien Key</value>
+  </data>
+  <data name="FunEdit" xml:space="preserve">
+    <value>Edit Fun</value>
+  </data>
+  <data name="FunRead" xml:space="preserve">
+    <value>Read Fun</value>
+  </data>
+  <data name="GetItem" xml:space="preserve">
+    <value>Get Items</value>
+  </data>
+  <data name="GetQitem" xml:space="preserve">
+    <value>Get Query Item</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="HalfWidth" xml:space="preserve">
+    <value>Half Width</value>
+  </data>
+  <data name="Hint" xml:space="preserve">
+    <value>Hint</value>
+  </data>
+  <data name="Hori" xml:space="preserve">
+    <value>Horizental</value>
+  </data>
+  <data name="Verti" xml:space="preserve">
+    <value>Vertical</value>
+  </data>
+  <data name="ItemData" xml:space="preserve">
+    <value>Input Data</value>
+  </data>
+  <data name="ItemType" xml:space="preserve">
+    <value>Input Type</value>
+  </data>
+  <data name="Layout" xml:space="preserve">
+    <value>Layout</value>
+  </data>
+  <data name="MoveLeft" xml:space="preserve">
+    <value>Move Left</value>
+  </data>
+  <data name="MoveRight" xml:space="preserve">
+    <value>Move Right</value>
+  </data>
+  <data name="OpType" xml:space="preserve">
+    <value>Operate Type</value>
+  </data>
+  <data name="Pkey" xml:space="preserve">
+    <value>Primary Key</value>
+  </data>
+  <data name="Qitem" xml:space="preserve">
+    <value>Query Item</value>
+  </data>
+  <data name="ReadSql" xml:space="preserve">
+    <value>Read Sql</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Required</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Ritem" xml:space="preserve">
+    <value>Result Item</value>
+  </data>
+  <data name="RlabelPos" xml:space="preserve">
+    <value>Read Label Pos</value>
+  </data>
+  <data name="StartEnd" xml:space="preserve">
+    <value>Start End</value>
+  </data>
+  <data name="Sure" xml:space="preserve">
+    <value>Sure</value>
+  </data>
+  <data name="TableAs" xml:space="preserve">
+    <value>Table Alias</value>
+  </data>
+  <data name="TipDataSort" xml:space="preserve">
+    <value>not include order by</value>
+  </data>
+  <data name="TipFind2" xml:space="preserve">
+    <value>Advance Query Input Below</value>
+  </data>
+  <data name="TipFkey" xml:space="preserve">
+    <value>Required after 2nd Table</value>
+  </data>
+  <data name="TipGroup" xml:space="preserve">
+    <value>Same Group will be Same Row</value>
+  </data>
+  <data name="TipItemDataE" xml:space="preserve">
+    <value>Selectd/Radio:Data Source, Checkbox:Label, Show:Fid</value>
+  </data>
+  <data name="TipLayout" xml:space="preserve">
+    <value>Label,Input Width(comma seperate)</value>
+  </data>
+  <data name="TipStartEnd" xml:space="preserve">
+    <value>Has Start End Input or not, for Date Input</value>
+  </data>
+  <data name="TipTableAs" xml:space="preserve">
+    <value>Table Alias Name</value>
+  </data>
+  <data name="TipWidth" xml:space="preserve">
+    <value>0 or Empty will be auto set</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="ValidData" xml:space="preserve">
+    <value>Validate Data</value>
+  </data>
+  <data name="ValidType" xml:space="preserve">
+    <value>Validate Type</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Width(px)</value>
+  </data>
+  <data name="TipItemDataQ" xml:space="preserve">
+    <value>Selectd/Radio:Data Source, Checkbox:Label</value>
+  </data>
+  <data name="TipReadSql" xml:space="preserve">
+    <value>Must has order by string</value>
+  </data>
+  <data name="TipHalfWidth" xml:space="preserve">
+    <value>Multiple edit form use half width</value>
+  </data>
+  <data name="TipCol4" xml:space="preserve">
+    <value>Has Creator,Created,Reviser,Revised or not</value>
+  </data>
+</root>

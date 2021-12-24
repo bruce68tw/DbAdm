@@ -1,0 +1,17 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace DbAdm.Controllers
+{
+    public class MyController : Controller
+    {
+        //controller name
+        public string Ctrl;
+
+        //constructor
+        public MyController()
+        {
+            Ctrl = ControllerContext.ActionDescriptor.ControllerName;
+        }
+
+    }
+}

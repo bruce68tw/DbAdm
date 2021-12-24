@@ -1,0 +1,24 @@
+﻿{
+  "BtnCreate": "新增",
+  "BtnAddRow": "新增一列",
+  "BtnFind": "查詢",
+  "BtnFind2": "進階",
+  "BtnSave": "儲存",
+  "BtnToRead": "回上一頁",
+  "BtnExport": "匯出",
+  "BtnReset": "清除",
+  "BtnOpen": "開啟",
+
+  "BtnYes": "確定",
+  "BtnCancel": "取消",
+  "BtnClose": "關閉",
+
+  "PlsSelect": "-請選取-",
+  "TipDeleteRow": "刪除此筆資料",
+
+  "NoAuthProg": "您沒有此功能的權限，請聯絡管理者。",
+  "NotLogin": "您尚未登入系統。",
+
+  "Required": "不可空白",
+  "StrLen": "字串過長({0})"
+}

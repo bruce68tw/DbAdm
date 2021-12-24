@@ -1,0 +1,14 @@
+﻿@inject IHtmlLocalizer<DbAdm.R0> R
+@{
+    var longCols = "2,10";
+}
+
+<form class='xg-form xg-mb10' id='eform'>
+    @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProjectCode"].Value, Fid = "Code", Value = "", MaxLen = 30, Required = true })
+    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["DbName"].Value, Fid = "DbName", Value = "", MaxLen = 30, Required = true })
+    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["Status"].Value, Fid = "Status", IsCheck = true, Value = "1", Label = R["Active"].Value })
+    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProjectPath"].Value, Fid = "ProjectPath", MaxLen = 255, Required = true, Cols = longCols })
+    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ConnectStr"].Value, Fid = "ConnectStr", MaxLen = 255, Required = true, Cols = longCols })
+</form>
+@await Component.InvokeAsync("XgSaveBack")

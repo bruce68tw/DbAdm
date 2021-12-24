@@ -1,0 +1,71 @@
+﻿
+/* use bootstrap datepicker */
+.datepicker {
+    z-index: 9999 !important;
+}
+
+/*日曆按鈕*/
+/*
+.datepicker table tr td.active, .datepicker table tr td.active.disabled, .datepicker table tr td.active.disabled:hover, .datepicker table tr td.active:hover {
+    background-color: #006dcc;
+    background-image: -moz-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: -ms-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#23c6c8),to(#1ab394));
+    background-image: -webkit-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: -o-linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-image: linear-gradient(to bottom,#23c6c8,#1ab394);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);
+    border-color: #1ab394 #1ab394 #002a80;
+    border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) rgba(0,0,0,.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+}
+
+.datepicker {
+    min-width: 135px;
+    position: relative;
+}
+.datepicker .input-group-addon {
+    padding-left: 0;
+    padding-right: 5px;
+}
+.datepicker input {
+    border-right-width: 0;
+}
+.datepicker .fa-calendar-o {
+    cursor: pointer;
+    border-left-width: 0;
+    border-right-width: 0;
+}
+.datepicker .fa-calendar {
+    cursor: pointer;
+    border-left-width: 0;
+}
+*/
+
+
+.date {
+    width: 180px;
+    /*position: relative;*/
+}
+
+    .date input {
+        border-radius: 4px !important;
+    }
+
+    .date .input-group-addon {
+        z-index: 500;
+        position: relative;
+        top: 7px;
+        right: 40px;
+    }
+
+    /* date icon */
+    .date span {
+        z-index: 510;
+        position: absolute;
+        top: 8px;
+        right: 5px;
+    }

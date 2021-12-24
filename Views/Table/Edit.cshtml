@@ -1,0 +1,53 @@
+﻿@inject IHtmlLocalizer<DbAdm.R0> R
+
+@* 1.Table *@
+<form id='eform' class='xg-form'>
+    @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+    @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, Required = true })
+    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Table"].Value, Fid = "Code", MaxLen = 30, Required = true })
+    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableName"].Value, Fid = "Name", MaxLen = 30, Required = true })
+    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["TranLog"].Value, Fid = "TranLog", Value = "1", Label = R["Yes"].Value })
+    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["Status"].Value, Fid = "Status", IsCheck = true, Value = "1", Label = R["Active"].Value })
+</form>
+
+@* 2.Column *@
+<div class='xg-btns-box'>
+    @await Component.InvokeAsync("XgAddRow", "_me.mCol.onAddRow()")
+</div>
+<form id='eformCol' class='xg-form' style="border:none">
+    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+        <thead>
+            <tr>
+                @* 3.XgTh component *@
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Column"].Value, Required = true })
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["ColName"].Value, Required = true })
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["DataType"].Value, Required = true })
+                <th>@R["Nullable"]</th>
+                <th>@R["Default"]</th>
+                <th>@R["Sort"]</th>
+                <th>@R["Note"]</th>
+                <th>@R["Crud"]</th>
+                <th>@R["Status"]</th>
+            </tr>
+        </thead>
+
+        <tbody id="divCols"></tbody>
+    </table>
+</form>
+@await Component.InvokeAsync("XgSaveBack")
+
+@* 4.row template, set td width, Nullable set false first then set by js *@
+<script id="tplCol" type="text/template">
+    <tr>
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Code", Value = "{{Code}}", MaxLen = 30, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Name", Value = "{{Name}}", MaxLen = 30, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DataType", Value = "{{DataType}}", MaxLen = 20, Required = true })</td>
+        <td class="text-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Nullable", Required = false, Value = "1" })</td>
+        <td width="120px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue", Value = "{{DefaultValue}}", MaxLen = 30 })</td>
+        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Sort", Value = "{{Sort}}", MaxLen = 2, Required = false, InputAttr = "width:50px", BoxClass = "xg-center" })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Note", Value = "{{Note}}", MaxLen = 100 })</td>
+        <td class="text-center">@await Component.InvokeAsync("XgDeleteRow", "_me.mCol.onDeleteRow(this)")</td>
+        <td class="text-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Status", IsCheck = true, Value = "1" })</td>
+    </tr>
+</script>

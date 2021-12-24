@@ -1,0 +1,95 @@
+using Base.Enums;
+using Base.Models;
+using Base.Services;
+{{#if HasFile}}
+using BaseWeb.Services;
+using Microsoft.AspNetCore.Http;
+{{/if}}
+using Newtonsoft.Json.Linq;
+{{#if HasFile}}
+using System.Collections.Generic;
+using System.Threading.Tasks;
+{{/if}}
+
+namespace {{Project}}.Services
+{
+    public class {{ProgCode}}Edit : XpEdit
+    {
+        public {{ProgCode}}Edit(string ctrl) : base(ctrl) { }
+
+        override public EditDto GetDto()
+        {
+            return new EditDto
+            {
+				{{#MainTable}}
+				Table = "dbo.[{{TableCode}}]",
+                PkeyFid = "{{PkeyFid}}",
+			{{#unless HasCol4}}
+                Col4 = null,
+			{{/unless}}
+                Items = new EitemDto[] 
+				{
+				{{#Eitems}}
+					{{ServiceStr}}
+				{{/Eitems}}
+                },
+				{{/MainTable}}
+			{{#if ChildTables}}
+                Childs = new EditDto[]
+                {
+				{{#ChildTables}}
+                    new EditDto
+                    {
+                        Table = "dbo.[{{TableCode}}]",
+                        PkeyFid = "{{PkeyFid}}",
+                        FkeyFid = "{{FkeyFid}}",
+					{{#if OrderBy}}
+						OrderBy = "{{OrderBy}}",
+					{{/if}}
+					{{#unless HasCol4}}
+                        Col4 = null,
+					{{/unless}}
+                        Items = new EitemDto[] 
+						{
+						{{#Eitems}}
+						{{#if ServiceStr}}
+							{{ServiceStr}}
+						{{/if}}
+						{{/Eitems}}
+                        },
+                    },
+				{{/ChildTables}}
+                },
+			{{/if}}
+            };
+        }
+
+        {{#if HasFile}}
+        //TODO: add your code
+        //t03_FileName: t + table serial _ + fid
+        public async Task<ResultDto> CreateAsnyc(JObject json, List<IFormFile> t03_FileName)
+        {
+            var service = Service();
+            var result = service.Create(json);
+            if (_Valid.ResultStatus(result))
+            {
+                await _WebFile.SaveCrudFile(s)Asnyc(json, service.GetNewKeyJson(), _Xp.GetDirUserLicence(), t03_FileName, nameof(t03_FileName));
+            }
+            return result;
+        }
+
+        //TODO: add your code
+        //t03_FileName: t + table serial _ + fid
+        public async Task<ResultDto> UpdateAsnyc(string key, JObject json, List<IFormFile> t03_FileName)
+        {
+            var service = Service();
+            var result = service.Update(key, json);
+            if (_Valid.ResultStatus(result))
+            {
+                await _WebFile.SaveCrudFile(s)Asnyc(json, service.GetNewKeyJson(), _Xp.GetDirUserLicence(), t03_FileName, nameof(t03_FileName));
+            }
+            return result;
+        }
+        {{/if}}
+    } //class
+}

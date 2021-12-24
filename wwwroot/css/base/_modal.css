@@ -1,0 +1,27 @@
+﻿
+/*
+.xg-modal .modal-dialog {
+    min-width: 200px;
+}
+*/
+
+.xg-modal .modal-header {
+    /*height: 10px;*/
+    border-bottom: 1px solid #eee;
+    padding: 9px 15px 9px 19px;
+}
+
+.xg-modal .modal-title {
+    font-size: 16px;
+    color: #3e8cc6;
+}
+
+.xg-modal .modal-body {
+    font-size: 16px;
+    padding: 20px 15px 15px 15px;
+}
+
+.xg-modal .modal-footer {
+    border: none;
+    padding: 0 20px 10px;
+}

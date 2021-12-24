@@ -1,0 +1,24 @@
+﻿{
+  "BtnCreate": "新增",
+  "BtnAddRow": "新增一列",
+  "BtnFind": "查询",
+  "BtnFind2": "进阶",
+  "BtnSave": "储存",
+  "BtnToRead": "回上一页",
+  "BtnExport": "汇出",
+  "BtnReset": "清除",
+  "BtnOpen": "开启",
+
+  "BtnYes": "确定",
+  "BtnCancel": "取消",
+  "BtnClose": "关闭",
+
+  "PlsSelect": "-请选取-",
+  "TipDeleteRow": "删除此笔资料",
+
+  "NoAuthProg": "您没有此功能的权限，请联络管理者。",
+  "NotLogin": "您尚未登入系统。",
+
+  "Required": "不可空白",
+  "StrLen": "字串过长({0})"
+}

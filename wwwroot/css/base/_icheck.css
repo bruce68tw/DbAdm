@@ -1,0 +1,123 @@
+﻿
+/**
+ * checkbox, radio, use pure css, no js
+ */
+.xi-check {
+    display: inline-block;
+    position: relative;
+    margin-top: 8px;
+    padding: 0 10px 0 25px; /* for label pos */
+}
+    /*
+    .xi-check.xg-in-dt, .xg-radio.xg-in-dt {
+        margin-top: 10px;
+        padding-left: 25px;
+    }
+    */
+
+/* hide original input element */
+.xi-check > input {
+    display: none;
+}
+
+/* checkbox, span is square/round checked sign */
+.xi-check > span {	
+	cursor: pointer;
+    position: absolute;
+	padding: 0;
+    top: 0;
+    left: 0;
+
+    content: '';
+	display: inline-block;
+	vertical-align: middle;
+	width: 19px;
+	height: 19px;
+	background: white;
+    border: 1px solid #ccc;
+	margin-right: 0px;
+}
+
+    /* for datatable checkbox, no label */
+    .xi-check.xg-no-label > span {
+        top: 0 !important;
+        left: 0 !important;
+    }
+
+/* radio sign box */
+.xi-rspan {
+    border-radius: 50% !important;
+}
+
+/*
+.xi-check.xd-center, .xg-radio.xd-center {	
+    padding:0;
+}
+*/
+
+/* 在 datatable裡面有時會置中 
+.xi-check.xd-center > span, .xg-radio.xd-center > span {	
+	cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+    padding:0;
+    margin:0;
+}
+*/
+
+    /* checkbox方框 style (span:before) 
+.xi-check > span:before {
+	content: '';
+	display: inline-block;
+	vertical-align: middle;
+	width: 19px;
+	height: 19px;
+	background: white;
+    border: 1px solid #ccc;
+	margin-right: 0px;
+}
+*/
+
+/* checkbox checked sign (span:after) */
+.xi-check > input:checked + .xi-cspan:after {
+	content: '';
+	position: absolute;
+    height: 10px;
+    width: 5px;
+    border: solid #666;
+    border-width: 0 2px 2px 0;	
+	transform: rotate(45deg);
+	top: 3px;
+	left: 7px;
+}
+
+/* radio checked sign (span:after) */
+.xi-check > input:checked + .xi-rspan:after {
+    content: '';
+    position: absolute;
+    height: 6px;
+    width: 6px;
+    top: 6px;
+    left: 6px;
+    border-radius: 50%;
+    background: #666;
+}   
+
+/* disabled style */
+.xi-check > input:disabled + span {
+    /*color: #b8b8b8;*/
+    background: #eee;
+    cursor: auto;
+}
+
+
+/* datatable header delete all checkbox */
+.xi-check.xg-delete-all {
+    padding-left: 15px;
+}
+
+.xg-delete-all-btn {
+    margin-top: -2px;
+    padding: 2px 3px 2px 0;
+    background: red;
+}

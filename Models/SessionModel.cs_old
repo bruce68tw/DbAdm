@@ -1,0 +1,51 @@
+﻿using Base.Models;
+using Base.Services;
+using BaseWeb.Models;
+using System.Collections.Generic;
+
+namespace DbAdmin.Models
+{
+    /// <summary>
+    /// session項目
+    /// </summary>
+    public class SessionModel : UserProfile0Model
+    {
+        //是否已登入
+        public bool IsLogin = false;
+
+        //語系
+        //public string Locale = _Fun.DefaultLocale;
+
+        //是否為最高權限人員
+        //public bool IsAdmin = false;
+
+        //登入者Id
+        //public static string UserId = "3330000077";    //梁小琳
+        //public string UserId = "";
+        public string UserName = "";
+
+        //登入者權限群組(角色)
+        //public string RoleId = "";
+        //public string RoleName = "";
+        //public string OldRoleId = "";   //記錄登入時的 RoleId
+
+        //public int LangNo = _Fun.DefaultLocaleNo;
+        //public string Lang = _Fun.DefaultLocale;
+
+        //登入者所屬機關
+        //public string OrgId = "";
+        //public string OrgName = "";
+        //public string OldOrgId = "";    //記錄登入時的 OrgId
+
+        //登入者所屬單位
+        //public string DeptId = "";
+        //public string DeptName = "";
+
+        //可執行的程式清單(使用table name為程式名稱)
+        //public List<string> Progs = new List<string>();
+
+        //menu 清單(使用table name為程式名稱)
+        public List<MenuModel> Menus = new List<MenuModel>();
+
+    }//class
+}

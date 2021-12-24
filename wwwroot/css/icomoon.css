@@ -1,0 +1,111 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?9ftoua');
+  src:  url('fonts/icomoon.eot?9ftoua#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?9ftoua') format('truetype'),
+    url('fonts/icomoon.woff?9ftoua') format('woff'),
+    url('fonts/icomoon.svg?9ftoua#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="ico-"], [class*=" ico-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ico-date:before {
+  content: "\f073";
+}
+.ico-find:before {
+  content: "\f002";
+}
+.ico-delete:before {
+  content: "\f00d";
+}
+.ico-find2:before {
+  content: "\f00e";
+}
+.ico-plus:before {
+  content: "\f067";
+}
+.ico-info:before {
+  content: "\e900";
+}
+.ico-back:before {
+  content: "\f148";
+}
+.ico-mail:before {
+  content: "\f003";
+}
+.ico-home:before {
+  content: "\f015";
+}
+.ico-print:before {
+  content: "\f02f";
+}
+.ico-pen:before {
+  content: "\f040";
+}
+.ico-eye:before {
+  content: "\f06f";
+}
+.ico-save:before {
+  content: "\f0c8";
+}
+.ico-first:before {
+  content: "\f100";
+}
+.ico-last:before {
+  content: "\f101";
+}
+.ico-prev:before {
+  content: "\f104";
+}
+.ico-next:before {
+  content: "\f105";
+}
+.ico-up:before {
+  content: "\f106";
+}
+.ico-down:before {
+  content: "\f107";
+}
+.ico-open:before {
+  content: "\f115";
+}
+.ico-pdf:before {
+  content: "\f1c1";
+}
+.ico-word:before {
+  content: "\f1c2";
+}
+.ico-excel:before {
+  content: "\f1c3";
+}
+.ico-facebook:before {
+  content: "\f230";
+}
+.ico-user:before {
+  content: "\f2c0";
+}
+.ico-reset:before {
+  content: "\f01e";
+}
+.ico-exit:before {
+  content: "\ea14";
+}
+.ico-spin:before {
+  content: "\e97c";
+}

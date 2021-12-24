@@ -1,0 +1,59 @@
+<form id='eform' class='xg-form'>
+{{#each MainTable.HideViewStrs}}
+	{{this}}
+{{/each}}
+{{#MainTable}}
+{{#Eitems}}
+{{#if IsGroupStart}}
+	<div class="row">
+{{/if}}
+{{#if IsGroup}}
+		{{ViewStr}}
+{{else}}
+	{{ViewStr}}
+{{/if}}
+{{#if IsGroupEnd}}
+	</div>
+{{/if}}
+{{/Eitems}}
+{{/MainTable}}
+</form>
+
+{{#ChildTables}}
+<div class='xg-btns-box'>
+	<span class="xg-block-label">{{TableName}}</span>
+	@await Component.InvokeAsync("XgAddRow", "_me.m{{TableCode}}.onAddRow()")
+</div>
+<form id='eform{{TableCode}}' class='xg-form' style="border:none;{{#if HalfWidth}} width:50%;{{/if}}">
+    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+        <thead>
+            <tr>
+			{{#Eitems}}
+			{{#if HeadStr}}
+				{{HeadStr}}
+			{{/if}}
+			{{/Eitems}}
+            </tr>
+        </thead>
+        <tbody id="tbody{{TableCode}}"></tbody>
+    </table>
+</form>
+
+{{/ChildTables}}
+@await Component.InvokeAsync("XgSaveBack")
+
+{{#ChildTables}}
+<script id="tpl{{TableCode}}" type="text/template">
+    <tr>
+	{{#each HideViewStrs}}
+		{{this}}
+	{{/each}}
+	{{#Eitems}}
+	{{#if ViewStr}}
+		{{ViewStr}}
+	{{/if}}
+	{{/Eitems}}
+    </tr>
+</script>
+
+{{/ChildTables}}

@@ -1,0 +1,41 @@
+﻿
+//使用jQuery繼承&擴充屬性
+//https://stackoverflow.com/questions/10744552/extending-existing-singleton
+var _text = $.extend({}, _0input, {
+
+    /** 
+     for 多筆資料only
+     產生 input text html 內容, 與後端 XgTextHelper 一致 
+     @param {string} fid data-id 
+     @param {string} value value
+     @param {int} maxLen default 0, 字串長度限制
+     @param {bool} required default false, 是否為必填
+     @param {bool} editable default true, 是否可編輯
+     @param {string} extClass extend class
+     @param {string} extProp extend property, 可以放onChange
+     @return {string} html string.
+    */
+    render: function (fid, value, maxLen, required, editable, extClass, extProp) {
+        var html = "" +
+            "<div style='width:100%; text-align:left;'>" +
+            "    <input data-id='{0}' value='{1}' class='form-control{2}'{3}>" +
+            "    <span data-id2='{4}' class='{5}'></span>" +
+            "</div>";
+
+        //class
+        extClass = extClass || '';
+        if (required === true)
+            extClass += ' xd-required';
+
+        //property
+        extProp = extProp || '';
+        maxLen = maxLen || 0;
+        if (editable === false)
+            extProp += ' disabled';
+        if (maxLen > 0)
+            extProp += " maxlength='" + maxLen + "'";
+
+        return _str.format(html, fid, value, extClass, extProp, fid + _fun.errTail, _fun.errLabCls);
+    },
+
+}); //class

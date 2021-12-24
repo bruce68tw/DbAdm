@@ -1,0 +1,57 @@
+﻿
+/* 用在 form裡面的 button */
+.xg-small-btn {
+    padding: 2px 5px;
+}
+
+/* 功能按鈕, 空白則為 basic button */
+.xg-fun-btn {    
+}
+
+/* look like link */
+.xg-link-btn {
+    background: none !important;
+    color: inherit;
+    border: none;
+    padding: 0 !important;
+    font: inherit;
+    /*border is optional*/
+    border-bottom: 1px solid #444;
+    cursor: pointer;
+}
+
+.xg-btns-box {
+    padding: 3px 0 3px 0;
+    display: flex;  /* 間距會變小 */
+}
+
+/* 功能按鈕, 空白則為 basic button */
+/* size and gray */
+.xg-btn {
+    padding: .25rem .5rem;
+    margin-right: 3px;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.xg-btn-size {
+    padding: .25rem .5rem;
+    margin-right: 3px;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+}
+
+.xg-btn-gray {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* table row button */
+.xg-row-btn {
+}

@@ -1,0 +1,201 @@
+﻿
+/*
+.jtk-demo-main {
+    background-color: transparent;
+    font-family: Arial,sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    max-width:1500px;
+    position: relative;
+    margin-top:98px;
+}
+
+.jtk-demo-canvas {
+    margin-left: 160px;
+    height:750px;
+    max-height:700px;
+    border:1px solid #CCC;
+    background-color:white;
+}
+
+.canvas-wide {
+    margin-left:0;
+}
+*/
+
+.xf-line-label {
+    -webkit-transition: background-color 0.25s ease-in;
+    -moz-transition: background-color 0.25s ease-in;
+    transition: background-color 0.25s ease-in;
+    background-color: white;
+    opacity: 0.8;
+    padding: 0.3em;
+    border-radius: 0.5em;
+    /*border: 1px solid #346789;*/
+    cursor: pointer;
+}
+
+
+.zz_demo {
+    /* for IE10+ touch devices */
+    touch-action:none;
+}
+
+.xf-node {
+    padding: 12px 18px 12px 12px;
+    position: absolute;
+    z-index: 4;
+    border: 1px solid #2e6f9a;
+    box-shadow: 2px 2px 19px #e0e0e0;
+    -o-box-shadow: 2px 2px 19px #e0e0e0;
+    -webkit-box-shadow: 2px 2px 19px #e0e0e0;
+    -moz-box-shadow: 2px 2px 19px #e0e0e0;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    opacity: 0.8;
+    cursor: move;
+    background-color: white;
+    font-size: 13px;
+    -webkit-transition: background-color 0.25s ease-in;
+    -moz-transition: background-color 0.25s ease-in;
+    transition: background-color 0.25s ease-in;
+}
+
+.xf-node:hover {
+    background-color: #5c96bc;
+    color: white;
+}
+
+.xf-node.xf-start-node {
+    border-color: red;
+}
+.xf-node.xf-end-node {
+    border-color: red;
+    border-radius: 50%;
+    padding: 12px;
+    width: 45px;
+    height: 45px;
+}
+    .xf-node.xf-end-node .xd-name {
+        margin-left: -2px !important;
+    }
+    .xf-node.xf-end-node .xf-ep {
+        display: none !important;
+    }
+
+/*
+.xf-node.xf-auto-node {
+    border: 3px solid gray;
+    border-radius: 0;
+}
+*/
+
+/*
+.aLabel {
+    -webkit-transition: background-color 0.25s ease-in;
+    -moz-transition: background-color 0.25s ease-in;
+    transition: background-color 0.25s ease-in;
+}
+.aLabel {
+    background-color: white;
+    opacity: 0.8;
+    padding: 0.3em;
+    border-radius: 0.5em;
+    border: 1px solid #346789;
+    cursor: pointer;
+}
+*/
+
+/*
+.xf-line-label.jtk-hover, .jtk-source-hover, .jtk-target-hover {
+    background-color: #1e8151;
+    color: white;
+}
+*/
+
+/* end point, class name fix to xf-ep !! */
+.xf-ep {
+    position: absolute;
+    bottom: 37%;
+    right: 5px;
+    width: 1em;
+    height: 1em;
+    background-color: orange;
+    cursor: pointer;
+    box-shadow: 0 0 2px black;
+    -webkit-transition: -webkit-box-shadow 0.25s ease-in;
+        -moz-transition: -moz-box-shadow 0.25s ease-in;
+        transition: box-shadow 0.25s ease-in;
+}
+
+.xf-ep:hover {
+    box-shadow: 0 0 6px black;
+}
+
+.zz_statemachine-demo .jtk-endpoint {
+    z-index: 3;
+}
+
+/* no used
+#opened {
+    left: 10em;
+    top: 5em;
+}
+
+#phone1 {
+    left: 35em;
+    top: 12em;
+    width: 7em;
+}
+
+#inperson {
+    left: 12em;
+    top: 23em;
+}
+
+#phone2 {
+    left: 28em;
+    top: 24em;
+}
+
+#rejected {
+    left: 10em;
+    top: 35em;
+}
+*/
+
+.dragHover {
+    border: 2px solid orange;
+}
+
+path, .jtk-endpoint { cursor:pointer; }
+
+/* context menu */
+/* The whole thing */
+.xf-menu {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid #CCC;
+    white-space: nowrap;
+    font-family: sans-serif;
+    background: #FFF;
+    color: #333;
+    border-radius: 5px;
+    padding: 0;
+    min-width: 100px;
+}
+
+/* Each of the items in the list */
+.xf-menu li {
+    padding: 6px 15px;
+    cursor: pointer;
+    list-style-type: none;
+    transition: all .3s ease;
+}
+
+.xf-menu li:hover {
+    background-color: #DEF;
+}

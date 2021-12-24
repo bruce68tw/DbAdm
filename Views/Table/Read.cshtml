@@ -1,0 +1,100 @@
+﻿@inject IHtmlLocalizer<DbAdm.R0> R
+
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+
+    var _me = {
+        init: function () {
+            //datatable config
+            var config = {
+                columns: [
+                    { data: '_F1' },
+                    { data: 'ProjectCode' },
+                    { data: 'DbName' },
+                    { data: 'Code' },
+                    { data: 'Name' },
+                    { data: 'TranLog' },
+                    { data: '_CrudFun' },
+                    { data: 'Status' },
+                ],
+                columnDefs: [
+                    { targets: [0], render: function (data, type, full, meta) {
+                        return _crud.dtCheck0(full.Id);
+                    }},
+                    { targets: [5], render: function (data, type, full, meta) {
+                        return _crud.dtYesEmpty(data);
+                    }},
+                    { targets: [6], render: function (data, type, full, meta) {
+                        return _crud.dtCrudFun(full.Id, full.Name, true, true, false);
+                    }},
+                    { targets: [7], render: function (data, type, full, meta) {
+                        return _crud.dtStatusName(data);
+                    }},
+                ],
+            };
+
+            //init crud
+            _me.mCol = new EditMany('Id', 'eformCol', 'tplCol', 'tr');
+            _crud.init(config, [null, _me.mCol]);
+        },
+
+        //generate Word document
+        onGenWord: function () {
+            var values = _icheck.getCheckeds(_me.divRead);
+            if (values.length > 0)
+                window.location = 'GenWord?keys=' + values.join(',');
+            else
+                _tool.msg(R.selectRow);
+        },
+
+    }; //class
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R["MenuTable"].Value } })
+<div class="xp-prog">
+    <!-- read form-->
+    <div id="divRead">
+        <!-- condition -->
+        <form id='formRead' class='xg-form xg-mb0'>
+            <div class="row">
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, InRow = true })
+                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true, HasFind2 = true })
+            </div>
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Table"].Value, Fid = "Code", MaxLen = 30 })
+        </form>
+        <form id='formRead2' class='xg-form'>
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableName"].Value, Fid = "Name", MaxLen = 30 })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["TranLog"].Value, Fid = "TranLog", Rows = (List<IdStrDto>)ViewBag.YesNos })
+        </form>
+
+        <div class='xg-btns-box' style="margin-top:5px;">
+            @await Component.InvokeAsync("XgCreate")
+            @await Component.InvokeAsync("XgExport")
+            <button type="button" class="btn xg-btn" onclick="_me.onGenWord()">@R["GenDocu"]</button>
+        </div>
+
+        <!-- result list -->
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th width="60px">@R["Select"]</th>
+                    <th>@R["Project"]</th>
+                    <th>@R["DbName"]</th>
+                    <th>@R["Table"]</th>
+                    <th>@R["TableName"]</th>
+                    <th width='60px'>@R["TranLog"]</th>
+                    <th width='80px'>@R["Crud"]</th>
+                    <th width='60px'>@R["Status"]</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- edit form-->
+    <div id="divEdit" class="xg-hide">
+        <partial name="Edit" />
+    </div>
+</div>

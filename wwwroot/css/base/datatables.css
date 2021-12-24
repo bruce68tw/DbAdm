@@ -1,0 +1,57 @@
+﻿
+/* 筆數起迄&合計 */
+.dataTables_info {
+    padding-top: 6px !important;
+}
+
+.dataTables_wrapper {
+    padding: 0;
+}
+
+    .dataTables_wrapper .dataTables_length, .dataTables_info, .toolbar {
+        float: left;
+    }
+
+
+/* change sorting icon to font-awesome
+    see: https://datatables.net/blog/2014-06-06
+*/
+table.dataTable thead th {
+    position: relative;
+    background-image: none !important; /* Remove the DataTables bootstrap integration styling */
+}
+
+    /* sun add, 否則會出現2個icon !! */
+    table.dataTable thead th.sorting:before,
+    table.dataTable thead th.sorting_asc:before,
+    table.dataTable thead th.sorting_desc:before {
+        display: none;
+    }
+
+    table.dataTable thead th.sorting:after,
+    table.dataTable thead th.sorting_asc:after,
+    table.dataTable thead th.sorting_desc:after {
+        position: absolute;
+        top: 15px; /* sun: 12 -> 15 */
+        right: 8px;
+        display: block;
+        font-family: FontAwesome;
+    }
+
+    table.dataTable thead th.sorting:after {
+        content: "\f0dc";
+        opacity: 0.2;
+        /*color: #ddd;
+        font-size: 0.8em;
+        padding-top: 0.12em;*/
+    }
+
+    table.dataTable thead th.sorting_asc:after {
+        content: "\f0de";
+        opacity: 0.8;
+    }
+
+    table.dataTable thead th.sorting_desc:after {
+        content: "\f0dd";
+        opacity: 0.8;
+    }
