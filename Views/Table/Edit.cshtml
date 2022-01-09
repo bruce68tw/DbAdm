@@ -40,11 +40,11 @@
 <script id="tplCol" type="text/template">
     <tr>
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Code", Value = "{{Code}}", MaxLen = 30, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Code", Value = "{{Code}}", MaxLen = 100, Required = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Name", Value = "{{Name}}", MaxLen = 30, Required = true })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DataType", Value = "{{DataType}}", MaxLen = 20, Required = true })</td>
         <td class="text-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Nullable", Required = false, Value = "1" })</td>
-        <td width="120px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue", Value = "{{DefaultValue}}", MaxLen = 30 })</td>
+        <td width="120px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue", Value = "{{DefaultValue}}", MaxLen = 100 })</td>
         <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Sort", Value = "{{Sort}}", MaxLen = 2, Required = false, InputAttr = "width:50px", BoxClass = "xg-center" })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Note", Value = "{{Note}}", MaxLen = 100 })</td>
         <td class="text-center">@await Component.InvokeAsync("XgDeleteRow", "_me.mCol.onDeleteRow(this)")</td>

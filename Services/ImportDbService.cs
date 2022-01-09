@@ -45,15 +45,15 @@ where Id='{0}'
             #region 2.create temp table: #tmpTable, #tmpColumn
             await db .ExecSqlAsync(@"
 CREATE TABLE #tmpTable(
-    Code varchar(30) NOT NULL primary key,
+    Code varchar(100) NOT NULL primary key,
     Note varchar(255) NULL
 );
 CREATE TABLE #tmpColumn(
-	Code varchar(30) NOT NULL,
-	TableCode varchar(30) NULL,
+	Code varchar(100) NOT NULL,
+	TableCode varchar(100) NULL,
 	DataType varchar(20) NOT NULL,
 	Nullable bit NOT NULL,
-	DefaultValue varchar(30) NULL,
+	DefaultValue varchar(100) NULL,
 	Sort smallint NOT NULL,
 	Note nvarchar(100) NULL
 );
@@ -130,7 +130,7 @@ ORDER BY table_name, ORDINAL_POSITION
                 catch (Exception ex)
                 {
                     //_Log.Error("#tmpColumn bulk copy failed: " + ex.Message);
-                    result.ErrorMsg = "#tmpColumn bulk copy failed. " + ex.Message;
+                    result.ErrorMsg = "#tmpColumn bulk copy failed: " + ex.Message;
                     goto lab_exit;
                 }
                 finally
