@@ -4,13 +4,13 @@ var _me = {
         //set Datatables config
         var config = {
             columns: [
-                { data: 'ProjectCode' },
-                { data: 'TableCode' },
-                { data: 'Code' },
+                { data: 'ProjectCode', orderable: true },
+                { data: 'TableCode', orderable: true },
+                { data: 'Code', orderable: true },
                 { data: 'Name' },
                 { data: 'DataType' },
                 { data: '_Fun' },
-                { data: 'Status' },
+                { data: 'Status', orderable: true },
             ],
             columnDefs: [
                 { targets: [5], render: function (data, type, full, meta) {

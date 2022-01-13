@@ -14,8 +14,9 @@ namespace DbAdm.Services
             ReadSql = @"
 Select 
     p.Code as ProjectCode, t.Code as TableCode,
-    c.Id, c.Code, c.Name, 
-    c.Status, c.DataType
+    c.Code, c.Name, 
+    c.DataType, _Fun='',
+    c.Status, c.Id
 From dbo.[Column] c
 inner join dbo.[Table] t on t.Id=c.TableId
 inner join dbo.Project p on p.Id=t.ProjectId
