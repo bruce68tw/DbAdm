@@ -34,9 +34,10 @@ namespace {{Project}}.Services
         }
 
 	{{#if HasExport}}
-        public void Export(JObject find)
+        public async Task ExportAsync(string ctrl, JObject find)
         {
-            _WebExcel.ScreenByCrud(dto, find, "{{ProgCode}}", _Locale.GetFilePath("{{ProgCode}}.xlsx"), 1);
+            await _WebExcel.ExportByReadAsync(ctrl, dto, find, 
+                "{{ProgCode}}.xlsx", _Xp.GetTplPath("{{ProgCode}}.xlsx", true), 1);
         }
 
 	{{/if}}

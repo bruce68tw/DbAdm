@@ -26,7 +26,7 @@ namespace {{Project}}.Controllers
     public class {{ProgCode}}Controller : ApiCtrl
     {
         {{#if AuthType2}}
-        [XgProgAuth(CrudFunEnum.Read)]
+        [XgProgAuth(CrudEnum.Read)]
         {{/if}}
         public ActionResult Read()
         {
@@ -47,7 +47,7 @@ namespace {{Project}}.Controllers
 
         [HttpPost]
         {{#if AuthType2}}
-        [XgProgAuth(CrudFunEnum.Read)]
+        [XgProgAuth(CrudEnum.Read)]
         {{/if}}
         public async Task<ContentResult> GetPage(DtDto dt)
         {
@@ -62,7 +62,7 @@ namespace {{Project}}.Controllers
         {{#if HasUpdate}}
         [HttpPost]
             {{#if AuthType2}}
-        [XgProgAuth(CrudFunEnum.Update)]
+        [XgProgAuth(CrudEnum.Update)]
             {{/if}}
         public async Task<ContentResult> GetUpdJson(string key)
         {
@@ -73,7 +73,7 @@ namespace {{Project}}.Controllers
         {{#if HasView}}
         [HttpPost]
             {{#if AuthType2}}
-        [XgProgAuth(CrudFunEnum.View)]
+        [XgProgAuth(CrudEnum.View)]
             {{/if}}
         public async Task<ContentResult> GetViewJson(string key)
         {
@@ -85,7 +85,7 @@ namespace {{Project}}.Controllers
             {{#if HasCreate}}
         [HttpPost]
                 {{#if AuthType2}}
-        [XgProgAuth(CrudFunEnum.Create)]
+        [XgProgAuth(CrudEnum.Create)]
                 {{/if}}
         //TODO: add your code, tSn_fid ex: t03_FileName
         public async Task<JsonResult> Create(string json, List<IFormFile> t03_FileName)
@@ -97,7 +97,7 @@ namespace {{Project}}.Controllers
             {{#if HasUpdate}}
         [HttpPost]
                 {{#if AuthType2}}
-        [XgProgAuth(CrudFunEnum.Update)]
+        [XgProgAuth(CrudEnum.Update)]
                 {{/if}}
         //TODO: add your code, tSn_fid ex: t03_FileName
         public async Task<JsonResult> Update(string key, string json, List<IFormFile> t03_FileName)
@@ -110,7 +110,7 @@ namespace {{Project}}.Controllers
         //TODO: add your code
         //get file/image
                 {{#if AuthType2}}
-        [XgProgAuth(CrudFunEnum.View)]
+        [XgProgAuth(CrudEnum.View)]
                 {{/if}}
         public async Task<FileResult> ViewFile(string table, string fid, string key, string ext)
         {
@@ -121,7 +121,7 @@ namespace {{Project}}.Controllers
             {{#if HasCreate}}
         [HttpPost]
                 {{#if AuthType2}}
-        [XgProgAuth(CrudFunEnum.Create)]
+        [XgProgAuth(CrudEnum.Create)]
                 {{/if}}
         public async Task<JsonResult> Create(string json)
         {
@@ -132,7 +132,7 @@ namespace {{Project}}.Controllers
             {{#if HasUpdate}}
         [HttpPost]
                 {{#if AuthType2}}
-        [XgProgAuth(CrudFunEnum.Update)]
+        [XgProgAuth(CrudEnum.Update)]
                 {{/if}}
         public async Task<JsonResult> Update(string key, string json)
         {
@@ -144,11 +144,22 @@ namespace {{Project}}.Controllers
         {{#if HasDelete}}
         [HttpPost]
             {{#if AuthType2}}
-        [XgProgAuth(CrudFunEnum.Delete)]
+        [XgProgAuth(CrudEnum.Delete)]
             {{/if}}
         public async Task<JsonResult> Delete(string key)
         {
             return Json(await EditService().DeleteAsync(key));
+        }
+        {{/if}}
+
+        {{#if HasExport}}
+        [HttpPost]
+            {{#if AuthType2}}
+        [XgProgAuth(CrudEnum.Export)]
+            {{/if}}
+        public async Task Export(string find)
+        {
+            await new {{ProgCode}}Read().ExportAsync(Ctrl, _Str.ToJson(find));
         }
         {{/if}}
 
