@@ -13,11 +13,14 @@ namespace DbAdm.Services
         {
             ReadSql = @"
 select 
-    a.*, 
-    p.Code as ProjectCode, p.DbName
+    '' as _F1, 
+    p.Code as ProjectCode, p.DbName,
+    a.Code, a.Name, a.TranLog,
+    '' as _Fun, a.Status, 
+    a.Id
 from dbo.[Table] a
 inner join dbo.Project p on p.Id=a.ProjectId
-order by p.Id, a.Code
+order by a.Id desc
 ",
             ExportSql = @"
 select 

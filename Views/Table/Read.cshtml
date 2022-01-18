@@ -11,13 +11,13 @@
             var config = {
                 columns: [
                     { data: '_F1' },
-                    { data: 'ProjectCode' },
+                    { data: 'ProjectCode', orderable: true },
                     { data: 'DbName' },
-                    { data: 'Code' },
-                    { data: 'Name' },
+                    { data: 'Code', orderable: true },
+                    { data: 'Name', orderable: true },
                     { data: 'TranLog' },
-                    { data: '_CrudFun' },
-                    { data: 'Status' },
+                    { data: '_Fun' },
+                    { data: 'Status', orderable: true },
                 ],
                 columnDefs: [
                     { targets: [0], render: function (data, type, full, meta) {
@@ -84,9 +84,9 @@
                     <th>@R["DbName"]</th>
                     <th>@R["Table"]</th>
                     <th>@R["TableName"]</th>
-                    <th width='60px'>@R["TranLog"]</th>
-                    <th width='80px'>@R["Crud"]</th>
-                    <th width='60px'>@R["Status"]</th>
+                    <th width='70px'>@R["TranLog"]</th>
+                    <th width='60px'>@R["Crud"]</th>
+                    <th width='75px'>@R["Status"]</th>
                 </tr>
             </thead>
             <tbody></tbody>

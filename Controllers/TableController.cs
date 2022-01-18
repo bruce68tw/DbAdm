@@ -31,37 +31,28 @@ namespace DbAdm.Controllers
             return new TableEdit(Ctrl);
         }
 
+        //讀取要修改的資料(Get Updated Json)
         [HttpPost]
         public async Task<ContentResult> GetUpdJson(string key)
         {
             return JsonToCnt(await EditService().GetUpdJsonAsync(key));
         }
 
-        [HttpPost]
-        public async Task<ContentResult> GetViewJson(string key)
-        {
-            return JsonToCnt(await EditService().GetViewJsonAsync(key));
-        }
-
-        /*
-        public JsonResult SetStatus(string key, bool status)
-        {
-            return Json(_Db.SetRowStatus("dbo.[Table]", "Id", key, status));
-        }
-        */
-
-        public async Task<JsonResult> Delete(string key)
-        {
-            return Json(await EditService().DeleteAsync(key));
-        }
-
+        //新增(DB)
         public async Task<JsonResult> Create(string json)
         {
             return Json(await EditService().CreateAsync(_Str.ToJson(json)));
         }
+        //修改(DB)
         public async Task<JsonResult> Update(string key, string json)
         {
             return Json(await EditService().UpdateAsync(key, _Str.ToJson(json)));
+        }
+
+        //刪除(DB)
+        public async Task<JsonResult> Delete(string key)
+        {
+            return Json(await EditService().DeleteAsync(key));
         }
 
         public async Task Export(string find)
@@ -76,6 +67,19 @@ namespace DbAdm.Controllers
             var tableIds = keys.Split(',');
             await new GenDocuService().RunAsync("", tableIds);
         }
+
+        /*
+        [HttpPost]
+        public async Task<ContentResult> GetViewJson(string key)
+        {
+            return JsonToCnt(await EditService().GetViewJsonAsync(key));
+        }
+
+        public JsonResult SetStatus(string key, bool status)
+        {
+            return Json(_Db.SetRowStatus("dbo.[Table]", "Id", key, status));
+        }
+        */
 
     }//class
 }

@@ -25,7 +25,7 @@ namespace DbAdm.Services
                 },
                 Childs = new EditDto[]
                 {
-                    new EditDto
+                    new()
                     {
                         Table = "dbo.[Column]",
                         PkeyFid = "Id",
