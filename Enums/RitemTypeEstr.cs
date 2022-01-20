@@ -8,9 +8,10 @@ namespace DbAdm.Enums
     {
         public const string Normal = "0";
         public const string CrudFun = "CF";
-        public const string SetStatus = "SS";
+        public const string YesEmpty = "YE";
         public const string StatusName = "SN";
+        //public const string DateTime = "DT";
+        public const string SetStatus = "SS";
         public const string UserDefined = "UD";
-        public const string DateTime = "DT";
     }
 }

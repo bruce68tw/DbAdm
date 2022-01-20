@@ -45,6 +45,8 @@ namespace DbAdm.Models
         public List<string> ReadSelectCols { get; set; }    //read view select cols
         public List<string> EditSelectCols { get; set; }    //edit view select cols
 
+        public bool HasSelect { get; set; }     //has ReadSelectCols or EditSelectCols
+
         //file
         public bool HasFile { get; set; }
 

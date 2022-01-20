@@ -28,18 +28,22 @@ namespace {{Project}}.Controllers
         {{#if AuthType2}}
         [XgProgAuth(CrudEnum.Read)]
         {{/if}}
+        {{#if HasSelect}}
+        public async Task<ActionResult> Read()
+        {{else}}
         public ActionResult Read()
+        {{/if}}
         {
 	        {{#if ReadSelectCols}}
 			//for read view
 		        {{#each ReadSelectCols}}
-			ViewBag.{{this}} = _XpCode.Get{{this}}();
+			ViewBag.{{this}} = await _XpCode.Get{{this}}Async();
 		        {{/each}}
 	        {{/if}}
 	        {{#if EditSelectCols}}
 			//for edit view
 		        {{#each EditSelectCols}}
-			ViewBag.{{this}} = _XpCode.Get{{this}}();
+			ViewBag.{{this}} = await _XpCode.Get{{this}}Async();
 		        {{/each}}
 	        {{/if}}
             return View();

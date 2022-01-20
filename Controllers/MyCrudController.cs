@@ -74,7 +74,8 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<string> GenCrud(string keys)
         {
-            return await new GenCrudService().RunAsync(keys);
+            var result = await new GenCrudService().RunAsync(keys);
+            return result;
         }
 
         //get table columns for modal

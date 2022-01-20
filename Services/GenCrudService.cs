@@ -361,6 +361,8 @@ namespace DbAdm.Services
                 .Select(a => a.ItemData)
                 .Distinct()
                 .ToList();
+
+            crud.HasSelect = (crud.ReadSelectCols.Count > 0 || crud.EditSelectCols.Count > 0);
             #endregion
 
             #region 5.set fields crud.MainTable, crud.ChildTables
@@ -501,15 +503,21 @@ namespace DbAdm.Services
                     //", i, SubToBool(ext, 0), SubToBool(ext, 1), SubToBool(ext, 2));
                     break;
 
-                case RitemTypeEstr.SetStatus:
+                case RitemTypeEstr.YesEmpty:
                     str = string.Format(@"{{ targets: [{0}], render: function (data, type, full, meta) {{
-                    return _crud.dtSetStatus(full.Id, data);
+                    return _crud.dtYesEmpty(data);
                 }}}},", i);
                     break;
 
                 case RitemTypeEstr.StatusName:
                     str = string.Format(@"{{ targets: [{0}], render: function (data, type, full, meta) {{
                     return _crud.dtStatusName(data);
+                }}}},", i);
+                    break;
+
+                case RitemTypeEstr.SetStatus:
+                    str = string.Format(@"{{ targets: [{0}], render: function (data, type, full, meta) {{
+                    return _crud.dtSetStatus(full.Id, data);
                 }}}},", i);
                     break;
 
@@ -938,7 +946,7 @@ namespace DbAdm.Services
             }
 
             if (data != "")
-                data = data.Substring(0, data.Length - ColSep.Length);
+                data = data[..^ColSep.Length];
             return data;
         }
 
