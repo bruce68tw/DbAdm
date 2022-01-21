@@ -62,7 +62,7 @@ order by Code
         {
             var sql = string.Format(@"
 select 
-    Value as Id, Name as Str
+    Value as Id, [Name] as Str
 from dbo.XpCode
 where Type='{0}'
 order by Sort
@@ -74,7 +74,7 @@ order by Sort
         {
             var sql = @"
 select 
-    Value as Id, Name as Str
+    Value as Id, [Name] as Str
 from dbo.XpCode
 where Type='EitemType'
 and Ext='Q'
