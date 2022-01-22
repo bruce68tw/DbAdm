@@ -58,7 +58,7 @@ namespace DbAdm.Services
         {
             //only alpha, num and ','
             //if (!_Str.CheckKeyRule(crudIdList2, "GenCrudService Run()"))
-            if (!_Str.CheckKeyRule(crudIdList2))
+            if (!await _Str.CheckKeyAsync(crudIdList2))
                 return "GenCrudService.cs RunAsync() only accept alphabet and numeric: (" + crudIdList2 + ")";
 
             var crudIds = crudIdList2.Split(',');
