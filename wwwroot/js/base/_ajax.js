@@ -147,7 +147,7 @@ var _ajax = {
                 //result maps to ResultDto/JObject
                 //if (!result)
                 //    return;
-
+                debugger;
                 var msg = _ajax.resultToMsg(result);
                 if (msg) {
                     if (fnError == null)
@@ -169,6 +169,7 @@ var _ajax = {
             },
 
             error: function (xhr, ajaxOptions, thrownError) {
+                debugger;
                 if (xhr != null) {
                     console.log("status" + xhr.status);
                     console.log(thrownError);

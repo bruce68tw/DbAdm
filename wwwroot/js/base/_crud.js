@@ -221,26 +221,33 @@ var _crud = {
 
     /**
      * change newDiv to active
-     * param newDiv {object} jquery object
+     * param toRead {bool} show divRead or not
+     * param nowDiv {object} (optional) now div to show
      */ 
-    swap: function (toRead) {
+    swap: function (toRead, nowDiv) {
         if (!_me.hasRead || !_me.hasEdit)
             return;
 
+        var isDefault = _var.isEmpty(nowDiv);
+        if (isDefault)
+            nowDiv = _me.divEdit;
+
         var oldDiv, newDiv;
         if (toRead) {
-            oldDiv = _me.divEdit;
+            oldDiv = nowDiv;
             newDiv = _me.divRead;
         } else {
             oldDiv = _me.divRead;
-            newDiv = _me.divEdit;
+            newDiv = nowDiv;
         }
 
         if (_obj.isShow(oldDiv)) {
             oldDiv.fadeToggle(200);
             newDiv.fadeToggle(500);
         }
-        _crud._afterSwap(toRead);
+
+        if (isDefault)
+            _crud._afterSwap(toRead);
     },
 
     //=== event start ===

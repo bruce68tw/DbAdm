@@ -1,1 +1,1 @@
-Scaffold-DbContext "Name=FunConfig:Db" Microsoft.EntityFrameworkCore.SqlServer -Project DbAdm -context MyContext -OutputDir Tables -Force -NoPluralize
+Scaffold-DbContext "Name=FunConfig:Db" Microsoft.EntityFrameworkCore.SqlServer -Project DbAdm -context MyContext -OutputDir Tables -Force -NoPluralize -UseDatabaseNames
