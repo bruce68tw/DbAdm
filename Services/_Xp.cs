@@ -22,9 +22,9 @@ namespace DbAdm.Services
 
         public static string GetTplPath(string fileName, bool hasLocale)
         {
-            var dir = _Fun.DirRoot + "_template\\";
+            var dir = _Fun.Dir("_template");
             if (hasLocale)
-                dir += _Locale.GetLocaleByUser() + "\\";
+                dir += _Locale.GetLocaleByUser() + _Fun.DirSep;
             return dir + fileName;
         }
         

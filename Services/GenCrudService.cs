@@ -442,7 +442,7 @@ namespace DbAdm.Services
 
             //generate crud files
             var isManyEdit = (etables.Count > 1);
-            var projectPath = _Str.AddAntiSlash(crud.ProjectPath);
+            var projectPath = _Str.AddDirSep(crud.ProjectPath);
             for (i = 0; i < _crudFileLen; i += 3)
             {
                 #region 6.read template file to string
@@ -461,7 +461,7 @@ namespace DbAdm.Services
 
                 #region 8.rename existed file if need
                 var tableCode = crud.ProgCode;
-                var toDir = projectPath + _Str.AddAntiSlash(_crudFiles[i + 1]).Replace(CrudProg, tableCode);
+                var toDir = projectPath + _Str.AddDirSep(_crudFiles[i + 1]).Replace(CrudProg, tableCode);
                 var toFile = toDir + _crudFiles[i + 2].Replace(CrudProg, tableCode);
                 //var toFile = _File.GetNextFileName(toDir + _crudFiles[i + 2].Replace(CrudTable, tableName), true);
                 if (File.Exists(toFile))
