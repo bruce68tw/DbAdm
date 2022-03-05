@@ -26,11 +26,9 @@ var _ihtml = $.extend({}, _ibase, {
 
     /**
      * init html editor
-     * param obj {objects} html input object array
+     * param edit {object} EditOne/EditMany object
      * param prog {string} program code
-     * param height {int} input height(px)
-     * //param fnFileName {function} js function to get filename, 
-     * //  if empty, fileName use prog + '_' + fid
+     * param height {int} (optional)input height(px)
      */
     init: function (edit, prog, height) {
         edit.eform.find(_ihtml.Filter).each(function () {
@@ -45,12 +43,19 @@ var _ihtml = $.extend({}, _ibase, {
                     onChange: function (contents, $editable) {
                         //sync value
                         var me = $(this);
-                        me.val(me.summernote('isEmpty') ? "" : contents);
+                        if (me.summernote('isEmpty')) {
+                            me.val('');
+                            //empty html value, carefully cause endless loop !!
+                            if (me.summernote('code') != '')
+                                me.summernote('code', '');
+                        } else {
+                            me.val(contents);
+                        }
+                        //me.val(me.summernote('isEmpty') ? '' : contents);
 
                         //re-validate
                         edit.validator.element(me);
                     },
-
                     onImageUpload: function (files) {
                         var me = $(this);   //jquery object
                         var data = new FormData();
@@ -59,7 +64,7 @@ var _ihtml = $.extend({}, _ibase, {
                         $.ajax({
                             data: data,
                             type: "POST",
-                            url: "SetHtmlImage",    //fixed action !!
+                            url: "SetHtmlImage",    //backend fixed action !!
                             cache: false,
                             contentType: false,
                             processData: false,

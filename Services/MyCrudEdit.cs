@@ -3,7 +3,7 @@ using Base.Services;
 
 namespace DbAdm.Services
 {
-    public class MyCrudEdit : XpEdit
+    public class MyCrudEdit : XgEdit
     {
         public MyCrudEdit(string ctrl) : base(ctrl) { }
 

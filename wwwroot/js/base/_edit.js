@@ -157,7 +157,12 @@ var _edit = {
      */
     isNewKey: function (key) {
         key = key.toString();   //convert to string for checking
-        return (key.length <= 3);
+        var len = key.length;
+        if (len >= 6)
+            return false;
+
+        var val = parseInt(key);
+        return (!Number.isNaN(val) && (val.toString().length == len));
     },
 
     /**

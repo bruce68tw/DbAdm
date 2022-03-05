@@ -147,7 +147,7 @@ var _ajax = {
                 //result maps to ResultDto/JObject
                 //if (!result)
                 //    return;
-
+                debugger;
                 var msg = _ajax.resultToMsg(result);
                 if (msg) {
                     if (fnError == null)
@@ -169,6 +169,7 @@ var _ajax = {
             },
 
             error: function (xhr, ajaxOptions, thrownError) {
+                debugger;
                 if (xhr != null) {
                     console.log("status" + xhr.status);
                     console.log(thrownError);
@@ -660,26 +661,33 @@ var _crud = {
 
     /**
      * change newDiv to active
-     * param newDiv {object} jquery object
+     * param toRead {bool} show divRead or not
+     * param nowDiv {object} (optional) now div to show
      */ 
-    swap: function (toRead) {
+    swap: function (toRead, nowDiv) {
         if (!_me.hasRead || !_me.hasEdit)
             return;
 
+        var isDefault = _var.isEmpty(nowDiv);
+        if (isDefault)
+            nowDiv = _me.divEdit;
+
         var oldDiv, newDiv;
         if (toRead) {
-            oldDiv = _me.divEdit;
+            oldDiv = nowDiv;
             newDiv = _me.divRead;
         } else {
             oldDiv = _me.divRead;
-            newDiv = _me.divEdit;
+            newDiv = nowDiv;
         }
 
         if (_obj.isShow(oldDiv)) {
             oldDiv.fadeToggle(200);
             newDiv.fadeToggle(500);
         }
-        _crud._afterSwap(toRead);
+
+        if (isDefault)
+            _crud._afterSwap(toRead);
     },
 
     //=== event start ===
@@ -1654,7 +1662,12 @@ var _edit = {
      */
     isNewKey: function (key) {
         key = key.toString();   //convert to string for checking
-        return (key.length <= 3);
+        var len = key.length;
+        if (len >= 6)
+            return false;
+
+        var val = parseInt(key);
+        return (!Number.isNaN(val) && (val.toString().length == len));
     },
 
     /**
@@ -2922,11 +2935,9 @@ var _ihtml = $.extend({}, _ibase, {
 
     /**
      * init html editor
-     * param obj {objects} html input object array
+     * param edit {object} EditOne/EditMany object
      * param prog {string} program code
-     * param height {int} input height(px)
-     * //param fnFileName {function} js function to get filename, 
-     * //  if empty, fileName use prog + '_' + fid
+     * param height {int} (optional)input height(px)
      */
     init: function (edit, prog, height) {
         edit.eform.find(_ihtml.Filter).each(function () {
@@ -2941,12 +2952,19 @@ var _ihtml = $.extend({}, _ibase, {
                     onChange: function (contents, $editable) {
                         //sync value
                         var me = $(this);
-                        me.val(me.summernote('isEmpty') ? "" : contents);
+                        if (me.summernote('isEmpty')) {
+                            me.val('');
+                            //empty html value, carefully cause endless loop !!
+                            if (me.summernote('code') != '')
+                                me.summernote('code', '');
+                        } else {
+                            me.val(contents);
+                        }
+                        //me.val(me.summernote('isEmpty') ? '' : contents);
 
                         //re-validate
                         edit.validator.element(me);
                     },
-
                     onImageUpload: function (files) {
                         var me = $(this);   //jquery object
                         var data = new FormData();
@@ -2955,7 +2973,7 @@ var _ihtml = $.extend({}, _ibase, {
                         $.ajax({
                             data: data,
                             type: "POST",
-                            url: "SetHtmlImage",    //fixed action !!
+                            url: "SetHtmlImage",    //backend fixed action !!
                             cache: false,
                             contentType: false,
                             processData: false,
@@ -4632,20 +4650,18 @@ var _valid = {
 
         //config
         var config = {
-            ignore: ':hidden:not([data-type=html]),.note-editable.card-block',   //or summernote got error
+            /*
             //errorClass: 'label label-danger',
+            //onclick: false, //checkbox, radio, and select
+            ignore: ':hidden:not(.xd-valid[data-type=file]),:hidden:not([data-type=html]),.note-editable.card-block',   //or summernote got error
+            */
+            ignore: ':hidden:not(.xd-valid)',     //html/file has .xd-valid need validate !!
             errorElement: 'span',
             errorPlacement: function (error, elm) {
-                //debugger;
                 error.insertAfter(_valid._getBox($(elm)));
                 return false;
             },
-            //ignore: '',     //xiFile has hidden input need validate
-            //onclick: false, //checkbox, radio, and select
-            /*
-            */
             highlight: function (elm, errorClass, validClass) {
-                //debugger;
                 var me = $(elm);
                 var box = _valid._getBox(me);
                 box.removeClass(validClass).addClass(errorClass);
@@ -4655,7 +4671,6 @@ var _valid = {
                 return false;
             },
             unhighlight: function (elm, errorClass, validClass) {
-                //debugger;
                 var me = $(elm);
                 var box = _valid._getBox(me);
                 box.removeClass(errorClass).addClass(validClass);
@@ -4663,9 +4678,8 @@ var _valid = {
                 if (obj != null)
                     obj.hide();
                 return false;
-                //var me = $(elm);
-                //me.data('edit', 1);    //註記此欄位有異動
             },
+            /*
             //copy from jquery validate defaultShowErrors()
             showErrors: function (errorMap, errorList) {
                 //this.defaultShowErrors();
@@ -4696,6 +4710,7 @@ var _valid = {
                 //this.addWrapper(this.toShow).show();
                 //return false;
             },
+            */
         };
 
         return form.validate(config);
@@ -4716,6 +4731,7 @@ var _valid = {
             ? error : null;
     },
 
+    /*
     valid: function () {
         var valid, validator, errorList;
 
@@ -4735,6 +4751,7 @@ var _valid = {
         }
         return valid;
     },
+    */
 
     //#region remark code
     /**
@@ -5002,18 +5019,24 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
  * notice:
  *   1.set data-fkeyFid when save
  *   
- * param kid {string} (required) pkey field id(single key)
+ * param kid {string} pkey field id(single key)
  * param eformId {string} (optional) edit form id
- *   if not empty, system will load UI & prepare save rows
- *     and rows container tag is fixed to 'tbody'
- *   if empty, you could write below custom functions:
- *     1.void fnLoadJson(json): necessary, show form
- *     2.json fnGetUpdJson(upKey): necessary
+ *   if empty, you must write below functions:
+ *     1.void fnLoadJson(json): show josn to form
+ *     2.json fnGetUpdJson(upKey): get updated json by form
  *     3.bool fnValid(): (optional) validate check
- * param tplRowId {string} (optional) row template id for load row & render row.
+ *   if not empty, system will load UI & prepare save rows,
+ *     and rows container tag is fixed to 'tbody'
+ * param tplRowId {string} (optional) row template id
+ *   1.if empty, it will log error when call related function.
+ *   2.system get fid type from this variables
+ *   3.called by singleFormLoadRow、loadRows、_renderRow
  * param rowFilter {string} (optional) filter for find row object
- *   1.inside element -> row(onDeleteRow), 2.rowsBox -> row(getUpdRows)
+ *   1.if empty, it will log error when call related function.
+ *   2.inside element -> row(onDeleteRow),
+ *   3.rowsBox -> row(getUpdRows)
  * param sortFid {string} (optional) sort fid for sorting function
+ * 
  * return {EditMany}
  */
 function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
@@ -5028,11 +5051,11 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         this.DataFkeyFid = '_fkeyfid';  //data field for fkey fid
 
         this.kid = kid;
-        this.hasTplRow = !_str.isEmpty(tplRowId);
         this.hasRowFilter = !_str.isEmpty(rowFilter);
         this.rowFilter = rowFilter;
         this.sortFid = sortFid;
 
+        this.hasTplRow = !_str.isEmpty(tplRowId);
         if (this.hasTplRow) {
             this.tplRow = $('#' + tplRowId).html();
             var rowObj = $(this.tplRow);
@@ -5098,7 +5121,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * load json rows into UI by UserRole Mode(urm)
+     * (urm: UserRole Mode), load json rows into UI by urm
      * param json {json} 
      */
     this.urmLoadJson = function (json, rowsBox, fids) {
@@ -5162,12 +5185,13 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     },
 
     /**
-     * load row by row box(container), also set old value
+     * single form load one row, also set field old value,
+     * ex: DbAdm/MyCrud.js Etable is a single form but has multiple rows property !!
      * param rowBox {object}
      * param row {json}
      * param index {int}
      */
-    this.loadRow = function (rowBox, row, index) {
+    this.singleFormLoadRow = function (rowBox, row, index) {
         if (!this.checkTplRow())
             return;
 
@@ -5402,14 +5426,15 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * add one row into UI
-     * param {object} row(optional)
+     * add one row(or empty) into UI
+     * param {object} (optional) rowsBox
+     * param {object} (optional) row
      * return {object} row jquery object(with UI)
      */
     this.addRow = function (rowsBox, row) {
         row = row || {};
         rowsBox = this.getRowsBox(rowsBox);
-        var obj = this.renderRow(rowsBox, row);
+        var obj = this._renderRow(rowsBox, row);
         this.boxSetNewId(obj);
         return obj;
     };
@@ -5466,9 +5491,9 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * param row {json}
      * return {object} row object
      */ 
-    this.renderRow = function (rowsBox, row) {
+    this._renderRow = function (rowsBox, row) {
         if (!this.checkTplRow())
-            return;
+            return null;
 
         rowsBox = this.getRowsBox(rowsBox);
         var obj = $(Mustache.render(this.tplRow, row));
@@ -5481,6 +5506,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * (need this.rowFilter !!) formData add upload files
      * param levelStr {string}
      * param data {FormData}
+     * param rowsBox {object} (optional) use EditMany setting if empty
      * return {json} file json
      */ 
     this.dataAddFiles = function (levelStr, data, rowsBox) {
@@ -6022,7 +6048,7 @@ function Flow(boxId, mNode, mLine) {
                 //debugger;
                 //var node = $(params.el);
                 var pos = $(params.el).position();
-                _form.loadJson(nodeObj, { PosX: pos.left, PosY: pos.top });
+                _form.loadJson(nodeObj, { PosX: Math.floor(pos.left), PosY: Math.floor(pos.top) });
             },
         });
 

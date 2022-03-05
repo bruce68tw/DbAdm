@@ -1,5 +1,5 @@
 ﻿using Base.Services;
-using BaseWeb.Services;
+using BaseApi.Services;
 using DocumentFormat.OpenXml.Packaging;
 using System.Collections.Generic;
 using System.IO;
@@ -40,6 +40,7 @@ namespace DbAdm.Services
             var query = (from c in db.Column
                          join t in db.Table on c.TableId equals t.Id
                          join p in db.Project on t.ProjectId equals p.Id
+                         where (c.Status && t.Status)
                          select new { c, t, p }
                          );
 

@@ -201,7 +201,7 @@ var _me = {
         for (var i = 0; i < rows.length; i++) {
             //add tab (only)
             var row = rows[i];
-            _me.mEtable.loadRow(_me.tabEtable, row, i);
+            _me.mEtable.singleFormLoadRow(_me.tabEtable, row, i);
 
             //add nav
             //on click必須add/remove active class, 所以改用javascript !!

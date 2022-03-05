@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?9ftoua');
-  src:  url('fonts/icomoon.eot?9ftoua#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?9ftoua') format('truetype'),
-    url('fonts/icomoon.woff?9ftoua') format('woff'),
-    url('fonts/icomoon.svg?9ftoua#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?25faek');
+  src:  url('fonts/icomoon.eot?25faek#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?25faek') format('truetype'),
+    url('fonts/icomoon.woff?25faek') format('woff'),
+    url('fonts/icomoon.svg?25faek#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.ico-desc:before {
+  content: "\e901";
+}
+.ico-asc:before {
+  content: "\e902";
+}
 .ico-date:before {
   content: "\f073";
 }
@@ -898,7 +904,7 @@ input[type=number] {
     /*.xg-table thead th {*/
     .xg-table th {
         background: #eee;
-        border-width: 0 1px 0 0 !important;
+        border-width: 0 1px 1px 0 !important;
         /*
     border-top: none !important;
     border-bottom: none !important;
@@ -921,7 +927,7 @@ input[type=number] {
         /*padding-top: 3px;
     padding-bottom: 3px;
     height: 48px !important;*/
-        border-width: 1px 1px 0 0 !important;
+        border-width: 0 1px 1px 0 !important;
         /*border-bottom-width: 0;
     border-left-width: 0;*/
     }
@@ -1153,7 +1159,8 @@ table.dataTable thead th {
     background-image: none !important; /* Remove the DataTables bootstrap integration styling */
 }
 
-    /* sun add, 否則會出現2個icon !! */
+    /* Bruce add, 否則會出現2個icon !! */
+    /*
     table.dataTable thead th.sorting:before,
     table.dataTable thead th.sorting_asc:before,
     table.dataTable thead th.sorting_desc:before {
@@ -1164,7 +1171,7 @@ table.dataTable thead th {
     table.dataTable thead th.sorting_asc:after,
     table.dataTable thead th.sorting_desc:after {
         position: absolute;
-        top: 15px; /* sun: 12 -> 15 */
+        top: 15px;
         right: 8px;
         display: block;
         font-family: FontAwesome;
@@ -1173,9 +1180,6 @@ table.dataTable thead th {
     table.dataTable thead th.sorting:after {
         content: "\f0dc";
         opacity: 0.2;
-        /*color: #ddd;
-        font-size: 0.8em;
-        padding-top: 0.12em;*/
     }
 
     table.dataTable thead th.sorting_asc:after {
@@ -1187,6 +1191,30 @@ table.dataTable thead th {
         content: "\f0dd";
         opacity: 0.8;
     }
+    */
+
+/* rewirte dataTables.bootstrap4.css */
+table.dataTable thead .sorting:before,
+table.dataTable thead .sorting_asc:before,
+table.dataTable thead .sorting_desc:before,
+table.dataTable thead .sorting_asc_disabled:before,
+table.dataTable thead .sorting_desc_disabled:before {
+    right: 1em;
+    content: '\e902' !important;
+    font-family: 'icomoon' !important;
+	font-weight: lighter !important;
+}
+
+table.dataTable thead .sorting:after,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_desc:after,
+table.dataTable thead .sorting_asc_disabled:after,
+table.dataTable thead .sorting_desc_disabled:after {
+    right: 0.5em;
+    content: '\e901' !important;
+    font-family: 'icomoon' !important;
+	font-weight: lighter !important;
+}
 
 
 /* use bootstrap datepicker */
