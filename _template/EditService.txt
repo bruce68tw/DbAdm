@@ -2,7 +2,7 @@ using Base.Enums;
 using Base.Models;
 using Base.Services;
 {{#if HasFile}}
-using BaseWeb.Services;
+using BaseApi.Services;
 using Microsoft.AspNetCore.Http;
 {{/if}}
 using Newtonsoft.Json.Linq;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace {{Project}}.Services
 {
-    public class {{ProgCode}}Edit : XpEdit
+    public class {{ProgCode}}Edit : XgEdit
     {
         public {{ProgCode}}Edit(string ctrl) : base(ctrl) { }
 
@@ -69,11 +69,11 @@ namespace {{Project}}.Services
         //t03_FileName: t + table serial _ + fid
         public async Task<ResultDto> CreateAsnyc(JObject json, List<IFormFile> t03_FileName)
         {
-            var service = Service();
-            var result = service.Create(json);
+            var service = EditService();
+            var result = await service.CreateAsync(json);
             if (_Valid.ResultStatus(result))
             {
-                await _WebFile.SaveCrudFile(s)Asnyc(json, service.GetNewKeyJson(), _Xp.GetDirUserLicence(), t03_FileName, nameof(t03_FileName));
+                await _WebFile.SaveCrudFile(s)Asnyc(json, service.GetNewKeyJson(), _Xp.GetDir{{ProgCode}}(), t03_FileName, nameof(t03_FileName));
             }
             return result;
         }
@@ -82,11 +82,11 @@ namespace {{Project}}.Services
         //t03_FileName: t + table serial _ + fid
         public async Task<ResultDto> UpdateAsnyc(string key, JObject json, List<IFormFile> t03_FileName)
         {
-            var service = Service();
-            var result = service.Update(key, json);
+            var service = EditService();
+            var result = await service.UpdateAsync(key, json);
             if (_Valid.ResultStatus(result))
             {
-                await _WebFile.SaveCrudFile(s)Asnyc(json, service.GetNewKeyJson(), _Xp.GetDirUserLicence(), t03_FileName, nameof(t03_FileName));
+                await _WebFile.SaveCrudFile(s)Asnyc(json, service.GetNewKeyJson(), _Xp.GetDir{{ProgCode}}(), t03_FileName, nameof(t03_FileName));
             }
             return result;
         }

@@ -113,8 +113,8 @@ namespace DbAdm.Services
                 #endregion
 
                 //table list loop
-                var bodyLeft = bodyTpl.TplStr.Substring(0, rowTpl.StartPos);
-                var bodyRight = bodyTpl.TplStr.Substring(rowTpl.EndPos);
+                var bodyLeft = bodyTpl.TplStr[..rowTpl.StartPos];
+                var bodyRight = bodyTpl.TplStr[rowTpl.EndPos..];
                 var fileStr = "";   //file string to echo
                 for (var i = 0; i < tableLen; i++)
                 {
@@ -133,9 +133,9 @@ namespace DbAdm.Services
                 }
 
                 #region 7.get file string
-                fileStr = mainTplStr.Substring(0, bodyTpl.StartPos) +
+                fileStr = mainTplStr[..bodyTpl.StartPos] +
                     fileStr +
-                    mainTplStr.Substring(bodyTpl.EndPos + 1);
+                    mainTplStr[(bodyTpl.EndPos + 1)..];
 
                 //write string into docx
                 wordSet.SetMainPartStr(fileStr);

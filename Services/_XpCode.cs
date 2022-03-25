@@ -1,5 +1,6 @@
 ﻿using Base.Models;
 using Base.Services;
+using BaseWeb.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -54,7 +55,11 @@ from dbo.[Table]
 where ProjectId='{0}'
 order by Code
 ", projectId);
-            return await SqlToCodesAsync(sql, db);
+            var rows = await SqlToCodesAsync(sql, db);
+            if (rows == null)
+                rows = new List<IdStrDto>();
+            rows.Insert(0, new IdStrDto() { Id = "", Str = _Locale.GetBaseRes().PlsSelect });
+            return rows;
         }
 
         //get code table rows for 下拉式欄位
@@ -113,6 +118,16 @@ order by Sort
             return new List<IdStrDto>() {
                 new IdStrDto(){ Id = "1", Str = "是" },
                 new IdStrDto(){ Id = "0", Str = "否" },
+            };
+        }
+
+        //get db type, match to DbTypeEnum
+        public static List<IdStrDto> DbTypes()
+        {
+            return new List<IdStrDto>() {
+                new IdStrDto(){ Id = "0", Str = "MSSql" },
+                new IdStrDto(){ Id = "1", Str = "MySql" },
+                //new IdStrDto(){ Id = "2", Str = "否" },
             };
         }
 

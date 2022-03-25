@@ -7,6 +7,7 @@ var _me = {
                 { data: '_F1' },
                 { data: 'ProjectCode' },
 				{ data: 'ProgCode' },
+                { data: 'ProgName' },
                 { data: '_CrudFun' },
 				{ data: 'Status' },
                 { data: 'Created' },
@@ -15,10 +16,10 @@ var _me = {
 				{ targets: [0], render: function (data, type, full, meta) {
                     return _crud.dtCheck0(full.Id);
 				}},
-                { targets: [3], render: function (data, type, full, meta) {
+                { targets: [4], render: function (data, type, full, meta) {
                     return _crud.dtCrudFun(full.Id, full.Name, true, true, false);
                 }},
-				{ targets: [4], render: function (data, type, full, meta) {
+				{ targets: [5], render: function (data, type, full, meta) {
                     return _crud.dtStatusName(data);
 				}},
 			],

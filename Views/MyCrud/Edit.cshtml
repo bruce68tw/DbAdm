@@ -62,7 +62,7 @@
 
 <!-- find buttons -->
 <div class="xg-btns-box">
-    <span class="xg-block-label">@R["Qitem"]</span>
+    <span class="xg-span-label">@R["Qitem"]</span>
     <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("Q")'>@R["GetItem"]</button>
 </div>
 
@@ -121,7 +121,7 @@
 
 <!-- query result buttons -->
 <div class="xg-btns-box">
-    <span class="xg-block-label">@R["Ritem"]</span>
+    <span class="xg-span-label">@R["Ritem"]</span>
     @await Component.InvokeAsync("XgAddRow", "_me.onRitemAdd()")
     <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("R")'>@R["GetItem"]</button>
 </div>
@@ -162,7 +162,7 @@
 
 <!-- Table edit form nav/tab/buttons -->
 <div class="xg-btns-box">
-    <span class="xg-block-label">@R["EditForm"]</span>
+    <span class="xg-span-label">@R["EditForm"]</span>
     <button type='button' class='btn xg-btn' onclick='_me.onEtableAdd()'>@R["Create"]</button>
     <button type='button' class='btn xg-btn' onclick='_me.onEtableDelete()'>@R["Delete"]</button>
     <button type='button' class='btn xg-btn' onclick='_me.onEtableLeft()'>@R["MoveLeft"]</button>
@@ -204,7 +204,7 @@
         </form>
 
         <div class="xg-btns-box">
-            <span class="xg-block-label">@R["Eitem"]</span>
+            <span class="xg-span-label">@R["Eitem"]</span>
             <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("E")'>@R["GetItem"]</button>
         </div>
         <form class="xu-form2">
@@ -277,7 +277,8 @@
                         Table
                     </div>
                     <div class="col-md-6">
-                        @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "TableId", Rows = (List<IdStrDto>)ViewBag.Tables, FnOnChange = "_me.onChangeItemTable(this)" })
+                        @* 動態讀取下拉欄位資料來源 *@
+                        @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "TableId", FnOnChange = "_me.onChangeItemTable(this)" })
                     </div>
                     <div class="col-md-4 xg-right">
                         <button type="button" class="btn btn-primary" onclick="_me.onItemModalOk()">@R["Sure"]</button>

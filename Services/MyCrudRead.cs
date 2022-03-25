@@ -12,7 +12,7 @@ namespace DbAdm.Services
         {
             ReadSql = @"
 select 
-    c.Id, c.Status, c.ProgCode,
+    c.Id, c.Status, c.ProgCode, c.ProgName,
     p.Code as ProjectCode,
     c.Created
 from dbo.Crud c

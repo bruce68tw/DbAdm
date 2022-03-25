@@ -20,7 +20,7 @@ select
     a.Id
 from dbo.[Table] a
 inner join dbo.Project p on p.Id=a.ProjectId
-order by a.Id desc
+order by p.Id, a.Code
 ",
             ExportSql = @"
 select 

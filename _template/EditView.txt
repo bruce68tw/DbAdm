@@ -21,7 +21,7 @@
 
 {{#ChildTables}}
 <div class='xg-btns-box'>
-	<span class="xg-block-label">{{TableName}}</span>
+	<span class="xg-span-label">{{TableName}}</span>
 	@await Component.InvokeAsync("XgAddRow", "_me.m{{TableCode}}.onAddRow()")
 </div>
 <form id='eform{{TableCode}}' class='xg-form' style="border:none;{{#if HalfWidth}} width:50%;{{/if}}">
