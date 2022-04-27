@@ -50,6 +50,7 @@ var _BR = {
 
     //others
     Working: '作業處理中...',
+    TimeOut: '待機時間過久，或未登入系統。',
 
 };
 /**

@@ -2,9 +2,10 @@
   {
     "outputFileName": "wwwroot/css/lib.css",
     "inputFiles": [
-      "wwwroot/css/lib/bootstrap-4.4.1.css",
-      "wwwroot/css/lib/dataTables.bootstrap4-1.10.19.css",
+      "wwwroot/css/lib/bootstrap-5.1.3.css",
+      "wwwroot/css/lib/datatables-1.11.5.css",
       "wwwroot/css/lib/bootstrap-datepicker-1.9.css"
+      //"wwwroot/css/lib/summernote-bs5.css"
     ]
   },
 
@@ -21,15 +22,10 @@
   {
     "outputFileName": "wwwroot/js/lib.js",
     "inputFiles": [
-      "wwwroot/js/lib/jquery-3.4.1.js",
-      /* load validate first, or cause error(but min not), 1.19.3 not need unobtrusive */
+      "wwwroot/js/lib/jquery-3.5.1.js",
+      //load validate first, or cause error(but min not), 1.19.3 not need unobtrusive
       "wwwroot/js/lib/jquery.validate-1.19.3-bruce.js",
-      /*"wwwroot/js/lib/jquery.validate.unobtrusive-3.2.11.js",*/
-      "wwwroot/js/lib/bootstrap.bundle-4.4.1.js",
-      /* use jquery.dataTables, dataTables.bootstrap4 !! */
-      "wwwroot/js/lib/jquery.dataTables-1.10.19.js",
-      "wwwroot/js/lib/dataTables.bootstrap4-1.10.19.js",
-      /* pjax must remark 716,716 lines */
+      "wwwroot/js/lib/datatables-1.11.5.js",
       "wwwroot/js/lib/jquery.pjax-2.0.1-bruce.js",
       "wwwroot/js/lib/jquery.blockUI-2.7.js",
       "wwwroot/js/lib/modernizr-2.8.3.js",

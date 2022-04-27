@@ -1,0 +1,10 @@
+﻿.xg-input {
+    padding-top: 7px;
+    min-height: 43px;
+}
+
+@media (max-width:768px) {
+    .xg-input {
+        padding-top: 0;
+    }
+}

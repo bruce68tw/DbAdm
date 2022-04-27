@@ -7,7 +7,7 @@
  */
 var _input = {
 
-    //get input value by data-fid
+    //get input value
     get: function (fid, box) {
         return _input.getO(_obj.get(fid, box), box);
     },
@@ -60,6 +60,9 @@ var _input = {
      * param type {string} optional, data-type
      */ 
     setO: function (obj, value, box, type) {
+        if (obj == null || !_var.isPureData(value))
+            return;
+
         type = type || _input.getType(obj);
         switch (type) {
             case 'text':

@@ -5,7 +5,7 @@
 var _iradio = $.extend({}, _ibase, {
 
     //=== get ===
-    //get checked data-value by fid
+    //get checked data-value
     get: function (fid, box) {
         return _iradio._getByName(fid, box);
     },

@@ -68,7 +68,7 @@
 
 <!-- find field -->
 <form id='eformQitem' class='xg-form' style="border:none">
-    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+    <table class="table xg-table xg-no-hline" cellspacing="0">
         <thead>
             <tr>
                 <th>@R0["Column"]</th>
@@ -128,7 +128,7 @@
 
 <!-- query result fields -->
 <form id='eformRitem' class='xg-form' style="border:none">
-    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+    <table class="table xg-table xg-no-hline" cellspacing="0">
         <thead>
             <tr>
                 <th>@R0["Column"]</th>
@@ -176,7 +176,7 @@
 <!-- template: edit form nav, use index to connect nav tab -->
 <script id="tplNavEtable" type="text/template">
     <li class='nav-item' data-index='{{Index}}'>
-        <a class='nav-link' data-toggle='tab' href='#divEtable{{Index}}' onclick='_me.onEtableNav({{Index}})'>
+        <a class='nav-link' data-bs-toggle='tab' href='#divEtable{{Index}}' onclick='_me.onEtableNav({{Index}})'>
         </a>
     </li>
 </script>
@@ -208,7 +208,7 @@
             <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("E")'>@R["GetItem"]</button>
         </div>
         <form class="xu-form2">
-            <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+            <table class="table xg-table xg-no-hline" cellspacing="0">
                 <thead>
                     <tr>
                         <th>@R0["Column"]/@R0["ColName"]<br>@R0["DataType"]</th>
@@ -269,7 +269,7 @@
         <div class="modal-content" style="width:560px; height:520px;">
             <div class="modal-header">
                 <div class="modal-title">@R["GetQitem"]</div>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type='button' class='btn-close' data-bs-dismiss='modal' style='padding:10px 10px;'></button>
             </div>
             <div class="modal-body">
                 <div class="row xg-row" style="margin:5px 5px">
@@ -286,7 +286,7 @@
                 </div>
 
                 <!-- query result list -->
-                <table id="tableItem" class="table table-bordered xg-table xg-table-vscroll" cellspacing="0" style="width:100%">
+                <table id="tableItem" class="table xg-table xg-table-vscroll" cellspacing="0" style="width:100%">
                     <thead>
                         <tr>
                             <th>@R0["Select"]</th>

@@ -1,0 +1,9 @@
+﻿.xg-hide {
+    display: none;
+}
+
+@media (max-width:768px) {
+    .xg-hide-rwd {
+        display: none !important;
+    }
+}

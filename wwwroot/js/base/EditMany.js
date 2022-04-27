@@ -39,10 +39,17 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         this.rowFilter = rowFilter;
         this.sortFid = sortFid;
 
+        this.systemError = '';
         this.hasTplRow = !_str.isEmpty(tplRowId);
         if (this.hasTplRow) {
             this.tplRow = $('#' + tplRowId).html();
             var rowObj = $(this.tplRow);
+            //check input & alert error if wrong
+            if (_obj.get(kid, rowObj) == null) {
+                this.systemError = 'EditMany.js input kid is wrong (' + kid + ')';
+                alert(this.systemError);
+            }
+
             _edit.setFidTypeVars(this, rowObj);
             _edit.setFileVars(this, rowObj);
         }

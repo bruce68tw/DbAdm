@@ -1,4 +1,23 @@
 ﻿
-.xg-block-label {
+/* span label */
+.xg-span-label {
     margin: 3px 3px;
+}
+
+.xg-label {
+    padding: 14px 5px 0 15px;
+    border: none;
+    text-align: right;
+}
+
+@media (max-width:768px) {
+    .xg-label {
+        text-align: left;
+    }
+}
+
+.xg-vlabel {
+    padding: 14px 0 0 0;
+    border: none;
+    text-align: left;
 }

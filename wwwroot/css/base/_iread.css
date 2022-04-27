@@ -11,3 +11,14 @@
     border: none;
     margin: 0;
 }
+
+/* edit field style */
+.xg-lineform .xi-read2 {
+    padding-left: 0;
+    background-color: #eee
+}
+.xg-form .xi-read2 {
+    padding-left: 0;
+    margin: 0;
+    background-color: #eee
+}

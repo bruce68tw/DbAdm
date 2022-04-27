@@ -210,9 +210,10 @@ var _me = {
             _me.navEtable.append(newNav);
             _me.etableLen++;
 
-            //focus first tab
-            if (i === 0)
-                newNav.find('a').click();
+            //focus first tab, [0] is need !!
+            if (i === 0) {
+                newNav.find('a')[0].click();
+            }
 
             //validate etable form
             var forms = _me.tabEtable.find('#divEtable' + i + ' form');

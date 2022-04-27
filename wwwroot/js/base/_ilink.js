@@ -4,7 +4,7 @@ var _ilink = {
 
     //value by fid
     get: function (fid, form) {
-        return this.getO(_obj.get(fid, form));   //use data-fid
+        return this.getO(_obj.get(fid, form));
     },
     //value by object
     getO: function (obj) {
@@ -12,7 +12,7 @@ var _ilink = {
     },
 
     set: function (fid, value, form) {
-        this.setO(_obj.get(fid, form), value);   //use data-fid
+        this.setO(_obj.get(fid, form), value);
     },
     setO: function (obj, value) {
         obj.text(value);

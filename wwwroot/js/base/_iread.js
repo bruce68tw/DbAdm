@@ -4,7 +4,7 @@ var _iread = {
 
     //value by fid
     get: function (fid, form) {
-        return _iread.getO(_obj.get(fid, form));   //use data-fid
+        return _iread.getO(_obj.get(fid, form));
     },
     //value by filter
     getF: function (filter, form) {
@@ -15,7 +15,7 @@ var _iread = {
         return obj.text();
     },
     set: function (fid, value, form) {
-        _iread.setO(_obj.get(fid, form), value);   //use data-fid
+        _iread.setO(_obj.get(fid, form), value);
     },
     setF: function (filter, value, form) {
         _iread.setO(_obj.getF(filter, form), value)

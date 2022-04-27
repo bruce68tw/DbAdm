@@ -1,0 +1,21 @@
+﻿
+.xg-page-menu {
+    float: left;
+}
+
+.xg-page-btns .xg-has-menu {
+    justify-content: flex-end !important;
+}
+.xg-page-btns .xg-no-menu {
+    justify-content: center !important;
+}
+
+@media (max-width:768px) {
+    .xg-page-menu {
+        display: none;
+    }
+
+    .xg-page-btns .xg-page-hasmenu {
+        justify-content: center !important;
+    }
+}

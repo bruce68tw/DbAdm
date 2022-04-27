@@ -39,8 +39,11 @@ var _ihtml = $.extend({}, _ibase, {
                 height: height || 200,
                 //new version use callbacks !!
                 callbacks: {
+                    /*
+                    */
                     //https://codepen.io/ondrejsvestka/pen/PROgzQ
                     onChange: function (contents, $editable) {
+                        
                         //sync value
                         var me = $(this);
                         if (me.summernote('isEmpty')) {
@@ -55,6 +58,12 @@ var _ihtml = $.extend({}, _ibase, {
 
                         //re-validate
                         edit.validator.element(me);
+                        
+                        /*
+                        var me = $(this);
+                        me.val(me.summernote('isEmpty') ? "" : contents);
+                        edit.validator.element(me);
+                        */
                     },
                     onImageUpload: function (files) {
                         var me = $(this);   //jquery object

@@ -5,64 +5,45 @@
     border-bottom: none;
 }
 
-
-/*
-  包含: 
-  1.xg-table
-  2.xg-table裡面的輸入元件
-  3.jQuery dataTables
-*/
+/* include: read, edit table */
 .xg-table {
+    border-collapse: separate !important;
     width: 100% !important;
     font-size: 15px;
-    /*table-layout: fixed;*/
+    border-width: 1px 0 0 1px !important;
+    border-color: lightgray !important;
+    border-style: solid !important;
 }
 
-    /*
-.xg-table td {
-    vertical-align: middle;
-    height: 32px;
-}
-*/
+    .xg-table th, .xg-table td {
+        font-weight: normal !important;
+        border-width: 0 1px 1px 0 !important;
+        border-color: lightgray !important;
+        border-style: solid !important;
+        vertical-align: middle !important;
+        text-align: center !important;
+        padding: 0.75rem; /* front web */
+    }
+
+    .xg-table th {
+        background: #eee;
+    }
 
     .xg-table tr:hover {
         background: #F6F6F6;
     }
 
-    /*.xg-table thead th {*/
-    .xg-table th {
-        background: #eee;
-        border-width: 0 1px 1px 0 !important;
-        /*
-    border-top: none !important;
-    border-bottom: none !important;
-    border-bottom-width: 1px !important;
-    border-left-width: 0;
-    */
-        vertical-align: middle !important;
-        /*padding-top: 3px;
-    padding-bottom: 3px;
-    height: 48px !important;*/
-        text-align: center !important;
+    .xg-table.xg-no-hline {
+        border-width: 1px 0 1px 1px !important;
     }
 
-        .xg-table th:last-child {
-            border-right-width: 0 !important;
+        .xg-table.xg-no-hline td {
+            border-width: 0 1px 0 0 !important;
         }
 
-    .xg-table tbody td {
-        vertical-align: middle !important;
-        /*padding-top: 3px;
-    padding-bottom: 3px;
-    height: 48px !important;*/
-        border-width: 0 1px 1px 0 !important;
-        /*border-bottom-width: 0;
-    border-left-width: 0;*/
-    }
-
-    .xg-table.xg-no-hline td {
-        border-top: none;
-        border-bottom: none;
+    .xg-table .xi-check > span {
+        top: -15px !important;
+        left: 8px !important;
     }
 
 /*
@@ -76,19 +57,17 @@
 */
 
 /* table v scroll */
+.xg-table-vscroll {
+    border-width: 1px 0 1px 1px !important;
+}
+
 .xg-table-vscroll tbody {
-  display:block;
-  overflow-y:scroll;
+    display: block;
+    overflow-y: scroll;
 }
 
 .xg-table-vscroll tr {
   display:flex;
-}
-
-/* TODO: ?? */
-.xg-table .xi-check > span {
-    top: -10px !important;
-    left: 8px !important;
 }
 
 tr input {
@@ -98,4 +77,67 @@ tr input {
 tr select {
     padding-left: 3px !important;
     padding-right: 3px !important;
+}
+
+@media (max-width:768px) {
+    .xg-table {
+        background: #fff;
+        overflow: hidden;
+        border: none;
+    }
+
+        /*
+        .xg-table tr:nth-of-type(2n) {
+            background: #eee;
+        }
+        .xg-table th, .xg-table td {
+            margin: 0.5em 1em;
+        }
+
+    .xg-table {
+        min-width: 100%;
+    }
+        */
+
+    .xg-table tbody {
+        padding-top: 3px;
+    }
+
+        .xg-table th {
+            display: none;
+        }
+
+        .xg-table td {
+            text-align: left;
+            display: block;
+            border: none !important;
+        }
+
+            .xg-table td:first-child {
+                padding-top: 15px;
+                border-top: 1px solid lightgray !important;
+            }
+            .xg-table td:last-child {
+                padding-bottom: 15px;
+            }
+
+            .xg-table td:before {
+                content: attr(data-rwd-th);
+                font-weight: bold;
+                /*width: 6.5em;*/
+                display: inline-block;
+                color: darkblue;
+                text-align: left;
+            }
+
+        /*
+        .xg-table th, .xg-table td {
+            text-align: left;
+        }
+
+            .xg-table th, .xg-table td:before {
+                color: #D20B2A;
+                font-weight: bold;
+            }
+        */
 }

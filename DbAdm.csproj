@@ -9,6 +9,7 @@
     <Compile Remove="wwwroot\css_old\**" />
     <Compile Remove="wwwroot\js_old\**" />
     <Compile Remove="wwwroot\locale_old\**" />
+    <Compile Remove="wwwroot_old\**" />
     <Compile Remove="_data\**" />
     <Compile Remove="_log\**" />
     <Compile Remove="_source\**" />
@@ -17,6 +18,7 @@
     <Content Remove="wwwroot\css_old\**" />
     <Content Remove="wwwroot\js_old\**" />
     <Content Remove="wwwroot\locale_old\**" />
+    <Content Remove="wwwroot_old\**" />
     <Content Remove="_data\**" />
     <Content Remove="_log\**" />
     <Content Remove="_source\**" />
@@ -25,6 +27,7 @@
     <EmbeddedResource Remove="wwwroot\css_old\**" />
     <EmbeddedResource Remove="wwwroot\js_old\**" />
     <EmbeddedResource Remove="wwwroot\locale_old\**" />
+    <EmbeddedResource Remove="wwwroot_old\**" />
     <EmbeddedResource Remove="_data\**" />
     <EmbeddedResource Remove="_log\**" />
     <EmbeddedResource Remove="_source\**" />
@@ -33,6 +36,7 @@
     <None Remove="wwwroot\css_old\**" />
     <None Remove="wwwroot\js_old\**" />
     <None Remove="wwwroot\locale_old\**" />
+    <None Remove="wwwroot_old\**" />
     <None Remove="_data\**" />
     <None Remove="_log\**" />
     <None Remove="_source\**" />
@@ -105,7 +109,6 @@
     <None Include="wwwroot\locale\zh-TW\bootstrap-datepicker.js" />
     <None Include="wwwroot\locale\zh-TW\dataTables.txt" />
     <None Include="wwwroot\locale\zh-TW\_BR.js" />
-    <None Include="wwwroot\locale\zh-TW\summernote.j_old" />
     <None Include="wwwroot\locale\zh-TW\validate.js" />
   </ItemGroup>
 

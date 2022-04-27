@@ -1,4 +1,12 @@
 ﻿
+.xg-hide {
+    display: none;
+}
+
+.xg-inline {
+    display: inline-block;
+}
+
 .xg-left {
     text-align: left;
 }

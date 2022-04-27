@@ -18,11 +18,16 @@ var _fun = {
 
     //error BR code, same to _Fun.PreBrError, fixed len to 2
     PreBrError: 'B:',
+
+    //class name of hide RWD phone
+    HideRwd: 'xg-hide-rwd',
     //#endregion
 
     //variables
     locale: 'zh-TW',    //now locale, _Layout.cshmlt will set
     maxFileSize: 50971520,  //upload file limit(50M)
+    isRwd: false,
+    //pageRows: 10,       //for _page.js (pagination object)
 
     //mid variables
     //data: {},

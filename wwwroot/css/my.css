@@ -117,6 +117,48 @@
 }
 
 
+.xg-hide {
+    display: none;
+}
+
+.xg-inline {
+    display: inline-block;
+}
+
+.xg-left {
+    text-align: left;
+}
+.xg-center {
+    text-align: center;
+}
+.xg-right {
+    text-align: right;
+}
+
+.xg-h10 {
+    height: 10px !important;
+}
+
+.xg-mt0 {
+    margin-top: 0 !important;
+}
+.xg-mt5 {
+    margin-top: 5px !important;
+}
+.xg-mt10 {
+    margin-top: 10px !important;
+}
+.xg-mb0 {
+    margin-bottom: 0 !important;
+}
+.xg-mb5 {
+    margin-bottom: 5px !important;
+}
+.xg-mb10 {
+    margin-bottom: 10px !important;
+}
+
+
 /* 用在 form裡面的 button */
 .xg-small-btn {
     padding: 2px 5px;
@@ -434,39 +476,14 @@ path, .jtk-endpoint { cursor:pointer; }
 }
 
 /* prog path, razor only support inline style */
+/*
 .xg-prog-path {
     height: 38px;
     padding: 8px 16px;
     font-size: 16px;
     color: gray;
 }
-
-/* form with line */
-.xg-lineform {
-    font-size: 15px;
-    border-color: #ddd;
-    border-style: solid;
-    border-width: 1px 1px 0 1px; 
-    border-radius: 4px;
-}
-
-    .xg-lineform .xg-row {
-        min-height: 53px;
-        margin: 0;
-        border-bottom: solid 1px #f0f0f0;
-    }
-
-    .xg-lineform .xg-label {
-        background: #eee;
-        padding: 14px 5px 0 15px;
-        border-right: solid 1px #ddd;
-        border-bottom: solid 1px #ddd;
-    }
-
-    .xg-lineform .xg-input {
-        padding-top: 7px;
-        /*border-bottom: solid 1px #f0f0f0;*/
-    }
+*/
 
 /* form without line */
 .xg-form {
@@ -482,24 +499,16 @@ path, .jtk-endpoint { cursor:pointer; }
         border: none;
     }
 
-    .xg-form .xg-label {
-        padding: 14px 5px 0 15px;
-        border: none;
-        text-align: right;
-    }
-
     .xg-form .xg-input {
         padding-top: 7px;
         min-height: 43px;
     }
-
-.xg-hide {
-    display: none;
-}
-
-.xg-inline {
-    display: inline-block;
-}
+    .xg-form.xg-border {
+        margin: 0 auto;
+        padding: 20px 16px;
+        border: solid 1px lightgray !important;
+        border-radius: 6px;
+    }
 
 /* title required sign */
 .xg-required {
@@ -507,15 +516,20 @@ path, .jtk-endpoint { cursor:pointer; }
     font-weight: bold;
 }
 
-/* match datepicker.css .date setting, for keep input width same to date at query form */
-.xg-date-w {
-    width: 180px !important;
-}
-
 /* animation */
 .xg-fade.hide {
     display: none;
 }
+.xg-hide {
+    display: none;
+}
+
+@media (max-width:768px) {
+    .xg-hide-rwd {
+        display: none !important;
+    }
+}
+
 
 /**
  * checkbox, radio, use pure css, no js
@@ -558,7 +572,7 @@ path, .jtk-endpoint { cursor:pointer; }
 
     /* for datatable checkbox, no label */
     .xi-check.xg-no-label > span {
-        top: 0 !important;
+        top: -6px !important;
         left: 0 !important;
     }
 
@@ -640,6 +654,12 @@ path, .jtk-endpoint { cursor:pointer; }
     background: red;
 }
 
+/* match datepicker.css .date setting, for keep input width same to date at query form */
+.xg-date-w {
+    width: 180px !important;
+}
+
+
 /* file url */
 .xi-file-box div a:first-child {
     color: blue;
@@ -654,6 +674,17 @@ path, .jtk-endpoint { cursor:pointer; }
 .xi-file {
     margin-bottom: 0 !important;
 }
+.xg-input {
+    padding-top: 7px;
+    min-height: 43px;
+}
+
+@media (max-width:768px) {
+    .xg-input {
+        padding-top: 0;
+    }
+}
+
 
 /* number input */
 /* hide stepper: Chrome, Safari, Edge, Opera */
@@ -681,28 +712,42 @@ input[type=number] {
     margin: 0;
 }
 
+/* edit field style */
+.xg-lineform .xi-read2 {
+    padding-left: 0;
+    background-color: #eee
+}
+.xg-form .xi-read2 {
+    padding-left: 0;
+    margin: 0;
+    background-color: #eee
+}
 
-.xg-block-label {
+
+/* span label */
+.xg-span-label {
     margin: 3px 3px;
 }
 
-/* main form */
-
-.xg-top {
-    color: #EAFFFF;
-    background: #28C2FE;
-    height: 45px;
-    border-bottom: 1px solid #CCC;
+.xg-label {
+    padding: 14px 5px 0 15px;
+    border: none;
+    text-align: right;
 }
 
-    .xg-top li {
-        margin: auto 5px;
+@media (max-width:768px) {
+    .xg-label {
+        text-align: left;
     }
+}
 
-    .xg-top i {
-        font-size: 20px;
-    }
+.xg-vlabel {
+    padding: 14px 0 0 0;
+    border: none;
+    text-align: left;
+}
 
+/* main form */
 .xg-leftmenu {
     margin-left: 0;
     padding: 0;
@@ -729,21 +774,22 @@ input[type=number] {
 }
 */
 
-/* menu item */
-.xg-leftmenu li {
-    /*text-indent: 0;*/
-    line-height: 42px;
-    border-bottom: solid 1px #E5E5E5;
-    /*color: #fff;*/
-}
+    /* menu item */
+    .xg-leftmenu li {
+        /*text-indent: 0;*/
+        line-height: 42px;
+        border-bottom: solid 1px #E5E5E5;
+        /*color: #fff;*/
+    }
 
-/* 文字 */
-.xg-leftmenu a {
-    display: block; /* 選取的有效寬度為100% */
-    font-size: 15px;
-    color: #555 !important;
+    /* 文字 */
+    .xg-leftmenu a {
+        display: block; /* 選取的有效寬度為100% */
+        font-size: 15px;
+        color: #555 !important;
+        text-decoration: none !important;
+    }
 
-}
     .xg-leftmenu a:hover {
         cursor: pointer;
         text-decoration: none; /* remove underline */
@@ -837,37 +883,51 @@ input[type=number] {
 }
 
 
-.xg-left {
-    text-align: left;
-}
-.xg-center {
-    text-align: center;
-}
-.xg-right {
-    text-align: right;
+.xg-page-menu {
+    float: left;
 }
 
-.xg-h10 {
-    height: 10px !important;
+.xg-page-btns .xg-has-menu {
+    justify-content: flex-end !important;
+}
+.xg-page-btns .xg-no-menu {
+    justify-content: center !important;
 }
 
-.xg-mt0 {
-    margin-top: 0 !important;
+@media (max-width:768px) {
+    .xg-page-menu {
+        display: none;
+    }
+
+    .xg-page-btns .xg-page-hasmenu {
+        justify-content: center !important;
+    }
 }
-.xg-mt5 {
-    margin-top: 5px !important;
+
+/* prog path, razor only support inline style */
+.xg-prog-path {
+    height: 38px;
+    padding: 8px 16px;
+    font-size: 16px;
+    color: gray;
 }
-.xg-mt10 {
-    margin-top: 10px !important;
+@media (max-width:768px) {
+    .xg-prog-path {
+        font-style: italic;
+    }
 }
-.xg-mb0 {
-    margin-bottom: 0 !important;
+
+.xg-prog {
+    margin: 5px 15px 10px 15px;
+    padding: 15px;
+    border: 1px solid #ddd !important;
+    border-radius: 4px;
 }
-.xg-mb5 {
-    margin-bottom: 5px !important;
-}
-.xg-mb10 {
-    margin-bottom: 10px !important;
+@media (max-width:768px) {
+    .xg-prog {
+        border: none !important;
+        padding: 0;
+    }
 }
 
 
@@ -877,64 +937,45 @@ input[type=number] {
     border-bottom: none;
 }
 
-
-/*
-  包含: 
-  1.xg-table
-  2.xg-table裡面的輸入元件
-  3.jQuery dataTables
-*/
+/* include: read, edit table */
 .xg-table {
+    border-collapse: separate !important;
     width: 100% !important;
     font-size: 15px;
-    /*table-layout: fixed;*/
+    border-width: 1px 0 0 1px !important;
+    border-color: lightgray !important;
+    border-style: solid !important;
 }
 
-    /*
-.xg-table td {
-    vertical-align: middle;
-    height: 32px;
-}
-*/
+    .xg-table th, .xg-table td {
+        font-weight: normal !important;
+        border-width: 0 1px 1px 0 !important;
+        border-color: lightgray !important;
+        border-style: solid !important;
+        vertical-align: middle !important;
+        text-align: center !important;
+        padding: 0.75rem; /* front web */
+    }
+
+    .xg-table th {
+        background: #eee;
+    }
 
     .xg-table tr:hover {
         background: #F6F6F6;
     }
 
-    /*.xg-table thead th {*/
-    .xg-table th {
-        background: #eee;
-        border-width: 0 1px 1px 0 !important;
-        /*
-    border-top: none !important;
-    border-bottom: none !important;
-    border-bottom-width: 1px !important;
-    border-left-width: 0;
-    */
-        vertical-align: middle !important;
-        /*padding-top: 3px;
-    padding-bottom: 3px;
-    height: 48px !important;*/
-        text-align: center !important;
+    .xg-table.xg-no-hline {
+        border-width: 1px 0 1px 1px !important;
     }
 
-        .xg-table th:last-child {
-            border-right-width: 0 !important;
+        .xg-table.xg-no-hline td {
+            border-width: 0 1px 0 0 !important;
         }
 
-    .xg-table tbody td {
-        vertical-align: middle !important;
-        /*padding-top: 3px;
-    padding-bottom: 3px;
-    height: 48px !important;*/
-        border-width: 0 1px 1px 0 !important;
-        /*border-bottom-width: 0;
-    border-left-width: 0;*/
-    }
-
-    .xg-table.xg-no-hline td {
-        border-top: none;
-        border-bottom: none;
+    .xg-table .xi-check > span {
+        top: -15px !important;
+        left: 8px !important;
     }
 
 /*
@@ -948,19 +989,17 @@ input[type=number] {
 */
 
 /* table v scroll */
+.xg-table-vscroll {
+    border-width: 1px 0 1px 1px !important;
+}
+
 .xg-table-vscroll tbody {
-  display:block;
-  overflow-y:scroll;
+    display: block;
+    overflow-y: scroll;
 }
 
 .xg-table-vscroll tr {
   display:flex;
-}
-
-/* TODO: ?? */
-.xg-table .xi-check > span {
-    top: -10px !important;
-    left: 8px !important;
 }
 
 tr input {
@@ -970,6 +1009,69 @@ tr input {
 tr select {
     padding-left: 3px !important;
     padding-right: 3px !important;
+}
+
+@media (max-width:768px) {
+    .xg-table {
+        background: #fff;
+        overflow: hidden;
+        border: none;
+    }
+
+        /*
+        .xg-table tr:nth-of-type(2n) {
+            background: #eee;
+        }
+        .xg-table th, .xg-table td {
+            margin: 0.5em 1em;
+        }
+
+    .xg-table {
+        min-width: 100%;
+    }
+        */
+
+    .xg-table tbody {
+        padding-top: 3px;
+    }
+
+        .xg-table th {
+            display: none;
+        }
+
+        .xg-table td {
+            text-align: left;
+            display: block;
+            border: none !important;
+        }
+
+            .xg-table td:first-child {
+                padding-top: 15px;
+                border-top: 1px solid lightgray !important;
+            }
+            .xg-table td:last-child {
+                padding-bottom: 15px;
+            }
+
+            .xg-table td:before {
+                content: attr(data-rwd-th);
+                font-weight: bold;
+                /*width: 6.5em;*/
+                display: inline-block;
+                color: darkblue;
+                text-align: left;
+            }
+
+        /*
+        .xg-table th, .xg-table td {
+            text-align: left;
+        }
+
+            .xg-table th, .xg-table td:before {
+                color: #D20B2A;
+                font-weight: bold;
+            }
+        */
 }
 
 /* bootstrap alert */
@@ -1050,35 +1152,6 @@ body.xg-show-wait .xg-wait {
     padding: 3px 0 3px 0;
 }
 
-@charset "utf-8";
-
-body {
-    /*padding-top: 50px;*/
-    padding-bottom: 20px;
-    font-size: 14px !important;
-}
-
-body, label {
-    color: #424243;
-    font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
-}
-
-/* space in button & icon */
-.btn > i {
-    padding-left: 3px;
-}
-
-/* icomoon spinner */
-@keyframes anim-rotate {
-    0% { transform: rotate(0); }
-    100% { transform: rotate(360deg); }
-}
-.spinner {
-    vertical-align: middle;
-    display: inline-block;
-    font-size: 2em;
-    animation: anim-rotate 2s infinite steps(12);
-}
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
@@ -1094,6 +1167,7 @@ body, label {
 /* table button with link style */
 .btn-link {
     padding: 0 !important;
+    text-decoration: none !important;
 }
 
 .table-condensed {
@@ -1137,9 +1211,20 @@ textarea.form-control {
     color: lightgrey !important;
 }
 
+/* fix bootstrap 5 */
+.table > :not(:first-child) {
+    border-top: none !important;
+}
+
+.input-group > .form-control,
+.input-group > .form-select {
+    width: 100% !important;    
+}
+
+
 /* 筆數起迄&合計 */
 .dataTables_info {
-    padding-top: 6px !important;
+    padding-top: 4px !important;
 }
 
 .dataTables_wrapper {
@@ -1288,6 +1373,35 @@ table.dataTable thead .sorting_desc_disabled:after {
         right: 5px;
     }
 
+@charset "utf-8";
+
+body {
+    /*padding-top: 50px;*/
+    padding-bottom: 20px;
+    font-size: 14px !important;
+}
+
+body, label {
+    color: #424243;
+    font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
+}
+
+/* space in button & icon */
+.btn > i {
+    padding-left: 3px;
+}
+
+/* icomoon spinner */
+@keyframes anim-rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+}
+.spinner {
+    vertical-align: middle;
+    display: inline-block;
+    font-size: 2em;
+    animation: anim-rotate 2s infinite steps(12);
+}
 .note-toolbar {
     background: #eee !important;
 }
@@ -1295,7 +1409,6 @@ table.dataTable thead .sorting_desc_disabled:after {
 .note-editable[contenteditable=false] {
     background: #eee !important;
 }
-
 
 /* prog path, razor 只支援 inline style */
 .xp-prog-path {
@@ -1447,10 +1560,11 @@ table.dataTable thead .sorting_desc_disabled:after {
 
 
 /*=== 暫解 ===*/
+/*
 .dataTables_info {
-    /*padding-top: 2px !important;*/
+    padding-top: 2px !important;
 }
-
+*/
 
 .xp-datatable {
 

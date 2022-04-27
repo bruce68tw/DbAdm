@@ -16,6 +16,10 @@ var _ibase = {
     getF: function (ft, box) {
         return this.getO(_obj.getF(ft, box));
     },
+    //get value by id
+    getD: function (id, box) {
+        return this.getO(_obj.getD(id, box));
+    },
     //get value by object
     getO: function (obj) {
         return obj.val();

@@ -1,20 +1,4 @@
 ﻿/* main form */
-
-.xg-top {
-    color: #EAFFFF;
-    background: #28C2FE;
-    height: 45px;
-    border-bottom: 1px solid #CCC;
-}
-
-    .xg-top li {
-        margin: auto 5px;
-    }
-
-    .xg-top i {
-        font-size: 20px;
-    }
-
 .xg-leftmenu {
     margin-left: 0;
     padding: 0;
@@ -41,21 +25,22 @@
 }
 */
 
-/* menu item */
-.xg-leftmenu li {
-    /*text-indent: 0;*/
-    line-height: 42px;
-    border-bottom: solid 1px #E5E5E5;
-    /*color: #fff;*/
-}
+    /* menu item */
+    .xg-leftmenu li {
+        /*text-indent: 0;*/
+        line-height: 42px;
+        border-bottom: solid 1px #E5E5E5;
+        /*color: #fff;*/
+    }
 
-/* 文字 */
-.xg-leftmenu a {
-    display: block; /* 選取的有效寬度為100% */
-    font-size: 15px;
-    color: #555 !important;
+    /* 文字 */
+    .xg-leftmenu a {
+        display: block; /* 選取的有效寬度為100% */
+        font-size: 15px;
+        color: #555 !important;
+        text-decoration: none !important;
+    }
 
-}
     .xg-leftmenu a:hover {
         cursor: pointer;
         text-decoration: none; /* remove underline */

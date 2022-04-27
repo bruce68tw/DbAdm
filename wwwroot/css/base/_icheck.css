@@ -40,7 +40,7 @@
 
     /* for datatable checkbox, no label */
     .xi-check.xg-no-label > span {
-        top: 0 !important;
+        top: -6px !important;
         left: 0 !important;
     }
 
