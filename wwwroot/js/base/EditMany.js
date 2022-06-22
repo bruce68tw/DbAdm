@@ -102,8 +102,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      */
     this.loadJson = function (json) {
         if (this.hasEform) {
-            var rows = (json == null || json[_crud.Rows] == null)
-                ? null : json[_crud.Rows];
+            var rows = (json == null || json[_crudE.Rows] == null)
+                ? null : json[_crudE.Rows];
             this.loadRows(this.rowsBox, rows);
         } else {
             //raise error if no function
@@ -122,7 +122,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         objs.data('key', '');
 
         //check
-        var rows = _crud.getJsonRows(json);
+        var rows = _crudE.getJsonRows(json);
         if (rows == null)
             return;
 
@@ -170,8 +170,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         });
 
         if (rows.length > 0)
-            json[_crud.Rows] = rows;
-        json[_crud.Deletes] = this.getDeletedStr();
+            json[_crudE.Rows] = rows;
+        json[_crudE.Deletes] = this.getDeletedStr();
         return json;
     },
 
@@ -321,8 +321,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     this.getUpdJson = function (upKey, rowsBox) {
         rowsBox = this.getRowsBox(rowsBox);
         var json = {};
-        json[_crud.Rows] = this.getUpdRows(upKey, rowsBox);
-        json[_crud.Deletes] = this.getDeletedStr();
+        json[_crudE.Rows] = this.getUpdRows(upKey, rowsBox);
+        json[_crudE.Deletes] = this.getDeletedStr();
         return json;
     };
 
@@ -628,7 +628,6 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         return tbody.find('tr').eq(rowNo).find('[data-id=' + dataId + ']');
     };
 
-    //?? -> _crud.js
     //keys is two dimension
     this.keysToStr = function (keys) {
         var strs = [];

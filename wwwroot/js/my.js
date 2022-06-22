@@ -438,21 +438,507 @@ var _chart = {
 
 }; //class
 /**
- * crud function
+ * crud edit function
  */
-var _crud = {
+var _crudE = {
 
-    //constant
+    //constant with underline
     Rows: '_rows',
     Childs: '_childs',
     Deletes: '_deletes',
+
+    /**
+     * initial crud edit
+     * param1 edits {object Array} for edit form
+     *   1.null: means one table, get eform
+     *   2.many edit object, if ary0 is null, then call new EditOne()
+     * param2 updName {string} update name, default to _BR.Update
+     */
+    init: function(edits) {
+        _me.divEdit = $('#divEdit');
+        _me.hasEdit = (_me.divEdit.length > 0);
+        if (_me.hasEdit) {
+            var Childs = _crudE.Childs;  //constant
+            var edit0 = null;  //master edit object
+            if (edits == null) {
+                edit0 = new EditOne();
+                //_me.hasChild = false;
+            } else {
+                edit0 = (edits[0] === null) ? new EditOne() : edits[0];
+                //_me.hasChild = edits.length > 1;
+                if (edits.length > 1) {
+                    edit0[Childs] = [];
+                    //var childs = _me.edits._childs;
+                    for (var i = 1; i < edits.length; i++)
+                        edit0[Childs][i - 1] = edits[i];
+                }
+            }
+
+            _me.edit0 = edit0;
+            _me.hasChild = (_fun.hasValue(_me.edit0[Childs]) && _me.edit0[Childs].length > 0);
+            //_me.editLen = _me.edits.length;
+            _crudE._initForm(_me.edit0);
+        }
+
+        _me._nowFun = '';    //now fun of edit0 form
+        //_me.updName = updName;
+
+        //for xgOpenModal
+        _me.modal = null;
+
+        //3.initial forms(recursive)
+        //_prog.init();   //prog path
+    },
+
+    /**
+     * initial edit forms(recursive)
+     * param edit {object} EditOne/EditMany object
+     */
+    _initForm: function(edit) {
+        if (edit.eform == null)
+            return;
+
+        _idate.init(edit.eform);  //init all date inputs
+        edit.validator = _valid.init(edit.eform);   //set valid variables for _ihtml.js !!
+        var childLen = _crudE._getEditChildLen(edit);
+        for (var i = 0; i < childLen; i++)
+            _crudE._initForm(_crudE._getEditChild(edit, i));
+    },
+
+    //get master edit form
+    getEform0: function() {
+        return _me.edit0.eform;
+    },
+
+    /*
+    _getJsonAndSetMode: function(key, fun) {
+        //_crud.toUpdateMode(key);
+        var act = (fun == _fun.FunU) ? 'GetUpdJson' :
+            (fun == _fun.FunV) ? 'GetViewJson' : '';
+        _ajax.getJson(act, { key: key }, function(data) {
+            _crud.toEditMode(fun, data);
+        });
+    },
+     */
+
+    /**
+     * load row(include childs) into UI
+     */
+    _loadJson: function(json) {
+        //load master(single) row
+        var edit = _me.edit0;
+        edit.loadRow(json);
+
+        //load childs rows(只需載入第一層)
+        var childLen = _crudE._getEditChildLen(edit);
+        for (var i = 0; i < childLen; i++) {
+            var edit2 = _crudE._getEditChild(edit, i);
+            edit2.loadJson(_crudE._getChildJson(json, i));
+        }
+
+        //call fnAfterLoadJson() if existed
+        //if (_fun.hasValue(edit.fnAfterLoadJson))
+        //    edit.fnAfterLoadJson(json);
+    },
+
+    //call fnAfterOpenEdit() if existed
+    // _afterOpenEdit -> _afterOpen
+    _afterOpenEdit: function(fun, json) {
+        var edit = _me.edit0;
+        if (_fun.hasValue(edit.fnAfterOpenEdit))
+            edit.fnAfterOpenEdit(fun, json);
+    },
+
+    /**
+     * set all forms fields edit status
+     * param fun {string} C,U,V
+     */ 
+    _setEditStatus: function(fun) {
+        if (fun === _me._nowFun)
+            return;
+
+        /*
+        var isView = (fun == _fun.FunV);
+        var run = (isView && _me._nowFun != _fun.FunV) ? true :
+            (!isView && _me._nowFun == _fun.FunV) ? true :
+            false;
+        */
+        //set variables
+        _me._nowFun = fun;
+        //if (!run)
+        //    return;
+
+        var box = _me.divEdit;
+        var items = box.find('input, textarea, select, button');
+        if (fun == _fun.FunV) {
+            items.prop('disabled', true)
+            box.find('#btnToRead').prop('disabled', false);
+            _ihtml.setEdits(box, '', false);
+        } else if (fun == _fun.FunC) {
+            var dataEdit = '[data-edit=U]';
+            items.prop('disabled', false)
+            items.filter(dataEdit).prop('disabled', true)
+            _ihtml.setEdits(box, '', true);
+            _ihtml.setEdits(box, dataEdit, false);
+        } else if (fun == _fun.FunU) {
+            var dataEdit = '[data-edit=C]';
+            items.prop('disabled', false)
+            items.filter(dataEdit).prop('disabled', true)
+            _ihtml.setEdits(box, '', true);
+            _ihtml.setEdits(box, dataEdit, false);
+        }
+
+        //enable btnToRead for view fun
+        //if (isView)
+        //    box.find('#btnToRead').prop('disabled', false);
+    },
+
+    /**
+     * check has upload file or not
+     */
+    _hasFile: function() {
+        var edit = _me.edit0;
+        if (edit.hasFile)
+            return true;
+
+        var childLen = _crudE._getEditChildLen(edit);
+        for (var i = 0; i < childLen; i++) {
+            var edit2 = _crudE._getEditChild(edit, i);
+            if (edit2.hasFile)
+                return true;
+        }
+
+        //case of not found
+        return false;
+    },
+
+    /**
+     * get updated data for save create/update(has _rows, _childs, _deletes, _fileJson)
+     * param formData {FormData} for write uploaded files
+     * return {json} include fileJson if existed
+     */
+    _getUpdJson: function(formData) {
+        //load master(single) row
+        var edit0 = _me.edit0;
+        var row = edit0.getUpdRow();
+        var key = edit0.getKey();
+        //var isNew = edit0.isNewRow();
+
+        //file for master edit
+        var fileJson = {};
+        var levelStr = '0'; //string
+        if (edit0.hasFile)
+            fileJson = edit0.dataAddFiles(levelStr, formData); //upload files
+
+        //load child(multiple) rows
+        var hasChild = false;
+        var childs = [];
+        var childLen = _crudE._getEditChildLen(edit0);
+        for (var i = 0; i < childLen; i++) {
+            var edit2 = _crudE._getEditChild(edit0, i);
+
+            //file
+            if (edit2.hasFile) {
+                var fileJson2 = edit2.dataAddFiles(levelStr + i, formData, edit2.rowsBox); //upload files
+                _json.copy(fileJson2, fileJson);
+            }
+
+            var childJson = edit2.getUpdJsonByCrud(key);
+            if (childJson == null)
+                continue;
+
+            //has child rows
+            hasChild = true;
+            childs[i] = childJson;
+        }
+
+        var data = {};
+        var hasData = false;
+        if (row != null) {
+            hasData = true;
+            data[_crudE.Rows] = [row];
+        }
+        if (hasChild) {
+            hasData = true;
+            data[_crudE.Childs] = childs;
+        }
+        if (!_json.isEmpty(fileJson)) {
+            hasData = true;
+            data[_edit.FileJson] = fileJson;
+        }
+
+        if (!hasData)
+            return null;
+
+        //if (!isNew)
+        //    data.key = key;
+        _json.removeNull(data);
+        return data;
+    },
+
+    /**
+     * forms validate check, also check systemError
+     * return {bool}
+     */
+    validAll: function() {
+        //check system error
+        var edit = _me.edit0;
+        if (_str.notEmpty(edit.systemError)) {
+            _tool.msg(edit.systemError);
+            return false;
+        }
+
+        //validate
+        if (!edit.eform.valid())
+            return false;
+
+        //check child Edit
+        var childLen = _crudE._getEditChildLen(edit);
+        for (var i = 0; i < childLen; i++) {
+            //check system error
+            var edit2 = _crudE._getEditChild(edit, i);
+            if (_str.notEmpty(edit2.systemError)) {
+                _tool.msg(edit2.systemError);
+                return false;
+            }
+
+            //validate
+            if (!edit2.valid())
+                return false;
+        }
+
+        //case of ok
+        return true;
+    },
+
+    /**
+     * 改為私有, search _crud.afterSave !!
+     * after save
+     * data: ResultDto
+     */
+    _afterSave: function(data) {
+        //debugger;
+        //call fnAfterSave if need
+        if (_fun.hasValue(_me.edit0.fnAfterSave))
+            _me.edit0.fnAfterSave();
+
+        //save no rows
+        if (data.Value === '0') {
+            _tool.msg(_BR.SaveNone);
+            return;
+        }
+
+        //case of ok
+        _tool.alert(_BR.SaveOk + '(' + data.Value + ')');
+
+        if (_me.hasRead) {
+            _me.dt.reload();
+            _crudR.toReadMode();
+        }
+    },
+
+    /**
+     * reset form (recursive)
+     * param edit {EditOne}
+     */
+    _resetForm: function(edit) {
+        //reset this
+        edit.reset();
+
+        //reset childs
+        var childLen = _crudE._getEditChildLen(edit);
+        for (var i = 0; i < childLen; i++) {
+            var edit2 = _crudE._getEditChild(edit, i);
+            edit2.reset();
+        }
+    },
+
+    /**
+     * check current is create/update mode or not
+     */
+    _isEditMode: function() {
+        return (_me._nowFun !== _fun.FunV);
+    },
+
+    _updateOrView: function(fun, key) {
+        var act = (fun == _fun.FunU)
+            ? 'GetUpdJson' : 'GetViewJson';
+        _ajax.getJson(act, { key: key }, function(data) {
+            _crudE._loadJson(data);   //load first
+            _crudE._setEditStatus(fun);
+            _crudE._afterOpenEdit(fun, data);
+        });
+
+    },
+
+
+    /**
+     * get edit child
+     * param edit {object} edit object
+     * param childIdx {int} child index, base 0
+     */
+    _getEditChild: function (edit, childIdx) {
+        return edit[_crudE.Childs][childIdx];
+    },
+
+    /**
+     * get edit child len
+     * param edit {object} edit object
+     */
+    _getEditChildLen: function (edit) {
+        var fid = _crudE.Childs;
+        return (edit[fid] == null) ? 0 : edit[fid].length;
+    },
+
+    //get json rows
+    getJsonRows: function (json) {
+        return (json == null || json[_crudE.Rows] == null)
+            ? null
+            : json[_crudE.Rows];
+    },
+
+    //get child json
+    _getChildJson: function (upJson, childIdx) {
+        var childs = _crudE.Childs;
+        return (upJson[childs] == null || upJson[childs].length <= childIdx)
+            ? null
+            : upJson[childs][childIdx];
+    },
+
+    //get child json rows
+    getChildRows: function (upJson, childIdx) {
+        var child = _crudE._getChildJson(upJson, childIdx);
+        return _crudE.getJsonRows(child);
+    },
+
+    /**
+     * set child rows
+     * param upRow {json}
+     * param childIdx {int}
+     * param rows {jsons}
+     * return {json} child object
+     */
+    setChildRows: function (upRow, childIdx, rows) {
+        var fid = _crudE.Childs;
+        if (upRow == null)
+            upRow = {};
+        if (upRow[fid] == null)
+            upRow[fid] = [];
+        if (upRow[fid].length <= childIdx)
+            upRow[fid][childIdx] = {};
+
+        var child = upRow[fid][childIdx];
+        child[_crudE.Rows] = rows;
+        return child;
+    },
+
+    //=== event start ===
+    /**
+     * onclick Create button
+     */
+    onCreate: function() {
+        var fun = _fun.FunC;
+        _crudE._setEditStatus(fun);
+        _crudE._resetForm(_me.edit0);
+        _crudE._afterOpenEdit(fun, null);
+    },
+
+    /**
+     * onclick Update button
+     * param key {string} row key
+     */
+    onUpdate: function(key) {
+        _crudE._updateOrView(_fun.FunU, key);
+    },
+
+    onView: function(key) {
+        _crudE._updateOrView(_fun.FunV, key);
+    },
+
+    /**
+     * table onclick openModal button(link)
+     * param btn {button} 
+     * param title {string} modal title
+     * param fid {string} input field name
+     * param required {bool}
+     * param maxLen {int} 
+     */
+    onOpenModal: function(btn, title, fid, required, maxLen) {
+        var tr = $(btn).closest('tr');
+        _tool.showArea(title, _itext.get(fid, tr), _crudE._isEditMode(), function(result) {
+            _itext.set(fid, result, tr);
+        });
+    },
+
+    /**
+     * on click save, when upload file, server side file variable is t(n)_FieldName
+     * below variables are sent to backend
+     *   key, row(包含_childs, _deletes, _fileNo), files
+     */
+    onSave: function() {
+        //validate all input & system error(will show error msg)
+        if (!_crudE.validAll()) {
+            _tool.alert(_BR.InputWrong);
+            return;
+        }
+
+        //call fnWhenSave if existed
+        var edit0 = _me.edit0;
+        if (_fun.hasValue(edit0.fnWhenSave)) {
+            var error = edit0.fnWhenSave();
+            if (_str.notEmpty(error)) {
+                _tool.msg(error);
+                return;
+            }
+        }
+
+        //get saving row
+        var formData = new FormData();  //for upload files if need
+        var row = _crudE._getUpdJson(formData);
+        if (_json.isEmpty(row)) {
+            _tool.msg(_BR.SaveNone);
+            return;
+        }
+
+        //save rows, call backend Save action
+        var isNew = edit0.isNewRow();
+        var action = isNew ? 'Create' : 'Update';
+        var data = null;
+        if (_crudE._hasFile()) {
+            //has files
+            data = formData;
+            data.append('json', _json.toStr(row));
+            if (!isNew)
+                data.append('key', edit0.getKey());
+
+            _ajax.getJsonByFormData(action, data, function(result) {
+                _crudE._afterSave(result);
+            });
+        } else {
+            //no files
+            data = { json: _json.toStr(row) };
+            if (!isNew)
+                data.key = edit0.getKey();
+
+            _ajax.getJson(action, data, function(result) {
+                _crudE._afterSave(result);
+            });
+        }
+    },
+    //=== event end ===
+
+};//class
+/**
+ * crud read function
+ * main for admin Web system
+ */
+var _crudR = {
 
     /**
      * save middle variables
      */
     temp: {},
 
-    //=== jQuery datatables(dt) start ===
     /**
      * default datatable layout
      * toolbar layout:l(length),f(filter),r(processing),t(table),i(info),p(page)
@@ -461,7 +947,7 @@ var _crud = {
 
     /**
      * default datatable column define
-     */ 
+     */
     dtColDef: {
         className: 'xg-center',
         orderable: false,
@@ -475,7 +961,6 @@ var _crud = {
      * //param fid {string} [_icheck.Check0Id] data-fid value
      */
     dtCheck0: function (value, editable) {
-        //debugger;
         if (_str.isEmpty(value))
             value = 1;
 
@@ -513,8 +998,8 @@ var _crud = {
     /**
      * set status column(checkbox)
      * param value {string} checkbox value, will translate to bool
-     * param fnOnClick {string} onclick function, default to _crud.onSetStatus
-     */ 
+     * param fnOnClick {string} onclick function, default to _crudR.onSetStatus
+     */
     dtSetStatus: function (key, value, fnOnClick) {
         //TODO: pending
         return '';
@@ -522,7 +1007,7 @@ var _crud = {
         //debugger;
         var checked = _str.toBool(value);
         if (_str.isEmpty(fnOnClick)) {
-            fnOnClick = _str.format("_crud.onSetStatus(this,\'{0}\')", key);
+            fnOnClick = _str.format("_crudR.onSetStatus(this,\'{0}\')", key);
         }
         //??
         return _icheck.render2(0, '', 1, checked, '', true, '', "onclick=" + fnOnClick);
@@ -551,17 +1036,16 @@ var _crud = {
         fnOnUpdate, fnOnDelete, fnOnView) {
         var funs = '';
         if (hasUpdate)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_crud.onUpdate' : fnOnUpdate), key, _BR.TipUpdate);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_crudR.onUpdate' : fnOnUpdate), key, _BR.TipUpdate);
         if (hasDelete)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="_crud.onDelete(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_crud.onDelete' : fnOnDelete), key, rowName, _BR.TipDelete);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="_crudR.onDelete(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_crudR.onDelete' : fnOnDelete), key, rowName, _BR.TipDelete);
         if (hasView)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="_crud.onView(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_crud.onView' : fnOnView), key, _BR.TipView);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="_crudR.onView(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_crudR.onView' : fnOnView), key, _BR.TipView);
         return funs;
     },
-    //=== jQuery datatables end ===    
 
     /**
-     * initial CRUD
+     * initial crud read & edit
      * param1 dtConfig {Object} datatables config
      * param2 edits {object Array} for edit form
      *   1.null: means one table, get eform
@@ -569,33 +1053,8 @@ var _crud = {
      * param3 updName {string} update name, default to _BR.Update
      */
     init: function (dtConfig, edits, updName) {
-        //_crud.initEdit(edits);
-        _me.divEdit = $('#divEdit');
-        _me.hasEdit = (_me.divEdit.length > 0);
-        if (_me.hasEdit) {
-            var Childs = _crud.Childs;  //constant
-            var edit0 = null;  //master edit object
-            if (edits == null) {
-                edit0 = new EditOne();
-                //_me.hasChild = false;
-            } else {
-                edit0 = (edits[0] === null) ? new EditOne() : edits[0];
-                //_me.hasChild = edits.length > 1;
-                if (edits.length > 1) {
-                    edit0[Childs] = [];
-                    //var childs = _me.edits._childs;
-                    for (var i = 1; i < edits.length; i++)
-                        edit0[Childs][i - 1] = edits[i];
-                }
-            }
 
-            _me.edit0 = edit0;
-            _me.hasChild = (_fun.hasValue(_me.edit0[Childs]) && _me.edit0[Childs].length > 0);
-            //_me.editLen = _me.edits.length;
-            _crud.initForm(_me.edit0);
-        }
-
-        //#region 2.set instance variables
+        //1.set instance variables
         _me.divRead = $('#divRead');
         _me.hasRead = (_me.divRead.length > 0);
         if (_me.hasRead) {
@@ -614,43 +1073,19 @@ var _crud = {
             _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig);
         }
 
-        _me.nowFun = '';    //now fun of edit0 form
-        _me.updName = updName;
+        _me._updName = updName;
 
-        //for xgOpenModal
-        _me.modal = null;
-        //#endregion
+        //2.init edit
+        _crudE.init(edits);
 
         //3.initial forms(recursive)
         _prog.init();   //prog path
     },
 
     /**
-     * initial forms(recursive)
-     * param edit {object} EditOne/EditMany object
-     */
-    initForm: function (edit) {
-        if (edit.eform == null)
-            return;
-
-        _idate.init(edit.eform);  //init all date inputs
-        edit.validator = _valid.init(edit.eform);   //set valid variables for _ihtml.js !!
-        var childLen = _crud.getEditChildLen(edit);
-        for (var i = 0; i < childLen; i++)
-            _crud.initForm(_crud.getEditChild(edit, i));
-    },
-
-    /**
-     * get master edit form
-     */
-    getEform0: function () {
-        return _me.edit0.eform;
-    },
-
-    /**
      * get Find condition
      */
-    getFindCond: function () {
+    _getFindCond: function () {
         var row = _form.toJson(_me.rform);
         var find2 = _me.rform2;
         if (find2 !== null && _obj.isShow(find2))
@@ -661,8 +1096,8 @@ var _crud = {
     /**
      * change newDiv to active
      * param toRead {bool} show divRead or not
-     * param nowDiv {object} (optional) now div to show
-     */ 
+     * param nowDiv {object} (default _me.divEdit) now div to show
+     */
     swap: function (toRead, nowDiv) {
         if (!_me.hasRead || !_me.hasEdit)
             return;
@@ -686,15 +1121,43 @@ var _crud = {
         }
 
         if (isDefault)
-            _crud._afterSwap(toRead);
+            _crudR._afterSwap(toRead);
     },
+
+    //XpFlowSign Read.cshtml 待處理!!
+    //to edit(U/V) mode
+    //toEditMode: function(fun, data) {
+    toEditMode: function (fun) {
+        _crudR.swap(false);  //call first
+        _prog.setPath(fun, _me._updName);
+    },
+
+    /**
+     * back to list form
+     */
+    toReadMode: function () {
+        //_me.divReadTool.show();
+        _prog.resetPath();
+        _crudR.swap(true);
+    },
+
+    /**
+     * call fnAfterSwap if existed
+     * param toRead {bool} to read mode or not
+     */
+    _afterSwap: function (toRead) {
+        var edit = _me.edit0;
+        if (_fun.hasValue(edit.fnAfterSwap))
+            edit.fnAfterSwap(toRead);
+    },
+
 
     //=== event start ===
     /**
      * onclick find rows
      */
     onFind: function () {
-        var cond = _crud.getFindCond();
+        var cond = _crudR._getFindCond();
         _me.dt.find(cond);
     },
 
@@ -702,7 +1165,6 @@ var _crud = {
      * onclick find2 button for show/hide find2 form
      */
     onFind2: function () {
-        //$('.xg-find-form').slideToggle();
         var find2 = _me.rform2;
         if (find2 == null)
             return;
@@ -710,7 +1172,6 @@ var _crud = {
             _form.hideShow([find2]);
         else
             _form.hideShow(null, [find2]);
-
     },
 
     /**
@@ -726,7 +1187,7 @@ var _crud = {
      * onClick export excel button
      */
     onExport: function () {
-        var find = _crud.getFindCond();
+        var find = _crudR._getFindCond();
         window.location = 'Export?find=' + _json.toStr(find);
     },
 
@@ -734,19 +1195,18 @@ var _crud = {
      * onclick toRead button
      */
     onToRead: function () {
-        _crud.toReadMode();
+        _crudR.toReadMode();
     },
 
     /**
      * onclick Create button
      */
     onCreate: function () {
-        var fun = _fun.FunC;
-        _crud.swap(false);  //call first
-        _prog.setPath(fun);
-        _crud.setEditStatus(fun);
-        _crud.resetForm(_me.edit0);
-        _crud._afterOpenEdit(fun, null);
+        //var fun = _fun.FunC;
+        //_crudR.swap(false);  //call first
+        //_prog.setPath(fun);
+        _crudE.onCreate();
+        _crudR.toEditMode(_fun.FunC);
     },
 
     /**
@@ -754,7 +1214,9 @@ var _crud = {
      * param key {string} row key
      */
     onUpdate: function (key) {
-        _crud._getJsonAndSetMode(key, _fun.FunU);
+        //_crudE._getJsonAndSetMode(key, _fun.FunU);
+        _crudE.onUpdate(key);
+        _crudR.toEditMode(_fun.FunU);
     },
 
     /**
@@ -762,79 +1224,14 @@ var _crud = {
      * param key {string} row key
      */
     onView: function (key) {
-        _crud._getJsonAndSetMode(key, _fun.FunV);
-    },
-
-    _getJsonAndSetMode: function (key, fun) {
-        /*
-        if (_str.isEmpty(key)) {
-            _log.error('error: key is empty !');
-            return;
-        }
-        */
-
-        //_crud.toUpdateMode(key);
-        var act = (fun == _fun.FunU) ? 'GetUpdJson' : 
-            (fun == _fun.FunV) ? 'GetViewJson' : '';
-        _ajax.getJson(act, { key: key }, function (data) {
-            _crud.toEditMode(fun, data);
-        });
-    },
-
-    //to edit(U/V) mode
-    toEditMode: function (fun, data) {
-        _crud.swap(false);  //call first
-        _prog.setPath(fun, _me.updName);
-        _crud.loadJson(data);   //load first
-        _crud.setEditStatus(fun);
-        _crud._afterOpenEdit(fun, data);
-    },
-
-    //set edit form status
-    //fun: C,U,V
-    setEditStatus: function (fun) {
-        if (fun === _me.nowFun)
-            return;
-
-        /*
-        var isView = (fun == _fun.FunV);
-        var run = (isView && _me.nowFun != _fun.FunV) ? true :
-            (!isView && _me.nowFun == _fun.FunV) ? true :
-            false;
-        */
-        //set variables
-        _me.nowFun = fun;
-        //if (!run)
-        //    return;
-
-        var box = _me.divEdit;
-        var items = box.find('input, textarea, select, button');
-        if (fun == _fun.FunV) {
-            items.prop('disabled', true)
-            box.find('#btnToRead').prop('disabled', false);
-            _ihtml.setEdits(box, '', false);
-        } else if (fun == _fun.FunC) {
-            var dataEdit = '[data-edit=U]';
-            items.prop('disabled', false)
-            items.filter(dataEdit).prop('disabled', true)
-            _ihtml.setEdits(box, '', true);
-            _ihtml.setEdits(box, dataEdit, false);
-        } else if (fun == _fun.FunU) {
-            var dataEdit = '[data-edit=C]';
-            items.prop('disabled', false)
-            items.filter(dataEdit).prop('disabled', true)
-            _ihtml.setEdits(box, '', true);
-            _ihtml.setEdits(box, dataEdit, false);
-        }
-
-        //enable btnToRead for view fun
-        //if (isView)
-        //    box.find('#btnToRead').prop('disabled', false);
+        //_crudE._getJsonAndSetMode(key, _fun.FunV);
+        _crudE.onView(key);
+        _crudR.toEditMode(_fun.FunV);
     },
 
     /**
      * click setStatus, 固定呼叫後端 SetStatus action
-     * me {string} checkbox element
+     * me {element} checkbox element
      * key {string} row key
      */
     onSetStatus: function (me, key) {
@@ -842,399 +1239,6 @@ var _crud = {
         _ajax.getStr('SetStatus', { key: key, status: status }, function (msg) {
             _tool.alert(_BR.UpdateOk);
         });
-    },
-
-    /**
-     * load row(include childs) into UI
-     */
-    loadJson: function (json) {
-        //load master(single) row
-        var edit = _me.edit0;
-        edit.loadRow(json);
-
-        //load childs rows(只需載入第一層)
-        var childLen = _crud.getEditChildLen(edit);
-        for (var i = 0; i < childLen; i++) {
-            var edit2 = _crud.getEditChild(edit, i);
-            //_crud.loadChildJson(edit2, _crud.getChildJsonByUp(rowJson, i));
-            edit2.loadJson(_crud.getChildJson(json, i));
-        }
-
-        //call fnAfterLoadJson() if existed
-        //if (_fun.hasValue(edit.fnAfterLoadJson))
-        //    edit.fnAfterLoadJson(json);
-    },
-
-    //call fnAfterOpenEdit() if existed
-    _afterOpenEdit: function (fun, json) {
-        var edit = _me.edit0;
-        if (_fun.hasValue(edit.fnAfterOpenEdit))
-            edit.fnAfterOpenEdit(fun, json);
-    },
-
-    /**
-     * load childs rows into UI(recursive)
-     * will call fnLoadJson()
-     */
-    /*
-    loadChild: function (edit, rows) {
-        //check rows
-        //var rows = _crud.getJsonRows(rowJson);  //??
-        if (rows == null)
-            return;
-
-        //load this
-        edit.loadRows(rows);
-
-        //load childs
-        var childLen = _crud.getEditChildLen(edit);
-        for (var i = 0; i < childLen; i++) {
-            var edit2 = _crud.getEditChild(edit, i);
-            _crud.loadChild(edit2, _crud.getChildJsonByUp(rowJson, i));
-        }
-    },
-    */
-
-    /**
-     * check has upload file or not
-     */
-    hasFile: function () {
-        var edit = _me.edit0;
-        if (edit.hasFile)
-            return true;
-
-        var childLen = _crud.getEditChildLen(edit);
-        for (var i = 0; i < childLen; i++) {
-            var edit2 = _crud.getEditChild(edit, i);
-            if (edit2.hasFile)
-                return true;
-        }
-
-        //case of not found
-        return false;
-    },
-
-    /**
-     * get updated data for save create/update(has _rows, _childs, _deletes, _fileJson)
-     * param formData {FormData} for write uploaded files
-     * return {json} include fileJson if existed
-     */ 
-    getUpdJson: function (formData) {
-        //load master(single) row
-        var edit0 = _me.edit0;
-        var row = edit0.getUpdRow();
-        var key = edit0.getKey();
-        //var isNew = edit0.isNewRow();
-
-        //file for master edit
-        var fileJson = {};
-        var levelStr = '0'; //string
-        if (edit0.hasFile)
-            fileJson = edit0.dataAddFiles(levelStr, formData); //upload files
-
-        //load child(multiple) rows
-        var hasChild = false;
-        var childs = [];
-        var childLen = _crud.getEditChildLen(edit0);
-        for (var i = 0; i < childLen; i++) {
-            var edit2 = _crud.getEditChild(edit0, i);
-
-            //file
-            if (edit2.hasFile) {
-                var fileJson2 = edit2.dataAddFiles(levelStr + i, formData, edit2.rowsBox); //upload files
-                _json.copy(fileJson2, fileJson);
-            }
-
-            var childJson = edit2.getUpdJsonByCrud(key);
-            if (childJson == null)
-                continue;
-
-            //has child rows
-            hasChild = true;
-            childs[i] = childJson; 
-        }
-
-        var data = {};
-        var hasData = false;
-        if (row != null) {
-            hasData = true;
-            data[_crud.Rows] = [row];
-        }
-        if (hasChild) {
-            hasData = true;
-            data[_crud.Childs] = childs;
-        }
-        if (!_json.isEmpty(fileJson)) {
-            hasData = true;
-            data[_edit.FileJson] = fileJson;
-        }
-
-        if (!hasData)
-            return null;
-
-        //if (!isNew)
-        //    data.key = key;
-        _json.removeNull(data);
-        return data;
-    },
-
-    /**
-     * get edit child len
-     * param edit {object} edit object
-     */ 
-    getEditChildLen: function (edit) {
-        var fid = _crud.Childs;
-        return (edit[fid] == null) ? 0 : edit[fid].length; 
-    },
-
-    /**
-     * get edit child
-     * param edit {object} edit object
-     * param childIdx {int} child index, base 0
-     */ 
-    getEditChild: function (edit, childIdx) {
-        return edit[_crud.Childs][childIdx];
-    },
-
-    //get json rows
-    getJsonRows: function (json) {
-        return (json == null || json[_crud.Rows] == null)
-            ? null
-            : json[_crud.Rows];
-    },
-
-    //get child json
-    getChildJson: function (upJson, childIdx) {
-        var childs = _crud.Childs;
-        return (upJson[childs] == null || upJson[childs].length <= childIdx)
-            ? null
-            : upJson[childs][childIdx];
-    },
-
-    //get child json rows
-    getChildRows: function (upJson, childIdx) {
-        var child = _crud.getChildJson(upJson, childIdx);
-        return _crud.getJsonRows(child);
-    },
-
-    /**
-     * set child rows
-     * param upRow {json}
-     * param childIdx {int}
-     * param rows {jsons}
-     * return {json} child object
-     */ 
-    setChildRows: function (upRow, childIdx, rows) {
-        var fid = _crud.Childs;
-        if (upRow == null)
-            upRow = {};
-        if (upRow[fid] == null)
-            upRow[fid] = [];
-        if (upRow[fid].length <= childIdx)
-            upRow[fid][childIdx] = {};
-        var child = upRow[fid][childIdx];
-        child[_crud.Rows] = rows;
-        return child;
-    },
-
-    /**
-     * forms validate check, also check systemError
-     * return {bool}
-     */ 
-    validAll: function () {
-        //check system error
-        var edit = _me.edit0;
-        if (_str.notEmpty(edit.systemError)) {
-            _tool.msg(edit.systemError);
-            return false;
-        }
-
-        //validate
-        if (!edit.eform.valid())
-            return false;
-
-        //check child Edit
-        var childLen = _crud.getEditChildLen(edit);
-        for (var i = 0; i < childLen; i++) {
-            //check system error
-            var edit2 = _crud.getEditChild(edit, i);
-            if (_str.notEmpty(edit2.systemError)) {
-                _tool.msg(edit2.systemError);
-                return false;
-            }
-
-            //validate
-            if (!edit2.valid())
-                return false;
-        }
-
-        //case of ok
-        return true;
-    },
-
-    /**
-     * (recursive) childs validate check
-     * return {bool}
-     */
-    /*
-    validChild: function (edit) {
-        //valid this
-        if (!edit.valid())
-            return false;
-
-        //valid childs
-        var childLen = _crud.getEditChildLen(edit);
-        for (var i = 0; i < childLen; i++) {
-            if (!_crud.validChild(_crud.getEditChild(edit, i)))
-                return false;
-        }
-
-        //case of ok
-        return true;
-    },
-    */
-
-    /**
-     * on click save, when upload file, server side file variable is t(n)_FieldName
-     * below variables are sent to backend:  
-     *   key, row(包含_childs, _deletes, _fileNo), files
-     */
-    onSave: function () {
-        //validate all input & system error(will show error msg)
-        if (!_crud.validAll()) {
-            _tool.alert(_BR.InputWrong);
-            return;
-        }
-
-        //call fnWhenSave if existed
-        var edit0 = _me.edit0;
-        if (_fun.hasValue(edit0.fnWhenSave)) {
-            var error = edit0.fnWhenSave();
-            if (_str.notEmpty(error)) {
-                _tool.msg(error);
-                return;
-            }
-        }
-
-        //get saving row
-        var formData = new FormData();  //for upload files if need
-        var row = _crud.getUpdJson(formData);
-        if (_json.isEmpty(row)) {
-            _tool.msg(_BR.SaveNone);
-            return;
-        }
-
-        //save rows, call backend Save action
-        var isNew = edit0.isNewRow();
-        var action = isNew ? 'Create' : 'Update';
-        var data = null;
-        if (_crud.hasFile()) {
-            //has files
-            data = formData;
-            data.append('json', _json.toStr(row));
-            if (!isNew)
-                data.append('key', edit0.getKey());
-
-            _ajax.getJsonByFormData(action, data, function (result) {
-                _crud.afterSave(result);
-            });
-        } else {
-            //no files
-            data = { json: _json.toStr(row) };
-            if (!isNew)
-                data.key = edit0.getKey();
-
-            _ajax.getJson(action, data, function (result) {
-                _crud.afterSave(result);
-            });
-        }
-    },
-
-    /* move to _json.removeNull()
-    //recursive remove null for json object
-    //level: for debug
-    _removeNull: function (level, obj) {
-        //debugger;
-        $.each(obj, function (key, value) {
-            if (value === null) {
-                //delete only null, empty is not !!
-                delete obj[key];
-            } else if (_json.isKeyValue(value)) {
-                _crud._removeNull(level+1, value);
-            } else if ($.isArray(value)) {
-                //check
-                var len = value.length;
-                if (len == 0) {
-                    delete obj[key];
-                    return; //continue
-                }
-
-                //case of string array
-                if (!_json.isKeyValue(value[0])) {
-                    var isEmpty = true;
-                    for (var i = 0; i < len; i++) {
-                        if (!_str.isEmpty(value[i])) {
-                            isEmpty = false;
-                            break;
-                        }
-                    }
-                    if (isEmpty)
-                        delete obj[key];
-                    return; //continue
-                }
-
-                //case of json array
-                $.each(value, function (k, v) {
-                    _crud._removeNull(level + 1, v);
-
-                    if (_json.isEmpty(v))
-                        v = null;
-                });
-
-                //check json and remove if need
-                var isEmpty = true;
-                //from end
-                for (var i=len - 1; i>=0; i--) {
-                    if (!_json.isEmpty(value[i])) {
-                        isEmpty = false;
-                    } else if (isEmpty) {
-                        //delete array element
-                        delete value[i];
-                    } else {
-                        value[i] = null;
-                    }
-                }
-                if (isEmpty)
-                    delete obj[key];
-            }
-        });
-    },
-    */
-
-    /**
-     * after save
-     * data: ResultDto
-     */
-    afterSave: function (data) {
-        //debugger;
-        //call fnAfterSave if need
-        if (_fun.hasValue(_me.edit0.fnAfterSave))
-            _me.edit0.fnAfterSave();
-
-        //save no rows
-        if (data.Value === '0') {
-            _tool.msg(_BR.SaveNone);
-            return;
-        }
-
-        //case of ok
-        //var start = _me.dt.dt.page.info().start;
-        _tool.alert(_BR.SaveOk + '(' + data.Value + ')');
-
-        if (_me.hasRead) {
-            _me.dt.reload();
-            _crud.toReadMode();
-        }
     },
 
     /**
@@ -1254,7 +1258,7 @@ var _crud = {
      * rowName {string} for confirm
      */
     onDelete: function (key, rowName) {
-        _crud.temp.data = { key: key };
+        //_temp.data = { key: key };
         _tool.ans(_BR.SureDeleteRow + ' (' + rowName + ')', function () {
             _ajax.getJson('Delete', { key: key }, function (msg) {
                 _tool.alert(_BR.DeleteOk);
@@ -1278,72 +1282,15 @@ var _crud = {
         }
 
         //刪除多筆資料, 後端固定呼叫 DeleteByKeys()
-        _crud.temp.data = { keys: keys };
+        //_temp.data = { keys: keys };
         _tool.ans(_BR.SureDeleteSelected, function () {
-            _ajax.getStr('DeleteByKeys', _crud.temp.data, function (msg) {
+            _ajax.getStr('DeleteByKeys', { keys: keys }, function (msg) {
                 _tool.alert(_BR.DeleteOk);
                 _me.dt.reload();
             });
         });
     },
-
-    /**
-     * table onclick openModal button(link)
-     * param btn {button} 
-     * param title {string} modal title
-     * param fid {string} input field name
-     * param required {bool}
-     * param maxLen {int} 
-     */ 
-    onOpenModal: function (btn, title, fid, required, maxLen) {
-        var tr = $(btn).closest('tr');
-        _tool.showArea(title, _itext.get(fid, tr), _crud.isEditMode(), function (result) {
-            _itext.set(fid, result, tr);
-        });
-    },
     //=== event end ===
-
-    /**
-     * reset form (recursive)
-     * param edit {EditOne}
-     */ 
-    resetForm: function (edit) {
-        //reset this
-        edit.reset();
-
-        //reset childs
-        var childLen = _crud.getEditChildLen(edit);
-        for (var i = 0; i < childLen; i++) {
-            var edit2 = _crud.getEditChild(edit, i);
-            edit2.reset();
-        }
-    },
-
-    /**
-     * back to list form
-     */
-    toReadMode: function () {
-        //_me.divReadTool.show();
-        _prog.resetPath();
-        _crud.swap(true);
-    },
-
-    /**
-     * call fnAfterSwap if existed
-     * param toRead {bool} to read mode or not
-     */
-    _afterSwap: function (toRead) {
-        var edit = _me.edit0;
-        if (_fun.hasValue(edit.fnAfterSwap))
-            edit.fnAfterSwap(toRead);
-    },
-
-    /**
-     * check current is fun view or not
-     */ 
-    isEditMode: function () {
-        return (_me.nowFun !== _fun.FunV);
-    },
 
 };//class
 /**
@@ -2033,7 +1980,6 @@ var _form = {
         })
     },
 
-    //move to _crud.js
     //keys is two dimension
     zz_keysToStr: function (keys) {
         var strs = [];
@@ -2635,7 +2581,7 @@ var _idate = $.extend({}, _ibase, {
     },
 
     /**
-     * initial, called by _crud.js
+     * initial, called by _crudE.js
      * param box {object}
      * param fid {string} optional
      */ 
@@ -4502,6 +4448,8 @@ var _table = {
     },
 
 }; //class
+//temp variables
+var _temp = {};
 
 //small public components
 var _tool = {
@@ -4929,7 +4877,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
             },
 
             //default toolbar layout
-            dom: _crud.dtDom,
+            dom: _crudR.dtDom,
 
             //call after dataTables initialize
             //1.add toolbar button list if need
@@ -5023,7 +4971,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
         if (dtConfig) {
             if (!_var.isEmpty(dtConfig.columnDefs)) {
                 var colDefs = dtConfig.columnDefs;
-                colDefs[colDefs.length] = _crud.dtColDef;   //add last array element
+                colDefs[colDefs.length] = _crudR.dtColDef;   //add last array element
             }
             config = _json.copy(dtConfig, config);
         }
@@ -5163,8 +5111,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      */
     this.loadJson = function (json) {
         if (this.hasEform) {
-            var rows = (json == null || json[_crud.Rows] == null)
-                ? null : json[_crud.Rows];
+            var rows = (json == null || json[_crudE.Rows] == null)
+                ? null : json[_crudE.Rows];
             this.loadRows(this.rowsBox, rows);
         } else {
             //raise error if no function
@@ -5183,7 +5131,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         objs.data('key', '');
 
         //check
-        var rows = _crud.getJsonRows(json);
+        var rows = _crudE.getJsonRows(json);
         if (rows == null)
             return;
 
@@ -5231,8 +5179,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         });
 
         if (rows.length > 0)
-            json[_crud.Rows] = rows;
-        json[_crud.Deletes] = this.getDeletedStr();
+            json[_crudE.Rows] = rows;
+        json[_crudE.Deletes] = this.getDeletedStr();
         return json;
     },
 
@@ -5382,8 +5330,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     this.getUpdJson = function (upKey, rowsBox) {
         rowsBox = this.getRowsBox(rowsBox);
         var json = {};
-        json[_crud.Rows] = this.getUpdRows(upKey, rowsBox);
-        json[_crud.Deletes] = this.getDeletedStr();
+        json[_crudE.Rows] = this.getUpdRows(upKey, rowsBox);
+        json[_crudE.Deletes] = this.getDeletedStr();
         return json;
     };
 
@@ -5689,7 +5637,6 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         return tbody.find('tr').eq(rowNo).find('[data-id=' + dataId + ']');
     };
 
-    //?? -> _crud.js
     //keys is two dimension
     this.keysToStr = function (keys) {
         var strs = [];
@@ -5704,16 +5651,16 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
 } //class
 /**
- * single edit form, called by _crud.js
+ * single edit form, called by _crudE.js
  * json row for both EditOne/EditMany has fields:
  *   _rows {json array}: updated rows include upload files
  *   _deletes {strings}: deleted key strings, seperate with ','
  *   _childs {json array}: child json array
  * 
- * custom function called by _crud.js
+ * custom function called by _crudE.js
  *   //void fnAfterLoadJson(json)
  *   void fnAfterOpenEdit(fun, json): called after open edit form
- *   void fnAfterSwap(readMode): called after _crud.swap()
+ *   void fnAfterSwap(readMode): called after _crudR.swap()
  *   error fnWhenSave()
  *   void fnAfterSave()
  *   
@@ -6155,7 +6102,7 @@ function Flow(boxId, mNode, mLine) {
         //box.find(this.NodeFilter).remove();
 
         //set nodes class
-        var rows = _crud.getJsonRows(json);
+        var rows = _crudE.getJsonRows(json);
         for (var i = 0; i < rows.length; i++)
             this._setNodeClass(rows[i]);
 
@@ -6188,7 +6135,7 @@ function Flow(boxId, mNode, mLine) {
         */
 
         //render jsplumb line
-        var rows = _crud.getJsonRows(json);
+        var rows = _crudE.getJsonRows(json);
         for (var i = 0; i < rows.length; i++)
             this._renderLine(rows[i]);
 
@@ -6900,13 +6847,13 @@ var _openUser = {
             ],
             //客製化欄位
             columnDefs: [
-                _crud.dtProp,
+                _crudR.dtProp,
                 { targets: [0], render: function (data, type, full, meta) {
                     //多選或單選
                     var value = _str.colsToStr(full.Id, full.Name, full.Account);
                     return ou.isRows
-                        ? _crud.dtCheck0(value)
-                        : _crud.dtRadio1(value);
+                        ? _crudR.dtCheck0(value)
+                        : _crudR.dtRadio1(value);
                 }},
             ],
         };

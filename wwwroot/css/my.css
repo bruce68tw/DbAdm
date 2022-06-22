@@ -475,16 +475,6 @@ path, .jtk-endpoint { cursor:pointer; }
     background-color: #DEF;
 }
 
-/* prog path, razor only support inline style */
-/*
-.xg-prog-path {
-    height: 38px;
-    padding: 8px 16px;
-    font-size: 16px;
-    color: gray;
-}
-*/
-
 /* form without line */
 .xg-form {
     /*font size same to .form-control*/
@@ -843,6 +833,102 @@ input[type=number] {
     color: #fff;*/
     padding-left: 22px;
 }
+/* main form */
+.xg-leftmenu {
+    margin-left: 0;
+    padding: 0;
+    /*min-width: 250px;
+    max-width: 300px;*/
+    width: 250px;
+    height: 100%;
+    /*font-size: 14px;*/
+    /*margin: 0;*/
+    background: #FFFFFF;
+    transition: 0.5s;
+    z-index: 1000;
+}
+
+.xg-leftmenu.xg-close {
+    transition: 0.5s;
+    margin-left: -250px;
+}
+/*
+.xg-leftmenu.xg-close span, 
+.xg-leftmenu.xg-close .xg-arrow {
+    display: none;
+    transition: 0.5s;
+}
+*/
+
+    /* menu item */
+    .xg-leftmenu li {
+        /*text-indent: 0;*/
+        line-height: 42px;
+        border-bottom: solid 1px #E5E5E5;
+        /*color: #fff;*/
+    }
+
+    /* 文字 */
+    .xg-leftmenu a {
+        display: block; /* 選取的有效寬度為100% */
+        font-size: 15px;
+        color: #555 !important;
+        text-decoration: none !important;
+    }
+
+    .xg-leftmenu a:hover {
+        cursor: pointer;
+        text-decoration: none; /* remove underline */
+        color: #EDD8E7 !important;
+        background: #333237;
+    }
+
+.xg-leftmenu a:hover i {
+    color: #EDD8E7;
+    background: #333237;
+}
+
+/* icon */
+.xg-leftmenu i {
+    margin-right: 10px;
+    padding-left: 12px;
+    /*color: #fff;*/
+    width: 25px;    /* 讓文字對齊 */
+}
+
+    .xg-leftmenu .xg-arrow:before {
+        float: right;
+        margin-right: 20px;
+        font-family: 'icomoon';
+        content: "\f107"; /* down arrow */
+    }
+.xg-leftmenu .xg-arrow.xg-open:before {
+    content: "\f106";   /* up arrow */
+}
+
+.xg-leftmenu-panel {
+    list-style: none;
+    /*
+    -moz-padding-start: 0;
+    -webkit-padding-start: 0;
+    -khtml-padding-start: 0;
+    -o-padding-start: 0;
+    padding-start: 0;
+    */
+    padding: 0;
+    background: #DAF8FF;
+}
+
+.xg-leftmenu-panel li {
+    border: none;
+}
+
+/* sub menu text */
+.xg-leftmenu-panel a {
+    /*font-size: 15px;
+    color: #fff;*/
+    padding-left: 22px;
+}
 
 /* program area */
 .xg-body {
@@ -904,13 +990,25 @@ input[type=number] {
     }
 }
 
-/* prog path, razor only support inline style */
+/* prog path, razor 只支援 inline style */
 .xg-prog-path {
-    height: 38px;
-    padding: 8px 16px;
-    font-size: 16px;
-    color: gray;
+    height: 43px;
+    /*border-bottom: 1px solid #E5E5E5;*/
 }
+
+    .xg-prog-path ul {
+        padding: 10px 0 10px 10px;
+        font-size: 15px;
+        color: #a5a5a5;
+        background: none;
+    }
+
+.xg-prog-title {
+    padding: 10px 0 10px 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
 @media (max-width:768px) {
     .xg-prog-path {
         font-style: italic;
@@ -923,6 +1021,7 @@ input[type=number] {
     border: 1px solid #ddd !important;
     border-radius: 4px;
 }
+
 @media (max-width:768px) {
     .xg-prog {
         border: none !important;
@@ -1402,190 +1501,16 @@ body, label {
     font-size: 2em;
     animation: anim-rotate 2s infinite steps(12);
 }
+
+/* font icon(icomoom) */
+[class^="ico-"], [class*=" ico-"] {
+    padding: 1px;
+}
+
 .note-toolbar {
     background: #eee !important;
 }
 
 .note-editable[contenteditable=false] {
     background: #eee !important;
-}
-
-/* prog path, razor 只支援 inline style */
-.xp-prog-path {
-    height: 43px;
-    /*border-bottom: 1px solid #E5E5E5;*/
-}
-.xp-prog-path ul {
-    padding: 10px 0 10px 10px;
-    font-size: 15px;
-    color: #a5a5a5;
-    background: none;
-}
-
-.xp-prog-title {
-    padding: 10px 0 10px 15px;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.xp-prog {
-    /*padding: 10px;
-    width: 100%;*/
-    /*border: 1px solid #ddd!important;
-    border-radius: 4px;
-    margin: 10px 15px 10px 15px;*/
-    margin: 5px 15px 10px 15px;
-    padding: 15px;
-    border: 1px solid #ddd!important;
-    border-radius: 4px;
-}
-
-.xp-toolbar {
-    /*padding: 0 2px 0 2px;*/
-    margin-bottom: 5px;
-}
-
-/* 以下移除 */
-/* 查詢畫面欄位label */
-.xp-find-label {
-    text-align: right;
-    padding-right: 10px;
-}
-
-.xp-find-form {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    /* border: 1px solid lightgray; */
-}
-/* 查詢畫面的查詢按鈕 */
-.xp-find-btn {
-    text-align: right;
-}
-.xp-find-btn button {
-    margin-right: 10px;
-}
-
-/* === 專案 class === */
-/* 查詢畫面輸入欄位外框 */
-
-/* CRUD form title */
-.xp-form-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-/* form group title */
-.xp-group-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: red;
-    margin-bottom: 10px;
-}
-
-.xp-group-item {
-    padding-left: 10px;
-}
-
-.xp-row-gap {
-    height: 15px;
-}
-
-/* red btn */
-.xp-btn-red {
-    color: white;
-    background-color: #DA1826;
-}
-.xp-btn-lightred {
-    color: white;
-    background-color: #E98B93 ;
-}
-/* blue btn */
-.xp-btn-blue {
-    color: white;
-    background-color: blue;
-}
-.xp-btn-lightblue {
-    color: white;
-    background-color: #B6D3EA;
-}
-/* green btn */
-.xp-btn-green {
-    color: white;
-    background-color: green;
-}
-/* purple btn */
-.xp-btn-purple {
-    color: white;
-    background-color: purple;
-}
-
-/* horizontal line */
-.xp-line {
-    border-color: darkgray;
-}
-
-/* datatable toolbar button */
-.xp-dt-btn {
-    margin-left: 10px;
-}
-
-/* here!! 修正日期欄位位置 */
-.xp-tmp-date-fix {
-    position: relative;
-    top: -12px;
-}
-
-/* horizontal line */
-/*
-.side-nav {
-    height: 100%;
-    width: 100%;
-    position:absolute;
-    transition: 0.5s;
-}
-.main-content {
-  -webkit-flex: 6;
-      -ms-flex: 6;
-          flex: 6;
-  position: relative;
-  padding: 15px 30px 15px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background: #F3F3F3;
-  width: 80%;
-  left: 200px;
-}
-*/
-
-
-/*=== 暫解 ===*/
-/*
-.dataTables_info {
-    padding-top: 2px !important;
-}
-*/
-
-.xp-datatable {
-
-}
-
-.xp-datatable thead tr th {
-    background: #eee;
-}
-    
-
-.dt-center {
-    text-align: center;
-}
-
-.xp-tr-btn {
-    margin: 1px;
-    padding: 2px 5px;
-    /*width: 60px;*/
-}
-
-/* font icon(icomoom) */
-[class^="ico-"], [class*=" ico-"] {
-    padding: 1px;
 }

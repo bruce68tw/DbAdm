@@ -14,16 +14,16 @@ var _me = {
             ],
             columnDefs: [
                 { targets: [5], render: function (data, type, full, meta) {
-                    return _crud.dtCrudFun(full.Id, full.Name, true, true, false);
+                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, false);
                 }},
                 { targets: [6], render: function (data, type, full, meta) {
-                    return _crud.dtStatusName(data);
+                    return _crudR.dtStatusName(data);
                 }},
             ],
         };
 
         //init crud
-        _crud.init(config); 
+        _crudR.init(config); 
     },
 
 }; //class

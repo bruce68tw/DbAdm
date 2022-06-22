@@ -1,14 +1,14 @@
 ﻿/**
- * single edit form, called by _crud.js
+ * single edit form, called by _crudE.js
  * json row for both EditOne/EditMany has fields:
  *   _rows {json array}: updated rows include upload files
  *   _deletes {strings}: deleted key strings, seperate with ','
  *   _childs {json array}: child json array
  * 
- * custom function called by _crud.js
+ * custom function called by _crudE.js
  *   //void fnAfterLoadJson(json)
  *   void fnAfterOpenEdit(fun, json): called after open edit form
- *   void fnAfterSwap(readMode): called after _crud.swap()
+ *   void fnAfterSwap(readMode): called after _crudR.swap()
  *   error fnWhenSave()
  *   void fnAfterSave()
  *   

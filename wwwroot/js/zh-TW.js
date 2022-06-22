@@ -51,6 +51,7 @@ var _BR = {
     //others
     Working: '作業處理中...',
     TimeOut: '待機時間過久，或未登入系統。',
+    Page: '每頁顯示 _Menu @@筆, 第 _Start 至 _End 筆, 總共 _Total 筆',
 
 };
 /**

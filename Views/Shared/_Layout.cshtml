@@ -23,6 +23,16 @@
     };
 }
 
+<style>
+	.xu-body {
+		display: inline-block;
+		width: 100%;
+		min-height: 600px;
+		transition: 0.5s;
+		border-left: 1px solid #CCC;
+	}
+</style>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -60,7 +70,7 @@
             _fun.locale = '@(locale)';
             //initial
             _leftmenu.init();
-            _pjax.init('.xg-body');
+            _pjax.init('.xu-body');
             _tool.init();
             moment.locale(_fun.locale);
         });
@@ -78,7 +88,7 @@
         @await Component.InvokeAsync("XgLeftMenu", new { rows = menus })
 
         <!-- work area -->
-        <div class="xg-body">
+        <div class="xu-body">
             @RenderBody()
         </div>
     </div>

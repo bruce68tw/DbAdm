@@ -25,16 +25,16 @@
                         return _str.format(html, full.Id, '@R["ImportDb"]', '@R["GenDocu"]', '@R["GenLogSql"]');
                     }},
                     { targets: [3], render: function (data, type, full, meta) {
-                        return _crud.dtCrudFun(full.Id, full.Name, true, true, false);
+                        return _crudR.dtCrudFun(full.Id, full.Name, true, true, false);
                     }},
                     { targets: [4], render: function (data, type, full, meta) {
-                        return _crud.dtStatusName(data);
+                        return _crudR.dtStatusName(data);
                     }},
                 ],
             };
 
             //initial
-            _crud.init(config);
+            _crudR.init(config);
         },
 
         //import excel into Db
@@ -65,7 +65,7 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new string[] { R["MenuProject"].Value })
-<div class="xp-prog">
+<div class="xg-prog">
     <!-- read form-->
     <div id="divRead">
         <div class='xg-btns-box'>

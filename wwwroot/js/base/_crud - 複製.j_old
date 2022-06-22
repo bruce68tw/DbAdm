@@ -187,7 +187,7 @@ var _crud = {
     },
 
     /**
-     * initial forms(recursive)
+     * initial edit forms(recursive)
      * param edit {object} EditOne/EditMany object
      */
     initForm: function (edit) {

@@ -304,7 +304,7 @@ function Flow(boxId, mNode, mLine) {
         //box.find(this.NodeFilter).remove();
 
         //set nodes class
-        var rows = _crud.getJsonRows(json);
+        var rows = _crudE.getJsonRows(json);
         for (var i = 0; i < rows.length; i++)
             this._setNodeClass(rows[i]);
 
@@ -337,7 +337,7 @@ function Flow(boxId, mNode, mLine) {
         */
 
         //render jsplumb line
-        var rows = _crud.getJsonRows(json);
+        var rows = _crudE.getJsonRows(json);
         for (var i = 0; i < rows.length; i++)
             this._renderLine(rows[i]);
 

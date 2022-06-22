@@ -242,7 +242,6 @@ var _form = {
         })
     },
 
-    //move to _crud.js
     //keys is two dimension
     zz_keysToStr: function (keys) {
         var strs = [];

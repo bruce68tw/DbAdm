@@ -37,13 +37,13 @@ var _openUser = {
             ],
             //客製化欄位
             columnDefs: [
-                _crud.dtProp,
+                _crudR.dtProp,
                 { targets: [0], render: function (data, type, full, meta) {
                     //多選或單選
                     var value = _str.colsToStr(full.Id, full.Name, full.Account);
                     return ou.isRows
-                        ? _crud.dtCheck0(value)
-                        : _crud.dtRadio1(value);
+                        ? _crudR.dtCheck0(value)
+                        : _crudR.dtRadio1(value);
                 }},
             ],
         };

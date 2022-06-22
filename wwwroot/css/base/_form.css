@@ -1,14 +1,4 @@
 ﻿
-/* prog path, razor only support inline style */
-/*
-.xg-prog-path {
-    height: 38px;
-    padding: 8px 16px;
-    font-size: 16px;
-    color: gray;
-}
-*/
-
 /* form without line */
 .xg-form {
     /*font size same to .form-control*/

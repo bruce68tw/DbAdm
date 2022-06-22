@@ -21,23 +21,23 @@
                 ],
                 columnDefs: [
                     { targets: [0], render: function (data, type, full, meta) {
-                        return _crud.dtCheck0(full.Id);
+                        return _crudR.dtCheck0(full.Id);
                     }},
                     { targets: [5], render: function (data, type, full, meta) {
-                        return _crud.dtYesEmpty(data);
+                        return _crudR.dtYesEmpty(data);
                     }},
                     { targets: [6], render: function (data, type, full, meta) {
-                        return _crud.dtCrudFun(full.Id, full.Name, true, true, false);
+                        return _crudR.dtCrudFun(full.Id, full.Name, true, true, false);
                     }},
                     { targets: [7], render: function (data, type, full, meta) {
-                        return _crud.dtStatusName(data);
+                        return _crudR.dtStatusName(data);
                     }},
                 ],
             };
 
             //init crud
             _me.mCol = new EditMany('Id', 'eformCol', 'tplCol', 'tr');
-            _crud.init(config, [null, _me.mCol]);
+            _crudR.init(config, [null, _me.mCol]);
         },
 
         //generate Word document
@@ -53,7 +53,7 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R["MenuTable"].Value } })
-<div class="xp-prog">
+<div class="xg-prog">
     <!-- read form-->
     <div id="divRead">
         <!-- condition -->

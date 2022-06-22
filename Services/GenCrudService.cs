@@ -498,26 +498,26 @@ namespace DbAdm.Services
                     //var ext = ritem.ExtInfo;
                     //align column
                     str = string.Format(@"{{ targets: [{0}], render: function (data, type, full, meta) {{
-                    return _crud.dtCrudFun(full.Id, full.Name, {1}, {2}, {3});
+                    return _crudR.dtCrudFun(full.Id, full.Name, {1}, {2}, {3});
                 }}}},", i, BoolToStr(crud.HasUpdate), BoolToStr(crud.HasDelete), BoolToStr(crud.HasView));
                     //", i, SubToBool(ext, 0), SubToBool(ext, 1), SubToBool(ext, 2));
                     break;
 
                 case RitemTypeEstr.YesEmpty:
                     str = string.Format(@"{{ targets: [{0}], render: function (data, type, full, meta) {{
-                    return _crud.dtYesEmpty(data);
+                    return _crudR.dtYesEmpty(data);
                 }}}},", i);
                     break;
 
                 case RitemTypeEstr.StatusName:
                     str = string.Format(@"{{ targets: [{0}], render: function (data, type, full, meta) {{
-                    return _crud.dtStatusName(data);
+                    return _crudR.dtStatusName(data);
                 }}}},", i);
                     break;
 
                 case RitemTypeEstr.SetStatus:
                     str = string.Format(@"{{ targets: [{0}], render: function (data, type, full, meta) {{
-                    return _crud.dtSetStatus(full.Id, data);
+                    return _crudR.dtSetStatus(full.Id, data);
                 }}}},", i);
                     break;
 
