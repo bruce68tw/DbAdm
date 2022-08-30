@@ -28,15 +28,15 @@ namespace {{Project}}.Services
 		{{/if}}
         };
 
-        public async Task<JObject> GetPage(string ctrl, DtDto dt)
+        public async Task<JObject> GetPageA(string ctrl, DtDto dt)
         {
-            return await new CrudRead().GetPageAsync(dto, dt, ctrl);
+            return await new CrudRead().GetPageA(dto, dt, ctrl);
         }
 
 	{{#if HasExport}}
-        public async Task ExportAsync(string ctrl, JObject find)
+        public async Task ExportA(string ctrl, JObject find)
         {
-            await _WebExcel.ExportByReadAsync(ctrl, dto, find, 
+            await _WebExcel.ExportByReadA(ctrl, dto, find, 
                 "{{ProgCode}}.xlsx", _Xp.GetTplPath("{{ProgCode}}.xlsx", true), 1);
         }
 

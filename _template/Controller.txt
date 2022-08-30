@@ -28,7 +28,7 @@ namespace {{Project}}.Controllers
         {{#if AuthType2}}
         [XgProgAuth(CrudEnum.Read)]
         {{/if}}
-        {{#if HasSelect}}
+        {{#if HasSelectA}}
         public async Task<ActionResult> Read()
         {{else}}
         public ActionResult Read()
@@ -37,13 +37,13 @@ namespace {{Project}}.Controllers
 	        {{#if ReadSelectCols}}
 			//for read view
 		        {{#each ReadSelectCols}}
-			ViewBag.{{this}} = await _XpCode.Get{{this}}Async();
+			{{this}}
 		        {{/each}}
 	        {{/if}}
 	        {{#if EditSelectCols}}
 			//for edit view
 		        {{#each EditSelectCols}}
-			ViewBag.{{this}} = await _XpCode.Get{{this}}Async();
+			{{this}}
 		        {{/each}}
 	        {{/if}}
             return View();
@@ -55,7 +55,7 @@ namespace {{Project}}.Controllers
         {{/if}}
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new {{ProgCode}}Read().GetPage(Ctrl, dt));
+            return JsonToCnt(await new {{ProgCode}}Read().GetPageA(Ctrl, dt));
         }
 
         private {{ProgCode}}Edit EditService()
@@ -70,7 +70,7 @@ namespace {{Project}}.Controllers
             {{/if}}
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonAsync(key));
+            return JsonToCnt(await EditService().GetUpdJsonA(key));
         }
         {{/if}}
 
@@ -81,7 +81,7 @@ namespace {{Project}}.Controllers
             {{/if}}
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonAsync(key));
+            return JsonToCnt(await EditService().GetViewJsonA(key));
         }
         {{/if}}
 
@@ -91,10 +91,9 @@ namespace {{Project}}.Controllers
                 {{#if AuthType2}}
         [XgProgAuth(CrudEnum.Create)]
                 {{/if}}
-        //TODO: add your code, tSn_fid ex: t03_FileName
-        public async Task<JsonResult> Create(string json, List<IFormFile> t03_FileName)
+        public async Task<JsonResult> Create(string json, {{FileEditTypeArg}})
         {
-            return Json(await EditService().CreateAsnyc(_Str.ToJson(json), t03_FileName));
+            return Json(await EditService().CreateA(_Str.ToJson(json), {{FileEditArg}}));
         }
             {{/if}}
 
@@ -103,10 +102,9 @@ namespace {{Project}}.Controllers
                 {{#if AuthType2}}
         [XgProgAuth(CrudEnum.Update)]
                 {{/if}}
-        //TODO: add your code, tSn_fid ex: t03_FileName
-        public async Task<JsonResult> Update(string key, string json, List<IFormFile> t03_FileName)
+        public async Task<JsonResult> Update(string key, string json, {{FileEditTypeArg}})
         {
-            return Json(await EditService().UpdateAsnyc(key, _Str.ToJson(json), t03_FileName));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json), {{FileEditArg}}));
         }
             {{/if}}
 
@@ -118,7 +116,7 @@ namespace {{Project}}.Controllers
                 {{/if}}
         public async Task<FileResult> ViewFile(string table, string fid, string key, string ext)
         {
-            return await _Xp.ViewFile(fid, key, ext);
+            return await _Xp.View{{ProgCode}}A(fid, key, ext);
         }
             {{/if}}
         {{else}}
@@ -129,7 +127,7 @@ namespace {{Project}}.Controllers
                 {{/if}}
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateAsync(_Str.ToJson(json)));
+            return Json(await EditService().CreateA(_Str.ToJson(json)));
         }
             {{/if}}
 
@@ -140,7 +138,7 @@ namespace {{Project}}.Controllers
                 {{/if}}
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateAsync(key, _Str.ToJson(json)));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)));
         }
             {{/if}}
         {{/if}}
@@ -152,7 +150,7 @@ namespace {{Project}}.Controllers
             {{/if}}
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteAsync(key));
+            return Json(await EditService().DeleteA(key));
         }
         {{/if}}
 
@@ -163,7 +161,7 @@ namespace {{Project}}.Controllers
             {{/if}}
         public async Task Export(string find)
         {
-            await new {{ProgCode}}Read().ExportAsync(Ctrl, _Str.ToJson(find));
+            await new {{ProgCode}}Read().ExportA(Ctrl, _Str.ToJson(find));
         }
         {{/if}}
 

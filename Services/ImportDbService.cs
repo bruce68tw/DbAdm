@@ -14,14 +14,14 @@ namespace DbAdm.Services
         private string _sqlGetTables;
         private string _sqlGetCols;
 
-        public async Task<ResultDto> RunAsync(string projectId)
+        public async Task<ResultDto> RunA(string projectId)
         {
             var result = new ResultDto();
 
             #region 1.get dbo.Project row
             var db = new Db();
             Db dbSrc = null;
-            var project = await db.GetJsonAsync(string.Format(@"
+            var project = await db.GetJsonA(string.Format(@"
 select DbName, ConnectStr, FromTmpTable
 from dbo.Project
 where Id='{0}'
@@ -52,7 +52,7 @@ where Id='{0}'
             else
             {
                 dbSrc = new Db(project["ConnectStr"].ToString());
-                if (!await dbSrc.InitDbAsync())
+                if (!await dbSrc.InitDbA())
                 {
                     result.ErrorMsg = "Project.ConnectStr is wrong.";
                     goto lab_exit;
@@ -61,7 +61,7 @@ where Id='{0}'
             #endregion
 
             #region 2.create temp table: #tmpTable, #tmpColumn
-            await db.ExecSqlAsync(@"
+            await db.ExecSqlA(@"
 CREATE TABLE #tmpTable(
     Code varchar(100) NOT NULL primary key,
     Note nvarchar(255) NULL
@@ -81,7 +81,7 @@ CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
             #region 3.write #tmpTable(from Information_Schema.Tables)
             //欄位順序必須與Db相同
             var dbName = project["DbName"].ToString();
-            var reader = await dbSrc.GetReaderAsync(string.Format(_sqlGetTables, dbName));
+            var reader = await dbSrc.GetReaderA(string.Format(_sqlGetTables, dbName));
 
             //bulk copy
             using (var bcp = new SqlBulkCopy((SqlConnection)db.GetConnection()))
@@ -105,7 +105,7 @@ CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
             #endregion
 
             #region 4.write #tmpColumn(from Information_Schema.Columns)
-            reader = await dbSrc.GetReaderAsync(string.Format(_sqlGetCols, dbName));
+            reader = await dbSrc.GetReaderA(string.Format(_sqlGetCols, dbName));
 
             using (var bcp = new SqlBulkCopy((SqlConnection)db.GetConnection()))
             {
@@ -129,7 +129,7 @@ CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
 
             #region 5.insert/update dbo.Table from #tmpTable
             //get rows for insert new 
-            var tables = await db.GetJsonsAsync(string.Format(@"
+            var tables = await db.GetJsonsA(string.Format(@"
 select Code, Note
 from #tmpTable
 where Code not in (
@@ -144,7 +144,7 @@ where Code not in (
             {
                 foreach (JObject table in tables)
                 {
-                    await db.ExecSqlAsync(string.Format(@"
+                    await db.ExecSqlA(string.Format(@"
 insert into dbo.[Table](Id, ProjectId, Code, Name, Note, Status)
 values('{0}', '{1}', '{2}', '', '{3}', 1)
 ", _Str.NewId(), projectId, table["Code"].ToString(), table["Note"].ToString()));
@@ -152,7 +152,7 @@ values('{0}', '{1}', '{2}', '', '{3}', 1)
             }
 
             //update table.status(0/1)
-            await db.ExecSqlAsync(string.Format(@"
+            await db.ExecSqlA(string.Format(@"
 update a set 
     Status=case when t.Code is null then 0 else 1 end
 from dbo.[Table] a
@@ -163,7 +163,7 @@ where a.ProjectId='{0}'
 
             #region 6.insert/update dbo.Column from #tmpColumn
             //get rows for insert new 
-            var cols = await db.GetJsonsAsync(string.Format(@"
+            var cols = await db.GetJsonsA(string.Format(@"
 select
     c.Code, t.Id as TableId, c.Note,
     c.Nullable
@@ -183,7 +183,7 @@ where t.Id+c.Code not in (
                 {
                     //create new Column
                     //在這裡只寫入部分欄位, 後面會再update一次
-                    await db.ExecSqlAsync(string.Format(@"
+                    await db.ExecSqlA(string.Format(@"
 insert into dbo.[Column](
     Id, TableId, Code, 
     Name, DataType, Nullable,
@@ -203,7 +203,7 @@ col["Note"].ToString()
             }
 
             //set column status = 0
-            await db.ExecSqlAsync(string.Format(@"
+            await db.ExecSqlA(string.Format(@"
 update c
     set Status=0
 from dbo.[Column] c
@@ -216,7 +216,7 @@ and t.Code+c.Code not in (
 
             //update column 
             //如果原本的Note為空白, 則無條件從來源欄位更新
-            await db.ExecSqlAsync(string.Format(@"
+            await db.ExecSqlA(string.Format(@"
 update c set 
     DataType=tc.DataType, Nullable=tc.Nullable, 
     DefaultValue=tc.DefaultValue, Sort=tc.Sort, 

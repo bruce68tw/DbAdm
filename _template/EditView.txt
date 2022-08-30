@@ -40,7 +40,7 @@
 </form>
 
 {{/ChildTables}}
-@await Component.InvokeAsync("XgSaveBack")
+<vc:xg-save-back/>
 
 {{#ChildTables}}
 <script id="tpl{{TableCode}}" type="text/template">

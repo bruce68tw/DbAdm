@@ -102,6 +102,7 @@ order by a.Sort
                             new() { Fid = "TableId", Required = true },
                             new() { Fid = "PkeyFid", Required = true },
                             new() { Fid = "FkeyFid" },
+                            new() { Fid = "AutoIdLen" },
                             new() { Fid = "Col4" },
                             new() { Fid = "HalfWidth" },
                             new() { Fid = "OrderBy" },

@@ -24,6 +24,9 @@ namespace {{Project}}.Services
 				{{#MainTable}}
 				Table = "dbo.[{{TableCode}}]",
                 PkeyFid = "{{PkeyFid}}",
+			{{#if AutoIdLen}}
+				AutoIdLen = {{AutoIdLen}},
+			{{/if}}
 			{{#unless HasCol4}}
                 Col4 = null,
 			{{/unless}}
@@ -43,6 +46,9 @@ namespace {{Project}}.Services
                         Table = "dbo.[{{TableCode}}]",
                         PkeyFid = "{{PkeyFid}}",
                         FkeyFid = "{{FkeyFid}}",
+			        {{#if AutoIdLen}}
+				        AutoIdLen = {{AutoIdLen}},
+			        {{/if}}
 					{{#if OrderBy}}
 						OrderBy = "{{OrderBy}}",
 					{{/if}}
@@ -65,29 +71,48 @@ namespace {{Project}}.Services
         }
 
         {{#if HasFile}}
-        //TODO: add your code
         //t03_FileName: t + table serial _ + fid
-        public async Task<ResultDto> CreateAsnyc(JObject json, List<IFormFile> t03_FileName)
+        public async Task<ResultDto> CreateA(JObject json, {{FileEditTypeArg}})
         {
             var service = EditService();
-            var result = await service.CreateAsync(json);
+            var result = await service.CreateA(json);
+        {{#if FileType0}}
+            if (_Valid.ResultStatus(result))
+			{{#each FileEditStrs}}
+				{{this}}
+			{{/each}}
+        {{/if}}
+        {{#if FileType1}}
             if (_Valid.ResultStatus(result))
             {
-                await _WebFile.SaveCrudFile(s)Asnyc(json, service.GetNewKeyJson(), _Xp.GetDir{{ProgCode}}(), t03_FileName, nameof(t03_FileName));
+                var newKeyJson = service.GetNewKeyJson();
+			{{#each FileEditStrs}}
+				{{this}}
+			{{/each}}
             }
+        {{/if}}
             return result;
         }
 
-        //TODO: add your code
-        //t03_FileName: t + table serial _ + fid
-        public async Task<ResultDto> UpdateAsnyc(string key, JObject json, List<IFormFile> t03_FileName)
+        public async Task<ResultDto> UpdateA(string key, JObject json, {{FileEditTypeArg}})
         {
             var service = EditService();
-            var result = await service.UpdateAsync(key, json);
+            var result = await service.UpdateA(key, json);
+        {{#if FileType0}}
+            if (_Valid.ResultStatus(result))
+			{{#each FileEditStrs}}
+				{{this}}
+			{{/each}}
+        {{/if}}
+        {{#if FileType1}}
             if (_Valid.ResultStatus(result))
             {
-                await _WebFile.SaveCrudFile(s)Asnyc(json, service.GetNewKeyJson(), _Xp.GetDir{{ProgCode}}(), t03_FileName, nameof(t03_FileName));
+                var newKeyJson = service.GetNewKeyJson();
+			{{#each FileEditStrs}}
+				{{this}}
+			{{/each}}
             }
+        {{/if}}
             return result;
         }
         {{/if}}

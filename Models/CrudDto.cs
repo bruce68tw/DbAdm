@@ -42,13 +42,22 @@ namespace DbAdm.Models
         public List<string> JsColDefStrs { get; set; }     //js column define string
         public string ManyTables { get; set; }             //list of ", _me.mXXX" 
 
-        public List<string> ReadSelectCols { get; set; }    //read view select cols
-        public List<string> EditSelectCols { get; set; }    //edit view select cols
+        public List<string> ReadSelectCols { get; set; }    //(controller)read view select/radio col string list
+        public List<string> EditSelectCols { get; set; }    //(controller)edit view select/radio col string list
 
-        public bool HasSelect { get; set; }     //has ReadSelectCols or EditSelectCols
+        public bool HasSelectA { get; set; }     //has async ReadSelectCols or EditSelectCols
 
         //file
         public bool HasFile { get; set; }
+        //file input arguments string
+        public string FileEditArg { get; set; }     //variables name
+        public string FileEditTypeArg { get; set; } //type and name
+        //only master file
+        public bool FileType0 { get; set; }
+        //has both master and child files
+        public bool FileType1 { get; set; }
+        //master/child file string list for editService
+        public List<string> FileEditStrs { get; set; }
 
         //crud.AuthType == 0,1,2
         public bool AuthType0 { get; set; }

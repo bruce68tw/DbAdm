@@ -17,6 +17,7 @@ namespace DbAdm.Tables
         public string TableId { get; set; }
         public string PkeyFid { get; set; }
         public string FkeyFid { get; set; }
+        public string AutoIdLen { get; set; }
         public string Col4 { get; set; }
         public string OrderBy { get; set; }
         public int Sort { get; set; }

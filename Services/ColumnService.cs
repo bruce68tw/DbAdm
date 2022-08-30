@@ -24,7 +24,7 @@ where c.TableId='{0}'
 and c.Status=1
 order by c.Sort
 ", tableId);
-            return await _Db.GetJsonsAsync(sql);
+            return await _Db.GetJsonsA(sql);
         }
 
     }//class

@@ -14,7 +14,7 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
-        public async Task<bool> RunAsync(string projectId)
+        public async Task<bool> RunA(string projectId)
         {
             #region 1.check input
             var error = "";
@@ -27,7 +27,7 @@ namespace DbAdm.Services
 
             #region 2.check template file
             var filePath = _Xp.GetTplPath("TranLog.sql", false);
-            var tplLog = await _File.ToStrAsync(filePath);
+            var tplLog = await _File.ToStrA(filePath);
             if (_Str.IsEmpty(tplLog))
             {
                 error = "no file " + filePath;
@@ -103,12 +103,12 @@ namespace DbAdm.Services
 
             //echo stream to file
             writer.Flush();
-            await _Web.ExportByStream(ms, tables[0].DbName + "_TranLog.sql");
+            await _Web.ExportByStreamA(ms, tables[0].DbName + "_TranLog.sql");
             return true;
             #endregion
 
         lab_error:
-            await _Log.ErrorAsync("GenLogSqlService.cs Run() failed: " + error);
+            await _Log.ErrorA("GenLogSqlService.cs Run() failed: " + error);
             return false;
         }
     }

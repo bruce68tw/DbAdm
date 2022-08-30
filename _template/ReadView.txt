@@ -45,10 +45,10 @@
 
 		<div class='xg-btns-box'>
 		{{#if HasCreate}}
-			@await Component.InvokeAsync("XgCreate")
+			<vc:xg-create/>
 		{{/if}}
 		{{#if CanExport}}
-			@await Component.InvokeAsync("XgExport")
+			<vc:xg-export/>
 		{{/if}}
         </div>
         <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">

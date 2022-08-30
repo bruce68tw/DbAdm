@@ -1,0 +1,51 @@
+﻿<form id='eform' class='xg-form'>
+	@await Component.InvokeAsync("XiHide", new XiHideDto{ Fid = "Id" })
+	
+	@await Component.InvokeAsync("XiText", new XiTextDto{ Title = "專案Id", Fid = "ProjectId", MaxLen = 10, Required = true })
+	@await Component.InvokeAsync("XiText", new XiTextDto{ Title = "資料表代碼", Fid = "Code", MaxLen = 100, Required = true })
+	@await Component.InvokeAsync("XiText", new XiTextDto{ Title = "資料表名稱", Fid = "Name", MaxLen = 30, Required = true })
+	@await Component.InvokeAsync("XiCheck", new XiCheckDto{ Title = "是否記錄交易", Fid = "TranLog", Label = "是" })
+	@await Component.InvokeAsync("XiCheck", new XiCheckDto{ Title = "資料狀態", Fid = "Status", Label = "正常" })
+</form>
+
+<div class='xg-btns-box'>
+	<span class="xg-span-label">欄位檔</span>
+	@await Component.InvokeAsync("XgAddRow", "_me.mColumn.onAddRow()")
+</div>
+<form id='eformColumn' class='xg-form' style="border:none;">
+    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+        <thead>
+            <tr>
+				@await Component.InvokeAsync("XgTh", new XgThDto{ Title = "欄位代碼", Required = true })
+				@await Component.InvokeAsync("XgTh", new XgThDto{ Title = "欄位名稱", Required = true })
+				@await Component.InvokeAsync("XgTh", new XgThDto{ Title = "資料型態", Required = true })
+				<th>可空值</th>
+				<th>預設值</th>
+				<th>排序</th>
+				<th>說明</th>
+				<th>資料狀態</th>
+				<th></th>
+            </tr>
+        </thead>
+        <tbody id="tbodyColumn"></tbody>
+    </table>
+</form>
+
+@await Component.InvokeAsync("XgSaveBack")
+
+<script id="tplColumn" type="text/template">
+    <tr>
+		@await Component.InvokeAsync("XiHide", new XiHideDto{ Fid = "Id" })
+		@await Component.InvokeAsync("XiHide", new XiHideDto{ Fid = "TableId" })
+		<td>@await Component.InvokeAsync("XiText", new XiTextDto{ Fid = "Code", MaxLen = 100, Required = true })</td>
+		<td>@await Component.InvokeAsync("XiText", new XiTextDto{ Fid = "Name", MaxLen = 30, Required = true })</td>
+		<td>@await Component.InvokeAsync("XiText", new XiTextDto{ Fid = "DataType", MaxLen = 20, Required = true })</td>
+		<td class='text-center'>@await Component.InvokeAsync("XiCheck", new XiCheckDto{ Fid = "Nullable" })</td>
+		<td>@await Component.InvokeAsync("XiText", new XiTextDto{ Fid = "DefaultValue", MaxLen = 100 })</td>
+		<td>@await Component.InvokeAsync("XiInt", new XiIntDto{ Fid = "Sort" })</td>
+		<td>@await Component.InvokeAsync("XiText", new XiTextDto{ Fid = "Note", MaxLen = 255 })</td>
+		<td class='text-center'>@await Component.InvokeAsync("XiCheck", new XiCheckDto{ Fid = "Status" })</td>
+		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mColumn.onDeleteRow(this)")</td>
+    </tr>
+</script>
+

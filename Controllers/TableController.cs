@@ -15,15 +15,15 @@ namespace DbAdm.Controllers
             //test
             //_Fun.Except("exception test");
 
-            ViewBag.Projects = await _XpCode.GetProjectsAsync(); //dropdown
-            ViewBag.YesNos = _XpCode.GetYesNos();
+            ViewBag.Projects = await _XpCode.ProjectsA(); //dropdown
+            ViewBag.YesNos = _XpCode.YesNos();
             return View();
         }
 
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new TableRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new TableRead().GetPageA(Ctrl, dt));
         }
 
         private TableEdit EditService()
@@ -35,24 +35,24 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonAsync(key));
+            return JsonToCnt(await EditService().GetUpdJsonA(key));
         }
 
         //新增(DB)
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateAsync(_Str.ToJson(json)));
+            return Json(await EditService().CreateA(_Str.ToJson(json)));
         }
         //修改(DB)
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateAsync(key, _Str.ToJson(json)));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)));
         }
 
         //刪除(DB)
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteAsync(key));
+            return Json(await EditService().DeleteA(key));
         }
 
         public async Task Export(string find)
@@ -65,7 +65,7 @@ namespace DbAdm.Controllers
         public async Task GenWord(string keys)
         {
             var tableIds = keys.Split(',');
-            await new GenDocuService().RunAsync("", tableIds);
+            await new GenDocuService().RunA("", tableIds);
         }
 
         /*

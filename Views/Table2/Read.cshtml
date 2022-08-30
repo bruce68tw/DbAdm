@@ -1,0 +1,43 @@
+﻿<script src="~/js/view/Table2.js"></script>
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "資料表維護2" } })
+<div class="xg-prog">
+    <div id="divRead">
+		<form id='formRead' class='xg-form'>
+			<div class="row">
+				@await Component.InvokeAsync("XiSelect", new XiSelectDto{ Title = "專案Id", Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, InRow = true })
+				@await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto{  })
+			</div>
+			@await Component.InvokeAsync("XiText", new XiTextDto{ Title = "資料表代碼", Fid = "Code", MaxLen = 100 })
+			@await Component.InvokeAsync("XiText", new XiTextDto{ Title = "資料表名稱", Fid = "Name", MaxLen = 30 })
+			@await Component.InvokeAsync("XiSelect", new XiSelectDto{ Title = "是否記錄交易", Fid = "TranLog", Rows = (List<IdStrDto>)ViewBag.YesNos })
+        </form>
+
+		<div class='xg-btns-box'>
+			@await Component.InvokeAsync("XgCreate")
+        </div>
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+					<th>專案Id</th>
+					<th>資料庫名稱</th>
+					<th>資料表代碼</th>
+					<th>資料表名稱</th>
+					<th>是否記錄交易</th>
+					<th>維護</th>
+					<th>資料狀態</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <partial name="Edit" />
+    </div>
+</div>

@@ -40,9 +40,9 @@ order by p.Id, a.Code
             },
         };
 
-        public async Task<JObject> GetPageAsync(string ctrl, DtDto dt)
+        public async Task<JObject> GetPageA(string ctrl, DtDto dt)
         {
-            return await new CrudRead().GetPageAsync(dto, dt, ctrl);
+            return await new CrudRead().GetPageA(dto, dt, ctrl);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ order by p.Id, a.Code
         /// <returns></returns>
         public async Task ExportAsync(JObject find)
         {
-            await _WebExcel.ExportByReadAsync("", dto, find, 
+            await _WebExcel.ExportByReadA("", dto, find, 
                 "Table.xlsx", _Xp.GetTplPath("Table.xlsx", true), 1);
         }
 

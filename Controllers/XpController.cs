@@ -11,12 +11,12 @@ namespace DbAdm.Controllers
         //id: project Id
         public async Task<JsonResult> GetProjects()
         {
-            return Json(await _XpCode.GetProjectsAsync());
+            return Json(await _XpCode.ProjectsA());
         }
 
         public async Task<JsonResult> GetTables(string projectId)
         {
-            return Json(await _XpCode.GetTablesAsync(projectId));
+            return Json(await _XpCode.TablesA(projectId));
         }
 
     }//class

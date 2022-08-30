@@ -18,7 +18,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new ProjectRead().GetPageAsync(Ctrl, dt));
+            return JsonToCnt(await new ProjectRead().GetPageA(Ctrl, dt));
         }
 
         private ProjectEdit EditService()
@@ -29,31 +29,31 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteAsync(key));
+            return Json(await EditService().DeleteA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonAsync(key));
+            return JsonToCnt(await EditService().GetUpdJsonA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonAsync(key));
+            return JsonToCnt(await EditService().GetViewJsonA(key));
         }
 
         [HttpPost]
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateAsync(_Str.ToJson(json)));
+            return Json(await EditService().CreateA(_Str.ToJson(json)));
         }
 
         [HttpPost]
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateAsync(key, _Str.ToJson(json)));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace DbAdm.Controllers
         /// <returns></returns>
         public async Task<JsonResult> Import(string id)
         {
-            return Json(await new ImportDbService().RunAsync(id));
+            return Json(await new ImportDbService().RunA(id));
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace DbAdm.Controllers
         /// <returns></returns>
         public async Task GenWord(string id)
         {
-            await new GenDocuService().RunAsync(id);
+            await new GenDocuService().RunA(id);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace DbAdm.Controllers
         public async Task GenLogSql(string id)
         {
             //raise exception for show default error.
-            if (!await new GenLogSqlService().RunAsync(id))
+            if (!await new GenLogSqlService().RunA(id))
                 _Fun.Except();
         }
 

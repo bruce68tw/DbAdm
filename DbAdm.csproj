@@ -73,6 +73,8 @@
 
   <ItemGroup>
 	<Content Include="_template\**" CopyToPublishDirectory="PreserveNewest" />
+	<Compile Remove="Controllers\Table2Controller.cs" />
+	<Compile Remove="Controllers\TestController.cs" />
     <Content Include="Views\Shared\Error.cshtml_old" />
   </ItemGroup>
 

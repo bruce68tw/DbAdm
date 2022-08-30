@@ -12,11 +12,13 @@ namespace DbAdm.Models
         public string TableName { get; set; }       //table name
         public string PkeyFid { get; set; }
         public string FkeyFid { get; set; }
+        public string AutoIdLen { get; set; }
         public string OrderBy { get; set; }
         public bool HasCol4 { get; set; }
         public bool HalfWidth { get; set; }
 
         //extend
+        public int Sort { get; set; }           //child table sort, base 0
         public string SortFid { get; set; }     //sort field id
         public List<CrudEitemDto> Eitems { get; set; }
         //hide item string for edit view

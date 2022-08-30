@@ -9,7 +9,8 @@ namespace DbAdm.Services
     //與下拉欄位有關
     public static class _XpCode
     {
-        public static async Task<List<IdStrDto>> TableToCodesAsync(string table, Db db = null)
+        /*
+        public static async Task<List<IdStrDto>> TableToCodesA(string table, Db db = null)
         {
             var sql = $@"
 select 
@@ -17,10 +18,22 @@ select
 from dbo.[{table}]
 order by Id
 ";
-            return await SqlToCodesAsync(sql, db);
+            return await SqlToCodesA(sql, db);
         }
 
-        public static async Task<List<IdStrDto>> GetProjectsAsync(Db db = null)
+        //get code table rows for 下拉式欄位
+        public static async Task<List<IdStrDto>> SqlToCodesA(string sql, Db db = null)
+        {
+            var emptyDb = false;
+            _Fun.CheckOpenDb(ref db, ref emptyDb);
+
+            var rows = await db.GetModelsA<IdStrDto>(sql);
+            await _Fun.CheckCloseDbA(db, emptyDb);
+            return rows;
+        }
+        */
+
+        public static async Task<List<IdStrDto>> ProjectsA(Db db = null)
         {
             var sql = @"
 select 
@@ -28,21 +41,10 @@ select
 from dbo.Project
 order by Id
 ";
-            return await SqlToCodesAsync(sql, db);
+            return await _Db.SqlToCodesA(sql, db);
         }
 
-        //get code table rows for 下拉式欄位
-        public static async Task<List<IdStrDto>> SqlToCodesAsync(string sql, Db db = null)
-        {
-            var emptyDb = false;
-            _Fun.CheckOpenDb(ref db, ref emptyDb);
-
-            var rows = await db.GetModelsAsync<IdStrDto>(sql);
-            await _Fun.CheckCloseDb(db, emptyDb);
-            return rows;
-        }
-
-        public static async Task<List<IdStrDto>> GetTablesAsync(string projectId, Db db = null)
+        public static async Task<List<IdStrDto>> TablesA(string projectId, Db db = null)
         {
             //if (_Str.IsEmpty(projectId) || !_Str.CheckKeyRule(projectId, "_XpCode.cs GetTables() projectId is wrong: " + projectId))
             if (_Str.IsEmpty(projectId))
@@ -55,7 +57,7 @@ from dbo.[Table]
 where ProjectId='{0}'
 order by Code
 ", projectId);
-            var rows = await SqlToCodesAsync(sql, db);
+            var rows = await _Db.SqlToCodesA(sql, db);
             if (rows == null)
                 rows = new List<IdStrDto>();
             rows.Insert(0, new IdStrDto() { Id = "", Str = _Locale.GetBaseRes().PlsSelect });
@@ -63,7 +65,7 @@ order by Code
         }
 
         //get code table rows for 下拉式欄位
-        public static async Task<List<IdStrDto>> GetCodesAsync(string type, Db db = null)
+        public static async Task<List<IdStrDto>> CodesA(string type, Db db = null)
         {
             var sql = string.Format(@"
 select 
@@ -72,10 +74,10 @@ from dbo.XpCode
 where Type='{0}'
 order by Sort
 ", type);
-            return await SqlToCodesAsync(sql, db);
+            return await _Db.SqlToCodesA(sql, db);
         }
 
-        public static async Task<List<IdStrDto>> GetQitemTypesAsync(Db db = null)
+        public static async Task<List<IdStrDto>> QitemTypesA(Db db = null)
         {
             var sql = @"
 select 
@@ -85,35 +87,35 @@ where Type='EitemType'
 and Ext='Q'
 order by Sort
 ";
-            return await SqlToCodesAsync(sql, db);
+            return await _Db.SqlToCodesA(sql, db);
         }
 
-        public static async Task<List<IdStrDto>> GetRitemTypesAsync(Db db = null)
+        public static async Task<List<IdStrDto>> RitemTypesA(Db db = null)
         {
-            return await GetCodesAsync("RitemType", db);
+            return await CodesA("RitemType", db);
         }
 
-        public static async Task<List<IdStrDto>> GetEitemTypesAsync(Db db = null)
+        public static async Task<List<IdStrDto>> EitemTypesA(Db db = null)
         {
-            return await GetCodesAsync("EitemType", db);
+            return await CodesA("EitemType", db);
         }
 
-        public static async Task<List<IdStrDto>> GetCheckTypesAsync(Db db = null)
+        public static async Task<List<IdStrDto>> CheckTypesA(Db db = null)
         {
-            return await GetCodesAsync("CheckType", db);
+            return await CodesA("CheckType", db);
         }
 
-        public static async Task<List<IdStrDto>> GetQitemOpsAsync(Db db = null)
+        public static async Task<List<IdStrDto>> QitemOpsA(Db db = null)
         {
-            return await GetCodesAsync("QitemOp", db);
+            return await CodesA("QitemOp", db);
         }
 
-        public static async Task<List<IdStrDto>> GetAuthTypesAsync(Db db = null)
+        public static async Task<List<IdStrDto>> AuthTypesA(Db db = null)
         {
-            return await GetCodesAsync("AuthType", db);
+            return await CodesA("AuthType", db);
         }
 
-        public static List<IdStrDto> GetYesNos()
+        public static List<IdStrDto> YesNos()
         {
             return new List<IdStrDto>() {
                 new IdStrDto(){ Id = "1", Str = "是" },
@@ -128,6 +130,15 @@ order by Sort
                 new IdStrDto(){ Id = "0", Str = "MSSql" },
                 new IdStrDto(){ Id = "1", Str = "MySql" },
                 //new IdStrDto(){ Id = "2", Str = "否" },
+            };
+        }
+
+        public static List<IdStrDto> AutoIdLens()
+        {
+            return new List<IdStrDto>() {
+                new IdStrDto(){ Id = "_Fun.AutoIdShort", Str = "短字串(6)" },
+                new IdStrDto(){ Id = "_Fun.AutoIdMid", Str = "中等字串(10)" },
+                new IdStrDto(){ Id = "_Fun.AutoIdLong", Str = "長字串(16)" },
             };
         }
 
