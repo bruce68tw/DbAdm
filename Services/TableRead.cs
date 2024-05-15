@@ -1,6 +1,7 @@
 using Base.Enums;
 using Base.Models;
 using Base.Services;
+using BaseApi.Services;
 using BaseWeb.Services;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
@@ -40,9 +41,9 @@ order by p.Id, a.Code
             },
         };
 
-        public async Task<JObject> GetPageA(string ctrl, DtDto dt)
+        public async Task<JObject?> GetPageA(string ctrl, DtDto dt)
         {
-            return await new CrudRead().GetPageA(dto, dt, ctrl);
+            return await new CrudReadSvc().GetPageA(dto, dt, ctrl);
         }
 
         /// <summary>
@@ -53,7 +54,7 @@ order by p.Id, a.Code
         /// <returns></returns>
         public async Task ExportAsync(JObject find)
         {
-            await _WebExcel.ExportByReadA("", dto, find, 
+            await _HttpExcel.ExportByReadA("", dto, find, 
                 "Table.xlsx", _Xp.GetTplPath("Table.xlsx", true), 1);
         }
 

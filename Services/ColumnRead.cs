@@ -31,10 +31,10 @@ Order by p.Id, t.Id, c.Sort
             },
         };
 
-        public async Task<JObject> GetPageA(DtDto dt)
+        public async Task<JObject?> GetPageA(DtDto dt)
         {
             //3.call CrudRead.GetPage()
-            return await new CrudRead().GetPageA(dto, dt);
+            return await new CrudReadSvc().GetPageA(dto, dt);
         }        
 
     } //class

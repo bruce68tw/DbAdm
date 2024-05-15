@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
 {
-    public class TestEdit : XgEdit
+    public class TestEdit : BaseEditSvc
     {
         public TestEdit(string ctrl) : base(ctrl) { }
 

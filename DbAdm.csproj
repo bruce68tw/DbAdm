@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>6b53b027-76c0-4cf7-b55a-c17f2031c2ba</UserSecretsId>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -69,6 +70,7 @@
     <None Remove="Services\zz__Session.cs_old" />
     <None Remove="Services\_ProgPath.cs_old" />
     <None Remove="Views\Shared\Error.cshtml_old" />
+    <None Remove="_image\noImage.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -76,6 +78,10 @@
 	<Compile Remove="Controllers\Table2Controller.cs" />
 	<Compile Remove="Controllers\TestController.cs" />
     <Content Include="Views\Shared\Error.cshtml_old" />
+    <Content Include="_image\noImage.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

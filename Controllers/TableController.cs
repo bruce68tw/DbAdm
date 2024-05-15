@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DbAdm.Controllers
 {
     //[Permission(Prog = _Prog.Course)]
-    public class TableController : ApiCtrl
+    public class TableController : BaseCtrl
     {
         public async Task<ActionResult> Read()
         {
@@ -41,12 +41,12 @@ namespace DbAdm.Controllers
         //新增(DB)
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json)));
+            return Json(await EditService().CreateA(_Str.ToJson(json)!));
         }
         //修改(DB)
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
         }
 
         //刪除(DB)
@@ -57,7 +57,7 @@ namespace DbAdm.Controllers
 
         public async Task Export(string find)
         {
-            await new TableRead().ExportAsync(_Str.ToJson(find));
+            await new TableRead().ExportAsync(_Str.ToJson(find)!);
         }
 
         //generate database document in word type

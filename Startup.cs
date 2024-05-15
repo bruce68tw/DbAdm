@@ -1,4 +1,5 @@
 using Base.Enums;
+using Base.Interfaces;
 using Base.Models;
 using Base.Services;
 using BaseWeb.Services;
@@ -43,7 +44,7 @@ namespace DbAdm
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //4.user info for base component
-            services.AddSingleton<IBaseUserService, BaseUserService>();
+            services.AddSingleton<IBaseUserS, BaseUserSvc>();
 
             //5.ado.net for mssql
             services.AddTransient<DbConnection, SqlConnection>();

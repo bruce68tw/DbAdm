@@ -97,18 +97,18 @@ namespace DbAdm.Services
                 var cols = "";
                 foreach(var col in tables[i].Cols)
                     cols += tplUpdRow.Replace("{Col}", col);
-                writer.Write(tplLog.Replace("{Table}", tables[i].TableCode).Replace("{Columns}", cols) + newLine);
+                writer.Write(tplLog!.Replace("{Table}", tables[i].TableCode).Replace("{Columns}", cols) + newLine);
             }
             #endregion
 
             //echo stream to file
             writer.Flush();
-            await _Web.ExportByStreamA(ms, tables[0].DbName + "_TranLog.sql");
+            await _FunApi.ExportByStreamA(ms, tables[0].DbName + "_TranLog.sql");
             return true;
             #endregion
 
         lab_error:
-            await _Log.ErrorA("GenLogSqlService.cs Run() failed: " + error);
+            await _Log.ErrorRootA("GenLogSqlService.cs Run() failed: " + error);
             return false;
         }
     }

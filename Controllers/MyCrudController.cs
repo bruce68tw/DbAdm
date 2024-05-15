@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DbAdm.Controllers
 {
     //[Permission(Prog = _Prog.Course)]
-    public class MyCrudController : ApiCtrl
+    public class MyCrudController : BaseCtrl
     {
         #region Read View
         public async Task<ActionResult> Read()
@@ -58,11 +58,11 @@ namespace DbAdm.Controllers
 
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json)));
+            return Json(await EditService().CreateA(_Str.ToJson(json)!));
         }
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
         }
         #endregion
 
@@ -83,7 +83,7 @@ namespace DbAdm.Controllers
         public async Task<ContentResult> GetColumns(string tableId)
         {
             //var tableId = _Datatable.GetFindValue(dt, "tableId");
-            var rows = await new ColumnService().GetRowsAsync(tableId);
+            var rows = await new ColumnService().GetRowsA(tableId);
             return Content(rows == null ? "" : rows.ToString(), ContentTypeEstr.Json);
         }
         #endregion

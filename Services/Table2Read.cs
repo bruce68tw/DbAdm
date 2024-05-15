@@ -28,9 +28,9 @@ order by a.Id desc
             },
         };
 
-        public async Task<JObject> GetPage(string ctrl, DtDto dt)
+        public async Task<JObject?> GetPage(string ctrl, DtDto dt)
         {
-            return await new CrudRead().GetPageA(dto, dt, ctrl);
+            return await new CrudReadSvc().GetPageA(dto, dt, ctrl);
         }
 
     } //class

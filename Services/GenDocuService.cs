@@ -16,7 +16,7 @@ namespace DbAdm.Services
         /// <param name="projectId"></param>
         /// <param name="tableIds"></param>
         /// <return>error msg if any</return>
-        public async Task<bool> RunA(string projectId, string[] tableIds = null)
+        public async Task<bool> RunA(string projectId, string[]? tableIds = null)
         {
             #region 1.check input & template file
             var error = "";
@@ -95,16 +95,16 @@ namespace DbAdm.Services
             using (var docx = WordprocessingDocument.Open(ms, true))
             {
                 #region 4.get body/row template string
-                var wordSet = new WordSetService(docx);
+                var wordSet = new WordSetSvc(docx);
                 var mainTplStr = wordSet.GetMainPartStr();
 
                 //get word body start/end pos
                 //int bodyStart = 0, bodyEnd = 0; //no start/end tag
-                var bodyTpl = await wordSet.GetBodyTplA(mainTplStr);
+                var bodyTpl = wordSet.GetBodyTpl(mainTplStr);
 
                 //get row template string
                 //int rowStart = 0, rowEnd = 0;
-                var rowTpl = await wordSet.GetRowTplA(bodyTpl.TplStr);
+                var rowTpl = wordSet.GetRowTpl(bodyTpl.TplStr);
                 if (rowTpl == null)
                 {
                     error = "can not find rowTpl String.";
@@ -150,11 +150,11 @@ namespace DbAdm.Services
             }
 
             //8.download file
-            await _Web.ExportByStreamA(ms, "Tables.docx");
+            await _FunApi.ExportByStreamA(ms, "Tables.docx");
             return true;
 
         lab_error:
-            await _Log.ErrorA("GenDocuService.cs RunAsync() failed: " + error);
+            await _Log.ErrorRootA("GenDocuService.cs RunAsync() failed: " + error);
             return false;
         }
 

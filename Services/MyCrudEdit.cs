@@ -3,7 +3,7 @@ using Base.Services;
 
 namespace DbAdm.Services
 {
-    public class MyCrudEdit : XgEdit
+    public class MyCrudEdit : BaseEditSvc
     {
         public MyCrudEdit(string ctrl) : base(ctrl) { }
 
@@ -13,7 +13,7 @@ namespace DbAdm.Services
             {
                 Table = "dbo.Crud",
                 PkeyFid = "Id",
-                Col4 = new string[] { null, "Created", null, "Revised"},
+                Col4 = new string[] { "", "Created", "", "Revised"},
                 Items = new EitemDto[] {
                     new() { Fid = "Id" },
                     new() { Fid = "ProjectId", Required = true },
@@ -41,7 +41,7 @@ select a.*,
 	c.Code, c.Name, c.DataType
 from dbo.CrudQitem a
 join dbo.[Column] c on a.ColumnId=c.Id
-where a.CrudId in ({0})
+where a.CrudId=@Id
 order by a.Sort
 ",
                         Table = "dbo.CrudQitem",                        
@@ -70,7 +70,7 @@ order by a.Sort
                         ReadSql = @"
 select a.*
 from dbo.CrudRitem a
-where a.CrudId in ({0})
+where a.CrudId=@Id
 order by a.Sort
 ",
                         Table = "dbo.CrudRitem",
@@ -110,6 +110,7 @@ order by a.Sort
                         },
                         Childs = new []
                         {
+                            //注意: 第2層child ReadSql where 使用 xxx in ({0}) 
                             new EditDto
                             {
                                 ReadSql = @"

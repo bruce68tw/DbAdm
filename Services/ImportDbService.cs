@@ -11,8 +11,8 @@ namespace DbAdm.Services
     public class ImportDbService
     {
         //consider different DB engine
-        private string _sqlGetTables;
-        private string _sqlGetCols;
+        private string _sqlGetTables = "";
+        private string _sqlGetCols = "";
 
         public async Task<ResultDto> RunA(string projectId)
         {
@@ -20,12 +20,12 @@ namespace DbAdm.Services
 
             #region 1.get dbo.Project row
             var db = new Db();
-            Db dbSrc = null;
-            var project = await db.GetJsonA(string.Format(@"
+            Db? dbSrc = null;
+            var project = await db.GetJsonA($@"
 select DbName, ConnectStr, FromTmpTable
 from dbo.Project
-where Id='{0}'
-", projectId));
+where Id='{projectId}'
+");
 
             if (project == null)
             {
@@ -41,7 +41,7 @@ where Id='{0}'
             //set variables, Db目前無法動態連結 MySql
             //var dbType = (DbTypeEnum)Convert.ToInt32(project["DbType"]);
             //SetSqlVar(dbType);
-            var fromTmpTable = (project["FromTmpTable"].ToString() == "1");
+            var fromTmpTable = (project["FromTmpTable"]!.ToString() == "1");
             SetSqlVar(fromTmpTable);
 
             //connect source db
@@ -51,7 +51,7 @@ where Id='{0}'
             }
             else
             {
-                dbSrc = new Db(project["ConnectStr"].ToString());
+                dbSrc = new Db(project["ConnectStr"]!.ToString());
                 if (!await dbSrc.InitDbA())
                 {
                     result.ErrorMsg = "Project.ConnectStr is wrong.";
@@ -80,11 +80,11 @@ CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
 
             #region 3.write #tmpTable(from Information_Schema.Tables)
             //欄位順序必須與Db相同
-            var dbName = project["DbName"].ToString();
+            var dbName = project["DbName"]!.ToString();
             var reader = await dbSrc.GetReaderA(string.Format(_sqlGetTables, dbName));
 
             //bulk copy
-            using (var bcp = new SqlBulkCopy((SqlConnection)db.GetConnection()))
+            using (var bcp = new SqlBulkCopy((SqlConnection)db.GetConnection()!))
             {
                 bcp.DestinationTableName = "#tmpTable";
                 try
@@ -99,7 +99,7 @@ CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
                 }
                 finally
                 {
-                    reader.Close();
+                    reader!.Close();
                 }
             }
             #endregion
@@ -107,7 +107,7 @@ CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
             #region 4.write #tmpColumn(from Information_Schema.Columns)
             reader = await dbSrc.GetReaderA(string.Format(_sqlGetCols, dbName));
 
-            using (var bcp = new SqlBulkCopy((SqlConnection)db.GetConnection()))
+            using (var bcp = new SqlBulkCopy((SqlConnection)db.GetConnection()!))
             {
                 bcp.DestinationTableName = "#tmpColumn";
                 try
@@ -122,22 +122,21 @@ CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
                 }
                 finally
                 {
-                    reader.Close();
+                    reader!.Close();
                 }
             }
             #endregion
 
             #region 5.insert/update dbo.Table from #tmpTable
             //get rows for insert new 
-            var tables = await db.GetJsonsA(string.Format(@"
+            var tables = await db.GetJsonsA($@"
 select Code, Note
 from #tmpTable
 where Code not in (
     select Code 
     from dbo.[Table]
-    where ProjectId='{0}'
-)
-", projectId));
+    where ProjectId='{projectId}'
+)");
 
             //insert new table
             if (tables != null)
@@ -147,18 +146,18 @@ where Code not in (
                     await db.ExecSqlA(string.Format(@"
 insert into dbo.[Table](Id, ProjectId, Code, Name, Note, Status)
 values('{0}', '{1}', '{2}', '', '{3}', 1)
-", _Str.NewId(), projectId, table["Code"].ToString(), table["Note"].ToString()));
+", _Str.NewId(), projectId, table["Code"]!.ToString(), table["Note"]!.ToString()));
                 }
             }
 
             //update table.status(0/1)
-            await db.ExecSqlA(string.Format(@"
+            await db.ExecSqlA($@"
 update a set 
     Status=case when t.Code is null then 0 else 1 end
 from dbo.[Table] a
 left outer join #tmpTable t on t.Code=a.Code
-where a.ProjectId='{0}'
-", projectId));
+where a.ProjectId='{projectId}'
+");
             #endregion
 
             #region 6.insert/update dbo.Column from #tmpColumn
@@ -195,9 +194,9 @@ values(
     '', 0, '{4}',
     1)
 ",
-_Str.NewId(), col["TableId"].ToString(), col["Code"].ToString(), 
+_Str.NewId(), col["TableId"]!.ToString(), col["Code"]!.ToString(), 
 Convert.ToByte(col["Nullable"]),
-col["Note"].ToString()
+col["Note"]!.ToString()
 ));
                 }
             }

@@ -4,19 +4,19 @@
     public class CrudEitem0Dto
     {
         //base
-        public string Fid { get; set; }
-        public string Name { get; set; }
-        public string DataType { get; set; }
+        public string Fid { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string DataType { get; set; } = "";
 
         public bool Required { get; set; }
-        public string CheckType { get; set; }
-        public string CheckData { get; set; }
+        public string CheckType { get; set; } = "";
+        public string CheckData { get; set; } = "";
 
-        public string ItemType { get; set; }
-        public string ItemData { get; set; }
-        public string PosGroup { get; set; }
-        public string LayoutCols { get; set; }
-        public string PlaceHolder { get; set; }
+        public string ItemType { get; set; } = "";
+        public string ItemData { get; set; } = "";
+        public string PosGroup { get; set; } = "";
+        public string LayoutCols { get; set; } = "";
+        public string PlaceHolder { get; set; } = "";
         public int Sort { get; set; }
         public int Width { get; set; }
 

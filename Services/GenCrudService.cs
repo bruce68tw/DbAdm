@@ -21,11 +21,11 @@ namespace DbAdm.Services
         const string PosGroup0 = "-abc99";  //impossible value for initial
 
         //rows for curdId list
-        private List<CrudDto> _cruds = null;        
-        private List<CrudQitemDto> _qitems = null;
-        private List<CrudRitemDto> _ritems = null;
-        private List<CrudEtableDto> _etables = null;
-        private List<CrudEitemDto> _eitems = null;
+        private List<CrudDto> _cruds = null!;
+        private List<CrudQitemDto>? _qitems = null;
+        private List<CrudRitemDto>? _ritems = null;
+        private List<CrudEtableDto>? _etables = null;
+        private List<CrudEitemDto>? _eitems = null;
 
         //template folder
         private readonly string _tplDir = _Fun.DirRoot + "_template/";
@@ -58,7 +58,7 @@ namespace DbAdm.Services
         {
             //only alpha, num and ','
             //if (!_Str.CheckKeyRule(crudIdList2, "GenCrudService Run()"))
-            if (!await _Str.CheckKeyA(crudIdList2))
+            if (!_Str.CheckKey(crudIdList2))
                 return "GenCrudService.cs RunAsync() only accept alphabet and numeric: (" + crudIdList2 + ")";
 
             var crudIds = crudIdList2.Split(',');
@@ -208,9 +208,9 @@ namespace DbAdm.Services
             }
 
             //rows for one crudId
-            var fitems = _qitems.Where(a => a.CrudId == crudId).ToList();   //find fields
-            var ritems = _ritems.Where(a => a.CrudId == crudId).ToList();   //result fields
-            var etables = _etables.Where(a => a.CrudId == crudId).ToList();
+            var fitems = _qitems!.Where(a => a.CrudId == crudId).ToList();   //find fields
+            var ritems = _ritems!.Where(a => a.CrudId == crudId).ToList();   //result fields
+            var etables = _etables!.Where(a => a.CrudId == crudId).ToList();
             #endregion
 
             #region 2.set fields: crud.RsItemStrs && IsGroup, IsGroupStart, IsGroupEnd
@@ -225,7 +225,7 @@ namespace DbAdm.Services
                 for (i=0; i<fitemLen; i++)
                 {
                     //set rSitemStrs
-                    var fitem = fitems[i];
+                    var fitem = fitems![i];
                     rSitemStrs.Add(GetRServiceItemStr(fitem));
 
                     //set IsGroup, IsGroupStart, IsGroupEnd
@@ -244,10 +244,10 @@ namespace DbAdm.Services
                     //fitem.RvStr = GetViewItemStr(fitem);  //set after XgFindTbar
                 }
                 crud.RsItemStrs = rSitemStrs;
-                crud.HasFitemCols = fitems.Any(a => _Str.IsEmpty(a.LayoutCols));
+                crud.HasFitemCols = fitems!.Any(a => _Str.IsEmpty(a.LayoutCols));
 
                 //set ReadSelectCols, be [] when null !!
-                crud.ReadSelectCols = fitems
+                crud.ReadSelectCols = fitems!
                     .Where(a => ddlpTypes.Contains(a.ItemType))
                     .Select(a => (a.ItemData[^1] == 'A')
                         ? $"ViewBag.{a.ItemData} = await _XpCode.{a.ItemData}();"
@@ -256,7 +256,7 @@ namespace DbAdm.Services
                     .ToList();
 
                 #region 4.set fields: EditSelectCols(ReadSelectCols already done)
-                crud.EditSelectCols = _eitems
+                crud.EditSelectCols = _eitems!
                     .Where(a => ddlpTypes.Contains(a.ItemType) &&
                         !crud.ReadSelectCols.Contains(a.ItemData))
                     .Select(a => (a.ItemData[^1] == 'A')
@@ -271,7 +271,7 @@ namespace DbAdm.Services
                 #endregion
 
                 //set Fitems, F2items
-                var f2Pos = fitems.FindIndex(a => a.IsFind2);
+                var f2Pos = fitems!.FindIndex(a => a.IsFind2);
                 var hasFind2 = (f2Pos > 0);    //must > 0
                 crud.HasFindForm = true;
                 crud.HasFind2Form = hasFind2;
@@ -343,7 +343,7 @@ namespace DbAdm.Services
             {
                 //array len are different, seperate to 2 arrays
                 var jsStrs = new List<string>();  //part fields for js
-                var ritemLen = ritems.Count;
+                var ritemLen = ritems!.Count;
                 for (i = 0; i < ritemLen; i++)
                 {
                     var ritem = ritems[i];
@@ -384,7 +384,7 @@ namespace DbAdm.Services
             for (i = 0; i < etableLen; i++)
             {
                 var etable = etables[i];
-                var eitems = _eitems.Where(a => a.EtableId == etable.Id).ToList();
+                var eitems = _eitems!.Where(a => a.EtableId == etable.Id).ToList();
                 etable.Eitems = eitems;
 
                 var posGroup = PosGroup0;   //set impossible init value
@@ -432,7 +432,7 @@ namespace DbAdm.Services
                     table.SortFid = table.Eitems
                         .Where(a => a.ItemType == QEitemTypeEstr.Sort)
                         .Select(a => a.Fid)
-                        .FirstOrDefault();
+                        .FirstOrDefault()!;
                     table.Eitems.Add(new CrudEitemDto()
                     {
                         HeadStr = "<th></th>",
@@ -462,13 +462,13 @@ namespace DbAdm.Services
             {
                 //FileType0, FileType1
                 var mainTableId = crud.MainTable.Id;
-                crud.FileType1 = files.Any(a => a.EtableId != mainTableId);
+                crud.FileType1 = files!.Any(a => a.EtableId != mainTableId);
                 crud.FileType0 = !crud.FileType1;
 
                 //FileEditArg, FileEditTypeArg, FileEditStrs
                 if (crud.FileType0)
                 {
-                    var file = files.First(a => a.EtableId == mainTableId);
+                    var file = files!.First(a => a.EtableId == mainTableId);
                     var fid2 = $"t0_{file.Fid}";
                     crud.FileEditArg = fid2;
                     crud.FileEditTypeArg = $"IFormFile {crud.FileEditArg}";
@@ -483,7 +483,7 @@ namespace DbAdm.Services
                     crud.FileEditTypeArg = "";
                     crud.FileEditStrs = new List<string>();
                     var sep = "";
-                    foreach (var file in files)
+                    foreach (var file in files!)
                     {
                         if (file.EtableId == mainTableId)
                         {
@@ -494,7 +494,7 @@ namespace DbAdm.Services
                         }
                         else
                         {
-                            var etable = crud.ChildTables.First(a => a.Id == file.EtableId);
+                            var etable = crud.ChildTables!.First(a => a.Id == file.EtableId);
                             var fid2 = $"t0{etable.Sort}_{file.Fid}";
                             crud.FileEditArg += sep + fid2;
                             crud.FileEditTypeArg += sep + $"List<IFormFile> {fid2}";

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DbAdm.Controllers
 {
     //[Permission(Prog = _Prog.Course)]
-    public class ColumnController : ApiCtrl
+    public class ColumnController : BaseCtrl
     {
         public async Task<ActionResult> Read()
         {
@@ -41,12 +41,12 @@ namespace DbAdm.Controllers
 
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json)));
+            return Json(await EditService().CreateA(_Str.ToJson(json)!));
         }
 
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
         }
 
         public async Task<JsonResult> Delete(string key)

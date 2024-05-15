@@ -4,7 +4,7 @@ using Base.Enums;
 using Base.Models;
 using Base.Services;
 {{#unless AuthType0}}
-using BaseWeb.Attributes;
+using BaseApi.Attributes;
 {{/unless}}
 using BaseApi.Controllers;
 using BaseWeb.Services;
