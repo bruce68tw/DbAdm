@@ -73,11 +73,11 @@ var _crudE = {
 
     /*
     _getJsonAndSetMode: function(key, fun) {
-        //_crud.toUpdateMode(key);
+        //_crudR.toUpdateMode(key);
         var act = (fun == _fun.FunU) ? 'GetUpdJson' :
             (fun == _fun.FunV) ? 'GetViewJson' : '';
         _ajax.getJson(act, { key: key }, function(data) {
-            _crud.toEditMode(fun, data);
+            _crudR.toEditMode(fun, data);
         });
     },
      */
@@ -273,11 +273,10 @@ var _crudE = {
     },
 
     /**
-     * 改為私有, search _crud.afterSave !!
-     * after save
+     * (public) after save
      * data: ResultDto
      */
-    _afterSave: function(data) {
+    afterSave: function(data) {
         //debugger;
         //call fnAfterSave if need
         if (_fun.hasValue(_me.edit0.fnAfterSave))
@@ -317,7 +316,7 @@ var _crudE = {
     /**
      * check current is create/update mode or not
      */
-    _isEditMode: function() {
+    isEditMode: function() {
         return (_me._nowFun !== _fun.FunV);
     },
 
@@ -426,7 +425,7 @@ var _crudE = {
      */
     onOpenModal: function(btn, title, fid, required, maxLen) {
         var tr = $(btn).closest('tr');
-        _tool.showArea(title, _itext.get(fid, tr), _crudE._isEditMode(), function(result) {
+        _tool.showArea(title, _itext.get(fid, tr), _crudE.isEditMode(), function(result) {
             _itext.set(fid, result, tr);
         });
     },
@@ -473,7 +472,7 @@ var _crudE = {
                 data.append('key', edit0.getKey());
 
             _ajax.getJsonByFormData(action, data, function(result) {
-                _crudE._afterSave(result);
+                _crudE.afterSave(result);
             });
         } else {
             //no files
@@ -482,7 +481,7 @@ var _crudE = {
                 data.key = edit0.getKey();
 
             _ajax.getJson(action, data, function(result) {
-                _crudE._afterSave(result);
+                _crudE.afterSave(result);
             });
         }
     },

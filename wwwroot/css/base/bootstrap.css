@@ -27,7 +27,7 @@
     /*padding: 3px 6px !important;*/
 }
 
-    .form-control:disabled, .form-control[readonly] {
+    .form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
         background-color: #eee !important;
     }
 

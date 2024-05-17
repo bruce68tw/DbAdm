@@ -21,6 +21,8 @@
  */ 
 function EditOne(kid, eformId) {
 
+    //fileFids, fileLen, hasFile 屬性在外部設定(_edit.js setFileVars())
+
     /**
      * initial & and instance variables (this.validator is by _valid.init())
      * called by this(at last)

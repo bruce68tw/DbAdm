@@ -211,7 +211,7 @@
     <value>Created Time</value>
   </data>
   <data name="ProgName" xml:space="preserve">
-    <value>Prpgram Name</value>
+    <value>Program Name</value>
   </data>
   <data name="GenCrud" xml:space="preserve">
     <value>Generate CRUD</value>

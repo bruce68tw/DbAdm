@@ -28,7 +28,7 @@ var _ajax = {
     /**
      * ajax return json by FormData, for upload file
      * param url {string}
-     * param data {json}
+     * param data {FormData}
      * param fnOk {function}
      * param fnError {function}
      * return {json}
@@ -37,11 +37,11 @@ var _ajax = {
         var json = {
             url: url,
             type: 'POST',
-            cache: false,
             data: data,
+            dataType: 'json',   //return type, TODO: pending test
+            cache: false,
             contentType: false, //false!! input type, default 'application/x-www-form-urlencoded; charset=UTF-8'
-            dataType: 'json',   //TODO: pending test
-            processData: false, //false!! if true it will convert input data to string, then get error !!
+            processData: false, //false!! (jQuery only) if true it will convert input data to string, then get error !!
         };
         _ajax._call(json, fnOk, fnError);
     },

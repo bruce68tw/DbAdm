@@ -108,9 +108,9 @@ var _crudR = {
         if (hasUpdate)
             funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_crudR.onUpdate' : fnOnUpdate), key, _BR.TipUpdate);
         if (hasDelete)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="_crudR.onDelete(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_crudR.onDelete' : fnOnDelete), key, rowName, _BR.TipDelete);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_crudR.onDelete' : fnOnDelete), key, rowName, _BR.TipDelete);
         if (hasView)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="_crudR.onView(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_crudR.onView' : fnOnView), key, _BR.TipView);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_crudR.onView' : fnOnView), key, _BR.TipView);
         return funs;
     },
 
@@ -140,7 +140,9 @@ var _crudR = {
                 _idate.init(_me.rform2);
 
             //4.Create Datatable object
-            _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig);
+            if (_var.notEmpty(dtConfig)) {
+                _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig, _crudR._getFindCond());
+            }
         }
 
         _me._updName = updName;
@@ -156,6 +158,9 @@ var _crudR = {
      * get Find condition
      */
     _getFindCond: function () {
+        if (_me.rform == null)
+            return null;
+
         var row = _form.toJson(_me.rform);
         var find2 = _me.rform2;
         if (find2 !== null && _obj.isShow(find2))

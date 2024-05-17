@@ -20,5 +20,10 @@
   "NotLogin": "Please Login First.",
 
   "Required": "Required",
-  "StrLen": "String too long({0})"
+  "StrLen": "String too long({0})",
+
+  "TipUpdate": "修改這筆資料",
+  "TipDelete": "刪除這筆資料",
+  "TipView": "檢視這筆資料"
+
 }

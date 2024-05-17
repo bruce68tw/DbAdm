@@ -124,18 +124,22 @@ var _iselect = $.extend({}, _ibase, {
     //ie 不支援 option display:none !!
     //filter options by data-ext value
     //rows: 所有option 資料(Id,Text,Ext)
-    filterByExt: function (fid, value, rows, box, allItem) {
+    filterByExt: function (fid, value, rows, box, allItem, addEmptyStr) {
         if (allItem === undefined)
             allItem = false;
         var obj = _obj.get(fid, box);
         obj.empty();
+
+        if (addEmptyStr != '')
+            obj.append(_str.format('<option value="">{0}</option>', addEmptyStr));
+
         //item.find('option').hide();
         var len = rows.length;
         for (var i = 0; i < len; i++) {
             var row = rows[i];
             //if (row.Ext == value)
             if ((allItem === true && row.Ext == '') || row.Ext == value)
-                obj.append(_str.format('<option value="{0}">{1}</option>', row.Id, row.Text));
+                obj.append(_str.format('<option value="{0}">{1}</option>', row.Id, row.Str));
         }
 
         //選取第0筆

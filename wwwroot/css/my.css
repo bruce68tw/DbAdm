@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?25faek');
-  src:  url('fonts/icomoon.eot?25faek#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?25faek') format('truetype'),
-    url('fonts/icomoon.woff?25faek') format('woff'),
-    url('fonts/icomoon.svg?25faek#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?fjpwrw');
+  src:  url('fonts/icomoon.eot?fjpwrw#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?fjpwrw') format('truetype'),
+    url('fonts/icomoon.woff?fjpwrw') format('woff'),
+    url('fonts/icomoon.svg?fjpwrw#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.ico-spin:before {
+  content: "\e97c";
+}
+.ico-checked:before {
+  content: "\ea10";
+}
 .ico-desc:before {
   content: "\e901";
 }
@@ -112,9 +118,6 @@
 .ico-exit:before {
   content: "\ea14";
 }
-.ico-spin:before {
-  content: "\e97c";
-}
 
 
 .xg-hide {
@@ -164,9 +167,10 @@
     padding: 2px 5px;
 }
 
-/* 功能按鈕, 空白則為 basic button */
+/* 功能按鈕, 空白則為 basic button 
 .xg-fun-btn {    
 }
+*/
 
 /* look like link */
 .xg-link-btn {
@@ -198,6 +202,7 @@
     border-color: #6c757d;
 }
 
+/* 只設定大小 */
 .xg-btn-size {
     padding: .25rem .5rem;
     margin-right: 3px;
@@ -476,6 +481,7 @@ path, .jtk-endpoint { cursor:pointer; }
 }
 
 /* form without line */
+/* 停用 xg-row */
 .xg-form {
     /*font size same to .form-control*/
     font-size: 16px;
@@ -483,11 +489,12 @@ path, .jtk-endpoint { cursor:pointer; }
     /*margin-bottom: 0px;*/
 }
 
-    .xg-form .xg-row {
-        /*min-height: 53px;*/
+    /* 停用 xg-row
+    .xg-form .zz_xg-row {
         margin: 0;
         border: none;
     }
+    */
 
     .xg-form .xg-input {
         padding-top: 7px;
@@ -992,8 +999,10 @@ input[type=number] {
 
 /* prog path, razor 只支援 inline style */
 .xg-prog-path {
-    height: 43px;
-    /*border-bottom: 1px solid #E5E5E5;*/
+    height: 38px;
+    padding: 8px 16px;
+    font-size: 16px;
+    color: #808080;
 }
 
     .xg-prog-path ul {
@@ -1002,12 +1011,6 @@ input[type=number] {
         color: #a5a5a5;
         background: none;
     }
-
-.xg-prog-title {
-    padding: 10px 0 10px 15px;
-    font-size: 20px;
-    font-weight: bold;
-}
 
 @media (max-width:768px) {
     .xg-prog-path {
@@ -1280,7 +1283,7 @@ body.xg-show-wait .xg-wait {
     /*padding: 3px 6px !important;*/
 }
 
-    .form-control:disabled, .form-control[readonly] {
+    .form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
         background-color: #eee !important;
     }
 

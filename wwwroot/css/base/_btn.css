@@ -4,9 +4,10 @@
     padding: 2px 5px;
 }
 
-/* 功能按鈕, 空白則為 basic button */
+/* 功能按鈕, 空白則為 basic button 
 .xg-fun-btn {    
 }
+*/
 
 /* look like link */
 .xg-link-btn {
@@ -38,6 +39,7 @@
     border-color: #6c757d;
 }
 
+/* 只設定大小 */
 .xg-btn-size {
     padding: .25rem .5rem;
     margin-right: 3px;

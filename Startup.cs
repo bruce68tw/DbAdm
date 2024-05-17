@@ -44,7 +44,7 @@ namespace DbAdm
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //4.user info for base component
-            services.AddSingleton<IBaseUserS, BaseUserSvc>();
+            services.AddSingleton<IBaseUserSvc, BaseUserSvc>();
 
             //5.ado.net for mssql
             services.AddTransient<DbConnection, SqlConnection>();

@@ -126,7 +126,8 @@ var _ifile = $.extend({}, _ibase, {
      * param box {object} box object
      */
     _boxGetLink: function (box) {
-        return box.find('a');
+        //return box.find('a');
+        return box.find('button').last();
     },
     _boxGetFile: function (box) {
         return box.find(':file');

@@ -28,7 +28,7 @@ var _ajax = {
     /**
      * ajax return json by FormData, for upload file
      * param url {string}
-     * param data {json}
+     * param data {FormData}
      * param fnOk {function}
      * param fnError {function}
      * return {json}
@@ -37,11 +37,11 @@ var _ajax = {
         var json = {
             url: url,
             type: 'POST',
-            cache: false,
             data: data,
+            dataType: 'json',   //return type, TODO: pending test
+            cache: false,
             contentType: false, //false!! input type, default 'application/x-www-form-urlencoded; charset=UTF-8'
-            dataType: 'json',   //TODO: pending test
-            processData: false, //false!! if true it will convert input data to string, then get error !!
+            processData: false, //false!! (jQuery only) if true it will convert input data to string, then get error !!
         };
         _ajax._call(json, fnOk, fnError);
     },
@@ -321,7 +321,7 @@ var _btn = {
 //use chart.js
 var _chart = {
 
-    _nowChart: null,
+    //_nowChart: null,
 
     //彩虹顏色
     rainbowColors: [
@@ -341,6 +341,7 @@ var _chart = {
      * param rows {List<IdNumDto>}
      * param color {string} 
      */
+    /*
     line: function (canvasId, rows, color) {
         var ids = [];
         var values = [];
@@ -352,13 +353,126 @@ var _chart = {
         _chart.drawLine(canvasId, ids, values, color);
     },
 
+    _clear: function () {
+        if (_chart._nowChart != null)
+            _chart._nowChart.destroy();
+    },
+    */
+
+    /**
+     * show chart
+     * param type {string} bar/pie/line
+     * param canvasObj {object} canvas Object
+     * param dto {model} Chart/ChartGroup, 可加入 config 
+     * param percent {bool} show percentage(for pie,doughnut) or not
+     */
+    _show: function (type, canvasObj, dto, legend, percent) {
+        if (legend == null)
+            legend = true;
+        if (percent == null)
+            percent = false;
+
+        //default config
+        var isHbar = (type == 'hbar');
+        var config = {
+            type: isHbar ? 'bar' : type,
+            data: {
+                labels: dto.labels,
+                datasets: dto.datasets,
+            },
+            options: {
+                //多包一層plugins才能顯示title
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        display: legend,
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    },
+                    title: {
+                        display: true,
+                        text: dto.title
+                    }
+                }
+            }
+        };
+
+        //add ext config.options if any
+        if (dto.options != null)
+            config.options = _json.copy(dto.options, config.options);
+
+        //add percentage if need
+        if (percent) {
+            config.options.plugins.tooltip = {
+                callbacks: {
+                    label: function (ctx) {
+                        //注意:不同版本的屬性不同, 以下為3.9.1版 !!
+                        //get sum if need
+                        var list = ctx.dataset.data;
+                        if (ctx.chart._sum == null) {
+                            var sum = 0;
+                            list.map(a => {
+                                sum += a;
+                            });
+                            ctx.chart._sum = sum;
+                        }
+
+                        //save old label if need
+                        if (ctx._oldLabel == null)
+                            ctx._oldLabel = ctx.label + ' ' + ctx.formattedValue;
+
+                        //get percentage and add tail
+                        var percent = (list[ctx.dataIndex] * 100 / ctx.chart._sum).toFixed(2) + "%";
+                        return ctx._oldLabel + ' (' + percent + ')';
+                    }
+                }
+            };
+        }
+
+        return new Chart(canvasObj, config);
+    },
+    
+    line: function (canvasObj, dto) {
+        return _chart._show('line', canvasObj, dto, false);
+    },
+
+    hbar: function (canvasObj, dto) {
+        dto.options = {
+            indexAxis: 'y'
+        };
+        //debugger;
+        return _chart._show('hbar', canvasObj, dto, false);
+    },
+
+    pie: function (canvasObj, dto) {
+        return _chart._show('pie', canvasObj, dto, null, true);
+    },
+    
+    doughnut: function (canvasObj, dto) {
+        return _chart._show('doughnut', canvasObj, dto, null, true);
+    },
+
+    groupLine: function (canvasObj, dto) {
+        /*
+        //set curve line
+        dto.datasets.map(a => {
+            a.tension = 0;
+        });
+        */
+        return _chart._show('line', canvasObj, dto);
+    },
+
+    groupBar: function (canvasObj, dto) {
+        return _chart._show('bar', canvasObj, dto);
+    },
+
     /**
      * show one line chart, called Chart.js
      */ 
     drawLine: function (canvasId, ids, values, color) {
-        if (_chart._nowChart != null)
-            _chart._nowChart.destroy();
-
+        _chart._clear();
         _chart._nowChart = new Chart(document.getElementById(canvasId), {
             type: 'line',
             data: {
@@ -512,11 +626,11 @@ var _crudE = {
 
     /*
     _getJsonAndSetMode: function(key, fun) {
-        //_crud.toUpdateMode(key);
+        //_crudR.toUpdateMode(key);
         var act = (fun == _fun.FunU) ? 'GetUpdJson' :
             (fun == _fun.FunV) ? 'GetViewJson' : '';
         _ajax.getJson(act, { key: key }, function(data) {
-            _crud.toEditMode(fun, data);
+            _crudR.toEditMode(fun, data);
         });
     },
      */
@@ -712,11 +826,10 @@ var _crudE = {
     },
 
     /**
-     * 改為私有, search _crud.afterSave !!
-     * after save
+     * (public) after save
      * data: ResultDto
      */
-    _afterSave: function(data) {
+    afterSave: function(data) {
         //debugger;
         //call fnAfterSave if need
         if (_fun.hasValue(_me.edit0.fnAfterSave))
@@ -756,7 +869,7 @@ var _crudE = {
     /**
      * check current is create/update mode or not
      */
-    _isEditMode: function() {
+    isEditMode: function() {
         return (_me._nowFun !== _fun.FunV);
     },
 
@@ -865,7 +978,7 @@ var _crudE = {
      */
     onOpenModal: function(btn, title, fid, required, maxLen) {
         var tr = $(btn).closest('tr');
-        _tool.showArea(title, _itext.get(fid, tr), _crudE._isEditMode(), function(result) {
+        _tool.showArea(title, _itext.get(fid, tr), _crudE.isEditMode(), function(result) {
             _itext.set(fid, result, tr);
         });
     },
@@ -912,7 +1025,7 @@ var _crudE = {
                 data.append('key', edit0.getKey());
 
             _ajax.getJsonByFormData(action, data, function(result) {
-                _crudE._afterSave(result);
+                _crudE.afterSave(result);
             });
         } else {
             //no files
@@ -921,7 +1034,7 @@ var _crudE = {
                 data.key = edit0.getKey();
 
             _ajax.getJson(action, data, function(result) {
-                _crudE._afterSave(result);
+                _crudE.afterSave(result);
             });
         }
     },
@@ -1038,9 +1151,9 @@ var _crudR = {
         if (hasUpdate)
             funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_crudR.onUpdate' : fnOnUpdate), key, _BR.TipUpdate);
         if (hasDelete)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="_crudR.onDelete(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_crudR.onDelete' : fnOnDelete), key, rowName, _BR.TipDelete);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_crudR.onDelete' : fnOnDelete), key, rowName, _BR.TipDelete);
         if (hasView)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="_crudR.onView(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_crudR.onView' : fnOnView), key, _BR.TipView);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_crudR.onView' : fnOnView), key, _BR.TipView);
         return funs;
     },
 
@@ -1070,7 +1183,9 @@ var _crudR = {
                 _idate.init(_me.rform2);
 
             //4.Create Datatable object
-            _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig);
+            if (_var.notEmpty(dtConfig)) {
+                _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig, _crudR._getFindCond());
+            }
         }
 
         _me._updName = updName;
@@ -1086,6 +1201,9 @@ var _crudR = {
      * get Find condition
      */
     _getFindCond: function () {
+        if (_me.rform == null)
+            return null;
+
         var row = _form.toJson(_me.rform);
         var find2 = _me.rform2;
         if (find2 !== null && _obj.isShow(find2))
@@ -2856,7 +2974,8 @@ var _ifile = $.extend({}, _ibase, {
      * param box {object} box object
      */
     _boxGetLink: function (box) {
-        return box.find('a');
+        //return box.find('a');
+        return box.find('button').last();
     },
     _boxGetFile: function (box) {
         return box.find(':file');
@@ -3384,7 +3503,8 @@ var _iradio = $.extend({}, _ibase, {
     //set checked status by name & data-value
     _setByName: function (name, value, box) {
         var obj = _obj.getF('[name=' + name + '][data-value=' + value + ']', box);
-        obj.prop('checked', true);
+        if (obj != null) 
+            obj.prop('checked', true);
     },
 
     //set status by name
@@ -3633,18 +3753,22 @@ var _iselect = $.extend({}, _ibase, {
     //ie 不支援 option display:none !!
     //filter options by data-ext value
     //rows: 所有option 資料(Id,Text,Ext)
-    filterByExt: function (fid, value, rows, box, allItem) {
+    filterByExt: function (fid, value, rows, box, allItem, addEmptyStr) {
         if (allItem === undefined)
             allItem = false;
         var obj = _obj.get(fid, box);
         obj.empty();
+
+        if (addEmptyStr != '')
+            obj.append(_str.format('<option value="">{0}</option>', addEmptyStr));
+
         //item.find('option').hide();
         var len = rows.length;
         for (var i = 0; i < len; i++) {
             var row = rows[i];
             //if (row.Ext == value)
             if ((allItem === true && row.Ext == '') || row.Ext == value)
-                obj.append(_str.format('<option value="{0}">{1}</option>', row.Id, row.Text));
+                obj.append(_str.format('<option value="{0}">{1}</option>', row.Id, row.Str));
         }
 
         //選取第0筆
@@ -4429,13 +4553,15 @@ var _table = {
         row.insertAfter(row.next());
     },
 
+    /*
     //delete, up, down
     rowFun: function () {
         return '' +
-            _str.format('<a href="javascript:_crud.onUpdate(\'{0}\');"><i class="ico-delete" title="{0}"></i></a>', key, _BR.TipUpdate) +
+            _str.format('<a href="javascript:_crudE.onUpdate(\'{0}\');"><i class="ico-delete" title="{0}"></i></a>', key, _BR.TipUpdate) +
             _str.format('<a href="javascript:_table.rowMoveUp(this);"><i class="ico-up" title="{0}"></i></a>', _BR.TipUpdate) +
             _str.format('<a href="javascript:_table.rowMoveDown(this);"><i class="ico-down" title="{0}"></i></a>', _BR.TipUpdate);
     },
+    */
 
     /**
      * get rows count
@@ -4919,6 +5045,12 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 
                 //add input parameter for datatables
                 data: function (arg) {
+                    //write order.fid if any
+                    var orders = arg.order;
+                    if (orders.length > 0) {
+                        var order = orders[0];
+                        order.fid = arg.columns[order.column].data;
+                    }
                     arg.findJson = _json.toStr(this.findJson);    //string type
                     arg.recordsFiltered = this.recordsFiltered;
                     if (this._keepStart)
@@ -5085,6 +5217,16 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * check is a new tr or not
+     * param tr {object} 
+     * return {bool}
+     */
+    this.isNewTr = function (tr) {
+        var id = _itext.get(this.kid, tr);
+        return _edit.isNewKey(id);
+    };
+
+    /**
      * reset edit form
      * param rowsBox {object} optional
      */
@@ -5145,7 +5287,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * get upd json by UserRole mode(urm)
+     * get upd json by UserRole mode(urm), Role欄位使用checkbox
+     * called by User.js、XpRole.js
      * param upKey {string} up key
      * param rowsBox {object} rows box
      * param keyFid {string} key fid, ex: UserId
@@ -5165,8 +5308,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
                 if (_icheck.checkedO(obj)) {
                     //new row
                     var row = {};
-                    row[fids[0]] = ++newIdx;
-                    row[fids[1]] = _icheck.getO(obj);
+                    row[fids[0]] = ++newIdx;            //Id, base 1 !!
+                    row[fids[1]] = _icheck.getO(obj);   //RoleId
                     me.rowSetFkey(row, upKey);  //set foreign key value
                     rows[rows.length] = row;
                 }
@@ -5241,6 +5384,9 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
                 _edit.setOld(obj2, row[fid]);
             }
 
+            //set date input
+            _idate.init(box);
+
             //one row into UI
             _form.loadJson(box, row);
 
@@ -5259,11 +5405,11 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
     /**
      * get row key
-     * param box {object} row box
+     * param tr {object} row box
      * return {string} key value
      */
-    this.getKey = function (box) {
-        return _input.get(this.kid, box);
+    this.getKey = function (tr) {
+        return _input.get(this.kid, tr);
     };
 
     /**
@@ -5672,6 +5818,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
  * return {EditOne}
  */ 
 function EditOne(kid, eformId) {
+
+    //fileFids, fileLen, hasFile 屬性在外部設定(_edit.js setFileVars())
 
     /**
      * initial & and instance variables (this.validator is by _valid.init())

@@ -1,8 +1,10 @@
 ﻿
 /* prog path, razor 只支援 inline style */
 .xg-prog-path {
-    height: 43px;
-    /*border-bottom: 1px solid #E5E5E5;*/
+    height: 38px;
+    padding: 8px 16px;
+    font-size: 16px;
+    color: #808080;
 }
 
     .xg-prog-path ul {
@@ -11,12 +13,6 @@
         color: #a5a5a5;
         background: none;
     }
-
-.xg-prog-title {
-    padding: 10px 0 10px 15px;
-    font-size: 20px;
-    font-weight: bold;
-}
 
 @media (max-width:768px) {
     .xg-prog-path {

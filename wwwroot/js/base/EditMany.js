@@ -76,6 +76,16 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * check is a new tr or not
+     * param tr {object} 
+     * return {bool}
+     */
+    this.isNewTr = function (tr) {
+        var id = _itext.get(this.kid, tr);
+        return _edit.isNewKey(id);
+    };
+
+    /**
      * reset edit form
      * param rowsBox {object} optional
      */
@@ -136,7 +146,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * get upd json by UserRole mode(urm)
+     * get upd json by UserRole mode(urm), Role欄位使用checkbox
+     * called by User.js、XpRole.js
      * param upKey {string} up key
      * param rowsBox {object} rows box
      * param keyFid {string} key fid, ex: UserId
@@ -156,8 +167,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
                 if (_icheck.checkedO(obj)) {
                     //new row
                     var row = {};
-                    row[fids[0]] = ++newIdx;
-                    row[fids[1]] = _icheck.getO(obj);
+                    row[fids[0]] = ++newIdx;            //Id, base 1 !!
+                    row[fids[1]] = _icheck.getO(obj);   //RoleId
                     me.rowSetFkey(row, upKey);  //set foreign key value
                     rows[rows.length] = row;
                 }
@@ -232,6 +243,9 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
                 _edit.setOld(obj2, row[fid]);
             }
 
+            //set date input
+            _idate.init(box);
+
             //one row into UI
             _form.loadJson(box, row);
 
@@ -250,11 +264,11 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
     /**
      * get row key
-     * param box {object} row box
+     * param tr {object} row box
      * return {string} key value
      */
-    this.getKey = function (box) {
-        return _input.get(this.kid, box);
+    this.getKey = function (tr) {
+        return _input.get(this.kid, tr);
     };
 
     /**

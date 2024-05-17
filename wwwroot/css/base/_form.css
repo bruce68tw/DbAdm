@@ -1,5 +1,6 @@
 ﻿
 /* form without line */
+/* 停用 xg-row */
 .xg-form {
     /*font size same to .form-control*/
     font-size: 16px;
@@ -7,11 +8,12 @@
     /*margin-bottom: 0px;*/
 }
 
-    .xg-form .xg-row {
-        /*min-height: 53px;*/
+    /* 停用 xg-row
+    .xg-form .zz_xg-row {
         margin: 0;
         border: none;
     }
+    */
 
     .xg-form .xg-input {
         padding-top: 7px;

@@ -20,5 +20,9 @@
   "NotLogin": "您尚未登入系统。",
 
   "Required": "不可空白",
-  "StrLen": "字串过长({0})"
+  "StrLen": "字串过长({0})",
+
+  "TipUpdate": "修改這筆資料",
+  "TipDelete": "刪除這筆資料",
+  "TipView": "檢視這筆資料"
 }

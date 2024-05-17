@@ -2,7 +2,7 @@
 //use chart.js
 var _chart = {
 
-    _nowChart: null,
+    //_nowChart: null,
 
     //彩虹顏色
     rainbowColors: [
@@ -22,6 +22,7 @@ var _chart = {
      * param rows {List<IdNumDto>}
      * param color {string} 
      */
+    /*
     line: function (canvasId, rows, color) {
         var ids = [];
         var values = [];
@@ -33,13 +34,126 @@ var _chart = {
         _chart.drawLine(canvasId, ids, values, color);
     },
 
+    _clear: function () {
+        if (_chart._nowChart != null)
+            _chart._nowChart.destroy();
+    },
+    */
+
+    /**
+     * show chart
+     * param type {string} bar/pie/line
+     * param canvasObj {object} canvas Object
+     * param dto {model} Chart/ChartGroup, 可加入 config 
+     * param percent {bool} show percentage(for pie,doughnut) or not
+     */
+    _show: function (type, canvasObj, dto, legend, percent) {
+        if (legend == null)
+            legend = true;
+        if (percent == null)
+            percent = false;
+
+        //default config
+        var isHbar = (type == 'hbar');
+        var config = {
+            type: isHbar ? 'bar' : type,
+            data: {
+                labels: dto.labels,
+                datasets: dto.datasets,
+            },
+            options: {
+                //多包一層plugins才能顯示title
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        display: legend,
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    },
+                    title: {
+                        display: true,
+                        text: dto.title
+                    }
+                }
+            }
+        };
+
+        //add ext config.options if any
+        if (dto.options != null)
+            config.options = _json.copy(dto.options, config.options);
+
+        //add percentage if need
+        if (percent) {
+            config.options.plugins.tooltip = {
+                callbacks: {
+                    label: function (ctx) {
+                        //注意:不同版本的屬性不同, 以下為3.9.1版 !!
+                        //get sum if need
+                        var list = ctx.dataset.data;
+                        if (ctx.chart._sum == null) {
+                            var sum = 0;
+                            list.map(a => {
+                                sum += a;
+                            });
+                            ctx.chart._sum = sum;
+                        }
+
+                        //save old label if need
+                        if (ctx._oldLabel == null)
+                            ctx._oldLabel = ctx.label + ' ' + ctx.formattedValue;
+
+                        //get percentage and add tail
+                        var percent = (list[ctx.dataIndex] * 100 / ctx.chart._sum).toFixed(2) + "%";
+                        return ctx._oldLabel + ' (' + percent + ')';
+                    }
+                }
+            };
+        }
+
+        return new Chart(canvasObj, config);
+    },
+    
+    line: function (canvasObj, dto) {
+        return _chart._show('line', canvasObj, dto, false);
+    },
+
+    hbar: function (canvasObj, dto) {
+        dto.options = {
+            indexAxis: 'y'
+        };
+        //debugger;
+        return _chart._show('hbar', canvasObj, dto, false);
+    },
+
+    pie: function (canvasObj, dto) {
+        return _chart._show('pie', canvasObj, dto, null, true);
+    },
+    
+    doughnut: function (canvasObj, dto) {
+        return _chart._show('doughnut', canvasObj, dto, null, true);
+    },
+
+    groupLine: function (canvasObj, dto) {
+        /*
+        //set curve line
+        dto.datasets.map(a => {
+            a.tension = 0;
+        });
+        */
+        return _chart._show('line', canvasObj, dto);
+    },
+
+    groupBar: function (canvasObj, dto) {
+        return _chart._show('bar', canvasObj, dto);
+    },
+
     /**
      * show one line chart, called Chart.js
      */ 
     drawLine: function (canvasId, ids, values, color) {
-        if (_chart._nowChart != null)
-            _chart._nowChart.destroy();
-
+        _chart._clear();
         _chart._nowChart = new Chart(document.getElementById(canvasId), {
             type: 'line',
             data: {
