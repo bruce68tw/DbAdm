@@ -1,5 +1,8 @@
 ﻿
-//裡面function預設傳入object(not element or selector)
+/**
+ * input form
+ * 裡面function預設傳入object(not element or selector) 
+ */
 var _form = {
 
     /**
@@ -7,14 +10,14 @@ var _form = {
      * param form {object} input form
      * return {json}
      */ 
-    toJson: function (form) {
+    toRow: function (form) {
         //skip link & read fields
-        var json = {};
+        var row = {};
         form.find(_fun.fidFilter()).filter(':not(.xi-unsave)').each(function () {
             var obj = $(this);
-            json[_fun.getFid(obj)] = _input.getO(obj, form);            
+            row[_fun.getFid(obj)] = _input.getO(obj, form);            
         });
-        return json;
+        return row;
 
         /*
         //get input
@@ -46,8 +49,8 @@ var _form = {
         return json;
         */
     },
-    toJsonStr: function (form) {
-        return JSON.stringify(_form.toJson(form));
+    toRowStr: function (form) {
+        return JSON.stringify(_form.toRow(form));
     },
 
     /**
@@ -55,9 +58,9 @@ var _form = {
      * param form {object} form or box object
      * param json {json}
      */
-    loadJson: function (form, json) {
-        for (var key in json)
-            _input.set(key, json[key], form);
+    loadRow: function (form, row) {
+        for (var key in row)
+            _input.set(key, row[key], form);
     },
 
     /**
@@ -260,7 +263,7 @@ var _form = {
      讀取 xd-required class
      如果欄位值有錯誤, 則會focus在第一個錯誤欄位
      包含多筆區域 !!
-     //@param {array} ids source field id array
+     //param {array} ids source field id array
      param {object} box box object, for 多筆畫面??
      //param {string} msg error msg, 如果沒輸入, 則使用 _BR.FieldRequired
      return {bool} true(field ok), false(has empty)

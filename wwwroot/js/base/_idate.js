@@ -49,7 +49,7 @@ var _idate = $.extend({}, _ibase, {
             /* temp remark
             if (fnOnChange !== undefined) {
                 var me = $(this);
-                var fid = !_str.isEmpty(me.attr('id')) ? me.attr('id') : me.data('id');
+                var fid = _str.notEmpty(me.attr('id')) ? me.attr('id') : me.data('id');
                 fnOnChange(fid, me.val());
             }
             */

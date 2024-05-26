@@ -23,7 +23,7 @@ where c.TableId='{tableId}'
 and c.Status=1
 order by c.Sort
 ";
-            return await _Db.GetJsonsA(sql);
+            return await _Db.GetRowsA(sql);
         }
 
     }//class

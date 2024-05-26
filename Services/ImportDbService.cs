@@ -21,7 +21,7 @@ namespace DbAdm.Services
             #region 1.get dbo.Project row
             var db = new Db();
             Db? dbSrc = null;
-            var project = await db.GetJsonA($@"
+            var project = await db.GetRowA($@"
 select DbName, ConnectStr, FromTmpTable
 from dbo.Project
 where Id='{projectId}'
@@ -129,7 +129,7 @@ CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
 
             #region 5.insert/update dbo.Table from #tmpTable
             //get rows for insert new 
-            var tables = await db.GetJsonsA($@"
+            var tables = await db.GetRowsA($@"
 select Code, Note
 from #tmpTable
 where Code not in (
@@ -162,7 +162,7 @@ where a.ProjectId='{projectId}'
 
             #region 6.insert/update dbo.Column from #tmpColumn
             //get rows for insert new 
-            var cols = await db.GetJsonsA(string.Format(@"
+            var cols = await db.GetRowsA(string.Format(@"
 select
     c.Code, t.Id as TableId, c.Note,
     c.Nullable

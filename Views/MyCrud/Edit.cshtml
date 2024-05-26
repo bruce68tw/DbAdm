@@ -27,7 +27,7 @@
     <div class="row">
         <!-- left columns -->
         <div class="col-md-6">
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Project"].Value, Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, Required = true, Cols = cols2, FnOnChange = "_me.onChangeProject()" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Project"].Value, Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, Required = true, Cols = cols2, FnOnChange = "_me.onChangeProjectA()" })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgCode"].Value, Fid = "ProgCode", MaxLen = 30, Required = true, Cols = cols2 })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgName"].Value, Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols2 })
 

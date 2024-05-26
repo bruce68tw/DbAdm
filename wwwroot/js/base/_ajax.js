@@ -5,11 +5,11 @@ var _ajax = {
      * ajax return json
      * param url {string} action url
      * param data {json} property should be string !!
-     * param fnOk {function} success callback function
-     * param fnError {function} failed callback function
-     * return {json}
+     * param fnOk {function} (optional) callback function
+     * param block {bool} block ui or not, default true
+     * return {bool/json}
      */
-    getJson: function (url, data, fnOk, fnError, block) {
+    getJsonA: async function (url, data, fnOk, block) {
         var json = {
             url: url,
             type: 'POST',
@@ -18,22 +18,18 @@ var _ajax = {
             dataType: 'json',   //return type: ContentType,JsonResult
             //processData: false
         };
-        _ajax._call(json, fnOk, fnError);
-    },
-    //no block UI
-    getJson0: function (url, data, fnOk, fnError) {
-        _ajax.getJson(url, data, fnOk, fnError, false);
+        return await _ajax._callA(json, fnOk);
     },
 
     /**
-     * ajax return json by FormData, for upload file
+     * ajax return json by FormData(Fd), for upload file
      * param url {string}
      * param data {FormData}
-     * param fnOk {function}
-     * param fnError {function}
-     * return {json}
+     * param fnOk {function} (optional) callback function
+     * param block {bool} block ui or not, default true
+     * return {bool/json}
      */
-    getJsonByFormData: function (url, data, fnOk, fnError, block) {
+    getJsonByFdA: async function (url, data, fnOk, block) {
         var json = {
             url: url,
             type: 'POST',
@@ -43,64 +39,53 @@ var _ajax = {
             contentType: false, //false!! input type, default 'application/x-www-form-urlencoded; charset=UTF-8'
             processData: false, //false!! (jQuery only) if true it will convert input data to string, then get error !!
         };
-        _ajax._call(json, fnOk, fnError);
-    },
-    //no block UI
-    getJsonByFormData0: function (url, data, fnOk, fnError) {
-        _ajax.getJsonByFormData(url, data, fnOk, fnError, false);
+        return await _ajax._callA(json, fnOk, block);
     },
 
     /**
      * ajax return string
+     * param fnOk {function} (optional) callback function
+     * param block {bool} block ui or not, default true
+     * return {bool/string}
      */ 
-    getStr: function (url, data, fnOk, fnError, block) {
+    getStrA: async function (url, data, fnOk, block) {
         var json = {
             url: url,
             type: 'POST',
             data: data,
             dataType: 'text',   //backend return text(ContentResult with text)
         };
-        _ajax._call(json, fnOk, fnError);
-    },
-    //no block UI
-    getStr0: function (url, data, fnOk, fnError, block) {
-        _ajax.getStr(url, data, fnOk, fnError, false);
+        return await _ajax._callA(json, fnOk, block);
     },
 
     /**
      * ajax return html string
-     * return html string
+     * param fnOk {function} (optional) callback function
+     * param block {bool} block ui or not, default true
+     * return {bool/html string}
      */
-    getView: function (url, data, fnOk, fnError, block) {
+    getViewA: async function (url, data, fnOk, block) {
         var json = {
             url: url,
             type: 'POST',
             data: data,
             dataType: 'html',
         };
-        _ajax._call(json, fnOk, fnError);
-    },
-    //no block UI
-    getView0: function (url, data, fnOk, fnError, block) {
-        _ajax.getView(url, data, fnOk, fnError, false);
+        return await _ajax._callA(json, fnOk, block);
     },
 
     /**
      * ajax return image file
-     * return html string
+     * return {bool/file}
      */
-    getImageFile: function (url, data, block) {
+    getImageFileA: async function (url, data, block) {
         var json = {
             url: url,
             type: 'POST',
             data: data,
             dataType: 'html',
         };
-        _ajax._call(json, null, null, block);
-    },
-    //no block UI
-    getImageFile0: function (url, data) {
-        _ajax.getImageFile(url, data, false);
+        return await _ajax._callA(json, null, block);
     },
 
     /**
@@ -123,22 +108,53 @@ var _ajax = {
             contentType: false,     //false!! 傳入參數編碼方式, default為 "application/x-www-form-urlencoded"
             processData: false,     //false!! if true it will convert input data to string, then get error !!
         };
-        _ajax._call(json, fnOk, fnError);
+        _ajax._callA(json, fnOk, fnError);
     },
     */
 
     /**
      * ajax call(private), only return success info(include custom message)
+     * 使用 async/await 傳回值 for caller 判斷執行結果是否成功
      * param json {json} ajax json
-     * param fnOk {function} callback function
-     * param fnError {function} callback function
+     * param fnOk {function} (optional) callback function
+     * param fnError {function} (optional) callback function
      * param block {bool} block ui or not, default true
-     * return {json} ResultDto
+     * return {bool/json/any} ResultDto return null when error
+     *   bool: fnOk not empty, return false when error
+     *   json/any: fnOk is empty, return null when error
      */
-    _call: function (json, fnOk, fnError, block) {
+    _callA: async function (json, fnOk, block) {
         if (_var.isEmpty(block))
             block = true;
 
+        if (block) _fun.block();
+
+        //改用 async/await
+        var status = false;
+        var result = null;
+        try {
+            result = await $.ajax(json);
+            var errMsg = _ajax.resultToErrMsg(result);
+            if (!errMsg && typeof result === 'string' && result.substring(0, 2) === _fun.PreBrError) {
+                //case of string error
+                errMsg = _ajax.strToErrMsg(result);
+            }
+
+            if (errMsg) {
+                result = null;
+                _tool.msg(errMsg);
+            } else if (fnOk) {
+                fnOk(result);
+                status = true;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+
+        if (block) _fun.unBlock();
+        return (fnOk == null) ? result : status;
+
+        /*
         var config = {
             //contentType: 'application/json; charset=utf-8',
             //traditional: true,
@@ -148,7 +164,7 @@ var _ajax = {
                 //if (!result)
                 //    return;
 
-                var msg = _ajax.resultToMsg(result);
+                var msg = _ajax.resultToErrMsg(result);
                 if (msg) {
                     if (fnError == null)
                         _tool.msg(msg);
@@ -157,7 +173,7 @@ var _ajax = {
 
                 //case of getStr()
                 } else if (typeof result === 'string' && result.substring(0, 2) === _fun.PreBrError) {
-                    var msg = _ajax.strToMsg(result)
+                    var msg = _ajax.strToErrMsg(result)
                     if (fnError == null)
                         _tool.msg(msg);
                     else
@@ -187,17 +203,19 @@ var _ajax = {
         };
 
         $.ajax(_json.copy(json, config));
+        */
     },
 
-    //result to error msg
+    //resultDto to error msg
     //also called by Datatable.js
-    resultToMsg: function (result) {
+    resultToErrMsg: function (result) {
         return (result.ErrorMsg)
-            ? _ajax.strToMsg(result.ErrorMsg)
+            ? _ajax.strToErrMsg(result.ErrorMsg)
             : '';
     },
 
-    strToMsg: function (str) {
+    //result string to error msg if any
+    strToErrMsg: function (str) {
         if (_str.isEmpty(str))
             return '';
         if (str.substring(0, 2) !== _fun.PreBrError)
@@ -206,7 +224,7 @@ var _ajax = {
         var fid = str.substring(2);
         return (_BR[fid])
             ? _BR[fid]
-            : _str.format('_ajax._call() failed, no BR Fid={0}', fid);
+            : _str.format('_ajax._callA() failed, no BR Fid={0}', fid);
     },
 
 };//class

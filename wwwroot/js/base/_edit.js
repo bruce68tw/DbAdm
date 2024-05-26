@@ -28,8 +28,8 @@ var _edit = {
     },
 
     /*
-    loadRowByArg: function (box, row, fidTypes) {
-        _form.loadJson(box, row);
+    zz_loadRowByArg: function (box, row, fidTypes) {
+        _form.loadRow(box, row);
 
         //set old value for each field
         //var fidLen = fidTypes.length;
@@ -51,7 +51,7 @@ var _edit = {
      */ 
     getUpdRow: function (kid, fidTypes, box) {
         //if key empty then return row
-        var row = _form.toJson(box);
+        var row = _form.toRow(box);
         var key = _input.get(kid, box);
         if (_str.isEmpty(key))
             return row;

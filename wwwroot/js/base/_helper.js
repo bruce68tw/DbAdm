@@ -11,7 +11,7 @@ var _helper = {
             attr += " required";
         if (editable === false)
             attr += " readonly";
-        if (!_str.isEmpty(extAttr))
+        if (_str.notEmpty(extAttr))
             attr += " " + extAttr;
         return _str.trim(attr);
     },

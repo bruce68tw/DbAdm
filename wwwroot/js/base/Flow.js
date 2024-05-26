@@ -265,7 +265,7 @@ function Flow(boxId, mNode, mLine) {
                 //debugger;
                 //var node = $(params.el);
                 var pos = $(params.el).position();
-                _form.loadJson(nodeObj, { PosX: Math.floor(pos.left), PosY: Math.floor(pos.top) });
+                _form.loadRow(nodeObj, { PosX: Math.floor(pos.left), PosY: Math.floor(pos.top) });
             },
         });
 
@@ -304,12 +304,12 @@ function Flow(boxId, mNode, mLine) {
         //box.find(this.NodeFilter).remove();
 
         //set nodes class
-        var rows = _crudE.getJsonRows(json);
+        var rows = _crudE.getRowsByJson(json);
         for (var i = 0; i < rows.length; i++)
             this._setNodeClass(rows[i]);
 
         //3rd param reset=false, coz box has other objects, cannot reset
-        this.mNode.loadRows(box, rows, false);
+        this.mNode.loadRowsByBox(box, rows, false);
 
         //set nodes event
         var me = this;
@@ -323,9 +323,9 @@ function Flow(boxId, mNode, mLine) {
 
     /**
      * load nodes into UI(hide)
-     * param rows {jsons} line rows
+     * param rows {rows} line rows
      */
-    this.loadLines = function (json) {
+    this.loadLines = function (rows) {
         //stop drawing
         jsPlumb.setSuspendDrawing(true);
 
@@ -337,12 +337,12 @@ function Flow(boxId, mNode, mLine) {
         */
 
         //render jsplumb line
-        var rows = _crudE.getJsonRows(json);
+        //var rows = _crudE.getRowsByJson(json);
         for (var i = 0; i < rows.length; i++)
             this._renderLine(rows[i]);
 
         //load editMany lines
-        this.mLine.loadRows(this.divLinesBox, rows);
+        this.mLine.loadRowsByBox(this.divLinesBox, rows, false);
 
         //start drawing
         jsPlumb.setSuspendDrawing(false, true);
@@ -456,6 +456,7 @@ function Flow(boxId, mNode, mLine) {
 
         //param 2(reference object) not work here !!
         var prop = this.getLineProp(row.CondStr);    //get line style & label
+        //debugger;
         var conn = this.plumb.connect({
             //type: 'basic',
             source: this._idToNode(row.StartNode),
@@ -479,7 +480,7 @@ function Flow(boxId, mNode, mLine) {
      */
     this.addLine = function (row) {
         var newLine = $(this.tplLine);      //create row object, no need mustache()
-        _form.loadJson(newLine, row);        //row objec to UI
+        _form.loadRow(newLine, row);        //row objec to UI
         var key = this.mLine.boxSetNewId(newLine);   //set new key
         this.divLinesBox.append(newLine);   //append row object
         return key;
@@ -528,7 +529,7 @@ function Flow(boxId, mNode, mLine) {
     //set connection label
     this._setLineLabel = function (conn, label) {
         var obj = conn.getOverlay('label');
-        obj.setVisible(!_str.isEmpty(label));
+        obj.setVisible(_str.notEmpty(label));
         obj.setLabel(label);
         //conn.getOverlay('label').setLabel(label);
     };
@@ -676,7 +677,7 @@ function Flow(boxId, mNode, mLine) {
     this.showNodeProp = function (nodeType) {
         var node = this._elmToNode(this.nowElm);
         var row = this._boxGetValues(node, ['NodeType', 'Name', 'SignerType', 'SignerValue']);
-        _form.loadJson(this.modalNodeProp, row);
+        _form.loadRow(this.modalNodeProp, row);
 
         //show modal
         _modal.showO(this.modalNodeProp);   //.modal('show');
@@ -709,7 +710,7 @@ function Flow(boxId, mNode, mLine) {
         if (condList != null) {
             for (var i = 0; i < condList.length; i++) {
                 var newCond = $(this.tplLineCond);
-                _form.loadJson(newCond, condList[i]);
+                _form.loadRow(newCond, condList[i]);
                 this.divLineConds.append(newCond);
             }
         }
@@ -780,7 +781,7 @@ function Flow(boxId, mNode, mLine) {
             Op: 'eq',
         };
         var cond = $(Mustache.render(this.tplLineCond, row));
-        _form.loadJson(cond, row);        //row objec to UI
+        _form.loadRow(cond, row);        //row objec to UI
         this.divLineConds.append(cond);
     };
 
@@ -796,7 +797,7 @@ function Flow(boxId, mNode, mLine) {
         _modal.hideO(this.modalNodeProp);
 
         //set new value
-        var row = _form.toJson(this.eformNode);
+        var row = _form.toRow(this.eformNode);
 
         //update node display name
         var nodeObj = $(this.nowElm);
@@ -846,7 +847,7 @@ function Flow(boxId, mNode, mLine) {
         //conn.setParameter('Sort', _itext.get('Sort', form));
         //var line = conn.getParameters();    //model
         var line = this._connToLine(conn);
-        _form.loadJson(line, row);
+        _form.loadRow(line, row);
 
         //change line label
         var prop = this.getLineProp(condStr)

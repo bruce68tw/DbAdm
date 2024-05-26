@@ -5,11 +5,11 @@ var _ajax = {
      * ajax return json
      * param url {string} action url
      * param data {json} property should be string !!
-     * param fnOk {function} success callback function
-     * param fnError {function} failed callback function
-     * return {json}
+     * param fnOk {function} (optional) callback function
+     * param block {bool} block ui or not, default true
+     * return {bool/json}
      */
-    getJson: function (url, data, fnOk, fnError, block) {
+    getJsonA: async function (url, data, fnOk, block) {
         var json = {
             url: url,
             type: 'POST',
@@ -18,22 +18,18 @@ var _ajax = {
             dataType: 'json',   //return type: ContentType,JsonResult
             //processData: false
         };
-        _ajax._call(json, fnOk, fnError);
-    },
-    //no block UI
-    getJson0: function (url, data, fnOk, fnError) {
-        _ajax.getJson(url, data, fnOk, fnError, false);
+        return await _ajax._callA(json, fnOk);
     },
 
     /**
-     * ajax return json by FormData, for upload file
+     * ajax return json by FormData(Fd), for upload file
      * param url {string}
      * param data {FormData}
-     * param fnOk {function}
-     * param fnError {function}
-     * return {json}
+     * param fnOk {function} (optional) callback function
+     * param block {bool} block ui or not, default true
+     * return {bool/json}
      */
-    getJsonByFormData: function (url, data, fnOk, fnError, block) {
+    getJsonByFdA: async function (url, data, fnOk, block) {
         var json = {
             url: url,
             type: 'POST',
@@ -43,64 +39,53 @@ var _ajax = {
             contentType: false, //false!! input type, default 'application/x-www-form-urlencoded; charset=UTF-8'
             processData: false, //false!! (jQuery only) if true it will convert input data to string, then get error !!
         };
-        _ajax._call(json, fnOk, fnError);
-    },
-    //no block UI
-    getJsonByFormData0: function (url, data, fnOk, fnError) {
-        _ajax.getJsonByFormData(url, data, fnOk, fnError, false);
+        return await _ajax._callA(json, fnOk, block);
     },
 
     /**
      * ajax return string
+     * param fnOk {function} (optional) callback function
+     * param block {bool} block ui or not, default true
+     * return {bool/string}
      */ 
-    getStr: function (url, data, fnOk, fnError, block) {
+    getStrA: async function (url, data, fnOk, block) {
         var json = {
             url: url,
             type: 'POST',
             data: data,
             dataType: 'text',   //backend return text(ContentResult with text)
         };
-        _ajax._call(json, fnOk, fnError);
-    },
-    //no block UI
-    getStr0: function (url, data, fnOk, fnError, block) {
-        _ajax.getStr(url, data, fnOk, fnError, false);
+        return await _ajax._callA(json, fnOk, block);
     },
 
     /**
      * ajax return html string
-     * return html string
+     * param fnOk {function} (optional) callback function
+     * param block {bool} block ui or not, default true
+     * return {bool/html string}
      */
-    getView: function (url, data, fnOk, fnError, block) {
+    getViewA: async function (url, data, fnOk, block) {
         var json = {
             url: url,
             type: 'POST',
             data: data,
             dataType: 'html',
         };
-        _ajax._call(json, fnOk, fnError);
-    },
-    //no block UI
-    getView0: function (url, data, fnOk, fnError, block) {
-        _ajax.getView(url, data, fnOk, fnError, false);
+        return await _ajax._callA(json, fnOk, block);
     },
 
     /**
      * ajax return image file
-     * return html string
+     * return {bool/file}
      */
-    getImageFile: function (url, data, block) {
+    getImageFileA: async function (url, data, block) {
         var json = {
             url: url,
             type: 'POST',
             data: data,
             dataType: 'html',
         };
-        _ajax._call(json, null, null, block);
-    },
-    //no block UI
-    getImageFile0: function (url, data) {
-        _ajax.getImageFile(url, data, false);
+        return await _ajax._callA(json, null, block);
     },
 
     /**
@@ -123,22 +108,53 @@ var _ajax = {
             contentType: false,     //false!! 傳入參數編碼方式, default為 "application/x-www-form-urlencoded"
             processData: false,     //false!! if true it will convert input data to string, then get error !!
         };
-        _ajax._call(json, fnOk, fnError);
+        _ajax._callA(json, fnOk, fnError);
     },
     */
 
     /**
      * ajax call(private), only return success info(include custom message)
+     * 使用 async/await 傳回值 for caller 判斷執行結果是否成功
      * param json {json} ajax json
-     * param fnOk {function} callback function
-     * param fnError {function} callback function
+     * param fnOk {function} (optional) callback function
+     * param fnError {function} (optional) callback function
      * param block {bool} block ui or not, default true
-     * return {json} ResultDto
+     * return {bool/json/any} ResultDto return null when error
+     *   bool: fnOk not empty, return false when error
+     *   json/any: fnOk is empty, return null when error
      */
-    _call: function (json, fnOk, fnError, block) {
+    _callA: async function (json, fnOk, block) {
         if (_var.isEmpty(block))
             block = true;
 
+        if (block) _fun.block();
+
+        //改用 async/await
+        var status = false;
+        var result = null;
+        try {
+            result = await $.ajax(json);
+            var errMsg = _ajax.resultToErrMsg(result);
+            if (!errMsg && typeof result === 'string' && result.substring(0, 2) === _fun.PreBrError) {
+                //case of string error
+                errMsg = _ajax.strToErrMsg(result);
+            }
+
+            if (errMsg) {
+                result = null;
+                _tool.msg(errMsg);
+            } else if (fnOk) {
+                fnOk(result);
+                status = true;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+
+        if (block) _fun.unBlock();
+        return (fnOk == null) ? result : status;
+
+        /*
         var config = {
             //contentType: 'application/json; charset=utf-8',
             //traditional: true,
@@ -148,7 +164,7 @@ var _ajax = {
                 //if (!result)
                 //    return;
 
-                var msg = _ajax.resultToMsg(result);
+                var msg = _ajax.resultToErrMsg(result);
                 if (msg) {
                     if (fnError == null)
                         _tool.msg(msg);
@@ -157,7 +173,7 @@ var _ajax = {
 
                 //case of getStr()
                 } else if (typeof result === 'string' && result.substring(0, 2) === _fun.PreBrError) {
-                    var msg = _ajax.strToMsg(result)
+                    var msg = _ajax.strToErrMsg(result)
                     if (fnError == null)
                         _tool.msg(msg);
                     else
@@ -187,17 +203,19 @@ var _ajax = {
         };
 
         $.ajax(_json.copy(json, config));
+        */
     },
 
-    //result to error msg
+    //resultDto to error msg
     //also called by Datatable.js
-    resultToMsg: function (result) {
+    resultToErrMsg: function (result) {
         return (result.ErrorMsg)
-            ? _ajax.strToMsg(result.ErrorMsg)
+            ? _ajax.strToErrMsg(result.ErrorMsg)
             : '';
     },
 
-    strToMsg: function (str) {
+    //result string to error msg if any
+    strToErrMsg: function (str) {
         if (_str.isEmpty(str))
             return '';
         if (str.substring(0, 2) !== _fun.PreBrError)
@@ -206,7 +224,7 @@ var _ajax = {
         var fid = str.substring(2);
         return (_BR[fid])
             ? _BR[fid]
-            : _str.format('_ajax._call() failed, no BR Fid={0}', fid);
+            : _str.format('_ajax._callA() failed, no BR Fid={0}', fid);
     },
 
 };//class
@@ -553,6 +571,16 @@ var _chart = {
 }; //class
 /**
  * crud edit function
+ * _me properties:
+ *   fnAfterSwap:
+ *   fnAfterOpenEdit:
+ *   fnUpdateOrViewA: see _updateOrViewA
+ *   divEdit:
+ *   hasEdit:
+ *   edit0:
+ *   hasChild:
+ *   _nowFun:
+ *   modal:
  */
 var _crudE = {
 
@@ -625,11 +653,11 @@ var _crudE = {
     },
 
     /*
-    _getJsonAndSetMode: function(key, fun) {
+    _getJsonAndSetMode: async function(key, fun) {
         //_crudR.toUpdateMode(key);
         var act = (fun == _fun.FunU) ? 'GetUpdJson' :
             (fun == _fun.FunV) ? 'GetViewJson' : '';
-        _ajax.getJson(act, { key: key }, function(data) {
+        await _ajax.getJsonA(act, { key: key }, function(data) {
             _crudR.toEditMode(fun, data);
         });
     },
@@ -658,9 +686,8 @@ var _crudE = {
     //call fnAfterOpenEdit() if existed
     // _afterOpenEdit -> _afterOpen
     _afterOpenEdit: function(fun, json) {
-        var edit = _me.edit0;
-        if (_fun.hasValue(edit.fnAfterOpenEdit))
-            edit.fnAfterOpenEdit(fun, json);
+        if (_fun.hasValue(_me.fnAfterOpenEdit))
+            _me.fnAfterOpenEdit(fun, json);
     },
 
     /**
@@ -873,15 +900,19 @@ var _crudE = {
         return (_me._nowFun !== _fun.FunV);
     },
 
-    _updateOrView: function(fun, key) {
+    //return {bool}
+    _updateOrViewA: async function (fun, key) {
+        if (_me.fnUpdateOrViewA)
+            return await _me.fnUpdateOrViewA(fun, key);
+
         var act = (fun == _fun.FunU)
             ? 'GetUpdJson' : 'GetViewJson';
-        _ajax.getJson(act, { key: key }, function(data) {
-            _crudE._loadJson(data);   //load first
+        return await _ajax.getJsonA(act, { key: key }, function (json) {
+            _crudE._loadJson(json);
             _crudE._setEditStatus(fun);
-            _crudE._afterOpenEdit(fun, data);
+            _crudE._afterOpenEdit(fun, json);
+            _crudR.toEditMode(fun);
         });
-
     },
 
 
@@ -903,8 +934,8 @@ var _crudE = {
         return (edit[fid] == null) ? 0 : edit[fid].length;
     },
 
-    //get json rows
-    getJsonRows: function (json) {
+    //get rows of json
+    getRowsByJson: function (json) {
         return (json == null || json[_crudE.Rows] == null)
             ? null
             : json[_crudE.Rows];
@@ -918,10 +949,10 @@ var _crudE = {
             : upJson[childs][childIdx];
     },
 
-    //get child json rows
+    //get child rows
     getChildRows: function (upJson, childIdx) {
         var child = _crudE._getChildJson(upJson, childIdx);
-        return _crudE.getJsonRows(child);
+        return _crudE.getRowsByJson(child);
     },
 
     /**
@@ -959,13 +990,15 @@ var _crudE = {
     /**
      * onclick Update button
      * param key {string} row key
+     * return {bool}
      */
-    onUpdate: function(key) {
-        _crudE._updateOrView(_fun.FunU, key);
+    onUpdateA: async function(key) {
+        return await _crudE._updateOrViewA(_fun.FunU, key);
     },
 
-    onView: function(key) {
-        _crudE._updateOrView(_fun.FunV, key);
+    //return { bool }
+    onViewA: async function(key) {
+        return await _crudE._updateOrViewA(_fun.FunV, key);
     },
 
     /**
@@ -988,7 +1021,7 @@ var _crudE = {
      * below variables are sent to backend
      *   key, row(包含_childs, _deletes, _fileNo), files
      */
-    onSave: function() {
+    onSaveA: async function() {
         //validate all input & system error(will show error msg)
         if (!_crudE.validAll()) {
             _tool.alert(_BR.InputWrong);
@@ -1024,7 +1057,7 @@ var _crudE = {
             if (!isNew)
                 data.append('key', edit0.getKey());
 
-            _ajax.getJsonByFormData(action, data, function(result) {
+            await _ajax.getJsonByFdA(action, data, function(result) {
                 _crudE.afterSave(result);
             });
         } else {
@@ -1033,7 +1066,7 @@ var _crudE = {
             if (!isNew)
                 data.key = edit0.getKey();
 
-            _ajax.getJson(action, data, function(result) {
+            await _ajax.getJsonA(action, data, function(result) {
                 _crudE.afterSave(result);
             });
         }
@@ -1044,7 +1077,15 @@ var _crudE = {
 /**
  * crud read function
  * main for admin Web system
- */
+ * _me properties:
+ *   divEdit
+ *   divRead
+ *   hasRead
+ *   rform
+ *   rform2
+ *   dt
+ *   _updName
+*/
 var _crudR = {
 
     /**
@@ -1111,7 +1152,7 @@ var _crudR = {
     /**
      * set status column(checkbox)
      * param value {string} checkbox value, will translate to bool
-     * param fnOnClick {string} onclick function, default to _crudR.onSetStatus
+     * param fnOnClick {string} onclick function, default to _crudR.onSetStatusA
      */
     dtSetStatus: function (key, value, fnOnClick) {
         //TODO: pending
@@ -1120,7 +1161,7 @@ var _crudR = {
         //debugger;
         var checked = _str.toBool(value);
         if (_str.isEmpty(fnOnClick)) {
-            fnOnClick = _str.format("_crudR.onSetStatus(this,\'{0}\')", key);
+            fnOnClick = _str.format("_crudR.onSetStatusA(this,\'{0}\')", key);
         }
         //??
         return _icheck.render2(0, '', 1, checked, '', true, '', "onclick=" + fnOnClick);
@@ -1149,11 +1190,11 @@ var _crudR = {
         fnOnUpdate, fnOnDelete, fnOnView) {
         var funs = '';
         if (hasUpdate)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_crudR.onUpdate' : fnOnUpdate), key, _BR.TipUpdate);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_crudR.onUpdateA' : fnOnUpdate), key, _BR.TipUpdate);
         if (hasDelete)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_crudR.onDelete' : fnOnDelete), key, rowName, _BR.TipDelete);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_crudR.onDeleteA' : fnOnDelete), key, rowName, _BR.TipDelete);
         if (hasView)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_crudR.onView' : fnOnView), key, _BR.TipView);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_crudR.onViewA' : fnOnView), key, _BR.TipView);
         return funs;
     },
 
@@ -1204,10 +1245,10 @@ var _crudR = {
         if (_me.rform == null)
             return null;
 
-        var row = _form.toJson(_me.rform);
+        var row = _form.toRow(_me.rform);
         var find2 = _me.rform2;
         if (find2 !== null && _obj.isShow(find2))
-            _json.copy(_form.toJson(find2), row);
+            _json.copy(_form.toRow(find2), row);
         return row;
     },
 
@@ -1215,10 +1256,14 @@ var _crudR = {
      * change newDiv to active
      * param toRead {bool} show divRead or not
      * param nowDiv {object} (default _me.divEdit) now div to show
+     * param fnCallback {function} (optional) callback function
      */
-    swap: function (toRead, nowDiv) {
-        if (!_me.hasRead || !_me.hasEdit)
+    swap: function (toRead, nowDiv, fnCallback) {
+        if (!_me.hasRead || !_me.hasEdit) {
+            if (fnCallback)
+                fnCallback();
             return;
+        }
 
         var isDefault = _var.isEmpty(nowDiv);
         if (isDefault)
@@ -1233,11 +1278,31 @@ var _crudR = {
             newDiv = nowDiv;
         }
 
+        /*
         if (_obj.isShow(oldDiv)) {
             oldDiv.fadeToggle(200);
             newDiv.fadeToggle(500);
         }
-
+        */
+        oldDiv.fadeOut(200, function () {
+            newDiv.fadeIn(500);
+            if (fnCallback)
+                fnCallback();
+        });
+        /*
+        newDiv.fadeIn(500, function () {
+            //debugger;
+            oldDiv.fadeOut(200);
+        });
+        
+        if (toRead) {
+            //nowDiv.fadeOut(200);
+            //_me.divRead.fadeIn(500);
+        } else {
+            //_me.divRead.fadeOut(200);
+            //nowDiv.fadeIn(500);
+        }
+        */
         if (isDefault)
             _crudR._afterSwap(toRead);
     },
@@ -1245,8 +1310,8 @@ var _crudR = {
     //XpFlowSign Read.cshtml 待處理!!
     //to edit(U/V) mode
     //toEditMode: function(fun, data) {
-    toEditMode: function (fun) {
-        _crudR.swap(false);  //call first
+    toEditMode: function (fun, fnCallback) {
+        _crudR.swap(false, null, fnCallback);  //call first
         _prog.setPath(fun, _me._updName);
     },
 
@@ -1264,9 +1329,8 @@ var _crudR = {
      * param toRead {bool} to read mode or not
      */
     _afterSwap: function (toRead) {
-        var edit = _me.edit0;
-        if (_fun.hasValue(edit.fnAfterSwap))
-            edit.fnAfterSwap(toRead);
+        if (_me.fnAfterSwap)
+            _me.fnAfterSwap(toRead);
     },
 
 
@@ -1331,20 +1395,20 @@ var _crudR = {
      * onclick Update button
      * param key {string} row key
      */
-    onUpdate: function (key) {
+    onUpdateA: async function (key) {
         //_crudE._getJsonAndSetMode(key, _fun.FunU);
-        _crudE.onUpdate(key);
-        _crudR.toEditMode(_fun.FunU);
+        //_crudR.toEditMode(_fun.FunU);
+        await _crudE.onUpdateA(key);
     },
 
     /**
      * onclick View button
      * param key {string} row key
      */
-    onView: function (key) {
+    onViewA: async function (key) {
         //_crudE._getJsonAndSetMode(key, _fun.FunV);
-        _crudE.onView(key);
-        _crudR.toEditMode(_fun.FunV);
+        await _crudE.onViewA(key);
+        //_crudR.toEditMode(_fun.FunV);
     },
 
     /**
@@ -1352,9 +1416,9 @@ var _crudR = {
      * me {element} checkbox element
      * key {string} row key
      */
-    onSetStatus: function (me, key) {
+    onSetStatusA: async function (me, key) {
         var status = _icheck.checkedO($(me));
-        _ajax.getStr('SetStatus', { key: key, status: status }, function (msg) {
+        await _ajax.getStrA('SetStatus', { key: key, status: status }, function (msg) {
             _tool.alert(_BR.UpdateOk);
         });
     },
@@ -1375,10 +1439,10 @@ var _crudR = {
      * key {string} row key
      * rowName {string} for confirm
      */
-    onDelete: function (key, rowName) {
+    onDeleteA: async function (key, rowName) {
         //_temp.data = { key: key };
-        _tool.ans(_BR.SureDeleteRow + ' (' + rowName + ')', function () {
-            _ajax.getJson('Delete', { key: key }, function (msg) {
+        _tool.ans(_BR.SureDeleteRow + ' (' + rowName + ')', async function () {
+            await _ajax.getJsonA('Delete', { key: key }, function (msg) {
                 _tool.alert(_BR.DeleteOk);
                 _me.dt.reload();
             });
@@ -1387,11 +1451,12 @@ var _crudR = {
 
     /**
      * TODO: need test
+     * no called
      * 刪除選取的多筆資料, 後端固定呼叫 DeleteByKeys()
      * box {string} row key
      * fid {string} 
      */
-    onDeleteRows: function (box, fid) {
+    onDeleteRowsA: async function (box, fid) {
         //get selected keys
         var keys = _icheck.getCheckeds(box, fid);
         if (keys.length === 0) {
@@ -1401,8 +1466,8 @@ var _crudR = {
 
         //刪除多筆資料, 後端固定呼叫 DeleteByKeys()
         //_temp.data = { keys: keys };
-        _tool.ans(_BR.SureDeleteSelected, function () {
-            _ajax.getStr('DeleteByKeys', { keys: keys }, function (msg) {
+        _tool.ans(_BR.SureDeleteSelected, async function () {
+            await _ajax.getStrA('DeleteByKeys', { keys: keys }, function (msg) {
                 _tool.alert(_BR.DeleteOk);
                 _me.dt.reload();
             });
@@ -1612,8 +1677,8 @@ var _edit = {
     },
 
     /*
-    loadRowByArg: function (box, row, fidTypes) {
-        _form.loadJson(box, row);
+    zz_loadRowByArg: function (box, row, fidTypes) {
+        _form.loadRow(box, row);
 
         //set old value for each field
         //var fidLen = fidTypes.length;
@@ -1635,7 +1700,7 @@ var _edit = {
      */ 
     getUpdRow: function (kid, fidTypes, box) {
         //if key empty then return row
-        var row = _form.toJson(box);
+        var row = _form.toRow(box);
         var key = _input.get(kid, box);
         if (_str.isEmpty(key))
             return row;
@@ -1855,7 +1920,10 @@ var _file = {
     }
 };//class
 
-//裡面function預設傳入object(not element or selector)
+/**
+ * input form
+ * 裡面function預設傳入object(not element or selector) 
+ */
 var _form = {
 
     /**
@@ -1863,14 +1931,14 @@ var _form = {
      * param form {object} input form
      * return {json}
      */ 
-    toJson: function (form) {
+    toRow: function (form) {
         //skip link & read fields
-        var json = {};
+        var row = {};
         form.find(_fun.fidFilter()).filter(':not(.xi-unsave)').each(function () {
             var obj = $(this);
-            json[_fun.getFid(obj)] = _input.getO(obj, form);            
+            row[_fun.getFid(obj)] = _input.getO(obj, form);            
         });
-        return json;
+        return row;
 
         /*
         //get input
@@ -1902,8 +1970,8 @@ var _form = {
         return json;
         */
     },
-    toJsonStr: function (form) {
-        return JSON.stringify(_form.toJson(form));
+    toRowStr: function (form) {
+        return JSON.stringify(_form.toRow(form));
     },
 
     /**
@@ -1911,9 +1979,9 @@ var _form = {
      * param form {object} form or box object
      * param json {json}
      */
-    loadJson: function (form, json) {
-        for (var key in json)
-            _input.set(key, json[key], form);
+    loadRow: function (form, row) {
+        for (var key in row)
+            _input.set(key, row[key], form);
     },
 
     /**
@@ -2116,7 +2184,7 @@ var _form = {
      讀取 xd-required class
      如果欄位值有錯誤, 則會focus在第一個錯誤欄位
      包含多筆區域 !!
-     //@param {array} ids source field id array
+     //param {array} ids source field id array
      param {object} box box object, for 多筆畫面??
      //param {string} msg error msg, 如果沒輸入, 則使用 _BR.FieldRequired
      return {bool} true(field ok), false(has empty)
@@ -2222,8 +2290,9 @@ var _fun = {
     //isCheck: true,
 
     //server need Fun/Hello()
-    onHello: function () {
-        _ajax.getStr('../Fun/Hello', null, function (msg) {
+    //no called
+    onHelloA: async function () {
+        await _ajax.getStrA('../Fun/Hello', null, function (msg) {
             alert(msg);
         });
     },
@@ -2269,8 +2338,9 @@ var _fun = {
     },
 
     //on change locale, 後端必須實作 Fun/SetLocale()
-    onSetLocale: function (code) {
-        _ajax.getStr('../Fun/SetLocale', { code: code }, function (msg) {
+    //no called
+    onSetLocaleA: async function (code) {
+        await _ajax.getStrA('../Fun/SetLocale', { code: code }, function (msg) {
             //_browser.setLang(lang);
             location.reload();
         });
@@ -2424,7 +2494,7 @@ var _helper = {
             attr += " required";
         if (editable === false)
             attr += " readonly";
-        if (!_str.isEmpty(extAttr))
+        if (_str.notEmpty(extAttr))
             attr += " " + extAttr;
         return _str.trim(attr);
     },
@@ -2723,7 +2793,7 @@ var _idate = $.extend({}, _ibase, {
             /* temp remark
             if (fnOnChange !== undefined) {
                 var me = $(this);
-                var fid = !_str.isEmpty(me.attr('id')) ? me.attr('id') : me.data('id');
+                var fid = _str.notEmpty(me.attr('id')) ? me.attr('id') : me.data('id');
                 fnOnChange(fid, me.val());
             }
             */
@@ -2903,7 +2973,7 @@ var _ifile = $.extend({}, _ibase, {
 
         //check file ext
         var exts = fileObj.data('exts').toLowerCase();
-        if (!_str.isEmpty(exts) && exts !== '*') {
+        if (_str.notEmpty(exts) && exts !== '*') {
             var ext = _file.getFileExt(value);
             exts = ',' + exts + ',';
             if (exts.indexOf(',' + ext + ',') < 0) {
@@ -3180,7 +3250,7 @@ var _ilink = {
 }; //class
 /**
  * 1.data-fid -> find object, get data-type, get/set old value
- * 2.name attr -> for _form.toJson()
+ * 2.name attr -> for _form.toRow()
  * 3.validation error span position rules:
  *   (a)same parent, could be different child level
  *   (b)sibling(ex: Date)
@@ -3923,6 +3993,9 @@ var _json = {
 
     //filter json array
     filterRows: function (rows, fid, value) {
+        if (rows == null || rows.length == 0)
+            return null;
+
         return rows.filter(function (row) {
             return (row[fid] === value);
         });
@@ -3966,7 +4039,7 @@ var _json = {
                 if (!_json.isKeyValue(value[0])) {
                     var isEmpty = true;
                     for (var i = 0; i < len; i++) {
-                        if (!_str.isEmpty(value[i])) {
+                        if (_str.notEmpty(value[i])) {
                             isEmpty = false;
                             break;
                         }
@@ -4303,7 +4376,7 @@ var _pjax = {
             debugger;
         });
         */
-        //選擇性 binding event 
+        //選擇性 binding event
         //xd-bind 只有用在這裡
         //debugger;
         //$('[data-pjax]:not(.xd-bind)').addClass('xd-bind').on('click', function () {
@@ -4349,11 +4422,11 @@ var _pjax = {
         //    /*
         //    //先載入 JsLib if need
         //    var jsLib = $('#_JsLib').val();
-        //    if (!_str.isEmpty(jsLib)) {
+        //    if (_str.notEmpty(jsLib)) {
         //        $.getScript('../Scripts/' + jsLib + '.js');
         //    }
 
-        //    //如果view包含_JsView這個hidden欄位, 則表示要載入指定的js檔案, 
+        //    //如果view包含_JsView這個hidden欄位, 則表示要載入指定的js檔案,
         //    //否則載入與controller相同名稱的js file
         //    var jsView = $('#_JsView').val();
         //    if (_str.isEmpty(jsView)) {
@@ -4367,7 +4440,7 @@ var _pjax = {
         //    }
 
         //    //載入 jsView
-        //    if (!_str.isEmpty(jsView)) {
+        //    if (_str.notEmpty(jsView)) {
         //        $.getScript('../Scripts/view/' + jsView + '.js', function (data, textStatus, jqxhr) {
         //            //載入成功後執行 init()
         //            if (typeof (_me) !== 'undefined')
@@ -4557,7 +4630,7 @@ var _table = {
     //delete, up, down
     rowFun: function () {
         return '' +
-            _str.format('<a href="javascript:_crudE.onUpdate(\'{0}\');"><i class="ico-delete" title="{0}"></i></a>', key, _BR.TipUpdate) +
+            _str.format('<a href="javascript:_crudE.onUpdateA(\'{0}\');"><i class="ico-delete" title="{0}"></i></a>', key, _BR.TipUpdate) +
             _str.format('<a href="javascript:_table.rowMoveUp(this);"><i class="ico-up" title="{0}"></i></a>', _BR.TipUpdate) +
             _str.format('<a href="javascript:_table.rowMoveDown(this);"><i class="ico-down" title="{0}"></i></a>', _BR.TipUpdate);
     },
@@ -4576,6 +4649,14 @@ var _table = {
 }; //class
 //temp variables
 var _temp = {};
+
+var _time = {
+
+    sleepA: async function (ms) {
+        return new Promise(a=> setTimeout(a, ms));
+    },
+
+}; //class
 
 //small public components
 var _tool = {
@@ -5062,9 +5143,9 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
                     this._start = this.dt.page.info().start;
                     this._keepStart = false; //reset
 
-                    var msg = _ajax.resultToMsg(result);
-                    if (msg) {
-                        _tool.msg(msg);
+                    var errMsg = _ajax.resultToErrMsg(result);
+                    if (errMsg) {
+                        _tool.msg(errMsg);
                         result.recordsFiltered = 0;
                         this.recordsFiltered = 0;
                         return [];  //no null, or jquery will get wrong !!
@@ -5144,23 +5225,23 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
  * notice:
  *   1.set data-fkeyFid when save
  *   
- * param kid {string} pkey field id(single key)
- * param eformId {string} (optional) edit form id
+ * param-1 kid {string} pkey field id(single key)
+ * param-2 eformId {string} (optional) edit form id
  *   if empty, you must write below functions:
- *     1.void fnLoadJson(json): show josn to form
+ *     1.void fnLoadJson(json): show json to form, use loadJson instead of loadRows for more situation !!
  *     2.json fnGetUpdJson(upKey): get updated json by form
  *     3.bool fnValid(): (optional) validate check
- *   if not empty, system will load UI & prepare save rows,
+ *   if not empty, system will load UI & prepare saving rows,
  *     and rows container tag is fixed to 'tbody'
- * param tplRowId {string} (optional) row template id
+ * param-3 tplRowId {string} (optional) row template id
  *   1.if empty, it will log error when call related function.
- *   2.system get fid type from this variables
- *   3.called by singleFormLoadRow、loadRows、_renderRow
- * param rowFilter {string} (optional) filter for find row object
+ *   2.system get fid-type from this variables
+ *   3.called by singleFormLoadRow、loadRowsByBox、_renderRow
+ * param-4 rowFilter {string} (optional) jQuery filter for find row object
  *   1.if empty, it will log error when call related function.
  *   2.inside element -> row(onDeleteRow),
  *   3.rowsBox -> row(getUpdRows)
- * param sortFid {string} (optional) sort fid for sorting function
+ * param-5 sortFid {string} (optional) sort fid for front-side sorting function
  * 
  * return {EditMany}
  */
@@ -5173,18 +5254,20 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     this.init = function () {
 
         //constant
-        this.DataFkeyFid = '_fkeyfid';  //data field for fkey fid
+        this.DataFkeyFid = '_fkeyfid';  //data field for fkey fid, lowercase
 
+        //variables
         this.kid = kid;
-        this.hasRowFilter = !_str.isEmpty(rowFilter);
+        this.hasRowFilter = _str.notEmpty(rowFilter);
         this.rowFilter = rowFilter;
         this.sortFid = sortFid;
-
         this.systemError = '';
-        this.hasTplRow = !_str.isEmpty(tplRowId);
+        this.hasTplRow = _str.notEmpty(tplRowId);
+
         if (this.hasTplRow) {
             this.tplRow = $('#' + tplRowId).html();
             var rowObj = $(this.tplRow);
+
             //check input & alert error if wrong
             if (_obj.get(kid, rowObj) == null) {
                 this.systemError = 'EditMany.js input kid is wrong (' + kid + ')';
@@ -5196,7 +5279,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         }
 
         //has edit form or not
-        this.hasEform = !_str.isEmpty(eformId);
+        this.hasEform = _str.notEmpty(eformId);
         if (this.hasEform) {
             this.eform = $('#' + eformId);     //edit form object
             this.rowsBox = this.eform.find('tbody'); //use tbody(in table)
@@ -5248,21 +5331,6 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * load this json rows into UI
-     * param json {json} 
-     */
-    this.loadJson = function (json) {
-        if (this.hasEform) {
-            var rows = (json == null || json[_crudE.Rows] == null)
-                ? null : json[_crudE.Rows];
-            this.loadRows(this.rowsBox, rows);
-        } else {
-            //raise error if no function
-            this.fnLoadJson(json);
-        }
-    };
-
-    /**
      * (urm: UserRole Mode), load json rows into UI by urm
      * param json {json} 
      */
@@ -5273,7 +5341,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         objs.data('key', '');
 
         //check
-        var rows = _crudE.getJsonRows(json);
+        var rows = _crudE.getRowsByJson(json);
         if (rows == null)
             return;
 
@@ -5339,7 +5407,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
             return;
 
         var form = $(Mustache.render(this.tplRow, { Index: index }));
-        _form.loadJson(form, row);   //use name field
+        _form.loadRow(form, row);   //use name field
 
         //set old value for each field
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
@@ -5352,23 +5420,38 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * load rows to form UI, also set old values !!
+     * load this json rows into UI, also set old values !!
+     * param json {json} 
+     */
+    this.loadJson = function (json) {
+        if (this.hasEform) {
+            var rows = (json == null || json[_crudE.Rows] == null)
+                ? null : json[_crudE.Rows];
+            this.loadRowsByBox(this.rowsBox, rows);
+        } else {
+            //will raise error if no function
+            this.fnLoadJson(json);
+        }
+    };
+
+    /**
+     * load rows with rowsBox
      * param rowsBox {object} rows box object
      * param rows {jsons}
+     * param reset {bool} (default true) reset rowsBox first.
      */ 
-    this.loadRows = function (rowsBox, rows, reset) {
+    this.loadRowsByBox = function (rowsBox, rows, reset) {
         if (!this.checkTplRow())
             return;
 
         //reset if need
-        if (reset === undefined)
-            reset = true;
-        if (reset)
+        //use "reset || true"" will cause wrong result !!
+        if (_var.isEmpty(reset) || reset)
             this.reset(rowsBox);
 
-        //var rows = json._rows;
+        //check
         var rowLen = (rows == null) ? 0 : rows.length;
-        if (rowLen === 0)
+        if (rowLen == 0)
             return;
 
         //render rows
@@ -5378,17 +5461,16 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
             //box.data(this.DataIndex, i);    //set row index
 
             //set old value for each field
-            for (var j = 0; j < this.fidTypeLen; j = j + 2) {
+            for (var j = 0; j < this.fidTypeLen; j += 2) {
                 fid = this.fidTypes[j];
-                var obj2 = _obj.get(fid, box);
-                _edit.setOld(obj2, row[fid]);
+                _edit.setOld(_obj.get(fid, box), row[fid]);
             }
 
             //set date input
             _idate.init(box);
 
             //one row into UI
-            _form.loadJson(box, row);
+            _form.loadRow(box, row);
 
             //into rows box
             box.appendTo(rowsBox);
@@ -5643,7 +5725,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
         rowsBox = this.getRowsBox(rowsBox);
         var obj = $(Mustache.render(this.tplRow, row));
-        _form.loadJson(obj, row);
+        _form.loadRow(obj, row);
         obj.appendTo(rowsBox);
         return obj;
     };
@@ -5805,8 +5887,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
  * 
  * custom function called by _crudE.js
  *   //void fnAfterLoadJson(json)
- *   void fnAfterOpenEdit(fun, json): called after open edit form
- *   void fnAfterSwap(readMode): called after _crudR.swap()
+ *   //void fnAfterOpenEdit(fun, json): called after open edit form
+ *   //void fnAfterSwap(readMode): called after _crudR.swap()
  *   error fnWhenSave()
  *   void fnAfterSave()
  *   
@@ -5874,7 +5956,7 @@ function EditOne(kid, eformId) {
      * param row {json}
      */
     this.loadRow = function (row) {
-        _form.loadJson(this.eform, row);
+        _form.loadRow(this.eform, row);
 
         //set old value for each field
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
@@ -6211,7 +6293,7 @@ function Flow(boxId, mNode, mLine) {
                 //debugger;
                 //var node = $(params.el);
                 var pos = $(params.el).position();
-                _form.loadJson(nodeObj, { PosX: Math.floor(pos.left), PosY: Math.floor(pos.top) });
+                _form.loadRow(nodeObj, { PosX: Math.floor(pos.left), PosY: Math.floor(pos.top) });
             },
         });
 
@@ -6250,12 +6332,12 @@ function Flow(boxId, mNode, mLine) {
         //box.find(this.NodeFilter).remove();
 
         //set nodes class
-        var rows = _crudE.getJsonRows(json);
+        var rows = _crudE.getRowsByJson(json);
         for (var i = 0; i < rows.length; i++)
             this._setNodeClass(rows[i]);
 
         //3rd param reset=false, coz box has other objects, cannot reset
-        this.mNode.loadRows(box, rows, false);
+        this.mNode.loadRowsByBox(box, rows, false);
 
         //set nodes event
         var me = this;
@@ -6269,9 +6351,9 @@ function Flow(boxId, mNode, mLine) {
 
     /**
      * load nodes into UI(hide)
-     * param rows {jsons} line rows
+     * param rows {rows} line rows
      */
-    this.loadLines = function (json) {
+    this.loadLines = function (rows) {
         //stop drawing
         jsPlumb.setSuspendDrawing(true);
 
@@ -6283,12 +6365,12 @@ function Flow(boxId, mNode, mLine) {
         */
 
         //render jsplumb line
-        var rows = _crudE.getJsonRows(json);
+        //var rows = _crudE.getRowsByJson(json);
         for (var i = 0; i < rows.length; i++)
             this._renderLine(rows[i]);
 
         //load editMany lines
-        this.mLine.loadRows(this.divLinesBox, rows);
+        this.mLine.loadRowsByBox(this.divLinesBox, rows, false);
 
         //start drawing
         jsPlumb.setSuspendDrawing(false, true);
@@ -6402,6 +6484,7 @@ function Flow(boxId, mNode, mLine) {
 
         //param 2(reference object) not work here !!
         var prop = this.getLineProp(row.CondStr);    //get line style & label
+        //debugger;
         var conn = this.plumb.connect({
             //type: 'basic',
             source: this._idToNode(row.StartNode),
@@ -6425,7 +6508,7 @@ function Flow(boxId, mNode, mLine) {
      */
     this.addLine = function (row) {
         var newLine = $(this.tplLine);      //create row object, no need mustache()
-        _form.loadJson(newLine, row);        //row objec to UI
+        _form.loadRow(newLine, row);        //row objec to UI
         var key = this.mLine.boxSetNewId(newLine);   //set new key
         this.divLinesBox.append(newLine);   //append row object
         return key;
@@ -6474,7 +6557,7 @@ function Flow(boxId, mNode, mLine) {
     //set connection label
     this._setLineLabel = function (conn, label) {
         var obj = conn.getOverlay('label');
-        obj.setVisible(!_str.isEmpty(label));
+        obj.setVisible(_str.notEmpty(label));
         obj.setLabel(label);
         //conn.getOverlay('label').setLabel(label);
     };
@@ -6622,7 +6705,7 @@ function Flow(boxId, mNode, mLine) {
     this.showNodeProp = function (nodeType) {
         var node = this._elmToNode(this.nowElm);
         var row = this._boxGetValues(node, ['NodeType', 'Name', 'SignerType', 'SignerValue']);
-        _form.loadJson(this.modalNodeProp, row);
+        _form.loadRow(this.modalNodeProp, row);
 
         //show modal
         _modal.showO(this.modalNodeProp);   //.modal('show');
@@ -6655,7 +6738,7 @@ function Flow(boxId, mNode, mLine) {
         if (condList != null) {
             for (var i = 0; i < condList.length; i++) {
                 var newCond = $(this.tplLineCond);
-                _form.loadJson(newCond, condList[i]);
+                _form.loadRow(newCond, condList[i]);
                 this.divLineConds.append(newCond);
             }
         }
@@ -6726,7 +6809,7 @@ function Flow(boxId, mNode, mLine) {
             Op: 'eq',
         };
         var cond = $(Mustache.render(this.tplLineCond, row));
-        _form.loadJson(cond, row);        //row objec to UI
+        _form.loadRow(cond, row);        //row objec to UI
         this.divLineConds.append(cond);
     };
 
@@ -6742,7 +6825,7 @@ function Flow(boxId, mNode, mLine) {
         _modal.hideO(this.modalNodeProp);
 
         //set new value
-        var row = _form.toJson(this.eformNode);
+        var row = _form.toRow(this.eformNode);
 
         //update node display name
         var nodeObj = $(this.nowElm);
@@ -6792,7 +6875,7 @@ function Flow(boxId, mNode, mLine) {
         //conn.setParameter('Sort', _itext.get('Sort', form));
         //var line = conn.getParameters();    //model
         var line = this._connToLine(conn);
-        _form.loadJson(line, row);
+        _form.loadRow(line, row);
 
         //change line label
         var prop = this.getLineProp(condStr)

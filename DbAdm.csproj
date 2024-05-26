@@ -52,12 +52,6 @@
   <ItemGroup>
     <Content Remove="bundleconfig_old.json" />
     <Content Remove="Views\Column\TestFlow.cshtml" />
-    <Content Remove="wwwroot\js\base\_crud.j_old" />
-    <Content Remove="wwwroot\js\base\_datatable.j_old" />
-    <Content Remove="wwwroot\js\base\_editMany.j_old" />
-    <Content Remove="wwwroot\js\base\_multi.j_old" />
-    <Content Remove="wwwroot\js\base\_text.j_old" />
-    <Content Remove="wwwroot\js\base\_valid.j_old" />
   </ItemGroup>
 
   <ItemGroup>

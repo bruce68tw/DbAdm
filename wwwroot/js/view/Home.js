@@ -10,11 +10,11 @@ var _me = {
 
         //show msg if any
         var msg = _text.get('Msg');
-        if (!_str.isEmpty(msg))
+        if (_str.notEmpty(msg))
             _tool.msg(msg);
     },
 
-    onClickLogin: function () {
+    onClickLogin: async function () {
         //debugger;
         var fm = _me.eform;
         var userId = _text.get('UserId', fm);
@@ -29,7 +29,7 @@ var _me = {
             return;
         }
 
-        _ajax.getJson('UserLogin', { id: userId, pwd: pwd }, function (data) {
+        await _ajax.getJsonA('UserLogin', { id: userId, pwd: pwd }, function (data) {
             window.location = '../Home/Index';
         });
 

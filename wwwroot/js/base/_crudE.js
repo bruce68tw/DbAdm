@@ -1,5 +1,15 @@
 ﻿/**
  * crud edit function
+ * _me properties:
+ *   fnAfterSwap:
+ *   fnAfterOpenEdit:
+ *   fnUpdateOrViewA: see _updateOrViewA
+ *   divEdit:
+ *   hasEdit:
+ *   edit0:
+ *   hasChild:
+ *   _nowFun:
+ *   modal:
  */
 var _crudE = {
 
@@ -72,11 +82,11 @@ var _crudE = {
     },
 
     /*
-    _getJsonAndSetMode: function(key, fun) {
+    _getJsonAndSetMode: async function(key, fun) {
         //_crudR.toUpdateMode(key);
         var act = (fun == _fun.FunU) ? 'GetUpdJson' :
             (fun == _fun.FunV) ? 'GetViewJson' : '';
-        _ajax.getJson(act, { key: key }, function(data) {
+        await _ajax.getJsonA(act, { key: key }, function(data) {
             _crudR.toEditMode(fun, data);
         });
     },
@@ -105,9 +115,8 @@ var _crudE = {
     //call fnAfterOpenEdit() if existed
     // _afterOpenEdit -> _afterOpen
     _afterOpenEdit: function(fun, json) {
-        var edit = _me.edit0;
-        if (_fun.hasValue(edit.fnAfterOpenEdit))
-            edit.fnAfterOpenEdit(fun, json);
+        if (_fun.hasValue(_me.fnAfterOpenEdit))
+            _me.fnAfterOpenEdit(fun, json);
     },
 
     /**
@@ -320,15 +329,19 @@ var _crudE = {
         return (_me._nowFun !== _fun.FunV);
     },
 
-    _updateOrView: function(fun, key) {
+    //return {bool}
+    _updateOrViewA: async function (fun, key) {
+        if (_me.fnUpdateOrViewA)
+            return await _me.fnUpdateOrViewA(fun, key);
+
         var act = (fun == _fun.FunU)
             ? 'GetUpdJson' : 'GetViewJson';
-        _ajax.getJson(act, { key: key }, function(data) {
-            _crudE._loadJson(data);   //load first
+        return await _ajax.getJsonA(act, { key: key }, function (json) {
+            _crudE._loadJson(json);
             _crudE._setEditStatus(fun);
-            _crudE._afterOpenEdit(fun, data);
+            _crudE._afterOpenEdit(fun, json);
+            _crudR.toEditMode(fun);
         });
-
     },
 
 
@@ -350,8 +363,8 @@ var _crudE = {
         return (edit[fid] == null) ? 0 : edit[fid].length;
     },
 
-    //get json rows
-    getJsonRows: function (json) {
+    //get rows of json
+    getRowsByJson: function (json) {
         return (json == null || json[_crudE.Rows] == null)
             ? null
             : json[_crudE.Rows];
@@ -365,10 +378,10 @@ var _crudE = {
             : upJson[childs][childIdx];
     },
 
-    //get child json rows
+    //get child rows
     getChildRows: function (upJson, childIdx) {
         var child = _crudE._getChildJson(upJson, childIdx);
-        return _crudE.getJsonRows(child);
+        return _crudE.getRowsByJson(child);
     },
 
     /**
@@ -406,13 +419,15 @@ var _crudE = {
     /**
      * onclick Update button
      * param key {string} row key
+     * return {bool}
      */
-    onUpdate: function(key) {
-        _crudE._updateOrView(_fun.FunU, key);
+    onUpdateA: async function(key) {
+        return await _crudE._updateOrViewA(_fun.FunU, key);
     },
 
-    onView: function(key) {
-        _crudE._updateOrView(_fun.FunV, key);
+    //return { bool }
+    onViewA: async function(key) {
+        return await _crudE._updateOrViewA(_fun.FunV, key);
     },
 
     /**
@@ -435,7 +450,7 @@ var _crudE = {
      * below variables are sent to backend
      *   key, row(包含_childs, _deletes, _fileNo), files
      */
-    onSave: function() {
+    onSaveA: async function() {
         //validate all input & system error(will show error msg)
         if (!_crudE.validAll()) {
             _tool.alert(_BR.InputWrong);
@@ -471,7 +486,7 @@ var _crudE = {
             if (!isNew)
                 data.append('key', edit0.getKey());
 
-            _ajax.getJsonByFormData(action, data, function(result) {
+            await _ajax.getJsonByFdA(action, data, function(result) {
                 _crudE.afterSave(result);
             });
         } else {
@@ -480,7 +495,7 @@ var _crudE = {
             if (!isNew)
                 data.key = edit0.getKey();
 
-            _ajax.getJson(action, data, function(result) {
+            await _ajax.getJsonA(action, data, function(result) {
                 _crudE.afterSave(result);
             });
         }

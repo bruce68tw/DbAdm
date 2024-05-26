@@ -45,7 +45,7 @@ var _me = {
 
         //custom function
         //_me.edit0.fnAfterLoadJson = _me.edit0_afterLoadJson;
-        _me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;        
+        //_me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;        
         _me.edit0.fnWhenSave = _me.edit0_whenSave;
         //
         _me.mEtable.fnLoadJson = _me.mEtable_loadJson;
@@ -105,24 +105,17 @@ var _me = {
         return _iselect.get('ProjectId', _crudE.getEform0());
     },
 
+    //auto called !!
     //set etable TableId(dropdown)
     //edit0_afterLoadJson: function (json) {
-    edit0_afterOpenEdit: function (fun, json) {
+    fnAfterOpenEdit: async function (fun, json) {
         if (fun == _fun.FunC)
             return;
 
         //set tables list, async call, send function parameter 
-        _me.onChangeProject(function () {
-            _me.edit0_afterOpenEdit2(json);
-        });
+        if (!await _me.onChangeProject())
+            return;
 
-        //reset
-        //_me.swapEitemCols();
-    },
-
-    //called by edit0_afterLoadRow()
-    //edit0_afterLoadJson2: function (json) {
-    edit0_afterOpenEdit2: function (json) {
         //set form0 tableId select 欄位
         //var form = _crudE.getEform0();
         //_iselect.set(_me.TableId, json[_me.TableId], form);
@@ -223,13 +216,8 @@ var _me = {
             //load Eitems & validate
             var form2 = forms.last();
             var rows2 = _json.filterRows(eitemRows, 'EtableId', _itext.get('Id', form));
-            _me.mEitem.loadRows(form2.find('tbody'), rows2);
+            _me.mEitem.loadRowsByBox(form2.find('tbody'), rows2);
             _valid.init(form2);
-            /*
-            var form = _me.tabEtable.find('#divEtable' + i + ' form');
-            _me.mEitem.loadRows(form.find('tbody'), rows2);
-            _valid.init(form);
-            */
         }
 
         /*
@@ -303,12 +291,12 @@ var _me = {
      * onclick generate crud
      * (如果在VS下產生DbAdm的CRUD會reload !!)
      */ 
-    onGenCrud: function () {
+    onGenCrud: async function () {
         var keys = _me.getCheckedTables();
         if (keys.length === 0)
             return;
 
-        _ajax.getStr('GenCrud', { keys: keys.join(',') }, function (error) {
+        await _ajax.getStrA('GenCrud', { keys: keys.join(',') }, function (error) {
             _tool.msg(_str.isEmpty(error) ? '執行成功' : error);
         });
     },
@@ -338,35 +326,37 @@ var _me = {
 
     onRitemAdd: function () {
         var box = $(Mustache.render(_me.tplRitem, {}));
-        _form.loadJson(box, {});
+        _form.loadRow(box, {});
         _me.mRitem.boxSetNewId(box);
         _me.divRitemBody.append(box);
     },
 
     //on change project id
     //多個地方呼叫
-    //fnCallback: (optional) callback function
-    onChangeProject: function (fnCallback) {
+    ////fnCallback: (optional) callback function
+    //return {bool}
+    onChangeProject: async function (fnCallback) {
         //var form = _crudE.getEform0();
         //var pid = _iselect.get('ProjectId', form);
         var pid = _me.getProjectId();
-        if (pid !== '') {
-            _ajax.getJson('/Xp/GetTables', { projectId: pid }, function (rows) {
-                _me.tables = rows;
-                //_iselect.setItems(_me.TableId, rows, form);
-                //if (!_str.isEmpty(tableId))
-                //    _iselect.set(_me.TableId, tableId, form);
+        if (_str.isEmpty(pid))
+            return false;
 
-                //set item modal tables
-                //debugger;
-                var obj = _obj.get(_me.TableId, _me.modalItems);
-                _iselect.setItemsO(obj, _me.tables);
-                _iselect.setO(obj, '');
+        return await _ajax.getJsonA('/Xp/GetTables', { projectId: pid }, function (rows) {
+            _me.tables = rows;
+            //_iselect.setItems(_me.TableId, rows, form);
+            //if (_str.notEmpty(tableId))
+            //    _iselect.set(_me.TableId, tableId, form);
+
+            //set item modal tables
+            //debugger;
+            var obj = _obj.get(_me.TableId, _me.modalItems);
+            _iselect.setItemsO(obj, _me.tables);
+            _iselect.setO(obj, '');
     
-                if (fnCallback !== undefined)
-                    fnCallback();
-            });
-        }
+            //if (fnCallback !== undefined)
+            //    fnCallback();
+        });
     },
 
     //on open item modal
@@ -409,13 +399,13 @@ var _me = {
     },   
 
     //on change tableId at ritem modal
-    onChangeItemTable: function (me) {
-        _me.changeItemTable(_iselect.getO($(me)));
+    onChangeItemTable: async function (me) {
+        await _me.changeItemTableA(_iselect.getO($(me)));
     },
 
     //called by 2 places
-    changeItemTable: function (tableId) {
-        _ajax.getJson('GetColumns', { tableId: tableId }, function (rows) {
+    changeItemTableA: async function (tableId) {
+        await _ajax.getJsonA('GetColumns', { tableId: tableId }, function (rows) {
             _me.divItemsBody.empty();
             for (var i = 0; i < rows.length; i++) {
                 _me.divItemsBody.append($(Mustache.render(_me.tplItemTr, rows[i])));
@@ -480,7 +470,7 @@ var _me = {
         //append query rows
         for (var i = 0; i < rowLen; i++) {
             var box = $(Mustache.render(tplItem, rows[i]));
-            _form.loadJson(box, rows[i]);
+            _form.loadRow(box, rows[i]);
             //if (mItem != null)
             //    mItem.boxSetMapId(box, crudId);
             mItem.boxSetNewId(box);

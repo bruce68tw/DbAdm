@@ -36,8 +36,9 @@ var _fun = {
     //isCheck: true,
 
     //server need Fun/Hello()
-    onHello: function () {
-        _ajax.getStr('../Fun/Hello', null, function (msg) {
+    //no called
+    onHelloA: async function () {
+        await _ajax.getStrA('../Fun/Hello', null, function (msg) {
             alert(msg);
         });
     },
@@ -83,8 +84,9 @@ var _fun = {
     },
 
     //on change locale, 後端必須實作 Fun/SetLocale()
-    onSetLocale: function (code) {
-        _ajax.getStr('../Fun/SetLocale', { code: code }, function (msg) {
+    //no called
+    onSetLocaleA: async function (code) {
+        await _ajax.getStrA('../Fun/SetLocale', { code: code }, function (msg) {
             //_browser.setLang(lang);
             location.reload();
         });

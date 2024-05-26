@@ -1,7 +1,15 @@
 ﻿/**
  * crud read function
  * main for admin Web system
- */
+ * _me properties:
+ *   divEdit
+ *   divRead
+ *   hasRead
+ *   rform
+ *   rform2
+ *   dt
+ *   _updName
+*/
 var _crudR = {
 
     /**
@@ -68,7 +76,7 @@ var _crudR = {
     /**
      * set status column(checkbox)
      * param value {string} checkbox value, will translate to bool
-     * param fnOnClick {string} onclick function, default to _crudR.onSetStatus
+     * param fnOnClick {string} onclick function, default to _crudR.onSetStatusA
      */
     dtSetStatus: function (key, value, fnOnClick) {
         //TODO: pending
@@ -77,7 +85,7 @@ var _crudR = {
         //debugger;
         var checked = _str.toBool(value);
         if (_str.isEmpty(fnOnClick)) {
-            fnOnClick = _str.format("_crudR.onSetStatus(this,\'{0}\')", key);
+            fnOnClick = _str.format("_crudR.onSetStatusA(this,\'{0}\')", key);
         }
         //??
         return _icheck.render2(0, '', 1, checked, '', true, '', "onclick=" + fnOnClick);
@@ -106,11 +114,11 @@ var _crudR = {
         fnOnUpdate, fnOnDelete, fnOnView) {
         var funs = '';
         if (hasUpdate)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_crudR.onUpdate' : fnOnUpdate), key, _BR.TipUpdate);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_crudR.onUpdateA' : fnOnUpdate), key, _BR.TipUpdate);
         if (hasDelete)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_crudR.onDelete' : fnOnDelete), key, rowName, _BR.TipDelete);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_crudR.onDeleteA' : fnOnDelete), key, rowName, _BR.TipDelete);
         if (hasView)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_crudR.onView' : fnOnView), key, _BR.TipView);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_crudR.onViewA' : fnOnView), key, _BR.TipView);
         return funs;
     },
 
@@ -161,10 +169,10 @@ var _crudR = {
         if (_me.rform == null)
             return null;
 
-        var row = _form.toJson(_me.rform);
+        var row = _form.toRow(_me.rform);
         var find2 = _me.rform2;
         if (find2 !== null && _obj.isShow(find2))
-            _json.copy(_form.toJson(find2), row);
+            _json.copy(_form.toRow(find2), row);
         return row;
     },
 
@@ -172,10 +180,14 @@ var _crudR = {
      * change newDiv to active
      * param toRead {bool} show divRead or not
      * param nowDiv {object} (default _me.divEdit) now div to show
+     * param fnCallback {function} (optional) callback function
      */
-    swap: function (toRead, nowDiv) {
-        if (!_me.hasRead || !_me.hasEdit)
+    swap: function (toRead, nowDiv, fnCallback) {
+        if (!_me.hasRead || !_me.hasEdit) {
+            if (fnCallback)
+                fnCallback();
             return;
+        }
 
         var isDefault = _var.isEmpty(nowDiv);
         if (isDefault)
@@ -190,11 +202,31 @@ var _crudR = {
             newDiv = nowDiv;
         }
 
+        /*
         if (_obj.isShow(oldDiv)) {
             oldDiv.fadeToggle(200);
             newDiv.fadeToggle(500);
         }
-
+        */
+        oldDiv.fadeOut(200, function () {
+            newDiv.fadeIn(500);
+            if (fnCallback)
+                fnCallback();
+        });
+        /*
+        newDiv.fadeIn(500, function () {
+            //debugger;
+            oldDiv.fadeOut(200);
+        });
+        
+        if (toRead) {
+            //nowDiv.fadeOut(200);
+            //_me.divRead.fadeIn(500);
+        } else {
+            //_me.divRead.fadeOut(200);
+            //nowDiv.fadeIn(500);
+        }
+        */
         if (isDefault)
             _crudR._afterSwap(toRead);
     },
@@ -202,8 +234,8 @@ var _crudR = {
     //XpFlowSign Read.cshtml 待處理!!
     //to edit(U/V) mode
     //toEditMode: function(fun, data) {
-    toEditMode: function (fun) {
-        _crudR.swap(false);  //call first
+    toEditMode: function (fun, fnCallback) {
+        _crudR.swap(false, null, fnCallback);  //call first
         _prog.setPath(fun, _me._updName);
     },
 
@@ -221,9 +253,8 @@ var _crudR = {
      * param toRead {bool} to read mode or not
      */
     _afterSwap: function (toRead) {
-        var edit = _me.edit0;
-        if (_fun.hasValue(edit.fnAfterSwap))
-            edit.fnAfterSwap(toRead);
+        if (_me.fnAfterSwap)
+            _me.fnAfterSwap(toRead);
     },
 
 
@@ -288,20 +319,20 @@ var _crudR = {
      * onclick Update button
      * param key {string} row key
      */
-    onUpdate: function (key) {
+    onUpdateA: async function (key) {
         //_crudE._getJsonAndSetMode(key, _fun.FunU);
-        _crudE.onUpdate(key);
-        _crudR.toEditMode(_fun.FunU);
+        //_crudR.toEditMode(_fun.FunU);
+        await _crudE.onUpdateA(key);
     },
 
     /**
      * onclick View button
      * param key {string} row key
      */
-    onView: function (key) {
+    onViewA: async function (key) {
         //_crudE._getJsonAndSetMode(key, _fun.FunV);
-        _crudE.onView(key);
-        _crudR.toEditMode(_fun.FunV);
+        await _crudE.onViewA(key);
+        //_crudR.toEditMode(_fun.FunV);
     },
 
     /**
@@ -309,9 +340,9 @@ var _crudR = {
      * me {element} checkbox element
      * key {string} row key
      */
-    onSetStatus: function (me, key) {
+    onSetStatusA: async function (me, key) {
         var status = _icheck.checkedO($(me));
-        _ajax.getStr('SetStatus', { key: key, status: status }, function (msg) {
+        await _ajax.getStrA('SetStatus', { key: key, status: status }, function (msg) {
             _tool.alert(_BR.UpdateOk);
         });
     },
@@ -332,10 +363,10 @@ var _crudR = {
      * key {string} row key
      * rowName {string} for confirm
      */
-    onDelete: function (key, rowName) {
+    onDeleteA: async function (key, rowName) {
         //_temp.data = { key: key };
-        _tool.ans(_BR.SureDeleteRow + ' (' + rowName + ')', function () {
-            _ajax.getJson('Delete', { key: key }, function (msg) {
+        _tool.ans(_BR.SureDeleteRow + ' (' + rowName + ')', async function () {
+            await _ajax.getJsonA('Delete', { key: key }, function (msg) {
                 _tool.alert(_BR.DeleteOk);
                 _me.dt.reload();
             });
@@ -344,11 +375,12 @@ var _crudR = {
 
     /**
      * TODO: need test
+     * no called
      * 刪除選取的多筆資料, 後端固定呼叫 DeleteByKeys()
      * box {string} row key
      * fid {string} 
      */
-    onDeleteRows: function (box, fid) {
+    onDeleteRowsA: async function (box, fid) {
         //get selected keys
         var keys = _icheck.getCheckeds(box, fid);
         if (keys.length === 0) {
@@ -358,8 +390,8 @@ var _crudR = {
 
         //刪除多筆資料, 後端固定呼叫 DeleteByKeys()
         //_temp.data = { keys: keys };
-        _tool.ans(_BR.SureDeleteSelected, function () {
-            _ajax.getStr('DeleteByKeys', { keys: keys }, function (msg) {
+        _tool.ans(_BR.SureDeleteSelected, async function () {
+            await _ajax.getStrA('DeleteByKeys', { keys: keys }, function (msg) {
                 _tool.alert(_BR.DeleteOk);
                 _me.dt.reload();
             });

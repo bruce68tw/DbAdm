@@ -38,10 +38,10 @@
         },
 
         //import excel into Db
-        onImport: function (id) {
+        onImport: async function (id) {
             _me.prjId = id;
-            _tool.ans('@R["SureImportDb"]', function () {
-                _ajax.getJson('Import', { id: _me.prjId }, function (data) {
+            _tool.ans('@R["SureImportDb"]', async function () {
+                await _ajax.getJsonA('Import', { id: _me.prjId }, function (data) {
                     _tool.msg(_BR.Done);
                 });
             });

@@ -110,6 +110,9 @@ var _json = {
 
     //filter json array
     filterRows: function (rows, fid, value) {
+        if (rows == null || rows.length == 0)
+            return null;
+
         return rows.filter(function (row) {
             return (row[fid] === value);
         });
@@ -153,7 +156,7 @@ var _json = {
                 if (!_json.isKeyValue(value[0])) {
                     var isEmpty = true;
                     for (var i = 0; i < len; i++) {
-                        if (!_str.isEmpty(value[i])) {
+                        if (_str.notEmpty(value[i])) {
                             isEmpty = false;
                             break;
                         }

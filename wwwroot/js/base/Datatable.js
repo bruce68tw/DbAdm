@@ -143,9 +143,9 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
                     this._start = this.dt.page.info().start;
                     this._keepStart = false; //reset
 
-                    var msg = _ajax.resultToMsg(result);
-                    if (msg) {
-                        _tool.msg(msg);
+                    var errMsg = _ajax.resultToErrMsg(result);
+                    if (errMsg) {
+                        _tool.msg(errMsg);
                         result.recordsFiltered = 0;
                         this.recordsFiltered = 0;
                         return [];  //no null, or jquery will get wrong !!

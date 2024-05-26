@@ -3,23 +3,23 @@
  * notice:
  *   1.set data-fkeyFid when save
  *   
- * param kid {string} pkey field id(single key)
- * param eformId {string} (optional) edit form id
+ * param-1 kid {string} pkey field id(single key)
+ * param-2 eformId {string} (optional) edit form id
  *   if empty, you must write below functions:
- *     1.void fnLoadJson(json): show josn to form
+ *     1.void fnLoadJson(json): show json to form, use loadJson instead of loadRows for more situation !!
  *     2.json fnGetUpdJson(upKey): get updated json by form
  *     3.bool fnValid(): (optional) validate check
- *   if not empty, system will load UI & prepare save rows,
+ *   if not empty, system will load UI & prepare saving rows,
  *     and rows container tag is fixed to 'tbody'
- * param tplRowId {string} (optional) row template id
+ * param-3 tplRowId {string} (optional) row template id
  *   1.if empty, it will log error when call related function.
- *   2.system get fid type from this variables
- *   3.called by singleFormLoadRow、loadRows、_renderRow
- * param rowFilter {string} (optional) filter for find row object
+ *   2.system get fid-type from this variables
+ *   3.called by singleFormLoadRow、loadRowsByBox、_renderRow
+ * param-4 rowFilter {string} (optional) jQuery filter for find row object
  *   1.if empty, it will log error when call related function.
  *   2.inside element -> row(onDeleteRow),
  *   3.rowsBox -> row(getUpdRows)
- * param sortFid {string} (optional) sort fid for sorting function
+ * param-5 sortFid {string} (optional) sort fid for front-side sorting function
  * 
  * return {EditMany}
  */
@@ -32,18 +32,20 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     this.init = function () {
 
         //constant
-        this.DataFkeyFid = '_fkeyfid';  //data field for fkey fid
+        this.DataFkeyFid = '_fkeyfid';  //data field for fkey fid, lowercase
 
+        //variables
         this.kid = kid;
-        this.hasRowFilter = !_str.isEmpty(rowFilter);
+        this.hasRowFilter = _str.notEmpty(rowFilter);
         this.rowFilter = rowFilter;
         this.sortFid = sortFid;
-
         this.systemError = '';
-        this.hasTplRow = !_str.isEmpty(tplRowId);
+        this.hasTplRow = _str.notEmpty(tplRowId);
+
         if (this.hasTplRow) {
             this.tplRow = $('#' + tplRowId).html();
             var rowObj = $(this.tplRow);
+
             //check input & alert error if wrong
             if (_obj.get(kid, rowObj) == null) {
                 this.systemError = 'EditMany.js input kid is wrong (' + kid + ')';
@@ -55,7 +57,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         }
 
         //has edit form or not
-        this.hasEform = !_str.isEmpty(eformId);
+        this.hasEform = _str.notEmpty(eformId);
         if (this.hasEform) {
             this.eform = $('#' + eformId);     //edit form object
             this.rowsBox = this.eform.find('tbody'); //use tbody(in table)
@@ -107,21 +109,6 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * load this json rows into UI
-     * param json {json} 
-     */
-    this.loadJson = function (json) {
-        if (this.hasEform) {
-            var rows = (json == null || json[_crudE.Rows] == null)
-                ? null : json[_crudE.Rows];
-            this.loadRows(this.rowsBox, rows);
-        } else {
-            //raise error if no function
-            this.fnLoadJson(json);
-        }
-    };
-
-    /**
      * (urm: UserRole Mode), load json rows into UI by urm
      * param json {json} 
      */
@@ -132,7 +119,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         objs.data('key', '');
 
         //check
-        var rows = _crudE.getJsonRows(json);
+        var rows = _crudE.getRowsByJson(json);
         if (rows == null)
             return;
 
@@ -198,7 +185,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
             return;
 
         var form = $(Mustache.render(this.tplRow, { Index: index }));
-        _form.loadJson(form, row);   //use name field
+        _form.loadRow(form, row);   //use name field
 
         //set old value for each field
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
@@ -211,23 +198,38 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * load rows to form UI, also set old values !!
+     * load this json rows into UI, also set old values !!
+     * param json {json} 
+     */
+    this.loadJson = function (json) {
+        if (this.hasEform) {
+            var rows = (json == null || json[_crudE.Rows] == null)
+                ? null : json[_crudE.Rows];
+            this.loadRowsByBox(this.rowsBox, rows);
+        } else {
+            //will raise error if no function
+            this.fnLoadJson(json);
+        }
+    };
+
+    /**
+     * load rows with rowsBox
      * param rowsBox {object} rows box object
      * param rows {jsons}
+     * param reset {bool} (default true) reset rowsBox first.
      */ 
-    this.loadRows = function (rowsBox, rows, reset) {
+    this.loadRowsByBox = function (rowsBox, rows, reset) {
         if (!this.checkTplRow())
             return;
 
         //reset if need
-        if (reset === undefined)
-            reset = true;
-        if (reset)
+        //use "reset || true"" will cause wrong result !!
+        if (_var.isEmpty(reset) || reset)
             this.reset(rowsBox);
 
-        //var rows = json._rows;
+        //check
         var rowLen = (rows == null) ? 0 : rows.length;
-        if (rowLen === 0)
+        if (rowLen == 0)
             return;
 
         //render rows
@@ -237,17 +239,16 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
             //box.data(this.DataIndex, i);    //set row index
 
             //set old value for each field
-            for (var j = 0; j < this.fidTypeLen; j = j + 2) {
+            for (var j = 0; j < this.fidTypeLen; j += 2) {
                 fid = this.fidTypes[j];
-                var obj2 = _obj.get(fid, box);
-                _edit.setOld(obj2, row[fid]);
+                _edit.setOld(_obj.get(fid, box), row[fid]);
             }
 
             //set date input
             _idate.init(box);
 
             //one row into UI
-            _form.loadJson(box, row);
+            _form.loadRow(box, row);
 
             //into rows box
             box.appendTo(rowsBox);
@@ -502,7 +503,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
         rowsBox = this.getRowsBox(rowsBox);
         var obj = $(Mustache.render(this.tplRow, row));
-        _form.loadJson(obj, row);
+        _form.loadRow(obj, row);
         obj.appendTo(rowsBox);
         return obj;
     };

@@ -7,8 +7,8 @@
  * 
  * custom function called by _crudE.js
  *   //void fnAfterLoadJson(json)
- *   void fnAfterOpenEdit(fun, json): called after open edit form
- *   void fnAfterSwap(readMode): called after _crudR.swap()
+ *   //void fnAfterOpenEdit(fun, json): called after open edit form
+ *   //void fnAfterSwap(readMode): called after _crudR.swap()
  *   error fnWhenSave()
  *   void fnAfterSave()
  *   
@@ -76,7 +76,7 @@ function EditOne(kid, eformId) {
      * param row {json}
      */
     this.loadRow = function (row) {
-        _form.loadJson(this.eform, row);
+        _form.loadRow(this.eform, row);
 
         //set old value for each field
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {

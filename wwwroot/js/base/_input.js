@@ -1,6 +1,6 @@
 ﻿/**
  * 1.data-fid -> find object, get data-type, get/set old value
- * 2.name attr -> for _form.toJson()
+ * 2.name attr -> for _form.toRow()
  * 3.validation error span position rules:
  *   (a)same parent, could be different child level
  *   (b)sibling(ex: Date)
