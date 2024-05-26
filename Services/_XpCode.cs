@@ -117,8 +117,8 @@ order by Sort
         public static List<IdStrDto> YesNos()
         {
             return new List<IdStrDto>() {
-                new IdStrDto(){ Id = "1", Str = "是" },
-                new IdStrDto(){ Id = "0", Str = "否" },
+                new IdStrDto(){ Id = "1", Str = "Yes" },
+                new IdStrDto(){ Id = "0", Str = "No" },
             };
         }
 
@@ -135,9 +135,9 @@ order by Sort
         public static List<IdStrDto> AutoIdLens()
         {
             return new List<IdStrDto>() {
-                new IdStrDto(){ Id = "_Fun.AutoIdShort", Str = "短字串(6)" },
-                new IdStrDto(){ Id = "_Fun.AutoIdMid", Str = "中等字串(10)" },
-                new IdStrDto(){ Id = "_Fun.AutoIdLong", Str = "長字串(16)" },
+                new IdStrDto(){ Id = "_Fun.AutoIdShort", Str = "Short(6)" },
+                new IdStrDto(){ Id = "_Fun.AutoIdMid", Str = "Medium(10)" },
+                new IdStrDto(){ Id = "_Fun.AutoIdLong", Str = "Long(22)" },
             };
         }
 
