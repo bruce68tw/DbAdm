@@ -1,4 +1,4 @@
-其他語系：[繁中](Readme-TW.md)、[簡中](Readme-CN.md)、[英文](Readme.md)
+其他語系：[簡中](Readme-CN.md)、[英文](Readme.md)
 
 ### 1.專案介紹
 DbAdm 是一套資料庫文件系統，主畫面如下：

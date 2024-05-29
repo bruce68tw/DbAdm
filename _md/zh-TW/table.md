@@ -1,4 +1,4 @@
-[回首頁](../../Readme-tw.md)
+[回首頁](../../Readme-TW.md)
 ### 資料表維護-查詢畫面
 查詢 Table 資料表：
 ![查詢畫面](image/table-read.png)
