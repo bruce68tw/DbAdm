@@ -2,7 +2,7 @@
 
 ### 1.專案介紹
 DbAdm 是一套資料庫文件系統，主畫面如下：
-![主畫面](image/main.png)
+![主畫面](_docu/zh-TW/image/main.png)
 
 使用的開發工具為 ASP.NET Core 6、jQuery 3、Bootstrap 5、Visual Studio 2022 Community，它的功能如下：
 - 從現有 MSSQL 的資料庫匯入欄位資訊。
