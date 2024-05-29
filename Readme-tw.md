@@ -59,10 +59,9 @@ DbAdm 的資料庫名稱為 Db，種類為 LocalDB、SQL Express、MS SQL 皆可
  - 到[臉書](https://www.facebook.com/groups/softblocks)參與討論。
  - 贈送 GitHub Star。
  - 購買[書籍](https://www.tenlong.com.tw/products/9789865029883)。
- - 贊助作者。
 
 ### 8.作者
  - Bruce Chen - *Initial work*
 
 ### 9.版權說明
-本專案使用 MIT 授權許可，詳情請參閱 [LICENSE.txt](https://github.com/shaojintian/Best_README_template/blob/master/LICENSE.txt)
+本專案使用 [MIT 授權許可](https://zh.wikipedia.org/zh-tw/MIT許可證)。
