@@ -1,7 +1,10 @@
 其他語系：[繁中](Readme-TW.md)、[簡中](Readme-CN.md)、[英文](Readme.md)
 
 ### 1.專案介紹
-DbAdm 是一套資料庫文件系統，使用的開發工具為 ASP.NET Core 6、jQuery 3、Bootstrap 5、Visual Studio 2022 Community，它的功能如下：
+DbAdm 是一套資料庫文件系統，主畫面如下：
+![主畫面](image/main.png)
+
+使用的開發工具為 ASP.NET Core 6、jQuery 3、Bootstrap 5、Visual Studio 2022 Community，它的功能如下：
 - 從現有 MSSQL 的資料庫匯入欄位資訊。
 - 產生資料庫文件檔案 Word 檔。
 - 產生 CRUD 原始碼：CRUD 即新增、查詢、修改、刪除，它代表對資料庫的存取動作。
