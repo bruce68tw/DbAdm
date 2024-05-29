@@ -2,7 +2,7 @@
 
 ### 1.專案介紹
 DbAdm 是一套資料庫文件系統，主畫面如下：
-![主畫面](_docu/zh-TW/image/main.png)
+![主畫面](_md/zh-TW/image/main.png)
 
 使用的開發工具為 ASP.NET Core 6、jQuery 3、Bootstrap 5、Visual Studio 2022 Community，它的功能如下：
 - 從現有 MSSQL 的資料庫匯入欄位資訊。
@@ -12,10 +12,10 @@ DbAdm 是一套資料庫文件系統，主畫面如下：
 
 ### 2.操作畫面
 進入主畫面後，左側功能表有4個功能項目：
-- [專案維護](_docu/zh-TW/project.md)
-- [資料表維護]()
-- [欄位維護]()
-- [CRUD維護]()
+- [專案維護](_md/zh-TW/project.md)
+- [資料表維護](_md/zh-TW/table.md)
+- [欄位維護](_md/zh-TW/column.md)
+- [CRUD維護](_md/zh-TW/myCrud.md)
 
 ### 3.下載 & 安裝
 執行 DbAdm 需要從 GitHub 下載以下兩個 Repo 檔案，解壓縮到本機目錄，並且確保 DbAdm 可以正確參照 BaseWeb 專案：
