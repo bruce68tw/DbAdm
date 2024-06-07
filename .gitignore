@@ -4,6 +4,8 @@ obj/
 _log/
 packages/
 *.rar
+*.bak
+zz_*.*
 old/
 wwwroot_old/
 wwwroot_old2/

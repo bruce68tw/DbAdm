@@ -54,7 +54,7 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="crudIdList2"></param>
         /// <returns>error msg if any</returns>
-        public async Task<string> RunAsync(string crudIdList2)
+        public async Task<string> RunA(string crudIdList2)
         {
             //only alpha, num and ','
             //if (!_Str.CheckKeyRule(crudIdList2, "GenCrudService Run()"))
@@ -182,7 +182,7 @@ namespace DbAdm.Services
             //loop generate files
             foreach (var crudId in crudIds)
             {
-                var error = await GenByCrudIdAsync(crudId);
+                var error = await GenByCrudIdA(crudId);
                 if (!_Str.IsEmpty(error))
                     return error;
             }
@@ -196,7 +196,7 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="crudId"></param>
         /// <returns>error msg if any</returns>
-        private async Task<string> GenByCrudIdAsync(string crudId)
+        private async Task<string> GenByCrudIdA(string crudId)
         {
             #region 1.check & get crud related rows
             var error = "";
