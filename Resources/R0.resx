@@ -225,4 +225,10 @@
   <data name="SureGenLogSql" xml:space="preserve">
     <value>Sure to Generate Transaction Log Sql file ?</value>
   </data>
+  <data name="GenRelat" xml:space="preserve">
+    <value>Generate Table Relationships</value>
+  </data>
+  <data name="SureGenRelat" xml:space="preserve">
+    <value>Sure to Generate Table Relationships</value>
+  </data>
 </root>

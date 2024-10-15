@@ -268,7 +268,10 @@ SELECT
 	TableCode=table_name, 
 	DataType=data_type + (case when character_maximum_length is null then '' else '('+CONVERT(VARCHAR, character_maximum_length)+')' end),
     Nullable=case when is_nullable = 'YES' then 1 else 0 end,
-	DefaultValue=case when i.COLUMN_DEFAULT is null then '' else replace(replace(i.COLUMN_DEFAULT,'(',''),')','') end,
+	/* todo: temp remark 
+    DefaultValue=case when i.COLUMN_DEFAULT is null then '' else replace(replace(i.COLUMN_DEFAULT,'(',''),')','') end,
+    */
+	DefaultValue='',
 	Sort=ORDINAL_POSITION,
     Note=ISNULL(( 
 		SELECT cast(value as varchar)

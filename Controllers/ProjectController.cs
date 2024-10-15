@@ -77,6 +77,16 @@ namespace DbAdm.Controllers
         }
 
         /// <summary>
+        /// generate txt file for table relationShips
+        /// </summary>
+        /// <param name="id">project Id</param>
+        /// <returns></returns>
+        public async Task GenRelat(string id)
+        {
+            await new GenTableRelatService().RunA(id);
+        }
+
+        /// <summary>
         /// generate tran log sql file
         /// </summary>
         /// <param name="id">project Id</param>

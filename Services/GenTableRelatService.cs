@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
-    public class GenDocuService
+    public class GenTableRelatService
     {
         /// <summary>
         /// generate database word document
@@ -154,7 +154,7 @@ namespace DbAdm.Services
             return true;
 
         lab_error:
-            await _Log.ErrorRootA("GenDocuService.cs RunA() failed: " + error);
+            await _Log.ErrorRootA("GenTableRelatService.cs RunA() failed: " + error);
             return false;
         }
 

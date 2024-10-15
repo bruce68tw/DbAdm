@@ -225,4 +225,10 @@
   <data name="SureGenLogSql" xml:space="preserve">
     <value>是否确定产生异动SQL档案?</value>
   </data>
+  <data name="GenRelat" xml:space="preserve">
+    <value>产生关联</value>
+  </data>
+  <data name="SureGenRelat" xml:space="preserve">
+    <value>是否确定产生资料表产生关联?</value>
+  </data>
 </root>
