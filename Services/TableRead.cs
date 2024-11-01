@@ -2,7 +2,6 @@ using Base.Enums;
 using Base.Models;
 using Base.Services;
 using BaseApi.Services;
-using BaseWeb.Services;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
@@ -14,13 +13,13 @@ namespace DbAdm.Services
         {
             ReadSql = @"
 select 
-    '' as _F1, 
+    CreatorName=u.Name,
     p.Code as ProjectCode, p.DbName,
     a.Code, a.Name, a.TranLog,
-    '' as _Fun, a.Status, 
-    a.Id
+    a.Status, a.Id
 from dbo.[Table] a
 inner join dbo.Project p on p.Id=a.ProjectId
+left join dbo.[User] u on p.Creator=u.Id
 order by p.Id, a.Code
 ",
             ExportSql = @"
@@ -29,16 +28,17 @@ select
     p.Code as ProjectCode, p.DbName
 from dbo.[Table] a
 inner join dbo.Project p on p.Id=a.ProjectId
+left join dbo.[User] u on p.Creator=u.Id
 order by p.Id, a.Code
 ",
             TableAs = "a",
-            Items = new QitemDto[] {
+            Items = [
                 new() { Fid = "ProjectId" },
                 new() { Fid = "Code", Op = ItemOpEstr.Like },
                 new() { Fid = "Name", Op = ItemOpEstr.Like2 },
                 new() { Fid = "TranLog" },
                 new() { Fid = "Status" },
-            },
+            ],
         };
 
         public async Task<JObject?> GetPageA(string ctrl, DtDto dt)

@@ -1,0 +1,72 @@
+﻿@inject IHtmlLocalizer<DbAdm.R0> R0
+@inject IViewLocalizer R
+
+<script src="~/js/view/User.js"></script>
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuUser"].Value } })
+<div class="xg-prog">
+    <div id="divRead">
+        <form id='formRead' class='xg-form'>
+            <div class="row">
+                @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Account"].Value, Fid = "Account", MaxLen = 20, InRow = true })
+                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+            </div>
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["UserName"].Value, Fid = "Name", MaxLen = 20 })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Dept"].Value, Fid = "DeptId", Rows = (List<IdStrDto>)ViewBag.Depts })
+        </form>
+
+        <div class='xg-btns-box'>
+            @await Component.InvokeAsync("XgCreate")
+        </div>
+        <table id="tableRead" class="table xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>@R["Account"]</th>
+                    <th>@R["UserName"]</th>
+                    <th>@R["Dept"]</th>
+                    <th>@R0["Status"]</th>
+                    <th>@R0["Crud"]</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <form id='eform' class='xg-form' style='margin-bottom:0;'>
+            @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Account"].Value, Fid = "Account", Required = true, MaxLen = 20 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["UserName"].Value, Fid = "Name", Required = true, MaxLen = 20 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Pwd"].Value, Fid = "Pwd", IsPwd = true, MaxLen = 32 })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Dept"].Value, Fid = "DeptId", Rows = (List<IdStrDto>)ViewBag.Depts })
+            @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R0["Status"].Value, Fid = "Status", Label = R0["Active"].Value })
+        </form>
+
+        <form class='xg-form'>
+            <div class='row'>
+                <div class='col-md-2 xg-label'>@R["RoleList"]</div>
+                <div class='col-md-8 xg-input'>
+                    <!-- table for control rows column has same width -->
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                            <tr>
+                                <td id="divRoles">
+                                    @foreach (var row in (List<IdStrDto>)ViewBag.Roles)
+                                    {
+                                        @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = row.Id, Value = row.Id, Label = row.Str })
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+        @await Component.InvokeAsync("XgSaveBack")
+    </div>
+</div>

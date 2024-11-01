@@ -14,7 +14,16 @@ namespace DbAdm.Services
                 Table = "dbo.[Table]",
                 PkeyFid = "Id",
                 Col4 = null,
-                Items = new EitemDto[] {
+                ReadSql = $@"
+select t.*, 
+    CreatorName=u.Name, 
+    {_Fun.FidUser}=u.Id, {_Fun.FidDept}=u.DeptId
+from dbo.[Table] t
+join dbo.Project p on t.ProjectId=p.Id
+left join dbo.[User] u on p.Creator=u.Id
+where t.Id=@Id
+",
+                Items = [
                     new() { Fid = "Id" },
                     new() { Fid = "ProjectId" },
                     new() { Fid = "Code" },
@@ -22,9 +31,8 @@ namespace DbAdm.Services
                     new() { Fid = "TranLog" },
                     new() { Fid = "Note" },
                     new() { Fid = "Status" },
-                },
-                Childs = new EditDto[]
-                {
+                ],
+                Childs = [
                     new()
                     {
                         Table = "dbo.[Column]",
@@ -32,7 +40,7 @@ namespace DbAdm.Services
                         FkeyFid = "TableId",
                         OrderBy = "Sort",
                         Col4 = null,
-                        Items = new EitemDto[] {
+                        Items = [
                             new() { Fid = "Id" },
                             new() { Fid = "TableId" },
                             new() { Fid = "Code" },
@@ -43,11 +51,10 @@ namespace DbAdm.Services
                             new() { Fid = "Sort" },
                             new() { Fid = "Note" },
                             new() { Fid = "Status" },
-                        },
+                        ],
                     },
-                },
+                ],
             };
         }
-
     } //class
 }

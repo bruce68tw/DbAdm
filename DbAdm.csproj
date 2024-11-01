@@ -56,6 +56,8 @@
 
   <ItemGroup>
     <None Remove="Controllers\MyController.cs_old" />
+    <None Remove="key.Development.txt" />
+    <None Remove="key.Production.txt" />
     <None Remove="Models\CrudFitemDto.cs_old" />
     <None Remove="Models\ErrorViewModel.cs_old" />
     <None Remove="Models\SessionModel.cs_old" />
@@ -71,6 +73,8 @@
 	<Content Include="_template\**" CopyToPublishDirectory="PreserveNewest" />
 	<Compile Remove="Controllers\Table2Controller.cs" />
 	<Compile Remove="Controllers\TestController.cs" />
+	<Content Include="key.Development.txt" />
+	<Content Include="key.Production.txt" />
     <Content Include="Views\Shared\Error.cshtml_old" />
     <Content Include="_image\noImage.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -81,16 +85,17 @@
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="Handlebars.Net" Version="2.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MySql.Data" Version="9.0.0" />
+    <PackageReference Include="MySql.Data" Version="9.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>

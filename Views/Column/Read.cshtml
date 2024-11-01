@@ -17,14 +17,15 @@
                     { data: 'Code', orderable: true },
                     { data: 'Name' },
                     { data: 'DataType' },
+                    { data: 'CreatorName' },
                     { data: '_Fun' },
                     { data: 'Status', orderable: true },
                 ],
                 columnDefs: [
-                    { targets: [5], render: function (data, type, full, meta) {
-                        return _crudR.dtCrudFun(full.Id, full.Name, true, true, false);
-                    }},
                     { targets: [6], render: function (data, type, full, meta) {
+                        return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    }},
+                    { targets: [7], render: function (data, type, full, meta) {
                         return _crudR.dtStatusName(data);
                     }},
                 ],
@@ -68,6 +69,7 @@
                     <th>@R["Column"]</th>
                     <th>@R["ColName"]</th>
                     <th>@R["DataType"]</th>
+                    <th>@R["Creator"]</th>
                     <th width='80px'>@R["Crud"]</th>
                     <th width='65px'>@R["Status"]</th>
                 </tr>

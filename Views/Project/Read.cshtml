@@ -12,23 +12,25 @@
                 columns: [
                     { data: 'Code' },
                     { data: 'DbName' },
+                    { data: 'CreatorName' },
                     { data: '_Fun' },
                     { data: '_Crud' },
                     { data: 'Status' },
                 ],
                 columnDefs: [
-                    { targets: [2], render: function (data, type, full, meta) {
+                    { targets: [3], render: function (data, type, full, meta) {
                         var html = '' +
                             '<button type="button" class="btn btn-link" onclick="_me.onImport(\'{0}\')">{1}</button> | ' +
                             '<button type="button" class="btn btn-link" onclick="_me.onGenWord(\'{0}\')">{2}</button> | ' +
-                            '<button type="button" class="btn btn-link" onclick="_me.onGenRelat(\'{0}\')">{3}</button> | ' +
-                            '<button type="button" class="btn btn-link" onclick="_me.onGenLogSql(\'{0}\')">{4}</button>';
-                        return _str.format(html, full.Id, '@R["ImportDb"]', '@R["GenDocu"]', '@R["GenRelat"]', '@R["GenLogSql"]');
-                    }},
-                    { targets: [3], render: function (data, type, full, meta) {
-                        return _crudR.dtCrudFun(full.Id, full.Name, true, true, false);
+                            /*'<button type="button" class="btn btn-link" onclick="_me.onGenRelat(\'{0}\')">{3}</button> | ' +*/
+                            '<button type="button" class="btn btn-link" onclick="_me.onGenLogSql(\'{0}\')">{3}</button>';
+                        //return _str.format(html, full.Id, '@R["ImportDb"]', '@R["GenDocu"]', '@R["GenRelat"]', '@R["GenLogSql"]');
+                        return _str.format(html, full.Id, '@R["ImportDb"]', '@R["GenDocu"]', '@R["GenLogSql"]');
                     }},
                     { targets: [4], render: function (data, type, full, meta) {
+                            return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    }},
+                    { targets: [5], render: function (data, type, full, meta) {
                         return _crudR.dtStatusName(data);
                     }},
                 ],
@@ -84,6 +86,7 @@
                 <tr>
                     <th>@R["Project"]</th>
                     <th>@R["DbName"]</th>
+                    <th>@R["Creator"]</th>
                     <th>@R["Fun"]</th>
                     <th width='80px'>@R["Crud"]</th>
                     <th width='65px'>@R["Status"]</th>

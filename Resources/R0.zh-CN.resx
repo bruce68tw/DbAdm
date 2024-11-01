@@ -138,7 +138,7 @@
   <data name="MenuColumn" xml:space="preserve">
     <value>栏位维护</value>
   </data>
-  <data name="MenuCrud" xml:space="preserve">
+  <data name="MenuMyCrud" xml:space="preserve">
     <value>CRUD维护</value>
   </data>
   <data name="Table" xml:space="preserve">
@@ -208,7 +208,7 @@
     <value>功能代码</value>
   </data>
   <data name="Created" xml:space="preserve">
-    <value>建立时间</value>
+    <value>建档时间</value>
   </data>
   <data name="ProgName" xml:space="preserve">
     <value>功能名称</value>
@@ -230,5 +230,62 @@
   </data>
   <data name="SureGenRelat" xml:space="preserve">
     <value>是否确定产生资料表产生关联?</value>
+  </data>
+  <data name="MenuSetPwd" xml:space="preserve">
+    <value>设定密码</value>
+  </data>
+  <data name="MenuUser" xml:space="preserve">
+    <value>用户管理</value>
+  </data>
+  <data name="MenuXpRole" xml:space="preserve">
+    <value>角色维护</value>
+  </data>
+  <data name="MenuXpProg" xml:space="preserve">
+    <value>功能维护</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>修改</value>
+  </data>
+  <data name="Read" xml:space="preserve">
+    <value>查询</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>列印</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>汇出</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>检视</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>汇入</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>用户名称</value>
+  </data>
+  <data name="DeptName" xml:space="preserve">
+    <value>部门名称</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>用户帐号</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>建档人员</value>
+  </data>
+  <data name="Reviser" xml:space="preserve">
+    <value>修改人员</value>
+  </data>
+  <data name="Revised" xml:space="preserve">
+    <value>修改日期</value>
   </data>
 </root>

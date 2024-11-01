@@ -9,6 +9,22 @@ namespace DbAdm.Services
     //與下拉欄位有關
     public static class _XpCode
     {
+        #region master table to codes
+        public static async Task<List<IdStrDto>?> DeptsA(Db? db = null)
+        {
+            return await _Db.TableToCodesA("Dept", db);
+        }
+        public static async Task<List<IdStrDto>?> RolesA(Db? db = null)
+        {
+            return await _Db.TableToCodesA("XpRole", db);
+        }
+        public static async Task<List<IdStrDto>?> UsersA(Db? db = null)
+        {
+            return await _Db.TableToCodesA("User", db);
+        }
+
+        #endregion
+
         /*
         public static async Task<List<IdStrDto>> TableToCodesA(string table, Db? db = null)
         {
@@ -112,6 +128,11 @@ order by Sort
         public static async Task<List<IdStrDto>> AuthTypesA(Db? db = null)
         {
             return await ByCodesA("AuthType", db);
+        }
+
+        public static async Task<List<IdStrDto>> AuthRangesA(Db? db = null)
+        {
+            return await ByCodesA("AuthRange", db);
         }
 
         public static List<IdStrDto> YesNos()

@@ -12,23 +12,22 @@ namespace DbAdm.Services
         {
             //1.set ReadSql
             ReadSql = @"
-Select 
-    p.Code as ProjectCode, t.Code as TableCode,
-    c.Code, c.Name, 
-    c.DataType, _Fun='',
-    c.Status, c.Id
+Select c.*,
+    CreatorName=u.Name,
+    p.Code as ProjectCode, t.Code as TableCode
 From dbo.[Column] c
 inner join dbo.[Table] t on t.Id=c.TableId
 inner join dbo.Project p on p.Id=t.ProjectId
+left join dbo.[User] u on p.Creator=u.Id
 Order by p.Id, t.Id, c.Sort
 ",
             TableAs = "c",
             //2.set query fields
-            Items = new QitemDto[] {
+            Items = [
                 new() { Fid = "ProjectId", Col = "t.ProjectId" },
                 new() { Fid = "TableCode", Col = "t.Code", Op = ItemOpEstr.Like },
                 new() { Fid = "Code", Op = ItemOpEstr.Like },
-            },
+            ],
         };
 
         public async Task<JObject?> GetPageA(DtDto dt)

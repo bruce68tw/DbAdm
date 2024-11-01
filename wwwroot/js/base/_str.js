@@ -65,4 +65,12 @@ var _str = {
         return $.trim(str);
     },
 
+    toJson: function (str) {
+        try {
+            return JSON.parse(str);
+        } catch (error) {
+            //console.log("JSON.parse failed");
+            return null;
+        }
+    },
 }; //class

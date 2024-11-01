@@ -1,4 +1,5 @@
 ﻿using Base.Services;
+using BaseApi.Services;
 using BaseWeb.Services;
 using DbAdm.Tables;
 
@@ -27,7 +28,14 @@ namespace DbAdm.Services
                 dir += _Locale.GetLocaleByUser() + _Fun.DirSep;
             return dir + fileName;
         }
-        
+
+        public static string GetClientKey(bool hasIp)
+        {
+            var key = _Http.GetCookie(_Fun.FidClientKey);
+            return hasIp
+                ? key + _Http.GetIp(false)
+                : key;
+        }
 
         /*
         public static SessionModel GetSession()

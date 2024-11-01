@@ -1,0 +1,161 @@
+﻿@model LoginVo
+@{
+    Layout = null;
+    var accountMsgClass = (Model.AccountMsg == "") ? "hide" : "";
+    var pwdMsgClass = (Model.PwdMsg == "") ? "hide" : "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DbAdm System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #3498db;
+            margin: 0 auto 0 auto;
+            width: 100%;
+            text-align: center;
+            margin: 20px 0px 20px 0px;
+        }
+
+        /*
+        p {
+            font-size: 12px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+        */
+
+        h1 {
+            font-size: 1.5em;
+            color: #525252;
+        }
+
+        .box {
+            background: white;
+            width: 300px;
+            border-radius: 6px;
+            margin: 0 auto 0 auto;
+            padding: 0px 10px 80px 10px;
+            border: #2980b9 4px solid;
+        }
+
+        input, select {
+            background: #ecf0f1;
+            border: #ccc 1px solid;
+            border-bottom: #ccc 2px solid;
+            padding: 8px;
+            width: 250px;
+            /*color: #AAAAAA;*/
+            margin-top: 10px;
+            font-size: 1em;
+            border-radius: 4px;
+        }
+
+        button {
+            background: #2ecc71;
+            width: 125px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            color: white;
+            border-radius: 4px;
+            border: #27ae60 1px solid;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            float: left;
+            margin-left: 88px;
+            font-weight: 800;
+            font-size: 0.8em;
+        }
+
+            .button:hover {
+                background: #2CC06B;
+            }
+
+            /*
+        .fpwd {
+            color: #f1c40f;
+            text-decoration: underline;
+        }
+            */
+        #formBox {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 400px;
+            height: 300px;
+            text-align: center;
+        }
+
+        #AccountMsg, #PwdMsg {
+            color: red;
+            text-align: left;
+            font-size: medium;
+            margin: 2px 20px 0;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
+
+    <script>
+        //declare global
+        //var _jwtToken = '';
+
+        //window.onload be ok only !! 
+        window.onload = function () {
+            //case of error
+            var msg = '@Model.ErrorMsg';
+            if (msg !== '') {
+                alert(msg);
+
+            /*
+            } else if (token !== '') {
+                //global for pass to _fun
+                localStorage.setItem('_jwtToken', token);
+
+                //使用form submit模擬redirect將jwt token傳送到後端
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/' + (url || 'Home/Index');
+
+                // 将 JWT 添加为隐藏字段
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = '_jwtToken';   //固定名稱
+                input.value = token;
+                form.appendChild(input);
+
+                // 提交表单
+                document.body.appendChild(form);
+                form.submit();
+                return;
+            }
+            */
+            document.getElementById('Account').focus();
+        };
+    </script>
+</head>
+<body>
+    <div id="formBox">
+        <form action=@Url.Action("login") method="post">
+            <input name="FromUrl" type="hidden" value="@Model.FromUrl">
+            <div class="box">
+                <h1>Login Form</h1>
+                <input type="text" id="Account" name="Account" value="@Model.Account" placeholder="User Account">
+                <div id="AccountMsg" class="@accountMsgClass">@Model.AccountMsg</div>
+                <input type="password" name="Pwd" value="@Model.Pwd" placeholder="Password">
+                <div id="PwdMsg" class="@pwdMsgClass">@Model.PwdMsg</div>
+                <button type="submit">Sign In</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

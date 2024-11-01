@@ -8,6 +8,11 @@
     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableName"].Value, Fid = "Name", MaxLen = 30, Required = true })
     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["TranLog"].Value, Fid = "TranLog", Value = "1", Label = R["Yes"].Value })
     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["Status"].Value, Fid = "Status", IsCheck = true, Value = "1", Label = R["Active"].Value })
+
+    <div class="row">
+        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Creator"].Value, Fid = "CreatorName", InRow = true, Cols = "2,3" })
+        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Created"].Value, Fid = "Created", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
+    </div>
 </form>
 
 @* 2.Column *@

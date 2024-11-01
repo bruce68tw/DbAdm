@@ -15,6 +15,7 @@
                     { data: 'DbName' },
                     { data: 'Code', orderable: true },
                     { data: 'Name', orderable: true },
+                    { data: 'CreatorName' },
                     { data: 'TranLog' },
                     { data: '_Fun' },
                     { data: 'Status', orderable: true },
@@ -23,13 +24,13 @@
                     { targets: [0], render: function (data, type, full, meta) {
                         return _crudR.dtCheck0(full.Id);
                     }},
-                    { targets: [5], render: function (data, type, full, meta) {
+                    { targets: [6], render: function (data, type, full, meta) {
                         return _crudR.dtYesEmpty(data);
                     }},
-                    { targets: [6], render: function (data, type, full, meta) {
-                        return _crudR.dtCrudFun(full.Id, full.Name, true, true, false);
-                    }},
                     { targets: [7], render: function (data, type, full, meta) {
+                        return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    }},
+                    { targets: [8], render: function (data, type, full, meta) {
                         return _crudR.dtStatusName(data);
                     }},
                 ],
@@ -84,6 +85,7 @@
                     <th>@R["DbName"]</th>
                     <th>@R["Table"]</th>
                     <th>@R["TableName"]</th>
+                    <th>@R["Creator"]</th>
                     <th width='70px'>@R["TranLog"]</th>
                     <th width='60px'>@R["Crud"]</th>
                     <th width='75px'>@R["Status"]</th>
