@@ -122,7 +122,7 @@ namespace DbAdm
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Project}/{action=Read}/{id?}");
+                    pattern: "{controller=Home}/{action=Login}/{id?}");
             });
         }
     }

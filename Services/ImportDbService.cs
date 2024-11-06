@@ -247,6 +247,7 @@ where t.projectId='{0}'
             }
             else
             {
+                //for new ms sql
                 _sqlGetTables = @"
 select 
     Code=t.table_name,
@@ -268,9 +269,8 @@ SELECT
 	TableCode=table_name, 
 	DataType=data_type + (case when character_maximum_length is null then '' else '('+CONVERT(VARCHAR, character_maximum_length)+')' end),
     Nullable=case when is_nullable = 'YES' then 1 else 0 end,
-	/* todo: temp remark 
+	--todo: temp remark when error
     DefaultValue=case when i.COLUMN_DEFAULT is null then '' else replace(replace(i.COLUMN_DEFAULT,'(',''),')','') end,
-    */
 	DefaultValue='',
 	Sort=ORDINAL_POSITION,
     Note=ISNULL(( 
@@ -284,6 +284,45 @@ WHERE 1=1
 AND TABLE_CATALOG='{0}'
 ORDER BY table_name, ORDINAL_POSITION
 ";
+
+                /*
+                //for old ms sql
+                _sqlGetTables = @"
+select 
+    Code=t.table_name,
+	Note=CASE WHEN p.value IS NULL THEN '' ELSE cast(p.value as varchar) end
+from Information_Schema.Tables t
+LEFT JOIN sys.extended_properties p ON p.major_id = object_id(t.table_schema + '.' + t.table_name) 
+	AND p.minor_id=0
+	AND p.name='MS_Description'     
+WHERE 1=1
+--and TABLE_SCHEMA='dbo'
+AND TABLE_CATALOG='{0}'
+and table_type='BASE TABLE'
+ORDER BY t.table_name
+";
+
+                _sqlGetCols = @"
+SELECT 
+    Code = i.column_name, 
+    TableCode = i.table_name, 
+    DataType = i.data_type + 
+        CASE WHEN i.character_maximum_length IS NULL 
+            THEN '' 
+            ELSE '(' + CONVERT(VARCHAR, i.character_maximum_length) + ')' 
+        END,
+    Nullable = CASE WHEN i.is_nullable = 'YES' THEN 1 ELSE 0 END,
+    DefaultValue = '',  -- 暫時將 DefaultValue 設為空
+    Sort = i.ordinal_position,
+    Note = ''  -- 因無法使用 sysproperties，暫時不提供 Note 欄位內容
+FROM Information_Schema.Columns AS i
+JOIN sysobjects AS t ON t.name = i.table_name 
+    AND t.xtype = 'U'  -- 僅選擇使用者表
+WHERE 1=1
+and TABLE_CATALOG = '{0}'
+ORDER BY i.table_name, i.ordinal_position
+";
+*/
             }
 
             /* MySql 語法(可執行)
