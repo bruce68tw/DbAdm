@@ -1,0 +1,38 @@
+﻿<script type="text/javascript">
+    /*
+    $(function () {
+        _me.init();
+    });
+    */
+    async function onSave() {
+        var form = $('#eform');
+        var oldPwd = _itext.get('OldPwd', form);
+        var newPwd = _itext.get('NewPwd', form);
+        if (newPwd == '') {
+            _tool.msg('新密碼不可空白。');
+            return;
+        }
+        if (newPwd !== _itext.get('NewPwd2', form)) {
+            _tool.msg('確認新密碼輸入錯誤。');
+            return;
+        }
+        await _ajax.getStrA('Save', { oldPwd: oldPwd, newPwd: newPwd }, function (msg) {
+            _tool.msg(msg || '儲存完成。');
+        });
+    }
+
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "設定密碼" } })
+<div class="xg-prog">
+    <div id="divEdit">
+        <form class='xg-form' id='eform'>
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "舊密碼", Fid = "OldPwd", MaxLen = 30, IsPwd = true })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "新密碼", Fid = "NewPwd", MaxLen = 30, Required = true, IsPwd = true })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "確認新密碼", Fid = "NewPwd2", MaxLen = 30, Required = true, IsPwd = true })
+        </form>
+    </div>
+</div>
+<div class='xg-center'>
+    <button type='button' class='btn xg-btn-size btn-success' onclick='onSave()'>儲存<i class='ico-save'></i></button>
+</div>

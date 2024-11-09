@@ -11,13 +11,18 @@ namespace DbAdm.Services
         private readonly ReadDto dto = new()
         {
             ReadSql = @"
-Select *
-From dbo.Project
-Order by Id
+select p.*, 
+    CreatorName=u.Name
+from dbo.Project p
+left join dbo.[User] u on p.Creator=u.Id
+order by p.Id
 ",
-            Items = new QitemDto[] {
+            /*
+            TableAs = "p",
+            Items = [
                 new() { Fid = "Name", Op = ItemOpEstr.Like },
-            },
+            ],
+            */
         };
 
         public async Task<JObject?> GetPageA(string ctrl, DtDto dt)

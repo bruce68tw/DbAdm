@@ -124,15 +124,14 @@ var _ajax = {
      *   json/any: fnOk is empty, return null when error
      */
     _callA: async function (json, fnOk, block) {
-        if (_var.isEmpty(block))
-            block = true;
-
+        if (_var.isEmpty(block)) block = true;
         if (block) _fun.block();
 
         //改用 async/await
         var status = false;
         var result = null;
         try {
+            _fun.jsonAddJwtHeader(json);
             result = await $.ajax(json);
             var errMsg = _ajax.resultToErrMsg(result);
             if (!errMsg && typeof result === 'string' && result.substring(0, 2) === _fun.PreBrError) {
@@ -206,15 +205,20 @@ var _ajax = {
         */
     },
 
-    //resultDto to error msg
-    //also called by Datatable.js
+    /**
+     * resultDto to error msg string
+     * also called by Datatable.js
+     * param result {ResultDto} error msg
+     */ 
     resultToErrMsg: function (result) {
         return (result.ErrorMsg)
             ? _ajax.strToErrMsg(result.ErrorMsg)
             : '';
     },
 
-    //result string to error msg if any
+    /**
+     * result string to error msg if any
+     */ 
     strToErrMsg: function (str) {
         if (_str.isEmpty(str))
             return '';

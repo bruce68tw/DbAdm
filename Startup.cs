@@ -3,6 +3,8 @@ using Base.Interfaces;
 using Base.Models;
 using Base.Services;
 using BaseWeb.Services;
+using DbAdm.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -44,7 +47,7 @@ namespace DbAdm
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //4.user info for base component
-            services.AddSingleton<IBaseUserSvc, BaseUserSvc>();
+            services.AddSingleton<IBaseUserSvc, MyBaseUserService>();
 
             //5.ado.net for mssql
             services.AddTransient<DbConnection, SqlConnection>();
@@ -55,13 +58,42 @@ namespace DbAdm
             Configuration.GetSection("FunConfig").Bind(config);
             _Fun.Config = config;
 
+            //cache server
+            //services.AddDistributedMemoryCache();   //AddDistributedRedisCache is old
+            services.AddMemoryCache();
+            //services.AddStackExchangeRedisCache(opts => { opts.Configuration = config.Redis; });
+            services.AddSingleton<ICacheSvc, CacheMemSvc>();
+
+            //jwt驗證
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opts => {
+                    opts.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateLifetime = true,                //是否驗證超時  當設置exp和nbf時有效 
+                        ValidateIssuerSigningKey = true,        //是否驗證密鑰
+                        IssuerSigningKey = _Login.GetJwtKey(),  //SecurityKey
+                    };
+                });
+
+            //cors
+            string[] origins = _Fun.Config.AllowOrigins.Split(',');
+            services.AddCors(opts => {
+                opts.AddDefaultPolicy(a => {
+                    a.WithOrigins(origins);
+                    a.AllowAnyHeader();
+                    a.AllowAnyMethod();
+                    a.AllowCredentials();
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //1.initial & set locale
-            _Fun.Init(env.IsDevelopment(), app.ApplicationServices, DbTypeEnum.MSSql);
+            _Fun.Init(env.IsDevelopment(), app.ApplicationServices, DbTypeEnum.MSSql, AuthTypeEnum.Row);
 
             //2.set locale, call async method here !!
             _Locale.SetCultureA(_Fun.Config.Locale);
@@ -81,13 +113,16 @@ namespace DbAdm
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            //app.UseAuthorization();
+
+            app.UseCors(); //加上後會套用到全域
+            app.UseAuthentication();    //認証
+            app.UseAuthorization();     //授權
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Login}/{id?}");
             });
         }
     }

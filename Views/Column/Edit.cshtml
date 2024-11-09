@@ -7,7 +7,7 @@
     @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["ProjectCode"].Value, Fid = "ProjectCode" })
     @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Table"].Value, Fid = "TableCode" })
     @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Column"].Value, Fid = "Code" })
-    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ColName"].Value, Fid = "Name", MaxLen = 30, Required = true })
+    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ColName"].Value, Fid = "Name", MaxLen = 30 })
     @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["DataType"].Value, Fid = "DataType" })
     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["Status"].Value, Fid = "Status", IsCheck = true, Value = "1", Label = R["Active"].Value })
     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Note"].Value, Fid = "Note", MaxLen = 30, Cols = "2,5" })

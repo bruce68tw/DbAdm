@@ -10,5 +10,15 @@
     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["Status"].Value, Fid = "Status", IsCheck = true, Value = "1", Label = R["Active"].Value })
     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProjectPath"].Value, Fid = "ProjectPath", MaxLen = 255, Required = true, Cols = longCols })
     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ConnectStr"].Value, Fid = "ConnectStr", MaxLen = 255, Required = true, Cols = longCols })
+
+    <div class="row">
+        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Creator"].Value, Fid = "CreatorName", InRow = true, Cols = "2,3" })
+        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Reviser"].Value, Fid = "ReviserName", InRow = true, Cols = "2,3" })
+    </div>
+    <div class="row">
+        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Created"].Value, Fid = "Created", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
+        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Revised"].Value, Fid = "Revised", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
+    </div>
 </form>
+
 @await Component.InvokeAsync("XgSaveBack")

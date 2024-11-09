@@ -186,7 +186,7 @@
   <data name="DataType" xml:space="preserve">
     <value>Data Type</value>
   </data>
-  <data name="MenuCrud" xml:space="preserve">
+  <data name="MenuMyCrud" xml:space="preserve">
     <value>CRUD Maintain</value>
   </data>
   <data name="Crud" xml:space="preserve">
@@ -224,5 +224,68 @@
   </data>
   <data name="SureGenLogSql" xml:space="preserve">
     <value>Sure to Generate Transaction Log Sql file ?</value>
+  </data>
+  <data name="GenRelat" xml:space="preserve">
+    <value>Generate Table Relationships</value>
+  </data>
+  <data name="SureGenRelat" xml:space="preserve">
+    <value>Sure to Generate Table Relationships</value>
+  </data>
+  <data name="MenuSetPwd" xml:space="preserve">
+    <value>Set Password</value>
+  </data>
+  <data name="MenuUser" xml:space="preserve">
+    <value>5.User Maintain</value>
+  </data>
+  <data name="MenuXpRole" xml:space="preserve">
+    <value>6.Role Maintain</value>
+  </data>
+  <data name="MenuXpProg" xml:space="preserve">
+    <value>7.Program Maintain</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Read" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="DeptName" xml:space="preserve">
+    <value>Depart Name</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>User Account</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Creator</value>
+  </data>
+  <data name="Reviser" xml:space="preserve">
+    <value>Reviser</value>
+  </data>
+  <data name="Revised" xml:space="preserve">
+    <value>Revised Time</value>
   </data>
 </root>

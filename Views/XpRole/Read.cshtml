@@ -1,0 +1,247 @@
+﻿@inject IHtmlLocalizer<DbAdm.R0> R0
+@inject IViewLocalizer R
+@{
+    var isAuthRow = _Fun.IsAuthTypeRow();
+    var authRanges = (List<IdStrDto>)ViewBag.AuthRanges;
+    var progs = GetProgs(); //for select input
+}
+
+@functions {
+    //re-set menu.Name(add locale)
+    public List<IdStrDto> GetProgs()
+    {
+        return new List<IdStrDto>()
+        {
+            new() { Id = "Project", Str = R0["MenuProject"].Value },
+            new() { Id = "Table", Str = R0["MenuTable"].Value },
+            new() { Id = "Column", Str = R0["MenuColumn"].Value },
+            new() { Id = "MyCrud", Str = R0["MenuMyCrud"].Value },
+            new() { Id = "SetPwd", Str = R0["MenuSetPwd"].Value },
+            new() { Id = "User", Str = R0["MenuUser"].Value },
+            new() { Id = "XpRole", Str = R0["MenuXpRole"].Value },
+            new() { Id = "XpProg", Str = R0["MenuXpProg"].Value },
+        };        
+    }
+}
+
+<style>
+    /* set scroll table column width(base 1) */
+    #tableUser th:nth-child(1), #tableUser td:nth-child(1) {
+        flex-basis: 60px;
+    }
+    #tableUser th:nth-child(2), #tableUser td:nth-child(2) {
+        flex-basis: 160px;
+    }
+    #tableUser th:nth-child(3), #tableUser td:nth-child(3) {
+        flex-basis: 120px;
+    }
+    /* get remain width */
+    #tableUser th:nth-child(4), #tableUser td:nth-child(4) {
+        flex-grow: 1;
+    }
+</style>
+
+<script src="~/js/view/XpRole.js"></script>
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpRole"].Value } })
+<div class="xg-prog">
+    <div id="divRead">
+        <form id='formRead' class='xg-form'>
+            <div class="row">
+                @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["RoleName"].Value, Fid = "Name", MaxLen = 30, InRow = true })
+                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+            </div>
+        </form>
+
+        <div class='xg-btns-box'>
+            @await Component.InvokeAsync("XgCreate")
+        </div>
+        <table id="tableRead" class="table xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>@R["RoleName"]</th>
+                    <th>@R0["Crud"]</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <form id='eform' class='xg-form'>
+            @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["RoleName"].Value, Fid = "Name", MaxLen = 30, Required = true })
+        </form>
+
+        <div class='xg-btns-box xg-mt5'>
+            <span class="xg-span-label">@R["UserList"]</span>
+            <button type="button" class="btn xg-btn" onclick="_me.onOpenUser()">@R0["Select"]</button>
+        </div>
+        <form id='eformUserRole' class='xg-form'>
+            <table class="table xg-table" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>@R0["DeptName"]</th>
+                        <th>@R0["Account"]</th>
+                        <th>@R0["UserName"]</th>
+                        <th>@R0["Crud"]</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyUserRole"></tbody>
+            </table>
+
+            @*
+            <div class='row'>
+                <div class='col-md-2 xg-label'>@R["UserList"]</div>
+                <div class='col-md-8 xg-input'>
+                    <!-- table for control rows column has same width -->
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+                            <tr>
+                                <td id="divUsers">
+                                    @foreach (var row in (List<IdStrDto>)ViewBag.Users)
+                                    {
+                                        @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = row.Id, Value = row.Id, Label = row.Str })
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            *@
+        </form>
+
+        <div class='xg-btns-box'>
+            <span class="xg-span-label">@R["RoleProg"]</span>
+            @await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow()")
+        </div>
+        <form id='eformRoleProg' class='xg-form' style="border:none;">
+            <table class="table xg-table xg-no-hline" cellspacing="0">
+                <thead>
+                    <tr>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Prog"].Value, Tip = "欄位前面有*表示有資料權限",  Required = true })
+                        <th>@R0["Create"]</th>
+                        <th>@R0["Read"]</th>
+                        <th>@R0["Update"]</th>
+                        <th>@R0["Delete"]</th>
+                        <th>@R0["Print"]</th>
+                        <th>@R0["Export"]</th>
+                        <th>@R0["View"]</th>
+                        <th>@R0["Crud"]</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyRoleProg"></tbody>
+            </table>
+        </form>
+        @await Component.InvokeAsync("XgSaveBack")
+    </div>
+</div>
+
+<script id="tplUserRole" type="text/template">
+    <tr>
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "RoleId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "UserId" })
+
+        <td class='text-center'>{{DeptName}}</td>
+        <td class='text-center'>{{Account}}</td>
+        <td class='text-center'>{{UserName}}</td>
+        <td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mUserRole.onDeleteRow(this)")</td>
+    </tr>
+</script>
+
+<script id="tplRoleProg" type="text/template">
+    <tr>
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "RoleId" })
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "ProgId", Rows = progs, Required = true })</td>
+
+        @if (isAuthRow)
+        {
+            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunCreate" })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunRead", Rows = authRanges })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunUpdate", Rows = authRanges })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunDelete", Rows = authRanges })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunPrint", Rows = authRanges })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunExport", Rows = authRanges })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunView", Rows = authRanges })</td>
+        }
+        else
+        {
+            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunCreate" })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunRead" })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunUpdate" })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunDelete" })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunPrint" })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunExport" })</td>
+            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunView" })</td>
+        }
+
+        <td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mRoleProg.onDeleteRow(this)")</td>
+    </tr>
+</script>
+
+<!-- modal: select user -->
+<div id="modalUser" class="modal fade xg-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:560px; height:520px;">
+            <div class="modal-header">
+                <div class="modal-title">選取使用者</div>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row xg-mb5">
+                    <div class="col-md-3 xg-right" style="padding-top: 6px;">@R0["DeptName"]</div>
+                    <div class="col-md-5">
+                        @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "DeptId", Rows = (List<IdStrDto>)ViewBag.Depts })
+                    </div>
+                </div>
+                <div class="row xg-mb5">
+                    <div class="col-md-3 xg-right" style="padding-top: 6px;">@R0["Account"]</div>
+                    <div class="col-md-5">
+                        @await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Account" })
+                    </div>
+                    <div class="col-md-4 xg-right">
+                        <button type="button" class="btn btn-success xg-btn-size" onclick="_me.onFindUserA()">查詢</button>
+                        <button type="button" class="btn btn-primary xg-btn-size" onclick="_me.onUserModalOk()">選取</button>
+                    </div>
+                </div>
+
+                <!-- query result list -->
+                <table id="tableUser" class="table xg-table xg-table-vscroll" cellspacing="0" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>@R0["Select"]</th>
+                            <th>@R0["DeptName"]</th>
+                            <th>@R0["Account"]</th>
+                            <th>@R0["UserName"]</th>
+                        </tr>
+                    </thead>
+                    <!-- match tplItemTr -->
+                    <tbody style="height:315px"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- template: modal user list row, data property is case insense !! -->
+<script id="tplUser" type="text/template">
+    <tr data-id='{{Id}}'
+        data-account='{{Account}}'
+        data-userName='{{UserName}}'
+        data-deptName='{{DeptName}}'>
+        <td>
+            @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "_check0" })
+        </td>
+        <td>{{DeptName}}</td>
+        <td>{{Account}}</td>
+        <td>{{UserName}}</td>
+    </tr>
+</script>

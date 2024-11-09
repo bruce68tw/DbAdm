@@ -124,15 +124,14 @@ var _ajax = {
      *   json/any: fnOk is empty, return null when error
      */
     _callA: async function (json, fnOk, block) {
-        if (_var.isEmpty(block))
-            block = true;
-
+        if (_var.isEmpty(block)) block = true;
         if (block) _fun.block();
 
         //改用 async/await
         var status = false;
         var result = null;
         try {
+            _fun.jsonAddJwtHeader(json);
             result = await $.ajax(json);
             var errMsg = _ajax.resultToErrMsg(result);
             if (!errMsg && typeof result === 'string' && result.substring(0, 2) === _fun.PreBrError) {
@@ -206,15 +205,20 @@ var _ajax = {
         */
     },
 
-    //resultDto to error msg
-    //also called by Datatable.js
+    /**
+     * resultDto to error msg string
+     * also called by Datatable.js
+     * param result {ResultDto} error msg
+     */ 
     resultToErrMsg: function (result) {
         return (result.ErrorMsg)
             ? _ajax.strToErrMsg(result.ErrorMsg)
             : '';
     },
 
-    //result string to error msg if any
+    /**
+     * result string to error msg if any
+     */ 
     strToErrMsg: function (str) {
         if (_str.isEmpty(str))
             return '';
@@ -2281,6 +2285,7 @@ var _fun = {
     locale: 'zh-TW',    //now locale, _Layout.cshmlt will set
     maxFileSize: 50971520,  //upload file limit(50M)
     isRwd: false,
+    //jwtToken: '',
     //pageRows: 10,       //for _page.js (pagination object)
 
     //mid variables
@@ -2288,6 +2293,34 @@ var _fun = {
 
     //variables ??
     //isCheck: true,
+    init: function (locale) {
+        //set jwt token
+        //_fun.jwtToken = localStorage.getItem('_jwtToken') || '';
+        //localStorage.removeItem('_jwtToken');
+
+        _fun.locale = locale;
+        //initial
+        _leftmenu.init();
+        _pjax.init('.xu-body');
+        _tool.init();
+        moment.locale(_fun.locale);
+    },
+
+    //get header json object for jwt
+    jsonAddJwtHeader: function (json) {
+        if (_fun.jwtToken)
+            json.headers = _fun.getJwtAuth();
+    },
+
+    getJwtAuth: function () {
+        return {
+            'Authorization': _fun.getJwtBearer()
+        };
+    },
+
+    getJwtBearer: function () {
+        return 'Bearer ' + _fun.jwtToken;
+    },
 
     //server need Fun/Hello()
     //no called
@@ -4355,6 +4388,23 @@ var _pjax = {
         var docu = $(document);
         docu.pjax('[data-pjax]', boxFt, { type: 'POST' });
 
+        //PJAX請求前
+        docu.on('pjax:beforeSend', function (event, xhr, opts) {
+            if (_fun.jwtToken)
+                xhr.setRequestHeader('Authorization', `Bearer ${_fun.jwtToken}`);
+        });
+
+        //'data' 是後端回傳字串, 可能為 HTML 或錯誤訊息
+        docu.on('pjax:success', function (event, data, status, xhr, opts) {
+            var json = _str.toJson(data);
+            if (json != null) {
+                var errMsg = _ajax.resultToErrMsg(json);
+                if (errMsg) {
+                    $(opts.container).html(errMsg);
+                }
+            }
+        });
+
         //when backend exception
         docu.on('pjax:error', function (event, xhr, textStatus, errorThrown, opts) {
             opts.success(xhr.responseText, textStatus, xhr);
@@ -4579,6 +4629,14 @@ var _str = {
         return $.trim(str);
     },
 
+    toJson: function (str) {
+        try {
+            return JSON.parse(str);
+        } catch (error) {
+            //console.log("JSON.parse failed");
+            return null;
+        }
+    },
 }; //class
 
 //switch radio, 使用 css3 toggle switch
@@ -4713,7 +4771,6 @@ var _tool = {
         });
     },
 
-    /*
     //show waiting
     showWait: function () {
         //$('body').addClass('xg-show-loading');
@@ -4723,7 +4780,6 @@ var _tool = {
         //$('body').removeClass('xg-show-loading');
         $('#xgWait').hide();
     },
-    */
 
     /**
      * show textarea editor
@@ -5123,7 +5179,11 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
                 url: url,
                 type: 'POST',
                 dataType: 'json',
-
+                beforeSend: function (jqXHR) {
+                    //debugger;
+                    if (_fun.jwtToken)
+                        jqXHR.setRequestHeader("Authorization", "Bearer " + _fun.jwtToken);
+                },
                 //add input parameter for datatables
                 data: function (arg) {
                     //write order.fid if any
@@ -5170,6 +5230,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 
                 //on error
                 error: function (xhr, ajaxOptions, thrownError) {
+                    //debugger;
                     _tool.hideWait();
                     _tool.msg('Datatable.js error.');
                     if (xhr != null) {

@@ -14,15 +14,23 @@ namespace DbAdm.Services
                 Table = "dbo.Project",
                 PkeyFid = "Id",   //primary key
                 Col4 = null,
-                Items = new EitemDto[] {
+                ReadSql = $@"
+select p.*, 
+    CreatorName=u.Name, ReviserName=u2.Name,
+    {_Fun.FidUser}=u.Id, {_Fun.FidDept}=u.DeptId
+from dbo.Project p
+left join dbo.[User] u on p.Creator=u.Id
+left join dbo.[User] u2 on p.Reviser=u2.Id
+where p.Id=@Id
+",
+                Items = [
                     new() { Fid = "Id" },
                     new() { Fid = "Code", Required = true },
                     new() { Fid = "DbName", Required = true },
-                    //new() { Fid = "ProjectSpace", Required = true },
                     new() { Fid = "ProjectPath", Required = true },
                     new() { Fid = "ConnectStr", Required = true },
                     new() { Fid = "Status", Required = true },
-                },
+                ],
             };
         }
 

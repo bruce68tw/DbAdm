@@ -1,5 +1,7 @@
+using Base.Enums;
 using Base.Models;
 using Base.Services;
+using BaseApi.Attributes;
 using BaseApi.Controllers;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -7,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace DbAdm.Controllers
 {
-    //[Permission(Prog = _Prog.Course)]
+    [XgLogin]
     public class TableController : BaseCtrl
     {
+        [XgProgAuth(CrudEnum.Read)]
         public async Task<ActionResult> Read()
         {
             //test
@@ -21,6 +24,7 @@ namespace DbAdm.Controllers
         }
 
         [HttpPost]
+        [XgProgAuth(CrudEnum.Read)]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
             return JsonToCnt(await new TableRead().GetPageA(Ctrl, dt));
@@ -31,29 +35,48 @@ namespace DbAdm.Controllers
             return new TableEdit(Ctrl);
         }
 
-        //讀取要修改的資料(Get Updated Json)
-        [HttpPost]
-        public async Task<ContentResult> GetUpdJson(string key)
-        {
-            return JsonToCnt(await EditService().GetUpdJsonA(key));
-        }
-
         //新增(DB)
+        [XgProgAuth(CrudEnum.Create)]
         public async Task<JsonResult> Create(string json)
         {
             return Json(await EditService().CreateA(_Str.ToJson(json)!));
         }
+
         //修改(DB)
+        [XgProgAuth(CrudEnum.Update)]
         public async Task<JsonResult> Update(string key, string json)
         {
             return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
         }
 
+        //讀取要修改的資料(Get Updated Json)
+        [HttpPost]
+        [XgProgAuth(CrudEnum.Update)]
+        public async Task<ContentResult> GetUpdJson(string key)
+        {
+            return JsonToCnt(await EditService().GetUpdJsonA(key));
+        }
+
         //刪除(DB)
+        [XgProgAuth(CrudEnum.Delete)]
         public async Task<JsonResult> Delete(string key)
         {
             return Json(await EditService().DeleteA(key));
         }
+
+        [HttpPost]
+        [XgProgAuth(CrudEnum.View)]
+        public async Task<ContentResult> GetViewJson(string key)
+        {
+            return JsonToCnt(await EditService().GetViewJsonA(key));
+        }
+
+        /*
+        public JsonResult SetStatus(string key, bool status)
+        {
+            return Json(_Db.SetRowStatus("dbo.[Table]", "Id", key, status));
+        }
+        */
 
         public async Task Export(string find)
         {
@@ -67,19 +90,6 @@ namespace DbAdm.Controllers
             var tableIds = keys.Split(',');
             await new GenDocuService().RunA("", tableIds);
         }
-
-        /*
-        [HttpPost]
-        public async Task<ContentResult> GetViewJson(string key)
-        {
-            return JsonToCnt(await EditService().GetViewJsonAsync(key));
-        }
-
-        public JsonResult SetStatus(string key, bool status)
-        {
-            return Json(_Db.SetRowStatus("dbo.[Table]", "Id", key, status));
-        }
-        */
 
     }//class
 }

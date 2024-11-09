@@ -1,33 +1,49 @@
-﻿
-<nav class="xg-top navbar navbar-expand navbar-dark">
-    <a class="sidebar-toggle text-light mr-3" onclick="_leftmenu.onToggleMenu(); return false;" style="cursor:pointer">
-        <!--<i class="fa fa-bars"></i>-->
+﻿<style>
+    .xu-top {
+        color: #EAFFFF;
+        background: #28C2FE;
+        padding: 2px 15px;
+        border-bottom: 1px solid #CCC;
+    }
+    .xu-top li {
+        margin: auto 5px;
+    }
+
+    .xu-top i {
+        font-size: 20px;
+    }
+</style>
+
+<nav class="xu-top navbar navbar-expand navbar-dark">
+    <a class="sidebar-toggle text-light mr-3" onclick="_leftmenu.onToggleMenu(); return false;" 
+        style="cursor:pointer; margin-right:10px;">
         <span class="navbar-toggler-icon"></span>
     </a>
 
-    <a class="navbar-brand" href="#"><i class="fa fa-code-branch"></i>@_Fun.Config.SystemName</a>
-
+    <a class="navbar-brand" href="#">@_Fun.Config.SystemName</a>
+    
     @*
-        <div class="navbar-collapse collapse">
-            <ul class="navbar-nav ml-auto">
-                <li>
-                    @Html.XiSelect("_Locale", _Session.Locale, locales, prop: new PropSelectDto() { AddEmptyRow = false, FnOnChange = "_xp.onChangeLocale(this.value)" })
-                </li>
-                <li style="margin:auto; padding-right:10px; font-size: 20px;">
-                    <a class="nav-link" href="@Url.Action("Board", "Home")">
-                        <i class="fa fa-home"></i>
-                    </a>
-                </li>
-                <li style="margin:auto; padding-right:10px;">
-                   @_Session.UserName
-                </li>
-                <li>
-                    <a class="nav-link" href="@Url.Action("Login", "Home")">
-                        <i class="fa fa-sign-out"></i>Logout
-                    </a>
-                </li>
-            </ul>
-        </div>
-    *@
+    <div class="navbar-collapse collapse" style="justify-content:flex-end;">
+        <ul class="navbar-nav ml-auto">
+            <li>
+                @Html.XiSelect("_Locale", _Session.Locale, locales, prop: new PropSelectDto() { AddEmptyRow = false, FnOnChange = "_xp.onChangeLocale(this.value)" })
+            </li>
+
+            <li>
+                <a class="nav-link" href="@Url.Action("Index", "Home")">
+                    <i class="ico-home"></i>
+                </a>
+            </li>
+            <li>
+                @_Fun.GetBaseUser().UserName
+            </li>
+            <li>
+                <a class="nav-link" title="Logout" href="@Url.Action("Logout", "Home")">
+                    <i class="ico-exit"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+	*@
 </nav>
 

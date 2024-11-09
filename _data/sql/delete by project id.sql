@@ -2,6 +2,8 @@ declare @projectId varchar(12)
 set @projectId=''
 --'1616J7CT0A'
 
+--select * from Project
+
 select c.*
 --delete c
 from [Column] c
@@ -15,6 +17,3 @@ where ProjectId=@projectId
 select * from Project
 --delete Project
 where Id=@projectId
-
---truncate table tmpTable
---truncate table tmpColumn

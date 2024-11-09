@@ -154,7 +154,7 @@ namespace DbAdm.Services
             return true;
 
         lab_error:
-            await _Log.ErrorRootA("GenDocuService.cs RunAsync() failed: " + error);
+            await _Log.ErrorRootA("GenDocuService.cs RunA() failed: " + error);
             return false;
         }
 

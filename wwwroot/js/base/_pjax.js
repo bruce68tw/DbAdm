@@ -10,6 +10,23 @@ var _pjax = {
         var docu = $(document);
         docu.pjax('[data-pjax]', boxFt, { type: 'POST' });
 
+        //PJAX請求前
+        docu.on('pjax:beforeSend', function (event, xhr, opts) {
+            if (_fun.jwtToken)
+                xhr.setRequestHeader('Authorization', `Bearer ${_fun.jwtToken}`);
+        });
+
+        //'data' 是後端回傳字串, 可能為 HTML 或錯誤訊息
+        docu.on('pjax:success', function (event, data, status, xhr, opts) {
+            var json = _str.toJson(data);
+            if (json != null) {
+                var errMsg = _ajax.resultToErrMsg(json);
+                if (errMsg) {
+                    $(opts.container).html(errMsg);
+                }
+            }
+        });
+
         //when backend exception
         docu.on('pjax:error', function (event, xhr, textStatus, errorThrown, opts) {
             opts.success(xhr.responseText, textStatus, xhr);
