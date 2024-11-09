@@ -30,36 +30,76 @@ namespace DbAdm.Models
         public bool HasFind2Form { get; set; }  //find2 form
 
         //read from DB
-        public List<CrudQitemDto>? Fitems { get; set; }      //find column
-        public List<CrudQitemDto>? F2items { get; set; }     //find2 column
-        public List<CrudRitemDto>? Ritems { get; set; }      //find result column
+        public List<CrudQitemDto>? Qitems { get; set; }      //find columns
+        public List<CrudQitemDto>? Qitems2 { get; set; }     //find2 columns
+        public List<CrudRitemDto>? Ritems { get; set; }      //find result columns
         public CrudEtableDto MainTable { get; set; } = null!;
         public List<CrudEtableDto>? ChildTables { get; set; }
 
         //extend
         public bool HasFitemCols { get; set; }    //whether fitmem has default cols
-        public List<string>? RsItemStrs { get; set; }       //read service item string
-        public List<string>? JsColDefStrs { get; set; }     //js column define string
-        public string ManyTables { get; set; } = "";             //list of ", _me.mXXX" 
 
-        public List<string>? ReadSelectCols { get; set; }    //(controller)read view select/radio col string list
-        public List<string>? EditSelectCols { get; set; }    //(controller)edit view select/radio col string list
+        /// <summary>
+        /// read service item string
+        /// </summary>
+        public List<string>? RsItemStrs { get; set; }
 
-        public bool HasSelectA { get; set; }     //has async ReadSelectCols or EditSelectCols
+        /// <summary>
+        /// js column define string
+        /// </summary>
+        public List<string>? JsColDefStrs { get; set; }
+
+        /// <summary>
+        /// list of ", _me.mXXX" 
+        /// </summary>
+        public string ManyTables { get; set; } = "";
+
+        /// <summary>
+        /// (controller)read view select/radio col string list
+        /// </summary>
+        public List<string>? ReadSelectCols { get; set; }
+
+        /// <summary>
+        /// (controller)edit view select/radio col string list
+        /// </summary>
+        public List<string>? EditSelectCols { get; set; }
+
+        /// <summary>
+        /// has async ReadSelectCols or EditSelectCols
+        /// </summary>
+        public bool HasSelectA { get; set; }
 
         //file
         public bool HasFile { get; set; }
-        //file input arguments string
-        public string FileEditArg { get; set; } = "";     //variables name
-        public string FileEditTypeArg { get; set; } = ""; //type and name
-        //only master file
+
+        /// <summary>
+        /// file input arguments string, variables name
+        /// </summary>
+        public string FileEditArg { get; set; } = "";
+
+        /// <summary>
+        /// type and name
+        /// </summary>
+        public string FileEditTypeArg { get; set; } = "";
+
+        /// <summary>
+        /// only master file
+        /// </summary>
         public bool FileType0 { get; set; }
-        //has both master and child files
+
+        /// <summary>
+        /// has both master and child files
+        /// </summary>
         public bool FileType1 { get; set; }
-        //master/child file string list for editService
+
+        /// <summary>
+        /// master/child file string list for editService
+        /// </summary>
         public List<string>? FileEditStrs { get; set; }
 
-        //crud.AuthType == 0,1,2
+        /// <summary>
+        /// crud.AuthType == 0,1,2
+        /// </summary>
         public bool AuthType0 { get; set; }
         public bool AuthType1 { get; set; }
         public bool AuthType2 { get; set; }

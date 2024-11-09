@@ -16,7 +16,7 @@ namespace DbAdm.Services
     public class GenCrudService
     {
         //constant
-        const string ColSep = ", ";         //item column seperator
+        const string CommaSep = ", ";       //comma seperator
         const string CrudProg = "[prog]";   //key word inside file name
         const string PosGroup0 = "-abc99";  //impossible value for initial
 
@@ -41,12 +41,12 @@ namespace DbAdm.Services
         };
 
         //crud files count -> 6
-        private readonly int _crudFileLen;
+        //private readonly int _crudFileLen;
 
         //constructor
         public GenCrudService()
         {
-            _crudFileLen = _crudFiles.Length;
+            //_crudFileLen = _crudFiles.Length;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace DbAdm.Services
             //only alpha, num and ','
             //if (!_Str.CheckKeyRule(crudIdList2, "GenCrudService Run()"))
             if (!_Str.CheckKey(crudIdList2))
-                return "GenCrudService.cs RunAsync() only accept alphabet and numeric: (" + crudIdList2 + ")";
+                return "GenCrudService.cs RunA() only accept alphabet and numeric: (" + crudIdList2 + ")";
 
             var crudIds = crudIdList2.Split(',');
             var crudIdList = _Str.ListAddQuote(crudIdList2);
@@ -208,7 +208,7 @@ namespace DbAdm.Services
             }
 
             //rows for one crudId
-            var fitems = _qitems!.Where(a => a.CrudId == crudId).ToList();   //find fields
+            var qitems = _qitems!.Where(a => a.CrudId == crudId).ToList();   //find fields
             var ritems = _ritems!.Where(a => a.CrudId == crudId).ToList();   //result fields
             var etables = _etables!.Where(a => a.CrudId == crudId).ToList();
             #endregion
@@ -216,38 +216,38 @@ namespace DbAdm.Services
             #region 2.set fields: crud.RsItemStrs && IsGroup, IsGroupStart, IsGroupEnd
             //dropdown list types
             var ddlpTypes = new List<string>() { QEitemTypeEstr.Select, QEitemTypeEstr.Radio };
-            var fitemLen = (fitems == null) ? 0 : fitems.Count;
+            var qitemLen = (qitems == null) ? 0 : qitems.Count;
             int i;
-            if (fitemLen > 0)
+            if (qitemLen > 0)
             {
                 var rSitemStrs = new List<String>();
                 var posGroup = PosGroup0;   //initial value, get one impossible value for avoid repeat
-                for (i=0; i<fitemLen; i++)
+                for (i=0; i<qitemLen; i++)
                 {
                     //set rSitemStrs
-                    var fitem = fitems![i];
-                    rSitemStrs.Add(GetRServiceItemStr(fitem));
+                    var qitem = qitems![i];
+                    rSitemStrs.Add(RServiceItemStr(qitem));
 
                     //set IsGroup, IsGroupStart, IsGroupEnd
-                    if (!_Str.IsEmpty(fitem.PosGroup))
+                    if (!_Str.IsEmpty(qitem.PosGroup))
                     {
-                        fitem.IsGroupStart = (fitem.PosGroup != posGroup);
-                        fitem.IsGroup = fitem.IsGroupStart || (fitem.PosGroup == posGroup);
-                        fitem.IsGroupEnd = !fitem.IsGroup ? false :
-                            (i + 1 == fitemLen) ? true :
-                            (fitems[i + 1].PosGroup != posGroup);
+                        qitem.IsGroupStart = (qitem.PosGroup != posGroup);
+                        qitem.IsGroup = qitem.IsGroupStart || (qitem.PosGroup == posGroup);
+                        qitem.IsGroupEnd = !qitem.IsGroup ? false :
+                            (i + 1 == qitemLen) ? true :
+                            (qitems[i + 1].PosGroup != posGroup);
 
                         //for next loop
-                        posGroup = fitem.PosGroup;
+                        posGroup = qitem.PosGroup;
                     }
 
                     //fitem.RvStr = GetViewItemStr(fitem);  //set after XgFindTbar
                 }
                 crud.RsItemStrs = rSitemStrs;
-                crud.HasFitemCols = fitems!.Any(a => _Str.IsEmpty(a.LayoutCols));
+                crud.HasFitemCols = qitems!.Any(a => _Str.IsEmpty(a.LayoutCols));
 
                 //set ReadSelectCols, be [] when null !!
-                crud.ReadSelectCols = fitems!
+                crud.ReadSelectCols = qitems!
                     .Where(a => ddlpTypes.Contains(a.ItemType))
                     .Select(a => (a.ItemData[^1] == 'A')
                         ? $"ViewBag.{a.ItemData} = await _XpCode.{a.ItemData}();"
@@ -271,63 +271,63 @@ namespace DbAdm.Services
                 #endregion
 
                 //set Fitems, F2items
-                var f2Pos = fitems!.FindIndex(a => a.IsFind2);
-                var hasFind2 = (f2Pos > 0);    //must > 0
+                var find2Pos = qitems!.FindIndex(a => a.IsFind2);
+                var hasFind2 = (find2Pos > 0);    //must > 0
                 crud.HasFindForm = true;
                 crud.HasFind2Form = hasFind2;
 
-                //split fitems to f2items
+                //split qitems to qitems2
                 if (hasFind2)
                 {
-                    var f2items = new List<CrudQitemDto>();
-                    var f2Len = fitemLen - f2Pos;
-                    f2items.AddRange(fitems.GetRange(f2Pos, f2Len));
-                    fitems.RemoveRange(f2Pos, f2Len);
-                    crud.F2items = f2items;
-                    fitemLen -= f2Pos;    //adjust
+                    var qitems2 = new List<CrudQitemDto>();
+                    var q2Len = qitemLen - find2Pos;
+                    qitems2.AddRange(qitems.GetRange(find2Pos, q2Len));
+                    qitems.RemoveRange(find2Pos, q2Len);
+                    crud.Qitems2 = qitems2;
+                    qitemLen -= find2Pos;    //adjust
 
                     //set RvStr
-                    foreach (var fitem in f2items)
-                        fitem.RvStr = GetViewItemStr(etables[0], fitem);
+                    foreach (var qitem2 in qitems2)
+                        qitem2.RvStr = ViewItemStr(etables[0], qitem2);
                 }
 
                 //adjust: fitems row 1 add toolbar buttons
-                posGroup = fitems[0].PosGroup;
+                posGroup = qitems[0].PosGroup;
                 //find group 1 last row for write toolbar
                 int pos;
                 if (_Str.IsEmpty(posGroup))
                 {
                     pos = 0;
-                    fitems[pos].IsGroup = true;
-                    fitems[pos].IsGroupStart = true;
-                    fitems[pos].IsGroupEnd = false;
+                    qitems[pos].IsGroup = true;
+                    qitems[pos].IsGroupStart = true;
+                    qitems[pos].IsGroupEnd = false;
                 }
                 else
                 {
-                    pos = fitems.FindIndex(a => a.PosGroup != posGroup);
-                    pos = (pos < 0) ? fitemLen - 1 : pos - 1;
-                    fitems[pos].IsGroup = true;
-                    fitems[pos].IsGroupStart = false;
-                    fitems[pos].IsGroupEnd = false;
+                    pos = qitems.FindIndex(a => a.PosGroup != posGroup);
+                    pos = (pos < 0) ? qitemLen - 1 : pos - 1;
+                    qitems[pos].IsGroup = true;
+                    qitems[pos].IsGroupStart = false;
+                    qitems[pos].IsGroupEnd = false;
                 }
                 //set RvStr first
-                foreach (var fitem in fitems)
-                    fitem.RvStr = GetViewItemStr(etables[0], fitem);
+                foreach (var fitem in qitems)
+                    fitem.RvStr = ViewItemStr(etables[0], fitem);
 
-                fitems.Insert(pos + 1, new CrudQitemDto()
+                qitems.Insert(pos + 1, new CrudQitemDto()
                 {
-                    RvStr = GetCompStart("XgFindTbar") +
-                        GetCols(
+                    RvStr = CompStart("XgFindTbar") +
+                        ConcatViewCols(
                             ViewBool("IsHori", crud.LabelHori, false),
                             ViewBool("HasReset", crud.HasReset, true),
                             ViewBool("HasFind2", hasFind2, true)) +
-                        GetCompEnd(),
+                        CompEnd(),
 
                     IsGroupStart = false,
                     IsGroupEnd = true,
                     IsGroup = true,
                 });
-                crud.Fitems = fitems;
+                crud.Qitems = qitems;
             }
             else
             {
@@ -347,9 +347,9 @@ namespace DbAdm.Services
                 for (i = 0; i < ritemLen; i++)
                 {
                     var ritem = ritems[i];
-                    ritem.ViewStr = GetRViewHeadStr(ritem);
+                    ritem.ViewStr = RViewHeadStr(ritem);
 
-                    var jsStr = GetJsColDefStr(crud, ritem, i);
+                    var jsStr = JsColDefStr(crud, ritem, i);
                     if (jsStr != "")
                         jsStrs.Add(jsStr);
                 }
@@ -393,8 +393,8 @@ namespace DbAdm.Services
                 for (var j=0; j< eitemLen; j++)
                 {
                     var eitem = eitems[j];
-                    eitem.ServiceStr = GetEServiceItemStr(eitem);
-                    eitem.ViewStr = GetViewItemStr(etable, eitem, isTable);
+                    eitem.ServiceStr = EServiceItemStr(eitem);
+                    eitem.ViewStr = ViewItemStr(etable, eitem, isTable);
 
                     //add hide field string for modal input(textArea)
                     if (eitem.ItemType == QEitemTypeEstr.Modal)
@@ -402,7 +402,7 @@ namespace DbAdm.Services
 
                     //child table set table header
                     if (i > 0)
-                        eitem.HeadStr = GetEViewHeadStr(eitem);
+                        eitem.HeadStr = EViewHeadStr(eitem);
 
                     //set posGroup related
                     if (_Str.IsEmpty(eitem.PosGroup))
@@ -509,7 +509,7 @@ namespace DbAdm.Services
             //generate crud files
             var isManyEdit = (etables.Count > 1);
             var projectPath = _Str.AddDirSep(crud.ProjectPath);
-            for (i = 0; i < _crudFileLen; i += 3)
+            for (i = 0; i < _crudFiles.Length; i += 3)
             {
                 #region 6.read template file to string
                 var tplFile = _tplDir + _crudFiles[i];
@@ -552,7 +552,7 @@ namespace DbAdm.Services
         /// get js column define string (ritem)
         /// </summary>
         /// <returns></returns>
-        private string GetJsColDefStr(CrudDto crud, CrudRitemDto ritem, int i)
+        private string JsColDefStr(CrudDto crud, CrudRitemDto ritem, int i)
         {
             var str = "";
             switch (ritem.RitemType)
@@ -601,10 +601,10 @@ namespace DbAdm.Services
         }
 
         /// <summary>
-        /// get ritem header string for view
+        /// get result view header string for view
         /// </summary>
         /// <returns></returns>
-        private string GetRViewHeadStr(CrudRitemDto item)
+        private string RViewHeadStr(CrudRitemDto item)
         {
             return "<th" + (item.Width == 0 ? ">" : " width='" + item.Width + "px'>") +
                 item.Name + 
@@ -616,7 +616,7 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private string GetEServiceItemStr(CrudEitemDto item)
+        private string EServiceItemStr(CrudEitemDto item)
         {
             if (_Str.IsEmpty(item.Fid))
                 return "";
@@ -636,11 +636,11 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private string GetRServiceItemStr(CrudQitemDto item)
+        private string RServiceItemStr(CrudQitemDto item)
         {
             return "new() { " +
                 KeyValue("Fid", item.Fid, true) +
-                ServiceFid("Op", GetQitemOpName(item.Op)) +
+                ServiceFid("Op", QitemOpName(item.Op)) +
                 " },";
         }
 
@@ -663,9 +663,9 @@ namespace DbAdm.Services
         /// <returns></returns>
         private string ViewHide(string fid)
         {
-            return GetCompStart("XiHide") +
+            return CompStart("XiHide") +
                 KeyValue("Fid", fid, true) +
-                GetCompEnd();
+                CompEnd();
         }
 
         /// <summary>
@@ -675,7 +675,7 @@ namespace DbAdm.Services
         /// <param name="item"></param>
         /// <param name="isMany"></param>
         /// <returns></returns>
-        private string GetViewItemStr(CrudEtableDto table, CrudEitem0Dto item, bool isMany = false)
+        private string ViewItemStr(CrudEtableDto table, CrudEitem0Dto item, bool isMany = false)
         {
             var center = false;
             var name = isMany ? "" : item.Name;
@@ -693,8 +693,8 @@ namespace DbAdm.Services
                 case QEitemTypeEstr.Password:
                     var compType = (item.ItemType == QEitemTypeEstr.TextArea) 
                         ? "XiTextarea" : "XiText";
-                    str = GetCompStart(compType) + 
-                        GetCols(
+                    str = CompStart(compType) + 
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             (item.ItemType == QEitemTypeEstr.Password) ? KeyValue("IsPwd", "true") : "",
@@ -702,126 +702,126 @@ namespace DbAdm.Services
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
                             ViewLayout(isMany, item.LayoutCols)) +
-                        GetCompEnd();
+                        CompEnd();
                     break;
 
                 case QEitemTypeEstr.Html:
-                    str = GetCompStart("XiHtml") +
-                        GetCols(
+                    str = CompStart("XiHtml") +
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             //ViewMaxLen(item.DataType),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
                             ViewLayout(isMany, item.LayoutCols)) +
-                        GetCompEnd();
+                        CompEnd();
                     break;
 
                 case QEitemTypeEstr.Integer:
                 case QEitemTypeEstr.Decimal:
                     var type2 = (item.ItemType == QEitemTypeEstr.Integer)
                         ? "XiInt" : "XiDec";
-                    str = GetCompStart(type2) +
-                        GetCols(
+                    str = CompStart(type2) +
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
                             ViewLayout(isMany, item.LayoutCols)) +
                             //TODO: add min/max if need
-                        GetCompEnd();
+                        CompEnd();
                     break;
 
                 case QEitemTypeEstr.CheckBox:
                     center = true;
-                    str = GetCompStart("XiCheck") + 
-                        GetCols(
+                    str = CompStart("XiCheck") + 
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             //KeyValue("value", "1", true),
                             ViewInRow(item.IsGroup),
                             ViewLabel(item.ItemData)) +
-                        GetCompEnd();
+                        CompEnd();
                     break;
 
                 case QEitemTypeEstr.Radio:
                     center = true;
-                    str = GetCompStart("XiRadio") +
-                        GetCols(
+                    str = CompStart("XiRadio") +
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewSelectRows(item),
                             //KeyValue("value", "1", true),
                             ViewInRow(item.IsGroup)) +
-                        GetCompEnd();
+                        CompEnd();
                     break;
 
                 case QEitemTypeEstr.Date:
-                    str = GetCompStart("XiDate") +
-                        GetCols(
+                    str = CompStart("XiDate") +
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
                             ViewLayout(isMany, item.LayoutCols)) +
-                        GetCompEnd();
+                        CompEnd();
                     break;
 
                 case QEitemTypeEstr.DateTime:
-                    str = GetCompStart("XiDt") +
-                        GetCols(
+                    str = CompStart("XiDt") +
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
                             ViewLayout(isMany, item.LayoutCols)) +
-                        GetCompEnd();
+                        CompEnd();
                     break;
 
                 case QEitemTypeEstr.Select:
-                    str = GetCompStart("XiSelect") + 
-                        GetCols(
+                    str = CompStart("XiSelect") + 
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewSelectRows(item),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
                             ViewLayout(isMany, item.LayoutCols)) +
-                        GetCompEnd();
+                        CompEnd();
                     break;
 
                 case QEitemTypeEstr.File:
-                    str = GetCompStart("XiFile") + 
-                        GetCols(
+                    str = CompStart("XiFile") + 
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
                             ViewLayout(isMany, item.LayoutCols)) +
-                        GetCompEnd();
+                        CompEnd();
                     break;
 
                 case QEitemTypeEstr.Modal:
                     item.Width = 85;
                     center = true;
                     //item.Name for modal title
-                    str = GetCompStart("XgOpenModal") +
-                        GetCols(
+                    str = CompStart("XgOpenModal") +
+                        ConcatViewCols(
                             ViewTitle(item.Name),
                             ViewFid(item.Fid),
                             ViewMaxLen(item.DataType),
                             ViewRequired(item.Required)) +
-                        GetCompEnd();
+                        CompEnd();
                     break;
 
                 case QEitemTypeEstr.ReadOnly:
-                    str = GetCompStart("XiRead") +
-                        GetCols(
+                    str = CompStart("XiRead") +
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewInRow(item.IsGroup),
                             ViewLayout(isMany, item.LayoutCols)) +
-                        GetCompEnd();
+                        CompEnd();
                     break;
 
                 default:
@@ -841,11 +841,11 @@ namespace DbAdm.Services
         }
 
         /// <summary>
-        /// get component first string
+        /// get component start string
         /// </summary>
         /// <param name="type">component type, ex: XiHide</param>
         /// <returns>part component string</returns>
-        private string GetCompStart(string type)
+        private string CompStart(string type)
         {
             //must escape '{'
             return $"@await Component.InvokeAsync(\"{type}\", new {type}Dto{{ ";
@@ -855,7 +855,7 @@ namespace DbAdm.Services
         /// get view item end string
         /// </summary>
         /// <returns></returns>
-        private string GetCompEnd()
+        private string CompEnd()
         {
             return " })";
         }
@@ -865,7 +865,7 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private string GetEViewHeadStr(CrudEitemDto item)
+        private string EViewHeadStr(CrudEitemDto item)
         {
             //skip some types
             if (item.ItemType == QEitemTypeEstr.Hide || item.ItemType == QEitemTypeEstr.Sort)
@@ -873,12 +873,12 @@ namespace DbAdm.Services
 
             //@await Component.InvokeAsync("XgTh", new { title = "XXX", required = true })
             return (item.Required || !_Str.IsEmpty(item.PlaceHolder))
-                ? GetCompStart("XgTh") +
-                    GetCols(
+                ? CompStart("XgTh") +
+                    ConcatViewCols(
                         ViewTitle(item.Name),
                         ViewPlaceHolder(item.PlaceHolder),
                         ViewRequired(item.Required)) +
-                    GetCompEnd()
+                    CompEnd()
                 : string.Format("<th{0}>{1}</th>", 
                     (_Str.IsEmpty(item.LayoutCols) || item.LayoutCols=="0" ? "" : " width='" + item.LayoutCols + "'"), 
                     item.Name);
@@ -947,6 +947,7 @@ namespace DbAdm.Services
             //return KeyValue("Rows", "(List<IdStrDto>)ViewBag." + value);
             return KeyValue("Rows", "ViewBag." + value);
         }
+
         //get view of column length
         private string ViewMaxLen(string dataType)
         {
@@ -962,6 +963,7 @@ namespace DbAdm.Services
                 ? ""
                 : KeyValue("MaxLen", len);
         }
+
         //get view LayoutCols, return "cols" if empty
         private string ViewLayout(bool isMany, string layoutCols)
         {
@@ -975,6 +977,7 @@ namespace DbAdm.Services
                 ? ""
                 : KeyValue("Cols", layoutCols, true);
         }
+
         //get view column string
         private string KeyValue(string fid, object value, bool quote = false)
         {
@@ -999,45 +1002,23 @@ namespace DbAdm.Services
         }
 
         /// <summary>
-        /// get column parameters list
+        /// concate view column list
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="cols"></param>
         /// <returns></returns>
-        private string GetCols(params string[] args)
+        private string ConcatViewCols(params string[] cols)
         {
-            var data = "";
-            for (var i = 0; i < args.Length; i++)
+            var result = "";
+            foreach (var col in cols)
             {
-                if (!_Str.IsEmpty(args[i]))
-                    data += args[i] + ColSep;
+                if (!_Str.IsEmpty(col))
+                    result += col + CommaSep;
             }
 
-            if (data != "")
-                data = data[..^ColSep.Length];
-            return data;
+            if (result != "")
+                result = result[..^CommaSep.Length];
+            return result;
         }
-
-        /*
-        // for html help(version of asp.net)
-        private string GetCols_old(params string[] args)
-        {
-            var data = "";
-            var skip = true;
-            //get from tail
-            var skips = new List<string>() { "", "\"\"", "0", "false", "cols" };
-            for (int i = args.Length - 1; i >= 0; i--)
-            {
-                if (skip && skips.Contains(args[i]))
-                    continue;
-
-                skip = false;
-                data = Sep + args[i] + data;
-            }
-            //if (data != "")
-            //    data = data.Substring(0, data.Length - Sep.Length);
-            return data;
-        }
-        */
 
         /*
         private int GetColLen(string dataType)
@@ -1060,7 +1041,7 @@ namespace DbAdm.Services
                 return "";
             if (quote)
                 value = "\"" + value + "\"";
-            return ColSep + fid + " = " + value;
+            return CommaSep + fid + " = " + value;
         }
 
         #region get mapping name
@@ -1069,7 +1050,7 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        private string GetQitemOpName(string type)
+        private string QitemOpName(string type)
         {
             return type switch
             {
@@ -1108,22 +1089,6 @@ namespace DbAdm.Services
             };
         }
         #endregion
-
-        /// <summary>
-        /// substring to boolean
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="pos"></param>
-        /// <returns></returns>
-        /*
-        private string SubStrToBool(string str, int pos)
-        {
-            return (_Str.IsEmpty(str)) ? "false" :
-                (str.Length <= pos) ? "false" :
-                (str.Substring(pos, 1) == "1") ? "true" :
-                "false";
-        }
-        */
 
     }//class
 }
