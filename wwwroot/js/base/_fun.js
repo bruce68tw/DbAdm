@@ -27,7 +27,6 @@ var _fun = {
     locale: 'zh-TW',    //now locale, _Layout.cshmlt will set
     maxFileSize: 50971520,  //upload file limit(50M)
     isRwd: false,
-    //jwtToken: '',
     //pageRows: 10,       //for _page.js (pagination object)
 
     //mid variables

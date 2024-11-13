@@ -17,12 +17,6 @@ namespace DbAdm.Controllers
             return View();
         }
 
-        public ActionResult Error()
-        {
-            var error = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            return View("Error", (error == null) ? _Fun.SystemError : error.Error.Message);
-        }
-
         //called by XgLogin
         public ActionResult Login(string url = "")
         {
@@ -43,6 +37,11 @@ namespace DbAdm.Controllers
         {
             _Http.SetCookie(_Fun.FidClientKey, "");
             return Redirect("/Home/Login");
+        }
+        public ActionResult Error()
+        {
+            var error = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            return View("Error", (error == null) ? _Fun.SystemError : error.Error.Message);
         }
     }
 }
