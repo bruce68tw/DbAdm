@@ -34,7 +34,7 @@ namespace DbAdm.Controllers
         {
             //await _Login.LoginA(vo, encodePwd);
             //return View(vo);
-            return await _Login.LoginA(vo, encodePwd)
+            return await _Login.LoginByVoA(vo, encodePwd)
                 ? Redirect(_Str.IsEmpty(vo.FromUrl) ? "/Home/Index" : vo.FromUrl)
                 : View(vo);
         }
