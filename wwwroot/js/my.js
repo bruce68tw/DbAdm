@@ -2285,7 +2285,6 @@ var _fun = {
     locale: 'zh-TW',    //now locale, _Layout.cshmlt will set
     maxFileSize: 50971520,  //upload file limit(50M)
     isRwd: false,
-    //jwtToken: '',
     //pageRows: 10,       //for _page.js (pagination object)
 
     //mid variables
@@ -4388,12 +4387,14 @@ var _pjax = {
         var docu = $(document);
         docu.pjax('[data-pjax]', boxFt, { type: 'POST' });
 
+		/*
         //PJAX請求前
         docu.on('pjax:beforeSend', function (event, xhr, opts) {
             if (_fun.jwtToken)
                 xhr.setRequestHeader('Authorization', `Bearer ${_fun.jwtToken}`);
         });
-
+		*/
+		
         //'data' 是後端回傳字串, 可能為 HTML 或錯誤訊息
         docu.on('pjax:success', function (event, data, status, xhr, opts) {
             var json = _str.toJson(data);
@@ -5179,11 +5180,13 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
                 url: url,
                 type: 'POST',
                 dataType: 'json',
+                /*
                 beforeSend: function (jqXHR) {
                     //debugger;
                     if (_fun.jwtToken)
                         jqXHR.setRequestHeader("Authorization", "Bearer " + _fun.jwtToken);
                 },
+                */
                 //add input parameter for datatables
                 data: function (arg) {
                     //write order.fid if any
@@ -5230,7 +5233,6 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 
                 //on error
                 error: function (xhr, ajaxOptions, thrownError) {
-                    //debugger;
                     _tool.hideWait();
                     _tool.msg('Datatable.js error.');
                     if (xhr != null) {

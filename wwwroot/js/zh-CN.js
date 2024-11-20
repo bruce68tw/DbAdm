@@ -47,6 +47,8 @@ var _BR = {
     //authority
     NoAuthUser: '您只能存取个人资料，请联络管理者。 ',
     NoAuthDept: '您只能存取同部门资料，请联络管理者。 ',
+    NoAuthProg: '您没有此功能的权限，请联络管理者。 ',
+    NotLogin: '您尚未登入系统。 ',
 
     //others
     Working: '作业处理中...',

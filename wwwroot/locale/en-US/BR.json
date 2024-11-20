@@ -14,16 +14,9 @@
   "BtnClose": "Close",
 
   "PlsSelect": "-Select-",
-  "TipDeleteRow": "Delete this Row",
-
-  "NoAuthProg": "You have not access right, Please connect Admin.",
-  "NotLogin": "Please Login First.",
-
-  "Required": "Required",
-  "StrLen": "String too long({0})",
 
   "TipUpdate": "修改這筆資料",
   "TipDelete": "刪除這筆資料",
-  "TipView": "檢視這筆資料"
-
+  "TipView": "檢視這筆資料",
+  "TipDeleteRow": "Delete this Row"
 }

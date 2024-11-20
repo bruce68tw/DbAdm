@@ -14,16 +14,10 @@
   "BtnClose": "關閉",
 
   "PlsSelect": "-請選取-",
-  "TipDeleteRow": "刪除此筆資料",
-
-  "NoAuthProg": "您沒有此功能的權限，請聯絡管理者。",
-  "NotLogin": "您尚未登入系統。",
-
-  "Required": "不可空白",
-  "StrLen": "字串過長({0})",
 
   "TipUpdate": "修改這筆資料",
   "TipDelete": "刪除這筆資料",
-  "TipView": "檢視這筆資料"
+  "TipView": "檢視這筆資料",
+  "TipDeleteRow": "刪除此筆資料"
 
 }
