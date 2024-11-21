@@ -4,12 +4,15 @@ using Base.Services;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
+//修改:DbAdm改成你的專案
+//修改:Column改成你的controller
 namespace DbAdm.Services
 {
     public class ColumnRead
     {
         private readonly ReadDto dto = new()
         {
+            //修改:讀取資料的sql,欄位必須對應查詢結果頁面的欄位
             //1.set ReadSql
             ReadSql = @"
 Select c.*,
@@ -22,6 +25,8 @@ left join dbo.[User] u on p.Creator=u.Id
 Order by p.Id, t.Id, c.Sort
 ",
             TableAs = "c",
+
+            //修改:查詢條件輸入欄位,與查詢畫面對應
             //2.set query fields
             Items = [
                 new() { Fid = "ProjectId", Col = "t.ProjectId" },
@@ -30,6 +35,7 @@ Order by p.Id, t.Id, c.Sort
             ],
         };
 
+        //傳回一頁資料, DtDto包含要查詢的條件和頁次、筆數
         public async Task<JObject?> GetPageA(DtDto dt)
         {
             //3.call CrudRead.GetPage()

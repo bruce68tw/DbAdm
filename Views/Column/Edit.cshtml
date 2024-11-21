@@ -1,7 +1,7 @@
-﻿@* 1.locale *@
+﻿@* //修改:如果沒有多國語則不必寫這行 *@
 @inject IHtmlLocalizer<DbAdm.R0> R
 
-@* 2.input *@
+@* //修改:輸入欄位 *@
 <form id='eform' class='xg-form xg-mb10'>
     @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
     @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["ProjectCode"].Value, Fid = "ProjectCode" })

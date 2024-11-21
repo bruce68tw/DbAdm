@@ -1,4 +1,4 @@
-﻿@* 1.locale *@
+﻿@* //修改:如果沒有多國語則不必寫這行 *@
 @inject IHtmlLocalizer<DbAdm.R0> R
 
 @* 2.initial *@
@@ -9,8 +9,8 @@
 
     var _me = {
         init: function () {
-            //set Datatables config
             var config = {
+                //修改:查詢結果欄位,與後端read service對應, 這是 Datatables config
                 columns: [
                     { data: 'ProjectCode', orderable: true },
                     { data: 'TableCode', orderable: true },
@@ -21,6 +21,8 @@
                     { data: '_Fun' },
                     { data: 'Status', orderable: true },
                 ],
+
+                //修改:如果查詢結果欄位有特殊的顯示規則就寫在這裡
                 columnDefs: [
                     { targets: [6], render: function (data, type, full, meta) {
                         return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
@@ -43,24 +45,24 @@
 
 <div class="xg-prog">
     <div id="divRead">
-        @* 4.first query area *@
+        @* //修改:查詢欄位 *@
         <form id='formRead' class='xg-form xg-mb0'>
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, InRow = true })
 
-                @* 5.toolbar *@
+                @* 工具列 *@
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true, HasFind2 = true })
             </div>
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Table"].Value, Fid = "TableCode", MaxLen = 30 })
         </form>
 
-        @* 6.second query area *@
+        @* //修改:進階查詢欄位, 如果沒有則可以省略 *@
         <form id='formRead2' class='xg-form xg-mb0'>
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Column"].Value, Fid = "Code", MaxLen = 30 })
         </form>
         <div class="xg-h10"></div>
 
-        @* 7.query result table header *@
+        @* //修改:查詢結果欄位header, 多國語部分可以直接用文字 *@
         <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
             <thead>
                 <tr>
