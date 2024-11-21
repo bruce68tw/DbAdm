@@ -79,17 +79,17 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- 1.load css -->
-    <link rel="stylesheet" href="~/css/lib@(min).css?v=@(libVer)" />
-    <link rel="stylesheet" href="~/css/my@(min).css?v=@(myVer)" />
+    <link rel="stylesheet" href="~/css/lib@(min).css?v=@libVer" />
+    <link rel="stylesheet" href="~/css/my@(min).css?v=@myVer" />
     @RenderSection("styles", required: false)
 
     <!-- 2.load lib js -->
-    <script src="~/js/lib@(min).js?v=@(libVer)"></script>
-    <script src="~/js/lib/bootstrap.bundle-5.1.3.min.js?v=@(libVer)"></script>
+    <script src="~/js/lib@(min).js?v=@libVer"></script>
+    <script src="~/js/lib/bootstrap.bundle-5.1.3.min.js?v=@libVer"></script>
 
     <!-- 3.load my site js(debug/production mode) !! -->
     <environment include="Production">
-        <script src="~/js/my@(min).js?v=@(myVer)"></script>
+        <script src="~/js/my@(min).js?v=@myVer"></script>
     </environment>
     <environment include="Development">
         <!-- tail ver will load failed !! -->
@@ -98,7 +98,7 @@
     </environment>
 
     <!-- 4.load local js -->
-    <script src="~/js/@(locale+min).js?v=@(myVer)"></script>
+    <script src="~/js/@(locale+min).js?v=@myVer"></script>
 
     @RenderSection("scripts", required: false)
 

@@ -1,4 +1,14 @@
 
+/* ==================
+ 2022/8/28 add CrudEtable.AutoIdLen
+ ==================*/
+if col_length('dbo.CrudEtable','AutoIdLen') is null
+begin
+	alter table dbo.CrudEtable add AutoIdLen varchar(20) NULL;	
+	execute sp_addextendedproperty 'MS_Description', N'自動Id欄位長度'
+end
+go
+
 --add Project.Creator
 if col_length('dbo.Project', 'Creator') is null
 begin

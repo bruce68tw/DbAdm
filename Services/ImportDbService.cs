@@ -271,7 +271,7 @@ SELECT
     Nullable=case when is_nullable = 'YES' then 1 else 0 end,
 	--todo: temp remark when error
     DefaultValue=case when i.COLUMN_DEFAULT is null then '' else replace(replace(i.COLUMN_DEFAULT,'(',''),')','') end,
-	DefaultValue='',
+	--DefaultValue='',
 	Sort=ORDINAL_POSITION,
     Note=ISNULL(( 
 		SELECT cast(value as varchar)

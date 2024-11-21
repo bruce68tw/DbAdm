@@ -3,25 +3,73 @@
 @inject IHtmlLocalizer<DbAdm.R0> R0
 
 @{
-    _Fun.Config.SystemName = R0["SystemName"].Value;
+    //網頁變數
+    var libVer = _Xp.LibVer;
+    var myVer = _Xp.MyVer;
+    var min = _Fun.IsDev ? "" : ".min";   //min js
     var locale = _Locale.GetLocaleByUser();
     //_Locale.SetCulture(locale);
-    var min = _Fun.IsDev ? "" : ".min";   //min js
-    var menus = new List<MenuDto>()
+
+    //系統名稱
+    _Fun.Config.SystemName = R0["SystemName"].Value;
+
+    //功能表
+    var isNeedLogin = _Fun.IsNeedLogin();
+    var menus = new List<MenuDto>();
+    var setPwd = new MenuDto() { Code = "SetPwd", Name = R0["MenuSetPwd"].Value, Url = "/SetPwd/Index" };
+    if (isNeedLogin && !_Fun.HasPwd())
     {
-        new() { Name = R0["MenuProject"].Value, Url = "/Project/Read" },
-        new() { Name = R0["MenuTable"].Value, Url = "/Table/Read" },
-        new() { Name = R0["MenuColumn"].Value, Url = "/Column/Read" },
-        new() { Name = R0["MenuCrud"].Value, Url = "/MyCrud/Read" },
-        /*
-        new() { Name = "第5個功能群組", Items = new List<MenuDto>()
+        menus.AddRange(new List<MenuDto>()
         {
-            new() { Name = "功能5-1", Url = "/Project/Read" },
-            new() { Name = "功能5-2", Url = "/Project/Read" },
-        }},
-        */
-    };
+            setPwd
+        });
+    }
+    else
+    {
+        menus.AddRange(new List<MenuDto>()
+        {
+            new() { Code = "Project", Name = R0["MenuProject"].Value, Url = "/Project/Read" },
+            new() { Code = "Table", Name = R0["MenuTable"].Value, Url = "/Table/Read" },
+            new() { Code = "Column", Name = R0["MenuColumn"].Value, Url = "/Column/Read" },
+            new() { Code = "MyCrud", Name = R0["MenuMyCrud"].Value, Url = "/MyCrud/Read" },
+            /* test sub menu
+            new() { Name = "第5個功能群組", Items = new List<MenuDto>()
+            {
+                new() { Name = "功能5-1", Url = "/Project/Read" },
+                new() { Name = "功能5-2", Url = "/Project/Read" },
+            }},
+            */
+        });
+
+        //如果需要登入, 則加上這些功能
+        if (isNeedLogin)
+        {
+            menus.AddRange(new List<MenuDto>()
+            {
+                setPwd,
+                new() { Code = "User", Name = R0["MenuUser"].Value, Url = "/User/Read" },
+                new() { Code = "XpRole", Name = R0["MenuXpRole"].Value, Url = "/XpRole/Read" },
+                new() { Code = "XpProg", Name = R0["MenuXpProg"].Value, Url = "/XpProg/Read" },
+            });
+        }
+    }
+
+    //過濾權限 if need
+    if (isNeedLogin)
+    {
+        _Auth.FilterMenu(menus);
+    }
 }
+
+<style>
+	.xu-body {
+		display: inline-block;
+		width: 100%;
+		min-height: 600px;
+		transition: 0.5s;
+		border-left: 1px solid #CCC;
+	}
+</style>
 
 <!DOCTYPE html>
 <html>
@@ -31,16 +79,17 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- 1.load css -->
-    <link rel="stylesheet" href="~/css/lib@(min).css?v=@(_Xp.LibVer)" />
-    <link rel="stylesheet" href="~/css/my@(min).css?v=@(_Xp.MyVer)" />
+    <link rel="stylesheet" href="~/css/lib@(min).css?v=@(libVer)" />
+    <link rel="stylesheet" href="~/css/my@(min).css?v=@(myVer)" />
     @RenderSection("styles", required: false)
 
     <!-- 2.load lib js -->
-    <script src="~/js/lib@(min).js?v=@(_Xp.LibVer)"></script>
+    <script src="~/js/lib@(min).js?v=@(libVer)"></script>
+    <script src="~/js/lib/bootstrap.bundle-5.1.3.min.js?v=@(libVer)"></script>
 
     <!-- 3.load my site js(debug/production mode) !! -->
     <environment include="Production">
-        <script src="~/js/my@(min).js?v=@(_Xp.MyVer)"></script>
+        <script src="~/js/my@(min).js?v=@(myVer)"></script>
     </environment>
     <environment include="Development">
         <!-- tail ver will load failed !! -->
@@ -49,19 +98,22 @@
     </environment>
 
     <!-- 4.load local js -->
-    <script src="~/js/@(locale+min).js?v=@(_Xp.MyVer)"></script>
+    <script src="~/js/@(locale+min).js?v=@(myVer)"></script>
 
     @RenderSection("scripts", required: false)
 
     <!-- 5.initial -->
     <script type="text/javascript">
         $(function () {
+            _fun.init('@locale');
+            /*
             _fun.locale = '@(locale)';
             //initial
             _leftmenu.init();
-            _pjax.init('.xg-body');
+            _pjax.init('.xu-body');
             _tool.init();
             moment.locale(_fun.locale);
+            */
         });
     </script>
 </head>
@@ -77,13 +129,12 @@
         @await Component.InvokeAsync("XgLeftMenu", new { rows = menus })
 
         <!-- work area -->
-        <div class="xg-body">
+        <div class="xu-body">
             @RenderBody()
         </div>
     </div>
 
     <!-- tool component -->
-    @await Component.InvokeAsync("XgTool")
-
+    <vc:xg-tool/>
 </body>
 </html>
