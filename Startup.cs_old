@@ -2,6 +2,7 @@ using Base.Enums;
 using Base.Interfaces;
 using Base.Models;
 using Base.Services;
+using BaseApi.Services;
 using BaseWeb.Services;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,7 +14,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Data.Common;
 using System.Data.SqlClient;
 
