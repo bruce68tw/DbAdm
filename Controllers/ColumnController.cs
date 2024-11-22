@@ -7,8 +7,8 @@ using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-//修改:DbAdm改成你的專案
-//修改:Column改成你的controller
+//修改:DbAdm 改成你的專案 -> AdoptAdm
+//修改:Column 改成你的controller -> Maker
 //修改:[XgLogin], [XgProgAuth(xx)]先註解,因為暫不考慮用戶權限
 namespace DbAdm.Controllers
 {

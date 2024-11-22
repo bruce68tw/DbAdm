@@ -4,8 +4,8 @@ using Base.Services;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
-//修改:DbAdm改成你的專案
-//修改:Column改成你的controller
+//修改:DbAdm 改成你的專案 -> AdoptAdm
+//修改:Column 改成你的controller -> Maker
 namespace DbAdm.Services
 {
     public class ColumnRead
