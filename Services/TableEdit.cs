@@ -20,7 +20,7 @@ select t.*,
     {_Fun.FidUser}=u.Id, {_Fun.FidDept}=u.DeptId
 from dbo.[Table] t
 join dbo.Project p on t.ProjectId=p.Id
-left join dbo.[User] u on p.Creator=u.Id
+left join dbo.XpUser u on p.Creator=u.Id
 where t.Id=@Id
 ",
                 Items = [

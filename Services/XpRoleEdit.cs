@@ -27,8 +27,8 @@ namespace DbAdm.Services
 select a.*, u.Account, 
     u.Name as UserName, d.Name as DeptName
 from dbo.XpUserRole a
-join dbo.[User] u on a.UserId=u.Id
-join dbo.Dept d on u.DeptId=d.Id
+join dbo.XpUser u on a.UserId=u.Id
+join dbo.XpDept d on u.DeptId=d.Id
 where a.RoleId=@Id
 order by u.Account
 ",

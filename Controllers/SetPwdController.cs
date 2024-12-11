@@ -26,7 +26,7 @@ namespace DbAdm.Controllers
                 : _Str.Md5(oldPwd);
 
             var sql = $@"
-update dbo.[User]
+update dbo.XpUser
 set Pwd='{_Str.Md5(newPwd)}'
 where Id='{_Fun.UserId()}'
 and Pwd=@Pwd

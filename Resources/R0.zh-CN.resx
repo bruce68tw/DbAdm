@@ -234,7 +234,7 @@
   <data name="MenuSetPwd" xml:space="preserve">
     <value>设定密码</value>
   </data>
-  <data name="MenuUser" xml:space="preserve">
+  <data name="MenuXpUser" xml:space="preserve">
     <value>用户管理</value>
   </data>
   <data name="MenuXpRole" xml:space="preserve">

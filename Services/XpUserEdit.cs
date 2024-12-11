@@ -3,15 +3,15 @@ using Base.Services;
 
 namespace DbAdm.Services
 {
-    public class UserEdit : BaseEditSvc
+    public class XpUserEdit : BaseEditSvc
     {
-        public UserEdit(string ctrl) : base(ctrl) { }
+        public XpUserEdit(string ctrl) : base(ctrl) { }
 
         override public EditDto GetDto()
         {
             return new EditDto
             {
-				Table = "dbo.[User]",
+				Table = "dbo.XpUser",
                 PkeyFid = "Id",
                 Col4 = null,
                 Items = new EitemDto[] 

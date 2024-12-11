@@ -21,7 +21,7 @@ Select c.*,
 From dbo.[Column] c
 inner join dbo.[Table] t on t.Id=c.TableId
 inner join dbo.Project p on p.Id=t.ProjectId
-left join dbo.[User] u on p.Creator=u.Id
+left join dbo.XpUser u on p.Creator=u.Id
 Order by p.Id, t.Id, c.Sort
 ",
             TableAs = "c",

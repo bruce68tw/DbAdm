@@ -27,7 +27,7 @@ select c.*,
 from dbo.[Column] c
 join dbo.[Table] t on t.Id=c.TableId
 join dbo.Project p on p.Id=t.ProjectId
-left join dbo.[User] u on p.Creator=u.Id
+left join dbo.XpUser u on p.Creator=u.Id
 where c.Id=@Id
 ",
                 //修改:要寫入的欄位清單

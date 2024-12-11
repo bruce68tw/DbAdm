@@ -10,6 +10,7 @@
             //datatable config
             var config = {
                 columns: [
+                    { data: 'Name' },
                     { data: 'Code' },
                     { data: 'DbName' },
                     { data: 'CreatorName' },
@@ -18,7 +19,7 @@
                     { data: 'Status' },
                 ],
                 columnDefs: [
-                    { targets: [3], render: function (data, type, full, meta) {
+                    { targets: [4], render: function (data, type, full, meta) {
                         var html = '' +
                             '<button type="button" class="btn btn-link" onclick="_me.onImport(\'{0}\')">{1}</button> | ' +
                             '<button type="button" class="btn btn-link" onclick="_me.onGenWord(\'{0}\')">{2}</button> | ' +
@@ -27,10 +28,10 @@
                         //return _str.format(html, full.Id, '@R["ImportDb"]', '@R["GenDocu"]', '@R["GenRelat"]', '@R["GenLogSql"]');
                         return _str.format(html, full.Id, '@R["ImportDb"]', '@R["GenDocu"]', '@R["GenLogSql"]');
                     }},
-                    { targets: [4], render: function (data, type, full, meta) {
+                    { targets: [5], render: function (data, type, full, meta) {
                             return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                     }},
-                    { targets: [5], render: function (data, type, full, meta) {
+                    { targets: [6], render: function (data, type, full, meta) {
                         return _crudR.dtStatusName(data);
                     }},
                 ],
@@ -85,6 +86,7 @@
             <thead>
                 <tr>
                     <th>@R["Project"]</th>
+                    <th>程式代碼</th>
                     <th>@R["DbName"]</th>
                     <th>@R["Creator"]</th>
                     <th>@R["Fun"]</th>

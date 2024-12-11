@@ -20,23 +20,23 @@ namespace {{Project}}.Services
 			TableAs = "{{TableAs}}",
 		{{/if}}
 		{{#if RsItemStrs}}
-            Items = new QitemDto[] {
+            Items = [
 			{{#each RsItemStrs}}
                 {{this}}
 			{{/each}}
-            },
+            ],
 		{{/if}}
         };
 
         public async Task<JObject?> GetPageA(string ctrl, DtDto dt)
         {
-            return await new CrudRead().GetPageA(dto, dt, ctrl);
+            return await new CrudReadSvc().GetPageA(dto, dt, ctrl);
         }
 
 	{{#if HasExport}}
         public async Task ExportA(string ctrl, JObject find)
         {
-            await _WebExcel.ExportByReadA(ctrl, dto, find, 
+            await _HttpExcel.ExportByReadA(ctrl, dto, find, 
                 "{{ProgCode}}.xlsx", _Xp.GetTplPath("{{ProgCode}}.xlsx", true), 1);
         }
 

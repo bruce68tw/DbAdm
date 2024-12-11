@@ -147,4 +147,23 @@ var _iselect = $.extend({}, _ibase, {
             _iselect.setIndexO(obj, 0);
     },
 
+    /**
+     * 處理2個下拉欄位的連動, 例如:城市-鄉鎮, parent欄位改變時, child欄位的內容也改變
+     * param parentFid {stirng} parent欄位Id
+     * param childFid {stirng} child欄位Id
+     * param childId {stirng} child欄位值, 如果空白表示不設定此欄位值(只更新來源)
+     * param action {stirng} 後端action讀取來源, 固定傳入parentId
+     * param isEdit {bool} true(編輯畫面), false(查詢畫面)
+     */
+    onChangeParent: function (parentFid, childFid, childId, action, isEdit) {
+        var box = isEdit ? _me.divEdit : _me.divRead; 
+        var thisId = _iselect.get(parentFid, box);
+        _ajax.getJsonA(action, { parentId: thisId }, (rows) => {
+            _iselect.setItems(childFid, rows, box);
+            if (_str.notEmpty(childId)) {
+                _iselect.set(childFid, childId, box);
+            }
+        });
+    },
+
 }); //class

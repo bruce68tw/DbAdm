@@ -342,7 +342,7 @@ var _me = {
         if (_str.isEmpty(pid))
             return false;
 
-        return await _ajax.getJsonA('/Xp/GetTables', { projectId: pid }, function (rows) {
+        return await _ajax.getJsonA('/XpCode/Tables', { projectId: pid }, function (rows) {
             _me.tables = rows;
             //_iselect.setItems(_me.TableId, rows, form);
             //if (_str.notEmpty(tableId))

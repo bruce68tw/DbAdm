@@ -182,7 +182,15 @@ namespace DbAdm.Services
             //loop generate files
             foreach (var crudId in crudIds)
             {
-                var error = await GenByCrudIdA(crudId);
+                string error;
+                try
+                {
+                    error = await GenByCrudIdA(crudId);
+                }
+                catch (Exception ex)
+                {
+                    error = ex.Message;
+                }
                 if (!_Str.IsEmpty(error))
                     return error;
             }
@@ -249,7 +257,7 @@ namespace DbAdm.Services
                 //set ReadSelectCols, be [] when null !!
                 crud.ReadSelectCols = qitems!
                     .Where(a => ddlpTypes.Contains(a.ItemType))
-                    .Select(a => (a.ItemData[^1] == 'A')
+                    .Select(a => (a.ItemData.Length > 0 && a.ItemData[^1] == 'A')
                         ? $"ViewBag.{a.ItemData} = await _XpCode.{a.ItemData}();"
                         : $"ViewBag.{a.ItemData} = _XpCode.{a.ItemData}();")
                     .Distinct()
@@ -259,7 +267,7 @@ namespace DbAdm.Services
                 crud.EditSelectCols = _eitems!
                     .Where(a => ddlpTypes.Contains(a.ItemType) &&
                         !crud.ReadSelectCols.Contains(a.ItemData))
-                    .Select(a => (a.ItemData[^1] == 'A')
+                    .Select(a => (a.ItemData.Length > 0 && a.ItemData[^1] == 'A')
                         ? $"ViewBag.{a.ItemData} = await _XpCode.{a.ItemData}();"
                         : $"ViewBag.{a.ItemData} = _XpCode.{a.ItemData}();")
                     .Distinct()

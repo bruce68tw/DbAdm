@@ -1,0 +1,87 @@
+﻿<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+
+    var _me = {
+
+        init: function () {
+            //datatable config
+            var config = {
+                columns: [
+                    { data: 'ProjectName' },
+                    { data: 'ProgName' },
+                    { data: 'IssueTypeName' },
+                    { data: 'Title' },
+                    { data: 'OwnerName' },
+                    { data: 'CreatorName' },
+                    { data: '_fun' },
+                ],
+                columnDefs: [
+                    { targets: [6], render: function (data, type, full, meta) {
+                        return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    }},
+                ],
+            };
+
+            //initial
+            _crudR.init(config);
+        },
+
+        //開啟編輯畫面時自動觸發
+        fnAfterOpenEdit: function (fun, json) {
+            if (fun == _fun.FunU || fun == _fun.FunV) {
+                _me.onChgProject(true, json.ProgId);
+            }
+        },
+
+        //on change projectId
+        onChgProject: function (isEdit, progId) {
+            _iselect.onChangeParent('ProjectId', 'ProgId', progId, 'GetPrjProgs', isEdit);
+        },
+    }; //class
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "問題維護" } })
+<div class="xg-prog">
+    <div id="divRead">
+		<form id='formRead' class='xg-form'>
+            <div class="row">
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true, InputAttr = "onchange=_me.onChgProject(false)" })
+                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+            </div>
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料種類", Fid = "IssueType", Rows = ViewBag.IssueTypes })
+            <div class="row">
+                <div class="col-md-2 xg-label">建檔日期</div>
+                <div class="col-md-10 xg-input">
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true, BoxClass = "xg-inline" })
+                    <span>～</span>
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true, BoxClass = "xg-inline" })
+                </div>
+            </div>
+        </form>
+
+		<div class='xg-btns-box'>
+			<vc:xg-create/>
+        </div>
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+					<th>專案</th>
+                    <th>專案功能</th>
+                    <th>資料種類</th>
+                    <th>標題</th>
+                    <th>擁有者</th>
+                    <th>建檔人員</th>
+                    <th>功能</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <partial name="Edit" />
+    </div>
+</div>

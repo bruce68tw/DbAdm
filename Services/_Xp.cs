@@ -12,6 +12,11 @@ namespace DbAdm.Services
         public static string MyVer = _Date.NowSecStr(); //for my.js/css
         public const string LibVer = "20220501b";       //for lib.js/css
 
+        public static string PlsSelect = _Locale.GetBaseRes().PlsSelect;
+
+        //for XpCode
+        public const string IssueType = "IssueType";
+
         //constant
         //upload file max size(MB)
         //public const int UploadFileMax = 5;

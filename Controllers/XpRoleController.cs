@@ -75,8 +75,8 @@ namespace DbAdm.Controllers
             var sql = @"
 select u.Id, u.Account, 
     u.Name as UserName, d.Name as DeptName
-from dbo.[User] u
-join dbo.Dept d on u.DeptId=d.Id
+from dbo.XpUser u
+join dbo.XpDept d on u.DeptId=d.Id
 where (@Account is null or u.Account like @Account)
 and d.Id=iif(@DeptId is null, d.Id, @DeptId)
 order by d.Id, u.Account

@@ -117,175 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Project" xml:space="preserve">
-    <value>專案</value>
-  </data>
-  <data name="Status" xml:space="preserve">
-    <value>資料狀態</value>
-  </data>
-  <data name="SystemName" xml:space="preserve">
-    <value>資料庫文件系統</value>
-  </data>
-  <data name="Active" xml:space="preserve">
-    <value>啟用</value>
-  </data>
-  <data name="MenuProject" xml:space="preserve">
-    <value>專案維護</value>
-  </data>
-  <data name="MenuTable" xml:space="preserve">
-    <value>資料表維護</value>
-  </data>
-  <data name="MenuColumn" xml:space="preserve">
-    <value>欄位維護</value>
-  </data>
-  <data name="MenuMyCrud" xml:space="preserve">
-    <value>CRUD維護</value>
-  </data>
-  <data name="Table" xml:space="preserve">
-    <value>資料表</value>
-  </data>
-  <data name="Select" xml:space="preserve">
-    <value>選取</value>
-  </data>
-  <data name="Crud" xml:space="preserve">
-    <value>維護</value>
-  </data>
-  <data name="DbName" xml:space="preserve">
-    <value>資料庫</value>
-  </data>
-  <data name="TableName" xml:space="preserve">
-    <value>資料表名稱</value>
-  </data>
-  <data name="ConnectStr" xml:space="preserve">
-    <value>DB連線字串</value>
-  </data>
-  <data name="ProjectCode" xml:space="preserve">
-    <value>專案代碼</value>
-  </data>
-  <data name="ProjectPath" xml:space="preserve">
-    <value>專案路徑</value>
-  </data>
-  <data name="Fun" xml:space="preserve">
-    <value>功能</value>
-  </data>
-  <data name="GenDocu" xml:space="preserve">
-    <value>產生文件</value>
-  </data>
-  <data name="GenLogSql" xml:space="preserve">
-    <value>產生異動SQL</value>
-  </data>
-  <data name="ImportDb" xml:space="preserve">
-    <value>匯入結構</value>
-  </data>
-  <data name="TranLog" xml:space="preserve">
-    <value>異動記錄</value>
-  </data>
-  <data name="Yes" xml:space="preserve">
-    <value>是</value>
-  </data>
-  <data name="Column" xml:space="preserve">
-    <value>欄位</value>
-  </data>
-  <data name="ColName" xml:space="preserve">
-    <value>欄位名稱</value>
-  </data>
-  <data name="DataType" xml:space="preserve">
-    <value>資料型態</value>
-  </data>
-  <data name="Nullable" xml:space="preserve">
-    <value>可空值</value>
-  </data>
-  <data name="Default" xml:space="preserve">
-    <value>預設值</value>
-  </data>
-  <data name="Sort" xml:space="preserve">
-    <value>排序</value>
-  </data>
-  <data name="Note" xml:space="preserve">
-    <value>說明</value>
-  </data>
-  <data name="ProgCode" xml:space="preserve">
-    <value>功能代碼</value>
-  </data>
-  <data name="Created" xml:space="preserve">
-    <value>建檔時間</value>
-  </data>
-  <data name="ProgName" xml:space="preserve">
-    <value>功能名稱</value>
-  </data>
-  <data name="GenCrud" xml:space="preserve">
-    <value>產生CRUD</value>
-  </data>
-  <data name="SureImportDb" xml:space="preserve">
-    <value>是否確定匯入資料庫結構?</value>
-  </data>
-  <data name="SureGenDocu" xml:space="preserve">
-    <value>是否確定產生資料庫文件?</value>
-  </data>
-  <data name="SureGenLogSql" xml:space="preserve">
-    <value>是否確定產生異動SQL檔案?</value>
-  </data>
-  <data name="GenRelat" xml:space="preserve">
-    <value>產生關聯</value>
-  </data>
-  <data name="SureGenRelat" xml:space="preserve">
-    <value>是否確定產生資料表產生關聯?</value>
-  </data>
-  <data name="MenuSetPwd" xml:space="preserve">
-    <value>設定密碼</value>
-  </data>
-  <data name="MenuXpUser" xml:space="preserve">
-    <value>用戶管理</value>
-  </data>
-  <data name="MenuXpRole" xml:space="preserve">
-    <value>角色維護</value>
-  </data>
-  <data name="MenuXpProg" xml:space="preserve">
-    <value>功能維護</value>
-  </data>
-  <data name="Create" xml:space="preserve">
-    <value>新增</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>刪除</value>
-  </data>
-  <data name="Update" xml:space="preserve">
-    <value>修改</value>
-  </data>
-  <data name="Read" xml:space="preserve">
-    <value>查詢</value>
-  </data>
-  <data name="Print" xml:space="preserve">
-    <value>列印</value>
-  </data>
-  <data name="Export" xml:space="preserve">
-    <value>匯出</value>
-  </data>
-  <data name="View" xml:space="preserve">
-    <value>檢視</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>取消</value>
-  </data>
-  <data name="Import" xml:space="preserve">
-    <value>匯入</value>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
   </data>
   <data name="UserName" xml:space="preserve">
-    <value>用戶名稱</value>
+    <value>User Name</value>
   </data>
   <data name="DeptName" xml:space="preserve">
-    <value>部門名稱</value>
+    <value>Department</value>
   </data>
-  <data name="Account" xml:space="preserve">
-    <value>用戶帳號</value>
+  <data name="Pwd" xml:space="preserve">
+    <value>Password</value>
   </data>
-  <data name="Creator" xml:space="preserve">
-    <value>建檔人員</value>
-  </data>
-  <data name="Reviser" xml:space="preserve">
-    <value>修改人員</value>
-  </data>
-  <data name="Revised" xml:space="preserve">
-    <value>修改日期</value>
+  <data name="RoleList" xml:space="preserve">
+    <value>Role List</value>
   </data>
 </root>

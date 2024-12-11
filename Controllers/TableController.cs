@@ -80,7 +80,7 @@ namespace DbAdm.Controllers
 
         public async Task Export(string find)
         {
-            await new TableRead().ExportAsync(_Str.ToJson(find)!);
+            await new TableRead().ExportA(_Str.ToJson(find)!);
         }
 
         //generate database document in word type

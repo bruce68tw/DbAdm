@@ -28,10 +28,10 @@ GO
 update dbo.Project set Creator='aa', Created=getDate() where Creator is null	
 GO
 
---create User table
-if object_id('dbo.User', 'U') is null
+--create XpUser table
+if object_id('dbo.XpUser', 'U') is null
 begin
-	CREATE TABLE [dbo].[User](
+	CREATE TABLE [dbo].[XpUser](
 		[Id] [varchar](10) NOT NULL,
 		[Account] [varchar](20) NOT NULL,
 		[Name] [nvarchar](20) NOT NULL,
@@ -44,14 +44,14 @@ begin
 	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 	) ON [PRIMARY]
 	
-	insert into dbo.[User](Id,Account,Name,Pwd,DeptId,Status) values ('aa','aa','管理者','','IT',1)
+	insert into dbo.[XpUser](Id,Account,Name,Pwd,DeptId,Status) values ('aa','aa','管理者','','IT',1)
 end
 GO
 
---create Dept table
-if object_id('dbo.Dept', 'U') is null
+--create XpDept table
+if object_id('dbo.XpDept', 'U') is null
 begin
-	CREATE TABLE [dbo].[Dept](
+	CREATE TABLE [dbo].[XpDept](
 		[Id] [varchar](10) NOT NULL,
 		[Name] [nvarchar](30) NOT NULL,
 		[MgrId] [varchar](10) NOT NULL,
@@ -61,7 +61,7 @@ begin
 	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 	) ON [PRIMARY]
 	
-	insert into dbo.[Dept](Id,Name,MgrId) values ('IT','資訊部','aa');
+	insert into dbo.[XpDept](Id,Name,MgrId) values ('IT','資訊部','aa');
 end
 GO
 
@@ -72,6 +72,16 @@ BEGIN
 	INSERT [dbo].[XpCode] ([Type],[Value],Name,Sort) VALUES ('AuthRange', '1', N'個人', 2)
 	INSERT [dbo].[XpCode] ([Type],[Value],Name,Sort) VALUES ('AuthRange', '2', N'部門', 3)
 	INSERT [dbo].[XpCode] ([Type],[Value],Name,Sort) VALUES ('AuthRange', '3', N'全部', 4)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM dbo.XpCode WHERE [Type]='IssueType')
+BEGIN
+	INSERT [dbo].[XpCode] ([Type],[Value],Name,Sort,Note) VALUES ('IssueType', 'R', N'例行工作', 1, 'Routine')
+	INSERT [dbo].[XpCode] ([Type],[Value],Name,Sort,Note) VALUES ('IssueType', 'K', N'知識', 2, 'KM')
+	INSERT [dbo].[XpCode] ([Type],[Value],Name,Sort,Note) VALUES ('IssueType', 'M', N'會議', 3, 'Meeting')
+	INSERT [dbo].[XpCode] ([Type],[Value],Name,Sort,Note) VALUES ('IssueType', 'L', N'請假', 4, 'Leave')
+	INSERT [dbo].[XpCode] ([Type],[Value],Name,Sort,Note) VALUES ('IssueType', 'O', N'其他', 5, 'Other')
 END
 GO
 
@@ -116,10 +126,18 @@ begin
 	INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'Project', N'Project', N'Project', NULL, N'/Project/Read', 1, 1, 1, 1, 1, 1, 0, 0, 1, 0)
 	INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'SetPwd', N'SetPwd', N'SetPwd', NULL, N'/SetPwd/Index', 5, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 	INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'Table', N'Table', N'Table', NULL, N'/Table/Read', 2, 1, 1, 1, 1, 1, 0, 0, 1, 0)
-	INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'User', N'User', N'User', NULL, N'/User/Read', 5, 0, 1, 1, 1, 1, 0, 0, 1, 0)
+	INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'XpUser', N'XpUser', N'XpUser', NULL, N'/XpUser/Read', 5, 0, 1, 1, 1, 1, 0, 0, 1, 0)
 	INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'XpProg', N'XpProg', N'XpProg', NULL, N'/XpProg/Read', 7, 0, 1, 1, 1, 1, 0, 0, 1, 0)
 	INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'XpRole', N'XpRole', N'XpRole', NULL, N'/XpRole/Read', 6, 0, 1, 1, 1, 1, 0, 0, 1, 0)
 end
+GO
+
+--add other XpProg
+IF NOT EXISTS (SELECT 1 FROM dbo.XpProg WHERE [Id]='PrjProg')
+BEGIN
+	INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'PrjProg', N'PrjProg', N'PrjProg', NULL, N'/PrjProg/Read', 9, 0, 1, 1, 1, 1, 0, 0, 1, 0)
+	INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'Issue', N'Issue', N'Issue', NULL, N'/Issue/Read', 10, 1, 0, 1, 1, 0, 0, 0, 1, 0)
+END
 GO
 
 --create & insert XpRole table
@@ -193,5 +211,61 @@ begin
 	INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'7fA4Ba9RhU', N'Adm', N'User', 1, 0, 0, 0, 0, 0, 0, 0)
 	INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'z0fW8NzHUn', N'Adm', N'XpRole', 1, 0, 0, 0, 0, 0, 0, 0)
 	INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'2koAJkBw89', N'Adm', N'XpProg', 1, 0, 0, 0, 0, 0, 0, 0)
+end
+GO
+
+--create & PrjProg table
+if object_id('dbo.PrjProg', 'U') is null
+begin
+	CREATE TABLE [dbo].[PrjProg](
+		[Id] [varchar](10) NOT NULL,
+		[Name] [nvarchar](30) NOT NULL,
+		[ProjectId] [varchar](10) NOT NULL,
+		[Sort] [smallint] NOT NULL,
+		[Status] [bit] NOT NULL,
+	 CONSTRAINT [PK_PrjProg] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+	
+	CREATE NONCLUSTERED INDEX [PrjProg_ProjectId] ON [dbo].[PrjProg]
+	(
+		[ProjectId] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+end
+GO
+
+--create & Issue table
+if object_id('dbo.Issue', 'U') is null
+begin
+	CREATE TABLE [dbo].[Issue](
+		[Sn] [int] IDENTITY(1,1) NOT NULL,
+		[Id] [varchar](10) NOT NULL,
+		[ProjectId] [varchar](10) NOT NULL,
+		[ProgId] [varchar](10) NOT NULL,
+		[OwnerId] [varchar](10) NOT NULL,
+		[Title] [nvarchar](255) NOT NULL,
+		[IssueType] [char](1) NOT NULL,
+		[Note] [nvarchar](1000) NULL,
+		[Creator] [varchar](10) NOT NULL,
+		[Created] [datetime] NOT NULL,
+		[Reviser] [varchar](10) NULL,
+		[Revised] [datetime] NULL,
+	 CONSTRAINT [PK_Issue] PRIMARY KEY CLUSTERED 
+	(
+		[Sn] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
+	CREATE UNIQUE NONCLUSTERED INDEX [Issue_Id] ON [dbo].[Issue]
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	
+	EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建檔人員' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Issue', @level2type=N'COLUMN',@level2name=N'Creator'
+	EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建檔日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Issue', @level2type=N'COLUMN',@level2name=N'Created'
+	EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'修改人員' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Issue', @level2type=N'COLUMN',@level2name=N'Reviser'
+	EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'修改日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Issue', @level2type=N'COLUMN',@level2name=N'Revised'
 end
 GO

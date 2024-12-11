@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace {{Project}}.Services
 {
-    public class {{ProgCode}}Edit : XgEdit
+    public class {{ProgCode}}Edit : BaseEditSvc
     {
         public {{ProgCode}}Edit(string ctrl) : base(ctrl) { }
 
@@ -30,12 +30,12 @@ namespace {{Project}}.Services
 			{{#unless HasCol4}}
                 Col4 = null,
 			{{/unless}}
-                Items = new EitemDto[] 
-				{
+                Items = 
+				[
 				{{#Eitems}}
 					{{ServiceStr}}
 				{{/Eitems}}
-                },
+                ],
 				{{/MainTable}}
 			{{#if ChildTables}}
                 Childs = new EditDto[]

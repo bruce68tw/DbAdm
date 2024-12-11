@@ -23,7 +23,7 @@ namespace {{Project}}.Controllers
     {{#if AuthType1}}
     [XgProgAuth]
     {{/if}}
-    public class {{ProgCode}}Controller : ApiCtrl
+    public class {{ProgCode}}Controller : BaseCtrl
     {
         {{#if AuthType2}}
         [XgProgAuth(CrudEnum.Read)]
@@ -93,7 +93,7 @@ namespace {{Project}}.Controllers
                 {{/if}}
         public async Task<JsonResult> Create(string json, {{FileEditTypeArg}})
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json), {{FileEditArg}}));
+            return Json(await EditService().CreateA(_Str.ToJson(json)!, {{FileEditArg}}));
         }
             {{/if}}
 
@@ -104,7 +104,7 @@ namespace {{Project}}.Controllers
                 {{/if}}
         public async Task<JsonResult> Update(string key, string json, {{FileEditTypeArg}})
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json), {{FileEditArg}}));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!, {{FileEditArg}}));
         }
             {{/if}}
 
@@ -127,7 +127,7 @@ namespace {{Project}}.Controllers
                 {{/if}}
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json)));
+            return Json(await EditService().CreateA(_Str.ToJson(json)!));
         }
             {{/if}}
 
@@ -138,7 +138,7 @@ namespace {{Project}}.Controllers
                 {{/if}}
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
         }
             {{/if}}
         {{/if}}
@@ -161,7 +161,7 @@ namespace {{Project}}.Controllers
             {{/if}}
         public async Task Export(string find)
         {
-            await new {{ProgCode}}Read().ExportA(Ctrl, _Str.ToJson(find));
+            await new {{ProgCode}}Read().ExportA(Ctrl, _Str.ToJson(find)!);
         }
         {{/if}}
 

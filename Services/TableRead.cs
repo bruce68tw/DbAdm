@@ -19,7 +19,7 @@ select
     a.Status, a.Id
 from dbo.[Table] a
 inner join dbo.Project p on p.Id=a.ProjectId
-left join dbo.[User] u on p.Creator=u.Id
+left join dbo.XpUser u on p.Creator=u.Id
 order by p.Id, a.Code
 ",
             ExportSql = @"
@@ -28,7 +28,7 @@ select
     p.Code as ProjectCode, p.DbName
 from dbo.[Table] a
 inner join dbo.Project p on p.Id=a.ProjectId
-left join dbo.[User] u on p.Creator=u.Id
+left join dbo.XpUser u on p.Creator=u.Id
 order by p.Id, a.Code
 ",
             TableAs = "a",
@@ -52,7 +52,7 @@ order by p.Id, a.Code
         /// <param name="ctrl">controller name for authorize</param>
         /// <param name="find"></param>
         /// <returns></returns>
-        public async Task ExportAsync(JObject find)
+        public async Task ExportA(JObject find)
         {
             await _HttpExcel.ExportByReadA("", dto, find, 
                 "Table.xlsx", _Xp.GetTplPath("Table.xlsx", true), 1);

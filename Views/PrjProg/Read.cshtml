@@ -1,0 +1,65 @@
+﻿<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+
+    var _me = {
+
+        init: function () {
+            //datatable config
+            var config = {
+                columns: [
+                    { data: 'ProjectName' },
+                    { data: 'Name' },
+                    { data: 'Sort' },
+                    { data: 'Status' },
+                    { data: '_fun' },
+                ],
+                columnDefs: [
+                    { targets: [3], render: function (data, type, full, meta) {
+                        return _crudR.dtStatusName(data);
+                    }},
+                    { targets: [4], render: function (data, type, full, meta) {
+                        return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    }},
+                ],
+            };
+
+            //initial
+            _crudR.init(config);
+        },
+    }; //class
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "專案功能" } })
+<div class="xg-prog">
+    <div id="divRead">
+		<form id='formRead' class='xg-form'>
+            <div class="row">
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
+                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+            </div>
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "功能名稱", Fid = "Name", MaxLen = 30 })
+        </form>
+
+		<div class='xg-btns-box'>
+			<vc:xg-create/>
+        </div>
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>專案</th>
+                    <th>功能名稱</th>
+					<th>排序</th>
+					<th>狀態</th>
+					<th>功能</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <partial name="Edit" />
+    </div>
+</div>

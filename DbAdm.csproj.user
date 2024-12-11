@@ -11,5 +11,8 @@
     <EmbeddedResource Update="Resources\Views\MyCrud\Edit.zh-TW.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\XpUser\Read.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
