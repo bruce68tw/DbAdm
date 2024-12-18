@@ -273,11 +273,12 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-      * get row(json) by tr object
+      * get row(json) by tr object, 不包含 xi-unsave 欄位
       * trObj {object} tr object
       * fidTypes {string array} field info array
       * return {json} one row
       */
+    /*
     this.getRow = function (trObj) {
         //var fidTypes = this.fidTypes;
         var row = {};
@@ -288,6 +289,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         }
         return row;
     };
+    */
 
     this.checkRowFilter = function () {
         if (this.hasRowFilter)
@@ -371,7 +373,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
             var tr = $(item);
             var key = _input.get(me.kid, tr);
             if (_edit.isNewKey(key)) {
-                var row2 = me.getRow(tr);
+                //var row2 = me.getRow(tr);
+                var row2 = _form.toRow(tr);
                 row2[me.DataFkeyFid] = upKey;   //write anyway !!
                 rows.push(row2);
                 return;     //continue;

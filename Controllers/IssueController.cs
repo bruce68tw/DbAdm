@@ -4,7 +4,9 @@ using Base.Services;
 using BaseApi.Attributes;
 using BaseApi.Controllers;
 using DbAdm.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DbAdm.Controllers
@@ -51,16 +53,16 @@ namespace DbAdm.Controllers
 
         [HttpPost]
         [XgProgAuth(CrudEnum.Create)]
-        public async Task<JsonResult> Create(string json)
-        {
-            return Json(await EditService().CreateA(_Str.ToJson(json)!));
-        }
+		public async Task<JsonResult> Create(string json, List<IFormFile> t00_FileName)
+		{
+			return Json(await EditService().CreateA(_Str.ToJson(json)!, t00_FileName));
+		}
 
-        [HttpPost]
+		[HttpPost]
         [XgProgAuth(CrudEnum.Update)]
-        public async Task<JsonResult> Update(string key, string json)
+        public async Task<JsonResult> Update(string key, string json, List<IFormFile> t00_FileName)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
+            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!, t00_FileName));
         }
 
         [HttpPost]
@@ -84,5 +86,12 @@ namespace DbAdm.Controllers
             return Json(await _XpCode.PrjProgsA(parentId));
         }
 
-    }//class
+		public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
+		{
+			return (fid == "FileName")
+				? await _Xp.ViewIssueFileA(fid, key, ext)
+				: null;
+		}
+
+	}//class
 }

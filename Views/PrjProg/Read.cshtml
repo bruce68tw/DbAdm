@@ -13,13 +13,14 @@
                     { data: 'Name' },
                     { data: 'Sort' },
                     { data: 'Status' },
+                    { data: 'CreatorName' },
                     { data: '_fun' },
                 ],
                 columnDefs: [
                     { targets: [3], render: function (data, type, full, meta) {
                         return _crudR.dtStatusName(data);
                     }},
-                    { targets: [4], render: function (data, type, full, meta) {
+                    { targets: [5], render: function (data, type, full, meta) {
                         return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                     }},
                 ],
@@ -51,8 +52,9 @@
                     <th>專案</th>
                     <th>功能名稱</th>
 					<th>排序</th>
-					<th>狀態</th>
-					<th>功能</th>
+					<th>資料狀態</th>
+                    <th>建檔人員</th>
+                    <th>功能</th>
                 </tr>
             </thead>
             <tbody></tbody>

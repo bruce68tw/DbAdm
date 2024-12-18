@@ -17,21 +17,20 @@ select i.*,
     ProjectName=p.Name,
     ProgName=pp.Name,
     IssueTypeName=c.Name,
-    OwnerName=u.Name, CreatorName=u2.Name
+    CreatorName=u2.Name
 from dbo.Issue i
 join dbo.Project p on i.ProjectId=p.Id
 join dbo.PrjProg pp on i.ProgId=pp.Id
-join dbo.XpUser u on i.OwnerId=u.Id
 join dbo.XpUser u2 on i.Creator=u2.Id
 join dbo.XpCode c on c.Type='{_Xp.IssueType}' and i.IssueType=c.Value
-order by i.Id
+order by i.Created desc
 ",
             TableAs = "i",
             Items = [
                 new() { Fid = "ProjectId" },
                 new() { Fid = "ProgId" },
+                new() { Fid = "WorkDate", Type = QitemTypeEnum.Date },
                 new() { Fid = "Created", Type = QitemTypeEnum.Date },
-                new() { Fid = "OwnerId" },
                 new() { Fid = "IssueType" },
                 new() { Fid = "Title", Op = ItemOpEstr.Like2 },
                 new() { Fid = "Creator" },

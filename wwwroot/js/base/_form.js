@@ -6,7 +6,7 @@
 var _form = {
 
     /**
-     * get input values, except read type
+     * get input values, 排除不儲存的欄位, 可用在多筆的單行
      * param form {object} input form
      * return {json}
      */ 

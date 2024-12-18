@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DbAdm System</title>
+    <title>資料庫文件系統</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -148,12 +148,12 @@
         <form action=@Url.Action("login") method="post">
             <input name="FromUrl" type="hidden" value="@Model.FromUrl">
             <div class="box">
-                <h1>Login Form</h1>
-                <input type="text" id="Account" name="Account" value="@Model.Account" placeholder="User Account">
+                <h1>登入畫面</h1>
+                <input type="text" id="Account" name="Account" value="@Model.Account" aria-label="登入帳號" placeholder="請輸入帳號">
                 <div id="AccountMsg" class="@accountMsgClass">@Model.AccountMsg</div>
-                <input type="password" name="Pwd" value="@Model.Pwd" placeholder="Password">
+                <input type="password" name="Pwd" value="@Model.Pwd" aria-label="密碼" placeholder="請輸入密碼">
                 <div id="PwdMsg" class="@pwdMsgClass">@Model.PwdMsg</div>
-                <button type="submit">Sign In</button>
+                <button type="submit" aria-label="提交表單">送出</button>
             </div>
         </form>
     </div>

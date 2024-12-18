@@ -12,20 +12,24 @@
                     { data: 'ProjectName' },
                     { data: 'ProgName' },
                     { data: 'IssueTypeName' },
+                    { data: 'WorkDate' },
+                    { data: 'WorkHours' },
                     { data: 'Title' },
-                    { data: 'OwnerName' },
                     { data: 'CreatorName' },
                     { data: '_fun' },
                 ],
                 columnDefs: [
-                    { targets: [6], render: function (data, type, full, meta) {
+                    { targets: [7], render: function (data, type, full, meta) {
                         return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                     }},
                 ],
             };
 
             //initial
-            _crudR.init(config);
+            _me.mIssueFile = new EditMany('Id', 'eformIssueFile', 'tplIssueFile', 'tr');
+            _me.mIssueRelat = new EditMany('Id', 'eformIssueRelat', 'tplIssueRelat', 'tr');
+            _crudR.init(config, [null, _me.mIssueFile, _me.mIssueRelat]);
+
         },
 
         //開啟編輯畫面時自動觸發
@@ -39,6 +43,31 @@
         onChgProject: function (isEdit, progId) {
             _iselect.onChangeParent('ProjectId', 'ProgId', progId, 'GetPrjProgs', isEdit);
         },
+
+        //onclick viewFile, called by XiFile component
+        onViewFile: function (table, fid, elm) {
+            if (fid == 'FileName')
+                _me.mIssueFile.onViewFile(table, fid, elm);
+        },
+
+        onMyToday: function () {
+            var box = _me.rform;
+            _crudR.onResetFind();   //reset
+            _iselect.set('Creator', 'Bruce', box);
+            _idate.set('Created', '2024/12/13', box);
+            _idate.set('Created2', '2024/12/13', box);
+            _crudR.onFind();
+        },
+
+        onMyWeek: function () {
+            var box = _me.rform;
+            _crudR.onResetFind();   //reset
+            _iselect.set('Creator', 'Bruce', box);
+            _idate.set('Created', '2024/12/09', box);
+            _idate.set('Created2', '2024/12/13', box);
+            _crudR.onFind();
+        },
+
     }; //class
 </script>
 
@@ -51,19 +80,30 @@
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "建檔人員", Fid = "Creator", Rows = ViewBag.Users })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料種類", Fid = "IssueType", Rows = ViewBag.IssueTypes })
+            <div class="row">
+                <div class="col-md-2 xg-label">工作日期</div>
+                <div class="col-md-10 xg-input">
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate", InRow = true, BoxClass = "xg-inline" })
+                    <span>～</span>
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate2", InRow = true, BoxClass = "xg-inline" })
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-2 xg-label">建檔日期</div>
                 <div class="col-md-10 xg-input">
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true, BoxClass = "xg-inline" })
                     <span>～</span>
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true, BoxClass = "xg-inline" })
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created2", InRow = true, BoxClass = "xg-inline" })
                 </div>
             </div>
         </form>
 
 		<div class='xg-btns-box'>
 			<vc:xg-create/>
+            <button type="button" class="btn xg-btn" onclick="_me.onMyToday()">我的今天資料</button>
+            <button type="button" class="btn xg-btn" onclick="_me.onMyWeek()">我的本週資料</button>
         </div>
         <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
             <thead>
@@ -71,8 +111,9 @@
 					<th>專案</th>
                     <th>專案功能</th>
                     <th>資料種類</th>
+                    <th>工作日期</th>
+                    <th>工作時數</th>
                     <th>標題</th>
-                    <th>擁有者</th>
                     <th>建檔人員</th>
                     <th>功能</th>
                 </tr>

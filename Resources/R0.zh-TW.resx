@@ -288,4 +288,10 @@
   <data name="Revised" xml:space="preserve">
     <value>修改日期</value>
   </data>
+  <data name="MenuPrjProg" xml:space="preserve">
+    <value>專案功能</value>
+  </data>
+  <data name="MenuIssue" xml:space="preserve">
+    <value>問題維護</value>
+  </data>
 </root>

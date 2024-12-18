@@ -288,4 +288,10 @@
   <data name="Revised" xml:space="preserve">
     <value>Revised Time</value>
   </data>
+  <data name="MenuPrjProg" xml:space="preserve">
+    <value>Project Program</value>
+  </data>
+  <data name="MenuIssue" xml:space="preserve">
+    <value>Issue</value>
+  </data>
 </root>

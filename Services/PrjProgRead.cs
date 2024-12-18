@@ -12,10 +12,12 @@ namespace DbAdm.Services
         {
             ReadSql = @"
 select a.*,
+    CreatorName=u.Name,
     ProjectName=p.Name
 from dbo.PrjProg a
+left join dbo.XpUser u on a.Creator=u.Id
 join dbo.Project p on a.ProjectId=p.Id
-order by a.Id
+order by p.Id, a.Id
 ",
             TableAs = "a",
             Items = [

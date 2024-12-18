@@ -13,7 +13,15 @@ namespace DbAdm.Services
             {
 				Table = "dbo.[PrjProg]",
                 PkeyFid = "Id",
-                Col4 = null,
+                Col4 = ["Creator"],
+                ReadSql = $@"
+select a.*,
+    CreatorName=u.Name,
+    {_Fun.FidUser}=u.Id, {_Fun.FidDept}=u.DeptId
+from dbo.PrjProg a
+left join dbo.XpUser u on a.Creator=u.Id
+where a.Id=@Id
+",
                 Items = 
 				[
 					new() { Fid = "Id" },

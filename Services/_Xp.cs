@@ -2,6 +2,8 @@
 using BaseApi.Services;
 using BaseWeb.Services;
 using DbAdm.Tables;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
@@ -17,11 +19,15 @@ namespace DbAdm.Services
         //for XpCode
         public const string IssueType = "IssueType";
 
-        //constant
-        //upload file max size(MB)
-        //public const int UploadFileMax = 5;
+		//for directory
+		public static string DirBaseUpload = _Fun.Dir("_upload");
+		public static string DirIssueFile = DirUpload("Issue");
 
-        public static MyContext GetDb()
+		//constant
+		//upload file max size(MB)
+		//public const int UploadFileMax = 5;
+
+		public static MyContext GetDb()
         {
             return new MyContext();
         }
@@ -42,14 +48,30 @@ namespace DbAdm.Services
                 : key;
         }
 
-        /*
+		private static string DirUpload(string subDir, bool sep = true)
+		{
+			return DirBaseUpload + subDir + (sep ? _Fun.DirSep : "");
+		}
+
+		private static async Task<FileResult?> ViewFileA(string dir, string fid, string key, string ext)
+		{
+			var path = $"{dir}{fid}_{key}.{ext}";
+			return await _HttpFile.ViewFileA(path, $"{fid}.{ext}");
+		}
+
+		public static async Task<FileResult?> ViewIssueFileA(string fid, string key, string ext)
+		{
+			return await ViewFileA(DirIssueFile, fid, key, ext);
+		}
+
+		/*
         public static SessionModel GetSession()
         {
             return new SessionModel();
         }
         */
 
-        /*
+		/*
         //檢查上傳檔案
         //後端程式不顯示詳細錯誤訊息到前端
         public static ErrorModel CheckUploadFile(HttpPostedFileBase file, int size, string exts)
@@ -94,5 +116,5 @@ namespace DbAdm.Services
         }
         */
 
-    }//class
+	}//class
 }
