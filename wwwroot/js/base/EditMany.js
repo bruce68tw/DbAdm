@@ -436,11 +436,11 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
     /**
      * add one row(or empty) into UI
-     * param {object} (optional) rowsBox
      * param {object} (optional) row
+     * param {object} (optional) rowsBox
      * return {object} row jquery object(with UI)
      */
-    this.addRow = function (rowsBox, row) {
+    this.addRow = function (row, rowsBox) {
         row = row || {};
         rowsBox = this.getRowsBox(rowsBox);
         var obj = this._renderRow(rowsBox, row);

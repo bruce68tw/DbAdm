@@ -102,6 +102,13 @@ function EditOne(kid, eformId) {
     };
 
     /**
+     * reset key, for update/view -> create
+     */
+    this.resetKey = function () {
+        _itext.set(this.kid, '', this.eform);
+    };
+
+    /**
      * set form edit status
      * param status {bool} edit status
      */

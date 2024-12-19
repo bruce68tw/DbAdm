@@ -75,7 +75,7 @@ var _edit = {
             if (value != old) {
                 //date/dt old value has more length
                 if ((ftype === 'date' || ftype === 'dt') &&
-                    _date.mmToValue(value) === _date.mmToValue(old))
+                    _date.dtsToValue(value) === _date.dtsToValue(old))
                     continue;
 
                 result[fid] = value;

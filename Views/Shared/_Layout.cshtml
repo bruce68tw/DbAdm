@@ -34,7 +34,7 @@
             new() { Code = "Column", Name = R0["MenuColumn"].Value, Url = "/Column/Read" },
             new() { Code = "MyCrud", Name = R0["MenuMyCrud"].Value, Url = "/MyCrud/Read" },
             new() { Code = "PrjProg", Name = "專案功能", Url = "/PrjProg/Read" },
-            new() { Code = "Issue", Name = "專案問題維護", Url = "/Issue/Read" },
+            new() { Code = "Issue", Name = "專案工作維護", Url = "/Issue/Read" },
             /* test sub menu
             new() { Name = "第5個功能群組", Items = new List<MenuDto>()
             {
@@ -109,6 +109,8 @@
     <script type="text/javascript">
         $(function () {
             _fun.init('@locale');
+            _fun.pageRows = 20;
+            _fun.userId = '@_Fun.UserId()';
         });
     </script>
 </head>

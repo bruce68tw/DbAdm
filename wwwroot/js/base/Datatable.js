@@ -66,6 +66,8 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
         
         //default config for dataTables
         var config = {
+            pageLength: _fun.pageRows || 10,
+            lengthMenu: [10, 20, 50, 100], //25 -> 20 for more friendly
             processing: false,  //use custom processing msg
             serverSide: true,   //server pagination
             jQueryUI: false,

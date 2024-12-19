@@ -7,6 +7,7 @@
  *   divEdit:
  *   hasEdit:
  *   edit0:
+ *   eform0: 
  *   hasChild:
  *   _nowFun:
  *   modal:
@@ -46,6 +47,8 @@ var _crudE = {
             }
 
             _me.edit0 = edit0;
+            if (edit0.eform != null)
+                _me.eform0 = edit0.eform;
             _me.hasChild = (_fun.hasValue(_me.edit0[Childs]) && _me.edit0[Childs].length > 0);
             //_me.editLen = _me.edits.length;
             _crudE._initForm(_me.edit0);
@@ -157,6 +160,9 @@ var _crudE = {
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         }
+
+        //remove span error
+        _me.divEdit.find('span.error').remove();
 
         //enable btnToRead for view fun
         //if (isView)
@@ -403,6 +409,20 @@ var _crudE = {
         var child = upRow[fid][childIdx];
         child[_crudE.Rows] = rows;
         return child;
+    },
+
+    /**
+     * 將目前畫面資料為新資料
+     * param upRow {json}
+     * param childIdx {int}
+     * param rows {jsons}
+     * return {json} child object
+     */
+    editToNew: function () {
+        var fun = _fun.FunC;
+        _crudE._setEditStatus(fun);
+        _me.edit0.resetKey();
+        _prog.setPath(fun);
     },
 
     //=== event start ===

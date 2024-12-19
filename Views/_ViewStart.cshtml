@@ -1,6 +1,6 @@
 ﻿@{
     //var req = _Http.GetRequest();
-    var isPjax = !_Str.IsEmpty(_Http.GetRequest().Headers["X-PJAX"]);
+    var isPjax = _Str.NotEmpty(_Http.GetRequest().Headers["X-PJAX"]);
     Layout = isPjax
         ? null
         : "~/Views/Shared/_Layout.cshtml";

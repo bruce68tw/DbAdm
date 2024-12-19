@@ -95,7 +95,7 @@ var _input = {
             case 'read':
                 var format = obj.data('format');
                 if (_str.notEmpty(format) && _str.notEmpty(_BR[format]))
-                    value = _date.mmToFormat(value, _BR[format]);
+                    value = _date.dtsToFormat(value, _BR[format]);
                 _iread.setO(obj, value);
                 break;
             case 'link':

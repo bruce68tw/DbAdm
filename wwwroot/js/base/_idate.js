@@ -17,7 +17,7 @@ var _idate = $.extend({}, _ibase, {
      * param value {string} format: _fun.MmDateFmt
      */
     setO: function (obj, value) {
-        _idate._boxSetDate(_idate._objToBox(obj), _date.mmToUiDate(value));
+        _idate._boxSetDate(_idate._objToBox(obj), _date.dtsToFormat(value));
     },
 
     setEditO: function (obj, status) {

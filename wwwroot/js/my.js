@@ -582,6 +582,7 @@ var _chart = {
  *   divEdit:
  *   hasEdit:
  *   edit0:
+ *   eform0: 
  *   hasChild:
  *   _nowFun:
  *   modal:
@@ -621,6 +622,8 @@ var _crudE = {
             }
 
             _me.edit0 = edit0;
+            if (edit0.eform != null)
+                _me.eform0 = edit0.eform;
             _me.hasChild = (_fun.hasValue(_me.edit0[Childs]) && _me.edit0[Childs].length > 0);
             //_me.editLen = _me.edits.length;
             _crudE._initForm(_me.edit0);
@@ -732,6 +735,9 @@ var _crudE = {
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         }
+
+        //remove span error
+        _me.divEdit.find('span.error').remove();
 
         //enable btnToRead for view fun
         //if (isView)
@@ -978,6 +984,20 @@ var _crudE = {
         var child = upRow[fid][childIdx];
         child[_crudE.Rows] = rows;
         return child;
+    },
+
+    /**
+     * 將目前畫面資料為新資料
+     * param upRow {json}
+     * param childIdx {int}
+     * param rows {jsons}
+     * return {json} child object
+     */
+    editToNew: function () {
+        var fun = _fun.FunC;
+        _crudE._setEditStatus(fun);
+        _me.edit0.resetKey();
+        _prog.setPath(fun);
     },
 
     //=== event start ===
@@ -1481,6 +1501,7 @@ var _crudR = {
 
 };//class
 /**
+ * 日期/時間格式包含: 資料庫、c#/js(兩者設定為一致)、UI
  * for date related
  * short name:
  *  1.date: moment date
@@ -1502,13 +1523,25 @@ var _date = {
     },
 
     /**
-     * ??get today date string in UI format
-    uiToday: function(){
-        //var date = new Date();
-        //return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
-        return moment().format(_BR.MmDateFmt);
-    },
+     * get today date string in UI format
      */
+    uiToday: function(){
+        var mm = moment();
+        return _date.mmToUiDate(mm);
+    },
+
+    /**
+     * get this week monday in UI format
+     */
+    uiWeekMonday: function () {
+        var mm = moment().day(1)
+        return _date.mmToUiDate(mm);
+    },
+
+    uiWeekFriday: function () {
+        var mm = moment().day(5)
+        return _date.mmToUiDate(mm);
+    },
 
     /**
      * get current year, ex: 2021
@@ -1517,21 +1550,33 @@ var _date = {
         return (new Date()).getFullYear();
     },
 
+    mmToUiDate: function (mm) {
+        return mm.format(_BR.MmUiDateFmt);
+    },
+
+    mmToUiDt: function (mm) {
+        return mm.format(_BR.MmUiDtFmt);
+    },
+
+    mmToUiDt2: function (mm) {
+        return mm.format(_BR.MmUiDt2Fmt);
+    },
+
     /**
      * js date string to ui date string
      * param ds {string} js date string
      * return {string} ui date string
      */ 
-    mmToUiDate: function (ds) {
-        return (_str.isEmpty(ds))
+    mmDsToUiDate: function (ds) {
+        return _str.isEmpty(ds)
             ? ''
-            : moment(ds, _fun.MmDateFmt).format(_BR.MmUiDateFmt);
+            : _date.mmToUiDate(moment(ds, _fun.MmDateFmt));
     },
 
-    mmToUiDt: function (dts) {
-        return (_str.isEmpty(dts))
+    mmDtsToUiDt: function (dts) {
+        return _str.isEmpty(dts)
             ? ''
-            : moment(dts, _fun.MmDtFmt).format(_BR.MmUiDtFmt);
+            : _date.mmToUiDt(moment(dts, _fun.MmDtFmt));
     },
 
     /**
@@ -1539,26 +1584,26 @@ var _date = {
      * param dts {string} js datetime string
      * return {string} ui datetime2 string(no second)
      */
-    mmToUiDt2: function (dts) {
-        return (_str.isEmpty(dts))
+    mmDtsToUiDt2: function (dts) {
+        return _str.isEmpty(dts)
             ? ''
-            : moment(dts, _fun.MmDtFmt).format(_BR.MmUiDt2Fmt);
+            : _date.mmToUiDt2(moment(dts, _fun.MmDtFmt));
     },
 
-    mmToFormat: function (dts, format) {
+    mmDtsToFormat: function (dts, format) {
         return (_str.isEmpty(dts))
             ? ''
             : moment(dts, _fun.MmDtFmt).format(format);
     },
 
     //get datetime value for compare
-    mmToValue: function (dts) {
+    mmDtsToValue: function (dts) {
         return (_str.isEmpty(dts))
             ? 0
             : moment(dts, _fun.MmDtFmt).valueOf();
     },
 
-    mmToMoment: function (dts) {
+    mmDtsToMoment: function (dts) {
         return (_str.isEmpty(dts))
             ? null
             : moment(dts, _fun.MmDtFmt);
@@ -1728,7 +1773,7 @@ var _edit = {
             if (value != old) {
                 //date/dt old value has more length
                 if ((ftype === 'date' || ftype === 'dt') &&
-                    _date.mmToValue(value) === _date.mmToValue(old))
+                    _date.mmDtsToValue(value) === _date.mmDtsToValue(old))
                     continue;
 
                 result[fid] = value;
@@ -2285,7 +2330,10 @@ var _fun = {
     locale: 'zh-TW',    //now locale, _Layout.cshmlt will set
     maxFileSize: 50971520,  //upload file limit(50M)
     isRwd: false,
-    //pageRows: 10,       //for _page.js (pagination object)
+    pageRows: 10,   //must be 10,20(not 25),50,100
+
+    //now userId
+    userId: '',
 
     //mid variables
     //data: {},
@@ -2612,6 +2660,7 @@ var _ibase = {
     },
     setO: function (obj, value) {
         obj.val(value);
+        obj.text(value);    //for XiRead
     },
 
     //set edit status
@@ -2793,7 +2842,7 @@ var _idate = $.extend({}, _ibase, {
      * param value {string} format: _fun.MmDateFmt
      */
     setO: function (obj, value) {
-        _idate._boxSetDate(_idate._objToBox(obj), _date.mmToUiDate(value));
+        _idate._boxSetDate(_idate._objToBox(obj), _date.mmDsToUiDate(value));
     },
 
     setEditO: function (obj, status) {
@@ -3377,7 +3426,7 @@ var _input = {
             case 'read':
                 var format = obj.data('format');
                 if (_str.notEmpty(format) && _str.notEmpty(_BR[format]))
-                    value = _date.mmToFormat(value, _BR[format]);
+                    value = _date.mmDtsToFormat(value, _BR[format]);
                 _iread.setO(obj, value);
                 break;
             case 'link':
@@ -5142,6 +5191,8 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
         
         //default config for dataTables
         var config = {
+            pageLength: _fun.pageRows || 10,
+            lengthMenu: [10, 20, 50, 100], //25 -> 20 for more friendly
             processing: false,  //use custom processing msg
             serverSide: true,   //server pagination
             jQueryUI: false,
@@ -5740,11 +5791,11 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
     /**
      * add one row(or empty) into UI
-     * param {object} (optional) rowsBox
      * param {object} (optional) row
+     * param {object} (optional) rowsBox
      * return {object} row jquery object(with UI)
      */
-    this.addRow = function (rowsBox, row) {
+    this.addRow = function (row, rowsBox) {
         row = row || {};
         rowsBox = this.getRowsBox(rowsBox);
         var obj = this._renderRow(rowsBox, row);
@@ -6064,6 +6115,13 @@ function EditOne(kid, eformId) {
      */
     this.reset = function () {
         _form.reset(this.eform);
+    };
+
+    /**
+     * reset key, for update/view -> create
+     */
+    this.resetKey = function () {
+        _itext.set(this.kid, '', this.eform);
     };
 
     /**
@@ -6498,7 +6556,7 @@ function Flow(boxId, mNode, mLine) {
             PosY: 100,
         };
 
-        var node = this.mNode.addRow(this.divFlowBox, this._setNodeClass(row));
+        var node = this.mNode.addRow(this._setNodeClass(row), this.divFlowBox);
         this._setNodeEvent(node);   //set node event
     };
 

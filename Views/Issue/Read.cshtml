@@ -4,22 +4,35 @@
     });
 
     var _me = {
+        issueId: '',        //要追踪或取消的Issue.Id
+        hasWatchId: '',     //是否有IssueWatch.Id
 
         init: function () {
             //datatable config
             var config = {
+                pageLength: 50,
                 columns: [
                     { data: 'ProjectName' },
                     { data: 'ProgName' },
                     { data: 'IssueTypeName' },
                     { data: 'WorkDate' },
                     { data: 'WorkHours' },
+                    { data: 'Id' },
                     { data: 'Title' },
+                    { data: 'IsFinish' },
+                    { data: 'IsWatch' },
+                    { data: 'OwnerName' },
                     { data: 'CreatorName' },
                     { data: '_fun' },
                 ],
                 columnDefs: [
                     { targets: [7], render: function (data, type, full, meta) {
+                        return _crudR.dtYesEmpty(data);
+                    }},
+                    { targets: [8], render: function (data, type, full, meta) {
+                        return _crudR.dtYesEmpty(data);
+                    }},
+                    { targets: [11], render: function (data, type, full, meta) {
                         return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                     }},
                 ],
@@ -35,7 +48,54 @@
         //開啟編輯畫面時自動觸發
         fnAfterOpenEdit: function (fun, json) {
             if (fun == _fun.FunU || fun == _fun.FunV) {
+                //設定專案功能欄位
                 _me.onChgProject(true, json.ProgId);
+
+                //設定追踪按鈕
+                _me.issueId = json.Id;
+                _me.hasWatchId = _str.notEmpty(json.WatchId);
+                _me.setWatchBtn(true);
+
+                //設定延續工作按鈕的狀態
+                _me.setKeepBtn(json.OwnerId == _fun.userId);
+            } else {                
+                _iselect.set('OwnerId', _fun.userId, _me.eform0);       //處理人員預設自己
+                _idate.set('WorkDate', _date.uiToday(), _me.eform0);    //工作日期預設今天
+
+                _me.setWatchBtn(false);
+                _me.setKeepBtn(false);
+            }
+        },
+
+        //設定延續工作按鈕的狀態
+        setKeepBtn: function (isShow) {
+            var btn = _me.divEdit.find('#btnKeepIssue');
+            if (isShow)
+                _me.showBtn(btn);
+            else
+                btn.hide();
+        },
+
+        //show & enabled button
+        showBtn: function (btn) {
+            btn.show();
+            _btn.setEditO(btn, true);
+        },
+
+        //設定追踪按鈕的狀態
+        setWatchBtn: function (isShow) {
+            var box = _me.divEdit;
+            var btnAdd = box.find('#btnAddWatch');
+            var btnDel = box.find('#btnDelWatch');
+            if (!isShow){
+                btnAdd.hide();
+                btnDel.hide();
+            } else if (_me.hasWatchId){
+                btnAdd.hide();
+                _me.showBtn(btnDel);
+            } else {
+                _me.showBtn(btnAdd);
+                btnDel.hide();
             }
         },
 
@@ -51,27 +111,95 @@
         },
 
         onMyToday: function () {
+            var today = _date.uiToday();
             var box = _me.rform;
             _crudR.onResetFind();   //reset
-            _iselect.set('Creator', 'Bruce', box);
-            _idate.set('Created', '2024/12/13', box);
-            _idate.set('Created2', '2024/12/13', box);
+            _iselect.set('OwnerId', _fun.userId, box);
+            _idate.set('WorkDate', today, box);
+            _idate.set('WorkDate2', today, box);
             _crudR.onFind();
         },
 
         onMyWeek: function () {
             var box = _me.rform;
             _crudR.onResetFind();   //reset
-            _iselect.set('Creator', 'Bruce', box);
-            _idate.set('Created', '2024/12/09', box);
-            _idate.set('Created2', '2024/12/13', box);
+            _iselect.set('OwnerId', _fun.userId, box);
+            _idate.set('WorkDate', _date.uiWeekMonday(), box);
+            _idate.set('WorkDate2', _date.uiWeekFriday(), box);
             _crudR.onFind();
+        },
+
+        //我的未結案
+        onMyNotFinish: function () {
+            var box = _me.rform;
+            _crudR.onResetFind();   //reset
+            _iselect.set('OwnerId', _fun.userId, box);
+            _iselect.set('IsFinish', '0', box);
+            _crudR.onFind();
+        },
+        
+        //我的追踪
+        onMyWatch: function () {
+            var box = _me.rform;
+            _crudR.onResetFind();   //reset
+            _iselect.set('_IsWatch', '1', box);
+            _crudR.onFind();
+        },
+
+        //加入追踪
+        onAddWatch: async()=>{
+            _tool.ans('是否確定加入追踪?', async()=>{
+                await _ajax.getStrA('AddWatch', {issueId: _me.issueId}, function(str){
+                    var ok = (str == '1');
+                    _tool.msg(ok ? '成功加入追踪。' : '無法加入此筆追踪 !!');
+                    if (ok){
+                        _me.hasWatchId = true;
+                        _me.setWatchBtn(true);
+                    }                        
+                });
+            });
+        },
+
+        //取消追踪
+        onDelWatch: async()=>{
+            _tool.ans('是否確定取消追踪?', async()=>{
+                await _ajax.getStrA('DelWatch', {issueId: _me.issueId}, (str)=>{
+                    var ok = (str == '1');
+                    _tool.msg(ok ? '已取消追踪。' : '無法取消此筆追踪 !!');
+                    if (ok){
+                        _me.hasWatchId = false;
+                        _me.setWatchBtn(true);
+                    }                        
+                });
+            });
+        },
+
+        //延續工作        
+        onKeepIssue: ()=>{
+            _tool.ans('是否確定延續此筆工作?', ()=>{
+                //變成新增狀態
+                _crudE.editToNew(); 
+
+                //設定按鈕
+                _me.setWatchBtn(false);
+                _me.setKeepBtn(false);
+
+                //title欄位前面加上'(續)'
+                var title = _obj.get('Title', _me.eform0);
+                _itext.setO(title, '(續)'+_itext.getO(title))
+                _idate.set('WorkDate', _date.uiToday(), _me.eform0);    //工作日期預設今天
+
+                //reset & 增加一筆相關工作
+                _me.mIssueFile.reset();
+                _me.mIssueRelat.reset();
+                _me.mIssueRelat.addRow({SourceIssue: _me.issueId});
+            });
         },
 
     }; //class
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "問題維護" } })
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "專案工作維護" } })
 <div class="xg-prog">
     <div id="divRead">
 		<form id='formRead' class='xg-form'>
@@ -80,8 +208,14 @@
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "建檔人員", Fid = "Creator", Rows = ViewBag.Users })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料種類", Fid = "IssueType", Rows = ViewBag.IssueTypes })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "已結案", Fid = "IsFinish", Rows = ViewBag.YesNos })
+            @* 底線欄位 _IsWatch 在後端用程式調整sql *@
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "已追踪", Fid = "_IsWatch", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Rows = ViewBag.Users })
+            @*
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "建檔人員", Fid = "Creator", Rows = ViewBag.Users })
+            *@
             <div class="row">
                 <div class="col-md-2 xg-label">工作日期</div>
                 <div class="col-md-10 xg-input">
@@ -104,6 +238,8 @@
 			<vc:xg-create/>
             <button type="button" class="btn xg-btn" onclick="_me.onMyToday()">我的今天資料</button>
             <button type="button" class="btn xg-btn" onclick="_me.onMyWeek()">我的本週資料</button>
+            <button type="button" class="btn xg-btn" onclick="_me.onMyNotFinish()">我的未結案</button>
+            <button type="button" class="btn xg-btn" onclick="_me.onMyWatch()">我的追踪</button>
         </div>
         <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
             <thead>
@@ -113,7 +249,11 @@
                     <th>資料種類</th>
                     <th>工作日期</th>
                     <th>工作時數</th>
+                    <th>資料Id</th>
                     <th>標題</th>
+                    <th>已結案</th>
+                    <th>已追踪</th>
+                    <th>處理人員</th>
                     <th>建檔人員</th>
                     <th>功能</th>
                 </tr>

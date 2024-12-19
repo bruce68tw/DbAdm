@@ -2,49 +2,65 @@
 using Base.Models;
 using Base.Services;
 using BaseApi.Services;
-using BaseWeb.Services;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
-    public class IssueRead
+	public class IssueRead
     {
-        private readonly ReadDto dto = new()
+        private string isWatch = "";
+
+        //sql內有變數isWatch, 改使用函數
+        private ReadDto GetDto()
         {
-            ReadSql = $@"
+            return new()
+            {
+                ReadSql = $@"
 select i.*,
     ProjectName=p.Name,
     ProgName=pp.Name,
     IssueTypeName=c.Name,
-    CreatorName=u2.Name
+    OwnerName=u.Name,
+    CreatorName=u2.Name,
+    IsWatch=case when w.Id is null then 0 else 1 end
 from dbo.Issue i
 join dbo.Project p on i.ProjectId=p.Id
 join dbo.PrjProg pp on i.ProgId=pp.Id
+join dbo.XpUser u on i.OwnerId=u.Id
 join dbo.XpUser u2 on i.Creator=u2.Id
 join dbo.XpCode c on c.Type='{_Xp.IssueType}' and i.IssueType=c.Value
-order by i.Created desc
+left join dbo.IssueWatch w on i.Id=w.IssueId and w.WatcherId='{_Fun.UserId()}'
+/* 判斷是否追踪 */
+where ('{isWatch}'='' or ('{isWatch}'='1' and w.Id is not null) or ('{isWatch}'='0' and w.Id is null))
+order by p.Id, pp.Sort, i.Created desc
 ",
-            TableAs = "i",
-            Items = [
-                new() { Fid = "ProjectId" },
-                new() { Fid = "ProgId" },
-                new() { Fid = "WorkDate", Type = QitemTypeEnum.Date },
-                new() { Fid = "Created", Type = QitemTypeEnum.Date },
-                new() { Fid = "IssueType" },
-                new() { Fid = "Title", Op = ItemOpEstr.Like2 },
-                new() { Fid = "Creator" },
-            ],
-        };
+                TableAs = "i",
+                Items = [
+                    new() { Fid = "ProjectId" },
+                    new() { Fid = "ProgId" },
+                    new() { Fid = "WorkDate", Type = QitemTypeEnum.Date },
+                    new() { Fid = "Created", Type = QitemTypeEnum.Date },
+                    new() { Fid = "IssueType" },
+                    new() { Fid = "Title", Op = ItemOpEstr.Like2 },
+                    new() { Fid = "OwnerId" },
+                    //new() { Fid = "Creator" },
+                    new() { Fid = "IsFinish" },
+                ],
+            };
+        }
 
         public async Task<JObject?> GetPageA(string ctrl, DtDto dt)
         {
-            return await new CrudReadSvc().GetPageA(dto, dt, ctrl);
+            //底線欄位 _IsWatch 不會自動加入 sql, 手動調整
+            isWatch = _Json.GetFidStr(_Str.ToJson(dt.findJson), "_IsWatch", "");
+			return await new CrudReadSvc().GetPageA(GetDto(), dt, ctrl);
         }
 
+        //todo
         public async Task ExportA(string ctrl, JObject find)
         {
-            await _HttpExcel.ExportByReadA(ctrl, dto, find, 
+            await _HttpExcel.ExportByReadA(ctrl, GetDto(), find, 
                 "Issue.xlsx", _Xp.GetTplPath("Issue.xlsx", true), 1);
         }
 

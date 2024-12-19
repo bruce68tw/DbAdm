@@ -22,7 +22,7 @@ namespace DbAdm.Services
         {
             return await _Db.TableToCodesA("XpUser", db);
         }
-        public static async Task<List<IdStrDto>?> ProjectsA(Db? db = null)
+		public static async Task<List<IdStrDto>?> ProjectsA(Db? db = null)
         {
             return await _Db.TableToCodesA("Project", db);
         }
@@ -120,8 +120,8 @@ order by Sort
         public static List<IdStrDto> YesNos()
         {
             return [
-                new(){ Id = "1", Str = "Yes" },
-                new(){ Id = "0", Str = "No" },
+                new(){ Id = "1", Str = "是" },
+                new(){ Id = "0", Str = "否" },
             ];
         }
 

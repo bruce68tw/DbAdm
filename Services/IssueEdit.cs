@@ -20,16 +20,19 @@ namespace DbAdm.Services
                 PkeyFid = "Id",
                 ReadSql = $@"
 select i.*,
+	WatchId=w.Id,
     ProjectName=p.Name,
     ProgName=pp.Name,
-    CreatorName=u.Name,
+    CreatorName=u2.Name,
     ReviserName=u3.Name,
     {_Fun.FidUser}=u.Id, {_Fun.FidDept}=u.DeptId
 from dbo.Issue i
 join dbo.Project p on i.ProjectId=p.Id
 join dbo.PrjProg pp on i.ProgId=pp.Id
-join dbo.XpUser u on i.Creator=u.Id
+join dbo.XpUser u on i.OwnerId=u.Id
+join dbo.XpUser u2 on i.Creator=u2.Id
 left join dbo.XpUser u3 on i.Reviser=u3.Id
+left join dbo.IssueWatch w on i.Id=w.IssueId and w.WatcherId='{_Fun.UserId()}'
 where i.Id=@Id
 ",
                 Items =
@@ -40,9 +43,14 @@ where i.Id=@Id
 					new() { Fid = "IssueType" },
 					new() { Fid = "WorkDate" },
 					new() { Fid = "WorkHours" },
+					new() { Fid = "IsFinish" },
 					new() { Fid = "Title" },
 					new() { Fid = "Note" },
-                ],
+					new() { Fid = "OwnerId" },
+					new() { Fid = "RptDeptId" },
+					new() { Fid = "RptUser" },
+					new() { Fid = "RptType" },
+				],
                 Childs = [
                     new()
 					{
@@ -68,7 +76,7 @@ where i.Id=@Id
 select r.*,
 	i.Title
 from dbo.IssueRelat r
-left join dbo.Issue i on r.IssueId=i.Id
+left join dbo.Issue i on r.SourceIssue=i.Id
 where r.IssueId=@Id
 ",						
 						Items =
@@ -76,6 +84,7 @@ where r.IssueId=@Id
 							new() { Fid = "Id" },
 							new() { Fid = "IssueId" },
                             new() { Fid = "Title", Read = true },
+                            new() { Fid = "SourceIssue" },
                         ],
 					},
 				],

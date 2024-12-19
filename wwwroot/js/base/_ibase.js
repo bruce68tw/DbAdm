@@ -40,6 +40,7 @@ var _ibase = {
     },
     setO: function (obj, value) {
         obj.val(value);
+        obj.text(value);    //for XiRead
     },
 
     //set edit status

@@ -20,7 +20,9 @@ namespace DbAdm.Controllers
             {
                 ViewBag.Projects = await _XpCode.ProjectsA(db);
                 ViewBag.IssueTypes = await _XpCode.IssueTypesA(db);
-                ViewBag.Users = await _XpCode.UsersA(db);
+				ViewBag.Depts = await _XpCode.DeptsA(db);
+				ViewBag.Users = await _XpCode.UsersA(db);
+                ViewBag.YesNos = _XpCode.YesNos();
             }
             return View();
         }
@@ -93,5 +95,23 @@ namespace DbAdm.Controllers
 				: null;
 		}
 
-	}//class
+        //加入追踪
+        [HttpPost]
+        public async Task<string> AddWatch(string issueId)
+        {
+            return await _Db.ExecSqlA($@"
+insert into dbo.IssueWatch(Id,IssueId,WatcherId) values (
+    '{_Str.NewId()}',@IssueId, '{_Fun.UserId()}'
+)", ["IssueId", issueId]) == 1 ? "1" : "0";
+        }
+
+        //取消追踪
+        [HttpPost]
+        public async Task<string> DelWatch(string issueId)
+        {
+            return await _Db.ExecSqlA($@"
+delete dbo.IssueWatch where IssueId=@IssueId and WatcherId='{_Fun.UserId()}'
+", ["IssueId", issueId]) == 1 ? "1" : "0";
+        }
+    }//class
 }

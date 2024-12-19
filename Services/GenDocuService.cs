@@ -45,7 +45,7 @@ namespace DbAdm.Services
                          );
 
             //add where condition
-            if (!_Str.IsEmpty(projectId))
+            if (_Str.NotEmpty(projectId))
                 query = query.Where(a => a.t.ProjectId == projectId);
             if (tableIds != null && tableIds.Length > 0)
                 query = query.Where(a => tableIds.Contains(a.t.Id));

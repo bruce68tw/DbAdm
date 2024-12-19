@@ -191,7 +191,7 @@ namespace DbAdm.Services
                 {
                     error = ex.Message;
                 }
-                if (!_Str.IsEmpty(error))
+                if (_Str.NotEmpty(error))
                     return error;
             }
 
@@ -237,7 +237,7 @@ namespace DbAdm.Services
                     rSitemStrs.Add(RServiceItemStr(qitem));
 
                     //set IsGroup, IsGroupStart, IsGroupEnd
-                    if (!_Str.IsEmpty(qitem.PosGroup))
+                    if (_Str.NotEmpty(qitem.PosGroup))
                     {
                         qitem.IsGroupStart = (qitem.PosGroup != posGroup);
                         qitem.IsGroup = qitem.IsGroupStart || (qitem.PosGroup == posGroup);
@@ -880,7 +880,7 @@ namespace DbAdm.Services
                 return "";
 
             //@await Component.InvokeAsync("XgTh", new { title = "XXX", required = true })
-            return (item.Required || !_Str.IsEmpty(item.PlaceHolder))
+            return (item.Required || _Str.NotEmpty(item.PlaceHolder))
                 ? CompStart("XgTh") +
                     ConcatViewCols(
                         ViewTitle(item.Name),
@@ -1019,7 +1019,7 @@ namespace DbAdm.Services
             var result = "";
             foreach (var col in cols)
             {
-                if (!_Str.IsEmpty(col))
+                if (_Str.NotEmpty(col))
                     result += col + CommaSep;
             }
 

@@ -385,7 +385,7 @@ function Flow(boxId, mNode, mLine) {
             PosY: 100,
         };
 
-        var node = this.mNode.addRow(this.divFlowBox, this._setNodeClass(row));
+        var node = this.mNode.addRow(this._setNodeClass(row), this.divFlowBox);
         this._setNodeEvent(node);   //set node event
     };
 

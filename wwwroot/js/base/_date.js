@@ -1,4 +1,5 @@
 ﻿/**
+ * 日期/時間格式包含: 資料庫、c#/js(兩者設定為一致)、UI
  * for date related
  * short name:
  *  1.date: moment date
@@ -20,13 +21,25 @@ var _date = {
     },
 
     /**
-     * ??get today date string in UI format
-    uiToday: function(){
-        //var date = new Date();
-        //return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
-        return moment().format(_BR.MmDateFmt);
-    },
+     * get today date string in UI format
      */
+    uiToday: function(){
+        var mm = moment();
+        return _date.mmToUiDate(mm);
+    },
+
+    /**
+     * get this week monday in UI format
+     */
+    uiWeekMonday: function () {
+        var mm = moment().day(1)
+        return _date.mmToUiDate(mm);
+    },
+
+    uiWeekFriday: function () {
+        var mm = moment().day(5)
+        return _date.mmToUiDate(mm);
+    },
 
     /**
      * get current year, ex: 2021
@@ -35,21 +48,33 @@ var _date = {
         return (new Date()).getFullYear();
     },
 
+    mmToUiDate: function (mm) {
+        return mm.format(_BR.MmUiDateFmt);
+    },
+
+    mmToUiDt: function (mm) {
+        return mm.format(_BR.MmUiDtFmt);
+    },
+
+    mmToUiDt2: function (mm) {
+        return mm.format(_BR.MmUiDt2Fmt);
+    },
+
     /**
      * js date string to ui date string
      * param ds {string} js date string
      * return {string} ui date string
      */ 
-    mmToUiDate: function (ds) {
-        return (_str.isEmpty(ds))
+    dtsToFormat: function (ds) {
+        return _str.isEmpty(ds)
             ? ''
-            : moment(ds, _fun.MmDateFmt).format(_BR.MmUiDateFmt);
+            : _date.mmToUiDate(moment(ds, _fun.MmDateFmt));
     },
 
-    mmToUiDt: function (dts) {
-        return (_str.isEmpty(dts))
+    dtsToUiDt: function (dts) {
+        return _str.isEmpty(dts)
             ? ''
-            : moment(dts, _fun.MmDtFmt).format(_BR.MmUiDtFmt);
+            : _date.mmToUiDt(moment(dts, _fun.MmDtFmt));
     },
 
     /**
@@ -57,26 +82,26 @@ var _date = {
      * param dts {string} js datetime string
      * return {string} ui datetime2 string(no second)
      */
-    mmToUiDt2: function (dts) {
-        return (_str.isEmpty(dts))
+    dtsToUiDt2: function (dts) {
+        return _str.isEmpty(dts)
             ? ''
-            : moment(dts, _fun.MmDtFmt).format(_BR.MmUiDt2Fmt);
+            : _date.mmToUiDt2(moment(dts, _fun.MmDtFmt));
     },
 
-    mmToFormat: function (dts, format) {
+    dtsToFormat: function (dts, format) {
         return (_str.isEmpty(dts))
             ? ''
             : moment(dts, _fun.MmDtFmt).format(format);
     },
 
     //get datetime value for compare
-    mmToValue: function (dts) {
+    dtsToValue: function (dts) {
         return (_str.isEmpty(dts))
             ? 0
             : moment(dts, _fun.MmDtFmt).valueOf();
     },
 
-    mmToMoment: function (dts) {
+    dtsToMoment: function (dts) {
         return (_str.isEmpty(dts))
             ? null
             : moment(dts, _fun.MmDtFmt);
@@ -148,8 +173,8 @@ var _date = {
 
     /**
      * get month difference by date
-     * param dt1 {string} start date
-     * param dt2 {string} end date
+     * param dt1 {moment obj} start date
+     * param dt2 {moment obj} end date
      * return {int} 
      */ 
     getMonthDiffByDate: function (dt1, dt2) {
@@ -159,11 +184,12 @@ var _date = {
 
     /**
      * js date string add year
+     * jsDateAddYear -> dsAddYear
      * param ds {string} js date string
      * param year {int} year to add
      * return {string} new js date string
      */ 
-    jsDateAddYear: function (ds, year) {
+    dsAddYear: function (ds, year) {
         //return (parseInt(date.substring(0, 4)) + year) + date.substring(4);
         return moment(ds, _fun.MmDtFmt).add(year, 'y').format(_fun.MmDtFmt);
     },
