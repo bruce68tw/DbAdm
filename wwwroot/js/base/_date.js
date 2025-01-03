@@ -42,6 +42,22 @@ var _date = {
     },
 
     /**
+     * get this month first day
+     */
+    uiMonthDay1: function () {
+        var mm = moment().startOf('month');
+        return _date.mmToUiDate(mm);
+    },
+
+    /**
+     * get this month last day
+     */
+    uiMonthDayLast: function () {
+        var mm = moment().endOf('month');
+        return _date.mmToUiDate(mm);
+    },
+
+    /**
      * get current year, ex: 2021
      */ 
     nowYear: function() {

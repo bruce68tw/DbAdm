@@ -208,6 +208,7 @@
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "工作標題", Fid = "Title" })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料種類", Fid = "IssueType", Rows = ViewBag.IssueTypes })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "已結案", Fid = "IsFinish", Rows = ViewBag.YesNos })
             @* 底線欄位 _IsWatch 在後端用程式調整sql *@

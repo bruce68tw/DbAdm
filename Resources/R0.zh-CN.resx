@@ -294,4 +294,7 @@
   <data name="MenuIssue" xml:space="preserve">
     <value>问题维护</value>
   </data>
+  <data name="MenuRptIssue" xml:space="preserve">
+    <value>报表-专案工作类别合计</value>
+  </data>
 </root>

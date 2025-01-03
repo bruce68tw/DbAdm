@@ -47,7 +47,7 @@ where i.Id=@Id
 					new() { Fid = "Title" },
 					new() { Fid = "Note" },
 					new() { Fid = "OwnerId" },
-					new() { Fid = "RptDeptId" },
+					new() { Fid = "RptDeptCode" },
 					new() { Fid = "RptUser" },
 					new() { Fid = "RptType" },
 				],

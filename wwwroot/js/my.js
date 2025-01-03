@@ -1544,6 +1544,22 @@ var _date = {
     },
 
     /**
+     * get this month first day
+     */
+    uiMonthDay1: function () {
+        var mm = moment().startOf('month');
+        return _date.mmToUiDate(mm);
+    },
+
+    /**
+     * get this month last day
+     */
+    uiMonthDayLast: function () {
+        var mm = moment().endOf('month');
+        return _date.mmToUiDate(mm);
+    },
+
+    /**
      * get current year, ex: 2021
      */ 
     nowYear: function() {
@@ -1567,13 +1583,13 @@ var _date = {
      * param ds {string} js date string
      * return {string} ui date string
      */ 
-    mmDsToUiDate: function (ds) {
+    dtsToFormat: function (ds) {
         return _str.isEmpty(ds)
             ? ''
             : _date.mmToUiDate(moment(ds, _fun.MmDateFmt));
     },
 
-    mmDtsToUiDt: function (dts) {
+    dtsToUiDt: function (dts) {
         return _str.isEmpty(dts)
             ? ''
             : _date.mmToUiDt(moment(dts, _fun.MmDtFmt));
@@ -1584,26 +1600,26 @@ var _date = {
      * param dts {string} js datetime string
      * return {string} ui datetime2 string(no second)
      */
-    mmDtsToUiDt2: function (dts) {
+    dtsToUiDt2: function (dts) {
         return _str.isEmpty(dts)
             ? ''
             : _date.mmToUiDt2(moment(dts, _fun.MmDtFmt));
     },
 
-    mmDtsToFormat: function (dts, format) {
+    dtsToFormat: function (dts, format) {
         return (_str.isEmpty(dts))
             ? ''
             : moment(dts, _fun.MmDtFmt).format(format);
     },
 
     //get datetime value for compare
-    mmDtsToValue: function (dts) {
+    dtsToValue: function (dts) {
         return (_str.isEmpty(dts))
             ? 0
             : moment(dts, _fun.MmDtFmt).valueOf();
     },
 
-    mmDtsToMoment: function (dts) {
+    dtsToMoment: function (dts) {
         return (_str.isEmpty(dts))
             ? null
             : moment(dts, _fun.MmDtFmt);
@@ -1675,8 +1691,8 @@ var _date = {
 
     /**
      * get month difference by date
-     * param dt1 {string} start date
-     * param dt2 {string} end date
+     * param dt1 {moment obj} start date
+     * param dt2 {moment obj} end date
      * return {int} 
      */ 
     getMonthDiffByDate: function (dt1, dt2) {
@@ -1686,11 +1702,12 @@ var _date = {
 
     /**
      * js date string add year
+     * jsDateAddYear -> dsAddYear
      * param ds {string} js date string
      * param year {int} year to add
      * return {string} new js date string
      */ 
-    jsDateAddYear: function (ds, year) {
+    dsAddYear: function (ds, year) {
         //return (parseInt(date.substring(0, 4)) + year) + date.substring(4);
         return moment(ds, _fun.MmDtFmt).add(year, 'y').format(_fun.MmDtFmt);
     },
@@ -1773,7 +1790,7 @@ var _edit = {
             if (value != old) {
                 //date/dt old value has more length
                 if ((ftype === 'date' || ftype === 'dt') &&
-                    _date.mmDtsToValue(value) === _date.mmDtsToValue(old))
+                    _date.dtsToValue(value) === _date.dtsToValue(old))
                     continue;
 
                 result[fid] = value;
@@ -2842,7 +2859,8 @@ var _idate = $.extend({}, _ibase, {
      * param value {string} format: _fun.MmDateFmt
      */
     setO: function (obj, value) {
-        _idate._boxSetDate(_idate._objToBox(obj), _date.mmDsToUiDate(value));
+        //_idate._boxSetDate(_idate._objToBox(obj), _date.dtsToFormat(value));
+        _idate._boxSetDate(_idate._objToBox(obj), value);
     },
 
     setEditO: function (obj, status) {
@@ -2917,6 +2935,8 @@ var _idate = $.extend({}, _ibase, {
 
     _boxSetDate: function (box, date) {
         box.datepicker('update', date);
+        //box.datepicker('update', '2024-12-30');
+        //box.val().datepicker('update', date('2024-12-25'));
     },
 
     _boxGetInput: function (box) {
@@ -3426,7 +3446,7 @@ var _input = {
             case 'read':
                 var format = obj.data('format');
                 if (_str.notEmpty(format) && _str.notEmpty(_BR[format]))
-                    value = _date.mmDtsToFormat(value, _BR[format]);
+                    value = _date.dtsToFormat(value, _BR[format]);
                 _iread.setO(obj, value);
                 break;
             case 'link':

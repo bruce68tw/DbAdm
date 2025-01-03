@@ -294,4 +294,7 @@
   <data name="MenuIssue" xml:space="preserve">
     <value>Issue</value>
   </data>
+  <data name="MenuRptIssue" xml:space="preserve">
+    <value>Report Issue</value>
+  </data>
 </root>

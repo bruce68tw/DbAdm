@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>6b53b027-76c0-4cf7-b55a-c17f2031c2ba</UserSecretsId>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,6 @@
     <Compile Remove="wwwroot\locale_old\**" />
     <Compile Remove="wwwroot_old2\**" />
     <Compile Remove="wwwroot_old\**" />
-    <Compile Remove="_data\**" />
     <Compile Remove="_log\**" />
     <Compile Remove="_source\**" />
     <Compile Remove="_source_old\**" />
@@ -22,7 +22,6 @@
     <Content Remove="wwwroot\locale_old\**" />
     <Content Remove="wwwroot_old2\**" />
     <Content Remove="wwwroot_old\**" />
-    <Content Remove="_data\**" />
     <Content Remove="_log\**" />
     <Content Remove="_source\**" />
     <Content Remove="_source_old\**" />
@@ -32,7 +31,6 @@
     <EmbeddedResource Remove="wwwroot\locale_old\**" />
     <EmbeddedResource Remove="wwwroot_old2\**" />
     <EmbeddedResource Remove="wwwroot_old\**" />
-    <EmbeddedResource Remove="_data\**" />
     <EmbeddedResource Remove="_log\**" />
     <EmbeddedResource Remove="_source\**" />
     <EmbeddedResource Remove="_source_old\**" />
@@ -42,7 +40,6 @@
     <None Remove="wwwroot\locale_old\**" />
     <None Remove="wwwroot_old2\**" />
     <None Remove="wwwroot_old\**" />
-    <None Remove="_data\**" />
     <None Remove="_log\**" />
     <None Remove="_source\**" />
     <None Remove="_source_old\**" />
@@ -70,6 +67,7 @@
     <None Remove="Startup.cs_old" />
     <None Remove="Views\Shared\Error.cshtml_old" />
     <None Remove="_image\noImage.jpg" />
+    <None Remove="_template\zh-TW\RptIssue.xlsx" />
   </ItemGroup>
 
   <ItemGroup>

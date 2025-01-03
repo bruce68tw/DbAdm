@@ -17,7 +17,8 @@ var _idate = $.extend({}, _ibase, {
      * param value {string} format: _fun.MmDateFmt
      */
     setO: function (obj, value) {
-        _idate._boxSetDate(_idate._objToBox(obj), _date.dtsToFormat(value));
+        //_idate._boxSetDate(_idate._objToBox(obj), _date.dtsToFormat(value));
+        _idate._boxSetDate(_idate._objToBox(obj), value);
     },
 
     setEditO: function (obj, status) {
@@ -92,6 +93,8 @@ var _idate = $.extend({}, _ibase, {
 
     _boxSetDate: function (box, date) {
         box.datepicker('update', date);
+        //box.datepicker('update', '2024-12-30');
+        //box.val().datepicker('update', date('2024-12-25'));
     },
 
     _boxGetInput: function (box) {

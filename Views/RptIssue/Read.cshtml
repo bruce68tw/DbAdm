@@ -1,0 +1,78 @@
+﻿<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+
+    var _me = {
+        init: function () {
+            //datatable config
+            var config = {
+                paginate: false, //不顯示分頁, 顯示全部資料
+                pageLength: 500,
+                columns: [
+                    { data: 'ProjectName', sort: false },
+                    { data: 'IssueTypeName' },
+                    { data: 'RowLen' },
+                ],
+            };
+
+            //initial
+            _crudR.init(config);
+
+        },
+
+        onNowWeek: function () {
+            var box = _me.rform;
+            _crudR.onResetFind();   //reset
+            _idate.set('WorkDate', _date.uiWeekMonday(), box);
+            _idate.set('WorkDate2', _date.uiWeekFriday(), box);
+            _crudR.onFind();
+        },
+
+        onNowMonth: function () {
+            var box = _me.rform;
+            _crudR.onResetFind();   //reset
+            _idate.set('WorkDate', _date.uiMonthDay1(), box);
+            _idate.set('WorkDate2', _date.uiMonthDayLast(), box);
+            _crudR.onFind();
+        },
+
+    }; //class
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "報表-專案工作類別合計" } })
+<div class="xg-prog">
+    <div id="divRead">
+		<form id='formRead' class='xg-form'>
+            <div class="row">
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true, InputAttr = "onchange=_me.onChgProject(false)" })
+                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+            </div>
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料種類", Fid = "IssueType", Rows = ViewBag.IssueTypes })
+            <div class="row">
+                <div class="col-md-2 xg-label">工作日期</div>
+                <div class="col-md-10 xg-input">
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate", InRow = true, BoxClass = "xg-inline" })
+                    <span>～</span>
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate2", InRow = true, BoxClass = "xg-inline" })
+                </div>
+            </div>
+        </form>
+
+		<div class='xg-btns-box'>
+            @await Component.InvokeAsync("XgExport")
+            <button type="button" class="btn xg-btn" onclick="_me.onNowWeek()">本週資料</button>
+            <button type="button" class="btn xg-btn" onclick="_me.onNowMonth()">本月資料</button>
+        </div>
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+					<th>專案</th>
+                    <th>資料種類</th>
+                    <th>資料筆數</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>

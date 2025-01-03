@@ -20,7 +20,7 @@ namespace DbAdm.Controllers
             {
                 ViewBag.Projects = await _XpCode.ProjectsA(db);
                 ViewBag.IssueTypes = await _XpCode.IssueTypesA(db);
-				ViewBag.Depts = await _XpCode.DeptsA(db);
+				//ViewBag.Depts = await _XpCode.DeptsA(db);
 				ViewBag.Users = await _XpCode.UsersA(db);
                 ViewBag.YesNos = _XpCode.YesNos();
             }

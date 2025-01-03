@@ -4,12 +4,7 @@ using Base.Models;
 using Base.Services;
 using BaseWeb.Services;
 using DbAdm.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Data.Common;
 using System.Data.SqlClient;
 
@@ -67,8 +62,10 @@ services.AddSession(opts =>
 
 //cors
 string[] origins = _Fun.Config.AllowOrigins.Split(',');
-services.AddCors(opts => {
-    opts.AddDefaultPolicy(a => {
+services.AddCors(opts =>
+{
+    opts.AddDefaultPolicy(a =>
+    {
         a.WithOrigins(origins);
         a.AllowAnyHeader();
         a.AllowAnyMethod();
