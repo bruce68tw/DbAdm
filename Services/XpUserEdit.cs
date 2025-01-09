@@ -14,31 +14,31 @@ namespace DbAdm.Services
 				Table = "dbo.XpUser",
                 PkeyFid = "Id",
                 Col4 = null,
-                Items = new EitemDto[] 
-				{
-					new() { Fid = "Id" },
+                Items =
+                [
+                    new() { Fid = "Id" },
 					new() { Fid = "Account" },
 					new() { Fid = "Name" },
-					new() { Fid = "Pwd" },
+					//new() { Fid = "Pwd" },
 					new() { Fid = "DeptId" },
 					new() { Fid = "Status" },
-                },
-                Childs = new EditDto[]
-                {
+                ],
+                Childs =
+                [
                     new EditDto
                     {
                         Table = "dbo.XpUserRole",
                         PkeyFid = "Id",
                         FkeyFid = "UserId",
                         Col4 = null,
-                        Items = new EitemDto[] 
-						{
-							new() { Fid = "Id" },
+                        Items =
+                        [
+                            new() { Fid = "Id" },
 							new() { Fid = "UserId" },
 							new() { Fid = "RoleId", Required = true },
-                        },
+                        ],
                     },
-                },
+                ],
             };
         }
 

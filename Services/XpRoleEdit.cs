@@ -14,13 +14,13 @@ namespace DbAdm.Services
 				Table = "dbo.XpRole",
                 PkeyFid = "Id",
                 Col4 = null,
-                Items = new EitemDto[] 
-				{
-					new() { Fid = "Id" },
+                Items =
+                [
+                    new() { Fid = "Id" },
 					new() { Fid = "Name" },
-                },
-                Childs = new EditDto[]
-                {
+                ],
+                Childs =
+                [
                     new EditDto
                     {
                         ReadSql = @"
@@ -36,12 +36,12 @@ order by u.Account
                         PkeyFid = "Id",
                         FkeyFid = "RoleId",
                         Col4 = null,
-                        Items = new EitemDto[]
-                        {
+                        Items =
+                        [
                             new() { Fid = "Id" },
                             new() { Fid = "UserId", Required = true },
                             new() { Fid = "RoleId" },
-                        },
+                        ],
                     },
                     new EditDto
                     {
@@ -57,9 +57,9 @@ order by p.Sort
                         FkeyFid = "RoleId",
                         //OrderBy = "",
                         Col4 = null,
-                        Items = new EitemDto[] 
-						{
-							new() { Fid = "Id" },
+                        Items =
+                        [
+                            new() { Fid = "Id" },
 							new() { Fid = "RoleId" },
 							new() { Fid = "ProgId", Required = true },
                             new() { Fid = "FunCreate" },
@@ -69,9 +69,9 @@ order by p.Sort
                             new() { Fid = "FunPrint" },
                             new() { Fid = "FunExport" },
                             new() { Fid = "FunView" },
-                        },
+                        ],
                     },
-                },
+                ],
             };
         }
 

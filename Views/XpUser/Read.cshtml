@@ -42,7 +42,9 @@
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Account"].Value, Fid = "Account", Required = true, MaxLen = 20 })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["UserName"].Value, Fid = "Name", Required = true, MaxLen = 20 })
+            @*
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Pwd"].Value, Fid = "Pwd", IsPwd = true, MaxLen = 32 })
+            *@
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["DeptName"].Value, Fid = "DeptId", Rows = (List<IdStrDto>)ViewBag.Depts })
             @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R0["Status"].Value, Fid = "Status", Label = R0["Active"].Value })
         </form>

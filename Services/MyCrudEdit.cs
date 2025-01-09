@@ -13,8 +13,8 @@ namespace DbAdm.Services
             {
                 Table = "dbo.Crud",
                 PkeyFid = "Id",
-                Col4 = new string[] { "", "Created", "", "Revised"},
-                Items = new EitemDto[] {
+                Col4 = ["", "Created", "", "Revised"],
+                Items = [
                     new() { Fid = "Id" },
                     new() { Fid = "ProjectId", Required = true },
                     new() { Fid = "ProgCode", Required = true },
@@ -30,9 +30,9 @@ namespace DbAdm.Services
                     new() { Fid = "HasReset" },
                     new() { Fid = "AuthType", Required = true },
                     new() { Fid = "Status", Required = true },
-                },
-                Childs = new EditDto[]
-                {
+                ],
+                Childs =
+                [
                     new EditDto
                     {
                         //all child readSql use 'in'
@@ -49,7 +49,7 @@ order by a.Sort
                         FkeyFid = "CrudId",
                         OrderBy = "Sort",
                         Col4 = null,
-                        Items = new EitemDto[] {
+                        Items = [
                             new() { Fid = "Id" },
                             new() { Fid = "CrudId" },
                             new() { Fid = "ColumnId", Required = true },
@@ -63,7 +63,7 @@ order by a.Sort
                             new() { Fid = "LayoutCols" },
                             //new() { Fid = "ExtInfo" },
                             new() { Fid = "Sort", Required = true },
-                        },
+                        ],
                     },
                     new EditDto
                     {
@@ -78,7 +78,7 @@ order by a.Sort
                         FkeyFid = "CrudId",
                         OrderBy = "Sort",
                         Col4 = null,
-                        Items = new EitemDto[] {
+                        Items = [
                             new() { Fid = "Id" },
                             new() { Fid = "CrudId" },
                             new() { Fid = "ColumnCode", Required = true },
@@ -87,7 +87,7 @@ order by a.Sort
                             new() { Fid = "RitemType", Required = true },
                             //new() { Fid = "ExtInfo" },
                             new() { Fid = "Sort", Required = true },
-                        },
+                        ],
                     },
                     new EditDto
                     {
@@ -96,7 +96,7 @@ order by a.Sort
                         FkeyFid = "CrudId",
                         OrderBy = "Sort",
                         Col4 = null,
-                        Items = new EitemDto[] {
+                        Items = [
                             new() { Fid = "Id" },
                             new() { Fid = "CrudId" },
                             new() { Fid = "TableId", Required = true },
@@ -107,9 +107,9 @@ order by a.Sort
                             new() { Fid = "HalfWidth" },
                             new() { Fid = "OrderBy" },
                             new() { Fid = "Sort", Required = true },
-                        },
-                        Childs = new []
-                        {
+                        ],
+                        Childs =
+                        [
                             //注意: 第2層child ReadSql where 使用 xxx in ({0}) 
                             new EditDto
                             {
@@ -126,7 +126,7 @@ order by a.Sort
                                 FkeyFid = "EtableId",
                                 OrderBy = "Sort",
                                 Col4 = null,
-                                Items = new EitemDto[] {
+                                Items = [
                                     new() { Fid = "Id" },
                                     new() { Fid = "EtableId" },
                                     new() { Fid = "ColumnId", Required = true },
@@ -143,11 +143,11 @@ order by a.Sort
                                     new() { Fid = "CheckType" },
                                     new() { Fid = "CheckData" },
                                     new() { Fid = "Sort" },    //by backend
-                                },
+                                ],
                             },
-                        },
+                        ],
                     },
-                },
+                ],
             };      
         }
 
