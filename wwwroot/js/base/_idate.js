@@ -1,19 +1,24 @@
-﻿//for date input (bootstrap-datepicker)
+﻿//使用 box 來操作 datepicker !!
+//for date input (bootstrap-datepicker)
 //_idt drive from _idate
 var _idate = $.extend({}, _ibase, {
 
-    //constant
+    //find box, 同時用來執行日期欄位初始化
     BoxFilter: '.date',
 
     //=== get/set start ===
-    //get ymd with format _fun.MmDateFmt
+    /**
+     * get ymd with format _fun.MmDateFmt
+     * param obj {object} date input object
+     * return mm date
+     */
     getO: function (obj) {
         return _date.uiToMmDate(obj.val());
     },
 
     /**
      * set input value
-     * param obj {object} date object
+     * param obj {object} date input object
      * param value {string} format: _fun.MmDateFmt
      */
     setO: function (obj, value) {
@@ -21,6 +26,10 @@ var _idate = $.extend({}, _ibase, {
         _idate._boxSetDate(_idate._objToBox(obj), value);
     },
 
+    /**
+     * set edit status
+     * param obj {object} date input object
+     */
     setEditO: function (obj, status) {
         obj.prop('disabled', !status);
     },
@@ -43,8 +52,14 @@ var _idate = $.extend({}, _ibase, {
             language: _fun.locale,
             autoclose: true,
             showOnFocus: false,
+            todayHighlight: true,   // 高亮顯示今天的日期
             //startDate: '-3d'            
         }).on('changeDate', function (e) {
+            //datepicker(使用box)和 validation(使用input)是2個不同的機制
+            //$(this).focus();
+            //$(this).valid();
+            //var aa = 'aa';
+            _idate._boxGetInput($(this)).valid();
             //$(_idate).datepicker('hide');
             //傳入 fid, value
             /* temp remark
@@ -70,8 +85,11 @@ var _idate = $.extend({}, _ibase, {
     onReset: function (btn) {
         //check input status first
         var box = _idate._elmToBox(btn);
-        if (_idate.getEditO(_idate._boxGetInput(box)))
+        var input = _idate._boxGetInput(box);
+        if (_idate.getEditO(input)) {
             _idate._boxSetDate(box, '');
+            //input.trigger('change');
+        }
     },    
 
     //get edit status, return bool
@@ -81,7 +99,7 @@ var _idate = $.extend({}, _ibase, {
 
     //=== private function below ===
     /**
-     * element to date box
+     * input element to date box
      * return {object}
      */
     _elmToBox: function (elm) {
@@ -93,6 +111,13 @@ var _idate = $.extend({}, _ibase, {
 
     _boxSetDate: function (box, date) {
         box.datepicker('update', date);
+        //var input = _idate._boxGetInput(box);
+        //input.datepicker('update', date);
+        // 手動觸發 changeDate 事件
+        box.trigger({
+            type: 'changeDate',
+            date: date // 獲取更新後的日期物件
+        });
         //box.datepicker('update', '2024-12-30');
         //box.val().datepicker('update', date('2024-12-25'));
     },

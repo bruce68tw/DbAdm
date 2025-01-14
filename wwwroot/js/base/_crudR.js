@@ -355,7 +355,7 @@ var _crudR = {
      * param fid {string} fid
      */
     onCheckAll: function (me, box, fid) {
-        _icheck.setF(_fun.fidFilter(fid) + ':not(:disabled)', _icheck.checkedO($(me)), box);
+        _icheck.setF(_input.fidFilter(fid) + ':not(:disabled)', _icheck.checkedO($(me)), box);
     },
 
     /**

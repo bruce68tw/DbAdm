@@ -96,10 +96,10 @@ var _edit = {
      */
     setFidTypeVars: function (me, box) {
         var fidTypes = [];
-        box.find(_fun.fidFilter()).each(function (i, item) {
+        box.find(_input.fidFilter()).each(function (i, item) {
             var obj = $(item);
             var j = i * 2;
-            fidTypes[j] = _fun.getFid(obj);
+            fidTypes[j] = _input.getFid(obj);
             fidTypes[j + 1] = _input.getType(obj);
         });
         me.fidTypes = fidTypes;
@@ -117,7 +117,7 @@ var _edit = {
         //var me = this;  //use outside .each()
         me.fileFids = [];      //upload file fid array
         box.find('[data-type=file]').each(function (index, item) {
-            me.fileFids[index] = _fun.getFid($(item));
+            me.fileFids[index] = _input.getFid($(item));
         });
         me.fileLen = me.fileFids.length;
         me.hasFile = me.fileFids.length > 0; //has input file or not

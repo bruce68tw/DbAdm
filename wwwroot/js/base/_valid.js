@@ -29,22 +29,24 @@ var _valid = {
                 error.insertAfter(_valid._getBox($(elm)));
                 return false;
             },
+            //顯示validation錯誤
             highlight: function (elm, errorClass, validClass) {
                 var me = $(elm);
                 var box = _valid._getBox(me);
                 box.removeClass(validClass).addClass(errorClass);
-                var obj = _valid._getError(me);
-                if (obj != null)
-                    obj.show();
+                var errObj = _valid._getError(me);
+                if (errObj != null)
+                    errObj.show();
                 return false;
             },
+            //清除validation錯誤
             unhighlight: function (elm, errorClass, validClass) {
                 var me = $(elm);
                 var box = _valid._getBox(me);
                 box.removeClass(errorClass).addClass(validClass);
-                var obj = _valid._getError(me);
-                if (obj != null)
-                    obj.hide();
+                var errObj = _valid._getError(me);
+                if (errObj != null)
+                    errObj.hide();
                 return false;
             },
             /*
@@ -82,6 +84,29 @@ var _valid = {
         };
 
         return form.validate(config);
+    },
+
+    /**
+     * 使用 jquery validation方式顯示錯誤, 通知由後端傳回錯誤, 再前端顯示
+     * param fid{string} field id
+     * param msg{string} error msg
+     * param eform id{string} (optional for 多筆) 若為多筆則必須配合rowId找到fid
+     * param rowId{string} (optional for 多筆) row Id valud
+     */
+    showError: function (fid, msg, eformId, rowId) {
+        var eform = _str.isEmpty(eformId) ? _me.eform0 : $('#' + eformId);
+        /*
+        var input;
+        if (_str.isEmpty(rowId)) {
+            input = eform.find(_input.fidFilter(fid));
+        } else {
+            //多筆??
+        }
+        */
+
+        eform.validator.showErrors({
+            [fid]: msg
+        });
     },
 
     _getBox: function (obj) {

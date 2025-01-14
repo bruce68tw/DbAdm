@@ -1,14 +1,11 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseApi.Services;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
-	public class IssueEdit : BaseEditSvc
+    public class IssueEdit : BaseEditSvc
     {
         public IssueEdit(string ctrl) : base(ctrl) { }
 
@@ -16,6 +13,7 @@ namespace DbAdm.Services
         {
             return new()
 			{
+				FnValidate = Validate,
 				Table = "dbo.Issue",
                 PkeyFid = "Id",
                 ReadSql = $@"
@@ -91,7 +89,28 @@ where r.IssueId=@Id
             };
         }
 
-		public async Task<ResultDto> CreateA(JObject json, List<IFormFile> t00_FileName)
+        //檢查傳入資料 for Create, Update
+        private List<ErrorRowDto>? Validate(JObject json)
+        {
+			var row = _Json.GetRows0(json);
+			var workDate = _Json.GetFidStr(row, "WorkDate");
+			if (_Str.IsEmpty(workDate))
+				return null;
+
+			//工作日期不可大於今天
+			var result = new List<ErrorRowDto>();
+            if (_Date.CsToDate(workDate) > _Date.Today())
+			{
+				result.Add(new ErrorRowDto()
+				{
+					Fid = "WorkDate",
+					Msg = "工作日期不可大於今天 !!",
+				});
+			}
+			return result;
+        }
+
+        public async Task<ResultDto> CreateA(JObject json, List<IFormFile> t00_FileName)
 		{
 			var service = EditService();
 			var result = await service.CreateA(json);

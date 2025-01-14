@@ -28,7 +28,7 @@ var _table = {
      * return {int} rows count
      */
     getRowCount: function (table, fid) {
-        return table.find(_fun.fidFilter(fid)).length;
+        return table.find(_input.fidFilter(fid)).length;
     },
 
 }; //class

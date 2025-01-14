@@ -126,6 +126,26 @@ var _input = {
         return (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
     },
 
+    /**
+     * get data-fid of object
+     * param obj {object}
+     * return fid string
+     */
+    getFid: function (obj) {
+        return obj.data('fid');
+    },
+
+    /**
+     * get data-fid string, ex: [data-fid=XXX]
+     * param fid {stirng} optional, if empty means find all inputs with data-fid
+     * return {string} filter
+     */
+    fidFilter: function (fid) {
+        return _str.isEmpty(fid)
+            ? '[data-fid]'
+            : '[data-fid=' + fid + ']';
+    },
+
 
     //#region remark code
     /**

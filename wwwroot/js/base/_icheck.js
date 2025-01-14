@@ -63,7 +63,7 @@ var _icheck = $.extend({}, _ibase, {
     getCheckeds: function (form, fid) {
         fid = fid || _icheck.Check0Id;
         var ary = [];
-        _obj.getF(_fun.fidFilter(fid) + ':checked', form).each(function (i) {
+        _obj.getF(_input.fidFilter(fid) + ':checked', form).each(function (i) {
             ary[i] = $(this).data('value');
         });
         return ary;

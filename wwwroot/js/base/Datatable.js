@@ -151,6 +151,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
                     this._start = this.dt.page.info().start;
                     this._keepStart = false; //reset
 
+                    //只顯示錯誤訊息, 不處理欄位 validation error
                     var errMsg = _ajax.resultToErrMsg(result);
                     if (errMsg) {
                         _tool.msg(errMsg);

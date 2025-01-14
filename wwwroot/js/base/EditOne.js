@@ -5,6 +5,9 @@
  *   _deletes {strings}: deleted key strings, seperate with ','
  *   _childs {json array}: child json array
  * 
+ * 屬性
+ *   validator: jquery vallidation object (EditMany同)
+ * 
  * custom function called by _crudE.js
  *   //void fnAfterLoadJson(json)
  *   //void fnAfterOpenEdit(fun, json): called after open edit form

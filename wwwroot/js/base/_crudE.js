@@ -500,7 +500,7 @@ var _crudE = {
         var action = isNew ? 'Create' : 'Update';
         var data = null;
         if (_crudE._hasFile()) {
-            //has files
+            //has files, use formData
             data = formData;
             data.append('json', _json.toStr(row));
             if (!isNew)
@@ -510,7 +510,7 @@ var _crudE = {
                 _crudE.afterSave(result);
             });
         } else {
-            //no files
+            //no file, use json
             data = { json: _json.toStr(row) };
             if (!isNew)
                 data.key = edit0.getKey();

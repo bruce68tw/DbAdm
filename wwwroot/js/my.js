@@ -18,7 +18,7 @@ var _ajax = {
             dataType: 'json',   //return type: ContentType,JsonResult
             //processData: false
         };
-        return await _ajax._callA(json, fnOk);
+        return await _ajax._rpcA(json, fnOk);
     },
 
     /**
@@ -39,7 +39,7 @@ var _ajax = {
             contentType: false, //false!! input type, default 'application/x-www-form-urlencoded; charset=UTF-8'
             processData: false, //false!! (jQuery only) if true it will convert input data to string, then get error !!
         };
-        return await _ajax._callA(json, fnOk, block);
+        return await _ajax._rpcA(json, fnOk, block);
     },
 
     /**
@@ -55,7 +55,7 @@ var _ajax = {
             data: data,
             dataType: 'text',   //backend return text(ContentResult with text)
         };
-        return await _ajax._callA(json, fnOk, block);
+        return await _ajax._rpcA(json, fnOk, block);
     },
 
     /**
@@ -71,7 +71,7 @@ var _ajax = {
             data: data,
             dataType: 'html',
         };
-        return await _ajax._callA(json, fnOk, block);
+        return await _ajax._rpcA(json, fnOk, block);
     },
 
     /**
@@ -85,7 +85,7 @@ var _ajax = {
             data: data,
             dataType: 'html',
         };
-        return await _ajax._callA(json, null, block);
+        return await _ajax._rpcA(json, null, block);
     },
 
     /**
@@ -108,7 +108,7 @@ var _ajax = {
             contentType: false,     //false!! 傳入參數編碼方式, default為 "application/x-www-form-urlencoded"
             processData: false,     //false!! if true it will convert input data to string, then get error !!
         };
-        _ajax._callA(json, fnOk, fnError);
+        _ajax._rpcA(json, fnOk, fnError);
     },
     */
 
@@ -123,7 +123,7 @@ var _ajax = {
      *   bool: fnOk not empty, return false when error
      *   json/any: fnOk is empty, return null when error
      */
-    _callA: async function (json, fnOk, block) {
+    _rpcA: async function (json, fnOk, block) {
         if (_var.isEmpty(block)) block = true;
         if (block) _fun.block();
 
@@ -131,17 +131,29 @@ var _ajax = {
         var status = false;
         var result = null;
         try {
-            _fun.jsonAddJwtHeader(json);
+            _jwt.jsonAddJwtHeader(json);
             result = await $.ajax(json);
             var errMsg = _ajax.resultToErrMsg(result);
-            if (!errMsg && typeof result === 'string' && result.substring(0, 2) === _fun.PreBrError) {
+            /*
+            if (!errMsg && typeof result === 'string' && _ajax._isBrError(result)) {
                 //case of string error
                 errMsg = _ajax.strToErrMsg(result);
             }
+            */
 
-            if (errMsg) {
-                result = null;
+            //先判斷error msg
+            if (_str.notEmpty(errMsg)) {
+                result = null;  //reset here !!
                 _tool.msg(errMsg);
+            } else if (result.ErrorRows && result.ErrorRows.length > 0) {
+                //有欄位驗證錯誤, //todo: 多筆區域是否顯示正確?
+                var errJson = {};
+                for (var i = 0; i < result.ErrorRows.length; i++) {
+                    var row = result.ErrorRows[i];
+                    var edit = _str.isEmpty(row.FormId) ? _me.edit0 : $('#' + row.FormId);
+                    errJson[row.Fid] = row.Msg;
+                    edit.validator.showErrors(errJson);
+                }
             } else if (fnOk) {
                 fnOk(result);
                 status = true;
@@ -210,6 +222,15 @@ var _ajax = {
      * also called by Datatable.js
      * param result {ResultDto} error msg
      */ 
+    _isBrError: function (result) {
+        return (result.length >= 2 && result.substring(0, 2) === _fun.PreBrError);
+    },
+
+    /**
+     * resultDto to error msg string
+     * also called by Datatable.js
+     * param result {ResultDto} error msg
+     */ 
     resultToErrMsg: function (result) {
         return (result.ErrorMsg)
             ? _ajax.strToErrMsg(result.ErrorMsg)
@@ -222,13 +243,14 @@ var _ajax = {
     strToErrMsg: function (str) {
         if (_str.isEmpty(str))
             return '';
-        if (str.substring(0, 2) !== _fun.PreBrError)
+        if (!_ajax._isBrError(result))
             return str;
 
+        //case of BR error msg
         var fid = str.substring(2);
         return (_BR[fid])
             ? _BR[fid]
-            : _str.format('_ajax._callA() failed, no BR Fid={0}', fid);
+            : _str.format('_ajax.strToErrMsg() failed, no BR Fid={0}', fid);
     },
 
 };//class
@@ -1075,7 +1097,7 @@ var _crudE = {
         var action = isNew ? 'Create' : 'Update';
         var data = null;
         if (_crudE._hasFile()) {
-            //has files
+            //has files, use formData
             data = formData;
             data.append('json', _json.toStr(row));
             if (!isNew)
@@ -1085,7 +1107,7 @@ var _crudE = {
                 _crudE.afterSave(result);
             });
         } else {
-            //no files
+            //no file, use json
             data = { json: _json.toStr(row) };
             if (!isNew)
                 data.key = edit0.getKey();
@@ -1455,7 +1477,7 @@ var _crudR = {
      * param fid {string} fid
      */
     onCheckAll: function (me, box, fid) {
-        _icheck.setF(_fun.fidFilter(fid) + ':not(:disabled)', _icheck.checkedO($(me)), box);
+        _icheck.setF(_input.fidFilter(fid) + ':not(:disabled)', _icheck.checkedO($(me)), box);
     },
 
     /**
@@ -1811,10 +1833,10 @@ var _edit = {
      */
     setFidTypeVars: function (me, box) {
         var fidTypes = [];
-        box.find(_fun.fidFilter()).each(function (i, item) {
+        box.find(_input.fidFilter()).each(function (i, item) {
             var obj = $(item);
             var j = i * 2;
-            fidTypes[j] = _fun.getFid(obj);
+            fidTypes[j] = _input.getFid(obj);
             fidTypes[j + 1] = _input.getType(obj);
         });
         me.fidTypes = fidTypes;
@@ -1832,7 +1854,7 @@ var _edit = {
         //var me = this;  //use outside .each()
         me.fileFids = [];      //upload file fid array
         box.find('[data-type=file]').each(function (index, item) {
-            me.fileFids[index] = _fun.getFid($(item));
+            me.fileFids[index] = _input.getFid($(item));
         });
         me.fileLen = me.fileFids.length;
         me.hasFile = me.fileFids.length > 0; //has input file or not
@@ -2000,9 +2022,9 @@ var _form = {
     toRow: function (form) {
         //skip link & read fields
         var row = {};
-        form.find(_fun.fidFilter()).filter(':not(.xi-unsave)').each(function () {
+        form.find(_input.fidFilter()).filter(':not(.xi-unsave)').each(function () {
             var obj = $(this);
-            row[_fun.getFid(obj)] = _input.getO(obj, form);            
+            row[_input.getFid(obj)] = _input.getO(obj, form);            
         });
         return row;
 
@@ -2055,7 +2077,7 @@ var _form = {
      * param form {object}
      */
     reset: function (form) {
-        form.find(_fun.fidFilter()).each(function () {
+        form.find(_input.fidFilter()).each(function () {
             _input.setO($(this), '', form);
         });
     },
@@ -2370,48 +2392,12 @@ var _fun = {
         moment.locale(_fun.locale);
     },
 
-    //get header json object for jwt
-    jsonAddJwtHeader: function (json) {
-        if (_fun.jwtToken)
-            json.headers = _fun.getJwtAuth();
-    },
-
-    getJwtAuth: function () {
-        return {
-            'Authorization': _fun.getJwtBearer()
-        };
-    },
-
-    getJwtBearer: function () {
-        return 'Bearer ' + _fun.jwtToken;
-    },
-
     //server need Fun/Hello()
     //no called
     onHelloA: async function () {
         await _ajax.getStrA('../Fun/Hello', null, function (msg) {
             alert(msg);
         });
-    },
-
-    /**
-     * get data-fid of object
-     * param obj {object}
-     * return fid string
-     */
-    getFid: function (obj) {
-        return obj.data('fid');
-    },
-
-    /**
-     * get data-fid string, ex: [data-fid=XXX]
-     * param fid {stirng} optional, if empty means find all inputs with data-fid
-     * return {string} filter
-     */
-    fidFilter: function (fid) {
-        return _str.isEmpty(fid)
-            ? '[data-fid]'
-            : '[data-fid=' + fid + ']';
     },
 
     /*
@@ -2757,7 +2743,7 @@ var _icheck = $.extend({}, _ibase, {
     getCheckeds: function (form, fid) {
         fid = fid || _icheck.Check0Id;
         var ary = [];
-        _obj.getF(_fun.fidFilter(fid) + ':checked', form).each(function (i) {
+        _obj.getF(_input.fidFilter(fid) + ':checked', form).each(function (i) {
             ary[i] = $(this).data('value');
         });
         return ary;
@@ -2840,22 +2826,27 @@ var _icolor = {
     */
 
 }; //class
+//使用 box 來操作 datepicker !!
 //for date input (bootstrap-datepicker)
 //_idt drive from _idate
 var _idate = $.extend({}, _ibase, {
 
-    //constant
+    //find box, 同時用來執行日期欄位初始化
     BoxFilter: '.date',
 
     //=== get/set start ===
-    //get ymd with format _fun.MmDateFmt
+    /**
+     * get ymd with format _fun.MmDateFmt
+     * param obj {object} date input object
+     * return mm date
+     */
     getO: function (obj) {
         return _date.uiToMmDate(obj.val());
     },
 
     /**
      * set input value
-     * param obj {object} date object
+     * param obj {object} date input object
      * param value {string} format: _fun.MmDateFmt
      */
     setO: function (obj, value) {
@@ -2863,6 +2854,10 @@ var _idate = $.extend({}, _ibase, {
         _idate._boxSetDate(_idate._objToBox(obj), value);
     },
 
+    /**
+     * set edit status
+     * param obj {object} date input object
+     */
     setEditO: function (obj, status) {
         obj.prop('disabled', !status);
     },
@@ -2885,8 +2880,14 @@ var _idate = $.extend({}, _ibase, {
             language: _fun.locale,
             autoclose: true,
             showOnFocus: false,
+            todayHighlight: true,   // 高亮顯示今天的日期
             //startDate: '-3d'            
         }).on('changeDate', function (e) {
+            //datepicker(使用box)和 validation(使用input)是2個不同的機制
+            //$(this).focus();
+            //$(this).valid();
+            //var aa = 'aa';
+            _idate._boxGetInput($(this)).valid();
             //$(_idate).datepicker('hide');
             //傳入 fid, value
             /* temp remark
@@ -2912,8 +2913,11 @@ var _idate = $.extend({}, _ibase, {
     onReset: function (btn) {
         //check input status first
         var box = _idate._elmToBox(btn);
-        if (_idate.getEditO(_idate._boxGetInput(box)))
+        var input = _idate._boxGetInput(box);
+        if (_idate.getEditO(input)) {
             _idate._boxSetDate(box, '');
+            //input.trigger('change');
+        }
     },    
 
     //get edit status, return bool
@@ -2923,7 +2927,7 @@ var _idate = $.extend({}, _ibase, {
 
     //=== private function below ===
     /**
-     * element to date box
+     * input element to date box
      * return {object}
      */
     _elmToBox: function (elm) {
@@ -2935,6 +2939,13 @@ var _idate = $.extend({}, _ibase, {
 
     _boxSetDate: function (box, date) {
         box.datepicker('update', date);
+        //var input = _idate._boxGetInput(box);
+        //input.datepicker('update', date);
+        // 手動觸發 changeDate 事件
+        box.trigger({
+            type: 'changeDate',
+            date: date // 獲取更新後的日期物件
+        });
         //box.datepicker('update', '2024-12-30');
         //box.val().datepicker('update', date('2024-12-25'));
     },
@@ -3475,6 +3486,26 @@ var _input = {
     getObj: function (fid, box, ftype) {
         ftype = ftype || _input.getType(_obj.get(fid, box));
         return (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
+    },
+
+    /**
+     * get data-fid of object
+     * param obj {object}
+     * return fid string
+     */
+    getFid: function (obj) {
+        return obj.data('fid');
+    },
+
+    /**
+     * get data-fid string, ex: [data-fid=XXX]
+     * param fid {stirng} optional, if empty means find all inputs with data-fid
+     * return {string} filter
+     */
+    fidFilter: function (fid) {
+        return _str.isEmpty(fid)
+            ? '[data-fid]'
+            : '[data-fid=' + fid + ']';
     },
 
 
@@ -4201,6 +4232,27 @@ var _json = {
 
 }; //class
 
+var _jwt = {
+
+    //??
+    //get header json object for jwt
+    jsonAddJwtHeader: function (json) {
+        if (_fun.jwtToken)
+            json.headers = _jwt.getJwtAuth();
+    },
+
+    getJwtAuth: function () {
+        return {
+            'Authorization': _jwt.getJwtBearer()
+        };
+    },
+
+    getJwtBearer: function () {
+        return 'Bearer ' + _fun.jwtToken;
+    },
+
+}; //class
+
 var _leftmenu = {
 
     init: function () {
@@ -4373,7 +4425,7 @@ var _obj = {
      * get object by name for input field
      */
     get: function (fid, box) {
-        return _obj.getF(_fun.fidFilter(fid), box);
+        return _obj.getF(_input.fidFilter(fid), box);
     },
 
     /**
@@ -4487,6 +4539,7 @@ var _pjax = {
         docu.on('pjax:success', function (event, data, status, xhr, opts) {
             var json = _str.toJson(data);
             if (json != null) {
+                //只顯示錯誤訊息, 不處理欄位 validation error
                 var errMsg = _ajax.resultToErrMsg(json);
                 if (errMsg) {
                     $(opts.container).html(errMsg);
@@ -4790,7 +4843,7 @@ var _table = {
      * return {int} rows count
      */
     getRowCount: function (table, fid) {
-        return table.find(_fun.fidFilter(fid)).length;
+        return table.find(_input.fidFilter(fid)).length;
     },
 
 }; //class
@@ -4980,22 +5033,24 @@ var _valid = {
                 error.insertAfter(_valid._getBox($(elm)));
                 return false;
             },
+            //顯示validation錯誤
             highlight: function (elm, errorClass, validClass) {
                 var me = $(elm);
                 var box = _valid._getBox(me);
                 box.removeClass(validClass).addClass(errorClass);
-                var obj = _valid._getError(me);
-                if (obj != null)
-                    obj.show();
+                var errObj = _valid._getError(me);
+                if (errObj != null)
+                    errObj.show();
                 return false;
             },
+            //清除validation錯誤
             unhighlight: function (elm, errorClass, validClass) {
                 var me = $(elm);
                 var box = _valid._getBox(me);
                 box.removeClass(errorClass).addClass(validClass);
-                var obj = _valid._getError(me);
-                if (obj != null)
-                    obj.hide();
+                var errObj = _valid._getError(me);
+                if (errObj != null)
+                    errObj.hide();
                 return false;
             },
             /*
@@ -5033,6 +5088,29 @@ var _valid = {
         };
 
         return form.validate(config);
+    },
+
+    /**
+     * 使用 jquery validation方式顯示錯誤, 通知由後端傳回錯誤, 再前端顯示
+     * param fid{string} field id
+     * param msg{string} error msg
+     * param eform id{string} (optional for 多筆) 若為多筆則必須配合rowId找到fid
+     * param rowId{string} (optional for 多筆) row Id valud
+     */
+    showError: function (fid, msg, eformId, rowId) {
+        var eform = _str.isEmpty(eformId) ? _me.eform0 : $('#' + eformId);
+        /*
+        var input;
+        if (_str.isEmpty(rowId)) {
+            input = eform.find(_input.fidFilter(fid));
+        } else {
+            //多筆??
+        }
+        */
+
+        eform.validator.showErrors({
+            [fid]: msg
+        });
     },
 
     _getBox: function (obj) {
@@ -5296,6 +5374,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
                     this._start = this.dt.page.info().start;
                     this._keepStart = false; //reset
 
+                    //只顯示錯誤訊息, 不處理欄位 validation error
                     var errMsg = _ajax.resultToErrMsg(result);
                     if (errMsg) {
                         _tool.msg(errMsg);
@@ -5501,7 +5580,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         //set checked sign & old value
         for (var i = 0; i < rows.length; i++) {
             var row = rows[i];
-            var obj = rowsBox.find(_fun.fidFilter(row[fids[1]]));   //fid map to dataFid
+            var obj = rowsBox.find(_input.fidFilter(row[fids[1]]));   //fid map to dataFid
             _icheck.setO(obj, 1);
             obj.data('key', row[fids[0]]);
         }
@@ -5967,7 +6046,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
         var me = this;
         rowsBox = this.getRowsBox(rowsBox);
-        rowsBox.find(_fun.fidFilter(sortFid)).each(function (i, item) {
+        rowsBox.find(_input.fidFilter(sortFid)).each(function (i, item) {
             //this did not work in this loop !!
             _itext.set(sortFid, i, $(item).closest(me.rowFilter));
         });
@@ -6040,6 +6119,9 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
  *   _rows {json array}: updated rows include upload files
  *   _deletes {strings}: deleted key strings, seperate with ','
  *   _childs {json array}: child json array
+ * 
+ * 屬性
+ *   validator: jquery vallidation object (EditMany同)
  * 
  * custom function called by _crudE.js
  *   //void fnAfterLoadJson(json)

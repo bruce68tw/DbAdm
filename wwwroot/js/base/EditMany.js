@@ -126,7 +126,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
         //set checked sign & old value
         for (var i = 0; i < rows.length; i++) {
             var row = rows[i];
-            var obj = rowsBox.find(_fun.fidFilter(row[fids[1]]));   //fid map to dataFid
+            var obj = rowsBox.find(_input.fidFilter(row[fids[1]]));   //fid map to dataFid
             _icheck.setO(obj, 1);
             obj.data('key', row[fids[0]]);
         }
@@ -592,7 +592,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
 
         var me = this;
         rowsBox = this.getRowsBox(rowsBox);
-        rowsBox.find(_fun.fidFilter(sortFid)).each(function (i, item) {
+        rowsBox.find(_input.fidFilter(sortFid)).each(function (i, item) {
             //this did not work in this loop !!
             _itext.set(sortFid, i, $(item).closest(me.rowFilter));
         });

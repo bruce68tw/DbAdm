@@ -22,6 +22,7 @@ var _pjax = {
         docu.on('pjax:success', function (event, data, status, xhr, opts) {
             var json = _str.toJson(data);
             if (json != null) {
+                //只顯示錯誤訊息, 不處理欄位 validation error
                 var errMsg = _ajax.resultToErrMsg(json);
                 if (errMsg) {
                     $(opts.container).html(errMsg);

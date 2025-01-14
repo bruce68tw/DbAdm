@@ -11022,7 +11022,7 @@ $.extend( $.fn, {
 	validTable: function (validator) {
 		var valid = true;
 		var errorList = [];
-		var fidFilter = _fun.fidFilter();
+		var fidFilter = _input.fidFilter();
 		$(this).find('tr').each(function () {
 			$(this).find(fidFilter).filter(':not(.xi-unsave)').each(function () {
 				valid = validator.element(this) && valid;
