@@ -13,7 +13,7 @@ namespace DbAdm.Services
         {
             return new()
 			{
-				FnValidate = Validate,
+				FnValidate = FnValidate,
 				Table = "dbo.Issue",
                 PkeyFid = "Id",
                 ReadSql = $@"
@@ -90,7 +90,7 @@ where r.IssueId=@Id
         }
 
         //檢查傳入資料 for Create, Update
-        private List<ErrorRowDto>? Validate(JObject json)
+        private List<ErrorRowDto>? FnValidate(bool isNew, JObject json)
         {
 			var row = _Json.GetRows0(json);
 			var workDate = _Json.GetFidStr(row, "WorkDate");
