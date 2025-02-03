@@ -101,7 +101,7 @@
 
         //on change projectId
         onChgProject: function (isEdit, progId) {
-            _iselect.onChangeParent('ProjectId', 'ProgId', progId, 'GetPrjProgs', isEdit);
+            _iselect.onChangeParent('_ProjectId', 'ProgId', progId, 'GetPrjProgs', isEdit);
         },
 
         //onclick viewFile, called by XiFile component
@@ -204,7 +204,7 @@
     <div id="divRead">
 		<form id='formRead' class='xg-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true, InputAttr = "onchange=_me.onChgProject(false)" })
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, InputAttr = "onchange=_me.onChgProject(false)" })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })

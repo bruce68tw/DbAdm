@@ -1,4 +1,4 @@
-/****** Object:  Table [dbo].[Column]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[Column]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21,7 +21,7 @@ CREATE TABLE [dbo].[Column](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Crud]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[Crud]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -50,7 +50,7 @@ CREATE TABLE [dbo].[Crud](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CrudEitem]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[CrudEitem]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -79,7 +79,7 @@ CREATE TABLE [dbo].[CrudEitem](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CrudEtable]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[CrudEtable]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -101,7 +101,7 @@ CREATE TABLE [dbo].[CrudEtable](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CrudQitem]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[CrudQitem]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -126,7 +126,7 @@ CREATE TABLE [dbo].[CrudQitem](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CrudRitem]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[CrudRitem]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -146,7 +146,7 @@ CREATE TABLE [dbo].[CrudRitem](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Issue]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[Issue]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -154,7 +154,7 @@ GO
 CREATE TABLE [dbo].[Issue](
 	[Sn] [int] IDENTITY(1,1) NOT NULL,
 	[Id] [varchar](10) NOT NULL,
-	[ProjectId] [varchar](10) NOT NULL,
+	[zz_ProjectId] [varchar](10) NULL,
 	[ProgId] [varchar](10) NOT NULL,
 	[OwnerId] [varchar](10) NULL,
 	[IssueType] [varchar](5) NOT NULL,
@@ -177,7 +177,7 @@ CREATE TABLE [dbo].[Issue](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[IssueFile]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[IssueFile]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -195,7 +195,7 @@ CREATE TABLE [dbo].[IssueFile](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[IssueRelat]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[IssueRelat]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -213,7 +213,7 @@ CREATE TABLE [dbo].[IssueRelat](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[IssueWatch]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[IssueWatch]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -229,7 +229,7 @@ CREATE TABLE [dbo].[IssueWatch](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PrjProg]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[PrjProg]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -247,7 +247,7 @@ CREATE TABLE [dbo].[PrjProg](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Project]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[Project]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -272,7 +272,7 @@ CREATE TABLE [dbo].[Project](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Table]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[Table]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -292,7 +292,7 @@ CREATE TABLE [dbo].[Table](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[tmpColumn]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[tmpColumn]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -307,7 +307,7 @@ CREATE TABLE [dbo].[tmpColumn](
 	[Note] [nvarchar](100) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[tmpColumnImport]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[tmpColumnImport]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -321,7 +321,7 @@ CREATE TABLE [dbo].[tmpColumnImport](
 	[Note] [nvarchar](500) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[tmpTable]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[tmpTable]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -335,7 +335,7 @@ CREATE TABLE [dbo].[tmpTable](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[XpCode]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[XpCode]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -354,7 +354,7 @@ CREATE TABLE [dbo].[XpCode](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[XpDept]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[XpDept]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -369,7 +369,7 @@ CREATE TABLE [dbo].[XpDept](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[XpProg]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[XpProg]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -396,7 +396,7 @@ CREATE TABLE [dbo].[XpProg](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[XpRole]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[XpRole]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -410,7 +410,7 @@ CREATE TABLE [dbo].[XpRole](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[XpRoleProg]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[XpRoleProg]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -433,7 +433,7 @@ CREATE TABLE [dbo].[XpRoleProg](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[XpUser]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[XpUser]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -452,7 +452,7 @@ CREATE TABLE [dbo].[XpUser](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[XpUserRole]    Script Date: 2025/2/3 上午 09:07:18 ******/
+/****** Object:  Table [dbo].[XpUserRole]    Script Date: 2025/2/3 下午 05:14:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1845,7 +1845,9 @@ SET IDENTITY_INSERT [dbo].[CrudRitem] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Issue] ON 
 GO
-INSERT [dbo].[Issue] ([Sn], [Id], [ProjectId], [ProgId], [OwnerId], [IssueType], [WorkDate], [WorkHours], [Title], [Note], [IsFinish], [RptDeptCode], [RptDeptId], [RptUser], [RptType], [Creator], [Created], [Reviser], [Revised]) VALUES (1, N'AwwQVmNGQ7', N'bu040syNlI', N'T6eAWTQc8M', N'Bruce', N'R', CAST(N'2025-02-03T00:00:00' AS SmallDateTime), 1, N'test1', N'test1', 1, N'', NULL, N'', N'', N'Bruce', CAST(N'2025-02-03T08:51:54.000' AS DateTime), NULL, NULL)
+INSERT [dbo].[Issue] ([Sn], [Id], [zz_ProjectId], [ProgId], [OwnerId], [IssueType], [WorkDate], [WorkHours], [Title], [Note], [IsFinish], [RptDeptCode], [RptDeptId], [RptUser], [RptType], [Creator], [Created], [Reviser], [Revised]) VALUES (1, N'AwwQVmNGQ7', N'bu040syNlI', N'T6eAWTQc8M', N'Bruce', N'R', CAST(N'2025-02-03T00:00:00' AS SmallDateTime), 1, N'test1', N'test1', 1, N'', NULL, N'', N'', N'Bruce', CAST(N'2025-02-03T08:51:54.000' AS DateTime), NULL, NULL)
+GO
+INSERT [dbo].[Issue] ([Sn], [Id], [zz_ProjectId], [ProgId], [OwnerId], [IssueType], [WorkDate], [WorkHours], [Title], [Note], [IsFinish], [RptDeptCode], [RptDeptId], [RptUser], [RptType], [Creator], [Created], [Reviser], [Revised]) VALUES (2, N'rJYWPDoqYz', NULL, N'aNLIg5iLr3', N'Bruce', N'R', CAST(N'2025-02-03T00:00:00' AS SmallDateTime), 1, N'test', N'test', 1, N'', NULL, N'', N'', N'Bruce', CAST(N'2025-02-03T13:47:42.000' AS DateTime), NULL, NULL)
 GO
 SET IDENTITY_INSERT [dbo].[Issue] OFF
 GO
@@ -1855,11 +1857,13 @@ INSERT [dbo].[IssueFile] ([Sn], [Id], [IssueId], [FileName], [Creator], [Created
 GO
 SET IDENTITY_INSERT [dbo].[IssueFile] OFF
 GO
+INSERT [dbo].[PrjProg] ([Id], [Name], [ProjectId], [Sort], [Status], [Creator]) VALUES (N'aNLIg5iLr3', N'test1', N'Db', 1, 1, N'Bruce')
+GO
 INSERT [dbo].[PrjProg] ([Id], [Name], [ProjectId], [Sort], [Status], [Creator]) VALUES (N'T6eAWTQc8M', N'功能1', N'bu040syNlI', 1, 1, N'Bruce')
 GO
 INSERT [dbo].[Project] ([Id], [Name], [Code], [DbName], [DbType], [ProjectPath], [ConnectStr], [Status], [FromTmpTable], [Creator], [Created], [Reviser], [Revised]) VALUES (N'D58WWHCYQA', N'尋寶', N'BaoAdm', N'Bao', 0, N'd:\_project\BaoAdm', N'data source=(localdb)\mssqllocaldb;initial catalog=Bao;integrated security=True;multipleactiveresultsets=True;max pool size=1000;', 1, 0, N'Bruce', CAST(N'2024-11-01T14:29:48.253' AS DateTime), NULL, NULL)
 GO
-INSERT [dbo].[Project] ([Id], [Name], [Code], [DbName], [DbType], [ProjectPath], [ConnectStr], [Status], [FromTmpTable], [Creator], [Created], [Reviser], [Revised]) VALUES (N'Db', N'資料庫文件', N'DbAdm', N'Db', 0, N'D:\_project\DbAdm', N'data source=.\SqlExpress;initial catalog=Db;integrated security=True;multipleactiveresultsets=True;max pool size=1000;', 1, 0, N'Bruce', CAST(N'2024-11-01T14:29:48.253' AS DateTime), NULL, NULL)
+INSERT [dbo].[Project] ([Id], [Name], [Code], [DbName], [DbType], [ProjectPath], [ConnectStr], [Status], [FromTmpTable], [Creator], [Created], [Reviser], [Revised]) VALUES (N'Db', N'DbAdm資料庫文件', N'DbAdm', N'Db', 0, N'D:\_project\DbAdm', N'data source=.\SqlExpress;initial catalog=Db;integrated security=True;multipleactiveresultsets=True;max pool size=1000;', 1, 0, N'Bruce', CAST(N'2024-11-01T14:29:48.253' AS DateTime), N'Bruce', CAST(N'2025-02-03T12:32:34.000' AS DateTime))
 GO
 INSERT [dbo].[Project] ([Id], [Name], [Code], [DbName], [DbType], [ProjectPath], [ConnectStr], [Status], [FromTmpTable], [Creator], [Created], [Reviser], [Revised]) VALUES (N'Hr', N'Hr人事', N'HrAdm', N'Hr', 0, N'D:\_project\HrAdm', N'data source=(localdb)\mssqllocaldb;initial catalog=Hr;integrated security=True;multipleactiveresultsets=True;max pool size=1000;', 1, 0, N'Bruce', CAST(N'2024-11-01T14:29:48.253' AS DateTime), NULL, NULL)
 GO

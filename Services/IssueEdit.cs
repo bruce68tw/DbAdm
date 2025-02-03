@@ -18,6 +18,7 @@ namespace DbAdm.Services
                 PkeyFid = "Id",
                 ReadSql = $@"
 select i.*,
+	_ProjectId=pp.ProjectId,
 	WatchId=w.Id,
     ProjectName=p.Name,
     ProgName=pp.Name,
@@ -25,8 +26,8 @@ select i.*,
     ReviserName=u3.Name,
     {_Fun.FidUser}=u.Id, {_Fun.FidDept}=u.DeptId
 from dbo.Issue i
-join dbo.Project p on i.ProjectId=p.Id
 join dbo.PrjProg pp on i.ProgId=pp.Id
+join dbo.Project p on pp.ProjectId=p.Id
 join dbo.XpUser u on i.OwnerId=u.Id
 join dbo.XpUser u2 on i.Creator=u2.Id
 left join dbo.XpUser u3 on i.Reviser=u3.Id
@@ -36,7 +37,7 @@ where i.Id=@Id
                 Items =
                 [
                     new() { Fid = "Id" },
-					new() { Fid = "ProjectId" },
+					//new() { Fid = "ProjectId" },
 					new() { Fid = "ProgId" },
 					new() { Fid = "IssueType" },
 					new() { Fid = "WorkDate" },

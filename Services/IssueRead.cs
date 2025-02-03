@@ -25,8 +25,8 @@ select i.*,
     CreatorName=u2.Name,
     IsWatch=case when w.Id is null then 0 else 1 end
 from dbo.Issue i
-join dbo.Project p on i.ProjectId=p.Id
 join dbo.PrjProg pp on i.ProgId=pp.Id
+join dbo.Project p on pp.ProjectId=p.Id
 join dbo.XpUser u on i.OwnerId=u.Id
 join dbo.XpUser u2 on i.Creator=u2.Id
 join dbo.XpCode c on c.Type='{_Xp.IssueType}' and i.IssueType=c.Value
@@ -37,7 +37,7 @@ order by p.Id, pp.Sort, i.Created desc
 ",
                 TableAs = "i",
                 Items = [
-                    new() { Fid = "ProjectId" },
+                    new() { Fid = "_ProjectId", Col = "pp.ProjectId" },
                     new() { Fid = "ProgId" },
                     new() { Fid = "WorkDate", Type = QitemTypeEnum.Date },
                     new() { Fid = "Created", Type = QitemTypeEnum.Date },
