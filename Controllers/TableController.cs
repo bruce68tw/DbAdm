@@ -20,6 +20,7 @@ namespace DbAdm.Controllers
 
             ViewBag.Projects = await _XpCode.ProjectsA(); //dropdown
             ViewBag.YesNos = _XpCode.YesNos();
+            ViewBag.Statuses = _XpCode.Statuses();
             return View();
         }
 

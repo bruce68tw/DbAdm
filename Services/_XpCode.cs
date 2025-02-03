@@ -125,6 +125,14 @@ order by Sort
             ];
         }
 
+        public static List<IdStrDto> Statuses()
+        {
+            return [
+                new(){ Id = "1", Str = "正常" },
+                new(){ Id = "0", Str = "停用" },
+            ];
+        }
+
         //get db type, match to DbTypeEnum
         public static List<IdStrDto> DbTypes()
         {

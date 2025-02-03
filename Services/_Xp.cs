@@ -12,7 +12,7 @@ namespace DbAdm.Services
     {
         //public const string MyVer = "20201228f";     //for my.js/css
         public static string MyVer = _Date.NowSecStr(); //for my.js/css
-        public const string LibVer = "20220501b";       //for lib.js/css
+        public const string LibVer = "20250115";       //for lib.js/css
 
         public static string PlsSelect = _Locale.GetBaseRes().PlsSelect;
 
@@ -40,6 +40,7 @@ namespace DbAdm.Services
             return dir + fileName;
         }
 
+        /*
         public static string GetClientKey(bool hasIp)
         {
             var key = _Http.GetCookie(_Fun.FidClientKey);
@@ -47,6 +48,7 @@ namespace DbAdm.Services
                 ? key + _Http.GetIp(false)
                 : key;
         }
+        */
 
 		private static string DirUpload(string subDir, bool sep = true)
 		{

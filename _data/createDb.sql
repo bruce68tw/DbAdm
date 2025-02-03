@@ -1,4 +1,4 @@
-/****** Object:  Table [dbo].[Column]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[Column]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21,7 +21,7 @@ CREATE TABLE [dbo].[Column](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Crud]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[Crud]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -50,7 +50,7 @@ CREATE TABLE [dbo].[Crud](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CrudEitem]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[CrudEitem]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -79,7 +79,7 @@ CREATE TABLE [dbo].[CrudEitem](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CrudEtable]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[CrudEtable]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -101,7 +101,7 @@ CREATE TABLE [dbo].[CrudEtable](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CrudQitem]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[CrudQitem]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -126,7 +126,7 @@ CREATE TABLE [dbo].[CrudQitem](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CrudRitem]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[CrudRitem]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -146,28 +146,115 @@ CREATE TABLE [dbo].[CrudRitem](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Dept]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[Issue]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Dept](
+CREATE TABLE [dbo].[Issue](
+	[Sn] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [varchar](10) NOT NULL,
+	[ProjectId] [varchar](10) NOT NULL,
+	[ProgId] [varchar](10) NOT NULL,
+	[OwnerId] [varchar](10) NULL,
+	[IssueType] [varchar](5) NOT NULL,
+	[WorkDate] [smalldatetime] NULL,
+	[WorkHours] [smallint] NULL,
+	[Title] [nvarchar](255) NOT NULL,
+	[Note] [nvarchar](1000) NULL,
+	[IsFinish] [bit] NOT NULL,
+	[RptDeptCode] [varchar](10) NULL,
+	[RptDeptId] [varchar](10) NULL,
+	[RptUser] [nvarchar](20) NULL,
+	[RptType] [nvarchar](30) NULL,
+	[Creator] [varchar](10) NOT NULL,
+	[Created] [datetime] NOT NULL,
+	[Reviser] [varchar](10) NULL,
+	[Revised] [datetime] NULL,
+ CONSTRAINT [PK_Issue] PRIMARY KEY CLUSTERED 
+(
+	[Sn] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[IssueFile]    Script Date: 2025/2/3 上午 09:07:18 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[IssueFile](
+	[Sn] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [varchar](10) NOT NULL,
+	[IssueId] [varchar](10) NOT NULL,
+	[FileName] [nvarchar](100) NOT NULL,
+	[Creator] [varchar](10) NOT NULL,
+	[Created] [datetime] NOT NULL,
+ CONSTRAINT [PK_IssueFile] PRIMARY KEY CLUSTERED 
+(
+	[Sn] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[IssueRelat]    Script Date: 2025/2/3 上午 09:07:18 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[IssueRelat](
+	[Sn] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [varchar](10) NOT NULL,
+	[IssueId] [varchar](10) NOT NULL,
+	[SourceIssue] [varchar](10) NOT NULL,
+	[Creator] [varchar](10) NOT NULL,
+	[Created] [datetime] NOT NULL,
+ CONSTRAINT [PK_IssueRelat] PRIMARY KEY CLUSTERED 
+(
+	[Sn] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[IssueWatch]    Script Date: 2025/2/3 上午 09:07:18 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[IssueWatch](
+	[Sn] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [varchar](10) NOT NULL,
+	[IssueId] [varchar](10) NOT NULL,
+	[WatcherId] [varchar](10) NOT NULL,
+ CONSTRAINT [PK_IssueWatch] PRIMARY KEY CLUSTERED 
+(
+	[Sn] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[PrjProg]    Script Date: 2025/2/3 上午 09:07:18 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PrjProg](
 	[Id] [varchar](10) NOT NULL,
 	[Name] [nvarchar](30) NOT NULL,
-	[MgrId] [varchar](10) NOT NULL,
- CONSTRAINT [PK_Dept] PRIMARY KEY CLUSTERED 
+	[ProjectId] [varchar](10) NOT NULL,
+	[Sort] [smallint] NOT NULL,
+	[Status] [bit] NOT NULL,
+	[Creator] [varchar](10) NOT NULL,
+ CONSTRAINT [PK_PrjProg] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Project]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[Project]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Project](
 	[Id] [varchar](10) NOT NULL,
+	[Name] [nvarchar](20) NULL,
 	[Code] [nvarchar](30) NOT NULL,
 	[DbName] [varchar](20) NOT NULL,
 	[DbType] [tinyint] NOT NULL,
@@ -185,7 +272,7 @@ CREATE TABLE [dbo].[Project](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Table]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[Table]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -205,7 +292,7 @@ CREATE TABLE [dbo].[Table](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[tmpColumn]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[tmpColumn]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -220,7 +307,21 @@ CREATE TABLE [dbo].[tmpColumn](
 	[Note] [nvarchar](100) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[tmpTable]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[tmpColumnImport]    Script Date: 2025/2/3 上午 09:07:18 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tmpColumnImport](
+	[DbName] [varchar](50) NULL,
+	[TableCode] [varchar](50) NULL,
+	[ColumnCode] [varchar](50) NULL,
+	[ColumnName] [nvarchar](500) NULL,
+	[DefaultValue] [varchar](50) NULL,
+	[Note] [nvarchar](500) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[tmpTable]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -234,25 +335,7 @@ CREATE TABLE [dbo].[tmpTable](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 2024/11/13 下午 04:39:02 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[User](
-	[Id] [varchar](10) NOT NULL,
-	[Name] [nvarchar](20) NOT NULL,
-	[Account] [varchar](20) NOT NULL,
-	[Pwd] [varchar](32) NOT NULL,
-	[DeptId] [varchar](10) NOT NULL,
-	[Status] [bit] NOT NULL,
- CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[XpCode]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[XpCode]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -271,7 +354,22 @@ CREATE TABLE [dbo].[XpCode](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[XpProg]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[XpDept]    Script Date: 2025/2/3 上午 09:07:18 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[XpDept](
+	[Id] [varchar](10) NOT NULL,
+	[Name] [nvarchar](30) NOT NULL,
+	[MgrId] [varchar](10) NOT NULL,
+ CONSTRAINT [PK_Dept] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[XpProg]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -298,7 +396,7 @@ CREATE TABLE [dbo].[XpProg](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[XpRole]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[XpRole]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -312,7 +410,7 @@ CREATE TABLE [dbo].[XpRole](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[XpRoleProg]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[XpRoleProg]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -335,7 +433,26 @@ CREATE TABLE [dbo].[XpRoleProg](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[XpUserRole]    Script Date: 2024/11/13 下午 04:39:02 ******/
+/****** Object:  Table [dbo].[XpUser]    Script Date: 2025/2/3 上午 09:07:18 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[XpUser](
+	[Id] [varchar](10) NOT NULL,
+	[Name] [nvarchar](20) NOT NULL,
+	[Account] [varchar](20) NOT NULL,
+	[Pwd] [varchar](32) NOT NULL,
+	[DeptId] [varchar](10) NOT NULL,
+	[PhotoFile] [nvarchar](100) NULL,
+	[Status] [bit] NOT NULL,
+ CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[XpUserRole]    Script Date: 2025/2/3 上午 09:07:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -354,23 +471,23 @@ SET IDENTITY_INSERT [dbo].[Column] ON
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1, N'15ZQD4ED1A', N'D58LXL44TA', N'test', N'test', N'varchar(10)', 0, N'', 3, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (931, N'5X9RB37ZKA', N'5X9RB36MYA', N'Id', N'Id', N'varchar(10)', 0, N'', 1, N'PKey', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (931, N'5X9RB37ZKA', N'5X9RB36MYA', N'Id', N'Id', N'varchar(10)', 0, N'', 2, N'PKey', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (932, N'5X9RB381FA', N'5X9RB36MYA', N'TableId', N'資料表Id', N'varchar(10)', 0, N'', 2, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (932, N'5X9RB381FA', N'5X9RB36MYA', N'TableId', N'資料表Id', N'varchar(10)', 0, N'', 3, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (933, N'5X9RB3845A', N'5X9RB36MYA', N'Name', N'欄位名稱', N'nvarchar(30)', 0, N'', 4, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (933, N'5X9RB3845A', N'5X9RB36MYA', N'Name', N'欄位名稱', N'nvarchar(30)', 0, N'', 5, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (934, N'5X9RB3890A', N'5X9RB36MYA', N'DataType', N'資料型態', N'varchar(20)', 0, N'', 5, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (934, N'5X9RB3890A', N'5X9RB36MYA', N'DataType', N'資料型態', N'varchar(20)', 0, N'', 6, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (935, N'5X9RB38APA', N'5X9RB36MYA', N'Nullable', N'可空值', N'bit', 0, N'', 6, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (935, N'5X9RB38APA', N'5X9RB36MYA', N'Nullable', N'可空值', N'bit', 0, N'', 7, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (936, N'5X9RB38E9A', N'5X9RB36MYA', N'DefaultValue', N'預設值', N'varchar(100)', 1, N'', 7, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (936, N'5X9RB38E9A', N'5X9RB36MYA', N'DefaultValue', N'預設值', N'varchar(100)', 1, N'', 8, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (937, N'5X9RB38G3A', N'5X9RB36MYA', N'Sort', N'排序', N'int', 0, N'', 8, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (937, N'5X9RB38G3A', N'5X9RB36MYA', N'Sort', N'排序', N'int', 0, N'', 9, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (938, N'5X9RB38HTA', N'5X9RB36MYA', N'Note', N'說明', N'nvarchar(255)', 1, N'', 9, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (938, N'5X9RB38HTA', N'5X9RB36MYA', N'Note', N'說明', N'nvarchar(255)', 1, N'', 10, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (939, N'5X9RB38KTA', N'5X9RB36MYA', N'Status', N'資料狀態', N'bit', 0, N'', 10, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (939, N'5X9RB38KTA', N'5X9RB36MYA', N'Status', N'資料狀態', N'bit', 0, N'', 11, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (940, N'5X9RB38NHA', N'5X9RB36PRA', N'Id', N'Id', N'varchar(10)', 0, N'', 1, N'PKey', 1)
 GO
@@ -396,35 +513,35 @@ INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nulla
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (951, N'5X9RB39VJA', N'5X9RB36PRA', N'Status', N'資料狀態', N'bit', 0, N'', 15, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (952, N'5X9RB39XPA', N'5X9RB36TCA', N'Id', N'Id', N'varchar(10)', 0, N'', 1, N'PKey', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (952, N'5X9RB39XPA', N'5X9RB36TCA', N'Id', N'Id', N'varchar(10)', 0, N'', 2, N'PKey', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (953, N'5X9RB3A19A', N'5X9RB36TCA', N'EtableId', N'EtableId', N'varchar(10)', 0, N'', 2, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (953, N'5X9RB3A19A', N'5X9RB36TCA', N'EtableId', N'EtableId', N'varchar(10)', 0, N'', 3, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (954, N'5X9RB3A4CA', N'5X9RB36TCA', N'InputType', N'輸入類型', N'varchar(10)', 0, N'', 4, N'', 0)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (955, N'5X9RB3A6GA', N'5X9RB36TCA', N'InputData', N'輸入資料', N'nvarchar(50)', 1, N'', 5, N'', 0)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (956, N'5X9RB3A9JA', N'5X9RB36TCA', N'Required', N'必填', N'bit', 0, N'', 6, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (956, N'5X9RB3A9JA', N'5X9RB36TCA', N'Required', N'必填', N'bit', 0, N'', 7, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (957, N'5X9RB3ABDA', N'5X9RB36TCA', N'HasCreate', N'Create功能', N'bit', 0, N'', 7, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (957, N'5X9RB3ABDA', N'5X9RB36TCA', N'HasCreate', N'Create功能', N'bit', 0, N'', 8, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (958, N'5X9RB3ACRA', N'5X9RB36TCA', N'HasUpdate', N'Update功能', N'bit', 0, N'', 8, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (958, N'5X9RB3ACRA', N'5X9RB36TCA', N'HasUpdate', N'Update功能', N'bit', 0, N'', 9, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (959, N'5X9RB3AE4A', N'5X9RB36TCA', N'PlaceHolder', N'PlaceHolder', N'varchar(10)', 1, N'', 9, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (959, N'5X9RB3AE4A', N'5X9RB36TCA', N'PlaceHolder', N'PlaceHolder', N'varchar(10)', 1, N'', 10, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (960, N'5X9RB3AHCA', N'5X9RB36TCA', N'DefaultValue', N'預設值', N'varchar(10)', 1, N'', 10, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (960, N'5X9RB3AHCA', N'5X9RB36TCA', N'DefaultValue', N'預設值', N'varchar(10)', 1, N'', 11, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (961, N'5X9RB3AT3A', N'5X9RB36TCA', N'PosGroup', N'同列', N'varchar(10)', 1, N'', 11, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (961, N'5X9RB3AT3A', N'5X9RB36TCA', N'PosGroup', N'同列', N'varchar(10)', 1, N'', 12, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (962, N'5X9RB3BH2A', N'5X9RB36TCA', N'LayoutCols', N'版位', N'varchar(10)', 1, N'', 12, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (962, N'5X9RB3BH2A', N'5X9RB36TCA', N'LayoutCols', N'版位', N'varchar(10)', 1, N'', 13, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (963, N'5X9RB3DMHA', N'5X9RB36TCA', N'Width', N'欄位寬度', N'int', 0, N'', 13, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (963, N'5X9RB3DMHA', N'5X9RB36TCA', N'Width', N'欄位寬度', N'int', 0, N'', 14, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (964, N'5X9RB3E38A', N'5X9RB36TCA', N'CheckType', N'檢查類型', N'varchar(10)', 0, N'', 14, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (964, N'5X9RB3E38A', N'5X9RB36TCA', N'CheckType', N'檢查類型', N'varchar(10)', 0, N'', 15, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (965, N'5X9RB3E4QA', N'5X9RB36TCA', N'CheckData', N'檢查資料', N'varchar(10)', 1, N'', 15, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (965, N'5X9RB3E4QA', N'5X9RB36TCA', N'CheckData', N'檢查資料', N'varchar(10)', 1, N'', 16, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (966, N'5X9RB3E6SA', N'5X9RB36TCA', N'Sort', N'排序', N'int', 0, N'', 16, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (966, N'5X9RB3E6SA', N'5X9RB36TCA', N'Sort', N'排序', N'int', 0, N'', 17, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (967, N'5X9RB3E8JA', N'5X9RB36VLA', N'Id', N'Id', N'varchar(10)', 0, N'', 1, N'PKey', 1)
 GO
@@ -442,65 +559,65 @@ INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nulla
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (974, N'5X9RB3EK8A', N'5X9RB36VLA', N'Sort', N'排序', N'int', 0, N'', 8, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (975, N'5X9RB3ELQA', N'5X9RB36XEA', N'Id', N'Id', N'varchar(10)', 0, N'', 1, N'PKey', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (975, N'5X9RB3ELQA', N'5X9RB36XEA', N'Id', N'Id', N'varchar(10)', 0, N'', 2, N'PKey', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (976, N'5X9RB3ENRA', N'5X9RB36XEA', N'CrudId', N'CrudId', N'varchar(10)', 0, N'', 2, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (976, N'5X9RB3ENRA', N'5X9RB36XEA', N'CrudId', N'CrudId', N'varchar(10)', 0, N'', 3, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (977, N'5X9RB3F0AA', N'5X9RB36XEA', N'TableAs', N'資料表別名', N'varchar(20)', 0, N'', 4, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (977, N'5X9RB3F0AA', N'5X9RB36XEA', N'TableAs', N'資料表別名', N'varchar(20)', 0, N'', 5, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (978, N'5X9RB3FABA', N'5X9RB36XEA', N'InputType', N'輸入類型', N'varchar(20)', 0, N'', 5, N'', 0)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (979, N'5X9RB3FC9A', N'5X9RB36XEA', N'InputData', N'輸入資料', N'varchar(20)', 1, N'', 6, N'', 0)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (980, N'5X9RB3FELA', N'5X9RB36XEA', N'Op', N'比對方式', N'varchar(10)', 0, N'', 7, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (980, N'5X9RB3FELA', N'5X9RB36XEA', N'Op', N'比對方式', N'varchar(10)', 0, N'', 8, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (981, N'5X9RB3FG9A', N'5X9RB36XEA', N'IsRange', N'Range比對', N'bit', 0, N'', 8, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (981, N'5X9RB3FG9A', N'5X9RB36XEA', N'IsRange', N'Range比對', N'bit', 0, N'', 9, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (982, N'5X9RB3FHUA', N'5X9RB36XEA', N'IsFind2', N'進階查詢', N'bit', 0, N'', 9, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (982, N'5X9RB3FHUA', N'5X9RB36XEA', N'IsFind2', N'進階查詢', N'bit', 0, N'', 10, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (983, N'5X9RB3FKDA', N'5X9RB36XEA', N'PosGroup', N'同列', N'varchar(10)', 1, N'', 10, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (983, N'5X9RB3FKDA', N'5X9RB36XEA', N'PosGroup', N'同列', N'varchar(10)', 1, N'', 11, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (984, N'5X9RB3FM3A', N'5X9RB36XEA', N'LayoutCols', N'版位', N'varchar(20)', 1, N'', 11, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (984, N'5X9RB3FM3A', N'5X9RB36XEA', N'LayoutCols', N'版位', N'varchar(20)', 1, N'', 12, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (985, N'5X9RB3FNUA', N'5X9RB36XEA', N'ExtInfo', N'其他資料', N'varchar(20)', 1, N'', 12, N'', 0)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (986, N'5X9RB3FQ1A', N'5X9RB36XEA', N'Sort', N'排序', N'int', 0, N'', 12, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (986, N'5X9RB3FQ1A', N'5X9RB36XEA', N'Sort', N'排序', N'int', 0, N'', 13, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (987, N'5X9RB3FRUA', N'5X9RB36ZCA', N'Id', N'Id', N'varchar(10)', 0, N'', 1, N'PKey', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (987, N'5X9RB3FRUA', N'5X9RB36ZCA', N'Id', N'Id', N'varchar(10)', 0, N'', 2, N'PKey', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (988, N'5X9RB3FTJA', N'5X9RB36ZCA', N'CrudId', N'CrudId', N'varchar(10)', 0, N'', 2, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (988, N'5X9RB3FTJA', N'5X9RB36ZCA', N'CrudId', N'CrudId', N'varchar(10)', 0, N'', 3, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (989, N'5X9RB3G21A', N'5X9RB36ZCA', N'Width', N'欄位寬度', N'int', 0, N'', 5, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (989, N'5X9RB3G21A', N'5X9RB36ZCA', N'Width', N'欄位寬度', N'int', 0, N'', 6, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (990, N'5X9RB3G3PA', N'5X9RB36ZCA', N'RitemType', N'結果欄位類型', N'varchar(10)', 0, N'', 6, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (990, N'5X9RB3G3PA', N'5X9RB36ZCA', N'RitemType', N'結果欄位類型', N'varchar(10)', 0, N'', 7, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (991, N'5X9RB3G5KA', N'5X9RB36ZCA', N'ExtInfo', N'其他資料', N'varchar(30)', 1, N'', 7, N'', 0)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (992, N'5X9RB3G71A', N'5X9RB36ZCA', N'Sort', N'排序', N'int', 0, N'', 7, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (992, N'5X9RB3G71A', N'5X9RB36ZCA', N'Sort', N'排序', N'int', 0, N'', 8, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (993, N'5X9RB3G8EA', N'5X9RB3720A', N'Id', N'Id', N'varchar(10)', 0, N'', 1, N'PKey', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (994, N'5X9RB3GG2A', N'5X9RB3720A', N'DbName', N'Db名稱', N'varchar(20)', 0, N'', 3, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (994, N'5X9RB3GG2A', N'5X9RB3720A', N'DbName', N'Db名稱', N'varchar(20)', 0, N'', 4, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (995, N'5X9RB3GK9A', N'5X9RB3720A', N'ProjectPath', N'專案路徑', N'varchar(255)', 0, N'', 4, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (995, N'5X9RB3GK9A', N'5X9RB3720A', N'ProjectPath', N'專案路徑', N'varchar(255)', 0, N'', 6, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (996, N'5X9RB3GLJA', N'5X9RB3720A', N'ConnectStr', N'Db連線字串', N'varchar(255)', 0, N'', 5, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (996, N'5X9RB3GLJA', N'5X9RB3720A', N'ConnectStr', N'Db連線字串', N'varchar(255)', 0, N'', 7, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (997, N'5X9RB3GN2A', N'5X9RB3720A', N'Status', N'資料狀態', N'bit', 0, N'', 6, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (997, N'5X9RB3GN2A', N'5X9RB3720A', N'Status', N'資料狀態', N'bit', 0, N'', 8, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (998, N'5X9RB3GPHA', N'5X9RB373ZA', N'Id', N'Id', N'varchar(10)', 0, N'', 1, N'PKey', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (998, N'5X9RB3GPHA', N'5X9RB373ZA', N'Id', N'Id', N'varchar(10)', 0, N'', 2, N'PKey', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (999, N'5X9RB3GRZA', N'5X9RB373ZA', N'ProjectId', N'專案Id', N'varchar(10)', 0, N'', 2, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (999, N'5X9RB3GRZA', N'5X9RB373ZA', N'ProjectId', N'專案Id', N'varchar(10)', 0, N'', 3, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1000, N'5X9RB3GT3A', N'5X9RB373ZA', N'Name', N'資料表名稱', N'nvarchar(30)', 0, N'', 4, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1000, N'5X9RB3GT3A', N'5X9RB373ZA', N'Name', N'資料表名稱', N'nvarchar(30)', 0, N'', 5, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1001, N'5X9RB3GWNA', N'5X9RB373ZA', N'Note', N'說明', N'nvarchar(255)', 1, N'', 5, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1001, N'5X9RB3GWNA', N'5X9RB373ZA', N'Note', N'說明', N'nvarchar(255)', 1, N'', 6, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1002, N'5X9RB3GZ3A', N'5X9RB373ZA', N'Status', N'資料狀態', N'bit', 0, N'', 7, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1002, N'5X9RB3GZ3A', N'5X9RB373ZA', N'Status', N'資料狀態', N'bit', 0, N'', 8, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1003, N'5XBA43L8QA', N'5X9RB36TCA', N'ColumnId', N'欄位Id', N'varchar(10)', 0, N'', 3, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1003, N'5XBA43L8QA', N'5X9RB36TCA', N'ColumnId', N'欄位Id', N'varchar(10)', 0, N'', 4, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1004, N'5XBA43LBNA', N'5X9RB36XEA', N'ColumnId', N'欄位Id', N'varchar(10)', 0, N'', 3, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1004, N'5XBA43LBNA', N'5X9RB36XEA', N'ColumnId', N'欄位Id', N'varchar(10)', 0, N'', 4, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1005, N'5XD29XCRAA', N'5XD29XBSMA', N'Id', N'Id', N'varchar(10)', 0, N'', 1, N'PKey', 1)
 GO
@@ -592,7 +709,7 @@ INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nulla
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1049, N'5YFVGEZSJA', N'5XD29XC3BA', N'Pwd', N'密碼', N'varchar(32)', 0, N'', 4, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1050, N'5YFVJXBYXA', N'5X9RB36MYA', N'Code', N'欄位代碼', N'varchar(100)', 0, N'', 3, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1050, N'5YFVJXBYXA', N'5X9RB36MYA', N'Code', N'欄位代碼', N'varchar(100)', 0, N'', 4, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1051, N'5YFVJXC0WA', N'5X9RB36PRA', N'ProgCode', N'功能代碼', N'varchar(30)', 0, N'', 3, N'', 1)
 GO
@@ -604,13 +721,13 @@ INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nulla
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1055, N'5YFVJXC6KA', N'5X9RB36PRA', N'Revised', N'修改時間', N'datetime', 1, N'', 17, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1056, N'5YFVJXC7TA', N'5X9RB36ZCA', N'ColumnCode', N'欄位代碼', N'varchar(100)', 0, N'', 3, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1056, N'5YFVJXC7TA', N'5X9RB36ZCA', N'ColumnCode', N'欄位代碼', N'varchar(100)', 0, N'', 4, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1057, N'5YFVJXC9YA', N'5X9RB36ZCA', N'Name', N'顯示名稱', N'nvarchar(30)', 0, N'', 4, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1057, N'5YFVJXC9YA', N'5X9RB36ZCA', N'Name', N'顯示名稱', N'nvarchar(30)', 0, N'', 5, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1058, N'5YFVJXCB7A', N'5X9RB3720A', N'Code', N'專案代碼', N'nvarchar(30)', 0, N'', 2, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1058, N'5YFVJXCB7A', N'5X9RB3720A', N'Code', N'專案代碼', N'nvarchar(30)', 0, N'', 3, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1059, N'5YFVJXCCVA', N'5X9RB373ZA', N'Code', N'資料表代碼', N'varchar(100)', 0, N'', 3, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1059, N'5YFVJXCCVA', N'5X9RB373ZA', N'Code', N'資料表代碼', N'varchar(100)', 0, N'', 4, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1060, N'5Z5BHXMCMA', N'5Z5BHXK86A', N'Id', N'Id', N'varchar(10)', 0, N'', 1, N'', 1)
 GO
@@ -640,19 +757,19 @@ INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nulla
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1073, N'5ZKB7A6VPA', N'5X9RB36VLA', N'HalfWidth', N'是否半幅寬度', N'bit', 0, N'', 9, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1074, N'D58FUTP10A', N'5X9RB36TCA', N'EitemType', N'編輯欄位種類', N'varchar(10)', 0, N'', 4, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1074, N'D58FUTP10A', N'5X9RB36TCA', N'EitemType', N'編輯欄位種類', N'varchar(10)', 0, N'', 5, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1075, N'D58FUTPHMA', N'5X9RB36TCA', N'ItemData', N'欄位資料', N'nvarchar(50)', 1, N'', 5, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1075, N'D58FUTPHMA', N'5X9RB36TCA', N'ItemData', N'欄位資料', N'nvarchar(50)', 1, N'', 6, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1076, N'D58FUTPZ6A', N'5X9RB36VLA', N'PkeyFid', N'主鍵欄位Id', N'varchar(10)', 0, N'', 4, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1077, N'D58FUTQEQA', N'5X9RB36VLA', N'FkeyFid', N'外鍵欄位Id', N'varchar(10)', 1, N'', 5, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1078, N'D58FUTQVNA', N'5X9RB36XEA', N'QitemType', N'查詢欄位種類', N'varchar(20)', 0, N'', 5, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1078, N'D58FUTQVNA', N'5X9RB36XEA', N'QitemType', N'查詢欄位種類', N'varchar(20)', 0, N'', 6, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1079, N'D58FUTRAMA', N'5X9RB36XEA', N'ItemData', N'欄位資料', N'varchar(20)', 1, N'', 6, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1079, N'D58FUTRAMA', N'5X9RB36XEA', N'ItemData', N'欄位資料', N'varchar(20)', 1, N'', 7, N'', 1)
 GO
-INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1080, N'D58FUTT5TA', N'5X9RB373ZA', N'TranLog', N'是否記錄交易', N'bit', 0, N'0', 6, N'', 1)
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1080, N'D58FUTT5TA', N'5X9RB373ZA', N'TranLog', N'是否記錄交易', N'bit', 0, N'0', 7, N'', 1)
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1081, N'D58FV79WAA', N'5Z5BHXK86A', N'FlowLevel', N'流程目前Level', N'tinyint', 0, N'', 8, N'', 1)
 GO
@@ -1102,7 +1219,237 @@ INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nulla
 GO
 INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (1304, N'D9QTSQJAGA', N'D9QTSQF55A', N'Note', N'備註', N'nvarchar(255)', 1, N'', 6, N'', 1)
 GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10783, N'HyCqhKLbUj', N'5X9RB36MYA', N'Sn', N'', N'int', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10784, N'9AR644Rz1S', N'5X9RB36TCA', N'Sn', N'', N'int', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10785, N'xlwhgmLoCe', N'5X9RB36VLA', N'AutoIdLen', N'', N'varchar(20)', 1, N'', 10, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10786, N'IOQCjWJb0Z', N'5X9RB36XEA', N'Sn', N'', N'int', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10787, N'QzwcThaFgg', N'5X9RB36ZCA', N'Sn', N'', N'int', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10788, N'gSsqhBBNL1', N'oOG6kwUBcT', N'Sn', N'', N'nchar(10)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10789, N'lrxkoVuL9N', N'oOG6kwUBcT', N'Id', N'', N'varchar(10)', 0, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10790, N'qH3wMFow2l', N'oOG6kwUBcT', N'ProgId', N'', N'varchar(10)', 0, N'', 3, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10791, N'toPiQ9D3zx', N'oOG6kwUBcT', N'OwnerId', N'', N'varchar(10)', 0, N'', 4, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10792, N'08XKCcU7cs', N'oOG6kwUBcT', N'Title', N'', N'nvarchar(255)', 0, N'', 5, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10793, N'GgRiWW7KxW', N'oOG6kwUBcT', N'IssueType', N'', N'char(1)', 0, N'', 6, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10794, N'e4y7hfjkGv', N'oOG6kwUBcT', N'Note', N'', N'nvarchar(1000)', 1, N'', 7, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10795, N'T8nJiW3G0b', N'oOG6kwUBcT', N'Creator', N'', N'varchar(10)', 0, N'', 8, N'建檔人員', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10796, N'exN2k1hrQS', N'oOG6kwUBcT', N'Created', N'', N'datetime', 0, N'', 9, N'建檔日期', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10797, N'oKTK9qHW1J', N'oOG6kwUBcT', N'Reviser', N'', N'varchar(10)', 1, N'', 10, N'修改人員', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10798, N'O6vOCd8tj5', N'oOG6kwUBcT', N'Revised', N'', N'datetime', 1, N'', 11, N'修改日期', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10799, N'3bxDGkBCZY', N'iskfQCWWld', N'm22_systype', N'', N'char(10)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10800, N'rlrYaj45J6', N'iskfQCWWld', N'm22_versions', N'', N'char(4)', 0, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10801, N'JvoosGki6V', N'iskfQCWWld', N'm22_table', N'', N'varchar(30)', 0, N'', 3, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10802, N'Avm9fYMkxF', N'iskfQCWWld', N'm22_colid', N'', N'varchar(3)', 0, N'', 4, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10803, N'MZs4jm52yf', N'iskfQCWWld', N'm22_column', N'', N'varchar(30)', 0, N'', 5, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10804, N'g1HOgnBpzx', N'iskfQCWWld', N'm22_typestat', N'', N'decimal', 1, N'', 6, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10805, N'ejRjKRBNLI', N'iskfQCWWld', N'm22_length', N'', N'decimal', 1, N'', 7, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10806, N'sGokeTlxNW', N'iskfQCWWld', N'm22_scale', N'', N'decimal', 1, N'', 8, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10807, N'oUc1GEbhuU', N'iskfQCWWld', N'm22_isnullable', N'', N'char(1)', 1, N'', 9, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10808, N'fwMY0Nhlag', N'iskfQCWWld', N'm22_colname', N'', N'varchar(255)', 1, N'', 10, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10809, N'AbIrdDLuLB', N'iskfQCWWld', N'm22_meno', N'', N'varchar(255)', 1, N'', 11, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10810, N'f4wptDg1eb', N'iskfQCWWld', N'm22_pkey', N'', N'decimal', 1, N'', 12, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10811, N'D7J66mIkm9', N'iskfQCWWld', N'm22_indexkey1', N'', N'decimal', 1, N'', 13, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10812, N'Ku7YSfNE0n', N'iskfQCWWld', N'm22_indexkey2', N'', N'decimal', 1, N'', 14, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10813, N'NSh8Ss9F5i', N'iskfQCWWld', N'm22_indexkey3', N'', N'decimal', 1, N'', 15, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10814, N'Ot6xBDxoBf', N'iskfQCWWld', N'm22_indexkey4', N'', N'decimal', 1, N'', 16, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10815, N'AsQAuiPxDs', N'iskfQCWWld', N'm22_indexkey5', N'', N'decimal', 1, N'', 17, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10816, N'BN6r4Pb9PC', N'iskfQCWWld', N'm22_indexkey6', N'', N'decimal', 1, N'', 18, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10817, N'9EX7Xx1Nqi', N'iskfQCWWld', N'm22_indexkey7', N'', N'decimal', 1, N'', 19, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10818, N'NphSJrbbuR', N'iskfQCWWld', N'm22_indexkey8', N'', N'decimal', 1, N'', 20, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10819, N'LRxUV3Qwd3', N'iskfQCWWld', N'm22_indexkey9', N'', N'decimal', 1, N'', 21, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10820, N'BiwhJa33e0', N'iskfQCWWld', N'm22_upduserno', N'', N'varchar(8)', 1, N'', 22, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10821, N'KjrlED2QLf', N'iskfQCWWld', N'm22_upddatetime', N'', N'varchar(14)', 1, N'', 23, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10822, N'eJKuTG8uOY', N'AHODXbOs21', N'm21_systype', N'', N'char(10)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10823, N'o1DWJJNKmG', N'AHODXbOs21', N'm21_versions', N'', N'char(4)', 0, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10824, N'2SOHKjAZBM', N'AHODXbOs21', N'm21_table', N'', N'varchar(30)', 0, N'', 3, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10825, N'Y2StCUcz9r', N'AHODXbOs21', N'm21_tablename', N'', N'varchar(100)', 1, N'', 4, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10826, N'gvKEQFKS5e', N'AHODXbOs21', N'm21_columnnum', N'', N'decimal', 1, N'', 5, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10827, N'rAyi3KjD39', N'AHODXbOs21', N'm21_dbversions', N'', N'char(4)', 1, N'', 6, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10828, N'oVNM6Ziwqt', N'AHODXbOs21', N'm21_meno', N'', N'varchar(200)', 1, N'', 7, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10829, N'cuhC71YBtK', N'AHODXbOs21', N'm21_tablealias', N'', N'varchar(5)', 1, N'', 8, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10830, N'ZutK44lksH', N'AHODXbOs21', N'm21_pflag', N'', N'char(1)', 1, N'', 9, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10831, N'1GTOgjPE1n', N'AHODXbOs21', N'm21_upduserno', N'', N'varchar(8)', 1, N'', 10, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10832, N'sZfyTOyWkV', N'AHODXbOs21', N'm21_upddatetime', N'', N'varchar(14)', 1, N'', 11, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10833, N'Kbwcf8gZM0', N'AHODXbOs21', N'm21_filegroup', N'', N'char(1)', 1, N'', 12, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10834, N'QKG8Dfcmxv', N'5X9RB3720A', N'DbType', N'', N'tinyint', 0, N'0', 5, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10835, N'uM8PSQnwmR', N'5X9RB3720A', N'FromTmpTable', N'', N'bit', 0, N'0', 9, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10836, N'lIRnWZcuyI', N'5X9RB3720A', N'Creator', N'', N'varchar(10)', 1, N'', 10, N'建檔人員', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10837, N'GH2txWoKm6', N'5X9RB3720A', N'Created', N'', N'datetime', 1, N'', 11, N'建檔日期', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10838, N'vze34BzNyw', N'5X9RB3720A', N'Reviser', N'', N'varchar(10)', 1, N'', 12, N'修改人員', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10839, N'HGcoSy3FdW', N'5X9RB3720A', N'Revised', N'', N'datetime', 1, N'', 13, N'修改日期', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10840, N'n8NvDUKgVT', N'5X9RB373ZA', N'Sn', N'', N'int', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10841, N'8D6tWswj5e', N'GP5KoCoFVL', N'Code', N'', N'varchar(100)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10842, N'J4svJ3fZlT', N'GP5KoCoFVL', N'TableCode', N'', N'varchar(100)', 1, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10843, N'KoUzYTR1lp', N'GP5KoCoFVL', N'DataType', N'', N'varchar(20)', 0, N'', 3, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10844, N'G8s9MBFpYi', N'GP5KoCoFVL', N'Nullable', N'', N'bit', 0, N'', 4, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10845, N'XWzO6tJPia', N'GP5KoCoFVL', N'DefaultValue', N'', N'varchar(100)', 1, N'', 5, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10846, N'Ce8kwQEOMO', N'GP5KoCoFVL', N'Sort', N'', N'smallint', 0, N'', 6, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10847, N'v54MuHrODL', N'GP5KoCoFVL', N'Note', N'', N'nvarchar(100)', 1, N'', 7, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10848, N'4V1GWztYUv', N'6QsXKBAf4h', N'Code', N'', N'varchar(100)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10849, N'p6Cwls4mtd', N'6QsXKBAf4h', N'Note', N'', N'nvarchar(255)', 1, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10850, N'aHaXg9X3Ux', N'bnZnlLytAh', N'Id', N'', N'varchar(10)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10851, N'C8g5CUaxe7', N'bnZnlLytAh', N'Name', N'', N'nvarchar(30)', 0, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10852, N'GsM5X5adXE', N'bnZnlLytAh', N'MgrId', N'', N'varchar(10)', 0, N'', 3, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10853, N'8Gw3dMor04', N'6hxO6mna5B', N'Id', N'', N'varchar(10)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10854, N'xEIxDrli5J', N'6hxO6mna5B', N'Code', N'', N'varchar(30)', 0, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10855, N'uOKadavWpB', N'6hxO6mna5B', N'Name', N'', N'nvarchar(30)', 0, N'', 3, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10856, N'iRRKbpJcQv', N'6hxO6mna5B', N'Icon', N'', N'varchar(20)', 1, N'', 4, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10857, N'vlNHBneoiB', N'6hxO6mna5B', N'Url', N'', N'varchar(100)', 1, N'', 5, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10858, N'g3lZK8uuHt', N'6hxO6mna5B', N'Sort', N'', N'smallint', 0, N'9', 6, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10859, N'fVlRZvOXIQ', N'6hxO6mna5B', N'AuthRow', N'', N'tinyint', 0, N'0', 7, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10860, N'Ig7VX8m3KE', N'6hxO6mna5B', N'FunCreate', N'', N'tinyint', 0, N'0', 8, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10861, N'xdspdF3Oe3', N'6hxO6mna5B', N'FunRead', N'', N'tinyint', 0, N'0', 9, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10862, N'lP8afLkoQH', N'6hxO6mna5B', N'FunUpdate', N'', N'tinyint', 0, N'0', 10, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10863, N'MUuYU3usp1', N'6hxO6mna5B', N'FunDelete', N'', N'tinyint', 0, N'0', 11, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10864, N'dOSqPc0UVi', N'6hxO6mna5B', N'FunPrint', N'', N'tinyint', 0, N'0', 12, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10865, N'Jkux9AtINc', N'6hxO6mna5B', N'FunExport', N'', N'tinyint', 0, N'0', 13, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10866, N'1MNMFh8mnb', N'6hxO6mna5B', N'FunView', N'', N'tinyint', 0, N'0', 14, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10867, N'7241lG9UDV', N'6hxO6mna5B', N'FunOther', N'', N'tinyint', 0, N'0', 15, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10868, N'4Q0wH0vWXQ', N'Shc53pKlhR', N'Id', N'', N'varchar(10)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10869, N'Cs65YLD9wj', N'Shc53pKlhR', N'Name', N'', N'nvarchar(30)', 0, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10870, N'iJ7os8NlSY', N'RGGtEcyABd', N'Id', N'', N'varchar(10)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10871, N'KPpWPw4PKG', N'RGGtEcyABd', N'RoleId', N'', N'varchar(10)', 0, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10872, N'xEEthhSVn9', N'RGGtEcyABd', N'ProgId', N'', N'varchar(10)', 0, N'', 3, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10873, N'AOj6ekGnsp', N'RGGtEcyABd', N'FunCreate', N'', N'tinyint', 0, N'0', 4, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10874, N'vkwS6lHeQL', N'RGGtEcyABd', N'FunRead', N'', N'tinyint', 0, N'0', 5, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10875, N'L6FTnNuI7L', N'RGGtEcyABd', N'FunUpdate', N'', N'tinyint', 0, N'0', 6, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10876, N'Q5RWHg5yaq', N'RGGtEcyABd', N'FunDelete', N'', N'tinyint', 0, N'0', 7, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10877, N'KFHPTGolU3', N'RGGtEcyABd', N'FunPrint', N'', N'tinyint', 0, N'0', 8, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10878, N'IRn6QsvpCr', N'RGGtEcyABd', N'FunExport', N'', N'tinyint', 0, N'0', 9, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10879, N'ZSmB0GA0zs', N'RGGtEcyABd', N'FunView', N'', N'tinyint', 0, N'0', 10, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10880, N'8IKS2nwuNB', N'RGGtEcyABd', N'FunOther', N'', N'tinyint', 0, N'0', 11, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10881, N'TxjRo2r9SD', N'N28UZ1M3aY', N'Id', N'', N'varchar(10)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10882, N'xunplxahua', N'N28UZ1M3aY', N'Name', N'', N'nvarchar(20)', 0, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10883, N'wIDSJpGldh', N'N28UZ1M3aY', N'Account', N'', N'varchar(20)', 0, N'', 3, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10884, N'Lp3WkaapwF', N'N28UZ1M3aY', N'Pwd', N'', N'varchar(32)', 0, N'', 4, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10885, N'nwLMlxSauQ', N'N28UZ1M3aY', N'DeptId', N'', N'varchar(10)', 0, N'', 5, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10886, N'vnfPmns73t', N'N28UZ1M3aY', N'Status', N'', N'bit', 0, N'', 6, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10887, N'CtN9mVn1WJ', N'e6HaNyL2vi', N'Id', N'', N'varchar(10)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10888, N'Ompxjv7SzW', N'e6HaNyL2vi', N'UserId', N'', N'varchar(10)', 0, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10889, N'R8UbVjrbbI', N'e6HaNyL2vi', N'RoleId', N'', N'varchar(10)', 0, N'', 3, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10890, N'HMDffuFGit', N'3DgSQnx0Wz', N'Id', N'', N'varchar(10)', 0, N'', 1, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10891, N'OcKm24vGQc', N'3DgSQnx0Wz', N'Name', N'', N'nvarchar(30)', 0, N'', 2, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10892, N'1Qe0r0bz7X', N'3DgSQnx0Wz', N'ProjectId', N'', N'varchar(10)', 0, N'', 3, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10893, N'9prI7l2STu', N'3DgSQnx0Wz', N'Sort', N'', N'smallint', 0, N'', 4, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10894, N'TYMsC4v2p9', N'3DgSQnx0Wz', N'Status', N'', N'bit', 0, N'', 5, N'', 1)
+GO
+INSERT [dbo].[Column] ([Sn], [Id], [TableId], [Code], [Name], [DataType], [Nullable], [DefaultValue], [Sort], [Note], [Status]) VALUES (10895, N'ujlGI3q6n0', N'5X9RB3720A', N'Name', N'', N'nvarchar(20)', 0, N'', 2, N'', 1)
+GO
 SET IDENTITY_INSERT [dbo].[Column] OFF
+GO
+INSERT [dbo].[Crud] ([Id], [ProjectId], [ProgCode], [ProgName], [LabelHori], [ReadSql], [TableAs], [HasCreate], [HasUpdate], [HasDelete], [HasView], [HasExport], [HasReset], [AuthType], [Status], [Created], [Revised]) VALUES (N'2638sRu1lL', N'Db', N'Issue', N'問題維護', 1, N'select *
+from dbo.Issue
+ordre by Id', N'', 1, 1, 1, 1, 1, 1, 2, 1, CAST(N'2024-12-10T17:40:14.000' AS DateTime), CAST(N'2024-12-10T17:43:02.000' AS DateTime))
 GO
 INSERT [dbo].[Crud] ([Id], [ProjectId], [ProgCode], [ProgName], [LabelHori], [ReadSql], [TableAs], [HasCreate], [HasUpdate], [HasDelete], [HasView], [HasExport], [HasReset], [AuthType], [Status], [Created], [Revised]) VALUES (N'5XDCQU13AA', N'Hr', N'UserExt', N'用戶學經歷維護', 1, N'select u.*, d.name as DeptName from [User] u
 join [Dept] d on u.DeptId=d.Id
@@ -1131,6 +1478,10 @@ INSERT [dbo].[Crud] ([Id], [ProjectId], [ProgCode], [ProgName], [LabelHori], [Re
 from dbo.[Table] a
 inner join dbo.Project p on p.Id=a.ProjectId
 order by a.Id desc', N'', 1, 1, 1, 1, 0, 0, 0, 1, CAST(N'2022-01-20T16:11:25.000' AS DateTime), CAST(N'2022-05-06T00:18:24.000' AS DateTime))
+GO
+INSERT [dbo].[Crud] ([Id], [ProjectId], [ProgCode], [ProgName], [LabelHori], [ReadSql], [TableAs], [HasCreate], [HasUpdate], [HasDelete], [HasView], [HasExport], [HasReset], [AuthType], [Status], [Created], [Revised]) VALUES (N'RgOxvoVpND', N'Db', N'PrjProg', N'專案功能', 1, N'select * 
+from dbo.PrjProg
+order by Id', N'', 1, 1, 1, 1, 0, 0, 1, 1, CAST(N'2024-12-11T11:31:52.000' AS DateTime), NULL)
 GO
 SET IDENTITY_INSERT [dbo].[CrudEitem] ON 
 GO
@@ -1306,6 +1657,36 @@ INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [Item
 GO
 INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (96, N'D8JNT00JHA', N'D8JNSZT7JA', N'5X9RB38KTA', N'C', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 9)
 GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3105, N'x2cdkvRX5g', N'lWoB2wEvK1', N'lrxkoVuL9N', N'H', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 0)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3106, N'ot62i29tal', N'lWoB2wEvK1', N'qH3wMFow2l', N'S', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 1)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3107, N'ZhXMgI1Lts', N'lWoB2wEvK1', N'toPiQ9D3zx', N'S', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 2)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3108, N'W4RHC5TRbE', N'lWoB2wEvK1', N'08XKCcU7cs', N'T', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 3)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3109, N'evp0VusUii', N'lWoB2wEvK1', N'GgRiWW7KxW', N'S', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 4)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3110, N'CvNnMAzJeL', N'lWoB2wEvK1', N'e4y7hfjkGv', N'TA', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 5)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3111, N'DeUhXQREW3', N'lWoB2wEvK1', N'T8nJiW3G0b', N'RO', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 6)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3112, N'nqwq5WRmrk', N'lWoB2wEvK1', N'exN2k1hrQS', N'RO', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 7)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3113, N'tq8Afwn7tO', N'lWoB2wEvK1', N'oKTK9qHW1J', N'RO', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 8)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3114, N'SzoKEUyvgg', N'lWoB2wEvK1', N'O6vOCd8tj5', N'RO', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 9)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3115, N'4xzrTORyaC', N'dOAxtyUcfO', N'HMDffuFGit', N'H', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 0)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3116, N'qeVDkvOXti', N'dOAxtyUcfO', N'OcKm24vGQc', N'T', N'', 1, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 1)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3117, N'IZKxa6rySE', N'dOAxtyUcfO', N'1Qe0r0bz7X', N'S', N'', 1, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 2)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3118, N'l9DSh1426K', N'dOAxtyUcfO', N'9prI7l2STu', N'INT', N'', 1, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 3)
+GO
+INSERT [dbo].[CrudEitem] ([Sn], [Id], [EtableId], [ColumnId], [EitemType], [ItemData], [Required], [HasCreate], [HasUpdate], [PlaceHolder], [DefaultValue], [PosGroup], [LayoutCols], [Width], [CheckType], [CheckData], [Sort]) VALUES (3119, N'U1oA4f28uL', N'dOAxtyUcfO', N'TYMsC4v2p9', N'C', N'', 0, 1, 1, N'', N'', N'', N'', 0, N'0', N'', 4)
+GO
 SET IDENTITY_INSERT [dbo].[CrudEitem] OFF
 GO
 INSERT [dbo].[CrudEtable] ([Id], [CrudId], [TableId], [PkeyFid], [FkeyFid], [Col4], [OrderBy], [Sort], [HalfWidth], [AutoIdLen]) VALUES (N'5XEYLM3AWA', N'5XDCQU13AA', N'5XD29XC3BA', N'Id', N'', N'0', N'', 0, 0, NULL)
@@ -1329,6 +1710,10 @@ GO
 INSERT [dbo].[CrudEtable] ([Id], [CrudId], [TableId], [PkeyFid], [FkeyFid], [Col4], [OrderBy], [Sort], [HalfWidth], [AutoIdLen]) VALUES (N'D8JNSZSWHA', N'D8JNSZN7YA', N'5X9RB373ZA', N'Id', N'', N'0', N'', 0, 0, NULL)
 GO
 INSERT [dbo].[CrudEtable] ([Id], [CrudId], [TableId], [PkeyFid], [FkeyFid], [Col4], [OrderBy], [Sort], [HalfWidth], [AutoIdLen]) VALUES (N'D8JNSZT7JA', N'D8JNSZN7YA', N'5X9RB36MYA', N'Id', N'TableId', N'0', N'', 1, 0, NULL)
+GO
+INSERT [dbo].[CrudEtable] ([Id], [CrudId], [TableId], [PkeyFid], [FkeyFid], [Col4], [OrderBy], [Sort], [HalfWidth], [AutoIdLen]) VALUES (N'dOAxtyUcfO', N'RgOxvoVpND', N'3DgSQnx0Wz', N'Id', N'', N'0', N'', 0, 0, N'')
+GO
+INSERT [dbo].[CrudEtable] ([Id], [CrudId], [TableId], [PkeyFid], [FkeyFid], [Col4], [OrderBy], [Sort], [HalfWidth], [AutoIdLen]) VALUES (N'lWoB2wEvK1', N'2638sRu1lL', N'oOG6kwUBcT', N'Id', N'', N'1', N'Id', 0, 0, N'')
 GO
 SET IDENTITY_INSERT [dbo].[CrudQitem] ON 
 GO
@@ -1359,6 +1744,20 @@ GO
 INSERT [dbo].[CrudQitem] ([Sn], [Id], [CrudId], [ColumnId], [TableAs], [QitemType], [ItemData], [Op], [IsRange], [IsFind2], [PosGroup], [LayoutCols], [Sort]) VALUES (14, N'D8JNSZPJJA', N'D8JNSZN7YA', N'5X9RB3GT3A', N'', N'T', N'', N'Like', 0, 0, N'', N'', 2)
 GO
 INSERT [dbo].[CrudQitem] ([Sn], [Id], [CrudId], [ColumnId], [TableAs], [QitemType], [ItemData], [Op], [IsRange], [IsFind2], [PosGroup], [LayoutCols], [Sort]) VALUES (15, N'D8JNSZQ05A', N'D8JNSZN7YA', N'D58FUTT5TA', N'', N'S', N'YesNos', N'Equal', 0, 0, N'', N'', 3)
+GO
+INSERT [dbo].[CrudQitem] ([Sn], [Id], [CrudId], [ColumnId], [TableAs], [QitemType], [ItemData], [Op], [IsRange], [IsFind2], [PosGroup], [LayoutCols], [Sort]) VALUES (1022, N'XqUYI5eki2', N'2638sRu1lL', N'qH3wMFow2l', N'', N'S', N'', N'Equal', 0, 0, N'', N'', 0)
+GO
+INSERT [dbo].[CrudQitem] ([Sn], [Id], [CrudId], [ColumnId], [TableAs], [QitemType], [ItemData], [Op], [IsRange], [IsFind2], [PosGroup], [LayoutCols], [Sort]) VALUES (1023, N'4Rk2YOj6PY', N'2638sRu1lL', N'toPiQ9D3zx', N'', N'S', N'', N'Equal', 0, 0, N'', N'', 1)
+GO
+INSERT [dbo].[CrudQitem] ([Sn], [Id], [CrudId], [ColumnId], [TableAs], [QitemType], [ItemData], [Op], [IsRange], [IsFind2], [PosGroup], [LayoutCols], [Sort]) VALUES (1024, N'TdYK7irH8u', N'2638sRu1lL', N'GgRiWW7KxW', N'', N'S', N'', N'Equal', 0, 0, N'', N'', 2)
+GO
+INSERT [dbo].[CrudQitem] ([Sn], [Id], [CrudId], [ColumnId], [TableAs], [QitemType], [ItemData], [Op], [IsRange], [IsFind2], [PosGroup], [LayoutCols], [Sort]) VALUES (1025, N'CxG0YN0aH0', N'2638sRu1lL', N'08XKCcU7cs', N'', N'T', N'', N'Like2', 0, 0, N'', N'', 3)
+GO
+INSERT [dbo].[CrudQitem] ([Sn], [Id], [CrudId], [ColumnId], [TableAs], [QitemType], [ItemData], [Op], [IsRange], [IsFind2], [PosGroup], [LayoutCols], [Sort]) VALUES (1026, N'Ycc3TusGnI', N'2638sRu1lL', N'T8nJiW3G0b', N'', N'S', N'', N'Equal', 0, 0, N'', N'', 4)
+GO
+INSERT [dbo].[CrudQitem] ([Sn], [Id], [CrudId], [ColumnId], [TableAs], [QitemType], [ItemData], [Op], [IsRange], [IsFind2], [PosGroup], [LayoutCols], [Sort]) VALUES (1027, N'wPtvUH6Mwr', N'RgOxvoVpND', N'OcKm24vGQc', N'', N'T', N'', N'Like2', 0, 0, N'', N'', 0)
+GO
+INSERT [dbo].[CrudQitem] ([Sn], [Id], [CrudId], [ColumnId], [TableAs], [QitemType], [ItemData], [Op], [IsRange], [IsFind2], [PosGroup], [LayoutCols], [Sort]) VALUES (1028, N'KsAnSwALYl', N'RgOxvoVpND', N'1Qe0r0bz7X', N'', N'S', N'', N'Equal', 0, 0, N'', N'', 1)
 GO
 SET IDENTITY_INSERT [dbo].[CrudQitem] OFF
 GO
@@ -1418,17 +1817,51 @@ INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [
 GO
 INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (34, N'D8JPP0W6JA', N'D8JNSZN7YA', N'_Fun', N'維護', 0, N'CF', 5)
 GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3042, N'KtR7xL0cuW', N'2638sRu1lL', N'Id', N'Id', 0, N'0', 0)
+GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3043, N'cH0jUxIWHq', N'2638sRu1lL', N'ProgId', N'功能', 0, N'0', 1)
+GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3044, N'uhI32dA4YK', N'2638sRu1lL', N'OwnerId', N'擁有者', 0, N'0', 2)
+GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3045, N'lYcwPni4wB', N'2638sRu1lL', N'Title', N'Title', 0, N'0', 3)
+GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3046, N'v67CMOihaT', N'2638sRu1lL', N'IssueType', N'資料種類', 0, N'0', 4)
+GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3047, N'QETKb1JuCd', N'2638sRu1lL', N'Creator', N'建檔人員', 0, N'0', 5)
+GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3048, N'j842mikfO2', N'2638sRu1lL', N'Reviser', N'修改人員', 0, N'0', 6)
+GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3049, N'Kf9wNOsrwH', N'RgOxvoVpND', N'Name', N'功能名稱', 0, N'0', 0)
+GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3050, N'crZ1G6kuii', N'RgOxvoVpND', N'ProjectId', N'專案', 0, N'0', 1)
+GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3051, N'8DjyNemrbr', N'RgOxvoVpND', N'Sort', N'排序', 0, N'0', 2)
+GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3052, N'aFrbpjrAZ1', N'RgOxvoVpND', N'Status', N'狀態', 0, N'SN', 3)
+GO
+INSERT [dbo].[CrudRitem] ([Sn], [Id], [CrudId], [ColumnCode], [Name], [Width], [RitemType], [Sort]) VALUES (3053, N'vFblllhsm0', N'RgOxvoVpND', N'_fun', N'功能', 0, N'CF', 4)
+GO
 SET IDENTITY_INSERT [dbo].[CrudRitem] OFF
 GO
-INSERT [dbo].[Dept] ([Id], [Name], [MgrId]) VALUES (N'RD', N'研發部', N'Nick')
+SET IDENTITY_INSERT [dbo].[Issue] ON 
 GO
-INSERT [dbo].[Dept] ([Id], [Name], [MgrId]) VALUES (N'ST', N'軟體中心', N'Bruce')
+INSERT [dbo].[Issue] ([Sn], [Id], [ProjectId], [ProgId], [OwnerId], [IssueType], [WorkDate], [WorkHours], [Title], [Note], [IsFinish], [RptDeptCode], [RptDeptId], [RptUser], [RptType], [Creator], [Created], [Reviser], [Revised]) VALUES (1, N'AwwQVmNGQ7', N'bu040syNlI', N'T6eAWTQc8M', N'Bruce', N'R', CAST(N'2025-02-03T00:00:00' AS SmallDateTime), 1, N'test1', N'test1', 1, N'', NULL, N'', N'', N'Bruce', CAST(N'2025-02-03T08:51:54.000' AS DateTime), NULL, NULL)
 GO
-INSERT [dbo].[Project] ([Id], [Code], [DbName], [DbType], [ProjectPath], [ConnectStr], [Status], [FromTmpTable], [Creator], [Created], [Reviser], [Revised]) VALUES (N'D58WWHCYQA', N'BaoAdm', N'Bao', 0, N'd:\_project\BaoAdm', N'data source=(localdb)\mssqllocaldb;initial catalog=Bao;integrated security=True;multipleactiveresultsets=True;max pool size=1000;', 1, 0, N'Bruce', CAST(N'2024-11-01T14:29:48.253' AS DateTime), NULL, NULL)
+SET IDENTITY_INSERT [dbo].[Issue] OFF
 GO
-INSERT [dbo].[Project] ([Id], [Code], [DbName], [DbType], [ProjectPath], [ConnectStr], [Status], [FromTmpTable], [Creator], [Created], [Reviser], [Revised]) VALUES (N'Db', N'DbAdm', N'Db', 0, N'D:\_project\DbAdm', N'data source=(localdb)\mssqllocaldb;initial catalog=Db;integrated security=True;multipleactiveresultsets=True;max pool size=1000;', 1, 0, N'Bruce', CAST(N'2024-11-01T14:29:48.253' AS DateTime), NULL, NULL)
+SET IDENTITY_INSERT [dbo].[IssueFile] ON 
 GO
-INSERT [dbo].[Project] ([Id], [Code], [DbName], [DbType], [ProjectPath], [ConnectStr], [Status], [FromTmpTable], [Creator], [Created], [Reviser], [Revised]) VALUES (N'Hr', N'HrAdm', N'Hr', 0, N'D:\_project\HrAdm', N'data source=(localdb)\mssqllocaldb;initial catalog=Hr;integrated security=True;multipleactiveresultsets=True;max pool size=1000;', 1, 0, N'Bruce', CAST(N'2024-11-01T14:29:48.253' AS DateTime), NULL, NULL)
+INSERT [dbo].[IssueFile] ([Sn], [Id], [IssueId], [FileName], [Creator], [Created]) VALUES (1, N'borCKm5ANt', N'Ga0KfnbQNq', N'遊樂場地圖.png', N'Bruce', CAST(N'2024-12-12T11:00:56.000' AS DateTime))
+GO
+SET IDENTITY_INSERT [dbo].[IssueFile] OFF
+GO
+INSERT [dbo].[PrjProg] ([Id], [Name], [ProjectId], [Sort], [Status], [Creator]) VALUES (N'T6eAWTQc8M', N'功能1', N'bu040syNlI', 1, 1, N'Bruce')
+GO
+INSERT [dbo].[Project] ([Id], [Name], [Code], [DbName], [DbType], [ProjectPath], [ConnectStr], [Status], [FromTmpTable], [Creator], [Created], [Reviser], [Revised]) VALUES (N'D58WWHCYQA', N'尋寶', N'BaoAdm', N'Bao', 0, N'd:\_project\BaoAdm', N'data source=(localdb)\mssqllocaldb;initial catalog=Bao;integrated security=True;multipleactiveresultsets=True;max pool size=1000;', 1, 0, N'Bruce', CAST(N'2024-11-01T14:29:48.253' AS DateTime), NULL, NULL)
+GO
+INSERT [dbo].[Project] ([Id], [Name], [Code], [DbName], [DbType], [ProjectPath], [ConnectStr], [Status], [FromTmpTable], [Creator], [Created], [Reviser], [Revised]) VALUES (N'Db', N'資料庫文件', N'DbAdm', N'Db', 0, N'D:\_project\DbAdm', N'data source=.\SqlExpress;initial catalog=Db;integrated security=True;multipleactiveresultsets=True;max pool size=1000;', 1, 0, N'Bruce', CAST(N'2024-11-01T14:29:48.253' AS DateTime), NULL, NULL)
+GO
+INSERT [dbo].[Project] ([Id], [Name], [Code], [DbName], [DbType], [ProjectPath], [ConnectStr], [Status], [FromTmpTable], [Creator], [Created], [Reviser], [Revised]) VALUES (N'Hr', N'Hr人事', N'HrAdm', N'Hr', 0, N'D:\_project\HrAdm', N'data source=(localdb)\mssqllocaldb;initial catalog=Hr;integrated security=True;multipleactiveresultsets=True;max pool size=1000;', 1, 0, N'Bruce', CAST(N'2024-11-01T14:29:48.253' AS DateTime), NULL, NULL)
 GO
 SET IDENTITY_INSERT [dbo].[Table] ON 
 GO
@@ -1517,6 +1950,30 @@ GO
 INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (120, N'D8ZRXEUS7A', N'D58WWHCYQA', N'BaoStage', N'尋寶關卡', N'', 0, 1)
 GO
 INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (121, N'D9QTSQF55A', N'D58WWHCYQA', N'XpCode', N'雜項檔', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1470, N'oOG6kwUBcT', N'Db', N'Issue', N'', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1471, N'iskfQCWWld', N'Db', N'MCTDDbDefinition', N'', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1472, N'AHODXbOs21', N'Db', N'MCTMDbDefinition', N'', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1473, N'GP5KoCoFVL', N'Db', N'tmpColumn', N'', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1474, N'6QsXKBAf4h', N'Db', N'tmpTable', N'', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1475, N'bnZnlLytAh', N'Db', N'XpDept', N'', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1476, N'6hxO6mna5B', N'Db', N'XpProg', N'', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1477, N'Shc53pKlhR', N'Db', N'XpRole', N'', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1478, N'RGGtEcyABd', N'Db', N'XpRoleProg', N'', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1479, N'N28UZ1M3aY', N'Db', N'XpUser', N'', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1480, N'e6HaNyL2vi', N'Db', N'XpUserRole', N'', N'', 0, 1)
+GO
+INSERT [dbo].[Table] ([Sn], [Id], [ProjectId], [Code], [Name], [Note], [TranLog], [Status]) VALUES (1481, N'3DgSQnx0Wz', N'Db', N'PrjProg', N'', N'', 0, 1)
 GO
 SET IDENTITY_INSERT [dbo].[Table] OFF
 GO
@@ -1770,16 +2227,6 @@ INSERT [dbo].[tmpTable] ([Code], [Note]) VALUES (N'WorkProcedure', N'')
 GO
 INSERT [dbo].[tmpTable] ([Code], [Note]) VALUES (N'WorkResponse', N'')
 GO
-INSERT [dbo].[User] ([Id], [Name], [Account], [Pwd], [DeptId], [Status]) VALUES (N'Bruce', N'明山', N'bruce', N'QSS8CpM1wn8IbyS6IHpJEg', N'ST', 1)
-GO
-INSERT [dbo].[User] ([Id], [Name], [Account], [Pwd], [DeptId], [Status]) VALUES (N'Dyrel', N'銘豪', N'dyrel', N'', N'ST', 1)
-GO
-INSERT [dbo].[User] ([Id], [Name], [Account], [Pwd], [DeptId], [Status]) VALUES (N'Ivan', N'進發', N'ivan', N'QSS8CpM1wn8IbyS6IHpJEg', N'ST', 1)
-GO
-INSERT [dbo].[User] ([Id], [Name], [Account], [Pwd], [DeptId], [Status]) VALUES (N'Paddy', N'宏銘', N'paddy', N'', N'ST', 1)
-GO
-INSERT [dbo].[User] ([Id], [Name], [Account], [Pwd], [DeptId], [Status]) VALUES (N'Peter', N'仁永', N'peter', N'Udww3cRz1DpgEenrumyncA', N'ST', 1)
-GO
 INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N'AuthRange', N'0', N'無', 1, NULL, NULL)
 GO
 INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N'AuthRange', N'1', N'個人', 2, NULL, NULL)
@@ -1866,6 +2313,16 @@ INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N
 GO
 INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N'InputType', N'TA', N'TextArea', 3, NULL, NULL)
 GO
+INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N'IssueType', N'K', N'知識', 2, NULL, N'KM')
+GO
+INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N'IssueType', N'L', N'請假', 4, NULL, N'Leave')
+GO
+INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N'IssueType', N'M', N'會議', 3, NULL, N'Meeting')
+GO
+INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N'IssueType', N'O', N'其他', 5, NULL, N'Other')
+GO
+INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N'IssueType', N'R', N'例行工作', 1, NULL, N'Routine')
+GO
 INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N'QitemOp', N'Equal', N'Equal', 1, NULL, NULL)
 GO
 INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N'QitemOp', N'In', N'In', 4, NULL, NULL)
@@ -1904,9 +2361,17 @@ INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N
 GO
 INSERT [dbo].[XpCode] ([Type], [Value], [Name], [Sort], [Ext], [Note]) VALUES (N'RitemType', N'YE', N'YesEmpty', 3, NULL, NULL)
 GO
+INSERT [dbo].[XpDept] ([Id], [Name], [MgrId]) VALUES (N'RD', N'研發部', N'Nick')
+GO
+INSERT [dbo].[XpDept] ([Id], [Name], [MgrId]) VALUES (N'ST', N'軟體中心', N'Bruce')
+GO
 INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'Column', N'Column', N'Column', NULL, N'/Column/Read', 3, 1, 1, 1, 1, 1, 0, 0, 1, 0)
 GO
+INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'Issue', N'Issue', N'Issue', NULL, N'/Issue/Read', 8, 1, 1, 1, 1, 1, 0, 0, 1, 0)
+GO
 INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'MyCrud', N'MyCrud', N'MyCrud', NULL, N'/MyCrud/Read', 4, 1, 0, 1, 1, 0, 0, 0, 1, 0)
+GO
+INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'PrjProg', N'PrjProg', N'PrjProg', NULL, N'/PrjProg/Read', 7, 0, 1, 1, 1, 1, 0, 0, 1, 0)
 GO
 INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'Project', N'Project', N'Project', NULL, N'/Project/Read', 1, 1, 1, 1, 1, 1, 0, 0, 1, 0)
 GO
@@ -1914,11 +2379,11 @@ INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [
 GO
 INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'Table', N'Table', N'Table', NULL, N'/Table/Read', 2, 1, 1, 1, 1, 1, 0, 0, 1, 0)
 GO
-INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'User', N'User', N'User', NULL, N'/User/Read', 5, 0, 1, 1, 1, 1, 0, 0, 1, 0)
-GO
 INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'XpProg', N'XpProg', N'XpProg', NULL, N'/XpProg/Read', 7, 0, 1, 1, 1, 1, 0, 0, 1, 0)
 GO
 INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'XpRole', N'XpRole', N'XpRole', NULL, N'/XpRole/Read', 6, 0, 1, 1, 1, 1, 0, 0, 1, 0)
+GO
+INSERT [dbo].[XpProg] ([Id], [Code], [Name], [Icon], [Url], [Sort], [AuthRow], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'XpUser', N'XpUser', N'XpUser', NULL, N'/XpUser/Read', 5, 0, 1, 1, 1, 1, 0, 0, 1, 0)
 GO
 INSERT [dbo].[XpRole] ([Id], [Name]) VALUES (N'Adm', N'管理者')
 GO
@@ -1930,15 +2395,21 @@ INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [Fu
 GO
 INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'3lZiDGr9R5', N'All', N'Column', 1, 9, 1, 0, 0, 0, 9, 0)
 GO
-INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'7fA4Ba9RhU', N'Adm', N'User', 1, 0, 0, 0, 0, 0, 0, 0)
+INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'6IuPtprTF2', N'Adm', N'PrjProg', 1, 9, 9, 9, 0, 0, 9, 0)
 GO
 INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'bgZ6GpMNDn', N'Adm', N'Table', 1, 9, 9, 9, 0, 0, 9, 0)
+GO
+INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'lckATVuDUg', N'Adm', N'Issue', 1, 9, 9, 9, 0, 0, 9, 0)
 GO
 INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'LftpdhJIUf', N'All', N'MyCrud', 1, 9, 2, 0, 0, 0, 9, 0)
 GO
 INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'nkyeSv59PR', N'All', N'Table', 1, 9, 1, 0, 0, 0, 9, 0)
 GO
+INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'np60Iog2rt', N'All', N'Issue', 1, 9, 1, 1, 0, 0, 9, 0)
+GO
 INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'q4jiuKviUm', N'All', N'SetPwd', 0, 0, 0, 0, 0, 0, 0, 0)
+GO
+INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'RZbOdEKfUt', N'Adm', N'XpUser', 1, 9, 9, 9, 0, 0, 9, 0)
 GO
 INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'Sb3k71zgds', N'All', N'Project', 1, 9, 1, 0, 0, 0, 9, 0)
 GO
@@ -1948,7 +2419,21 @@ INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [Fu
 GO
 INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'z0fW8NzHUn', N'Adm', N'XpRole', 1, 0, 0, 0, 0, 0, 0, 0)
 GO
+INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'zmta9T2gax', N'All', N'PrjProg', 1, 9, 9, 9, 0, 0, 9, 0)
+GO
 INSERT [dbo].[XpRoleProg] ([Id], [RoleId], [ProgId], [FunCreate], [FunRead], [FunUpdate], [FunDelete], [FunPrint], [FunExport], [FunView], [FunOther]) VALUES (N'zNA1tEuwsA', N'Adm', N'Project', 1, 9, 9, 9, 0, 0, 9, 0)
+GO
+INSERT [dbo].[XpUser] ([Id], [Name], [Account], [Pwd], [DeptId], [PhotoFile], [Status]) VALUES (N'Bruce', N'bruce', N'aa', N'QSS8CpM1wn8IbyS6IHpJEg', N'ST', NULL, 1)
+GO
+INSERT [dbo].[XpUser] ([Id], [Name], [Account], [Pwd], [DeptId], [PhotoFile], [Status]) VALUES (N'Dyrel', N'銘豪', N'bb', N'Ia0L2Da5DQj0z2QLTCmOfA', N'ST', NULL, 1)
+GO
+INSERT [dbo].[XpUser] ([Id], [Name], [Account], [Pwd], [DeptId], [PhotoFile], [Status]) VALUES (N'Ivan', N'進發', N'ivan', N'QSS8CpM1wn8IbyS6IHpJEg', N'ST', NULL, 1)
+GO
+INSERT [dbo].[XpUser] ([Id], [Name], [Account], [Pwd], [DeptId], [PhotoFile], [Status]) VALUES (N'LOTxPI5WM8', N'test', N'tt', N'', N'ST', NULL, 1)
+GO
+INSERT [dbo].[XpUser] ([Id], [Name], [Account], [Pwd], [DeptId], [PhotoFile], [Status]) VALUES (N'Paddy', N'paddy', N'paddy', N'', N'ST', NULL, 1)
+GO
+INSERT [dbo].[XpUser] ([Id], [Name], [Account], [Pwd], [DeptId], [PhotoFile], [Status]) VALUES (N'Peter', N'peter', N'peter', N'Udww3cRz1DpgEenrumyncA', N'ST', NULL, 1)
 GO
 INSERT [dbo].[XpUserRole] ([Id], [UserId], [RoleId]) VALUES (N'001', N'Bruce', N'Adm')
 GO
@@ -1959,6 +2444,8 @@ GO
 INSERT [dbo].[XpUserRole] ([Id], [UserId], [RoleId]) VALUES (N'Vdn6EA6hQM', N'Dyrel', N'All')
 GO
 INSERT [dbo].[XpUserRole] ([Id], [UserId], [RoleId]) VALUES (N'HXytfka6G5', N'Ivan', N'All')
+GO
+INSERT [dbo].[XpUserRole] ([Id], [UserId], [RoleId]) VALUES (N'mI4YJ9yWgD', N'LOTxPI5WM8', N'All')
 GO
 INSERT [dbo].[XpUserRole] ([Id], [UserId], [RoleId]) VALUES (N'h46y8LIE9G', N'Paddy', N'Adm')
 GO
@@ -2021,6 +2508,14 @@ GO
 ALTER TABLE [dbo].[CrudEitem] CHECK CONSTRAINT [FK_CrudEitem_CrudEtable]
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'權限種類, 0(無), 1(Ctrl), 2(Action)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Crud', @level2type=N'COLUMN',@level2name=N'AuthType'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建檔人員' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Issue', @level2type=N'COLUMN',@level2name=N'Creator'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建檔日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Issue', @level2type=N'COLUMN',@level2name=N'Created'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'修改人員' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Issue', @level2type=N'COLUMN',@level2name=N'Reviser'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'修改日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Issue', @level2type=N'COLUMN',@level2name=N'Revised'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建檔人員' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'Creator'
 GO

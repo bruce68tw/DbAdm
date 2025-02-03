@@ -19,7 +19,7 @@ namespace DbAdm.Services
                     new() { Fid = "Id" },
 					new() { Fid = "Account" },
 					new() { Fid = "Name" },
-					//new() { Fid = "Pwd" },
+					new() { Fid = "Pwd", Value = "" },
 					new() { Fid = "DeptId" },
 					new() { Fid = "Status" },
                 ],

@@ -68,6 +68,7 @@
         <form id='formRead2' class='xg-form'>
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableName"].Value, Fid = "Name", MaxLen = 30 })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["TranLog"].Value, Fid = "TranLog", Rows = (List<IdStrDto>)ViewBag.YesNos })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Status"].Value, Fid = "Status", Rows = (List<IdStrDto>)ViewBag.Statuses })
         </form>
 
         <div class='xg-btns-box' style="margin-top:5px;">

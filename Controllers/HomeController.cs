@@ -35,7 +35,7 @@ namespace DbAdm.Controllers
 
         public ActionResult Logout()
         {
-            _Http.SetCookie(_Fun.FidClientKey, "");
+            _Http.DeleteCookie(_Fun.FidClientKey);
             return Redirect("/Home/Login");
         }
         public ActionResult Error()
