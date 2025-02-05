@@ -1600,6 +1600,12 @@ var _date = {
         return mm.format(_BR.MmUiDt2Fmt);
     },
 
+    dtsToUiDate: function (dts) {
+        return _str.isEmpty(dts)
+            ? ''
+            : _date.mmToUiDate(moment(dts, _fun.MmDtFmt));
+    },
+
     /**
      * js date string to ui date string
      * param ds {string} js date string
