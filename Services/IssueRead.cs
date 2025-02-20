@@ -46,6 +46,11 @@ order by p.Id, pp.Sort, i.Created desc
                     new() { Fid = "OwnerId" },
                     //new() { Fid = "Creator" },
                     new() { Fid = "IsFinish" },
+                    //以下為額外的排序欄位
+                    new() { Fid = "ProjectName", Col = "pp.ProjectId" },
+                    new() { Fid = "ProgName", Col = "i.ProgId" },
+                    new() { Fid = "IssueTypeName", Col = "i.IssueType" },
+
                 ],
             };
         }

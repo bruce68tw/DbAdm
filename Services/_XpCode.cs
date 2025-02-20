@@ -24,7 +24,15 @@ namespace DbAdm.Services
         }
 		public static async Task<List<IdStrDto>?> ProjectsA(Db? db = null)
         {
-            return await _Db.TableToCodesA("Project", db);
+            //return await _Db.TableToCodesA("Project", db);
+            var sql = @"
+select 
+    Id, [Name] as Str
+from dbo.Project
+order by [Name]
+";
+            return await BySqlA(sql, db);
+
         }
 
         #endregion
