@@ -1,4 +1,5 @@
-﻿.xg-input {
+﻿/* 輸入欄位的外框 */
+.xg-input {
     padding-top: 7px;
     min-height: 43px;
 }

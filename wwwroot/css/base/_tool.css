@@ -1,6 +1,6 @@
 ﻿
 /* bootstrap alert */
-#xgAlert {
+.xg-alert {
     position: fixed; 
     top: 3px; 
     right: 3px; 
@@ -10,7 +10,7 @@
 }
 
 /*
-#xgWait {
+#xg-wait {
     display: none;  
     position: fixed;
     top: 33%;
@@ -18,7 +18,7 @@
 }
 */
 
-/* xg-msg for both xgMsg & xgAns */
+/* xg-msg class for both xgMsg & xgAns */
 .xg-msg .modal-dialog {
     min-width: 280px;
     max-width: 480px;
@@ -43,14 +43,14 @@
 }
 */
 
-#xgImage .modal-body {
+.xg-image .modal-body {
     padding: 3px;
 }
-#xgImage .modal-footer {
+.xg-image .modal-footer {
     border: none;
     padding: 5px;
 }
-#xgImage img {
+.xg-image img {
     max-width: 100%;
     max-height: 100%;
     height: auto;

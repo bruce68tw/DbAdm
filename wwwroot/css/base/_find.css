@@ -1,12 +1,11 @@
-﻿
-/* toolbar */
+﻿/* 查詢畫面 */
 
-/* find form toolbar */
+/* 右上方工具列 */
 .xg-find-tbar {
     padding-top: 8px;
 }
 
-/* find form, use $.slideToggle() */
+/* ?? find form, use $.slideToggle() */
 .xg-find-form {
     display: none;
     padding: 10px 0 10px 0;

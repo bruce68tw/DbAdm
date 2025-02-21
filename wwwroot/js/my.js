@@ -4869,11 +4869,11 @@ var _tool = {
 
     init: function () {
         //alert
-        _tool.xgAlert = $('#xgAlert');
-        _tool.xgMsg = $('#xgMsg');
-        _tool.xgAns = $('#xgAns');
-        _tool.xgArea = $('#xgArea');
-        _tool.xgImage = $('#xgImage');
+        _tool.xgAlert = $('.xg-alert');
+        _tool.xgMsg = $('#xgMsg');  //使用id
+        _tool.xgAns = $('#xgAns');  //使用id
+        _tool.xgArea = $('#xg-area');
+        _tool.xgImage = $('#xg-image');
     },
 
     /**
@@ -4919,14 +4919,15 @@ var _tool = {
         });
     },
 
-    //show waiting
+    //??show waiting
     showWait: function () {
         //$('body').addClass('xg-show-loading');
-        $('#xgWait').show();
+        $('.xg-wait').show();
     },
+    //??
     hideWait: function () {
         //$('body').removeClass('xg-show-loading');
-        $('#xgWait').hide();
+        $('.xg-wait').hide();
     },
 
     /**

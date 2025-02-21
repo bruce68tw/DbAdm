@@ -1,6 +1,13 @@
-﻿
+﻿/* 不歸納到某個元件 */
+
 .xg-hide {
     display: none;
+}
+
+@media (max-width:768px) {
+    .xg-hide-rwd {
+        display: none !important;
+    }
 }
 
 .xg-inline {

@@ -1,4 +1,5 @@
-﻿
+﻿/* jQuery Datatables */
+
 /* 筆數起迄&合計 */
 .dataTables_info {
     padding-top: 4px !important;
@@ -55,6 +56,7 @@ table.dataTable thead th {
     }
     */
 
+/* table header 上下排序 icon */
 /* rewirte dataTables.bootstrap4.css */
 table.dataTable thead .sorting:before,
 table.dataTable thead .sorting_asc:before,

@@ -12,15 +12,16 @@
 /* look like link */
 .xg-link-btn {
     background: none !important;
-    color: inherit;
+    /*color: inherit;*/
     border: none;
     padding: 0 !important;
-    font: inherit;
+    /*font: inherit;*/
     /*border is optional*/
     border-bottom: 1px solid #444;
     cursor: pointer;
 }
 
+/* 用來放多個 button */
 .xg-btns-box {
     padding: 3px 0 3px 0;
     display: flex;  /* 間距會變小 */

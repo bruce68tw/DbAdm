@@ -1,5 +1,6 @@
-﻿
-/* 在輸入欄位(右邊)的label*/
+﻿/* 唯讀欄位 */
+
+/* 在輸入欄位(右邊)的label, line form(畫面有格線) 時欄位無外框 */
 .xg-lineform .xi-read {
     border: none;
     padding-left: 0;

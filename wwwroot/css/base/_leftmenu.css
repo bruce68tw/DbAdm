@@ -1,4 +1,4 @@
-﻿/* main form */
+﻿/* 左側功能表 */
 .xg-leftmenu {
     margin-left: 0;
     padding: 0;
@@ -67,11 +67,12 @@
         font-family: 'icomoon';
         content: "\f107"; /* down arrow */
     }
-.xg-leftmenu .xg-arrow.xg-open:before {
-    content: "\f106";   /* up arrow */
-}
+    .xg-leftmenu .xg-arrow.xg-open:before {
+        content: "\f106";   /* up arrow */
+    }
 
-.xg-leftmenu-panel {
+/* 子功能表(第2層) 的外框 */
+.xg-leftmenu-subbox {
     list-style: none;
     /*
     -moz-padding-start: 0;
@@ -84,13 +85,13 @@
     background: #DAF8FF;
 }
 
-.xg-leftmenu-panel li {
-    border: none;
-}
+    .xg-leftmenu-subbox li {
+        border: none;
+    }
 
-/* sub menu text */
-.xg-leftmenu-panel a {
-    /*font-size: 15px;
-    color: #fff;*/
-    padding-left: 22px;
-}
+    /* sub menu text */
+    .xg-leftmenu-subbox a {
+        /*font-size: 15px;
+        color: #fff;*/
+        padding-left: 22px;
+    }
