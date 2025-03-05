@@ -67,6 +67,7 @@
     <None Remove="Startup.cs_old" />
     <None Remove="Views\Shared\Error.cshtml_old" />
     <None Remove="_image\noImage.jpg" />
+    <None Remove="_template\EmailMisSurvey.html" />
     <None Remove="_template\zh-TW\RptIssue.xlsx" />
   </ItemGroup>
 

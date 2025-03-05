@@ -20,7 +20,7 @@ namespace DbAdm.Controllers
             {
                 ViewBag.Projects = await _XpCode.ProjectsA(db);
                 ViewBag.IssueTypes = await _XpCode.IssueTypesA(db);
-				//ViewBag.Depts = await _XpCode.DeptsA(db);
+				ViewBag.Reporters = await _XpCode.ReportersA(db);
 				ViewBag.Users = await _XpCode.UsersA(db);
                 ViewBag.YesNos = _XpCode.YesNos();
             }
@@ -107,11 +107,19 @@ insert into dbo.IssueWatch(Id,IssueId,WatcherId) values (
 
         //取消追踪
         [HttpPost]
-        public async Task<string> DelWatch(string issueId)
+        public async Task<string> DeleteWatch(string issueId)
         {
             return await _Db.ExecSqlA($@"
 delete dbo.IssueWatch where IssueId=@IssueId and WatcherId='{_Fun.UserId()}'
 ", ["IssueId", issueId]) == 1 ? "1" : "0";
         }
+
+        //寄送問卷
+        [HttpPost]
+        public async Task<string> SendSurvey(string issueId)
+        {
+            return await new SurveyService().SendSurveyA(issueId);
+        }
+
     }//class
 }

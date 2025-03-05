@@ -4,7 +4,7 @@
 		<div class="col-md-5 xg-input">
 			@await Component.InvokeAsync("XiRead", new XiReadDto { Fid = "Id", InRow = true, InputAttr = "id='Id' style='width:120px' class='xg-inline'" })
 			<button type="button" id="btnAddWatch" class="btn xg-btn-size btn-success" onclick="_me.onAddWatch()">加入追踪</button>
-			<button type="button" id="btnDelWatch" class="btn xg-btn-size btn-danger" onclick="_me.onDelWatch()">取消追踪</button>
+			<button type="button" id="btnDeleteWatch" class="btn xg-btn-size btn-danger" onclick="_me.onDeleteWatch()">取消追踪</button>
 			<button type="button" id="btnKeepIssue" class="btn xg-btn" onclick="_me.onKeepIssue()">延續工作</button>
 		</div>
 	</div>
@@ -14,7 +14,7 @@
 	</div>
 	<div class="row">
 		@await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Required = true, InRow = true })
-		@await Component.InvokeAsync("XiText", new XiTextDto { Title = "回報人員", Fid = "RptUser", MaxLen = 20, Cols = "2,2", InRow = true })
+		@await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "回報人員", Fid = "RptUser", Rows = ViewBag.Reporters, Cols = "2,2", InRow = true })
 	</div>
 	<div class="row">
 		@await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料種類", Required = true, Fid = "IssueType", Rows = ViewBag.IssueTypes, InRow = true })

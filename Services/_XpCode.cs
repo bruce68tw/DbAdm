@@ -22,7 +22,11 @@ namespace DbAdm.Services
         {
             return await _Db.TableToCodesA("XpUser", db);
         }
-		public static async Task<List<IdStrDto>?> ProjectsA(Db? db = null)
+        public static async Task<List<IdStrDto>?> ReportersA(Db? db = null)
+        {
+            return await _Db.TableToCodesA("Reporter", db);
+        }
+        public static async Task<List<IdStrDto>?> ProjectsA(Db? db = null)
         {
             //return await _Db.TableToCodesA("Project", db);
             var sql = @"

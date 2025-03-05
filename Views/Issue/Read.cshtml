@@ -20,9 +20,11 @@
                     { data: 'Id' },
                     { data: 'Title' },
                     { data: 'IsFinish' },
-                    { data: 'IsWatch' },
+                    //{ data: 'IsWatch' },
                     { data: 'OwnerName' },
-                    { data: 'CreatorName' },
+                    //{ data: 'CreatorName' },
+                    { data: 'SendTimes' },      //寄送問卷次數
+                    { data: '_Survey' },        //空白(沒有問卷Id && 沒有回報人)/已填問卷(有問卷Id)/寄送問卷(有回報人)
                     { data: '_fun' },
                 ],
                 columnDefs: [
@@ -31,6 +33,14 @@
                     }},
                     { targets: [8], render: function (data, type, full, meta) {
                         return _crudR.dtYesEmpty(data);
+                    }},
+                    { targets: [10], render: function (data, type, full, meta) {
+                        let hasSurvey = _str.notEmpty(full.SurveyId);
+                        let hasRptUser = _str.notEmpty(full.RptUserId);
+                            return (!hasSurvey && !hasRptUser) ? '' :
+                                hasSurvey ? '是' :
+                                (full.OwnerId !== _fun.userId) ? '' : 
+                                `<button type="button" class="btn xg-btn xg-btn-size" onclick="_me.onSurvey('${full.Id}')">寄問卷</button>`;
                     }},
                     { targets: [11], render: function (data, type, full, meta) {
                         return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
@@ -67,6 +77,19 @@
             }
         },
 
+        //寄問卷
+        onSurvey: function (issueId) {
+            _tool.ans('是否確定寄送問卷?', async () => {
+                await _ajax.getStrA('SendSurvey', { issueId: issueId }, function (str) {
+                    var ok = (str == '1');
+                    _tool.msg(ok ? '成功寄送問卷。' : '無法寄送問卷 !!');
+                    if (ok) {
+                        _crudR.onFind();
+                    }
+                });
+            });
+        },
+
         //設定延續工作按鈕的狀態
         setKeepBtn: function (isShow) {
             var btn = _me.divEdit.find('#btnKeepIssue');
@@ -86,7 +109,7 @@
         setWatchBtn: function (isShow) {
             var box = _me.divEdit;
             var btnAdd = box.find('#btnAddWatch');
-            var btnDel = box.find('#btnDelWatch');
+            var btnDel = box.find('#btnDeleteWatch');
             if (!isShow){
                 btnAdd.hide();
                 btnDel.hide();
@@ -161,9 +184,9 @@
         },
 
         //取消追踪
-        onDelWatch: async()=>{
+        onDeleteWatch: async () => {
             _tool.ans('是否確定取消追踪?', async()=>{
-                await _ajax.getStrA('DelWatch', {issueId: _me.issueId}, (str)=>{
+                await _ajax.getStrA('DeleteWatch', { issueId: _me.issueId }, (str) => {
                     var ok = (str == '1');
                     _tool.msg(ok ? '已取消追踪。' : '無法取消此筆追踪 !!');
                     if (ok){
@@ -253,9 +276,9 @@
                     <th>資料Id</th>
                     <th>標題</th>
                     <th>已結案</th>
-                    <th>已追踪</th>
                     <th>處理人員</th>
-                    <th>建檔人員</th>
+                    <th>寄送次數</th>
+                    <th>已填問卷</th>
                     <th>功能</th>
                 </tr>
             </thead>
