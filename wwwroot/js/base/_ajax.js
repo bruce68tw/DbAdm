@@ -243,7 +243,7 @@ var _ajax = {
     strToErrMsg: function (str) {
         if (_str.isEmpty(str))
             return '';
-        if (!_ajax._isBrError(result))
+        if (!_ajax._isBrError(str))
             return str;
 
         //case of BR error msg

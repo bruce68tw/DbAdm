@@ -243,7 +243,7 @@ var _ajax = {
     strToErrMsg: function (str) {
         if (_str.isEmpty(str))
             return '';
-        if (!_ajax._isBrError(result))
+        if (!_ajax._isBrError(str))
             return str;
 
         //case of BR error msg
@@ -1030,6 +1030,7 @@ var _crudE = {
         var fun = _fun.FunC;
         _crudE._setEditStatus(fun);
         _crudE._resetForm(_me.edit0);
+        _edit.addIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
         _crudE._afterOpenEdit(fun, null);
     },
 
@@ -1039,6 +1040,7 @@ var _crudE = {
      * return {bool}
      */
     onUpdateA: async function(key) {
+        _edit.removeIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
         return await _crudE._updateOrViewA(_fun.FunU, key);
     },
 
@@ -1752,6 +1754,35 @@ var _edit = {
     //data property name for keep old value
     DataOld: '_old',
 
+    //前後端欄位: isNew
+    IsNew: '_IsNew',
+
+    /**
+     * 增加隱藏欄位 _IsNew, 同時設為1
+     * param obj {box} jquery object
+     */
+    addIsNew: function (box, value) {
+        var fid = _edit.IsNew;
+        var field = box.find(_input.fidFilter(fid));
+        if (value == null)
+            value = '1';
+        if (field.length == 0)
+            box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="${value}">`);
+        else
+            field.val(value);
+    },
+
+    /**
+     * 刪除隱藏欄位 _IsNew
+     * param obj {box} jquery object
+     */
+    removeIsNew: function (box) {
+        var fid = _edit.IsNew;
+        var field = box.find(_input.fidFilter(fid));
+        if (field.length > 0)
+            field.remove();
+    },
+
     /**
      * get old value 
      * param obj {object} input jquery object
@@ -1895,9 +1926,15 @@ var _edit = {
     },
 
     /**
+     * isNewKey(key) -> isNewRow(row)
      * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
      * param key {string}
      */
+    isNewRow: function (row) {
+        var fid = _edit.IsNew;
+        return (row[fid] != null || row[fid] == '1');
+    },
+    /*
     isNewKey: function (key) {
         key = key.toString();   //convert to string for checking
         var len = key.length;
@@ -1907,6 +1944,7 @@ var _edit = {
         var val = parseInt(key);
         return (!Number.isNaN(val) && (val.toString().length == len));
     },
+    */
 
     /**
      * onclick viewFile
@@ -2651,7 +2689,7 @@ var _ibase = {
     },
     //get value by object
     getO: function (obj) {
-        return obj.val();
+        return obj == null ? null : obj.val();
     },
 
     //get input border for show red border
@@ -5461,6 +5499,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 } //class
 /**
  * multiple edit forms
+ *   資料儲存在 html input
  * notice:
  *   1.set data-fkeyFid when save
  *   
@@ -5534,8 +5573,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * return {bool}
      */
     this.isNewRow = function (row) {
-        //return _str.isEmpty(row[this.kid]);
-        return _edit.isNewKey(row[this.kid]);
+        return _edit.isNewRow(row);
     };
 
     /**
@@ -5544,8 +5582,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * return {bool}
      */
     this.isNewTr = function (tr) {
-        var id = _itext.get(this.kid, tr);
-        return _edit.isNewKey(id);
+        return (_itext.get(_edit.IsNew, tr) == '1');
     };
 
     /**
@@ -5662,14 +5699,14 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * load this json rows into UI, also set old values !!
      * param json {json} 
      */
+    //todo: 未完成
     this.loadJson = function (json) {
-        if (this.hasEform) {
+        if (this.fnLoadJson) {
+            this.fnLoadJson(json);
+        } else {
             var rows = (json == null || json[_crudE.Rows] == null)
                 ? null : json[_crudE.Rows];
             this.loadRowsByBox(this.rowsBox, rows);
-        } else {
-            //will raise error if no function
-            this.fnLoadJson(json);
         }
     };
 
@@ -5780,6 +5817,15 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * get row box by id
+     * param id {string} row id
+     * return {object} row box
+     */
+    this.idToRowBox = function (id) {
+        return this.eform.find(_input.fidFilter(id)).parent();
+    };
+
+    /**
      * get updated json, called by crud.js only !!
      * param upKey {string}
      * return {json} modified columns only
@@ -5833,8 +5879,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
             //add new row if empty key
             var tr = $(item);
             var key = _input.get(me.kid, tr);
-            if (_edit.isNewKey(key)) {
-                //var row2 = me.getRow(tr);
+            //if (_edit.isNewKey(key)) {
+            if (me.isNewTr(tr)) {
                 var row2 = _form.toRow(tr);
                 row2[me.DataFkeyFid] = upKey;   //write anyway !!
                 rows.push(row2);
@@ -5892,7 +5938,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * onclick addRow button
      */
     this.onAddRow = function () {
-        this.addRow();
+        var row = this.addRow();
+        _edit.addIsNew(row);    //增加_IsNew隱藏欄位
     };
 
     /**
@@ -6193,7 +6240,7 @@ function EditOne(kid, eformId) {
      * return {bool}
      */
     this.isNewRow = function () {
-        return _str.isEmpty(this.getKey());
+        return (_itext.get(_edit.IsNew, this.eform) == '1');
     };
 
     /**
@@ -6279,6 +6326,7 @@ function EditOne(kid, eformId) {
 
 }//class
 /**
+ * 處理 flow UI 元素和資料(mNode, mLine)之間的轉換
  * workflow component
  * param boxId {string} edit canvas id
  * param mNode {EditMany}
@@ -6286,6 +6334,9 @@ function EditOne(kid, eformId) {
  * return {Flow}
  */ 
 function Flow(boxId, mNode, mLine) {
+    /**
+     flowBox: FlowBox instance
+    */
 
     /**
      * initial flow
@@ -6293,9 +6344,9 @@ function Flow(boxId, mNode, mLine) {
     this.init = function () {
         //#region constant
         //node types
-        this.StartNode = 'S';
-        this.EndNode = 'E';
-        this.NormalNode = 'N';
+        //this.StartNode = 'S';
+        //this.EndNode = 'E';
+        //this.NormalNode = 'N';
         //this.AutoNode = 'A';
 
         //and/or seperator for line condition
@@ -6307,17 +6358,17 @@ function Flow(boxId, mNode, mLine) {
         //html filter/class
         this.NodeFilter = '.xf-node';   //for find node object
         this.MenuFilter = '.xf-menu';   //menu for node/line property
-        this.EpFilter = '.xf-ep';       //node end point
-        this.StartNodeCls = 'xf-start-node';    //start node class
-        this.EndNodeCls = 'xf-end-node';        //end node class
+        this.EpFilter = '.xf-ep';       //??node end point
+        this.StartNodeCls = 'xf-start';    //start node class
+        this.EndNodeCls = 'xf-end';        //end node class
         //this.AutoNodeCls = 'xf-auto-node';      //auto node class
 
         //connection(line) style: start, agree, disagree
-        this.InitLineCfg = { stroke: 'blue', strokeWidth: 2 };  //initial
-        this.OkLineCfg = { stroke: 'green', strokeWidth: 2 };   //ok
-        this.DenyLineCfg = { stroke: 'red', strokeWidth: 2 };   //deny(reject)
+        this.InitLineCfg = { stroke: 'blue', strokeWidth: 2 };  //??initial
+        this.OkLineCfg = { stroke: 'green', strokeWidth: 2 };   //??ok
+        this.DenyLineCfg = { stroke: 'red', strokeWidth: 2 };   //??deny(reject)
 
-        //start node config
+        //??start node config
         this.StartNodeCfg = {
             filter: this.EpFilter,
             //anchor: 'Continuous',
@@ -6341,7 +6392,7 @@ function Flow(boxId, mNode, mLine) {
             */
         };
 
-        //end node config
+        //??end node config
         this.EndNodeCfg = {
             dropOptions: { hoverClass: 'dragHover' },
             //anchor: 'Continuous',
@@ -6395,8 +6446,9 @@ function Flow(boxId, mNode, mLine) {
             j++;
         }
 
+        /*
         //get jsplumb instance
-        var plumb = jsPlumb.getInstance({
+        var flowBox = jsPlumb.getInstance({
             Container: boxId,
             //Connector: 'StateMachine',
             Connector: 'Flowchart',            
@@ -6419,17 +6471,23 @@ function Flow(boxId, mNode, mLine) {
         });
 
         //set one basic connection style 
-        plumb.registerConnectionType('basic', {
+        flowBox.registerConnectionType('basic', {
             anchor: 'Continuous',
             connector: 'Flowchart',
             //connector: 'StateMachine',            
         });
+        */
 
         //set instance first
-        this.plumb = plumb;
+        this.flowBox = new FlowBox(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
 
         //set event
         this._setFlowEvent();
+    };
+
+    this.onMoveNode = function (nodeId, x, y) {
+        var rowElm = this.mNode.idToRowBox(nodeId);
+        _form.loadRow(rowElm, { PosX: x, PosY: y });
     };
 
     /**
@@ -6438,7 +6496,7 @@ function Flow(boxId, mNode, mLine) {
      *   2.mouse down to hide context menu
      */
     this._setFlowEvent = function () {
-        var plumb = this.plumb;
+        var flowBox = this.flowBox;
         var me = this;
 
         // bind a click listener to each connection; the connection is deleted. you could of course
@@ -6446,34 +6504,35 @@ function Flow(boxId, mNode, mLine) {
         // happening.
         //(定義)Notification a Connection was clicked.
         /*
-        plumb.bind('click', function (c) {
+        flowBox.bind('click', function (c) {
             //this.showNodeProp();
             this.modalNodeProp.modal('show');
         });
         */
 
+        /* todo: temp remark
         //line(connection) show context menu
-        plumb.bind('contextmenu', function (elm, event) {
+        flowBox.bind('contextmenu', function (elm, event) {
             //"this" not work here !!
             me.showPopupMenu(elm, event, false);
         });
+        */
 
+        /*
         //event: before build connection
         //info: connection        
-        //plumb.bind('connection', function (info) {
-        plumb.bind('beforeDrop', function (info) {
+        //flowBox.bind('connection', function (info) {
+        flowBox.bind('beforeDrop', function (info) {
             //if (this.loading)
             //    return true;
 
             //if connection existed, return false for stop 
             //info.source did not work here !!
             var conn = info.connection;
-            if (plumb.getConnections({ source: conn.source, target: conn.target }).length > 0)
+            if (flowBox.getConnections({ source: conn.source, target: conn.target }).length > 0)
                 return false;
 
             //get source node & type
-            //var sourceType = me._elmToNodeRow(conn.source).NodeType;
-            //var lineType = this._isSourceCondMode(sourceType) ? this.LineTypeCond : this.LineTypeYes;
             var prop = me.getLineProp('');
 
             //set conn style & label
@@ -6481,33 +6540,15 @@ function Flow(boxId, mNode, mLine) {
             me._setLineLabel(conn, prop.label);
 
             //add parameters(line model) into connection
-            //debugger;
             var row = {
                 StartNode: me._elmToNodeValue(conn.source, 'Id'),
                 EndNode: me._elmToNodeValue(conn.target, 'Id'),
-                //LineType: lineType,
                 CondStr: '',
                 Sort: 9,
             };
             me._setLineKey(conn, me.addLine(row));
-            //this.connSetParas(conn, line, true);
 
-            //alert('connect');
             return true;
-        });
-
-        /*
-        // click listener for the enable/disable link in the source box (the blue one).
-        plumb.on(this.NodeFilter, 'contextmenu', function (ev) {
-            //this.nowIsNode = true;
-            //this.nowElm = ev.target;
-            this.wf._showPopupMenu('.xf-menu', ev);
-        */
-
-        /*
-        // bind a double click listener to 'boxEl'; add new node when this occurs.
-        jsPlumb.on(this.boxEl, 'dblclick', function (e) {
-            this.newNode(e.offsetX, e.offsetY);
         });
         */
 
@@ -6527,18 +6568,19 @@ function Flow(boxId, mNode, mLine) {
     /**
      * set node event & source/target property
      * param nodeObj {object} node object
-     */ 
+     */
+    /*
     this._setNodeEvent = function (nodeObj) {
         //set source & target property
         var nodeType = _itext.get('NodeType', nodeObj);
-        var plumb = this.plumb;
+        var flowBox = this.flowBox;
         var me = this;
 
         //event: move node (update x,y)
         //initialise draggable elements.
         //must put before makeSource/makeTarget !!
         var nodeElm = nodeObj[0];
-        plumb.draggable(nodeElm, {
+        flowBox.draggable(nodeElm, {
             grid: [10, 10],
             //update node position
             stop: function (params) {
@@ -6550,11 +6592,11 @@ function Flow(boxId, mNode, mLine) {
         });
 
         //build line(connection)
-        //must put after plumb.draggable() !!
-        if (nodeType != this.EndNode)
-            plumb.makeSource(nodeElm, this.StartNodeCfg);
-        if (nodeType != this.StartNode)
-            plumb.makeTarget(nodeElm, this.EndNodeCfg);
+        //must put after flowBox.draggable() !!
+        if (nodeType != FlowNode.TypeEnd)
+            flowBox.makeSource(nodeElm, this.StartNodeCfg);
+        if (nodeType != FlowNode.TypeStart)
+            flowBox.makeTarget(nodeElm, this.EndNodeCfg);
 
         //event: show node menu
         //this._setNodeEvent(nodeObj);
@@ -6562,43 +6604,42 @@ function Flow(boxId, mNode, mLine) {
             //"this" is not work here !!
             me.showPopupMenu(event.target, event, true);
         });
-
-        //create node, remark it: seems no work !!
-        // this is not part of the core demo functionality; it is a means for the Toolkit edition's wrapped
-        // version of this demo to find out about new nodes being added.
-        //plumb.fire('jsPlumbDemoNodeAdded', nodeElm);
     };
+    */
 
     /**
      * load nodes into UI
-     * param rows {jsons} node rows
+     * param rows {json} 後端傳回的完整json
      */
     this.loadNodes = function (json) {
-        this.reset();
+        //this.flowBox.reset();
 
         //stop drawing
-        jsPlumb.setSuspendDrawing(true);
+        //jsPlumb.setSuspendDrawing(true);
 
         //empty all nodes first
         var box = this.divFlowBox;
-        //box.find(this.NodeFilter).remove();
 
         //set nodes class
         var rows = _crudE.getRowsByJson(json);
-        for (var i = 0; i < rows.length; i++)
-            this._setNodeClass(rows[i]);
+        //for (var i = 0; i < rows.length; i++)
+        //    this._setNodeClass(rows[i]);
 
         //3rd param reset=false, coz box has other objects, cannot reset
         this.mNode.loadRowsByBox(box, rows, false);
 
+        this.flowBox.loadNodes(rows);
+
+        /*
         //set nodes event
         var me = this;
         box.find(this.NodeFilter).each(function () {
             me._setNodeEvent($(this));
         });
+        */
 
         //start drawing
-        jsPlumb.setSuspendDrawing(false, true);
+        //jsPlumb.setSuspendDrawing(false, true);
     };
 
     /**
@@ -6607,25 +6648,21 @@ function Flow(boxId, mNode, mLine) {
      */
     this.loadLines = function (rows) {
         //stop drawing
-        jsPlumb.setSuspendDrawing(true);
+        //jsPlumb.setSuspendDrawing(true);
 
-        /*
-        //empty jsplumb lines
-        var conns = this.plumb.getAllConnections();   //for in did not work !!
-        for (var i = 0; i < conns.length; i++)
-            this.plumb.deleteConnection(conns[i]);
-        */
 
         //render jsplumb line
         //var rows = _crudE.getRowsByJson(json);
-        for (var i = 0; i < rows.length; i++)
-            this._renderLine(rows[i]);
+        //for (var i = 0; i < rows.length; i++)
+        //    this._renderLine(rows[i]);
 
         //load editMany lines
         this.mLine.loadRowsByBox(this.divLinesBox, rows, false);
 
+        this.flowBox.loadLines(rows);
+
         //start drawing
-        jsPlumb.setSuspendDrawing(false, true);
+        //jsPlumb.setSuspendDrawing(false, true);
     };
 
     //#region node function
@@ -6633,7 +6670,8 @@ function Flow(boxId, mNode, mLine) {
      * set node class(_NodeClass), template has this field
      * param row {json} node row
      * return {json} new row
-     */ 
+     */
+    /*
     this._setNodeClass = function (row) {
         switch (row.NodeType) {
             case this.StartNode:
@@ -6642,11 +6680,9 @@ function Flow(boxId, mNode, mLine) {
             case this.EndNode:
                 row._NodeClass = this.EndNodeCls;
                 break;
-            /*
-            case this.AutoNode:
-                row._NodeClass = this.AutoNodeCls;
-                break;
-            */
+            //case this.AutoNode:
+            //    row._NodeClass = this.AutoNodeCls;
+            //    break;
             default:
                 //normal node
                 break;
@@ -6654,6 +6690,7 @@ function Flow(boxId, mNode, mLine) {
 
         return row;
     };
+    */
 
     //add new node
     this.addNode = function (name, nodeType) {
@@ -6713,9 +6750,9 @@ function Flow(boxId, mNode, mLine) {
 
     this.deleteNode = function (nodeElm) {
         //delete from & to lines
-        var plumb = this.plumb;
-        this.deleteLines(plumb.getConnections({ source: nodeElm }));
-        this.deleteLines(plumb.getConnections({ target: nodeElm }));
+        var flowBox = this.flowBox;
+        this.deleteLines(flowBox.getConnections({ source: nodeElm }));
+        this.deleteLines(flowBox.getConnections({ target: nodeElm }));
 
         //add deleted row of node
         var node = $(nodeElm);
@@ -6737,7 +6774,7 @@ function Flow(boxId, mNode, mLine) {
         //param 2(reference object) not work here !!
         var prop = this.getLineProp(row.CondStr);    //get line style & label
         //debugger;
-        var conn = this.plumb.connect({
+        var conn = this.flowBox.connect({
             //type: 'basic',
             source: this._idToNode(row.StartNode),
             target: this._idToNode(row.EndNode),
@@ -6827,7 +6864,7 @@ function Flow(boxId, mNode, mLine) {
         this.mLine.deleteRow(json.Id);
 
         //delete conn
-        this.plumb.deleteConnection(conn);
+        this.flowBox.deleteConnection(conn);
     };
     this.deleteLines = function (conns) {
         for (var i = 0; i < conns.length; i++) {
@@ -6835,24 +6872,6 @@ function Flow(boxId, mNode, mLine) {
         }
     };
     //#endregion (line function)
-
-    this.reset = function () {
-        //below method not working !!
-        //jsPlumb.deleteEveryEndpoint();
-        //jsPlumb.removeAllEndpoints();
-        //jsPlumb.detachEveryConnection();
-        //jsPlumb.reset();
-
-        //reset lines
-        var conns = this.plumb.getAllConnections();   //for in did not work !!
-        var len = conns.length;
-        for (var i = len - 1; i >= 0; i--)
-            this.plumb.deleteConnection(conns[i]);        
-
-        //reset nodes
-        var box = this.divFlowBox;
-        box.find(this.NodeFilter).remove();
-    };
 
     /**
      * show popup menu for node(normal, auto)/line
@@ -6878,7 +6897,7 @@ function Flow(boxId, mNode, mLine) {
         } else {
             nodeType = this._elmToNodeValue(elm.source, 'NodeType');
             //canEdit = (nodeType == this.StartNode || nodeType == this.AutoNode);
-            canEdit = (nodeType == this.StartNode);
+            canEdit = (nodeType == FlowNode.TypeStart);
         }
         /*
         //debugger;
@@ -7140,6 +7159,621 @@ function Flow(boxId, mNode, mLine) {
     this.init();
 
 }//class
+
+class FlowBox {	
+	/**
+	 boxElm: box element
+	 svg: svg
+	 nodes: nodes
+	 lines: lines
+	 startNode: start node
+	 onMoveNode: event onMoveNode(node)
+	*/
+    constructor(boxId, onMoveNode) {
+		this.boxElm = document.getElementById(boxId);
+		this.svg = SVG().addTo(this.boxElm).size('100%', '100%');
+		this.onMoveNode = onMoveNode;
+		this.reset(false);		
+    }
+
+	//清除全部UI元件
+	//hasUI: default true(會同時清除UI元素)
+	reset(hasUI) {
+		this.nodes = [];
+		this.lines = [];
+		this.startNode = null;
+
+		//todo: 只刪除 svg、text元素(flow box裡面有其他input欄位)
+		if (hasUI || hasUI == null) {
+			this.boxElm.querySelectorAll('svg,text').forEach(elm => elm.remove());
+		}
+	}
+
+	//載入nodes & lines
+	loadNodes(rows) {
+		for (var i = 0; i < rows.length; i++)
+			this.addNode(rows[i]);
+	}
+
+	loadLines(rows) {
+		for (var i = 0; i < rows.length; i++)
+			this.addLine(rows[i]);
+	}
+
+	addNode(json) {
+		//this.nodeCount++;
+		//if (json.id == null)
+		//	json.id = (this.nodes.length + 1) * (-1);
+		let node = new FlowNode(this, json);
+		this.nodes.push(node);
+		return node;
+	}
+	
+	//addLine(fromNode, toNode, id, lineType) {
+	addLine(json) {
+		//this.lineCount++;
+		//if (id == null)
+		//	id = (this.lines.length + 1) * (-1);
+		let fromNode = this.findNode(json.StartNode);
+		let toNode = this.findNode(json.EndNode);
+		return new FlowLine(this, fromNode, toNode, json.Id, 'A');
+	}
+	
+	drawLineStart(startNode) {
+		this.startNode = startNode;
+	}
+	
+	drawLineEnd(endNode) {
+		new FlowLine(this, this.startNode, endNode);
+		this.startNode = null;
+	}
+	
+	findNode(id) {
+		//elm2.node 指向dom
+		return this.nodes.find(node => node.getId() == id);
+	}
+}
+
+class FlowNode {
+	/**
+	 self: this
+	 flowBox: FlowBox object
+	 svg: svg
+	 json: node json, 欄位與後端XgFlowE相同: Id, FlowId, NodeType, Name, PosX, PosY, Width, Height
+	 elm2: svg element 與 html element不同
+	 textElm: node text element
+	 lines: 進入/離開此節點的流程線
+	 width: width
+	 height: height
+	*/
+
+	//靜態屬性 node type enum
+    static TypeStart = 'S';
+	static TypeEnd = 'E';
+	static TypeNode = 'N';
+    //TypeAuto = 'A';	//??
+
+	//drag evnet
+	DragMove = 'dragmove';
+	DragStart = 'dragstart';
+	DragEnd = 'dragend';
+
+	//start/end node
+	MinRadius = 20;
+
+	//node
+	MinWidth = 100;
+	MinHeight = 50;
+	Padding = 15;
+
+    constructor(flowBox, json) {
+		this.self = this;
+		this.flowBox = flowBox;
+        this.svg = flowBox.svg;
+        this.json = Object.assign({
+			Name: 'Node',
+            NodeType: this.TypeNode,
+            PosX: 50,
+            PosY: 50,
+            Width: 100,	//??
+            Height: 50,	//??
+        }, json);
+
+        this._init();
+    }
+
+    _init() {
+		//set instance variables
+		this.lines = [];
+		
+        this._drawNode();	//draw node first
+        this._setNodeDrag();
+        this._setJointDrag(); // 讓connector可拖拉
+    }
+
+	getId() {
+		return this._getIdByElm2(this.elm2);
+	}
+
+	_getIdByElm2(elm2) {
+		return elm2.node.dataset.id;
+	}
+
+	_setId(id) {
+		this.elm2.node.dataset.id = id;
+	}
+
+	addLine(line) {
+		this.lines.push(line);
+	}
+	
+	deleteLine(line) {
+		let index = this.lines.findIndex(item => item.Id == line.Id);
+		this.lines.splice(index, 1);
+	}
+	
+	//init時呼叫
+    _drawNode() {
+        let nodeType = this.json.NodeType;
+        let cssClass = '';
+        let nodeName = '';
+
+		let startEnd = this._isStartEnd();
+		if (startEnd) {
+            if (nodeType == FlowNode.TypeStart) {
+                cssClass = 'xf-start';
+				nodeName = FlowNode.TypeStart;
+            } else {
+                cssClass = 'xf-end';
+				nodeName = FlowNode.TypeEnd;
+            }
+
+			//circle大小不填, 由css設定, 這時radius還沒確定, 不能move(因為會用到radius)
+            this.elm2 = this.svg.circle()
+                .addClass(cssClass);
+				
+			//移動circle時會參考radius, 所以先更新, 從css讀取radius, 而不是從circle建立的屬性 !!
+            let style = window.getComputedStyle(this.elm2.node);	//不能直接讀取circle屬性
+            let radius = parseFloat(style.getPropertyValue("r"));	//轉浮點
+            this.elm2.attr("r", radius);
+            this.elm2.move(this.json.PosX, this.json.PosY);
+			
+			let width = radius * 2;
+            this.width = width;		//寫入width, 供後面計算位置
+            this.height = width;	//畫流程線時會用到
+		} else {
+            nodeName = this.json.Name;
+            cssClass = 'xf-node';
+			this.elm2 = this.svg.rect()
+				.addClass(cssClass)
+				.move(this.json.PosX, this.json.PosY);
+        }
+
+		//set data-id = node id
+		this._setId(this.json.Id);
+
+		//add 節點文字
+        this.textElm = this.svg.text(nodeName)
+            .addClass(cssClass + '-text')
+            .font({ anchor: 'middle' });
+
+		this._setSize(startEnd);
+
+		//add 連接點 connector(在文字右側), 小方塊, data-nodeElm 記錄節點元素
+		if (nodeType != this.TypeEnd){
+			this.connectorElm = this.svg.rect(12, 12).addClass('xf-connector');
+			this.connectorElm.node.dataset.nodeElm = this.elm2;
+		}
+		
+		this._render(startEnd);
+    }
+
+	//是否為起迄節點
+    _isStartEnd() {
+		return (this.json.NodeType == FlowNode.TypeStart || this.json.NodeType == FlowNode.TypeEnd);
+    }
+
+	//繪製, 移動子元件
+	_setSize(startEnd) {
+		if (!startEnd) {
+			let bbox = this.textElm.bbox();
+			this.width = Math.max(this.MinWidth, bbox.width + this.Padding * 2);
+			this.height = Math.max(this.MinHeight, bbox.height + this.Padding * 2);
+		}
+		this.elm2.size(this.width, this.height);
+	}
+
+	//繪製, 移動子元件
+	//param startEnd: 如果不是起迄節點要考慮最小寬高
+    _render(startEnd) {
+		//文字
+		let bbox = this.textElm.bbox();
+		let centerX = this.elm2.x() + this.width / 2;
+		let centerY = this.elm2.y() + this.height / 2;
+        this.textElm.move(centerX - bbox.width / 2, centerY - bbox.height / 2);
+
+        //連接點
+		if (this.connectorElm)
+			this.connectorElm.move(centerX + bbox.width / 2 + 3, centerY - 5);
+    }
+
+	_setNodeDrag() {
+		this.elm2.draggable().on(this.DragMove, () => {
+			this._render(this._isStartEnd());
+			this.lines.forEach(line => line.render());
+		}).on(this.DragEnd, (event) => {	
+			let { x, y } = event.detail.box;
+			//console.log(`x=${x}, y=${y}`);
+			this.flowBox.onMoveNode(this.getId(), x, y);	//trigger
+		});
+	}
+
+	_setJointDrag() {
+		if (!this.connectorElm)
+			return;
+		
+		let startElm2, startX, startY;
+		let tempLine;
+		let endElm2 = null;
+
+		// 啟用 connectorElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 connectorElm !!
+		this.connectorElm.draggable().on(this.DragStart, (event) => {
+			// 初始化線條
+			let { x, y } = this.connectorElm.rbox(this.svg); // 使用SVG畫布的座標系
+			startX = x;
+			startY = y;
+			startElm2 = this.self.elm2;
+
+			tempLine = this.svg.line(startX, startY, startX, startY)
+				.addClass('xf-line off');
+				
+			this.flowBox.drawLineStart(this.self);
+				
+		}).on(this.DragMove, (event) => {
+			//阻止 connector 移動
+			event.preventDefault();
+			
+			// 獲取拖拽的目標座標（相對於 SVG 畫布）
+			let { x, y } = event.detail.box;
+			let endX = x;
+			let endY = y;
+
+			// 更新線條的終點
+			tempLine.plot(startX, startY, endX, endY);
+
+			// 檢查座標值是否有效
+			if (isFinite(endX) && isFinite(endY)) {
+				// 將 SVG 座標轉換為檢視座標
+				let svgRect = this.svg.node.getBoundingClientRect();
+				let viewPortX = endX + svgRect.x;
+				let viewPortY = endY + svgRect.y;
+
+				// 檢查是否懸停在節點上
+				let overNode = document.elementsFromPoint(viewPortX, viewPortY)
+					.find(elm => elm != startElm2 && (elm.classList.contains('xf-node') || elm.classList.contains('xf-end')));
+				if (overNode) {
+					if (endElm2 !== overNode) {
+						if (endElm2) 
+							this._highlightNode(endElm2, false);
+						endElm2 = overNode;
+						this._highlightNode(endElm2, true);
+					}
+				} else if (endElm2) {
+					this._highlightNode(endElm2, false);
+					endElm2 = null;
+				}
+			}
+			
+		}).on(this.DragEnd, (event) => {
+			// 檢查座標值是否有效
+			if (endElm2) {
+				this._highlightNode(endElm2, false);					
+				//this.flowBox.drawLineEnd(this.flowBox.findNode(endElm2.node.dataset.id));
+				this.flowBox.drawLineEnd(this.flowBox.findNode(this._getIdByElm2(endElm2)));
+				endElm2 = null;
+			}
+			tempLine.remove();
+		});
+	}
+	
+	_highlightNode(node, status){
+		if (status){
+			node.classList.add('on');
+		} else {
+			node.classList.remove('on');
+		}
+	}
+	
+}//class FlowNode
+
+
+class FlowLine {
+	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
+	Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
+	Min2NodeDist = 25;	//2節點的最小距離, 大於此值可建立line(1,3線段)
+	Min2SegDist = 20;	//建立2線段的最小距離, 中心點和邊
+
+	//末端箭頭
+	ArrowLen = 10; 	//長度
+	ArrowWidth = 5; 	//寬度	
+
+ 	//line type, 起點位置
+    TypeAuto = 'A';	//自動
+    TypeV = 'V';	//垂直(上下)
+    TypeH = 'H';	//水平(左右)
+
+	/**
+	 flowBox: FlowBox object
+	 svg: svg
+	 path: line path
+	 fromNode: from node
+	 toNode: to node
+	 lineType: 起點位置, A(auto),U(上下),L(左右)
+	 isTypeAuto:
+	 isTypeV:
+	 isTypeH:
+	*/
+	constructor(flowBox, fromNode, toNode, lineType) {
+		this.flowBox = flowBox;
+        this.svg = flowBox.svg;
+        this.fromNode = fromNode;
+        this.toNode = toNode;
+		this.path = this.svg.path('').addClass('xf-line');
+		
+		// 用來儲存箭頭的路徑
+		this.arrowPath = this.svg.path('').addClass('xf-arrow');
+		//this.arrowPath2 = this.svg.path('').addClass('xf-arrow');
+		
+		//add line to from/to node
+		fromNode.addLine(this);
+		toNode.addLine(this);
+		this.setType(lineType);
+		this.render();
+    }
+
+	setType(lineType){
+		lineType = lineType || this.TypeAuto;
+		this.lineType = lineType;
+		this.isTypeV = (lineType == this.TypeV);
+		this.isTypeH = (lineType == this.TypeH);
+		//this.isTypeAuto = (!this.isTypeV && !this.isTypeH) || (lineType == this.TypeAuto);
+	}
+	
+	/**
+	 依次考慮使用1線段、2線段、3線段
+	 */
+	render() {
+
+		//=== from Node ===
+		// 位置和尺寸, x/y為左上方座標
+		const fromX = this.fromNode.elm2.x();	
+		const fromY = this.fromNode.elm2.y();
+		const fromWidth = this.fromNode.width;
+		const fromHeight = this.fromNode.height;
+		const fromCntX = fromX + fromWidth / 2;		//中心點
+		const fromCntY = fromY + fromHeight / 2;
+		// 四個邊的中間點
+		const fromUp = { x: fromX + fromWidth / 2, y: fromY }; // 上邊中點
+		const fromDown = { x: fromX + fromWidth / 2, y: fromY + fromHeight };
+		const fromLeft = { x: fromX, y: fromY + fromHeight / 2 };
+		const fromRight = { x: fromX + fromWidth, y: fromY + fromHeight / 2 };
+
+		//=== to Node ===
+		const toX = this.toNode.elm2.x();
+		const toY = this.toNode.elm2.y();
+		const toWidth = this.toNode.width;
+		const toHeight = this.toNode.height;
+		const toCntX = toX + toWidth / 2;
+		const toCntY = toY + toHeight / 2;
+		// 四個邊的中間點
+		const toUp = { x: toX + toWidth / 2, y: toY };
+		const toDown = { x: toX + toWidth / 2, y: toY + toHeight };
+		const toLeft = { x: toX, y: toY + toHeight / 2 };
+		const toRight = { x: toX + toWidth, y: toY + toHeight / 2 };
+		
+		// 判斷 fromNode 和 toNode 的相對位置
+		const isToRight = toCntX > fromCntX; 	// toNode 在 fromNode 的右側
+		const isToDown = toCntY > fromCntY; 	// toNode 在 fromNode 的下方
+
+		// 是否符合垂直/水平最小距離, 字尾H/V表示距離量測方向
+		const match2NodeDistH = (isToRight ? toLeft.x - fromRight.x : fromLeft.x - toRight.x) >= this.Min2NodeDist;
+		const match2NodeDistV = (isToDown ? toUp.y - fromDown.y : fromUp.y - toDown.y) >= this.Min2NodeDist;
+		
+		// 是否符合2中心點之間最小距離 for 1線段(否則為3線段)
+		const match1SegDistH = Math.abs(fromCntX - toCntX) <= this.Max1SegDist;
+		const match1SegDistV = Math.abs(fromCntY - toCntY) <= this.Max1SegDist;
+		
+		// 是否符合中心點-邊線之間最小距離 for 2線段
+		const match2SegDistIn = Math.abs(fromCntX - toCntX) - toWidth/2 >= this.Min2SegDist;
+		const match2SegDistOut = Math.abs(fromCntY - toCntY) - fromHeight/2 >= this.Min2SegDist;
+		
+		//判斷線段數目(1,2,3), 有4個象限, 先考慮上下再左右
+		let fromPnt, toPnt;
+		let points;
+		//let pathStr;
+		if (!this.isTypeH && match1SegDistH && match2NodeDistV){
+			//1線段-垂直
+			if (isToDown){
+				fromPnt = fromDown;
+				toPnt = toUp;
+			} else {
+				fromPnt = fromUp;
+				toPnt = toDown;
+			}
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${toPnt.y}`;	//取垂直線
+			points = [fromPnt, {x:fromPnt.x, y:toPnt.y}];
+		} else if(!this.isTypeV && match1SegDistV && match2NodeDistH){
+			//1線段-水平
+			if (isToRight){
+				fromPnt = fromRight;
+				toPnt = toLeft;
+			} else {
+				fromPnt = fromLeft;
+				toPnt = toRight;
+			}
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${toPnt.x}`;	//取水平線
+			points = [fromPnt, {x:toPnt.x, y:fromPnt.y}];
+		} else if(!this.isTypeV && match2NodeDistH && match2SegDistOut){
+			//2線段-水平
+			fromPnt = isToRight ? fromRight : fromLeft;
+			toPnt = isToDown ? toUp : toDown;
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${toPnt.x} V ${toPnt.y}`;
+			points = [fromPnt, {x:toPnt.x, y:fromPnt.y}, toPnt];
+		} else if(!this.isTypeH && match2NodeDistV && match2SegDistIn){
+			//2線段-垂直
+			fromPnt = isToDown ? fromDown : fromUp;
+			toPnt = isToRight ? toLeft : toRight;
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${toPnt.y} H ${toPnt.x}`;
+			points = [fromPnt, {x:fromPnt.x, y:toPnt.y}, toPnt];
+		} else if(!this.isTypeH && match2NodeDistV){
+			//3線段-垂直(2節點內側)
+			if (isToDown){
+				fromPnt = fromDown;
+				toPnt = toUp;
+			} else {
+				fromPnt = fromUp;
+				toPnt = toDown;
+			}
+			
+			let midY = (fromPnt.y + toPnt.y)/2;
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${midY} H ${toPnt.x} V ${toPnt.y}`;
+			points = [fromPnt, {x:fromPnt.x, y:midY}, {x:toPnt.x, y:midY}, toPnt];
+		} else if(!this.isTypeV && match2NodeDistH){
+			//3線段-水平(2節點內側)
+			if (isToRight){
+				fromPnt = fromRight;
+				toPnt = toLeft;
+			} else {
+				fromPnt = fromLeft;
+				toPnt = toRight;
+			}
+			
+			let midX = (fromPnt.x + toPnt.x)/2;
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${midX} V ${toPnt.y} H ${toPnt.x}`;
+			points = [fromPnt, {x:midX, y:fromPnt.y}, {x:midX, y:toPnt.y}, toPnt];
+		} else if(!this.isTypeV){
+			//3線段-水平(2節點外側)
+			if (isToRight){
+				fromPnt = fromRight;
+				toPnt = toRight;
+			} else {
+				fromPnt = fromLeft;
+				toPnt = toLeft;
+			}
+			let midX = isToRight ? Math.max(fromPnt.x, toPnt.x) + this.Min2NodeDist : Math.min(fromPnt.x, toPnt.x) - this.MinSideSide;
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${midX} V ${toPnt.y} H ${toPnt.x}`;
+			points = [fromPnt, {x:midX, y:fromPnt.y}, {x:midX, y:toPnt.y}, toPnt];
+		} else {
+			//其他狀況: 用直線(非折線)連接起迄點
+			if (isToDown){
+				if (isToRight){
+					fromPnt = !this.isTypeH ? fromDown : fromRight;
+					toPnt = toLeft;
+				} else {
+					fromPnt = !this.isTypeH ? fromDown : fromLeft;
+					toPnt = toRight;
+				}
+			} else {
+				if (isToRight){
+					fromPnt = !this.isTypeH ? fromUp : fromRight;
+					toPnt = toLeft;
+				} else {
+					fromPnt = !this.isTypeH ? fromUp : fromLeft;
+					toPnt = toRight;
+				}
+			}
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y}`;
+			points = [fromPnt, toPnt];
+		}
+		
+		// 繪製流程線
+		this._drawLine(points);
+		//this.path.plot(pathStr);
+	}
+	
+	/**
+	 畫流程線
+	 */
+	_drawLine(points) {
+		// 生成帶有圓角的折線路徑
+		let pathStr = `M ${points[0].x} ${points[0].y}`; // 移動到起點
+		let pntLen = points.length;
+		let radius = this.Max1SegDist;
+		for (let i = 1; i < pntLen; i++) {
+		  const prevPnt = points[i - 1];
+		  const nowPnt = points[i];
+
+		  // 計算圓角的路徑
+		  if (i < pntLen - 1) {
+			const nextPnt = points[i + 1];
+
+			// 計算圓角的起始點和結束點
+			const fromAngle = Math.atan2(nowPnt.y - prevPnt.y, nowPnt.x - prevPnt.x);
+			const toAngle = Math.atan2(nextPnt.y - nowPnt.y, nextPnt.x - nowPnt.x);
+
+			const fromOffsetX = radius * Math.cos(fromAngle);
+			const fromOffsetY = radius * Math.sin(fromAngle);
+			const toOffsetX = radius * Math.cos(toAngle);
+			const toOffsetY = radius * Math.sin(toAngle);
+
+			const arcStartX = nowPnt.x - fromOffsetX;
+			const arcStartY = nowPnt.y - fromOffsetY;
+			const arcEndX = nowPnt.x + toOffsetX;
+			const arcEndY = nowPnt.y + toOffsetY;
+
+			// 添加直線到圓角的起始點
+			pathStr += ` L ${arcStartX} ${arcStartY}`;
+
+			// 判斷圓弧的方向（順時針或逆時針）
+			const angleDiff = toAngle - fromAngle;
+			const sweepFlag = angleDiff > 0 ? 1 : 0; // 根據角度差決定 sweep-flag
+
+			// 添加圓角（A 指令）
+			pathStr += ` A ${radius} ${radius} 0 0 ${sweepFlag} ${arcEndX} ${arcEndY}`;
+		  } else {
+			// 最後一段直線
+			pathStr += ` L ${nowPnt.x} ${nowPnt.y}`;
+		  }
+		}
+
+		// 繪製流程線
+		this.path.plot(pathStr);
+		
+		//畫末端箭頭
+		this._arrow(points[pntLen - 2], points[pntLen - 1]);
+		/*
+		// 繪製帶有圓角的折線
+		const path = svg.path(pathStr)
+		  .stroke({ width: 2, color: '#000', linecap: 'round', linejoin: 'round' })
+		  .fill('none');
+		*/
+	  
+	}
+	
+	/**
+	 畫末端箭頭, 利用2個傳入端點計算斜率
+	 */
+	_arrow(fromPnt, toPnt) {
+		// 計算箭頭的方向
+		const angle = Math.atan2(toPnt.y - fromPnt.y, toPnt.x - fromPnt.x); // 計算角度
+
+		// 計算箭頭的2個點
+		const arrowPnt1 = {
+		  x: toPnt.x - this.ArrowLen * Math.cos(angle) + this.ArrowWidth * Math.cos(angle - Math.PI / 2),
+		  y: toPnt.y - this.ArrowLen * Math.sin(angle) + this.ArrowWidth * Math.sin(angle - Math.PI / 2)
+		};
+		const arrowPnt2 = {
+		  x: toPnt.x - this.ArrowLen * Math.cos(angle) + this.ArrowWidth * Math.cos(angle + Math.PI / 2),
+		  y: toPnt.y - this.ArrowLen * Math.sin(angle) + this.ArrowWidth * Math.sin(angle + Math.PI / 2)
+		};
+
+		// 更新箭頭路徑
+		this.arrowPath.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
+		//this.arrowPath1.plot(`M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
+	}
+	
+}//class FlowLine
+
 /**
  * pagin component, config has properties:
  * pageStr {string} json string from backend(pageNo,pageRows,filterRows)

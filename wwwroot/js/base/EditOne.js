@@ -71,7 +71,7 @@ function EditOne(kid, eformId) {
      * return {bool}
      */
     this.isNewRow = function () {
-        return _str.isEmpty(this.getKey());
+        return (_itext.get(_edit.IsNew, this.eform) == '1');
     };
 
     /**

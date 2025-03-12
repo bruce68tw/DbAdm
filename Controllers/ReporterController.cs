@@ -12,7 +12,7 @@ namespace DbAdm.Controllers
     public class ReporterController : BaseCtrl
     {
         [XgProgAuth(CrudEnum.Read)]
-        public async Task<ActionResult> Read()
+        public ActionResult Read()
         {
             return View();
         }

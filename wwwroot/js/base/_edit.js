@@ -9,6 +9,35 @@ var _edit = {
     //data property name for keep old value
     DataOld: '_old',
 
+    //前後端欄位: isNew
+    IsNew: '_IsNew',
+
+    /**
+     * 增加隱藏欄位 _IsNew, 同時設為1
+     * param obj {box} jquery object
+     */
+    addIsNew: function (box, value) {
+        var fid = _edit.IsNew;
+        var field = box.find(_input.fidFilter(fid));
+        if (value == null)
+            value = '1';
+        if (field.length == 0)
+            box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="${value}">`);
+        else
+            field.val(value);
+    },
+
+    /**
+     * 刪除隱藏欄位 _IsNew
+     * param obj {box} jquery object
+     */
+    removeIsNew: function (box) {
+        var fid = _edit.IsNew;
+        var field = box.find(_input.fidFilter(fid));
+        if (field.length > 0)
+            field.remove();
+    },
+
     /**
      * get old value 
      * param obj {object} input jquery object
@@ -152,9 +181,15 @@ var _edit = {
     },
 
     /**
+     * isNewKey(key) -> isNewRow(row)
      * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
      * param key {string}
      */
+    isNewRow: function (row) {
+        var fid = _edit.IsNew;
+        return (row[fid] != null || row[fid] == '1');
+    },
+    /*
     isNewKey: function (key) {
         key = key.toString();   //convert to string for checking
         var len = key.length;
@@ -164,6 +199,7 @@ var _edit = {
         var val = parseInt(key);
         return (!Number.isNaN(val) && (val.toString().length == len));
     },
+    */
 
     /**
      * onclick viewFile

@@ -22,7 +22,7 @@ var _ibase = {
     },
     //get value by object
     getO: function (obj) {
-        return obj.val();
+        return obj == null ? null : obj.val();
     },
 
     //get input border for show red border

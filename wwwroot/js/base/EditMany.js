@@ -1,5 +1,6 @@
 ﻿/**
  * multiple edit forms
+ *   資料儲存在 html input
  * notice:
  *   1.set data-fkeyFid when save
  *   
@@ -73,8 +74,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * return {bool}
      */
     this.isNewRow = function (row) {
-        //return _str.isEmpty(row[this.kid]);
-        return _edit.isNewKey(row[this.kid]);
+        return _edit.isNewRow(row);
     };
 
     /**
@@ -83,8 +83,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * return {bool}
      */
     this.isNewTr = function (tr) {
-        var id = _itext.get(this.kid, tr);
-        return _edit.isNewKey(id);
+        return (_itext.get(_edit.IsNew, tr) == '1');
     };
 
     /**
@@ -201,14 +200,14 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * load this json rows into UI, also set old values !!
      * param json {json} 
      */
+    //todo: 未完成
     this.loadJson = function (json) {
-        if (this.hasEform) {
+        if (this.fnLoadJson) {
+            this.fnLoadJson(json);
+        } else {
             var rows = (json == null || json[_crudE.Rows] == null)
                 ? null : json[_crudE.Rows];
             this.loadRowsByBox(this.rowsBox, rows);
-        } else {
-            //will raise error if no function
-            this.fnLoadJson(json);
         }
     };
 
@@ -319,6 +318,15 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * get row box by id
+     * param id {string} row id
+     * return {object} row box
+     */
+    this.idToRowBox = function (id) {
+        return this.eform.find(_input.fidFilter(id)).parent();
+    };
+
+    /**
      * get updated json, called by crud.js only !!
      * param upKey {string}
      * return {json} modified columns only
@@ -372,8 +380,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
             //add new row if empty key
             var tr = $(item);
             var key = _input.get(me.kid, tr);
-            if (_edit.isNewKey(key)) {
-                //var row2 = me.getRow(tr);
+            //if (_edit.isNewKey(key)) {
+            if (me.isNewTr(tr)) {
                 var row2 = _form.toRow(tr);
                 row2[me.DataFkeyFid] = upKey;   //write anyway !!
                 rows.push(row2);
@@ -431,7 +439,8 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
      * onclick addRow button
      */
     this.onAddRow = function () {
-        this.addRow();
+        var row = this.addRow();
+        _edit.addIsNew(row);    //增加_IsNew隱藏欄位
     };
 
     /**

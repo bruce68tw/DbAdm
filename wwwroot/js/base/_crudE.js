@@ -433,6 +433,7 @@ var _crudE = {
         var fun = _fun.FunC;
         _crudE._setEditStatus(fun);
         _crudE._resetForm(_me.edit0);
+        _edit.addIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
         _crudE._afterOpenEdit(fun, null);
     },
 
@@ -442,6 +443,7 @@ var _crudE = {
      * return {bool}
      */
     onUpdateA: async function(key) {
+        _edit.removeIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
         return await _crudE._updateOrViewA(_fun.FunU, key);
     },
 
