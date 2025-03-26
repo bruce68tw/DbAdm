@@ -27,6 +27,13 @@ body, label {
     */
 }
 
+    /* 文字 */
+    .xg-leftmenu a {
+        font-size: 15px;
+        color: #555 !important;
+    }
+
+
 .xg-leftmenu a, .xg-leftmenu i {
     color: #222222 !important;
 }
@@ -63,6 +70,7 @@ body, label {
     background: #FAFAFA;
 }
 
+
 /* ==== modal ==== */
 .xg-modal .modal-header {
     border-bottom: none;
@@ -75,33 +83,34 @@ body, label {
 
 /* === checkbox/radio === */
 /* checkbox, span is square/round checked sign */
-.xi-check > span {	
-    border: 2px solid #BFBFBF;
-	/*background: white;*/
+.xi-check > span {
+    /*border: 2px solid #BFBFBF;
+	background: white;*/
 }
 
 /* checked background */
 .xi-check > input:checked + span {
-    border: 2px solid #0D6EFD;
-	background: #0D6EFD;
+    /*border: 2px solid #0D6EFD;
+	background: #0D6EFD;*/
 }
 
 /* checked sign */
 .xi-check > input:checked + span:after {
-    border: 2px solid #F1F6FF;
-	/*background: #1266F1;*/
+    /*border: 2px solid #F1F6FF;
+	background: #1266F1;*/
 }
 
 /* radio checked sign 填滿 */
 .xi-check > input:checked + .xi-rspan:after {
-    background: #F1F6FF;
+    /*background: #F1F6FF;*/
 }   
 
 /* disabled */
 .xi-check > input:disabled + span {
-    /*color: #b8b8b8;*/
+    /*color: #b8b8b8;
     border: 2px solid #86B7FE;
     background: #86B7FE;
+    */
 }
 
 .xg-wait {
@@ -114,4 +123,9 @@ body, label {
     height: 20px;
     font-style: italic;
     margin-bottom: 10px;
+}
+
+/* chart.js */
+.chart-title {
+    font-size: 24px;
 }

@@ -44,7 +44,7 @@ var _chart = {
      * show chart
      * param type {string} bar/pie/line
      * param canvasObj {object} canvas Object
-     * param dto {model} Chart/ChartGroup, 可加入 config 
+     * param dto {model} Chart/ChartGroup, 可加入 config, 屬性datasets -> values !! 
      * param percent {bool} show percentage(for pie,doughnut) or not
      */
     _show: function (type, canvasObj, dto, legend, percent) {
@@ -59,7 +59,16 @@ var _chart = {
             type: isHbar ? 'bar' : type,
             data: {
                 labels: dto.labels,
-                datasets: dto.datasets,
+                /*
+                datasets: dto.values,
+                */
+                datasets: [
+                    {
+                        //label: "Population (millions)",
+                        //backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                        data: dto.values,
+                    }
+                ]
             },
             options: {
                 //多包一層plugins才能顯示title
@@ -74,7 +83,11 @@ var _chart = {
                     },
                     title: {
                         display: true,
-                        text: dto.title
+                        text: dto.title,
+                        //class: 'xc-title',    //3.x以後不支持
+                        font: {
+                            size: 16,    //temp add
+                        },
                     }
                 }
             }
@@ -114,11 +127,13 @@ var _chart = {
 
         return new Chart(canvasObj, config);
     },
-    
+
+    //線形圖
     line: function (canvasObj, dto) {
         return _chart._show('line', canvasObj, dto, false);
     },
 
+    //水平條狀圖
     hbar: function (canvasObj, dto) {
         dto.options = {
             indexAxis: 'y'
@@ -127,14 +142,17 @@ var _chart = {
         return _chart._show('hbar', canvasObj, dto, false);
     },
 
+    //圓餅圖
     pie: function (canvasObj, dto) {
         return _chart._show('pie', canvasObj, dto, null, true);
     },
-    
+
+    //甜甜圈
     doughnut: function (canvasObj, dto) {
         return _chart._show('doughnut', canvasObj, dto, null, true);
     },
 
+    //多個線形圖
     groupLine: function (canvasObj, dto) {
         /*
         //set curve line
@@ -145,6 +163,7 @@ var _chart = {
         return _chart._show('line', canvasObj, dto);
     },
 
+    //多個線形圖
     groupBar: function (canvasObj, dto) {
         return _chart._show('bar', canvasObj, dto);
     },

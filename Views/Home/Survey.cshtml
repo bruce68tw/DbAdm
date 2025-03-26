@@ -1,0 +1,121 @@
+@model string 
+@{
+    //model為顯示訊息(正確or錯誤), 如果有值則只顯示訊息, 不顯示題目
+    Layout = null;
+    var title = $"{_Xp.Config.DeptName}-滿意度問卷";
+}
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@title</title>
+    <style>
+        .error {
+            margin: 15px;
+            font-size: 2rem;
+            color: red;
+        }
+
+        .qitem {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .rate {
+            margin-top: -15px;
+            margin-left: 10px;
+            direction: rtl;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+            .rate input {
+                display: none;
+            }
+
+            .rate label {
+                font-size: 3rem;
+                color: #ccc;
+                cursor: pointer;
+            }
+
+                .rate input:checked ~ label,
+                .rate label:hover,
+                .rate label:hover ~ label {
+                    color: gold;
+                }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+
+<body style="padding: 10px 0 0 20px;">
+    <h2>@title</h2>
+
+    @if(string.IsNullOrEmpty(Model))
+    {
+        var rowLen = ViewBag.SurveyRows.Count;
+
+        <h3>工作項目：@ViewBag.IssueTitle</h3>
+        <form action=@Url.Action("Survey") method="post">
+            @* 隱藏欄位傳送後端做驗證 *@
+            <input name="SurveyData" type="hidden" value="@ViewBag.SurveyData">
+
+            @for (int i = 0; i < rowLen; i++)
+            {
+                IdStrDto row = ViewBag.SurveyRows[i];
+                var id = row.Id;
+                var str = row.Str;
+
+                //最後一個問題固定是文字欄位
+                if (i == rowLen - 1)
+                {
+                    <div class="qitem">
+                        <p>@str</p>
+                        <textarea name="@id" rows="4" cols="50" placeholder="請輸入您的意見..."></textarea>
+                    </div>
+                }
+                else
+                {
+                    <div class="qitem">
+                        <p>@str</p>
+                        <div class="rate">
+                            <input type="radio" id="@(id)-5" name="@id" value="5"><label for="@(id)-5">★</label>
+                            <input type="radio" id="@(id)-4" name="@id" value="4"><label for="@(id)-4">★</label>
+                            <input type="radio" id="@(id)-3" name="@id" value="3" checked><label for="@(id)-3">★</label>
+                            <input type="radio" id="@(id)-2" name="@id" value="2"><label for="@(id)-2">★</label>
+                            <input type="radio" id="@(id)-1" name="@id" value="1"><label for="@(id)-1">★</label>
+                        </div>
+                    </div>
+                }
+            }
+
+            <button type="submit">提交</button>
+        </form>
+    }
+    else
+    {
+        @* 錯誤時只顯示訊息 *@
+        <div class="error">
+            @Model
+        </div>
+    }
+</body>
+</html>

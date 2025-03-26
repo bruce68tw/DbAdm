@@ -20,7 +20,7 @@ namespace DbAdm.Controllers
             {
                 ViewBag.Projects = await _XpCode.ProjectsA(db);
                 ViewBag.IssueTypes = await _XpCode.IssueTypesA(db);
-				ViewBag.Reporters = await _XpCode.ReportersA(db);
+				//ViewBag.Reporters = await _XpCode.ReportersA(db);
 				ViewBag.Users = await _XpCode.UsersA(db);
                 ViewBag.YesNos = _XpCode.YesNos();
             }
@@ -81,7 +81,7 @@ namespace DbAdm.Controllers
             await new IssueRead().ExportA(Ctrl, _Str.ToJson(find)!);
         }
 
-        //固定傳入 parentId
+        //傳回專案功能清單, 固定傳入 parentId
         [HttpPost]
         public async Task<JsonResult> GetPrjProgs(string parentId)
         {

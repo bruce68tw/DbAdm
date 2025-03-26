@@ -1,8 +1,6 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseWeb.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
@@ -22,10 +20,12 @@ namespace DbAdm.Services
         {
             return await _Db.TableToCodesA("XpUser", db);
         }
+        /*
         public static async Task<List<IdStrDto>?> ReportersA(Db? db = null)
         {
             return await _Db.TableToCodesA("Reporter", db);
         }
+        */
         public static async Task<List<IdStrDto>?> ProjectsA(Db? db = null)
         {
             //return await _Db.TableToCodesA("Project", db);
@@ -65,10 +65,15 @@ order by Id
         }
         */
 
-        #region 2.from XpCode table
+        #region 2.XpCode to codes
 
-        //get code table rows for 下拉式欄位
-        private static async Task<List<IdStrDto>> ByCodesA(string type, Db? db = null)
+        private static async Task<List<IdStrDto>> BySqlA(string sql, Db? db = null)
+        {
+            return await _Db.SqlToCodesA(sql, null, db) ?? [];
+        }
+
+        //get by XpCode.Type
+        private static async Task<List<IdStrDto>> ByTypeA(string type, Db? db = null)
         {
             var sql = string.Format(@"
 select 
@@ -78,6 +83,18 @@ where Type='{0}'
 order by Sort
 ", type);
             return await BySqlA(sql, db);
+        }
+
+        private static async Task<List<IdStrExtDto>> ByTypeExtA(string type, Db? db = null)
+        {
+            var sql = string.Format(@"
+select 
+    Value as Id, [Name] as Str, Ext
+from dbo.XpCode
+where Type='{0}'
+order by Sort
+", type);
+            return await _Db.SqlToCodeExtsA(sql, null, db) ?? [];
         }
 
         public static async Task<List<IdStrDto>> QitemTypesA(Db? db = null)
@@ -93,38 +110,43 @@ order by Sort
             return await BySqlA(sql, db);
         }
 
+        public static async Task<List<IdStrDto>> SurveySatisesA(Db? db = null)
+        {
+            return await ByTypeA("SurveySatis", db);
+        }
+
         public static async Task<List<IdStrDto>> RitemTypesA(Db? db = null)
         {
-            return await ByCodesA("RitemType", db);
+            return await ByTypeA("RitemType", db);
         }
 
         public static async Task<List<IdStrDto>> EitemTypesA(Db? db = null)
         {
-            return await ByCodesA("EitemType", db);
+            return await ByTypeA("EitemType", db);
         }
 
         public static async Task<List<IdStrDto>> CheckTypesA(Db? db = null)
         {
-            return await ByCodesA("CheckType", db);
+            return await ByTypeA("CheckType", db);
         }
 
         public static async Task<List<IdStrDto>> QitemOpsA(Db? db = null)
         {
-            return await ByCodesA("QitemOp", db);
+            return await ByTypeA("QitemOp", db);
         }
 
         public static async Task<List<IdStrDto>> AuthTypesA(Db? db = null)
         {
-            return await ByCodesA("AuthType", db);
+            return await ByTypeA("AuthType", db);
         }
 
         public static async Task<List<IdStrDto>> AuthRangesA(Db? db = null)
         {
-            return await ByCodesA("AuthRange", db);
+            return await ByTypeA("AuthRange", db);
         }
         public static async Task<List<IdStrDto>> IssueTypesA(Db? db = null)
         {
-            return await ByCodesA(_Xp.IssueType, db);
+            return await ByTypeA(_Xp.IssueType, db);
         }
         #endregion
 
@@ -155,6 +177,7 @@ order by Sort
             ];
         }
 
+        //for CRUD 產生器
         public static List<IdStrDto> AutoIdLens()
         {
             return [
@@ -166,29 +189,29 @@ order by Sort
         #endregion
 
         #region 4.其他
+        //專案功能清單
         public static async Task<List<IdStrDto>> PrjProgsA(string projectId, Db? db = null)
         {
             var sql = @"
 select 
     Id, [Name] as Str
 from dbo.PrjProg
-where ProjectId=@ProjectId
+where ProjectId=@Id
 order by Sort
 ";
-            var rows = await _Db.GetModelsA<IdStrDto>(sql, ["ProjectId", projectId], db) ?? [];
-            return _List.CodesAddEmpty(rows, _Xp.PlsSelect);
+            var rows = await _Db.GetModelsA<IdStrDto>(sql, ["Id", projectId], db) ?? [];
+            return _List.CodesAddEmpty(rows, _Locale.GetBaseRes().PlsSelect);
         }
 
         #endregion
 
         /// <summary>
-        /// called by XpCodeController
-        /// [Table] to Codes
+        /// [Table] to Codes, called by XpCodeController
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public static async Task<List<IdStrDto>> ByTablesA(string projectId, Db? db = null)
+        public static async Task<List<IdStrDto>> TablesA(string projectId, Db? db = null)
         {
             //if (_Str.IsEmpty(projectId) || !_Str.CheckKeyRule(projectId, "_XpCode.cs GetTables() projectId is wrong: " + projectId))
             //if (_Str.IsEmpty(projectId)) return null;
@@ -197,18 +220,12 @@ order by Sort
 select 
     Id, Code as Str
 from dbo.[Table]
-where ProjectId='{projectId}'
+where ProjectId=@Id
 order by Code
 ";
-            var rows = await _Db.SqlToCodesA(sql, db) ?? [];
-            //rows ??= [];
+            var rows = await _Db.SqlToCodesA(sql, ["Id", projectId], db) ?? [];
             rows.Insert(0, new IdStrDto() { Id = "", Str = _Locale.GetBaseRes().PlsSelect });
             return rows;
-        }
-
-        private static async Task<List<IdStrDto>> BySqlA(string sql, Db? db = null)
-        {
-            return await _Db.SqlToCodesA(sql, db) ?? [];
         }
 
         /*

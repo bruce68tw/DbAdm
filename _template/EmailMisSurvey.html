@@ -35,7 +35,7 @@
         .btn {
             display: inline-block;
             background-color: #007bff;
-            color: #ffffff;
+            color: #ffffff !important;
             padding: 12px 25px;
             text-decoration: none;
             font-size: 16px;
@@ -51,12 +51,12 @@
 </head>
 <body>
     <div class="container">
-        <h2>資管處(軟體中心)服務滿意度問卷調查</h2>
+        <h2>[DeptName]-滿意度問卷</h2>
         <p>同工 平安，</p>
         <p>為了提供更好的服務，針對本次工作：[Title]</p>
         <p>請您花幾分鐘填寫滿意度問卷，這樣的意見對我們十分重要！</p>
         <p>請點擊下方按鈕進入系統並開始填寫，謝謝。</p>
-        <a href="https://DbAdmTest.eden.org.tw/Survey/Reply?id=[Id]" class="btn">填寫問卷</a>
+        <a href="https://[ServerUrl]/Home/Survey?data=[SurveyData]" class="btn">填寫問卷</a>
     </div>
 </body>
 </html>

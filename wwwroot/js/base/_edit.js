@@ -22,7 +22,7 @@ var _edit = {
         if (value == null)
             value = '1';
         if (field.length == 0)
-            box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="${value}">`);
+            field = box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="${value}" >`);
         else
             field.val(value);
     },

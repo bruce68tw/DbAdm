@@ -1,9 +1,0 @@
-﻿
-<form id='eform' class='xg-form xg-mb10'>
-    @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-    @await Component.InvokeAsync("XiText", new XiTextDto { Title = "姓名", Fid = "Name", MaxLen = 20 })
-    @await Component.InvokeAsync("XiText", new XiTextDto { Title = "Email", Fid = "Email", MaxLen = 50 })
-</form>
-
-@* 3.Save & Back buttons *@
-@await Component.InvokeAsync("XgSaveBack")

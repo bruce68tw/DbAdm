@@ -19,28 +19,26 @@
                     { data: 'WorkHours' },
                     { data: 'Id' },
                     { data: 'Title' },
-                    { data: 'IsFinish' },
-                    //{ data: 'IsWatch' },
+                    { data: 'IsFinish' },       //7:Issue是否結案
                     { data: 'OwnerName' },
-                    //{ data: 'CreatorName' },
-                    { data: 'SendTimes' },      //寄送問卷次數
-                    { data: '_Survey' },        //空白(沒有問卷Id && 沒有回報人)/已填問卷(有問卷Id)/寄送問卷(有回報人)
+                    { data: 'SendTimes' },      //9:寄送問卷次數
+                    { data: '_Survey' },        //10.空白(沒有問卷Id && 沒有回報人)/已填問卷(有問卷Id)/寄送問卷(有回報人)
                     { data: '_fun' },
                 ],
                 columnDefs: [
                     { targets: [7], render: function (data, type, full, meta) {
                         return _crudR.dtYesEmpty(data);
                     }},
+                    /*
                     { targets: [8], render: function (data, type, full, meta) {
                         return _crudR.dtYesEmpty(data);
                     }},
+                    */
                     { targets: [10], render: function (data, type, full, meta) {
-                        let hasSurvey = _str.notEmpty(full.SurveyId);
-                        let hasRptUser = _str.notEmpty(full.RptUserId);
-                            return (!hasSurvey && !hasRptUser) ? '' :
-                                hasSurvey ? '是' :
-                                (full.OwnerId !== _fun.userId) ? '' : 
-                                `<button type="button" class="btn xg-btn xg-btn-size" onclick="_me.onSurvey('${full.Id}')">寄問卷</button>`;
+                        return _str.notEmpty(full.SurveyId) ? '是' :
+                            (full.IsFinish == 1 && _str.notEmpty(full.RptUser) && full.OwnerId == _fun.userId)
+                                ? `<button type="button" class="btn xg-btn xg-btn-size" onclick="_me.onSurvey('${full.Id}')">寄問卷</button>`
+                                : '';
                     }},
                     { targets: [11], render: function (data, type, full, meta) {
                         return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
@@ -274,12 +272,12 @@
                     <th>工作日期</th>
                     <th>工作時數</th>
                     <th>資料Id</th>
-                    <th>標題</th>
-                    <th>已結案</th>
-                    <th>處理人員</th>
-                    <th>寄送次數</th>
-                    <th>已填問卷</th>
-                    <th>功能</th>
+                    <th max-width='300px'>標題</th>
+                    <th min-width='65px'>已結案</th>
+                    <th min-width='65px'>處理人員</th>
+                    <th min-width='65px'>寄送次數</th>
+                    <th min-width='65px'>已填問卷</th>
+                    <th width ='80px'>功能</th>
                 </tr>
             </thead>
             <tbody></tbody>

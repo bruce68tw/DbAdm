@@ -3,6 +3,7 @@ using Base.Interfaces;
 using Base.Models;
 using Base.Services;
 using BaseWeb.Services;
+using DbAdm.Models;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Data.Common;
@@ -41,6 +42,10 @@ services.AddTransient<DbCommand, SqlCommand>();
 var config = new ConfigDto();
 builder.Configuration.GetSection("FunConfig").Bind(config);
 _Fun.Config = config;
+//
+var myConfig = new MyConfigDto();
+builder.Configuration.GetSection("MyConfig").Bind(myConfig);
+_Xp.Config = myConfig;
 
 //cache server
 //services.AddDistributedMemoryCache();   //AddDistributedRedisCache is old

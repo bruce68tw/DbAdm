@@ -587,6 +587,7 @@ function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
     this.boxSetNewId = function (box) {
         this.newIndex++;
         _itext.set(this.kid, this.newIndex, box);
+        _edit.addIsNew(box);    //增加_IsNew隱藏欄位
         return this.newIndex;
     };
 

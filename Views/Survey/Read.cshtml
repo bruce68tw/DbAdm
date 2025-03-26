@@ -1,0 +1,67 @@
+﻿<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+
+    var _me = {
+        init: function () {
+            var config = {
+                //修改:查詢結果欄位,與後端read service對應, 這是 Datatables config
+                columns: [
+                    { data: 'Id' },
+                    { data: 'Title' },
+                    { data: 'Q5' },
+                    { data: 'Created' },
+                    { data: '_Fun' },
+                ],
+
+                //修改:如果查詢結果欄位有特殊的顯示規則就寫在這裡
+                columnDefs: [
+                    { targets: [4], render: function (data, type, full, meta) {
+                            return _crudR.dtCrudFun(full.Id, full.Name, false, false, true);
+                    }},
+                ],
+            };
+
+            //init crud
+            _crudR.init(config);
+        },
+
+    }; //class
+</script>
+
+@* 3.program name *@
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "滿意度問卷" } })
+
+<div class="xg-prog">
+    <div id="divRead">
+        <form id='formRead' class='xg-form'>
+            <div class="row">
+                <div class="col-md-2 xg-label">填寫時間</div>
+                <div class="col-md-10 xg-input">
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true, BoxClass = "xg-inline" })
+                    <span>～</span>
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created2", InRow = true, BoxClass = "xg-inline" })
+                    @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+                </div>
+            </div>
+        </form>
+
+        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>問題Id</th>
+                    <th>標題</th>
+                    <th>建議內容</th>
+                    <th>填寫時間</th>                    
+                    <th width='80px'>維護功能</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="divEdit" class="xg-hide">
+        <partial name="Edit" />
+    </div>
+</div>
