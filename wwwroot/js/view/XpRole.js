@@ -89,16 +89,4 @@
         _modal.hideO(_me.modalUser);
     },
 
-    /*
-    //load json
-    mUserRole_loadJson: function (json) {
-        _me.mUserRole.urmLoadJson(json, _me.divUsers, _me.mUserRoleFids);
-    },
-
-    //getUpdJson
-    mUserRole_getUpdJson: function (upKey) {
-        return _me.mUserRole.urmGetUpdJson(upKey, _me.divUsers, _me.mUserRoleFids);
-    },
-    */
-
 }; //class

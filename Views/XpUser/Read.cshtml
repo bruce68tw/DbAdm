@@ -58,7 +58,7 @@
                         <tbody>
                             <tr>
                                 <td id="divRoles">
-                                    @foreach (var row in (List<IdStrDto>)ViewBag.Roles)
+                                    @foreach (IdStrDto row in ViewBag.Roles)
                                     {
                                         @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = row.Id, Value = row.Id, Label = row.Str })
                                     }
