@@ -16,7 +16,7 @@
                     { data: 'TableCode', orderable: true },
                     { data: 'Code', orderable: true },
                     { data: 'Name' },
-                    { data: 'DataType' },
+                    { data: 'DataType', orderable: true },
                     { data: 'CreatorName' },
                     { data: '_Fun' },
                     { data: 'Status', orderable: true },
@@ -58,7 +58,8 @@
 
         @* //修改:進階查詢欄位, 如果沒有則可以省略 *@
         <form id='formRead2' class='xg-form xg-mb0'>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Column"].Value, Fid = "Code", MaxLen = 30 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Column"].Value, Fid = "Code", LabelTip = "使用模糊查詢",  MaxLen = 30 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位名稱", Fid = "Name", LabelTip = "使用模糊查詢", MaxLen = 30 })
         </form>
         <div class="xg-h10"></div>
 

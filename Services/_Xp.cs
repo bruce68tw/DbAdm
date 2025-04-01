@@ -1,6 +1,8 @@
-﻿using Base.Services;
+﻿using Base.Models;
+using Base.Services;
 using BaseApi.Services;
 using BaseWeb.Services;
+using DbAdm.Models;
 using DbAdm.Tables;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -10,11 +12,14 @@ namespace DbAdm.Services
     //project service
     public static class _Xp
     {
+        //密key for 問卷(不可更改)
+        public const string AesKey = "EdenDbAdmSurvey";
+
         //public const string MyVer = "20201228f";     //for my.js/css
         public static string MyVer = _Date.NowSecStr(); //for my.js/css
         public const string LibVer = "20250115";       //for lib.js/css
 
-        public static string PlsSelect = _Locale.GetBaseRes().PlsSelect;
+        //public static string PlsSelect = _Locale.GetBaseRes().PlsSelect;
 
         //for XpCode
         public const string IssueType = "IssueType";
@@ -23,11 +28,14 @@ namespace DbAdm.Services
 		public static string DirBaseUpload = _Fun.Dir("_upload");
 		public static string DirIssueFile = DirUpload("Issue");
 
-		//constant
-		//upload file max size(MB)
-		//public const int UploadFileMax = 5;
+        //from config file
+        public static MyConfigDto Config = null!;
 
-		public static MyContext GetDb()
+        //constant
+        //upload file max size(MB)
+        //public const int UploadFileMax = 5;
+
+        public static MyContext GetDb()
         {
             return new MyContext();
         }
@@ -66,14 +74,21 @@ namespace DbAdm.Services
 			return await ViewFileA(DirIssueFile, fid, key, ext);
 		}
 
-		/*
+        public static string EnDecode(bool isEncode, string data)
+        {
+            return isEncode 
+                ? _Str.Encode(data, AesKey)
+                : _Str.Decode(data, AesKey);
+        }
+
+        /*
         public static SessionModel GetSession()
         {
             return new SessionModel();
         }
         */
 
-		/*
+        /*
         //檢查上傳檔案
         //後端程式不顯示詳細錯誤訊息到前端
         public static ErrorModel CheckUploadFile(HttpPostedFileBase file, int size, string exts)
@@ -118,5 +133,5 @@ namespace DbAdm.Services
         }
         */
 
-	}//class
+    }//class
 }

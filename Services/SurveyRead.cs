@@ -5,17 +5,19 @@ using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
 {
-    public class ReporterRead
+    public class SurveyRead
     {
         private readonly ReadDto dto = new()
         {
             ReadSql = @"
-Select * 
-From dbo.Reporter
-Order by Id
+Select s.*, i.Title 
+From dbo.Survey s
+join dbo.Issue i on s.Id=i.Id
+Order by s.Id
 ",
+            TableAs = "s",
             Items = [
-                new() { Fid = "Name", Op = ItemOpEstr.Like },
+                new() { Fid = "Created", Type = QitemTypeEnum.Date },
             ],
         };
 

@@ -19,6 +19,21 @@ var _json = {
     */
 
     /**
+     * 轉換一筆json為多筆資料, 用於產生統計圖
+     * param from {json}
+     * param to {json}
+     * return {json} new json data
+     */
+    toChartRows: function (json, cols) {
+        var rows = [];
+        for (var i = 0; i < cols.length; i++) {
+            var fid = cols[i];
+            rows.push({ Id: fid, Num:json[fid]});
+        }
+        return rows;
+    },
+
+    /**
      * copy json data
      * param from {json}
      * param to {json}

@@ -24,7 +24,6 @@ select i.*,
     OwnerName=u.Name,
     CreatorName=u2.Name,
     IsWatch=case when w.Id is null then 0 else 1 end,
-    RptUserId=r.Id,
     SurveyId=s.Id
 from dbo.Issue i
 join dbo.PrjProg pp on i.ProgId=pp.Id
@@ -33,7 +32,6 @@ join dbo.XpUser u on i.OwnerId=u.Id
 join dbo.XpUser u2 on i.Creator=u2.Id
 join dbo.XpCode c on c.Type='{_Xp.IssueType}' and i.IssueType=c.Value
 left join dbo.IssueWatch w on i.Id=w.IssueId and w.WatcherId='{_Fun.UserId()}'
-left join dbo.Reporter r on i.RptUser=r.Id
 left join dbo.Survey s on i.Id=s.Id
 /* 判斷是否追踪 */
 where ('{isWatch}'='' or ('{isWatch}'='1' and w.Id is not null) or ('{isWatch}'='0' and w.Id is null))

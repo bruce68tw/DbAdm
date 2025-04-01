@@ -18,7 +18,7 @@ namespace DbAdm.Controllers
 
         public async Task<JsonResult> Tables(string projectId)
         {
-            return Json(await _XpCode.ByTablesA(projectId));
+            return Json(await _XpCode.TablesA(projectId));
         }
 
     }//class

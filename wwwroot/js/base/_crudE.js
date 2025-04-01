@@ -127,8 +127,8 @@ var _crudE = {
      * param fun {string} C,U,V
      */ 
     _setEditStatus: function(fun) {
-        if (fun === _me._nowFun)
-            return;
+        //if (fun === _me._nowFun)
+        //    return;
 
         /*
         var isView = (fun == _fun.FunV);
@@ -142,18 +142,22 @@ var _crudE = {
         //    return;
 
         var box = _me.divEdit;
+        var eform = _me.edit0.eform;
         var items = box.find('input, textarea, select, button');
         if (fun == _fun.FunV) {
+            _edit.removeIsNew(eform);
             items.prop('disabled', true)
             box.find('#btnToRead').prop('disabled', false);
             _ihtml.setEdits(box, '', false);
         } else if (fun == _fun.FunC) {
+            _edit.addIsNew(eform);    //增加_IsNew隱藏欄位
             var dataEdit = '[data-edit=U]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         } else if (fun == _fun.FunU) {
+            _edit.removeIsNew(eform);
             var dataEdit = '[data-edit=C]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
@@ -431,9 +435,8 @@ var _crudE = {
      */
     onCreate: function() {
         var fun = _fun.FunC;
+        _crudE._resetForm(_me.edit0);   //reset first
         _crudE._setEditStatus(fun);
-        _crudE._resetForm(_me.edit0);
-        _edit.addIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
         _crudE._afterOpenEdit(fun, null);
     },
 
