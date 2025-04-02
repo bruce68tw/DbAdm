@@ -22,7 +22,7 @@
         };
 
         //initial
-        _me.mRoleProg = new EditMany('Id', 'eformRoleProg', 'tplRoleProg', 'tr');
+        _me.mRoleProg = new EditMany('Id', 'tbodyRoleProg', 'tplRoleProg', 'tr');
 		_crudR.init(config, [null, _me.mRoleProg]);
     },
 

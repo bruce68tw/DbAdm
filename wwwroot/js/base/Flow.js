@@ -299,7 +299,7 @@ function Flow(boxId, mNode, mLine) {
         //    this._setNodeClass(rows[i]);
 
         //3rd param reset=false, coz box has other objects, cannot reset
-        this.mNode.loadRowsByBox(box, rows, false);
+        this.mNode.loadRowsByRsb(rows, false, box);
 
         this.flowBox.loadNodes(rows);
 
@@ -330,7 +330,7 @@ function Flow(boxId, mNode, mLine) {
         //    this._renderLine(rows[i]);
 
         //load editMany lines
-        this.mLine.loadRowsByBox(this.divLinesBox, rows, false);
+        this.mLine.loadRowsByRsb(rows, false, this.divLinesBox);
 
         this.flowBox.loadLines(rows);
 

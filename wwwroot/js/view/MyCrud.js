@@ -31,8 +31,8 @@ var _me = {
 
         //maintain tables:
         _me.edit0 = new EditOne();
-        _me.mQitem = new EditMany('Id', 'eformQitem', 'tplQitem', '.xu-tr');
-        _me.mRitem = new EditMany('Id', 'eformRitem', 'tplRitem', '.xu-tr');
+        _me.mQitem = new EditMany('Id', 'tbodyQitem', 'tplQitem', '.xu-tr');
+        _me.mRitem = new EditMany('Id', 'tbodyRitem', 'tplRitem', '.xu-tr');
         _me.mEtable = new EditMany('Id', null, 'tplTabEtable', '.xg-form');
         _me.mEitem = new EditMany('Id', null, 'tplEitemTr', '.xu-tr');
         _me.mEtable._childs = [_me.mEitem];
@@ -216,7 +216,7 @@ var _me = {
             //load Eitems & validate
             var form2 = forms.last();
             var rows2 = _json.filterRows(eitemRows, 'EtableId', _itext.get('Id', form));
-            _me.mEitem.loadRowsByBox(form2.find('tbody'), rows2);
+            _me.mEitem.loadRowsByRsb(rows2, true, form2.find('tbody'));
             _valid.init(form2);
         }
 

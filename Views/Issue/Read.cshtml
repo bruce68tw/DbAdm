@@ -47,8 +47,8 @@
             };
 
             //initial
-            _me.mIssueFile = new EditMany('Id', 'eformIssueFile', 'tplIssueFile', 'tr');
-            _me.mIssueRelat = new EditMany('Id', 'eformIssueRelat', 'tplIssueRelat', 'tr');
+            _me.mIssueFile = new EditMany('Id', 'tbodyIssueFile', 'tplIssueFile', 'tr');
+            _me.mIssueRelat = new EditMany('Id', 'tbodyIssueRelat', 'tplIssueRelat', 'tr');
             _crudR.init(config, [null, _me.mIssueFile, _me.mIssueRelat]);
 
         },

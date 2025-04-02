@@ -19,6 +19,10 @@ var _crudE = {
     Childs: '_childs',
     Deletes: '_deletes',
 
+    //mode
+    ModeBase: 'Base',
+    ModeUR: 'UR',   //user role mode
+
     /**
      * initial crud edit
      * param1 edits {object Array} for edit form
@@ -223,7 +227,7 @@ var _crudE = {
                 _json.copy(fileJson2, fileJson);
             }
 
-            var childJson = edit2.getUpdJsonByCrud(key);
+            var childJson = edit2.getUpdJson(key);
             if (childJson == null)
                 continue;
 

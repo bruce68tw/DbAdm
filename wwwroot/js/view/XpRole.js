@@ -15,8 +15,8 @@
         };
 
         //initial
-        _me.mUserRole = new EditMany('Id', 'eformUserRole', 'tplUserRole', 'tr');
-        _me.mRoleProg = new EditMany('Id', 'eformRoleProg', 'tplRoleProg', 'tr');
+        _me.mUserRole = new EditMany('Id', 'tbodyUserRole', 'tplUserRole', 'tr');
+        _me.mRoleProg = new EditMany('Id', 'tbodyRoleProg', 'tplRoleProg', 'tr');
         _crudR.init(config, [null, _me.mUserRole, _me.mRoleProg]);
 
         //_me.mUserRole.fnLoadJson = _me.mUserRole_loadJson;

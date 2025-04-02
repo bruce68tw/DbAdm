@@ -143,7 +143,7 @@ var _input = {
     fidFilter: function (fid) {
         return _str.isEmpty(fid)
             ? '[data-fid]'
-            : '[data-fid=' + fid + ']';
+            : `[data-fid='${fid}']`;
     },
 
 
