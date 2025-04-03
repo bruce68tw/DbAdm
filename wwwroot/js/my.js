@@ -616,7 +616,8 @@ var _chart = {
 }; //class
 /**
  * crud edit function
- * _me properties:
+ *   合併 _edit.js
+ * 寫入 _me properties:
  *   fnAfterSwap:
  *   fnAfterOpenEdit:
  *   fnUpdateOrViewA: see _updateOrViewA
@@ -635,12 +636,22 @@ var _crudE = {
     Childs: '_childs',
     Deletes: '_deletes',
 
-    //mode
+    //edit form mode
     ModeBase: 'Base',
     ModeUR: 'UR',   //user role mode
 
+    //server side fid for file input collection, must pre '_'
+    //key-value of file serverFid vs row key
+    FileJson: '_fileJson',
+
+    //data property name for keep old value
+    DataOld: '_old',
+
+    //前後端欄位: isNew, new row flag
+    IsNew: '_IsNew',
+
     /**
-     * initial crud edit
+     * initial crud edit, 寫入 _me 變數
      * param1 edits {object Array} for edit form
      *   1.null: means one table, get eform
      *   2.many edit object, if ary0 is null, then call new EditOne()
@@ -722,12 +733,14 @@ var _crudE = {
         //load master(single) row
         var edit = _me.edit0;
         edit.loadRow(json);
+        edit.dataJson = json;
 
         //load childs rows(只需載入第一層)
         var childLen = _crudE._getEditChildLen(edit);
         for (var i = 0; i < childLen; i++) {
             var edit2 = _crudE._getEditChild(edit, i);
-            edit2.loadJson(_crudE._getChildJson(json, i));
+            edit2.dataJson = _crudE._getChildJson(json, i);
+            edit2.loadRows(_crudE.jsonGetRows(edit2.dataJson));
         }
 
         //call fnAfterLoadJson() if existed
@@ -765,19 +778,19 @@ var _crudE = {
         var eform = _me.edit0.eform;
         var items = box.find('input, textarea, select, button');
         if (fun == _fun.FunV) {
-            _edit.removeIsNew(eform);
+            _crudE.removeIsNew(eform);
             items.prop('disabled', true)
             box.find('#btnToRead').prop('disabled', false);
             _ihtml.setEdits(box, '', false);
         } else if (fun == _fun.FunC) {
-            _edit.addIsNew(eform);    //增加_IsNew隱藏欄位
+            _crudE.addIsNew(eform);    //增加_IsNew隱藏欄位
             var dataEdit = '[data-edit=U]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         } else if (fun == _fun.FunU) {
-            _edit.removeIsNew(eform);
+            _crudE.removeIsNew(eform);
             var dataEdit = '[data-edit=C]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
@@ -843,7 +856,7 @@ var _crudE = {
                 _json.copy(fileJson2, fileJson);
             }
 
-            var childJson = edit2.getUpdJsonByCrud(key);
+            var childJson = edit2.getUpdJson(key);
             if (childJson == null)
                 continue;
 
@@ -864,7 +877,7 @@ var _crudE = {
         }
         if (!_json.isEmpty(fileJson)) {
             hasData = true;
-            data[_edit.FileJson] = fileJson;
+            data[_crudE.FileJson] = fileJson;
         }
 
         if (!hasData)
@@ -993,8 +1006,13 @@ var _crudE = {
         return (edit[fid] == null) ? 0 : edit[fid].length;
     },
 
-    //get rows of json
-    getRowsByJson: function (json) {
+    /**
+     * getRowsByJson -> jsonGetRows
+     * get rows of json 
+     * @param {any} json
+     * @returns
+     */
+    jsonGetRows: function (json) {
         return (json == null || json[_crudE.Rows] == null)
             ? null
             : json[_crudE.Rows];
@@ -1011,36 +1029,32 @@ var _crudE = {
     //get child rows
     getChildRows: function (upJson, childIdx) {
         var child = _crudE._getChildJson(upJson, childIdx);
-        return _crudE.getRowsByJson(child);
+        return _crudE.jsonGetRows(child);
     },
 
     /**
      * set child rows
-     * param upRow {json}
+     * param upJson {json}
      * param childIdx {int}
      * param rows {jsons}
      * return {json} child object
      */
-    setChildRows: function (upRow, childIdx, rows) {
+    setChildRows: function (upJson, childIdx, rows) {
         var fid = _crudE.Childs;
-        if (upRow == null)
-            upRow = {};
-        if (upRow[fid] == null)
-            upRow[fid] = [];
-        if (upRow[fid].length <= childIdx)
-            upRow[fid][childIdx] = {};
+        if (upJson == null)
+            upJson = {};
+        if (upJson[fid] == null)
+            upJson[fid] = [];
+        if (upJson[fid].length <= childIdx)
+            upJson[fid][childIdx] = {};
 
-        var child = upRow[fid][childIdx];
+        var child = upJson[fid][childIdx];
         child[_crudE.Rows] = rows;
         return child;
     },
 
     /**
-     * 將目前畫面資料為新資料
-     * param upRow {json}
-     * param childIdx {int}
-     * param rows {jsons}
-     * return {json} child object
+     * 將目前畫面資料轉變為新資料
      */
     editToNew: function () {
         var fun = _fun.FunC;
@@ -1048,6 +1062,258 @@ var _crudE = {
         _me.edit0.resetKey();
         _prog.setPath(fun);
     },
+
+    //=== move from _edit.js start
+    /**
+     * 增加隱藏欄位 _IsNew, 同時設為1
+     * param obj {box} jquery object
+     */
+    addIsNew: function (box) {
+        var fid = _crudE.IsNew;
+        var field = box.find(_input.fidFilter(fid));
+        if (field.length == 0)
+            field = box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="1" >`);
+        else
+            field.val(value);
+    },
+
+    /**
+     * 刪除隱藏欄位 _IsNew
+     * param obj {box} jquery object
+     */
+    removeIsNew: function (box) {
+        var fid = _crudE.IsNew;
+        var field = box.find(_input.fidFilter(fid));
+        if (field.length > 0)
+            field.remove();
+    },
+
+    /**
+     * get old value 
+     * param obj {object} input jquery object
+     * return {string}
+     */
+    getOld: function (obj) {
+        return obj.data(_crudE.DataOld);
+    },
+
+    /**
+     * set old value
+     * param obj {object} input jquery object
+     * param value {int/string}
+     */
+    setOld: function (obj, value) {
+        obj.data(_crudE.DataOld, value);
+    },
+
+    /*
+    zz_loadRowByArg: function (box, row, fidTypes) {
+        _form.loadRow(box, row);
+
+        //set old value for each field
+        //var fidLen = fidTypes.length;
+        for (var i = 0; i < fidTypes.length; i = i + 2) {
+            fid = fidTypes[i];
+            var obj = _obj.get(fid, box);
+            obj.data(_crudE.DataOld, row[fid]);
+        }
+    },
+    */
+
+    /**
+     * get one updated row for New/Updated
+     * 只讀取有異動的欄位
+     * called by: EditOne.js, DbAdm MyCrud.js(使用變形的 form !!)
+     * param kid {string} key fid
+     * param fidTypes {id-value array}
+     * param box {object} form object
+     * return json row
+     */
+    getUpdRow: function (kid, fidTypes, box) {
+        //if key empty then return row
+        var row = _form.toRow(box);
+        var key = _input.get(kid, box);
+        if (_str.isEmpty(key))
+            return row;
+
+        //讀取有異動的欄位
+        var diff = false;
+        var result = {};
+        var fid, ftype, value, obj, old;
+        for (var j = 0; j < fidTypes.length; j = j + 2) {
+            //skip read only type
+            ftype = fidTypes[j + 1];
+            //if (ftype === 'link' || ftype === 'read')
+            //    continue;
+
+            fid = fidTypes[j];
+            //obj = (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
+            obj = _input.getObj(fid, box, ftype);
+            //value = _input.getO(obj, box, ftype);
+            value = row[fid];
+            old = obj.data(_crudE.DataOld);
+            //if fully compare, string will not equal numeric !!
+            if (value != old) {
+                //date/dt old value has more length
+                if ((ftype === 'date' || ftype === 'dt') &&
+                    _date.dtsToValue(value) === _date.dtsToValue(old))
+                    continue;
+
+                result[fid] = value;
+                diff = true;
+            }
+        }
+        if (!diff)
+            return null;
+
+        result[kid] = key;
+        return result;
+    },
+
+    /**
+     * setFidTypeVars -> setFidTypes
+     * set fid-type variables: fidTypes, fidTypeLen
+     * param me {object} EditOne/EditMany object
+     * param box {object} container
+     * return void
+     */
+    setFidTypes: function (me, box) {
+        var fidTypes = [];
+        box.find(_input.fidFilter()).each(function (i, item) {
+            var obj = $(item);
+            var j = i * 2;
+            fidTypes[j] = _input.getFid(obj);
+            fidTypes[j + 1] = _input.getType(obj);
+        });
+        me.fidTypes = fidTypes;
+        me.fidTypeLen = me.fidTypes.length;
+    },
+
+    /**
+     * set file variables: fileFids, fileLen, hasFile
+     * called by EditOne/EditMany init()
+     * param me {edit} EditOne/EditMany variables
+     * param box {object} form or row object
+     * return void
+     */
+    setFileVars: function (me, box) {
+        //var me = this;  //use outside .each()
+        me.fileFids = [];      //upload file fid array
+        box.find('[data-type=file]').each(function (index, item) {
+            me.fileFids[index] = _input.getFid($(item));
+        });
+        me.fileLen = me.fileFids.length;
+        me.hasFile = me.fileFids.length > 0; //has input file or not
+    },
+
+    /**
+     * getServerFid -> getFileSid
+     * get server side variables name for file field
+     * param tableId {string} 
+     * param fid {string} ui file id
+     * return {string} format: Table_Fid
+     */
+    getFileSid: function (levelStr, fid) {
+        return 't' + levelStr + '_' + fid;
+    },
+
+    /**
+     * formData set fileJson field
+     * param data {formData}
+     * param fileJson {json}
+     * return void
+     */
+    dataSetFileJson: function (data, fileJson) {
+        if (_json.isEmpty(fileJson))
+            return;
+
+        var fid = _crudE.FileJson
+        if (data.has(fid)) {
+            var json = data.get(fid);
+            fileJson = _json.copy(fileJson, json);
+        }
+        data.set(fid, fileJson);
+    },
+
+    /**
+     * isNewKey(key) -> isNewRow(row)
+     * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
+     * param key {string}
+     */
+    isNewRow: function (row) {
+        var fid = _crudE.IsNew;
+        return (row[fid] != null || row[fid] == '1');
+    },
+    /*
+    isNewKey: function (key) {
+        key = key.toString();   //convert to string for checking
+        var len = key.length;
+        if (len >= 6)
+            return false;
+
+        var val = parseInt(key);
+        return (!Number.isNaN(val) && (val.toString().length == len));
+    },
+    */
+
+    /**
+     * onclick viewFile
+     * param table {string} table name
+     * param fid {string}
+     * param elm {element} link element
+     * param key {string} row key
+     */
+    viewFile: function (table, fid, elm, key) {
+        if (_crudE.isNewKey(key)) {
+            _tool.msg(_BR.NewFileNotView);
+        } else {
+            var ext = _file.getFileExt(elm.innerText);
+            if (_file.isImageExt(ext))
+                _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
+        }
+    },
+
+    //#region remark code
+    /**
+     * get field info array by box object & row filter
+     * box {object} form/div container
+     * trFilter {string} (optional 'tr')
+     * return json array
+     */
+    /*
+    getFidTypesByDid: function (box, trFilter) {
+        //trFilter = trFilter || 'tr';
+        //var trObj = box.find(trFilter + ':first');
+
+        var fidTypes = [];
+        box.find('[data-id]').each(function (i, item) {
+            var obj = $(item);
+            var j = i * 2;
+            fidTypes[j] = obj.data('id');
+            fidTypes[j + 1] = _input.getType(obj);
+        });
+        return fidTypes;
+    },
+    */
+
+    /*
+    //for EditMany.js
+    getFidTypesById: function (box) {
+        //return _crudE._getFidTypes(box, '[id]');
+        var fidTypes = [];
+        box.find('[id]').each(function (i, item) {
+            var obj = $(item);
+            var j = i * 2;
+            fidTypes[j] = obj.attr('id');
+            fidTypes[j + 1] = _input.getType(obj);
+        });
+        return fidTypes;
+    },
+    */
+
+    //=== move from _edit.js end
+    //#endregion
+
 
     //=== event start ===
     /**
@@ -1066,7 +1332,7 @@ var _crudE = {
      * return {bool}
      */
     onUpdateA: async function(key) {
-        _edit.removeIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
+        _crudE.removeIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
         return await _crudE._updateOrViewA(_fun.FunU, key);
     },
 
@@ -1769,285 +2035,6 @@ var _date = {
     },
 
 }; //class
-
-//for EditOne.js, EditMany.js
-var _edit = {
-
-    //server side fid for file input collection, must pre '_'
-    //key-value of file serverFid vs row key
-    FileJson: '_fileJson',
-
-    //data property name for keep old value
-    DataOld: '_old',
-
-    //前後端欄位: isNew
-    IsNew: '_IsNew',
-
-    /**
-     * 增加隱藏欄位 _IsNew, 同時設為1
-     * param obj {box} jquery object
-     */
-    addIsNew: function (box, value) {
-        var fid = _edit.IsNew;
-        var field = box.find(_input.fidFilter(fid));
-        if (value == null)
-            value = '1';
-        if (field.length == 0)
-            field = box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="${value}" >`);
-        else
-            field.val(value);
-    },
-
-    /**
-     * 刪除隱藏欄位 _IsNew
-     * param obj {box} jquery object
-     */
-    removeIsNew: function (box) {
-        var fid = _edit.IsNew;
-        var field = box.find(_input.fidFilter(fid));
-        if (field.length > 0)
-            field.remove();
-    },
-
-    /**
-     * get old value 
-     * param obj {object} input jquery object
-     * return {string}
-     */
-    getOld: function (obj) {
-        return obj.data(_edit.DataOld);
-    },
-
-    /**
-     * set old value
-     * param obj {object} input jquery object
-     * param value {int/string}
-     */
-    setOld: function (obj, value) {
-        obj.data(_edit.DataOld, value);
-    },
-
-    /*
-    zz_loadRowByArg: function (box, row, fidTypes) {
-        _form.loadRow(box, row);
-
-        //set old value for each field
-        //var fidLen = fidTypes.length;
-        for (var i = 0; i < fidTypes.length; i = i + 2) {
-            fid = fidTypes[i];
-            var obj = _obj.get(fid, box);
-            obj.data(_edit.DataOld, row[fid]);
-        }
-    },
-    */
-
-    /**
-     * get one updated row for New/Updated
-     * called by: EditOne.js, DbAdm MyCrud.js
-     * param kid {string} key fid
-     * param fidTypes {id-value array}
-     * param box {object} form object
-     * return json row
-     */ 
-    getUpdRow: function (kid, fidTypes, box) {
-        //if key empty then return row
-        var row = _form.toRow(box);
-        var key = _input.get(kid, box);
-        if (_str.isEmpty(key))
-            return row;
-
-        var diff = false;
-        var result = {};
-        var fid, ftype, value, obj, old;
-        for (var j = 0; j < fidTypes.length; j = j + 2) {
-            //skip read only type
-            ftype = fidTypes[j + 1];
-            //if (ftype === 'link' || ftype === 'read')
-            //    continue;
-
-            fid = fidTypes[j];
-            //obj = (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
-            obj = _input.getObj(fid, box, ftype);
-            //value = _input.getO(obj, box, ftype);
-            value = row[fid];
-            old = obj.data(_edit.DataOld);
-            //if fully compare, string will not equal numeric !!
-            if (value != old) {
-                //date/dt old value has more length
-                if ((ftype === 'date' || ftype === 'dt') &&
-                    _date.dtsToValue(value) === _date.dtsToValue(old))
-                    continue;
-
-                result[fid] = value;
-                diff = true;
-            }
-        }
-        if (!diff)
-            return null;
-
-        result[kid] = key;
-        return result;
-    },
-
-    /**
-     * set fid-type related variables: fidTypes, fidTypeLen
-     * param box {object} container
-     * return void
-     */
-    setFidTypeVars: function (me, box) {
-        var fidTypes = [];
-        box.find(_input.fidFilter()).each(function (i, item) {
-            var obj = $(item);
-            var j = i * 2;
-            fidTypes[j] = _input.getFid(obj);
-            fidTypes[j + 1] = _input.getType(obj);
-        });
-        me.fidTypes = fidTypes;
-        me.fidTypeLen = me.fidTypes.length;
-    },
-
-    /**
-     * set file related variables: fileFids, fileLen, hasFile
-     * called by EditOne/EditMany init()
-     * param me {edit} EditOne/EditMany variables
-     * param box {object} form or row object
-     * return void
-     */
-    setFileVars: function (me, box) {
-        //var me = this;  //use outside .each()
-        me.fileFids = [];      //upload file fid array
-        box.find('[data-type=file]').each(function (index, item) {
-            me.fileFids[index] = _input.getFid($(item));
-        });
-        me.fileLen = me.fileFids.length;
-        me.hasFile = me.fileFids.length > 0; //has input file or not
-    },
-
-    /**
-     * get server side var name for file field
-     * param tableId {string} 
-     * param fid {string} ui file id
-     * return {string} format: Table_Fid
-     */
-    getServerFid: function (levelStr, fid) {
-        return 't' + levelStr + '_' + fid;
-    },
-
-    /**
-     * formData set fileJson field
-     * param data {formData}
-     * param fileJson {json}
-     * return void
-     */
-    dataSetFileJson: function (data, fileJson) {
-        if (_json.isEmpty(fileJson))
-            return;
-
-        var fid = _edit.FileJson
-        if (data.has(fid)) {
-            var json = data.get(fid);
-            fileJson = _json.copy(fileJson, json);
-        }
-        data.set(fid, fileJson);
-    },
-
-    /**
-     * isNewKey(key) -> isNewRow(row)
-     * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
-     * param key {string}
-     */
-    isNewRow: function (row) {
-        var fid = _edit.IsNew;
-        return (row[fid] != null || row[fid] == '1');
-    },
-    /*
-    isNewKey: function (key) {
-        key = key.toString();   //convert to string for checking
-        var len = key.length;
-        if (len >= 6)
-            return false;
-
-        var val = parseInt(key);
-        return (!Number.isNaN(val) && (val.toString().length == len));
-    },
-    */
-
-    /**
-     * onclick viewFile
-     * param table {string} table name
-     * param fid {string}
-     * param elm {element} link element
-     * param key {string} row key
-     */
-    viewFile: function (table, fid, elm, key) {
-        if (_edit.isNewKey(key)) {
-            _tool.msg(_BR.NewFileNotView);
-            return;
-        } else {
-            var ext = _file.getFileExt(elm.innerText);
-            if (_file.isImageExt(ext))
-                _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
-        }
-    },
-
-    //#region remark code
-    /**
-     * get field info array by box object & row filter
-     * box {object} form/div container
-     * trFilter {string} (optional 'tr')
-     * return json array
-     */
-    /*
-    getFidTypesByDid: function (box, trFilter) {
-        //trFilter = trFilter || 'tr';
-        //var trObj = box.find(trFilter + ':first');
-
-        var fidTypes = [];
-        box.find('[data-id]').each(function (i, item) {
-            var obj = $(item);
-            var j = i * 2;
-            fidTypes[j] = obj.data('id');
-            fidTypes[j + 1] = _input.getType(obj);
-        });
-        return fidTypes;
-    },
-    */
-
-    /*
-    //for EditMany.js
-    getFidTypesById: function (box) {
-        //return _edit._getFidTypes(box, '[id]');
-        var fidTypes = [];
-        box.find('[id]').each(function (i, item) {
-            var obj = $(item);
-            var j = i * 2;
-            fidTypes[j] = obj.attr('id');
-            fidTypes[j + 1] = _input.getType(obj);
-        });
-        return fidTypes;
-    },
-    */
-
-    /**
-     * get field info array: 0:id, 1:type
-     * param {object} trObj
-     * return {string array}
-     */
-    /*
-    _getFidTypes: function (box, filter) {
-        var fidTypes = [];
-        box.find(filter).each(function (i, item) {
-            var obj = $(item);
-            var j = i * 2;
-            fidTypes[j] = obj.data('id');
-            fidTypes[j + 1] = _input.getType(obj);
-        });
-        return fidTypes;
-    },
-    */
-    //#endregion
-
-};
 var _error = {
 
     log: function (msg) {
@@ -5539,13 +5526,25 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
 
 } //class
 /**
+ * 多筆編輯畫面
  * multiple edit forms
  *   資料儲存在 html input
+ * 
  * notice:
  *   set data-fkeyFid when save
  *   函數名稱後面ByRsb(表示by RowsBox)為擴充原本函數, 參數rowsBox空白則為this.RowsBox
+ * 
+ * 屬性: 參考 init()
+ *   kid:
+ *   eform:
+ *   fidTypes:
+ *   systemError:
+ *   dataJson: 同EditOne.js
+ *   hasFile、fileLen、fileFids: 在 _crudE.js setFileVars() 設定
+ *   validator: jquery vallidation object (EditMany同), 在 _crudE.js _initForm() 設定
+ * 
  * 自定函數:
- *   void fnLoadJson(json)：show json to form, use loadJson instead of loadRows for more situation !!
+ *   void fnLoadJson(json) -> fnLoadRows(rows)：show json to form, use loadJson instead of loadRows for more situation !!
  *   json fnGetUpdJson(upKey)：get updated json by form
  *   bool fnValid()：validate check
  *   void fnReset()：reset
@@ -5553,13 +5552,12 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
  * param-1 kid {string} pkey field id(single key)
  * //param-2 eformId {string} (optional) edit form id
  * param-2 rowsBoxId {string} (optional) rows box id
- *   if empty, you must write functions: fnLoadJson、fnGetUpdJson、fnValid
- *   if not empty, system will load UI & prepare saving rows,
- *     and rows container tag is fixed to 'tbody'
+ *   if empty, you must write functions: fnLoadRows、fnGetUpdJson、fnValid
  * param-3 tplRowId {string} (optional) row template id
+ *   tplRowId -> rowTplId
  *   1.if empty, it will log error when call related function.
  *   2.system get fid-type from this variables
- *   3.called by singleFormLoadRow、loadRowsByBox、_renderRow
+ *   3.called by singleFormLoadRow、loadRowsByRsb、_renderRow
  * param-4 rowFilter {string} (optional) jQuery filter for find row object
  *   1.if empty, it will log error when call related function.
  *   2.inside element -> row(onDeleteRow),
@@ -5568,8 +5566,8 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
  * 
  * return {EditMany}
  */
-//function EditMany(kid, eformId, tplRowId, rowFilter, sortFid) {
-function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
+//function EditMany(kid, eformId, rowTplId, rowFilter, sortFid) {
+function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
 
     /**
      * initial & and instance variables (this.validator by _valid.init())
@@ -5590,10 +5588,11 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
         this.rowFilter = rowFilter;
         this.sortFid = sortFid;
         this.systemError = '';
-        this.hasTplRow = _str.notEmpty(tplRowId);
+        this.hasTplRow = _str.notEmpty(rowTplId);
+        this.dataJson = null;
 
         if (this.hasTplRow) {
-            this.tplRow = $('#' + tplRowId).html();
+            this.tplRow = $('#' + rowTplId).html();
             var rowObj = $(this.tplRow);
 
             //check input & alert error if wrong
@@ -5602,8 +5601,8 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
                 alert(this.systemError);
             }
 
-            _edit.setFidTypeVars(this, rowObj);
-            _edit.setFileVars(this, rowObj);
+            _crudE.setFidTypes(this, rowObj);
+            _crudE.setFileVars(this, rowObj);
         }
 
         //has edit form or not
@@ -5620,7 +5619,10 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
         this.newIndex = 0;      //new row serial no
     };
 
-    //fids: 要傳到後端的欄位id array
+    /**
+     * initial urm, 參考 XpUser Read.cshmtl
+     * param fids: 要傳到後端的欄位id array
+     */ 
     this.initUrm = function (fids) {
         this.mode = _crudE.ModeUR;
         this.modeData = fids;
@@ -5628,21 +5630,13 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
-     * check is a new row or not
-     * param row {json} 
-     * return {bool}
-     */
-    this.isNewRow = function (row) {
-        return _edit.isNewRow(row);
-    };
-
-    /**
+     * isNewTr -> _isNewBox
      * check is a new tr or not
      * param tr {object} 
      * return {bool}
      */
-    this.isNewTr = function (tr) {
-        return (_itext.get(_edit.IsNew, tr) == '1');
+    this._isNewBox = function (tr) {
+        return (_itext.get(_crudE.IsNew, tr) == '1');
     };
 
     /**
@@ -5654,7 +5648,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
             this.fnReset();
         } else if (this.isUrm) {
             this._urmReset();
-        } else {
+        } else if (this.hasEform) {
             this.rowsBox.empty();   //empty rows ui first
             this._resetVar();
         }
@@ -5663,37 +5657,37 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
     //reset variables
     this._resetVar = function () {
         this.newIndex = 0;
-        this.resetDeleted();
+        this._resetDeletes();
     };
 
     /**
+     * resetDeleted -> _resetDeletes
      * reset deleted rows
      */
-    this.resetDeleted = function () {
+    this._resetDeletes = function () {
         this.deletedRows = [];
     };
 
     /**
+     * urmLoadJson -> urmLoadRows
      * (urm: UserRole Mode), load json rows into UI by urm
      * param json {json} 
      * param rowsBox {object} 
      * param fids {string[]} 
      */
-    this._urmLoadJson = function (json, rowsBox, fids) {
-        //reset form first
-        var objs = rowsBox.find(':checkbox');
-        _icheck.setO(objs, 0);
-        objs.data('key', '');
+    this._urmLoadJson = function (json) {
+        this._urmReset();
 
         //check
-        var rows = _crudE.getRowsByJson(json);
+        var rows = _crudE.jsonGetRows(json);
         if (rows == null)
             return;
 
         //set checked sign & old value
+        var fids = this.modeData;
         for (var i = 0; i < rows.length; i++) {
             var row = rows[i];
-            var obj = rowsBox.find(_input.fidFilter(row[fids[1]]));   //fid map to dataFid
+            var obj = this.rowsBox.find(_input.fidFilter(row[fids[1]]));   //fid map to dataFid
             _icheck.setO(obj, 1);
             obj.data('key', row[fids[0]]);
         }
@@ -5714,7 +5708,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
         var me = this;
         var newIdx = 0;
         var fids = this.modeData;   //string array
-        this.resetDeleted();    //reset first
+        this._resetDeletes();    //reset first
         this.rowsBox.find(':checkbox').each(function () {
             var obj = $(this);
             var key = obj.data('key');
@@ -5722,7 +5716,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
                 if (_icheck.checkedO(obj)) {
                     //new row
                     var row = {};
-                    row[_edit.IsNew] = '1';     //new row flag
+                    row[_crudE.IsNew] = '1';     //new row flag
                     row[fids[0]] = ++newIdx;            //Id, base 1 !!
                     row[fids[1]] = _icheck.getO(obj);   //RoleId
                     me.rowSetFkey(row, upKey);  //set foreign key value
@@ -5738,71 +5732,82 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
 
         if (rows.length > 0)
             json[_crudE.Rows] = rows;
-        json[_crudE.Deletes] = this.getDeletedStr();
+        json[_crudE.Deletes] = this.getDeletes();
         return json;
     };
 
     this._urmReset = function () {
         this._resetVar();
-        this.rowsBox.find(':checkbox').each(function () {
-            _icheck.setO($(this), 0);
-        });
+
+        var objs = this.rowsBox.find(':checkbox');
+        _icheck.setO(objs, 0);
+        objs.data('key', '');
     };
 
+    /**
+     * loadJson(json) -> loadRows(rows)
+     * 系統自動呼叫, 不可在 fnXXX 呼叫, 否則會產生無窮迴圈 !!
+     * load this json rows into UI, also set old values !!
+     * param json {json} 
+     */
+    this.loadRows = function (rows) {
+        if (this.fnLoadRows) {
+            this.fnLoadRows(rows);
+        } else if (this.isUrm) {
+            this._urmLoadJson(json, _me.divRoles, _me.mUserRoleFids);
+        } else {
+            //var rows = (json == null || json[_crudE.Rows] == null)
+            //    ? null : json[_crudE.Rows];
+            this.loadRowsByRsb(rows, true);
+        }
+    };
 
     /**
-     * single form load one row, also set field old value,
+     * singleFormLoadRow -> loadRowByBox
+     * box 與 rsb(rowsBox) 有些不同, 所以用不同名 !!
+     * load one row, also set field old value,
      * ex: DbAdm/MyCrud.js Etable is a single form but has multiple rows property !!
      * param rowBox {object}
      * param row {json}
-     * param index {int}
+     * param index {int} 資料序號 base 0
      */
-    this.singleFormLoadRow = function (rowBox, row, index) {
-        if (!this.checkTplRow())
-            return;
+    this.loadRowByBox = function (rowBox, row, index) {
+        //if (!this._checkRowTpl())
+        //    return;
 
-        var form = $(Mustache.render(this.tplRow, { Index: index }));
-        _form.loadRow(form, row);   //use name field
+        var box = $(Mustache.render(this.tplRow, { Index: index }));
 
         //set old value for each field
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
-            var obj = _obj.get(fid, form);
-            obj.data(_edit.DataOld, row[fid]);
+            _crudE.setOld(_obj.get(fid, box), row[fid]);
         }
 
-        rowBox.append(form);
+        //set date input
+        _idate.init(box);
+
+        //one row into UI
+        _form.loadRow(box, row);
+
+        //rowBox.append(box);
+        box.appendTo(rowBox);
     };
 
     /**
-     * 系統自動呼叫, PG不可呼叫, 否則會產生無窮迴圈 !!
-     * load this json rows into UI, also set old values !!
-     * param json {json} 
-     */
-    this.loadJson = function (json) {
-        if (this.fnLoadJson) {
-            this.fnLoadJson(json);
-        } else if (this.isUrm) {
-            this._urmLoadJson(json, _me.divRoles, _me.mUserRoleFids);
-        } else {
-            var rows = (json == null || json[_crudE.Rows] == null)
-                ? null : json[_crudE.Rows];
-            this.loadRowsByBox(this.rowsBox, rows);
-        }
-    };
-
-    /**
-     * load rows with rowsBox
+     * loadRowsByBox(rowsBox, rows, reset) -> loadRowsByRsb(rows, reset, rowsBox)
+     * load rows by rowsBox also set old value
      * param rowsBox {object} rows box object
      * param rows {jsons}
      * param reset {bool} (default true) reset rowsBox first.
+     * param rowsBox {object} (optional) rows box object, default this.rowsBox
      */ 
-    this.loadRowsByBox = function (rowsBox, rows, reset) {
-        if (!this.checkTplRow())
+    this.loadRowsByRsb = function (rows, reset, rowsBox) {
+        if (!this._checkRowTpl())
             return;
 
         //reset if need
         //use "reset || true"" will cause wrong result !!
+        rowsBox = this._getRowsBox(rowsBox);
         if (_var.isEmpty(reset) || reset)
             this.reset(rowsBox);
 
@@ -5813,6 +5818,8 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
 
         //render rows
         for (var i = 0; i < rowLen; i++) {
+            this.loadRowByBox(rowsBox, rows[i], i);
+            /*
             var row = rows[i];
             var box = $(Mustache.render(this.tplRow, row));
             //box.data(this.DataIndex, i);    //set row index
@@ -5820,7 +5827,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
             //set old value for each field
             for (var j = 0; j < this.fidTypeLen; j += 2) {
                 fid = this.fidTypes[j];
-                _edit.setOld(_obj.get(fid, box), row[fid]);
+                _crudE.setOld(_obj.get(fid, box), row[fid]);
             }
 
             //set date input
@@ -5831,6 +5838,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
 
             //into rows box
             box.appendTo(rowsBox);
+            */
         }        
     };
 
@@ -5838,17 +5846,18 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
      * validate form
      */
     this.valid = function () {
-        return (this.hasEform) ? this.eform.validTable(this.validator) :
-            (this.fnValid == null) ? true : this.fnValid();
+        return this.fnValid ? this.fnValid() :
+            this.hasEform ? this.eform.validTable(this.validator) :
+            true;
     };
 
     /**
      * get row key
-     * param tr {object} row box
+     * param rowBox {object} row box
      * return {string} key value
      */
-    this.getKey = function (tr) {
-        return _input.get(this.kid, tr);
+    this.getKey = function (rowBox) {
+        return _input.get(this.kid, rowBox);
     };
 
     /**
@@ -5869,8 +5878,8 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
         return row;
     };
     */
-
-    this.checkRowFilter = function () {
+    
+    this._checkRowFilter = function () {
         if (this.hasRowFilter)
             return true;
 
@@ -5878,7 +5887,8 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
         return false;
     };
 
-    this.checkTplRow = function () {
+    //checkTplRow -> _checkRowTpl
+    this._checkRowTpl = function () {
         if (this.hasTplRow)
             return true;
 
@@ -5891,14 +5901,15 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
      * param elm {element/object}
      * return {object}
      */
-    this.elmToRowBox = function (elm) {
-        return this.checkRowFilter()
+    this._elmToRowBox = function (elm) {
+        return this._checkRowFilter()
             ? $(elm).closest(this.rowFilter)
             : null;
     };
 
     /**
      * get row box by id
+     * called Flow.js
      * param id {string} row id
      * return {object} row box
      */
@@ -5909,7 +5920,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
 
     /**
      * getUpdJsonByCrud -> getUpdJson
-     * 系統自動呼叫, PG不可呼叫, 否則會產生無窮迴圈 !!
+     * 系統自動呼叫, 不可在 fnXXX 呼叫, 否則會產生無窮迴圈 !!
      * get updated json, called by crudE.js only !!
      * param upKey {string}
      * return {json} modified columns only
@@ -5930,7 +5941,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
     this.getUpdJsonByRsb = function (upKey, rowsBox) {
         var json = {};
         json[_crudE.Rows] = this.getUpdRows(upKey, this._getRowsBox(rowsBox));
-        json[_crudE.Deletes] = this.getDeletedStr();
+        json[_crudE.Deletes] = this.getDeletes();
         return json;
     };
 
@@ -5943,18 +5954,18 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
      */
 
     /**
-     * public: myCrud.js 會用到
+     * public for myCrud.js
      * (need this.rowFilter !!) get updated rows(not include _childs, _deletes)
      * will also set fkeyFid
-     * param rowsBox {object} (optional) rows container
+     * param rowsBox {object} (optional) rows box, default this.rowsBox
      * return {jsons} null if empty
      */ 
     this.getUpdRows = function (upKey, rowsBox) {
-        if (!this.checkRowFilter())
+        if (!this._checkRowFilter())
             return;
 
         //set sort field
-        rowsBox = this._391(rowsBox);
+        rowsBox = this._getRowsBox(rowsBox);
         this.setSort(rowsBox);
 
         //debugger;
@@ -5962,18 +5973,18 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
         var me = this;  //this is not work inside each() !!
         rowsBox.find(me.rowFilter).each(function (idx, item) {
             //add new row if empty key
-            var tr = $(item);
-            var key = _input.get(me.kid, tr);
-            //if (_edit.isNewKey(key)) {
-            if (me.isNewTr(tr)) {
-                var row2 = _form.toRow(tr);
+            var box = $(item);
+            var key = _input.get(me.kid, box);
+            //if (_crudE.isNewKey(key)) {
+            if (me._isNewBox(box)) {
+                var row2 = _form.toRow(box);
                 row2[me.DataFkeyFid] = upKey;   //write anyway !!
                 rows.push(row2);
                 return;     //continue;
             }
 
             //add modified fields
-            //var key = tr.data(_fun.DataKey);
+            //var key = box.data(_fun.DataKey);
             //var oldRow = me.getOldRow(key);
             var diffRow = {};
             var diff = false;
@@ -5985,10 +5996,10 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
                     continue;
 
                 fid = me.fidTypes[j];
-                obj = _obj.get(fid, tr);
-                value = _input.getO(obj, tr, ftype);
+                obj = _obj.get(fid, box);
+                value = _input.getO(obj, box, ftype);
                 //if totally compare, string is not equal to numeric !!
-                if (value != _edit.getOld(obj)) {
+                if (value != _crudE.getOld(obj)) {
                     diffRow[fid] = value;
                     diff = true;
                 }
@@ -6011,10 +6022,12 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
     };
 
     /** 
-     * get deleted rows(key array "string" !!)
+     * getDeletedStr -> getDeletes
+     * get deleted rows key list字串 for 傳回後端
+     * public for MyCrud.js
      * return {string} null for empty.
      */ 
-    this.getDeletedStr = function () {
+    this.getDeletes = function () {
         return (this.deletedRows.length === 0)
             ? null : this.deletedRows.join();
     };    
@@ -6023,21 +6036,20 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
      * onclick addRow button
      */
     this.onAddRow = function () {
-        var row = this.addRow();
-        _edit.addIsNew(row);    //增加_IsNew隱藏欄位
+        this.addRow();
     };
 
     /**
      * add one row(or empty) into UI
      * param {object} (optional) row
-     * param {object} (optional) rowsBox
-     * return {object} row jquery object(with UI)
+     * param {object} (optional) rowsBox, default this.rowsBox
+     * return {object} row
      */
     this.addRow = function (row, rowsBox) {
         row = row || {};
         rowsBox = this._getRowsBox(rowsBox);
-        var obj = this._renderRow(rowsBox, row);
-        this.boxSetNewId(obj);
+        var obj = this._renderRow(row, rowsBox);
+        this.setNewIdByBox(obj);
         return obj;
     };
 
@@ -6046,14 +6058,14 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
      * param btn {element}
      */
     this.onDeleteRow = function (btn) {        
-        var box = this.elmToRowBox(btn);
+        var box = this._elmToRowBox(btn);
         this.deleteRow(_itext.get(this.kid, box), box);
     };
 
     /**
      * add deleted row & remove UI row
      * param key {string} row key
-     * param rowBox {object} (optional) row box object
+     * param rowBox {object} (optional) rows box, default this.rowsBox
      */ 
     this.deleteRow = function (key, rowBox) {
         var deletes = this.deletedRows;
@@ -6083,8 +6095,8 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
      * param elm {element} link element
      */
     this.onViewFile = function (table, fid, elm) {
-        var key = this.getKey(this.elmToRowBox(elm));
-        _edit.viewFile(table, fid, elm, key);
+        var key = this.getKey(this._elmToRowBox(elm));
+        _crudE.viewFile(table, fid, elm, key);
     };
 
     /**
@@ -6093,8 +6105,8 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
      * param row {json}
      * return {object} row object
      */ 
-    this._renderRow = function (rowsBox, row) {
-        if (!this.checkTplRow())
+    this._renderRow = function (row, rowsBox) {
+        if (!this._checkRowTpl())
             return null;
 
         rowsBox = this._getRowsBox(rowsBox);
@@ -6108,15 +6120,12 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
      * (need this.rowFilter !!) formData add upload files
      * param levelStr {string}
      * param data {FormData}
-     * param rowsBox {object} (optional) use EditMany setting if empty
+     * param rowsBox {object} (optional) default this.rowsBox
      * return {json} file json
      */ 
     this.dataAddFiles = function (levelStr, data, rowsBox) {
-        if (!this.hasFile)
-            return null;
-
-        if (!this.checkRowFilter())
-            return null;
+        if (!this.hasFile) return null;
+        if (!this._checkRowFilter()) return null;
 
         rowsBox = this._getRowsBox(rowsBox);
         var me = this;
@@ -6126,7 +6135,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
             var tr = $(item);
             for (var i = 0; i < me.fileLen; i++) {
                 var fid = me.fileFids[i];
-                var serverFid = _edit.getServerFid(levelStr, fid);
+                var serverFid = _crudE.getFileSid(levelStr, fid);
                 if (_ifile.dataAddFile(data, fid, serverFid, tr)) {
                     fileIdx[fid] = (fileIdx[fid] == null) ? 0 : fileIdx[fid] + 1;
                     //set fileJson
@@ -6134,7 +6143,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
                 }
             }
         });
-        //_edit.dataSetFileJson(data, fileJson);
+        //_crudE.dataSetFileJson(data, fileJson);
         return fileJson;
     };
 
@@ -6144,7 +6153,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
      * param fkeyFid {string}
      */
     this.rowSetFkey = function (row, fkey) {
-        if (row != null && this.isNewRow(row))
+        if (row != null && _crudE.isNewRow(row))
             row[this.DataFkeyFid] = fkey;
     };
 
@@ -6157,27 +6166,29 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
         if (rows != null) {
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                if (row != null && this.isNewRow(row))
+                if (row != null && _crudE.isNewRow(row))
                     row[this.DataFkeyFid] = fkey;
             }
         }
     };
 
     /**
+     * boxSetNewId -> setNewIdByBox
      * set new id by row box
+     * public for MyCrud.js, Flow.js
      * param box {object} row box
      * return {int} new key index
      */
-    this.boxSetNewId = function (box) {
+    this.setNewIdByBox = function (box) {
         this.newIndex++;
         _itext.set(this.kid, this.newIndex, box);
-        _edit.addIsNew(box);    //增加_IsNew隱藏欄位
+        _crudE.addIsNew(box);    //增加_IsNew隱藏欄位
         return this.newIndex;
     };
 
     /**
      * set sort field if need
-     * param rowsBox {object}
+     * param rowsBox {object} default this.rowsBox
      */
     this.setSort = function (rowsBox) {
         var sortFid = this.sortFid;
@@ -6193,6 +6204,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
     };
 
     /**
+     * getRowsBox -> getTrs
      * get rows box
      * param rowsBox {object} optional, return this.rowsBox if null
      * return {object}
@@ -6262,13 +6274,19 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
  *   _childs {json array}: child json array
  * 
  * 屬性
- *   validator: jquery vallidation object (EditMany同)
+ *   kid:
+ *   eform:
+ *   fidTypes:
+ *   systemError:
+ *   dataJson: 載入資料後(update/view)自動設定
+ *   hasFile、fileLen、fileFids: 在 _crudE.js setFileVars() 設定
+ *   validator: jquery vallidation object (EditMany同), 在 _crudE.js _initForm() 設定
  * 
- * custom function called by _crudE.js
+ * 自定函數 called by _crudE.js
  *   //void fnAfterLoadJson(json)
  *   //void fnAfterOpenEdit(fun, json): called after open edit form
  *   //void fnAfterSwap(readMode): called after _crudR.swap()
- *   error fnWhenSave()
+ *   error fnWhenSave() ??
  *   void fnAfterSave()
  *   
  * param kid {string} (default 'Id') pkey field id for getKey value & getUpdRow,
@@ -6280,7 +6298,7 @@ function EditMany(kid, rowsBoxId, tplRowId, rowFilter, sortFid) {
  */ 
 function EditOne(kid, eformId) {
 
-    //fileFids, fileLen, hasFile 屬性在外部設定(_edit.js setFileVars())
+    //fileFids, fileLen, hasFile 屬性在外部設定(_crudE.js setFileVars())
 
     /**
      * initial & and instance variables (this.validator is by _valid.init())
@@ -6290,6 +6308,7 @@ function EditOne(kid, eformId) {
         this.kid = kid || 'Id';
         eformId = eformId || 'eform';
         this.eform = $('#' + eformId);     //multiple rows container object
+        this.dataJson = null;
 
         //check input & alert error if wrong
         this.systemError = '';
@@ -6302,8 +6321,8 @@ function EditOne(kid, eformId) {
             //return;   //not return
         }
 
-        _edit.setFidTypeVars(this, this.eform);
-        _edit.setFileVars(this, this.eform);
+        _crudE.setFidTypes(this, this.eform);
+        _crudE.setFileVars(this, this.eform);
     };
 
     /**
@@ -6327,7 +6346,7 @@ function EditOne(kid, eformId) {
      * return {bool}
      */
     this.isNewRow = function () {
-        return (_itext.get(_edit.IsNew, this.eform) == '1');
+        return (_itext.get(_crudE.IsNew, this.eform) == '1');
     };
 
     /**
@@ -6341,7 +6360,7 @@ function EditOne(kid, eformId) {
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
             var obj = _obj.get(fid, this.eform);
-            obj.data(_edit.DataOld, row[fid]);
+            obj.data(_crudE.DataOld, row[fid]);
         }
     };
 
@@ -6350,7 +6369,7 @@ function EditOne(kid, eformId) {
      * return {json} different column only
      */
     this.getUpdRow = function () {
-        return _edit.getUpdRow(this.kid, this.fidTypes, this.eform);
+        return _crudE.getUpdRow(this.kid, this.fidTypes, this.eform);
     };
 
     /**
@@ -6388,12 +6407,12 @@ function EditOne(kid, eformId) {
         var fileJson = {};
         for (var i = 0; i < this.fileLen; i++) {
             var fid = this.fileFids[i];
-            var serverFid = _edit.getServerFid(levelStr, fid);
+            var serverFid = _crudE.getFileSid(levelStr, fid);
             if (_ifile.dataAddFile(data, fid, serverFid, this.eform)) {
                 fileJson[serverFid] = this.getKey();
             }
         }
-        //_edit.dataSetFileJson(data, fileJson);
+        //_crudE.dataSetFileJson(data, fileJson);
         return fileJson;
     };
 
@@ -6405,13 +6424,641 @@ function EditOne(kid, eformId) {
      */
     this.onViewFile = function (table, fid, elm) {
         var key = this.getKey();
-        _edit.viewFile(table, fid, elm, key);
+        _crudE.viewFile(table, fid, elm, key);
     };
 
     //call last
     this.init();
 
 }//class
+
+//靜態類別
+var _Flow = {
+
+	//靜態屬性 node type enum
+	TypeStart: 'S',
+	TypeEnd: 'E',
+	TypeNode: 'N',
+	//TypeAuto: 'A',	//auto
+};
+
+function FlowBase(boxId, onMoveNode) {	
+
+	/**
+	 屬性:
+	 boxElm: box element
+	 svg: svg
+	 nodes: nodes
+	 lines: lines
+	 startNode: start node
+	 onMoveNode: event onMoveNode(node)
+	*/
+
+	this._init = function (boxId, onMoveNode) {
+		this.boxElm = document.getElementById(boxId);
+		this.svg = SVG().addTo(this.boxElm).size('100%', '100%');
+		this.onMoveNode = onMoveNode;
+		this.reset(false);
+	};
+
+	//清除全部UI元件
+	//hasUI: default true(會同時清除UI元素)
+	this.reset = function (hasUI) {
+		this.nodes = [];
+		this.lines = [];
+		this.startNode = null;
+
+		//todo: 只刪除 svg、text元素(flow box裡面有其他input欄位)
+		if (hasUI || hasUI == null) {
+			this.boxElm.querySelectorAll('svg,text').forEach(elm => elm.remove());
+		}
+	};
+
+	//載入nodes & lines
+	this.loadNodes = function (rows) {
+		for (var i = 0; i < rows.length; i++)
+			this.addNode(rows[i]);
+	};
+
+	this.loadLines = function (rows) {
+		for (var i = 0; i < rows.length; i++)
+			this.addLine(rows[i]);
+	};
+
+	this.addNode = function (json) {
+		//this.nodeCount++;
+		//if (json.id == null)
+		//	json.id = (this.nodes.length + 1) * (-1);
+		let node = new FlowNode(this, json);
+		this.nodes.push(node);
+		return node;
+	};
+	
+	//addLine(fromNode, toNode, id, lineType) {
+	this.addLine = function (json) {
+		//this.lineCount++;
+		//if (id == null)
+		//	id = (this.lines.length + 1) * (-1);
+		let fromNode = this.findNode(json.StartNode);
+		let toNode = this.findNode(json.EndNode);
+		return new FlowLine(this, fromNode, toNode, json.Id, 'A');
+	};
+	
+	this.drawLineStart = function (startNode) {
+		this.startNode = startNode;
+	};
+	
+	this.drawLineEnd = function (endNode) {
+		new FlowLine(this, this.startNode, endNode);
+		this.startNode = null;
+	};
+	
+	this.findNode = function (id) {
+		//elm2.node 指向dom
+		return this.nodes.find(node => node.getId() == id);
+	};
+
+	//call last
+	this._init(boxId, onMoveNode);
+
+} //class FlowBox
+
+function FlowNode(flowBox, json) {
+	/**
+	 屬性:
+	 self: this
+	 flowBox: FlowBox object
+	 svg: svg
+	 json: node json, 欄位與後端XgFlowE相同: Id, FlowId, NodeType, Name, PosX, PosY, Width, Height
+	 elm2: svg element 與 html element不同
+	 textElm: node text element
+	 lines: 進入/離開此節點的流程線
+	 width: width
+	 height: height
+	*/
+
+	//drag evnet
+	this.DragMove = 'dragmove';
+	this.DragStart = 'dragstart';
+	this.DragEnd = 'dragend';
+
+	//start/end node
+	this.MinRadius = 20;
+
+	//node
+	this.MinWidth = 100;
+	this.MinHeight = 50;
+	this.Padding = 15;
+
+	this._init = function (flowBox, json) {
+		this.self = this;
+		this.flowBox = flowBox;
+		this.svg = flowBox.svg;
+		this.json = Object.assign({
+			Name: 'Node',
+			NodeType: _Flow.TypeNode,
+			PosX: 50,
+			PosY: 50,
+			Width: 100,	//??
+			Height: 50,	//??
+		}, json);
+
+		//set instance variables
+		this.lines = [];
+
+		this._drawNode();	//draw node first
+		this._setNodeDrag();
+		this._setJointDrag(); // 讓connector可拖拉
+	};
+
+	this.getId = function () {
+		return this._getIdByElm2(this.elm2);
+	};
+
+	this._getIdByElm2 = function (elm2) {
+		return elm2.node.dataset.id;
+	};
+
+	this._setId = function (id) {
+		this.elm2.node.dataset.id = id;
+	};
+
+	this.addLine = function (line) {
+		this.lines.push(line);
+	};
+	
+	this.deleteLine = function (line) {
+		let index = this.lines.findIndex(item => item.Id == line.Id);
+		this.lines.splice(index, 1);
+	};
+	
+	//init時呼叫
+	this._drawNode = function () {
+        let nodeType = this.json.NodeType;
+        let cssClass = '';
+        let nodeName = '';
+
+		let startEnd = this._isStartEnd();
+		if (startEnd) {
+            if (nodeType == _Flow.TypeStart) {
+                cssClass = 'xf-start';
+				nodeName = _Flow.TypeStart;
+            } else {
+                cssClass = 'xf-end';
+				nodeName = _Flow.TypeEnd;
+            }
+
+			//circle大小不填, 由css設定, 這時radius還沒確定, 不能move(因為會用到radius)
+            this.elm2 = this.svg.circle()
+                .addClass(cssClass);
+				
+			//移動circle時會參考radius, 所以先更新, 從css讀取radius, 而不是從circle建立的屬性 !!
+            let style = window.getComputedStyle(this.elm2.node);	//不能直接讀取circle屬性
+            let radius = parseFloat(style.getPropertyValue("r"));	//轉浮點
+            this.elm2.attr("r", radius);
+            this.elm2.move(this.json.PosX, this.json.PosY);
+			
+			let width = radius * 2;
+            this.width = width;		//寫入width, 供後面計算位置
+            this.height = width;	//畫流程線時會用到
+		} else {
+            nodeName = this.json.Name;
+            cssClass = 'xf-node';
+			this.elm2 = this.svg.rect()
+				.addClass(cssClass)
+				.move(this.json.PosX, this.json.PosY);
+        }
+
+		//set data-id = node id
+		this._setId(this.json.Id);
+
+		//add 節點文字
+        this.textElm = this.svg.text(nodeName)
+            .addClass(cssClass + '-text')
+            .font({ anchor: 'middle' });
+
+		this._setSize(startEnd);
+
+		//add 連接點 connector(在文字右側), 小方塊, data-nodeElm 記錄節點元素
+		if (nodeType != _Flow.TypeEnd){
+			this.connectorElm = this.svg.rect(12, 12).addClass('xf-connector');
+			this.connectorElm.node.dataset.nodeElm = this.elm2;
+		}
+		
+		this._render(startEnd);
+	};
+
+	//是否為起迄節點
+	this._isStartEnd = function () {
+		return (this.json.NodeType == _Flow.TypeStart || this.json.NodeType == _Flow.TypeEnd);
+	};
+
+	//繪製, 移動子元件
+	this._setSize = function (startEnd) {
+		if (!startEnd) {
+			let bbox = this.textElm.bbox();
+			this.width = Math.max(this.MinWidth, bbox.width + this.Padding * 2);
+			this.height = Math.max(this.MinHeight, bbox.height + this.Padding * 2);
+		}
+		this.elm2.size(this.width, this.height);
+	};
+
+	//繪製, 移動子元件
+	//param startEnd: 如果不是起迄節點要考慮最小寬高
+	this._render = function (startEnd) {
+		//文字
+		let bbox = this.textElm.bbox();
+		let centerX = this.elm2.x() + this.width / 2;
+		let centerY = this.elm2.y() + this.height / 2;
+        this.textElm.move(centerX - bbox.width / 2, centerY - bbox.height / 2);
+
+        //連接點
+		if (this.connectorElm)
+			this.connectorElm.move(centerX + bbox.width / 2 + 3, centerY - 5);
+	};
+
+	this._setNodeDrag = function () {
+		this.elm2.draggable().on(this.DragMove, () => {
+			this._render(this._isStartEnd());
+			this.lines.forEach(line => line.render());
+		}).on(this.DragEnd, (event) => {	
+			let { x, y } = event.detail.box;
+			//console.log(`x=${x}, y=${y}`);
+			this.flowBox.onMoveNode(this.getId(), x, y);	//trigger
+		});
+	};
+
+	this._setJointDrag = function () {
+		if (!this.connectorElm)
+			return;
+		
+		let startElm2, startX, startY;
+		let tempLine;
+		let endElm2 = null;
+
+		// 啟用 connectorElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 connectorElm !!
+		this.connectorElm.draggable().on(this.DragStart, (event) => {
+			// 初始化線條
+			let { x, y } = this.connectorElm.rbox(this.svg); // 使用SVG畫布的座標系
+			startX = x;
+			startY = y;
+			startElm2 = this.self.elm2;
+
+			tempLine = this.svg.line(startX, startY, startX, startY)
+				.addClass('xf-line off');
+				
+			this.flowBox.drawLineStart(this.self);
+				
+		}).on(this.DragMove, (event) => {
+			//阻止 connector 移動
+			event.preventDefault();
+			
+			// 獲取拖拽的目標座標（相對於 SVG 畫布）
+			let { x, y } = event.detail.box;
+			let endX = x;
+			let endY = y;
+
+			// 更新線條的終點
+			tempLine.plot(startX, startY, endX, endY);
+
+			// 檢查座標值是否有效
+			if (isFinite(endX) && isFinite(endY)) {
+				// 將 SVG 座標轉換為檢視座標
+				let svgRect = this.svg.node.getBoundingClientRect();
+				let viewPortX = endX + svgRect.x;
+				let viewPortY = endY + svgRect.y;
+
+				// 檢查是否懸停在節點上
+				let overNode = document.elementsFromPoint(viewPortX, viewPortY)
+					.find(elm => elm != startElm2 && (elm.classList.contains('xf-node') || elm.classList.contains('xf-end')));
+				if (overNode) {
+					if (endElm2 !== overNode) {
+						if (endElm2) 
+							this._highlightNode(endElm2, false);
+						endElm2 = overNode;
+						this._highlightNode(endElm2, true);
+					}
+				} else if (endElm2) {
+					this._highlightNode(endElm2, false);
+					endElm2 = null;
+				}
+			}
+			
+		}).on(this.DragEnd, (event) => {
+			// 檢查座標值是否有效
+			if (endElm2) {
+				this._highlightNode(endElm2, false);					
+				//this.flowBox.drawLineEnd(this.flowBox.findNode(endElm2.node.dataset.id));
+				this.flowBox.drawLineEnd(this.flowBox.findNode(this._getIdByElm2(endElm2)));
+				endElm2 = null;
+			}
+			tempLine.remove();
+		});
+	};
+	
+	this._highlightNode = function (node, status){
+		if (status){
+			node.classList.add('on');
+		} else {
+			node.classList.remove('on');
+		}
+	};
+
+	//call last
+	this._init(flowBox, json);
+
+}//class FlowNode
+
+function FlowLine(flowBox, fromNode, toNode, lineType) {
+	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
+	this.Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
+	this.Min2NodeDist = 25;	//2節點的最小距離, 大於此值可建立line(1,3線段)
+	this.Min2SegDist = 20;	//建立2線段的最小距離, 中心點和邊
+
+	//末端箭頭
+	this.ArrowLen = 10; 	//長度
+	this.ArrowWidth = 5; 	//寬度	
+
+ 	//line type, 起點位置
+	this.TypeAuto = 'A';	//自動
+	this.TypeV = 'V';	//垂直(上下)
+	this.TypeH = 'H';	//水平(左右)
+
+	/**
+	 flowBox: FlowBox object
+	 svg: svg
+	 path: line path
+	 fromNode: from node
+	 toNode: to node
+	 lineType: 起點位置, A(auto),U(上下),L(左右)
+	 isTypeAuto:
+	 isTypeV:
+	 isTypeH:
+	*/
+	this._init = function (flowBox, fromNode, toNode, lineType) {
+		this.flowBox = flowBox;
+		this.svg = flowBox.svg;
+		this.fromNode = fromNode;
+		this.toNode = toNode;
+		this.path = this.svg.path('').addClass('xf-line');
+
+		// 用來儲存箭頭的路徑
+		this.arrowPath = this.svg.path('').addClass('xf-arrow');
+		//this.arrowPath2 = this.svg.path('').addClass('xf-arrow');
+
+		//add line to from/to node
+		fromNode.addLine(this);
+		toNode.addLine(this);
+		this.setType(lineType);
+		this.render();
+	};
+
+	this.setType = function (lineType){
+		lineType = lineType || this.TypeAuto;
+		this.lineType = lineType;
+		this.isTypeV = (lineType == this.TypeV);
+		this.isTypeH = (lineType == this.TypeH);
+		//this.isTypeAuto = (!this.isTypeV && !this.isTypeH) || (lineType == this.TypeAuto);
+	};
+	
+	/**
+	 依次考慮使用1線段、2線段、3線段
+	 */
+	this.render = function () {
+
+		//=== from Node ===
+		// 位置和尺寸, x/y為左上方座標
+		const fromX = this.fromNode.elm2.x();	
+		const fromY = this.fromNode.elm2.y();
+		const fromWidth = this.fromNode.width;
+		const fromHeight = this.fromNode.height;
+		const fromCntX = fromX + fromWidth / 2;		//中心點
+		const fromCntY = fromY + fromHeight / 2;
+		// 四個邊的中間點
+		const fromUp = { x: fromX + fromWidth / 2, y: fromY }; // 上邊中點
+		const fromDown = { x: fromX + fromWidth / 2, y: fromY + fromHeight };
+		const fromLeft = { x: fromX, y: fromY + fromHeight / 2 };
+		const fromRight = { x: fromX + fromWidth, y: fromY + fromHeight / 2 };
+
+		//=== to Node ===
+		const toX = this.toNode.elm2.x();
+		const toY = this.toNode.elm2.y();
+		const toWidth = this.toNode.width;
+		const toHeight = this.toNode.height;
+		const toCntX = toX + toWidth / 2;
+		const toCntY = toY + toHeight / 2;
+		// 四個邊的中間點
+		const toUp = { x: toX + toWidth / 2, y: toY };
+		const toDown = { x: toX + toWidth / 2, y: toY + toHeight };
+		const toLeft = { x: toX, y: toY + toHeight / 2 };
+		const toRight = { x: toX + toWidth, y: toY + toHeight / 2 };
+		
+		// 判斷 fromNode 和 toNode 的相對位置
+		const isToRight = toCntX > fromCntX; 	// toNode 在 fromNode 的右側
+		const isToDown = toCntY > fromCntY; 	// toNode 在 fromNode 的下方
+
+		// 是否符合垂直/水平最小距離, 字尾H/V表示距離量測方向
+		const match2NodeDistH = (isToRight ? toLeft.x - fromRight.x : fromLeft.x - toRight.x) >= this.Min2NodeDist;
+		const match2NodeDistV = (isToDown ? toUp.y - fromDown.y : fromUp.y - toDown.y) >= this.Min2NodeDist;
+		
+		// 是否符合2中心點之間最小距離 for 1線段(否則為3線段)
+		const match1SegDistH = Math.abs(fromCntX - toCntX) <= this.Max1SegDist;
+		const match1SegDistV = Math.abs(fromCntY - toCntY) <= this.Max1SegDist;
+		
+		// 是否符合中心點-邊線之間最小距離 for 2線段
+		const match2SegDistIn = Math.abs(fromCntX - toCntX) - toWidth/2 >= this.Min2SegDist;
+		const match2SegDistOut = Math.abs(fromCntY - toCntY) - fromHeight/2 >= this.Min2SegDist;
+		
+		//判斷線段數目(1,2,3), 有4個象限, 先考慮上下再左右
+		let fromPnt, toPnt;
+		let points;
+		//let pathStr;
+		if (!this.isTypeH && match1SegDistH && match2NodeDistV){
+			//1線段-垂直
+			if (isToDown){
+				fromPnt = fromDown;
+				toPnt = toUp;
+			} else {
+				fromPnt = fromUp;
+				toPnt = toDown;
+			}
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${toPnt.y}`;	//取垂直線
+			points = [fromPnt, {x:fromPnt.x, y:toPnt.y}];
+		} else if(!this.isTypeV && match1SegDistV && match2NodeDistH){
+			//1線段-水平
+			if (isToRight){
+				fromPnt = fromRight;
+				toPnt = toLeft;
+			} else {
+				fromPnt = fromLeft;
+				toPnt = toRight;
+			}
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${toPnt.x}`;	//取水平線
+			points = [fromPnt, {x:toPnt.x, y:fromPnt.y}];
+		} else if(!this.isTypeV && match2NodeDistH && match2SegDistOut){
+			//2線段-水平
+			fromPnt = isToRight ? fromRight : fromLeft;
+			toPnt = isToDown ? toUp : toDown;
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${toPnt.x} V ${toPnt.y}`;
+			points = [fromPnt, {x:toPnt.x, y:fromPnt.y}, toPnt];
+		} else if(!this.isTypeH && match2NodeDistV && match2SegDistIn){
+			//2線段-垂直
+			fromPnt = isToDown ? fromDown : fromUp;
+			toPnt = isToRight ? toLeft : toRight;
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${toPnt.y} H ${toPnt.x}`;
+			points = [fromPnt, {x:fromPnt.x, y:toPnt.y}, toPnt];
+		} else if(!this.isTypeH && match2NodeDistV){
+			//3線段-垂直(2節點內側)
+			if (isToDown){
+				fromPnt = fromDown;
+				toPnt = toUp;
+			} else {
+				fromPnt = fromUp;
+				toPnt = toDown;
+			}
+			
+			let midY = (fromPnt.y + toPnt.y)/2;
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${midY} H ${toPnt.x} V ${toPnt.y}`;
+			points = [fromPnt, {x:fromPnt.x, y:midY}, {x:toPnt.x, y:midY}, toPnt];
+		} else if(!this.isTypeV && match2NodeDistH){
+			//3線段-水平(2節點內側)
+			if (isToRight){
+				fromPnt = fromRight;
+				toPnt = toLeft;
+			} else {
+				fromPnt = fromLeft;
+				toPnt = toRight;
+			}
+			
+			let midX = (fromPnt.x + toPnt.x)/2;
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${midX} V ${toPnt.y} H ${toPnt.x}`;
+			points = [fromPnt, {x:midX, y:fromPnt.y}, {x:midX, y:toPnt.y}, toPnt];
+		} else if(!this.isTypeV){
+			//3線段-水平(2節點外側)
+			if (isToRight){
+				fromPnt = fromRight;
+				toPnt = toRight;
+			} else {
+				fromPnt = fromLeft;
+				toPnt = toLeft;
+			}
+			let midX = isToRight ? Math.max(fromPnt.x, toPnt.x) + this.Min2NodeDist : Math.min(fromPnt.x, toPnt.x) - this.MinSideSide;
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${midX} V ${toPnt.y} H ${toPnt.x}`;
+			points = [fromPnt, {x:midX, y:fromPnt.y}, {x:midX, y:toPnt.y}, toPnt];
+		} else {
+			//其他狀況: 用直線(非折線)連接起迄點
+			if (isToDown){
+				if (isToRight){
+					fromPnt = !this.isTypeH ? fromDown : fromRight;
+					toPnt = toLeft;
+				} else {
+					fromPnt = !this.isTypeH ? fromDown : fromLeft;
+					toPnt = toRight;
+				}
+			} else {
+				if (isToRight){
+					fromPnt = !this.isTypeH ? fromUp : fromRight;
+					toPnt = toLeft;
+				} else {
+					fromPnt = !this.isTypeH ? fromUp : fromLeft;
+					toPnt = toRight;
+				}
+			}
+			//pathStr = `M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y}`;
+			points = [fromPnt, toPnt];
+		}
+		
+		// 繪製流程線
+		this._drawLine(points);
+		//this.path.plot(pathStr);
+	};
+	
+	/**
+	 畫流程線
+	 */
+	this._drawLine = function (points) {
+		// 生成帶有圓角的折線路徑
+		let pathStr = `M ${points[0].x} ${points[0].y}`; // 移動到起點
+		let pntLen = points.length;
+		let radius = this.Max1SegDist;
+		for (let i = 1; i < pntLen; i++) {
+		  const prevPnt = points[i - 1];
+		  const nowPnt = points[i];
+
+		  // 計算圓角的路徑
+		  if (i < pntLen - 1) {
+			const nextPnt = points[i + 1];
+
+			// 計算圓角的起始點和結束點
+			const fromAngle = Math.atan2(nowPnt.y - prevPnt.y, nowPnt.x - prevPnt.x);
+			const toAngle = Math.atan2(nextPnt.y - nowPnt.y, nextPnt.x - nowPnt.x);
+
+			const fromOffsetX = radius * Math.cos(fromAngle);
+			const fromOffsetY = radius * Math.sin(fromAngle);
+			const toOffsetX = radius * Math.cos(toAngle);
+			const toOffsetY = radius * Math.sin(toAngle);
+
+			const arcStartX = nowPnt.x - fromOffsetX;
+			const arcStartY = nowPnt.y - fromOffsetY;
+			const arcEndX = nowPnt.x + toOffsetX;
+			const arcEndY = nowPnt.y + toOffsetY;
+
+			// 添加直線到圓角的起始點
+			pathStr += ` L ${arcStartX} ${arcStartY}`;
+
+			// 判斷圓弧的方向（順時針或逆時針）
+			const angleDiff = toAngle - fromAngle;
+			const sweepFlag = angleDiff > 0 ? 1 : 0; // 根據角度差決定 sweep-flag
+
+			// 添加圓角（A 指令）
+			pathStr += ` A ${radius} ${radius} 0 0 ${sweepFlag} ${arcEndX} ${arcEndY}`;
+		  } else {
+			// 最後一段直線
+			pathStr += ` L ${nowPnt.x} ${nowPnt.y}`;
+		  }
+		}
+
+		// 繪製流程線
+		this.path.plot(pathStr);
+		
+		//畫末端箭頭
+		this._arrow(points[pntLen - 2], points[pntLen - 1]);
+		/*
+		// 繪製帶有圓角的折線
+		const path = svg.path(pathStr)
+		  .stroke({ width: 2, color: '#000', linecap: 'round', linejoin: 'round' })
+		  .fill('none');
+		*/
+	  
+	};
+	
+	/**
+	 畫末端箭頭, 利用2個傳入端點計算斜率
+	 */
+	this._arrow = function (fromPnt, toPnt) {
+		// 計算箭頭的方向
+		const angle = Math.atan2(toPnt.y - fromPnt.y, toPnt.x - fromPnt.x); // 計算角度
+
+		// 計算箭頭的2個點
+		const arrowPnt1 = {
+		  x: toPnt.x - this.ArrowLen * Math.cos(angle) + this.ArrowWidth * Math.cos(angle - Math.PI / 2),
+		  y: toPnt.y - this.ArrowLen * Math.sin(angle) + this.ArrowWidth * Math.sin(angle - Math.PI / 2)
+		};
+		const arrowPnt2 = {
+		  x: toPnt.x - this.ArrowLen * Math.cos(angle) + this.ArrowWidth * Math.cos(angle + Math.PI / 2),
+		  y: toPnt.y - this.ArrowLen * Math.sin(angle) + this.ArrowWidth * Math.sin(angle + Math.PI / 2)
+		};
+
+		// 更新箭頭路徑
+		this.arrowPath.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
+		//this.arrowPath1.plot(`M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
+	};
+
+	//call last
+	this._init(flowBox, fromNode, toNode, lineType);
+	
+}//class FlowLine
+
 /**
  * 處理 flow UI 元素和資料(mNode, mLine)之間的轉換
  * workflow component
@@ -6420,9 +7067,9 @@ function EditOne(kid, eformId) {
  * param mLine {EditMany}
  * return {Flow}
  */ 
-function Flow(boxId, mNode, mLine) {
+function FlowForm(boxId, mNode, mLine) {
     /**
-     flowBox: FlowBox instance
+     flowBase: flowBase instance
     */
 
     /**
@@ -6566,7 +7213,7 @@ function Flow(boxId, mNode, mLine) {
         */
 
         //set instance first
-        this.flowBox = new FlowBox(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
+        this.flowBase = new FlowBase(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
 
         //set event
         this._setFlowEvent();
@@ -6574,7 +7221,7 @@ function Flow(boxId, mNode, mLine) {
 
     this.onMoveNode = function (nodeId, x, y) {
         var rowElm = this.mNode.idToRowBox(nodeId);
-        _form.loadRow(rowElm, { PosX: x, PosY: y });
+        _form.loadRow(rowElm, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
     };
 
     /**
@@ -6583,7 +7230,7 @@ function Flow(boxId, mNode, mLine) {
      *   2.mouse down to hide context menu
      */
     this._setFlowEvent = function () {
-        var flowBox = this.flowBox;
+        var flowBase = this.flowBase;
         var me = this;
 
         // bind a click listener to each connection; the connection is deleted. you could of course
@@ -6591,7 +7238,7 @@ function Flow(boxId, mNode, mLine) {
         // happening.
         //(定義)Notification a Connection was clicked.
         /*
-        flowBox.bind('click', function (c) {
+        flowBase.bind('click', function (c) {
             //this.showNodeProp();
             this.modalNodeProp.modal('show');
         });
@@ -6599,7 +7246,7 @@ function Flow(boxId, mNode, mLine) {
 
         /* todo: temp remark
         //line(connection) show context menu
-        flowBox.bind('contextmenu', function (elm, event) {
+        flowBase.bind('contextmenu', function (elm, event) {
             //"this" not work here !!
             me.showPopupMenu(elm, event, false);
         });
@@ -6608,15 +7255,15 @@ function Flow(boxId, mNode, mLine) {
         /*
         //event: before build connection
         //info: connection        
-        //flowBox.bind('connection', function (info) {
-        flowBox.bind('beforeDrop', function (info) {
+        //flowBase.bind('connection', function (info) {
+        flowBase.bind('beforeDrop', function (info) {
             //if (this.loading)
             //    return true;
 
             //if connection existed, return false for stop 
             //info.source did not work here !!
             var conn = info.connection;
-            if (flowBox.getConnections({ source: conn.source, target: conn.target }).length > 0)
+            if (flowBase.getConnections({ source: conn.source, target: conn.target }).length > 0)
                 return false;
 
             //get source node & type
@@ -6660,14 +7307,14 @@ function Flow(boxId, mNode, mLine) {
     this._setNodeEvent = function (nodeObj) {
         //set source & target property
         var nodeType = _itext.get('NodeType', nodeObj);
-        var flowBox = this.flowBox;
+        var flowBase = this.flowBase;
         var me = this;
 
         //event: move node (update x,y)
         //initialise draggable elements.
         //must put before makeSource/makeTarget !!
         var nodeElm = nodeObj[0];
-        flowBox.draggable(nodeElm, {
+        flowBase.draggable(nodeElm, {
             grid: [10, 10],
             //update node position
             stop: function (params) {
@@ -6679,11 +7326,11 @@ function Flow(boxId, mNode, mLine) {
         });
 
         //build line(connection)
-        //must put after flowBox.draggable() !!
+        //must put after flowBase.draggable() !!
         if (nodeType != FlowNode.TypeEnd)
-            flowBox.makeSource(nodeElm, this.StartNodeCfg);
+            flowBase.makeSource(nodeElm, this.StartNodeCfg);
         if (nodeType != FlowNode.TypeStart)
-            flowBox.makeTarget(nodeElm, this.EndNodeCfg);
+            flowBase.makeTarget(nodeElm, this.EndNodeCfg);
 
         //event: show node menu
         //this._setNodeEvent(nodeObj);
@@ -6698,24 +7345,24 @@ function Flow(boxId, mNode, mLine) {
      * load nodes into UI
      * param rows {json} 後端傳回的完整json
      */
-    this.loadNodes = function (json) {
-        //this.flowBox.reset();
+    this.loadNodes = function (rows) {
+        //this.flowBase.reset();
 
         //stop drawing
         //jsPlumb.setSuspendDrawing(true);
 
         //empty all nodes first
-        var box = this.divFlowBox;
+        //var box = this.divFlowBox;
 
         //set nodes class
-        var rows = _crudE.getRowsByJson(json);
+        //var rows = _crudE.jsonGetRows(json);
         //for (var i = 0; i < rows.length; i++)
         //    this._setNodeClass(rows[i]);
 
         //3rd param reset=false, coz box has other objects, cannot reset
-        this.mNode.loadRowsByBox(box, rows, false);
+        this.mNode.loadRowsByRsb(rows, true, this.mNode.eform);
 
-        this.flowBox.loadNodes(rows);
+        this.flowBase.loadNodes(rows);
 
         /*
         //set nodes event
@@ -6739,14 +7386,14 @@ function Flow(boxId, mNode, mLine) {
 
 
         //render jsplumb line
-        //var rows = _crudE.getRowsByJson(json);
+        //var rows = _crudE.jsonGetRows(json);
         //for (var i = 0; i < rows.length; i++)
         //    this._renderLine(rows[i]);
 
         //load editMany lines
-        this.mLine.loadRowsByBox(this.divLinesBox, rows, false);
+        this.mLine.loadRowsByRsb(rows, true, this.mLine.eform);
 
-        this.flowBox.loadLines(rows);
+        this.flowBase.loadLines(rows);
 
         //start drawing
         //jsPlumb.setSuspendDrawing(false, true);
@@ -6837,9 +7484,9 @@ function Flow(boxId, mNode, mLine) {
 
     this.deleteNode = function (nodeElm) {
         //delete from & to lines
-        var flowBox = this.flowBox;
-        this.deleteLines(flowBox.getConnections({ source: nodeElm }));
-        this.deleteLines(flowBox.getConnections({ target: nodeElm }));
+        var flowBase = this.flowBase;
+        this.deleteLines(flowBase.getConnections({ source: nodeElm }));
+        this.deleteLines(flowBase.getConnections({ target: nodeElm }));
 
         //add deleted row of node
         var node = $(nodeElm);
@@ -6861,7 +7508,7 @@ function Flow(boxId, mNode, mLine) {
         //param 2(reference object) not work here !!
         var prop = this.getLineProp(row.CondStr);    //get line style & label
         //debugger;
-        var conn = this.flowBox.connect({
+        var conn = this.flowBase.connect({
             //type: 'basic',
             source: this._idToNode(row.StartNode),
             target: this._idToNode(row.EndNode),
@@ -6885,7 +7532,7 @@ function Flow(boxId, mNode, mLine) {
     this.addLine = function (row) {
         var newLine = $(this.tplLine);      //create row object, no need mustache()
         _form.loadRow(newLine, row);        //row objec to UI
-        var key = this.mLine.boxSetNewId(newLine);   //set new key
+        var key = this.mLine.setNewIdByBox(newLine);   //set new key
         this.divLinesBox.append(newLine);   //append row object
         return key;
     };
@@ -6951,7 +7598,7 @@ function Flow(boxId, mNode, mLine) {
         this.mLine.deleteRow(json.Id);
 
         //delete conn
-        this.flowBox.deleteConnection(conn);
+        this.flowBase.deleteConnection(conn);
     };
     this.deleteLines = function (conns) {
         for (var i = 0; i < conns.length; i++) {

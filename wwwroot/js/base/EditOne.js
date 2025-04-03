@@ -7,13 +7,19 @@
  *   _childs {json array}: child json array
  * 
  * 屬性
- *   validator: jquery vallidation object (EditMany同)
+ *   kid:
+ *   eform:
+ *   fidTypes:
+ *   systemError:
+ *   dataJson: 載入資料後(update/view)自動設定
+ *   hasFile、fileLen、fileFids: 在 _crudE.js setFileVars() 設定
+ *   validator: jquery vallidation object (EditMany同), 在 _crudE.js _initForm() 設定
  * 
- * custom function called by _crudE.js
+ * 自定函數 called by _crudE.js
  *   //void fnAfterLoadJson(json)
  *   //void fnAfterOpenEdit(fun, json): called after open edit form
  *   //void fnAfterSwap(readMode): called after _crudR.swap()
- *   error fnWhenSave()
+ *   error fnWhenSave() ??
  *   void fnAfterSave()
  *   
  * param kid {string} (default 'Id') pkey field id for getKey value & getUpdRow,
@@ -25,7 +31,7 @@
  */ 
 function EditOne(kid, eformId) {
 
-    //fileFids, fileLen, hasFile 屬性在外部設定(_edit.js setFileVars())
+    //fileFids, fileLen, hasFile 屬性在外部設定(_crudE.js setFileVars())
 
     /**
      * initial & and instance variables (this.validator is by _valid.init())
@@ -35,6 +41,7 @@ function EditOne(kid, eformId) {
         this.kid = kid || 'Id';
         eformId = eformId || 'eform';
         this.eform = $('#' + eformId);     //multiple rows container object
+        this.dataJson = null;
 
         //check input & alert error if wrong
         this.systemError = '';
@@ -47,8 +54,8 @@ function EditOne(kid, eformId) {
             //return;   //not return
         }
 
-        _edit.setFidTypeVars(this, this.eform);
-        _edit.setFileVars(this, this.eform);
+        _crudE.setFidTypes(this, this.eform);
+        _crudE.setFileVars(this, this.eform);
     };
 
     /**
@@ -72,7 +79,7 @@ function EditOne(kid, eformId) {
      * return {bool}
      */
     this.isNewRow = function () {
-        return (_itext.get(_edit.IsNew, this.eform) == '1');
+        return (_itext.get(_crudE.IsNew, this.eform) == '1');
     };
 
     /**
@@ -86,7 +93,7 @@ function EditOne(kid, eformId) {
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
             var obj = _obj.get(fid, this.eform);
-            obj.data(_edit.DataOld, row[fid]);
+            obj.data(_crudE.DataOld, row[fid]);
         }
     };
 
@@ -95,7 +102,7 @@ function EditOne(kid, eformId) {
      * return {json} different column only
      */
     this.getUpdRow = function () {
-        return _edit.getUpdRow(this.kid, this.fidTypes, this.eform);
+        return _crudE.getUpdRow(this.kid, this.fidTypes, this.eform);
     };
 
     /**
@@ -133,12 +140,12 @@ function EditOne(kid, eformId) {
         var fileJson = {};
         for (var i = 0; i < this.fileLen; i++) {
             var fid = this.fileFids[i];
-            var serverFid = _edit.getServerFid(levelStr, fid);
+            var serverFid = _crudE.getFileSid(levelStr, fid);
             if (_ifile.dataAddFile(data, fid, serverFid, this.eform)) {
                 fileJson[serverFid] = this.getKey();
             }
         }
-        //_edit.dataSetFileJson(data, fileJson);
+        //_crudE.dataSetFileJson(data, fileJson);
         return fileJson;
     };
 
@@ -150,7 +157,7 @@ function EditOne(kid, eformId) {
      */
     this.onViewFile = function (table, fid, elm) {
         var key = this.getKey();
-        _edit.viewFile(table, fid, elm, key);
+        _crudE.viewFile(table, fid, elm, key);
     };
 
     //call last

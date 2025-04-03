@@ -1,6 +1,7 @@
 ﻿/**
  * crud edit function
- * _me properties:
+ *   合併 _edit.js
+ * 寫入 _me properties:
  *   fnAfterSwap:
  *   fnAfterOpenEdit:
  *   fnUpdateOrViewA: see _updateOrViewA
@@ -19,12 +20,22 @@ var _crudE = {
     Childs: '_childs',
     Deletes: '_deletes',
 
-    //mode
+    //edit form mode
     ModeBase: 'Base',
     ModeUR: 'UR',   //user role mode
 
+    //server side fid for file input collection, must pre '_'
+    //key-value of file serverFid vs row key
+    FileJson: '_fileJson',
+
+    //data property name for keep old value
+    DataOld: '_old',
+
+    //前後端欄位: isNew, new row flag
+    IsNew: '_IsNew',
+
     /**
-     * initial crud edit
+     * initial crud edit, 寫入 _me 變數
      * param1 edits {object Array} for edit form
      *   1.null: means one table, get eform
      *   2.many edit object, if ary0 is null, then call new EditOne()
@@ -106,12 +117,14 @@ var _crudE = {
         //load master(single) row
         var edit = _me.edit0;
         edit.loadRow(json);
+        edit.dataJson = json;
 
         //load childs rows(只需載入第一層)
         var childLen = _crudE._getEditChildLen(edit);
         for (var i = 0; i < childLen; i++) {
             var edit2 = _crudE._getEditChild(edit, i);
-            edit2.loadJson(_crudE._getChildJson(json, i));
+            edit2.dataJson = _crudE._getChildJson(json, i);
+            edit2.loadRows(_crudE.jsonGetRows(edit2.dataJson));
         }
 
         //call fnAfterLoadJson() if existed
@@ -149,19 +162,19 @@ var _crudE = {
         var eform = _me.edit0.eform;
         var items = box.find('input, textarea, select, button');
         if (fun == _fun.FunV) {
-            _edit.removeIsNew(eform);
+            _crudE.removeIsNew(eform);
             items.prop('disabled', true)
             box.find('#btnToRead').prop('disabled', false);
             _ihtml.setEdits(box, '', false);
         } else if (fun == _fun.FunC) {
-            _edit.addIsNew(eform);    //增加_IsNew隱藏欄位
+            _crudE.addIsNew(eform);    //增加_IsNew隱藏欄位
             var dataEdit = '[data-edit=U]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         } else if (fun == _fun.FunU) {
-            _edit.removeIsNew(eform);
+            _crudE.removeIsNew(eform);
             var dataEdit = '[data-edit=C]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
@@ -248,7 +261,7 @@ var _crudE = {
         }
         if (!_json.isEmpty(fileJson)) {
             hasData = true;
-            data[_edit.FileJson] = fileJson;
+            data[_crudE.FileJson] = fileJson;
         }
 
         if (!hasData)
@@ -377,8 +390,13 @@ var _crudE = {
         return (edit[fid] == null) ? 0 : edit[fid].length;
     },
 
-    //get rows of json
-    getRowsByJson: function (json) {
+    /**
+     * getRowsByJson -> jsonGetRows
+     * get rows of json 
+     * @param {any} json
+     * @returns
+     */
+    jsonGetRows: function (json) {
         return (json == null || json[_crudE.Rows] == null)
             ? null
             : json[_crudE.Rows];
@@ -395,36 +413,32 @@ var _crudE = {
     //get child rows
     getChildRows: function (upJson, childIdx) {
         var child = _crudE._getChildJson(upJson, childIdx);
-        return _crudE.getRowsByJson(child);
+        return _crudE.jsonGetRows(child);
     },
 
     /**
      * set child rows
-     * param upRow {json}
+     * param upJson {json}
      * param childIdx {int}
      * param rows {jsons}
      * return {json} child object
      */
-    setChildRows: function (upRow, childIdx, rows) {
+    setChildRows: function (upJson, childIdx, rows) {
         var fid = _crudE.Childs;
-        if (upRow == null)
-            upRow = {};
-        if (upRow[fid] == null)
-            upRow[fid] = [];
-        if (upRow[fid].length <= childIdx)
-            upRow[fid][childIdx] = {};
+        if (upJson == null)
+            upJson = {};
+        if (upJson[fid] == null)
+            upJson[fid] = [];
+        if (upJson[fid].length <= childIdx)
+            upJson[fid][childIdx] = {};
 
-        var child = upRow[fid][childIdx];
+        var child = upJson[fid][childIdx];
         child[_crudE.Rows] = rows;
         return child;
     },
 
     /**
-     * 將目前畫面資料為新資料
-     * param upRow {json}
-     * param childIdx {int}
-     * param rows {jsons}
-     * return {json} child object
+     * 將目前畫面資料轉變為新資料
      */
     editToNew: function () {
         var fun = _fun.FunC;
@@ -432,6 +446,258 @@ var _crudE = {
         _me.edit0.resetKey();
         _prog.setPath(fun);
     },
+
+    //=== move from _edit.js start
+    /**
+     * 增加隱藏欄位 _IsNew, 同時設為1
+     * param obj {box} jquery object
+     */
+    addIsNew: function (box) {
+        var fid = _crudE.IsNew;
+        var field = box.find(_input.fidFilter(fid));
+        if (field.length == 0)
+            field = box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="1" >`);
+        else
+            field.val(value);
+    },
+
+    /**
+     * 刪除隱藏欄位 _IsNew
+     * param obj {box} jquery object
+     */
+    removeIsNew: function (box) {
+        var fid = _crudE.IsNew;
+        var field = box.find(_input.fidFilter(fid));
+        if (field.length > 0)
+            field.remove();
+    },
+
+    /**
+     * get old value 
+     * param obj {object} input jquery object
+     * return {string}
+     */
+    getOld: function (obj) {
+        return obj.data(_crudE.DataOld);
+    },
+
+    /**
+     * set old value
+     * param obj {object} input jquery object
+     * param value {int/string}
+     */
+    setOld: function (obj, value) {
+        obj.data(_crudE.DataOld, value);
+    },
+
+    /*
+    zz_loadRowByArg: function (box, row, fidTypes) {
+        _form.loadRow(box, row);
+
+        //set old value for each field
+        //var fidLen = fidTypes.length;
+        for (var i = 0; i < fidTypes.length; i = i + 2) {
+            fid = fidTypes[i];
+            var obj = _obj.get(fid, box);
+            obj.data(_crudE.DataOld, row[fid]);
+        }
+    },
+    */
+
+    /**
+     * get one updated row for New/Updated
+     * 只讀取有異動的欄位
+     * called by: EditOne.js, DbAdm MyCrud.js(使用變形的 form !!)
+     * param kid {string} key fid
+     * param fidTypes {id-value array}
+     * param box {object} form object
+     * return json row
+     */
+    getUpdRow: function (kid, fidTypes, box) {
+        //if key empty then return row
+        var row = _form.toRow(box);
+        var key = _input.get(kid, box);
+        if (_str.isEmpty(key))
+            return row;
+
+        //讀取有異動的欄位
+        var diff = false;
+        var result = {};
+        var fid, ftype, value, obj, old;
+        for (var j = 0; j < fidTypes.length; j = j + 2) {
+            //skip read only type
+            ftype = fidTypes[j + 1];
+            //if (ftype === 'link' || ftype === 'read')
+            //    continue;
+
+            fid = fidTypes[j];
+            //obj = (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
+            obj = _input.getObj(fid, box, ftype);
+            //value = _input.getO(obj, box, ftype);
+            value = row[fid];
+            old = obj.data(_crudE.DataOld);
+            //if fully compare, string will not equal numeric !!
+            if (value != old) {
+                //date/dt old value has more length
+                if ((ftype === 'date' || ftype === 'dt') &&
+                    _date.dtsToValue(value) === _date.dtsToValue(old))
+                    continue;
+
+                result[fid] = value;
+                diff = true;
+            }
+        }
+        if (!diff)
+            return null;
+
+        result[kid] = key;
+        return result;
+    },
+
+    /**
+     * setFidTypeVars -> setFidTypes
+     * set fid-type variables: fidTypes, fidTypeLen
+     * param me {object} EditOne/EditMany object
+     * param box {object} container
+     * return void
+     */
+    setFidTypes: function (me, box) {
+        var fidTypes = [];
+        box.find(_input.fidFilter()).each(function (i, item) {
+            var obj = $(item);
+            var j = i * 2;
+            fidTypes[j] = _input.getFid(obj);
+            fidTypes[j + 1] = _input.getType(obj);
+        });
+        me.fidTypes = fidTypes;
+        me.fidTypeLen = me.fidTypes.length;
+    },
+
+    /**
+     * set file variables: fileFids, fileLen, hasFile
+     * called by EditOne/EditMany init()
+     * param me {edit} EditOne/EditMany variables
+     * param box {object} form or row object
+     * return void
+     */
+    setFileVars: function (me, box) {
+        //var me = this;  //use outside .each()
+        me.fileFids = [];      //upload file fid array
+        box.find('[data-type=file]').each(function (index, item) {
+            me.fileFids[index] = _input.getFid($(item));
+        });
+        me.fileLen = me.fileFids.length;
+        me.hasFile = me.fileFids.length > 0; //has input file or not
+    },
+
+    /**
+     * getServerFid -> getFileSid
+     * get server side variables name for file field
+     * param tableId {string} 
+     * param fid {string} ui file id
+     * return {string} format: Table_Fid
+     */
+    getFileSid: function (levelStr, fid) {
+        return 't' + levelStr + '_' + fid;
+    },
+
+    /**
+     * formData set fileJson field
+     * param data {formData}
+     * param fileJson {json}
+     * return void
+     */
+    dataSetFileJson: function (data, fileJson) {
+        if (_json.isEmpty(fileJson))
+            return;
+
+        var fid = _crudE.FileJson
+        if (data.has(fid)) {
+            var json = data.get(fid);
+            fileJson = _json.copy(fileJson, json);
+        }
+        data.set(fid, fileJson);
+    },
+
+    /**
+     * isNewKey(key) -> isNewRow(row)
+     * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
+     * param key {string}
+     */
+    isNewRow: function (row) {
+        var fid = _crudE.IsNew;
+        return (row[fid] != null || row[fid] == '1');
+    },
+    /*
+    isNewKey: function (key) {
+        key = key.toString();   //convert to string for checking
+        var len = key.length;
+        if (len >= 6)
+            return false;
+
+        var val = parseInt(key);
+        return (!Number.isNaN(val) && (val.toString().length == len));
+    },
+    */
+
+    /**
+     * onclick viewFile
+     * param table {string} table name
+     * param fid {string}
+     * param elm {element} link element
+     * param key {string} row key
+     */
+    viewFile: function (table, fid, elm, key) {
+        if (_crudE.isNewKey(key)) {
+            _tool.msg(_BR.NewFileNotView);
+        } else {
+            var ext = _file.getFileExt(elm.innerText);
+            if (_file.isImageExt(ext))
+                _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
+        }
+    },
+
+    //#region remark code
+    /**
+     * get field info array by box object & row filter
+     * box {object} form/div container
+     * trFilter {string} (optional 'tr')
+     * return json array
+     */
+    /*
+    getFidTypesByDid: function (box, trFilter) {
+        //trFilter = trFilter || 'tr';
+        //var trObj = box.find(trFilter + ':first');
+
+        var fidTypes = [];
+        box.find('[data-id]').each(function (i, item) {
+            var obj = $(item);
+            var j = i * 2;
+            fidTypes[j] = obj.data('id');
+            fidTypes[j + 1] = _input.getType(obj);
+        });
+        return fidTypes;
+    },
+    */
+
+    /*
+    //for EditMany.js
+    getFidTypesById: function (box) {
+        //return _crudE._getFidTypes(box, '[id]');
+        var fidTypes = [];
+        box.find('[id]').each(function (i, item) {
+            var obj = $(item);
+            var j = i * 2;
+            fidTypes[j] = obj.attr('id');
+            fidTypes[j + 1] = _input.getType(obj);
+        });
+        return fidTypes;
+    },
+    */
+
+    //=== move from _edit.js end
+    //#endregion
+
 
     //=== event start ===
     /**
@@ -450,7 +716,7 @@ var _crudE = {
      * return {bool}
      */
     onUpdateA: async function(key) {
-        _edit.removeIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
+        _crudE.removeIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
         return await _crudE._updateOrViewA(_fun.FunU, key);
     },
 

@@ -1,6 +1,18 @@
 
-class FlowBox {	
+//靜態類別
+var _Flow = {
+
+	//靜態屬性 node type enum
+	TypeStart: 'S',
+	TypeEnd: 'E',
+	TypeNode: 'N',
+	//TypeAuto: 'A',	//auto
+};
+
+function FlowBase(boxId, onMoveNode) {	
+
 	/**
+	 屬性:
 	 boxElm: box element
 	 svg: svg
 	 nodes: nodes
@@ -8,16 +20,17 @@ class FlowBox {
 	 startNode: start node
 	 onMoveNode: event onMoveNode(node)
 	*/
-    constructor(boxId, onMoveNode) {
+
+	this._init = function (boxId, onMoveNode) {
 		this.boxElm = document.getElementById(boxId);
 		this.svg = SVG().addTo(this.boxElm).size('100%', '100%');
 		this.onMoveNode = onMoveNode;
-		this.reset(false);		
-    }
+		this.reset(false);
+	};
 
 	//清除全部UI元件
 	//hasUI: default true(會同時清除UI元素)
-	reset(hasUI) {
+	this.reset = function (hasUI) {
 		this.nodes = [];
 		this.lines = [];
 		this.startNode = null;
@@ -26,55 +39,60 @@ class FlowBox {
 		if (hasUI || hasUI == null) {
 			this.boxElm.querySelectorAll('svg,text').forEach(elm => elm.remove());
 		}
-	}
+	};
 
 	//載入nodes & lines
-	loadNodes(rows) {
+	this.loadNodes = function (rows) {
 		for (var i = 0; i < rows.length; i++)
 			this.addNode(rows[i]);
-	}
+	};
 
-	loadLines(rows) {
+	this.loadLines = function (rows) {
 		for (var i = 0; i < rows.length; i++)
 			this.addLine(rows[i]);
-	}
+	};
 
-	addNode(json) {
+	this.addNode = function (json) {
 		//this.nodeCount++;
 		//if (json.id == null)
 		//	json.id = (this.nodes.length + 1) * (-1);
 		let node = new FlowNode(this, json);
 		this.nodes.push(node);
 		return node;
-	}
+	};
 	
 	//addLine(fromNode, toNode, id, lineType) {
-	addLine(json) {
+	this.addLine = function (json) {
 		//this.lineCount++;
 		//if (id == null)
 		//	id = (this.lines.length + 1) * (-1);
 		let fromNode = this.findNode(json.StartNode);
 		let toNode = this.findNode(json.EndNode);
 		return new FlowLine(this, fromNode, toNode, json.Id, 'A');
-	}
+	};
 	
-	drawLineStart(startNode) {
+	this.drawLineStart = function (startNode) {
 		this.startNode = startNode;
-	}
+	};
 	
-	drawLineEnd(endNode) {
+	this.drawLineEnd = function (endNode) {
 		new FlowLine(this, this.startNode, endNode);
 		this.startNode = null;
-	}
+	};
 	
-	findNode(id) {
+	this.findNode = function (id) {
 		//elm2.node 指向dom
 		return this.nodes.find(node => node.getId() == id);
-	}
-}
+	};
 
-class FlowNode {
+	//call last
+	this._init(boxId, onMoveNode);
+
+} //class FlowBox
+
+function FlowNode(flowBox, json) {
 	/**
+	 屬性:
 	 self: this
 	 flowBox: FlowBox object
 	 svg: svg
@@ -86,85 +104,75 @@ class FlowNode {
 	 height: height
 	*/
 
-	//靜態屬性 node type enum
-    static TypeStart = 'S';
-	static TypeEnd = 'E';
-	static TypeNode = 'N';
-    //TypeAuto = 'A';	//??
-
 	//drag evnet
-	DragMove = 'dragmove';
-	DragStart = 'dragstart';
-	DragEnd = 'dragend';
+	this.DragMove = 'dragmove';
+	this.DragStart = 'dragstart';
+	this.DragEnd = 'dragend';
 
 	//start/end node
-	MinRadius = 20;
+	this.MinRadius = 20;
 
 	//node
-	MinWidth = 100;
-	MinHeight = 50;
-	Padding = 15;
+	this.MinWidth = 100;
+	this.MinHeight = 50;
+	this.Padding = 15;
 
-    constructor(flowBox, json) {
+	this._init = function (flowBox, json) {
 		this.self = this;
 		this.flowBox = flowBox;
-        this.svg = flowBox.svg;
-        this.json = Object.assign({
+		this.svg = flowBox.svg;
+		this.json = Object.assign({
 			Name: 'Node',
-            NodeType: this.TypeNode,
-            PosX: 50,
-            PosY: 50,
-            Width: 100,	//??
-            Height: 50,	//??
-        }, json);
+			NodeType: _Flow.TypeNode,
+			PosX: 50,
+			PosY: 50,
+			Width: 100,	//??
+			Height: 50,	//??
+		}, json);
 
-        this._init();
-    }
-
-    _init() {
 		//set instance variables
 		this.lines = [];
-		
-        this._drawNode();	//draw node first
-        this._setNodeDrag();
-        this._setJointDrag(); // 讓connector可拖拉
-    }
 
-	getId() {
+		this._drawNode();	//draw node first
+		this._setNodeDrag();
+		this._setJointDrag(); // 讓connector可拖拉
+	};
+
+	this.getId = function () {
 		return this._getIdByElm2(this.elm2);
-	}
+	};
 
-	_getIdByElm2(elm2) {
+	this._getIdByElm2 = function (elm2) {
 		return elm2.node.dataset.id;
-	}
+	};
 
-	_setId(id) {
+	this._setId = function (id) {
 		this.elm2.node.dataset.id = id;
-	}
+	};
 
-	addLine(line) {
+	this.addLine = function (line) {
 		this.lines.push(line);
-	}
+	};
 	
-	deleteLine(line) {
+	this.deleteLine = function (line) {
 		let index = this.lines.findIndex(item => item.Id == line.Id);
 		this.lines.splice(index, 1);
-	}
+	};
 	
 	//init時呼叫
-    _drawNode() {
+	this._drawNode = function () {
         let nodeType = this.json.NodeType;
         let cssClass = '';
         let nodeName = '';
 
 		let startEnd = this._isStartEnd();
 		if (startEnd) {
-            if (nodeType == FlowNode.TypeStart) {
+            if (nodeType == _Flow.TypeStart) {
                 cssClass = 'xf-start';
-				nodeName = FlowNode.TypeStart;
+				nodeName = _Flow.TypeStart;
             } else {
                 cssClass = 'xf-end';
-				nodeName = FlowNode.TypeEnd;
+				nodeName = _Flow.TypeEnd;
             }
 
 			//circle大小不填, 由css設定, 這時radius還沒確定, 不能move(因為會用到radius)
@@ -199,32 +207,32 @@ class FlowNode {
 		this._setSize(startEnd);
 
 		//add 連接點 connector(在文字右側), 小方塊, data-nodeElm 記錄節點元素
-		if (nodeType != this.TypeEnd){
+		if (nodeType != _Flow.TypeEnd){
 			this.connectorElm = this.svg.rect(12, 12).addClass('xf-connector');
 			this.connectorElm.node.dataset.nodeElm = this.elm2;
 		}
 		
 		this._render(startEnd);
-    }
+	};
 
 	//是否為起迄節點
-    _isStartEnd() {
-		return (this.json.NodeType == FlowNode.TypeStart || this.json.NodeType == FlowNode.TypeEnd);
-    }
+	this._isStartEnd = function () {
+		return (this.json.NodeType == _Flow.TypeStart || this.json.NodeType == _Flow.TypeEnd);
+	};
 
 	//繪製, 移動子元件
-	_setSize(startEnd) {
+	this._setSize = function (startEnd) {
 		if (!startEnd) {
 			let bbox = this.textElm.bbox();
 			this.width = Math.max(this.MinWidth, bbox.width + this.Padding * 2);
 			this.height = Math.max(this.MinHeight, bbox.height + this.Padding * 2);
 		}
 		this.elm2.size(this.width, this.height);
-	}
+	};
 
 	//繪製, 移動子元件
 	//param startEnd: 如果不是起迄節點要考慮最小寬高
-    _render(startEnd) {
+	this._render = function (startEnd) {
 		//文字
 		let bbox = this.textElm.bbox();
 		let centerX = this.elm2.x() + this.width / 2;
@@ -234,9 +242,9 @@ class FlowNode {
         //連接點
 		if (this.connectorElm)
 			this.connectorElm.move(centerX + bbox.width / 2 + 3, centerY - 5);
-    }
+	};
 
-	_setNodeDrag() {
+	this._setNodeDrag = function () {
 		this.elm2.draggable().on(this.DragMove, () => {
 			this._render(this._isStartEnd());
 			this.lines.forEach(line => line.render());
@@ -245,9 +253,9 @@ class FlowNode {
 			//console.log(`x=${x}, y=${y}`);
 			this.flowBox.onMoveNode(this.getId(), x, y);	//trigger
 		});
-	}
+	};
 
-	_setJointDrag() {
+	this._setJointDrag = function () {
 		if (!this.connectorElm)
 			return;
 		
@@ -313,33 +321,35 @@ class FlowNode {
 			}
 			tempLine.remove();
 		});
-	}
+	};
 	
-	_highlightNode(node, status){
+	this._highlightNode = function (node, status){
 		if (status){
 			node.classList.add('on');
 		} else {
 			node.classList.remove('on');
 		}
-	}
-	
+	};
+
+	//call last
+	this._init(flowBox, json);
+
 }//class FlowNode
 
-
-class FlowLine {
+function FlowLine(flowBox, fromNode, toNode, lineType) {
 	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
-	Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
-	Min2NodeDist = 25;	//2節點的最小距離, 大於此值可建立line(1,3線段)
-	Min2SegDist = 20;	//建立2線段的最小距離, 中心點和邊
+	this.Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
+	this.Min2NodeDist = 25;	//2節點的最小距離, 大於此值可建立line(1,3線段)
+	this.Min2SegDist = 20;	//建立2線段的最小距離, 中心點和邊
 
 	//末端箭頭
-	ArrowLen = 10; 	//長度
-	ArrowWidth = 5; 	//寬度	
+	this.ArrowLen = 10; 	//長度
+	this.ArrowWidth = 5; 	//寬度	
 
  	//line type, 起點位置
-    TypeAuto = 'A';	//自動
-    TypeV = 'V';	//垂直(上下)
-    TypeH = 'H';	//水平(左右)
+	this.TypeAuto = 'A';	//自動
+	this.TypeV = 'V';	//垂直(上下)
+	this.TypeH = 'H';	//水平(左右)
 
 	/**
 	 flowBox: FlowBox object
@@ -352,36 +362,36 @@ class FlowLine {
 	 isTypeV:
 	 isTypeH:
 	*/
-	constructor(flowBox, fromNode, toNode, lineType) {
+	this._init = function (flowBox, fromNode, toNode, lineType) {
 		this.flowBox = flowBox;
-        this.svg = flowBox.svg;
-        this.fromNode = fromNode;
-        this.toNode = toNode;
+		this.svg = flowBox.svg;
+		this.fromNode = fromNode;
+		this.toNode = toNode;
 		this.path = this.svg.path('').addClass('xf-line');
-		
+
 		// 用來儲存箭頭的路徑
 		this.arrowPath = this.svg.path('').addClass('xf-arrow');
 		//this.arrowPath2 = this.svg.path('').addClass('xf-arrow');
-		
+
 		//add line to from/to node
 		fromNode.addLine(this);
 		toNode.addLine(this);
 		this.setType(lineType);
 		this.render();
-    }
+	};
 
-	setType(lineType){
+	this.setType = function (lineType){
 		lineType = lineType || this.TypeAuto;
 		this.lineType = lineType;
 		this.isTypeV = (lineType == this.TypeV);
 		this.isTypeH = (lineType == this.TypeH);
 		//this.isTypeAuto = (!this.isTypeV && !this.isTypeH) || (lineType == this.TypeAuto);
-	}
+	};
 	
 	/**
 	 依次考慮使用1線段、2線段、3線段
 	 */
-	render() {
+	this.render = function () {
 
 		//=== from Node ===
 		// 位置和尺寸, x/y為左上方座標
@@ -528,12 +538,12 @@ class FlowLine {
 		// 繪製流程線
 		this._drawLine(points);
 		//this.path.plot(pathStr);
-	}
+	};
 	
 	/**
 	 畫流程線
 	 */
-	_drawLine(points) {
+	this._drawLine = function (points) {
 		// 生成帶有圓角的折線路徑
 		let pathStr = `M ${points[0].x} ${points[0].y}`; // 移動到起點
 		let pntLen = points.length;
@@ -587,12 +597,12 @@ class FlowLine {
 		  .fill('none');
 		*/
 	  
-	}
+	};
 	
 	/**
 	 畫末端箭頭, 利用2個傳入端點計算斜率
 	 */
-	_arrow(fromPnt, toPnt) {
+	this._arrow = function (fromPnt, toPnt) {
 		// 計算箭頭的方向
 		const angle = Math.atan2(toPnt.y - fromPnt.y, toPnt.x - fromPnt.x); // 計算角度
 
@@ -609,6 +619,9 @@ class FlowLine {
 		// 更新箭頭路徑
 		this.arrowPath.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
 		//this.arrowPath1.plot(`M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
-	}
+	};
+
+	//call last
+	this._init(flowBox, fromNode, toNode, lineType);
 	
 }//class FlowLine

@@ -19,9 +19,6 @@
         _me.mRoleProg = new EditMany('Id', 'tbodyRoleProg', 'tplRoleProg', 'tr');
         _crudR.init(config, [null, _me.mUserRole, _me.mRoleProg]);
 
-        //_me.mUserRole.fnLoadJson = _me.mUserRole_loadJson;
-        //_me.mUserRole.fnGetUpdJson = _me.mUserRole_getUpdJson;
-
         //_me.divUsers = $('#divUsers');
         //_me.mUserRoleFids = ['Id', 'UserId']; //key fid, child fid
         _me.divUrBody = $('#tbodyUserRole');    //tbody of user role
@@ -80,7 +77,7 @@
 
             var tr = $(Mustache.render(_me.tplUr, row));
             _form.loadRow(tr, row);
-            _me.mUserRole.boxSetNewId(tr);
+            _me.mUserRole.setNewIdByBox(tr);
             _me.divUrBody.append(tr);
         }
 

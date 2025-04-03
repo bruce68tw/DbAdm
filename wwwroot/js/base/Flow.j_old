@@ -471,7 +471,7 @@ function Flow(boxId, mNode, mLine) {
     this.addLine = function (row) {
         var newLine = $(this.tplLine);      //create row object, no need mustache()
         _form.loadRow(newLine, row);        //row objec to UI
-        var key = this.mLine.boxSetNewId(newLine);   //set new key
+        var key = this.mLine.setNewIdByBox(newLine);   //set new key
         this.divLinesBox.append(newLine);   //append row object
         return key;
     };

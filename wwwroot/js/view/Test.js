@@ -26,7 +26,7 @@
         };
 
         //initial
-        _me.mColumn = new EditMany('Id', 'tbodyColumn', 'tplColumn', 'tr');
+        _me.mColumn = new EditMany('Id', 'tbodyCol', 'tplCol', 'tr');
 		_crudR.init(config, [null, _me.mColumn]);
     },
 

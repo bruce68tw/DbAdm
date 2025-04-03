@@ -19,7 +19,7 @@
 <div class='xg-btns-box'>
     @await Component.InvokeAsync("XgAddRow", "_me.mCol.onAddRow()")
 </div>
-<form id='eformCol' class='xg-form' style="border:none">
+<form class='xg-form' style="border:none">
     <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
         <thead>
             <tr>
@@ -36,7 +36,7 @@
             </tr>
         </thead>
 
-        <tbody id="divCols"></tbody>
+        <tbody id="tbodyCol"></tbody>
     </table>
 </form>
 @await Component.InvokeAsync("XgSaveBack")

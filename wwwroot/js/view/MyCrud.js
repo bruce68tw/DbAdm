@@ -48,7 +48,7 @@ var _me = {
         //_me.edit0.fnAfterOpenEdit = _me.edit0_afterOpenEdit;        
         _me.edit0.fnWhenSave = _me.edit0_whenSave;
         //
-        _me.mEtable.fnLoadJson = _me.mEtable_loadJson;
+        _me.mEtable.fnLoadRows = _me.mEtable_loadRows;
         _me.mEtable.fnGetUpdJson = _me.mEtable_getUpdJson;
         _me.mEtable.fnValid = _me.mEtable_valid;
 
@@ -178,24 +178,24 @@ var _me = {
     },
 
     //load etable
-    mEtable_loadJson: function (json) {
+    mEtable_loadRows: function (rows) {
         //empty first
         _me.navEtable.empty();
         _me.tabEtable.empty();
 
         //null表示沒資料
-        if (json == null || json[_crudE.Rows] == null)
+        if (rows == null || rows.length == 0)
             return;
 
         //_me.etableNavRemoveAct();
 
         //render etables & eitems
-        var rows = json[_crudE.Rows];
-        var eitemRows = _crudE.getChildRows(json, 0);
+        //var eitemRows = _crudE.getChildRows(json, 0);   //已改為傳入rows, 不是json
+        var eitemRows = _crudE.getChildRows(_me.mEtable.dataJson, 0);   //從dataJson讀取 !!
         for (var i = 0; i < rows.length; i++) {
             //add tab (only)
             var row = rows[i];
-            _me.mEtable.singleFormLoadRow(_me.tabEtable, row, i);
+            _me.mEtable.loadRowByBox(_me.tabEtable, row, i);
 
             //add nav
             //on click必須add/remove active class, 所以改用javascript !!
@@ -237,7 +237,7 @@ var _me = {
         _me.getEtableForms().each(function (i, item) {
             //etable
             var form = $(item);
-            rows[i] = _edit.getUpdRow(_me.mEtable.kid, _me.mEtable.fidTypes, form); //edit table
+            rows[i] = _crudE.getUpdRow(_me.mEtable.kid, _me.mEtable.fidTypes, form); //edit table
             _me.mEtable.rowSetFkey(rows[i], upKey);
 
             //eitems
@@ -255,7 +255,7 @@ var _me = {
         });
         return {
             _rows: rows,
-            _deletes: _me.mEtable.getDeletedStr(),
+            _deletes: _me.mEtable.getDeletes(),
             _childs: [{ _rows: eitems, _deletes: _me.mEitem.getDeletedStr()}],
         };
     },
@@ -327,7 +327,7 @@ var _me = {
     onRitemAdd: function () {
         var box = $(Mustache.render(_me.tplRitem, {}));
         _form.loadRow(box, {});
-        _me.mRitem.boxSetNewId(box);
+        _me.mRitem.setNewIdByBox(box);
         _me.divRitemBody.append(box);
     },
 
@@ -473,7 +473,7 @@ var _me = {
             _form.loadRow(box, rows[i]);
             //if (mItem != null)
             //    mItem.boxSetMapId(box, crudId);
-            mItem.boxSetNewId(box);
+            mItem.setNewIdByBox(box);
             body.append(box);
         }
 
@@ -491,7 +491,7 @@ var _me = {
         var index = _me.etableLen;
         var json = { Index: index };
         var newTab = $(Mustache.render(_me.tplTabEtable, json));
-        _me.mEtable.boxSetNewId(newTab);    //set new row key !!
+        _me.mEtable.setNewIdByBox(newTab);    //set new row key !!
         //debugger;
         _iselect.setItems(_me.TableId, _me.tables, newTab); //set dropdown source
         _me.tabEtable.append(newTab);
