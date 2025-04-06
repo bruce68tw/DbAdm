@@ -45,7 +45,7 @@ var _crudE = {
         _me.divEdit = $('#divEdit');
         _me.hasEdit = (_me.divEdit.length > 0);
         if (_me.hasEdit) {
-            var Childs = _crudE.Childs;  //constant
+            var Childs = _me.crudE.Childs;  //constant
             var edit0 = null;  //master edit object
             if (edits == null) {
                 edit0 = new EditOne();
@@ -66,7 +66,7 @@ var _crudE = {
                 _me.eform0 = edit0.eform;
             _me.hasChild = (_fun.hasValue(_me.edit0[Childs]) && _me.edit0[Childs].length > 0);
             //_me.editLen = _me.edits.length;
-            _crudE._initForm(_me.edit0);
+            _me.crudE._initForm(_me.edit0);
         }
 
         _me._nowFun = '';    //now fun of edit0 form
@@ -89,9 +89,9 @@ var _crudE = {
 
         _idate.init(edit.eform);  //init all date inputs
         edit.validator = _valid.init(edit.eform);   //set valid variables for _ihtml.js !!
-        var childLen = _crudE._getEditChildLen(edit);
+        var childLen = _me.crudE._getEditChildLen(edit);
         for (var i = 0; i < childLen; i++)
-            _crudE._initForm(_crudE._getEditChild(edit, i));
+            _me.crudE._initForm(_me.crudE._getEditChild(edit, i));
     },
 
     //get master edit form
@@ -101,11 +101,11 @@ var _crudE = {
 
     /*
     _getJsonAndSetMode: async function(key, fun) {
-        //_crudR.toUpdateMode(key);
+        //_me.crudR.toUpdateMode(key);
         var act = (fun == _fun.FunU) ? 'GetUpdJson' :
             (fun == _fun.FunV) ? 'GetViewJson' : '';
         await _ajax.getJsonA(act, { key: key }, function(data) {
-            _crudR.toEditMode(fun, data);
+            _me.crudR.toEditMode(fun, data);
         });
     },
      */
@@ -120,11 +120,11 @@ var _crudE = {
         edit.dataJson = json;
 
         //load childs rows(只需載入第一層)
-        var childLen = _crudE._getEditChildLen(edit);
+        var childLen = _me.crudE._getEditChildLen(edit);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = _crudE._getEditChild(edit, i);
-            edit2.dataJson = _crudE._getChildJson(json, i);
-            edit2.loadRows(_crudE.jsonGetRows(edit2.dataJson));
+            var edit2 = _me.crudE._getEditChild(edit, i);
+            edit2.dataJson = _me.crudE._getChildJson(json, i);
+            edit2.loadRows(_me.crudE.jsonGetRows(edit2.dataJson));
         }
 
         //call fnAfterLoadJson() if existed
@@ -162,19 +162,19 @@ var _crudE = {
         var eform = _me.edit0.eform;
         var items = box.find('input, textarea, select, button');
         if (fun == _fun.FunV) {
-            _crudE.removeIsNew(eform);
+            _me.crudE.removeIsNew(eform);
             items.prop('disabled', true)
             box.find('#btnToRead').prop('disabled', false);
             _ihtml.setEdits(box, '', false);
         } else if (fun == _fun.FunC) {
-            _crudE.addIsNew(eform);    //增加_IsNew隱藏欄位
+            _me.crudE.addIsNew(eform);    //增加_IsNew隱藏欄位
             var dataEdit = '[data-edit=U]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         } else if (fun == _fun.FunU) {
-            _crudE.removeIsNew(eform);
+            _me.crudE.removeIsNew(eform);
             var dataEdit = '[data-edit=C]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
@@ -198,9 +198,9 @@ var _crudE = {
         if (edit.hasFile)
             return true;
 
-        var childLen = _crudE._getEditChildLen(edit);
+        var childLen = _me.crudE._getEditChildLen(edit);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = _crudE._getEditChild(edit, i);
+            var edit2 = _me.crudE._getEditChild(edit, i);
             if (edit2.hasFile)
                 return true;
         }
@@ -230,9 +230,9 @@ var _crudE = {
         //load child(multiple) rows
         var hasChild = false;
         var childs = [];
-        var childLen = _crudE._getEditChildLen(edit0);
+        var childLen = _me.crudE._getEditChildLen(edit0);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = _crudE._getEditChild(edit0, i);
+            var edit2 = _me.crudE._getEditChild(edit0, i);
 
             //file
             if (edit2.hasFile) {
@@ -253,15 +253,15 @@ var _crudE = {
         var hasData = false;
         if (row != null) {
             hasData = true;
-            data[_crudE.Rows] = [row];
+            data[_me.crudE.Rows] = [row];
         }
         if (hasChild) {
             hasData = true;
-            data[_crudE.Childs] = childs;
+            data[_me.crudE.Childs] = childs;
         }
         if (!_json.isEmpty(fileJson)) {
             hasData = true;
-            data[_crudE.FileJson] = fileJson;
+            data[_me.crudE.FileJson] = fileJson;
         }
 
         if (!hasData)
@@ -290,10 +290,10 @@ var _crudE = {
             return false;
 
         //check child Edit
-        var childLen = _crudE._getEditChildLen(edit);
+        var childLen = _me.crudE._getEditChildLen(edit);
         for (var i = 0; i < childLen; i++) {
             //check system error
-            var edit2 = _crudE._getEditChild(edit, i);
+            var edit2 = _me.crudE._getEditChild(edit, i);
             if (_str.notEmpty(edit2.systemError)) {
                 _tool.msg(edit2.systemError);
                 return false;
@@ -329,7 +329,7 @@ var _crudE = {
 
         if (_me.hasRead) {
             _me.dt.reload();
-            _crudR.toReadMode();
+            _me.crudR.toReadMode();
         }
     },
 
@@ -342,9 +342,9 @@ var _crudE = {
         edit.reset();
 
         //reset childs
-        var childLen = _crudE._getEditChildLen(edit);
+        var childLen = _me.crudE._getEditChildLen(edit);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = _crudE._getEditChild(edit, i);
+            var edit2 = _me.crudE._getEditChild(edit, i);
             edit2.reset();
         }
     },
@@ -364,10 +364,10 @@ var _crudE = {
         var act = (fun == _fun.FunU)
             ? 'GetUpdJson' : 'GetViewJson';
         return await _ajax.getJsonA(act, { key: key }, function (json) {
-            _crudE._loadJson(json);
-            _crudE._setEditStatus(fun);
-            _crudE._afterOpenEdit(fun, json);
-            _crudR.toEditMode(fun);
+            _me.crudE._loadJson(json);
+            _me.crudE._setEditStatus(fun);
+            _me.crudE._afterOpenEdit(fun, json);
+            _me.crudR.toEditMode(fun);
         });
     },
 
@@ -378,7 +378,7 @@ var _crudE = {
      * param childIdx {int} child index, base 0
      */
     _getEditChild: function (edit, childIdx) {
-        return edit[_crudE.Childs][childIdx];
+        return edit[_me.crudE.Childs][childIdx];
     },
 
     /**
@@ -386,7 +386,7 @@ var _crudE = {
      * param edit {object} edit object
      */
     _getEditChildLen: function (edit) {
-        var fid = _crudE.Childs;
+        var fid = _me.crudE.Childs;
         return (edit[fid] == null) ? 0 : edit[fid].length;
     },
 
@@ -397,14 +397,14 @@ var _crudE = {
      * @returns
      */
     jsonGetRows: function (json) {
-        return (json == null || json[_crudE.Rows] == null)
+        return (json == null || json[_me.crudE.Rows] == null)
             ? null
-            : json[_crudE.Rows];
+            : json[_me.crudE.Rows];
     },
 
     //get child json
     _getChildJson: function (upJson, childIdx) {
-        var childs = _crudE.Childs;
+        var childs = _me.crudE.Childs;
         return (upJson[childs] == null || upJson[childs].length <= childIdx)
             ? null
             : upJson[childs][childIdx];
@@ -412,8 +412,8 @@ var _crudE = {
 
     //get child rows
     getChildRows: function (upJson, childIdx) {
-        var child = _crudE._getChildJson(upJson, childIdx);
-        return _crudE.jsonGetRows(child);
+        var child = _me.crudE._getChildJson(upJson, childIdx);
+        return _me.crudE.jsonGetRows(child);
     },
 
     /**
@@ -424,7 +424,7 @@ var _crudE = {
      * return {json} child object
      */
     setChildRows: function (upJson, childIdx, rows) {
-        var fid = _crudE.Childs;
+        var fid = _me.crudE.Childs;
         if (upJson == null)
             upJson = {};
         if (upJson[fid] == null)
@@ -433,7 +433,7 @@ var _crudE = {
             upJson[fid][childIdx] = {};
 
         var child = upJson[fid][childIdx];
-        child[_crudE.Rows] = rows;
+        child[_me.crudE.Rows] = rows;
         return child;
     },
 
@@ -442,7 +442,7 @@ var _crudE = {
      */
     editToNew: function () {
         var fun = _fun.FunC;
-        _crudE._setEditStatus(fun);
+        _me.crudE._setEditStatus(fun);
         _me.edit0.resetKey();
         _prog.setPath(fun);
     },
@@ -453,7 +453,7 @@ var _crudE = {
      * param obj {box} jquery object
      */
     addIsNew: function (box) {
-        var fid = _crudE.IsNew;
+        var fid = _me.crudE.IsNew;
         var field = box.find(_input.fidFilter(fid));
         if (field.length == 0)
             field = box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="1" >`);
@@ -466,7 +466,7 @@ var _crudE = {
      * param obj {box} jquery object
      */
     removeIsNew: function (box) {
-        var fid = _crudE.IsNew;
+        var fid = _me.crudE.IsNew;
         var field = box.find(_input.fidFilter(fid));
         if (field.length > 0)
             field.remove();
@@ -478,7 +478,7 @@ var _crudE = {
      * return {string}
      */
     getOld: function (obj) {
-        return obj.data(_crudE.DataOld);
+        return obj.data(_me.crudE.DataOld);
     },
 
     /**
@@ -487,7 +487,7 @@ var _crudE = {
      * param value {int/string}
      */
     setOld: function (obj, value) {
-        obj.data(_crudE.DataOld, value);
+        obj.data(_me.crudE.DataOld, value);
     },
 
     /*
@@ -499,7 +499,7 @@ var _crudE = {
         for (var i = 0; i < fidTypes.length; i = i + 2) {
             fid = fidTypes[i];
             var obj = _obj.get(fid, box);
-            obj.data(_crudE.DataOld, row[fid]);
+            obj.data(_me.crudE.DataOld, row[fid]);
         }
     },
     */
@@ -535,7 +535,7 @@ var _crudE = {
             obj = _input.getObj(fid, box, ftype);
             //value = _input.getO(obj, box, ftype);
             value = row[fid];
-            old = obj.data(_crudE.DataOld);
+            old = obj.data(_me.crudE.DataOld);
             //if fully compare, string will not equal numeric !!
             if (value != old) {
                 //date/dt old value has more length
@@ -611,7 +611,7 @@ var _crudE = {
         if (_json.isEmpty(fileJson))
             return;
 
-        var fid = _crudE.FileJson
+        var fid = _me.crudE.FileJson
         if (data.has(fid)) {
             var json = data.get(fid);
             fileJson = _json.copy(fileJson, json);
@@ -625,7 +625,7 @@ var _crudE = {
      * param key {string}
      */
     isNewRow: function (row) {
-        var fid = _crudE.IsNew;
+        var fid = _me.crudE.IsNew;
         return (row[fid] != null || row[fid] == '1');
     },
     /*
@@ -648,7 +648,7 @@ var _crudE = {
      * param key {string} row key
      */
     viewFile: function (table, fid, elm, key) {
-        if (_crudE.isNewKey(key)) {
+        if (_me.crudE.isNewKey(key)) {
             _tool.msg(_BR.NewFileNotView);
         } else {
             var ext = _file.getFileExt(elm.innerText);
@@ -683,7 +683,7 @@ var _crudE = {
     /*
     //for EditMany.js
     getFidTypesById: function (box) {
-        //return _crudE._getFidTypes(box, '[id]');
+        //return _me.crudE._getFidTypes(box, '[id]');
         var fidTypes = [];
         box.find('[id]').each(function (i, item) {
             var obj = $(item);
@@ -705,9 +705,9 @@ var _crudE = {
      */
     onCreate: function() {
         var fun = _fun.FunC;
-        _crudE._resetForm(_me.edit0);   //reset first
-        _crudE._setEditStatus(fun);
-        _crudE._afterOpenEdit(fun, null);
+        _me.crudE._resetForm(_me.edit0);   //reset first
+        _me.crudE._setEditStatus(fun);
+        _me.crudE._afterOpenEdit(fun, null);
     },
 
     /**
@@ -716,13 +716,13 @@ var _crudE = {
      * return {bool}
      */
     onUpdateA: async function(key) {
-        _crudE.removeIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
-        return await _crudE._updateOrViewA(_fun.FunU, key);
+        _me.crudE.removeIsNew(_me.edit0.eform);    //增加_IsNew隱藏欄位
+        return await _me.crudE._updateOrViewA(_fun.FunU, key);
     },
 
     //return { bool }
     onViewA: async function(key) {
-        return await _crudE._updateOrViewA(_fun.FunV, key);
+        return await _me.crudE._updateOrViewA(_fun.FunV, key);
     },
 
     /**
@@ -735,7 +735,7 @@ var _crudE = {
      */
     onOpenModal: function(btn, title, fid, required, maxLen) {
         var tr = $(btn).closest('tr');
-        _tool.showArea(title, _itext.get(fid, tr), _crudE.isEditMode(), function(result) {
+        _tool.showArea(title, _itext.get(fid, tr), _me.crudE.isEditMode(), function(result) {
             _itext.set(fid, result, tr);
         });
     },
@@ -747,7 +747,7 @@ var _crudE = {
      */
     onSaveA: async function() {
         //validate all input & system error(will show error msg)
-        if (!_crudE.validAll()) {
+        if (!_me.crudE.validAll()) {
             _tool.alert(_BR.InputWrong);
             return;
         }
@@ -764,7 +764,7 @@ var _crudE = {
 
         //get saving row
         var formData = new FormData();  //for upload files if need
-        var row = _crudE._getUpdJson(formData);
+        var row = _me.crudE._getUpdJson(formData);
         if (_json.isEmpty(row)) {
             _tool.msg(_BR.SaveNone);
             return;
@@ -774,7 +774,7 @@ var _crudE = {
         var isNew = edit0.isNewRow();
         var action = isNew ? 'Create' : 'Update';
         var data = null;
-        if (_crudE._hasFile()) {
+        if (_me.crudE._hasFile()) {
             //has files, use formData
             data = formData;
             data.append('json', _json.toStr(row));
@@ -782,7 +782,7 @@ var _crudE = {
                 data.append('key', edit0.getKey());
 
             await _ajax.getJsonByFdA(action, data, function(result) {
-                _crudE.afterSave(result);
+                _me.crudE.afterSave(result);
             });
         } else {
             //no file, use json
@@ -791,7 +791,7 @@ var _crudE = {
                 data.key = edit0.getKey();
 
             await _ajax.getJsonA(action, data, function(result) {
-                _crudE.afterSave(result);
+                _me.crudE.afterSave(result);
             });
         }
     },

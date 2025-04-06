@@ -14,20 +14,20 @@
             ],
             columnDefs: [
 				{ targets: [4], render: function (data, type, full, meta) {
-                    return _crudR.dtYesEmpty(data);
+                    return _me.crudR.dtYesEmpty(data);
                 }},
 				{ targets: [5], render: function (data, type, full, meta) {
-                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
 				{ targets: [6], render: function (data, type, full, meta) {
-                    return _crudR.dtStatusName(data);
+                    return _me.crudR.dtStatusName(data);
                 }},
             ],
         };
 
         //initial
         _me.mColumn = new EditMany('Id', 'tbodyCol', 'tplCol', 'tr');
-		_crudR.init(config, [null, _me.mColumn]);
+		new CrudR(config, [null, _me.mColumn]);
     },
 
 }; //class

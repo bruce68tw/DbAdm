@@ -202,7 +202,7 @@
                 <div class="row xg-mb5">
                     <div class="col-md-3 xg-right" style="padding-top: 6px;">@R0["DeptName"]</div>
                     <div class="col-md-5">
-                        @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "DeptId", Rows = (List<IdStrDto>)ViewBag.Depts })
+                        @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "DeptId", Rows = ViewBag.Depts })
                     </div>
                 </div>
                 <div class="row xg-mb5">

@@ -27,11 +27,11 @@
                 ],
                 columnDefs: [
                     { targets: [7], render: function (data, type, full, meta) {
-                        return _crudR.dtYesEmpty(data);
+                        return _me.crudR.dtYesEmpty(data);
                     }},
                     /*
                     { targets: [8], render: function (data, type, full, meta) {
-                        return _crudR.dtYesEmpty(data);
+                        return _me.crudR.dtYesEmpty(data);
                     }},
                     */
                     { targets: [10], render: function (data, type, full, meta) {
@@ -41,7 +41,7 @@
                                 : '';
                     }},
                     { targets: [11], render: function (data, type, full, meta) {
-                        return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                        return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                     }},
                 ],
             };
@@ -49,7 +49,7 @@
             //initial
             _me.mIssueFile = new EditMany('Id', 'tbodyIssueFile', 'tplIssueFile', 'tr');
             _me.mIssueRelat = new EditMany('Id', 'tbodyIssueRelat', 'tplIssueRelat', 'tr');
-            _crudR.init(config, [null, _me.mIssueFile, _me.mIssueRelat]);
+            new CrudR(config, [null, _me.mIssueFile, _me.mIssueRelat]);
 
         },
 
@@ -82,7 +82,7 @@
                     var ok = (str == '1');
                     _tool.msg(ok ? '成功寄送問卷。' : '無法寄送問卷 !!');
                     if (ok) {
-                        _crudR.onFind();
+                        _me.crudR.onFind();
                     }
                 });
             });
@@ -134,37 +134,37 @@
         onMyToday: function () {
             var today = _date.uiToday();
             var box = _me.rform;
-            _crudR.onResetFind();   //reset
+            _me.crudR.onResetFind();   //reset
             _iselect.set('OwnerId', _fun.userId, box);
             _idate.set('WorkDate', today, box);
             _idate.set('WorkDate2', today, box);
-            _crudR.onFind();
+            _me.crudR.onFind();
         },
 
         onMyWeek: function () {
             var box = _me.rform;
-            _crudR.onResetFind();   //reset
+            _me.crudR.onResetFind();   //reset
             _iselect.set('OwnerId', _fun.userId, box);
             _idate.set('WorkDate', _date.uiWeekMonday(), box);
             _idate.set('WorkDate2', _date.uiWeekFriday(), box);
-            _crudR.onFind();
+            _me.crudR.onFind();
         },
 
         //我的未結案
         onMyNotFinish: function () {
             var box = _me.rform;
-            _crudR.onResetFind();   //reset
+            _me.crudR.onResetFind();   //reset
             _iselect.set('OwnerId', _fun.userId, box);
             _iselect.set('IsFinish', '0', box);
-            _crudR.onFind();
+            _me.crudR.onFind();
         },
         
         //我的追踪
         onMyWatch: function () {
             var box = _me.rform;
-            _crudR.onResetFind();   //reset
+            _me.crudR.onResetFind();   //reset
             _iselect.set('_IsWatch', '1', box);
-            _crudR.onFind();
+            _me.crudR.onFind();
         },
 
         //加入追踪
@@ -199,7 +199,7 @@
         onKeepIssue: ()=>{
             _tool.ans('是否確定延續此筆工作?', ()=>{
                 //變成新增狀態
-                _crudE.editToNew(); 
+                _me.crudE.editToNew(); 
 
                 //設定按鈕
                 _me.setWatchBtn(false);

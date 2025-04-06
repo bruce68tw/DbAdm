@@ -9,7 +9,7 @@
             ],
             columnDefs: [
 				{ targets: [1], render: function (data, type, full, meta) {
-                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
         };
@@ -17,7 +17,7 @@
         //initial
         _me.mUserRole = new EditMany('Id', 'tbodyUserRole', 'tplUserRole', 'tr');
         _me.mRoleProg = new EditMany('Id', 'tbodyRoleProg', 'tplRoleProg', 'tr');
-        _crudR.init(config, [null, _me.mUserRole, _me.mRoleProg]);
+        new CrudR(config, [null, _me.mUserRole, _me.mRoleProg]);
 
         //_me.divUsers = $('#divUsers');
         //_me.mUserRoleFids = ['Id', 'UserId']; //key fid, child fid

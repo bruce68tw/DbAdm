@@ -1,6 +1,6 @@
 ﻿/**
  * 單筆編輯畫面
- * single edit form, called by _crudE.js
+ * single edit form, called by _me.crudE.js
  * json row for both EditOne/EditMany has fields:
  *   _rows {json array}: updated rows include upload files
  *   _deletes {strings}: deleted key strings, seperate with ','
@@ -12,13 +12,13 @@
  *   fidTypes:
  *   systemError:
  *   dataJson: 載入資料後(update/view)自動設定
- *   hasFile、fileLen、fileFids: 在 _crudE.js setFileVars() 設定
- *   validator: jquery vallidation object (EditMany同), 在 _crudE.js _initForm() 設定
+ *   hasFile、fileLen、fileFids: 在 _me.crudE.js setFileVars() 設定
+ *   validator: jquery vallidation object (EditMany同), 在 _me.crudE.js _initForm() 設定
  * 
- * 自定函數 called by _crudE.js
+ * 自定函數 called by _me.crudE.js
  *   //void fnAfterLoadJson(json)
  *   //void fnAfterOpenEdit(fun, json): called after open edit form
- *   //void fnAfterSwap(readMode): called after _crudR.swap()
+ *   //void fnAfterSwap(readMode): called after _me.crudR.swap()
  *   error fnWhenSave() ??
  *   void fnAfterSave()
  *   
@@ -31,7 +31,7 @@
  */ 
 function EditOne(kid, eformId) {
 
-    //fileFids, fileLen, hasFile 屬性在外部設定(_crudE.js setFileVars())
+    //fileFids, fileLen, hasFile 屬性在外部設定(_me.crudE.js setFileVars())
 
     /**
      * initial & and instance variables (this.validator is by _valid.init())
@@ -54,8 +54,8 @@ function EditOne(kid, eformId) {
             //return;   //not return
         }
 
-        _crudE.setFidTypes(this, this.eform);
-        _crudE.setFileVars(this, this.eform);
+        _me.crudE.setFidTypes(this, this.eform);
+        _me.crudE.setFileVars(this, this.eform);
     };
 
     /**
@@ -79,7 +79,7 @@ function EditOne(kid, eformId) {
      * return {bool}
      */
     this.isNewRow = function () {
-        return (_itext.get(_crudE.IsNew, this.eform) == '1');
+        return (_itext.get(_me.crudE.IsNew, this.eform) == '1');
     };
 
     /**
@@ -93,7 +93,7 @@ function EditOne(kid, eformId) {
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
             var obj = _obj.get(fid, this.eform);
-            obj.data(_crudE.DataOld, row[fid]);
+            obj.data(_me.crudE.DataOld, row[fid]);
         }
     };
 
@@ -102,7 +102,7 @@ function EditOne(kid, eformId) {
      * return {json} different column only
      */
     this.getUpdRow = function () {
-        return _crudE.getUpdRow(this.kid, this.fidTypes, this.eform);
+        return _me.crudE.getUpdRow(this.kid, this.fidTypes, this.eform);
     };
 
     /**
@@ -140,12 +140,12 @@ function EditOne(kid, eformId) {
         var fileJson = {};
         for (var i = 0; i < this.fileLen; i++) {
             var fid = this.fileFids[i];
-            var serverFid = _crudE.getFileSid(levelStr, fid);
+            var serverFid = _me.crudE.getFileSid(levelStr, fid);
             if (_ifile.dataAddFile(data, fid, serverFid, this.eform)) {
                 fileJson[serverFid] = this.getKey();
             }
         }
-        //_crudE.dataSetFileJson(data, fileJson);
+        //_me.crudE.dataSetFileJson(data, fileJson);
         return fileJson;
     };
 
@@ -157,7 +157,7 @@ function EditOne(kid, eformId) {
      */
     this.onViewFile = function (table, fid, elm) {
         var key = this.getKey();
-        _crudE.viewFile(table, fid, elm, key);
+        _me.crudE.viewFile(table, fid, elm, key);
     };
 
     //call last

@@ -4,7 +4,7 @@
  * param boxId {string} edit canvas id
  * param mNode {EditMany}
  * param mLine {EditMany}
- * return {Flow}
+ * return {FlowForm}
  */ 
 function FlowForm(boxId, mNode, mLine) {
     /**
@@ -152,7 +152,12 @@ function FlowForm(boxId, mNode, mLine) {
         */
 
         //set instance first
-        this.flowBase = new FlowBase(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
+        //this.flowBase = new FlowBase(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
+        var flowBase = new FlowBase(boxId);
+        flowBase.fnMoveNode = (nodeId, x, y) => this.onMoveNode(nodeId, x, y);
+        flowBase.fnAddLine = (startId, endId) => this.onAddLine(startId, endId);
+        flowBase.fnRightMenu = (isNode, rowId, mouseX, mouseY) => this.onRightMenu(isNode, rowId, mouseX, mouseY);
+        this.flowBase = flowBase;
 
         //set event
         this._setFlowEvent();
@@ -161,6 +166,14 @@ function FlowForm(boxId, mNode, mLine) {
     this.onMoveNode = function (nodeId, x, y) {
         var rowElm = this.mNode.idToRowBox(nodeId);
         _form.loadRow(rowElm, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
+    };
+
+    this.onAddLine = function (startId, endId) {
+        alert('onAddLine');
+    };
+
+    this.onRightMenu = function (isNode, rowId, mouseX, mouseY) {
+        alert('onRightMenu');
     };
 
     /**
@@ -294,7 +307,7 @@ function FlowForm(boxId, mNode, mLine) {
         //var box = this.divFlowBox;
 
         //set nodes class
-        //var rows = _crudE.jsonGetRows(json);
+        //var rows = _me.crudE.jsonGetRows(json);
         //for (var i = 0; i < rows.length; i++)
         //    this._setNodeClass(rows[i]);
 
@@ -325,7 +338,7 @@ function FlowForm(boxId, mNode, mLine) {
 
 
         //render jsplumb line
-        //var rows = _crudE.jsonGetRows(json);
+        //var rows = _me.crudE.jsonGetRows(json);
         //for (var i = 0; i < rows.length; i++)
         //    this._renderLine(rows[i]);
 

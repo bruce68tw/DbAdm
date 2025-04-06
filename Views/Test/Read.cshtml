@@ -10,12 +10,12 @@
     <div id="divRead">
 		<form id='formRead' class='xg-form'>
 			<div class="row">
-				@await Component.InvokeAsync("XiSelect", new XiSelectDto{ Title = "專案Id", Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, InRow = true })
+				@await Component.InvokeAsync("XiSelect", new XiSelectDto{ Title = "專案Id", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
 				@await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto{  })
 			</div>
 			@await Component.InvokeAsync("XiText", new XiTextDto{ Title = "資料表代碼", Fid = "Code", MaxLen = 100 })
 			@await Component.InvokeAsync("XiText", new XiTextDto{ Title = "資料表名稱", Fid = "Name", MaxLen = 30 })
-			@await Component.InvokeAsync("XiSelect", new XiSelectDto{ Title = "是否記錄交易", Fid = "TranLog", Rows = (List<IdStrDto>)ViewBag.YesNos })
+			@await Component.InvokeAsync("XiSelect", new XiSelectDto{ Title = "是否記錄交易", Fid = "TranLog", Rows = ViewBag.YesNos })
         </form>
 
 		<div class='xg-btns-box'>

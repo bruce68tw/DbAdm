@@ -2,7 +2,7 @@
 /* bootstrap alert */
 .xg-alert {
     position: fixed; 
-    top: 3px; 
+    top: 48px; 
     right: 3px; 
     width: auto;
     z-index: 9999; 

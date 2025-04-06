@@ -45,7 +45,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         this.DataFkeyFid = '_fkeyfid';  //data field for fkey fid, lowercase
 
         //variables
-        this.mode = _crudE.ModeBase;    //default value
+        this.mode = _me.crudE.ModeBase;    //default value
         this.modeData = '';             //for different mode
         this.isUrm = false;             //is urm or not
 
@@ -67,8 +67,8 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
                 alert(this.systemError);
             }
 
-            _crudE.setFidTypes(this, rowObj);
-            _crudE.setFileVars(this, rowObj);
+            _me.crudE.setFidTypes(this, rowObj);
+            _me.crudE.setFileVars(this, rowObj);
         }
 
         //has edit form or not
@@ -91,7 +91,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param fids: 要傳到後端的欄位id array
      */ 
     this.initUrm = function (fids) {
-        this.mode = _crudE.ModeUR;
+        this.mode = _me.crudE.ModeUR;
         this.modeData = fids;
         this.isUrm = true;
     };
@@ -103,7 +103,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * return {bool}
      */
     this._isNewBox = function (box) {
-        return (_itext.get(_crudE.IsNew, box) == '1');
+        return (_itext.get(_me.crudE.IsNew, box) == '1');
     };
 
     /**
@@ -146,7 +146,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         this._urmReset();
 
         //check
-        //var rows = _crudE.jsonGetRows(json);
+        //var rows = _me.crudE.jsonGetRows(json);
         if (rows == null)
             return;
 
@@ -183,7 +183,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
                 if (_icheck.checkedO(obj)) {
                     //new row
                     var row = {};
-                    row[_crudE.IsNew] = '1';     //new row flag
+                    row[_me.crudE.IsNew] = '1';     //new row flag
                     row[fids[0]] = ++newIdx;            //Id, base 1 !!
                     row[fids[1]] = _icheck.getO(obj);   //RoleId
                     me.rowSetFkey(row, upKey);  //set foreign key value
@@ -198,8 +198,8 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         });
 
         if (rows.length > 0)
-            json[_crudE.Rows] = rows;
-        json[_crudE.Deletes] = this.getDeletes();
+            json[_me.crudE.Rows] = rows;
+        json[_me.crudE.Deletes] = this.getDeletes();
         return json;
     };
 
@@ -223,8 +223,8 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         } else if (this.isUrm) {
             this._urmLoadRows(rows, _me.divRoles, _me.mUserRoleFids);
         } else {
-            //var rows = (json == null || json[_crudE.Rows] == null)
-            //    ? null : json[_crudE.Rows];
+            //var rows = (json == null || json[_me.crudE.Rows] == null)
+            //    ? null : json[_me.crudE.Rows];
             this.loadRowsByRsb(rows, true);
         }
     };
@@ -248,7 +248,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         //set old value for each field
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
-            _crudE.setOld(_obj.get(fid, box), row[fid]);
+            _me.crudE.setOld(_obj.get(fid, box), row[fid]);
         }
 
         //set date input
@@ -295,7 +295,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             //set old value for each field
             for (var j = 0; j < this.fidTypeLen; j += 2) {
                 fid = this.fidTypes[j];
-                _crudE.setOld(_obj.get(fid, box), row[fid]);
+                _me.crudE.setOld(_obj.get(fid, box), row[fid]);
             }
 
             //set date input
@@ -394,7 +394,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * return {json} modified columns only
      */
     this.getUpdJson = function (upKey) {
-        return this.fnGetUpdJson ? this.fnGetUpdJson(json) :
+        return this.fnGetUpdJson ? this.fnGetUpdJson(upKey) :
             this.isUrm ? this._urmGetUpdJson(upKey) :
             this.getUpdJsonByRsb(upKey, this.rowsBox);
     };
@@ -408,8 +408,8 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      */
     this.getUpdJsonByRsb = function (upKey, rowsBox) {
         var json = {};
-        json[_crudE.Rows] = this.getUpdRows(upKey, this._getRowsBox(rowsBox));
-        json[_crudE.Deletes] = this.getDeletes();
+        json[_me.crudE.Rows] = this.getUpdRows(upKey, this._getRowsBox(rowsBox));
+        json[_me.crudE.Deletes] = this.getDeletes();
         return json;
     };
 
@@ -443,7 +443,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             //add new row if empty key
             var box = $(item);
             var key = _input.get(me.kid, box);
-            //if (_crudE.isNewKey(key)) {
+            //if (_me.crudE.isNewKey(key)) {
             if (me._isNewBox(box)) {
                 var row2 = _form.toRow(box);
                 row2[me.DataFkeyFid] = upKey;   //write anyway !!
@@ -467,7 +467,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
                 obj = _obj.get(fid, box);
                 value = _input.getO(obj, box, ftype);
                 //if totally compare, string is not equal to numeric !!
-                if (value != _crudE.getOld(obj)) {
+                if (value != _me.crudE.getOld(obj)) {
                     diffRow[fid] = value;
                     diff = true;
                 }
@@ -564,7 +564,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      */
     this.onViewFile = function (table, fid, elm) {
         var key = this.getKey(this._elmToRowBox(elm));
-        _crudE.viewFile(table, fid, elm, key);
+        _me.crudE.viewFile(table, fid, elm, key);
     };
 
     /**
@@ -603,7 +603,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             var tr = $(item);
             for (var i = 0; i < me.fileLen; i++) {
                 var fid = me.fileFids[i];
-                var serverFid = _crudE.getFileSid(levelStr, fid);
+                var serverFid = _me.crudE.getFileSid(levelStr, fid);
                 if (_ifile.dataAddFile(data, fid, serverFid, tr)) {
                     fileIdx[fid] = (fileIdx[fid] == null) ? 0 : fileIdx[fid] + 1;
                     //set fileJson
@@ -611,7 +611,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
                 }
             }
         });
-        //_crudE.dataSetFileJson(data, fileJson);
+        //_me.crudE.dataSetFileJson(data, fileJson);
         return fileJson;
     };
 
@@ -621,7 +621,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param fkeyFid {string}
      */
     this.rowSetFkey = function (row, fkey) {
-        if (row != null && _crudE.isNewRow(row))
+        if (row != null && _me.crudE.isNewRow(row))
             row[this.DataFkeyFid] = fkey;
     };
 
@@ -634,7 +634,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         if (rows != null) {
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                if (row != null && _crudE.isNewRow(row))
+                if (row != null && _me.crudE.isNewRow(row))
                     row[this.DataFkeyFid] = fkey;
             }
         }
@@ -650,7 +650,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
     this.setNewIdByBox = function (box) {
         this.newIndex++;
         _itext.set(this.kid, this.newIndex, box);
-        _crudE.addIsNew(box);    //增加_IsNew隱藏欄位
+        _me.crudE.addIsNew(box);    //增加_IsNew隱藏欄位
         return this.newIndex;
     };
 

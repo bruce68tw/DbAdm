@@ -22,23 +22,23 @@
                 ],
                 columnDefs: [
                     { targets: [0], render: function (data, type, full, meta) {
-                        return _crudR.dtCheck0(full.Id);
+                        return _me.crudR.dtCheck0(full.Id);
                     }},
                     { targets: [6], render: function (data, type, full, meta) {
-                        return _crudR.dtYesEmpty(data);
+                        return _me.crudR.dtYesEmpty(data);
                     }},
                     { targets: [7], render: function (data, type, full, meta) {
-                        return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                        return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                     }},
                     { targets: [8], render: function (data, type, full, meta) {
-                        return _crudR.dtStatusName(data);
+                        return _me.crudR.dtStatusName(data);
                     }},
                 ],
             };
 
             //init crud
             _me.mCol = new EditMany('Id', 'tbodyCol', 'tplCol', 'tr');
-            _crudR.init(config, [null, _me.mCol]);
+            new CrudR(config, [null, _me.mCol]);
         },
 
         //generate Word document
@@ -60,15 +60,15 @@
         <!-- condition -->
         <form id='formRead' class='xg-form xg-mb0'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, InRow = true })
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true, HasFind2 = true })
             </div>
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Table"].Value, Fid = "Code", MaxLen = 30 })
         </form>
         <form id='formRead2' class='xg-form'>
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableName"].Value, Fid = "Name", MaxLen = 30 })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["TranLog"].Value, Fid = "TranLog", Rows = (List<IdStrDto>)ViewBag.YesNos })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Status"].Value, Fid = "Status", Rows = (List<IdStrDto>)ViewBag.Statuses })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["TranLog"].Value, Fid = "TranLog", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Status"].Value, Fid = "Status", Rows = ViewBag.Statuses })
         </form>
 
         <div class='xg-btns-box' style="margin-top:5px;">

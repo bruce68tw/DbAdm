@@ -14,13 +14,13 @@ var _me = {
 			],
 			columnDefs: [
 				{ targets: [0], render: function (data, type, full, meta) {
-                    return _crudR.dtCheck0(full.Id);
+                    return _me.crudR.dtCheck0(full.Id);
 				}},
                 { targets: [4], render: function (data, type, full, meta) {
-                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, false);
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, false);
                 }},
 				{ targets: [5], render: function (data, type, full, meta) {
-                    return _crudR.dtStatusName(data);
+                    return _me.crudR.dtStatusName(data);
 				}},
 			],
         };
@@ -37,7 +37,7 @@ var _me = {
         _me.mEitem = new EditMany('Id', null, 'tplEitemTr', '.xu-tr');
         _me.mEtable._childs = [_me.mEitem];
 
-        _crudR.init(config, [_me.edit0, _me.mQitem, _me.mRitem, _me.mEtable]);
+        new CrudR(config, [_me.edit0, _me.mQitem, _me.mRitem, _me.mEtable]);
 
         //_me.ritemChdIdx = 0;    //child index of Ritem
         _me.etableChdIdx = 2;   //child index of Etable nav(CrudEdit)
@@ -102,7 +102,7 @@ var _me = {
     */
 
     getProjectId: function () {
-        return _iselect.get('ProjectId', _crudE.getEform0());
+        return _iselect.get('ProjectId', _me.crudE.getEform0());
     },
 
     //auto called !!
@@ -117,11 +117,11 @@ var _me = {
             return;
 
         //set form0 tableId select 欄位
-        //var form = _crudE.getEform0();
+        //var form = _me.crudE.getEform0();
         //_iselect.set(_me.TableId, json[_me.TableId], form);
 
         //set tabEtable(s) tableId select 欄位
-        var navRows = _crudE.getChildRows(json, _me.etableChdIdx);
+        var navRows = _me.crudE.getChildRows(json, _me.etableChdIdx);
         var navLen = (navRows == null) ? 0 : navRows.length;
         for (var i = 0; i < navLen; i++) {
             //set dropdown source
@@ -190,8 +190,8 @@ var _me = {
         //_me.etableNavRemoveAct();
 
         //render etables & eitems
-        //var eitemRows = _crudE.getChildRows(json, 0);   //已改為傳入rows, 不是json
-        var eitemRows = _crudE.getChildRows(_me.mEtable.dataJson, 0);   //從dataJson讀取 !!
+        //var eitemRows = _me.crudE.getChildRows(json, 0);   //已改為傳入rows, 不是json
+        var eitemRows = _me.crudE.getChildRows(_me.mEtable.dataJson, 0);   //從dataJson讀取 !!
         for (var i = 0; i < rows.length; i++) {
             //add tab (only)
             var row = rows[i];
@@ -231,13 +231,13 @@ var _me = {
 
     //GetUpdJson
     mEtable_getUpdJson: function (upKey) {
-        //var upKey = _itext.get('Id', _crudE.getEform0());
+        //var upKey = _itext.get('Id', _me.crudE.getEform0());
         var rows = [];
         var eitems = [];
         _me.getEtableForms().each(function (i, item) {
             //etable
             var form = $(item);
-            rows[i] = _crudE.getUpdRow(_me.mEtable.kid, _me.mEtable.fidTypes, form); //edit table
+            rows[i] = _me.crudE.getUpdRow(_me.mEtable.kid, _me.mEtable.fidTypes, form); //edit table
             _me.mEtable.rowSetFkey(rows[i], upKey);
 
             //eitems
@@ -249,7 +249,7 @@ var _me = {
             if (rows2 != null) {
                 if (rows[i] == null)
                     rows[i] = {};
-                _crudE.setChildRows(rows[i], 0, rows2);
+                _me.crudE.setChildRows(rows[i], 0, rows2);
             }
             */
         });
@@ -317,7 +317,7 @@ var _me = {
 
     //onclick Create(table)
     onCreate: function () {
-        _crudR.onCreate();
+        _me.crudR.onCreate();
 
         //init master edit
         _me.resetEdits();
@@ -336,7 +336,7 @@ var _me = {
     ////fnCallback: (optional) callback function
     //return {bool}
     onChangeProject: async function (fnCallback) {
-        //var form = _crudE.getEform0();
+        //var form = _me.crudE.getEform0();
         //var pid = _iselect.get('ProjectId', form);
         var pid = _me.getProjectId();
         if (_str.isEmpty(pid))
@@ -367,7 +367,7 @@ var _me = {
 
         /*
         //get tableId
-        var form = _crudE.getEform0();
+        var form = _me.crudE.getEform0();
         var tableId = _iselect.get(_me.TableId, form);
 
         //get編輯畫面tableId
@@ -423,7 +423,7 @@ var _me = {
     //onclick ok at Item(R/Q/E) modal
     onItemModalOk: function () {
         //get checked columns list
-        //var crudId = _itext.get('Id', _crudE.getEform0());
+        //var crudId = _itext.get('Id', _me.crudE.getEform0());
         var rows = [];
         _me.divItemsBody.find(':checkbox:checked').each(function (idx) {
             var obj = $(this);

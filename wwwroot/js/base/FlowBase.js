@@ -9,7 +9,14 @@ var _Flow = {
 	//TypeAuto: 'A',	//auto
 };
 
-function FlowBase(boxId, onMoveNode) {	
+/**
+ * 自定函數:
+ * void fnMoveNode(node, x, y): after move node to (x,y)
+ * void fnAddLine(startNodeId, endNodeId): when add line
+ * void fnDropLineEnd(oldNode, newNode): after drop line end point
+ */
+//控制 FlowNode、FlowLine for 外部程式
+function FlowBase(boxId) {	
 
 	/**
 	 屬性:
@@ -21,28 +28,32 @@ function FlowBase(boxId, onMoveNode) {
 	 onMoveNode: event onMoveNode(node)
 	*/
 
-	this._init = function (boxId, onMoveNode) {
+	this._init = function (boxId) {
 		this.boxElm = document.getElementById(boxId);
 		this.svg = SVG().addTo(this.boxElm).size('100%', '100%');
-		this.onMoveNode = onMoveNode;
-		this.reset(false);
+
+		this.fnMoveNode = null;
+		this.fnAddLine = null;
+		this.fnRightMenu = null;
+		//this.onMoveNode = onMoveNode;
+		//this._reset();
 	};
 
 	//清除全部UI元件
-	//hasUI: default true(會同時清除UI元素)
-	this.reset = function (hasUI) {
+	this._reset = function () {
 		this.nodes = [];
 		this.lines = [];
 		this.startNode = null;
 
-		//todo: 只刪除 svg、text元素(flow box裡面有其他input欄位)
-		if (hasUI || hasUI == null) {
-			this.boxElm.querySelectorAll('svg,text').forEach(elm => elm.remove());
-		}
+		//刪除 svg 裡面的全部子元素
+		Array.from(this.svg.node.childNodes).forEach(node => {
+			node.remove();
+		});
 	};
 
 	//載入nodes & lines
 	this.loadNodes = function (rows) {
+		this._reset();
 		for (var i = 0; i < rows.length; i++)
 			this.addNode(rows[i]);
 	};
@@ -74,10 +85,12 @@ function FlowBase(boxId, onMoveNode) {
 	this.drawLineStart = function (startNode) {
 		this.startNode = startNode;
 	};
-	
+
+	//return new line
 	this.drawLineEnd = function (endNode) {
-		new FlowLine(this, this.startNode, endNode);
+		var line = new FlowLine(this, this.startNode, endNode);
 		this.startNode = null;
+		return line;
 	};
 	
 	this.findNode = function (id) {
@@ -86,18 +99,18 @@ function FlowBase(boxId, onMoveNode) {
 	};
 
 	//call last
-	this._init(boxId, onMoveNode);
+	this._init(boxId);
 
-} //class FlowBox
+} //class FlowBase
 
-function FlowNode(flowBox, json) {
+function FlowNode(flowBase, json) {
 	/**
 	 屬性:
 	 self: this
-	 flowBox: FlowBox object
+	 flowBase: FlowBase object
 	 svg: svg
 	 json: node json, 欄位與後端XgFlowE相同: Id, FlowId, NodeType, Name, PosX, PosY, Width, Height
-	 elm2: svg element 與 html element不同
+	 elm2: svg element(與 html element不同)
 	 textElm: node text element
 	 lines: 進入/離開此節點的流程線
 	 width: width
@@ -105,22 +118,22 @@ function FlowNode(flowBox, json) {
 	*/
 
 	//drag evnet
-	this.DragMove = 'dragmove';
 	this.DragStart = 'dragstart';
+	this.DragMove = 'dragmove';
 	this.DragEnd = 'dragend';
 
-	//start/end node
+	//start/end node radius
 	this.MinRadius = 20;
 
-	//node
+	//normal node size
 	this.MinWidth = 100;
 	this.MinHeight = 50;
 	this.Padding = 15;
 
-	this._init = function (flowBox, json) {
+	this._init = function (flowBase, json) {
 		this.self = this;
-		this.flowBox = flowBox;
-		this.svg = flowBox.svg;
+		this.flowBase = flowBase;
+		this.svg = flowBase.svg;
 		this.json = Object.assign({
 			Name: 'Node',
 			NodeType: _Flow.TypeNode,
@@ -133,9 +146,9 @@ function FlowNode(flowBox, json) {
 		//set instance variables
 		this.lines = [];
 
-		this._drawNode();	//draw node first
-		this._setNodeDrag();
-		this._setJointDrag(); // 讓connector可拖拉
+		this._drawNode();		//draw node first
+		//this._setNodeDrag();	//set node draggable
+		//this._setJointDrag();   //讓connector可拖拉
 	};
 
 	this.getId = function () {
@@ -213,6 +226,7 @@ function FlowNode(flowBox, json) {
 		}
 		
 		this._render(startEnd);
+		this._setEvent();
 	};
 
 	//是否為起迄節點
@@ -244,17 +258,34 @@ function FlowNode(flowBox, json) {
 			this.connectorElm.move(centerX + bbox.width / 2 + 3, centerY - 5);
 	};
 
-	this._setNodeDrag = function () {
+	this._setEvent = function () {
+		//enable right click menu
+		var me = this;	//FlowNode
+		this.elm2.node.addEventListener('contextmenu', function (event) {
+			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
+			var flowBase = me.flowBase;
+			if (flowBase.fnRightMenu)
+				flowBase.fnRightMenu(true, me.getId(), event.pageX, event.pageY);
+		});
+
+		//set node draggable
 		this.elm2.draggable().on(this.DragMove, () => {
 			this._render(this._isStartEnd());
 			this.lines.forEach(line => line.render());
-		}).on(this.DragEnd, (event) => {	
+		}).on(this.DragEnd, (event) => {
 			let { x, y } = event.detail.box;
 			//console.log(`x=${x}, y=${y}`);
-			this.flowBox.onMoveNode(this.getId(), x, y);	//trigger
+
+			//trigger event
+			if (this.flowBase.fnMoveNode)
+				this.flowBase.fnMoveNode(this.getId(), x, y);
 		});
+
+		//set connector draggable
+		this._setJointDrag();
 	};
 
+	//set node connector draggable
 	this._setJointDrag = function () {
 		if (!this.connectorElm)
 			return;
@@ -274,7 +305,7 @@ function FlowNode(flowBox, json) {
 			tempLine = this.svg.line(startX, startY, startX, startY)
 				.addClass('xf-line off');
 				
-			this.flowBox.drawLineStart(this.self);
+			this.flowBase.drawLineStart(this.self);
 				
 		}).on(this.DragMove, (event) => {
 			//阻止 connector 移動
@@ -315,9 +346,13 @@ function FlowNode(flowBox, json) {
 			// 檢查座標值是否有效
 			if (endElm2) {
 				this._highlightNode(endElm2, false);					
-				//this.flowBox.drawLineEnd(this.flowBox.findNode(endElm2.node.dataset.id));
-				this.flowBox.drawLineEnd(this.flowBox.findNode(this._getIdByElm2(endElm2)));
+				//this.flowBase.drawLineEnd(this.flowBase.findNode(endElm2.node.dataset.id));
+				var line = this.flowBase.drawLineEnd(this.flowBase.findNode(this._getIdByElm2(endElm2)));
 				endElm2 = null;
+
+				//trigger event
+				if (this.flowBase.fnAddLine)
+					this.flowBase.fnAddLine(line.startNode.getId(), line.endNode.getId());
 			}
 			tempLine.remove();
 		});
@@ -332,11 +367,11 @@ function FlowNode(flowBox, json) {
 	};
 
 	//call last
-	this._init(flowBox, json);
+	this._init(flowBase, json);
 
 }//class FlowNode
 
-function FlowLine(flowBox, fromNode, toNode, lineType) {
+function FlowLine(flowBase, fromNode, toNode, lineType) {
 	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
 	this.Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
 	this.Min2NodeDist = 25;	//2節點的最小距離, 大於此值可建立line(1,3線段)
@@ -352,7 +387,7 @@ function FlowLine(flowBox, fromNode, toNode, lineType) {
 	this.TypeH = 'H';	//水平(左右)
 
 	/**
-	 flowBox: FlowBox object
+	 flowBase: FlowBase object
 	 svg: svg
 	 path: line path
 	 fromNode: from node
@@ -362,9 +397,9 @@ function FlowLine(flowBox, fromNode, toNode, lineType) {
 	 isTypeV:
 	 isTypeH:
 	*/
-	this._init = function (flowBox, fromNode, toNode, lineType) {
-		this.flowBox = flowBox;
-		this.svg = flowBox.svg;
+	this._init = function (flowBase, fromNode, toNode, lineType) {
+		this.flowBase = flowBase;
+		this.svg = flowBase.svg;
 		this.fromNode = fromNode;
 		this.toNode = toNode;
 		this.path = this.svg.path('').addClass('xf-line');
@@ -376,11 +411,11 @@ function FlowLine(flowBox, fromNode, toNode, lineType) {
 		//add line to from/to node
 		fromNode.addLine(this);
 		toNode.addLine(this);
-		this.setType(lineType);
+		this._setType(lineType);
 		this.render();
 	};
 
-	this.setType = function (lineType){
+	this._setType = function (lineType){
 		lineType = lineType || this.TypeAuto;
 		this.lineType = lineType;
 		this.isTypeV = (lineType == this.TypeV);
@@ -389,7 +424,8 @@ function FlowLine(flowBox, fromNode, toNode, lineType) {
 	};
 	
 	/**
-	 依次考慮使用1線段、2線段、3線段
+	 * 依次考慮使用1線段、2線段、3線段
+	 * public for FlowBase.js
 	 */
 	this.render = function () {
 
@@ -622,6 +658,6 @@ function FlowLine(flowBox, fromNode, toNode, lineType) {
 	};
 
 	//call last
-	this._init(flowBox, fromNode, toNode, lineType);
+	this._init(flowBase, fromNode, toNode, lineType);
 	
 }//class FlowLine

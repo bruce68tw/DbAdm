@@ -76,7 +76,7 @@ var _crudR = {
     /**
      * set status column(checkbox)
      * param value {string} checkbox value, will translate to bool
-     * param fnOnClick {string} onclick function, default to _crudR.onSetStatusA
+     * param fnOnClick {string} onclick function, default to _me.crudR.onSetStatusA
      */
     dtSetStatus: function (key, value, fnOnClick) {
         //TODO: pending
@@ -85,7 +85,7 @@ var _crudR = {
         //debugger;
         var checked = _str.toBool(value);
         if (_str.isEmpty(fnOnClick)) {
-            fnOnClick = _str.format("_crudR.onSetStatusA(this,\'{0}\')", key);
+            fnOnClick = _str.format("_me.crudR.onSetStatusA(this,\'{0}\')", key);
         }
         //??
         return _icheck.render2(0, '', 1, checked, '', true, '', "onclick=" + fnOnClick);
@@ -114,11 +114,11 @@ var _crudR = {
         fnOnUpdate, fnOnDelete, fnOnView) {
         var funs = '';
         if (hasUpdate)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_crudR.onUpdateA' : fnOnUpdate), key, _BR.TipUpdate);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_me.crudR.onUpdateA' : fnOnUpdate), key, _BR.TipUpdate);
         if (hasDelete)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_crudR.onDeleteA' : fnOnDelete), key, rowName, _BR.TipDelete);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_me.crudR.onDeleteA' : fnOnDelete), key, rowName, _BR.TipDelete);
         if (hasView)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_crudR.onViewA' : fnOnView), key, _BR.TipView);
+            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_me.crudR.onViewA' : fnOnView), key, _BR.TipView);
         return funs;
     },
 
@@ -149,14 +149,14 @@ var _crudR = {
 
             //4.Create Datatable object
             if (_var.notEmpty(dtConfig)) {
-                _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig, _crudR._getFindCond());
+                _me.dt = new Datatable('#tableRead', 'GetPage', dtConfig, _me.crudR._getFindCond());
             }
         }
 
         _me._updName = updName;
 
         //2.init edit
-        _crudE.init(edits);
+        _me.crudE.init(edits);
 
         //3.initial forms(recursive)
         _prog.init();   //prog path
@@ -228,14 +228,14 @@ var _crudR = {
         }
         */
         if (isDefault)
-            _crudR._afterSwap(toRead);
+            _me.crudR._afterSwap(toRead);
     },
 
     //XpFlowSign Read.cshtml 待處理!!
     //to edit(U/V) mode
     //toEditMode: function(fun, data) {
     toEditMode: function (fun, fnCallback) {
-        _crudR.swap(false, null, fnCallback);  //call first
+        _me.crudR.swap(false, null, fnCallback);  //call first
         _prog.setPath(fun, _me._updName);
     },
 
@@ -245,7 +245,7 @@ var _crudR = {
     toReadMode: function () {
         //_me.divReadTool.show();
         _prog.resetPath();
-        _crudR.swap(true);
+        _me.crudR.swap(true);
     },
 
     /**
@@ -263,7 +263,7 @@ var _crudR = {
      * onclick find rows
      */
     onFind: function () {
-        var cond = _crudR._getFindCond();
+        var cond = _me.crudR._getFindCond();
         _me.dt.find(cond);
     },
 
@@ -293,7 +293,7 @@ var _crudR = {
      * onClick export excel button
      */
     onExport: function () {
-        var find = _crudR._getFindCond();
+        var find = _me.crudR._getFindCond();
         window.location = 'Export?find=' + _json.toStr(find);
     },
 
@@ -301,7 +301,7 @@ var _crudR = {
      * onclick toRead button
      */
     onToRead: function () {
-        _crudR.toReadMode();
+        _me.crudR.toReadMode();
     },
 
     /**
@@ -309,10 +309,10 @@ var _crudR = {
      */
     onCreate: function () {
         //var fun = _fun.FunC;
-        //_crudR.swap(false);  //call first
+        //_me.crudR.swap(false);  //call first
         //_prog.setPath(fun);
-        _crudE.onCreate();
-        _crudR.toEditMode(_fun.FunC);
+        _me.crudE.onCreate();
+        _me.crudR.toEditMode(_fun.FunC);
     },
 
     /**
@@ -320,9 +320,9 @@ var _crudR = {
      * param key {string} row key
      */
     onUpdateA: async function (key) {
-        //_crudE._getJsonAndSetMode(key, _fun.FunU);
-        //_crudR.toEditMode(_fun.FunU);
-        await _crudE.onUpdateA(key);
+        //_me.crudE._getJsonAndSetMode(key, _fun.FunU);
+        //_me.crudR.toEditMode(_fun.FunU);
+        await _me.crudE.onUpdateA(key);
     },
 
     /**
@@ -330,9 +330,9 @@ var _crudR = {
      * param key {string} row key
      */
     onViewA: async function (key) {
-        //_crudE._getJsonAndSetMode(key, _fun.FunV);
-        await _crudE.onViewA(key);
-        //_crudR.toEditMode(_fun.FunV);
+        //_me.crudE._getJsonAndSetMode(key, _fun.FunV);
+        await _me.crudE.onViewA(key);
+        //_me.crudR.toEditMode(_fun.FunV);
     },
 
     /**

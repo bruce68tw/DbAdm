@@ -27,7 +27,7 @@
     <div class="row">
         <!-- left columns -->
         <div class="col-md-6">
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Project"].Value, Fid = "ProjectId", Rows = (List<IdStrDto>)ViewBag.Projects, Required = true, Cols = cols2, FnOnChange = "_me.onChangeProjectA()" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols2, FnOnChange = "_me.onChangeProjectA()" })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgCode"].Value, Fid = "ProgCode", MaxLen = 30, Required = true, Cols = cols2 })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgName"].Value, Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols2 })
 
@@ -52,7 +52,7 @@
 
         <!-- right columns -->
         <div class="col-md-6">
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["AuthType"].Value, Fid = "AuthType", Rows = (List<IdStrDto>)ViewBag.AuthTypes, Required = true, Cols = cols2 })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["AuthType"].Value, Fid = "AuthType", Rows = ViewBag.AuthTypes, Required = true, Cols = cols2 })
             @await Component.InvokeAsync("XiRadio", new XiRadioDto { Title = R["RlabelPos"].Value, Fid = "LabelHori", Rows = _Str.ToIdStrs("1," + R["Hori"].Value + ",0," + R["Verti"].Value), Cols = cols2 })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableAs"].Value, Fid = "TableAs", MaxLen = 10, Cols = cols2, LabelTip = R["TipTableAs"].Value })
             @await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Title = R["ReadSql"].Value, Fid = "ReadSql", Required = true, LabelTip = R["TipReadSql"].Value, Cols = "4,8", RowsCount = 5 })
@@ -103,10 +103,10 @@
         <td width="120px">{{DataType}}</td>
         <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "TableAs" })</td>
         <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "QitemType", 
-           Rows = (List<IdStrDto>)ViewBag.QitemTypes, AddEmptyRow = false, Value = "T" })</td>
+           Rows = ViewBag.QitemTypes, AddEmptyRow = false, Value = "T" })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
         <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "Op",
-           Rows = (List<IdStrDto>)ViewBag.QitemOps,
+           Rows = ViewBag.QitemOps,
            AddEmptyRow = false,
            Value = "Equal"
        })</td>
@@ -154,7 +154,7 @@
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ColumnCode" })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Name" })</td>
         <td width="100px">@await Component.InvokeAsync("XiInt", new XiIntDto { Fid = "Width" })</td>
-        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "RitemType", Rows = (List<IdStrDto>)ViewBag.RitemTypes, AddEmptyRow = false, Value = "0" })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "RitemType", Rows = ViewBag.RitemTypes, AddEmptyRow = false, Value = "0" })</td>
         @*<td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ExtInfo" })</td>*@
         <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mRitem" })</td>
     </tr>
@@ -245,7 +245,7 @@
 
         <td>{{Code}}/{{Name}}<br>{{DataType}}</td>
         <td width="120px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "EitemType",
-                         Rows = (List<IdStrDto>)ViewBag.EitemTypes, Required = true,
+                         Rows = ViewBag.EitemTypes, Required = true,
                          AddEmptyRow = false, Value = "T"
                      })</td>
         <td width="90px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
@@ -254,7 +254,7 @@
         <td width="50px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasUpdate", IsCheck = true })</td>
         <td width="110px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PlaceHolder" })</td>
         <td width="70px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue" })</td>
-        <td width="110px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "CheckType", Value = "0", Rows = (List<IdStrDto>)ViewBag.CheckTypes, Required = true, AddEmptyRow = false })</td>
+        <td width="110px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "CheckType", Value = "0", Rows = ViewBag.CheckTypes, Required = true, AddEmptyRow = false })</td>
         <td width="90px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "CheckData" })</td>
         <td width="60px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PosGroup" })</td>
         <td width="80px" class="xu-layout">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LayoutCols" })</td>

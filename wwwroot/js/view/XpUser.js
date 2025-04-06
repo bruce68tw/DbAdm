@@ -12,10 +12,10 @@
             ],
             columnDefs: [
 				{ targets: [3], render: function (data, type, full, meta) {
-                    return _crudR.dtStatusName(data);
+                    return _me.crudR.dtStatusName(data);
                 }},
 				{ targets: [4], render: function (data, type, full, meta) {
-                    return _crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
         };
@@ -23,7 +23,7 @@
         //initial
         _me.mUserRole = new EditMany('Id', 'divRoles');
         _me.mUserRole.initUrm(['Id', 'RoleId']);    //for urm
-        _crudR.init(config, [null, _me.mUserRole]);
+        new CrudR(config, [null, _me.mUserRole]);
     },
 
 }; //class

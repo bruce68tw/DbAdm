@@ -24,9 +24,9 @@ var _me = {
         _me.m{{TableCode}} = new EditMany('{{PkeyFid}}', 'eform{{TableCode}}', 'tpl{{TableCode}}', 'tr');
             {{/if}}
 		{{/ChildTables}}
-		_crudR.init(config, [null, {{ManyTables}}]);
+		new CrudR(config, [null, {{ManyTables}}]);
 	{{else}}
-		_crudR.init(config);
+		new CrudR(config);
 	{{/if}}          
     },
 

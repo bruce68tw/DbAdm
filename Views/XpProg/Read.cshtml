@@ -99,7 +99,7 @@
     <tr>
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "ProgId" })
-        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "RoleId", Rows = (List<IdStrDto>)ViewBag.Roles, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "RoleId", Rows = ViewBag.Roles, Required = true })</td>
 
         @if (isAuthRow)
         {

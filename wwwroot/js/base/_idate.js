@@ -35,7 +35,7 @@ var _idate = $.extend({}, _ibase, {
     },
 
     /**
-     * initial, called by _crudE.js
+     * initial, called by _me.crudE.js
      * param box {object}
      * param fid {string} optional
      */ 

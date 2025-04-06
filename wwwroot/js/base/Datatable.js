@@ -86,7 +86,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
             },
 
             //default toolbar layout
-            dom: _crudR.dtDom,
+            dom: _me.crudR.dtDom,
 
             //call after dataTables initialize
             //1.add toolbar button list if need
@@ -193,7 +193,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
         if (dtConfig) {
             if (!_var.isEmpty(dtConfig.columnDefs)) {
                 var colDefs = dtConfig.columnDefs;
-                colDefs[colDefs.length] = _crudR.dtColDef;   //add last array element
+                colDefs[colDefs.length] = _me.crudR.dtColDef;   //add last array element
             }
             config = _json.copy(dtConfig, config);
         }

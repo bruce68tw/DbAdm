@@ -17,7 +17,7 @@
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["UserName"].Value, Fid = "Name", MaxLen = 20 })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["DeptName"].Value, Fid = "DeptId", Rows = (List<IdStrDto>)ViewBag.Depts })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "部門", Fid = "DeptId", Rows = ViewBag.Depts })
         </form>
 
         <div class='xg-btns-box'>
@@ -28,7 +28,7 @@
                 <tr>
                     <th>@R["Account"]</th>
                     <th>@R["UserName"]</th>
-                    <th>@R["DeptName"]</th>
+                    <th>部門</th>
                     <th>@R0["Status"]</th>
                     <th>@R0["Crud"]</th>
                 </tr>
@@ -45,7 +45,7 @@
             @*
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Pwd"].Value, Fid = "Pwd", IsPwd = true, MaxLen = 32 })
             *@
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["DeptName"].Value, Fid = "DeptId", Rows = (List<IdStrDto>)ViewBag.Depts })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["DeptName"].Value, Fid = "DeptId", Rows = ViewBag.Depts })
             @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R0["Status"].Value, Fid = "Status", Label = R0["Active"].Value })
         </form>
 
