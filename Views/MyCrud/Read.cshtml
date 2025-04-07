@@ -22,7 +22,7 @@
 
         <!-- other functions -->
         <div class="xg-btns-box" style="margin-top:5px;">
-            @await Component.InvokeAsync("XgCreate", new { fnOnClick = "_me.onCreate()" })
+            @await Component.InvokeAsync("XgCreate", new { fnOnClick = "_me.crudR.onCreate()" })
             <button type="button" class="btn xg-btn" onclick="_me.onGenCrud()">@R["GenCrud"]</button>
         </div>
 

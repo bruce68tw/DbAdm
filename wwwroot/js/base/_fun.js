@@ -29,6 +29,13 @@ var _fun = {
     isRwd: false,
     pageRows: 10,   //must be 10,20(not 25),50,100
 
+    //datatables column define default values
+    dtColDef: {
+        className: 'xg-center',
+        orderable: false,
+        targets: '_all',
+    },
+
     //now userId
     userId: '',
 

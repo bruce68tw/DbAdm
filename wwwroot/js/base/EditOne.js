@@ -54,8 +54,8 @@ function EditOne(kid, eformId) {
             //return;   //not return
         }
 
-        _me.crudE.setFidTypes(this, this.eform);
-        _me.crudE.setFileVars(this, this.eform);
+        _edit.setFidTypes(this, this.eform);
+        _edit.setFileVars(this, this.eform);
     };
 
     /**
@@ -79,7 +79,7 @@ function EditOne(kid, eformId) {
      * return {bool}
      */
     this.isNewRow = function () {
-        return (_itext.get(_me.crudE.IsNew, this.eform) == '1');
+        return (_itext.get(_edit.IsNew, this.eform) == '1');
     };
 
     /**
@@ -140,7 +140,7 @@ function EditOne(kid, eformId) {
         var fileJson = {};
         for (var i = 0; i < this.fileLen; i++) {
             var fid = this.fileFids[i];
-            var serverFid = _me.crudE.getFileSid(levelStr, fid);
+            var serverFid = _edit.getFileSid(levelStr, fid);
             if (_ifile.dataAddFile(data, fid, serverFid, this.eform)) {
                 fileJson[serverFid] = this.getKey();
             }

@@ -90,7 +90,7 @@
 
         //設定延續工作按鈕的狀態
         setKeepBtn: function (isShow) {
-            var btn = _me.divEdit.find('#btnKeepIssue');
+            var btn = _me.crudE.divEdit.find('#btnKeepIssue');
             if (isShow)
                 _me.showBtn(btn);
             else
@@ -105,7 +105,7 @@
 
         //設定追踪按鈕的狀態
         setWatchBtn: function (isShow) {
-            var box = _me.divEdit;
+            var box = _me.crudE.divEdit;
             var btnAdd = box.find('#btnAddWatch');
             var btnDel = box.find('#btnDeleteWatch');
             if (!isShow){
@@ -133,7 +133,7 @@
 
         onMyToday: function () {
             var today = _date.uiToday();
-            var box = _me.rform;
+            var box = _me.crudR.rform;
             _me.crudR.onResetFind();   //reset
             _iselect.set('OwnerId', _fun.userId, box);
             _idate.set('WorkDate', today, box);
@@ -142,7 +142,7 @@
         },
 
         onMyWeek: function () {
-            var box = _me.rform;
+            var box = _me.crudR.rform;
             _me.crudR.onResetFind();   //reset
             _iselect.set('OwnerId', _fun.userId, box);
             _idate.set('WorkDate', _date.uiWeekMonday(), box);
@@ -152,7 +152,7 @@
 
         //我的未結案
         onMyNotFinish: function () {
-            var box = _me.rform;
+            var box = _me.crudR.rform;
             _me.crudR.onResetFind();   //reset
             _iselect.set('OwnerId', _fun.userId, box);
             _iselect.set('IsFinish', '0', box);
@@ -161,7 +161,7 @@
         
         //我的追踪
         onMyWatch: function () {
-            var box = _me.rform;
+            var box = _me.crudR.rform;
             _me.crudR.onResetFind();   //reset
             _iselect.set('_IsWatch', '1', box);
             _me.crudR.onFind();
@@ -206,9 +206,9 @@
                 _me.setKeepBtn(false);
 
                 //title欄位前面加上'(續)'
-                var title = _obj.get('Title', _me.eform0);
+                var title = _obj.get('Title', _me.crudE.eform0);
                 _itext.setO(title, '(續)'+_itext.getO(title))
-                _idate.set('WorkDate', _date.uiToday(), _me.eform0);    //工作日期預設今天
+                _idate.set('WorkDate', _date.uiToday(), _me.crudE.eform0);    //工作日期預設今天
 
                 //reset & 增加一筆相關工作
                 _me.mIssueFile.reset();

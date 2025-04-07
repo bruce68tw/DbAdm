@@ -303,7 +303,7 @@ var _me = {
 
     //get checked table id array
 	getCheckedTables: function () {
-        var values = _icheck.getCheckeds(_me.divRead);
+        var values = _icheck.getCheckeds(_me.crudR.divRead);
 		if (values.length === 0)
 			_tool.msg('請選取資料。');
 		return values;

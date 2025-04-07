@@ -43,7 +43,7 @@
 
         //generate Word document
         onGenWord: function () {
-            var values = _icheck.getCheckeds(_me.divRead);
+            var values = _icheck.getCheckeds(_me.crudR.divRead);
             if (values.length > 0)
                 window.location = 'GenWord?keys=' + values.join(',');
             else
