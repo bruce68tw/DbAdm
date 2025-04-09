@@ -581,10 +581,10 @@ function CrudE(edits) {
      * param tableId {string} 
      * param fid {string} ui file id
      * return {string} format: Table_Fid
+     */
     this.getFileSid = function (levelStr, fid) {
         return 't' + levelStr + '_' + fid;
     };
-     */
 
     /**
      * formData set fileJson field

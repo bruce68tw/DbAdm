@@ -140,7 +140,7 @@ function EditOne(kid, eformId) {
         var fileJson = {};
         for (var i = 0; i < this.fileLen; i++) {
             var fid = this.fileFids[i];
-            var serverFid = _edit.getFileSid(levelStr, fid);
+            var serverFid = _me.crudE.getFileSid(levelStr, fid);
             if (_ifile.dataAddFile(data, fid, serverFid, this.eform)) {
                 fileJson[serverFid] = this.getKey();
             }

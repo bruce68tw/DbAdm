@@ -1,6 +1,12 @@
-﻿
-//許多函數無法放在CrudE.js
-//for EditOne.js, EditMany.js only !!
+﻿/**
+ * 許多函數在初始化執行, 所以無法放在CrudE.js
+ * for EditOne.js, EditMany.js only !!
+ * 內容為: 
+ *   1.靜態 constant
+ *   2.初始化函數
+ *   3.get/set old value
+ *   4.判斷是否為新資料 & 處理
+ */ 
 var _edit = {
 
     //server side fid for file input collection, must pre '_'
@@ -17,47 +23,6 @@ var _edit = {
     ModeBase: 'Base',
     ModeUR: 'UR',   //user role mode
 
-    /**
-     * get old value 
-     * param obj {object} input jquery object
-     * return {string}
-     */ 
-    getOld: function (obj) {
-        return obj.data(this.DataOld);
-    },
-
-    /**
-     * set old value
-     * param obj {object} input jquery object
-     * param value {int/string}
-     */ 
-    setOld: function (obj, value) {
-        obj.data(this.DataOld, value);
-    },
-
-    /**
-     * 增加隱藏欄位 _IsNew, 同時設為1
-     * param obj {box} jquery object
-     */
-    addIsNew: function (box) {
-        var fid = this.IsNew;
-        var field = box.find(_input.fidFilter(fid));
-        if (field.length == 0)
-            field = box.append(`<input type="hidden" data-fid="${fid}" name="${fid}" value="1" >`);
-        else
-            field.val('1');
-    },
-
-    /**
-     * 刪除隱藏欄位 _IsNew
-     * param obj {box} jquery object
-     */
-    removeIsNew: function (box) {
-        var fid = this.IsNew;
-        var field = box.find(_input.fidFilter(fid));
-        if (field.length > 0)
-            field.remove();
-    },
 
     /**
      * setFidTypeVars -> setFidTypes
@@ -96,14 +61,21 @@ var _edit = {
     },
 
     /**
-     * getServerFid -> getFileSid
-     * get server side variables name for file field
-     * param tableId {string} 
-     * param fid {string} ui file id
-     * return {string} format: Table_Fid
-     */
-    getFileSid: function (levelStr, fid) {
-        return 't' + levelStr + '_' + fid;
+     * get old value 
+     * param obj {object} input jquery object
+     * return {string}
+     */ 
+    getOld: function (obj) {
+        return obj.data(this.DataOld);
+    },
+
+    /**
+     * set old value
+     * param obj {object} input jquery object
+     * param value {int/string}
+     */ 
+    setOld: function (obj, value) {
+        obj.data(this.DataOld, value);
     },
 
     /**
@@ -139,5 +111,16 @@ var _edit = {
         if (field.length > 0)
             field.remove();
     },
+
+    /**
+     * getServerFid -> getFileSid
+     * get server side variables name for file field
+     * param tableId {string} 
+     * param fid {string} ui file id
+     * return {string} format: Table_Fid
+    getFileSid: function (levelStr, fid) {
+        return 't' + levelStr + '_' + fid;
+    },
+     */
 
 };
