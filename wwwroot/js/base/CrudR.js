@@ -149,6 +149,13 @@ function CrudR(dtConfig, edits, updName) {
         return (value == '1') ? _BR.Yes : '';
     };
 
+    //顯示紅色
+    this.dtRed = function (text, status) {
+        return status
+            ? '<span class="text-danger">' + text + '</span>'
+            : '<span>' + text + '</span>';
+    };
+
     /**
      * !! change link to button
      * crud functions: update,delete,view
