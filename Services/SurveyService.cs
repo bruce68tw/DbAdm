@@ -18,8 +18,9 @@ namespace DbAdm.Services
             //讀取收件者
             var error = "";
             var sql = @"
-select i.Id, i.Title, i.RptUser, s.UserId
+select i.Id, i.Title, i.RptUser, s.UserId, UserName=u.Name
 from dbo.Issue i
+join dbo.XpUser u on i.OwnerId=u.Id
 left join dbo.Survey s on i.Id=s.Id
 where i.Id=@Id
 ";
@@ -71,7 +72,8 @@ where Id=@Id
             var row2 = new JObject
             {
                 { "DeptName", _Xp.Config.DeptName },
-                { "Title", row!["Title"]!.ToString() },                
+                { "Title", row!["Title"]!.ToString() },
+                { "UserName", row!["UserName"]!.ToString() },
                 { "ServerUrl", _Xp.Config.ServerUrl },
                 { "SurveyData", _Http.UrlEncode(_Xp.EnDecode(true, $"{rptUser},{issueId}")) },   //必須進行url encode
             };

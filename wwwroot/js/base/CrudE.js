@@ -15,12 +15,12 @@
  */
 function CrudE(edits) {
 
+    /*
     //constant with underline
     this.Rows = '_rows';
     this.Childs = '_childs';
     this.Deletes = '_deletes';
 
-    /*
     //edit form mode
     this.ModeBase = 'Base';
     this.ModeUR = 'UR';   //user role mode
@@ -47,7 +47,7 @@ function CrudE(edits) {
         this.divEdit = $('#divEdit');
         var hasEdit = (this.divEdit.length > 0);
         if (hasEdit) {
-            var Childs = this.Childs;  //constant
+            var Childs = _edit.Childs;  //constant
             var edit0 = null;  //master edit object
             if (edits == null) {
                 edit0 = new EditOne();
@@ -261,15 +261,15 @@ function CrudE(edits) {
         var hasData = false;
         if (row != null) {
             hasData = true;
-            data[this.Rows] = [row];
+            data[_edit.Rows] = [row];
         }
         if (hasChild) {
             hasData = true;
-            data[this.Childs] = childs;
+            data[_edit.Childs] = childs;
         }
         if (!_json.isEmpty(fileJson)) {
             hasData = true;
-            data[this.FileJson] = fileJson;
+            data[_edit.FileJson] = fileJson;
         }
 
         if (!hasData)
@@ -387,7 +387,7 @@ function CrudE(edits) {
      * param childIdx {int} child index, base 0
      */
     this._getEditChild = function (edit, childIdx) {
-        return edit[this.Childs][childIdx];
+        return edit[_edit.Childs][childIdx];
     };
 
     /**
@@ -395,7 +395,7 @@ function CrudE(edits) {
      * param edit {object} edit object
      */
     this._getEditChildLen = function (edit) {
-        var fid = this.Childs;
+        var fid = _edit.Childs;
         return (edit[fid] == null) ? 0 : edit[fid].length;
     };
 
@@ -406,14 +406,14 @@ function CrudE(edits) {
      * @returns
      */
     this.jsonGetRows = function (json) {
-        return (json == null || json[this.Rows] == null)
+        return (json == null || json[_edit.Rows] == null)
             ? null
-            : json[this.Rows];
+            : json[_edit.Rows];
     };
 
     //get child json
     this._getChildJson = function (upJson, childIdx) {
-        var childs = this.Childs;
+        var childs = _edit.Childs;
         return (upJson[childs] == null || upJson[childs].length <= childIdx)
             ? null
             : upJson[childs][childIdx];
@@ -433,7 +433,7 @@ function CrudE(edits) {
      * return {json} child object
      */
     this.setChildRows = function (upJson, childIdx, rows) {
-        var fid = this.Childs;
+        var fid = _edit.Childs;
         if (upJson == null)
             upJson = {};
         if (upJson[fid] == null)
@@ -442,7 +442,7 @@ function CrudE(edits) {
             upJson[fid][childIdx] = {};
 
         var child = upJson[fid][childIdx];
-        child[this.Rows] = rows;
+        child[_edit.Rows] = rows;
         return child;
     };
 
@@ -462,7 +462,7 @@ function CrudE(edits) {
      * param obj {object} input jquery object
      * return {string}
     this.getOld = function (obj) {
-        return obj.data(this.DataOld);
+        return obj.data(_edit.DataOld);
     };
     */
 
@@ -471,7 +471,7 @@ function CrudE(edits) {
      * param obj {object} input jquery object
      * param value {int/string}
     this.setOld = function (obj, value) {
-        obj.data(this.DataOld, value);
+        obj.data(_edit.DataOld, value);
     };
      */
 
@@ -484,7 +484,7 @@ function CrudE(edits) {
         for (var i = 0; i < fidTypes.length; i = i + 2) {
             fid = fidTypes[i];
             var obj = _obj.get(fid, box);
-            obj.data(this.DataOld, row[fid]);
+            obj.data(_edit.DataOld, row[fid]);
         }
     };
     */
@@ -520,7 +520,7 @@ function CrudE(edits) {
             obj = _input.getObj(fid, box, ftype);
             //value = _input.getO(obj, box, ftype);
             value = row[fid];
-            old = obj.data(this.DataOld);
+            old = obj.data(_edit.DataOld);
             //if fully compare, string will not equal numeric !!
             if (value != old) {
                 //date/dt old value has more length
@@ -596,7 +596,7 @@ function CrudE(edits) {
         if (_json.isEmpty(fileJson))
             return;
 
-        var fid = this.FileJson
+        var fid = _edit.FileJson
         if (data.has(fid)) {
             var json = data.get(fid);
             fileJson = _json.copy(fileJson, json);
@@ -609,7 +609,7 @@ function CrudE(edits) {
      * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
      * param key {string}
     this.isNewRow = function (row) {
-        var fid = this.IsNew;
+        var fid = _edit.IsNew;
         return (row[fid] != null || row[fid] == '1');
     };
      */
