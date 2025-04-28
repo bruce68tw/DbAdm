@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col-md-2 xg-label">資料Id</div>
 		<div class="col-md-5 xg-input">
-			@await Component.InvokeAsync("XiRead", new XiReadDto { Fid = "Id", InRow = true, InputAttr = "id='Id' style='width:120px' class='xg-inline'" })
+			@await Component.InvokeAsync("XiRead", new XiReadDto { Fid = "Id", InRow = true, InputAttr = "id='Id' style='width:120px'" })
 			<button type="button" id="btnAddWatch" class="btn xg-btn-size btn-success" onclick="_me.onAddWatch()">加入追踪</button>
 			<button type="button" id="btnDeleteWatch" class="btn xg-btn-size btn-danger" onclick="_me.onDeleteWatch()">取消追踪</button>
 			<button type="button" id="btnKeepIssue" class="btn xg-btn" onclick="_me.onKeepIssue()">延續工作</button>

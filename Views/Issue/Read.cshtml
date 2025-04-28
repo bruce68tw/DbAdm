@@ -241,17 +241,17 @@
             <div class="row">
                 <div class="col-md-2 xg-label">工作日期</div>
                 <div class="col-md-10 xg-input">
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate", InRow = true, BoxClass = "xg-inline" })
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate", InRow = true })
                     <span>～</span>
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate2", InRow = true, BoxClass = "xg-inline" })
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate2", InRow = true })
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-2 xg-label">建檔日期</div>
                 <div class="col-md-10 xg-input">
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true, BoxClass = "xg-inline" })
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true })
                     <span>～</span>
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created2", InRow = true, BoxClass = "xg-inline" })
+                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created2", InRow = true })
                 </div>
             </div>
         </form>

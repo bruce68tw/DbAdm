@@ -10,3 +10,11 @@ zz_*.*
 old/
 wwwroot_old/
 .config/
+wwwroot/js/my.js
+wwwroot/js/my.min.js
+wwwroot/js/lib.js
+wwwroot/js/lib.min.js
+wwwroot/css/my.css
+wwwroot/css/my.min.css
+wwwroot/css/lib.css
+wwwroot/css/lib.min.css
