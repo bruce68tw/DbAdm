@@ -268,8 +268,8 @@ function CrudR(dtConfig, edits, updName) {
      * param toRead {bool} to read mode or not
      */
     this._afterSwap = function (toRead) {
-        if (this.fnAfterSwap)
-            this.fnAfterSwap(toRead);
+        if (_me.fnAfterSwap)
+            _me.fnAfterSwap(toRead);
     };
 
 

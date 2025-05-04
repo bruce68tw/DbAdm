@@ -286,206 +286,130 @@ span.error {
         padding: 10px 0 10px 0;
     }
 
-/*
-.jtk-demo-main {
-    background-color: transparent;
-    font-family: Arial,sans-serif;
-    margin-left: auto;
-    margin-right: auto;
-    width: 90%;
-    max-width:1500px;
-    position: relative;
-    margin-top:98px;
+.xf-start, .xf-end, .xf-node {
+	cursor: move;
+}
+.xf-start-text, .xf-end-text, .xf-node-text {
+	fill: black;
+	cursor: move;
+}
+/* when hover */
+.xf-end.on, .xf-node.on {
+	stroke: blue;
+	stroke-width: 3px;
 }
 
-.jtk-demo-canvas {
-    margin-left: 160px;
-    height:750px;
-    max-height:700px;
-    border:1px solid #CCC;
-    background-color:white;
+/* 1.開始節點(also button) */
+.xf-start {
+	r: 20; /* 半徑, 沒有單位 */
+	fill: #E2F4D7;
+	background: #E2F4D7;
+	stroke: #BAE89F;
+	stroke-width: 1px;
+	border: #BAE89F 1px solid;
 }
 
-.canvas-wide {
-    margin-left:0;
-}
-*/
-
-.xf-line-label {
-    -webkit-transition: background-color 0.25s ease-in;
-    -moz-transition: background-color 0.25s ease-in;
-    transition: background-color 0.25s ease-in;
-    background-color: white;
-    opacity: 0.8;
-    padding: 0.3em;
-    border-radius: 0.5em;
-    /*border: 1px solid #346789;*/
-    cursor: pointer;
+/* 2.結束節點(also button) */
+.xf-end {
+	r: 20;
+	fill: #FEE1ED;
+	background: #FEE1ED;
+	stroke: #FD88BF;
+	stroke-width: 1px;
+	border: #FD88BF 1px solid;
 }
 
-
-.zz_demo {
-    /* for IE10+ touch devices */
-    touch-action:none;
-}
-
+/* 3.一般節點(also button) */
 .xf-node {
-    padding: 12px 18px 12px 12px;
-    position: absolute;
-    z-index: 4;
-    border: 1px solid #2e6f9a;
-    box-shadow: 2px 2px 19px #e0e0e0;
-    -o-box-shadow: 2px 2px 19px #e0e0e0;
-    -webkit-box-shadow: 2px 2px 19px #e0e0e0;
-    -moz-box-shadow: 2px 2px 19px #e0e0e0;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
-    opacity: 0.8;
-    cursor: move;
-    background-color: white;
-    font-size: 13px;
-    -webkit-transition: background-color 0.25s ease-in;
-    -moz-transition: background-color 0.25s ease-in;
-    transition: background-color 0.25s ease-in;
+	fill: #DFDEFE;
+	background: #DFDEFE;
+	stroke: #B6B4E9;
+	stroke-width: 1px;
+	border: #B6B4E9 1px solid;
+	rx: 5px; /* 水平圓角半徑 */
+	ry: 5px; /* 垂直圓角半徑 */
 }
 
-.xf-node:hover {
-    background-color: #5c96bc;
-    color: white;
+/* 4.自動節點?? */
+.xf-auto {
+	fill: white;
+	stroke: black;
+	stroke-width: 1px;
+}
+.xf-auto-text {
+    fill: black;	
 }
 
-.xf-node.xf-start-node {
-    border-color: red;
-}
-.xf-node.xf-end-node {
-    border-color: red;
-    border-radius: 50%;
-    padding: 12px;
-    width: 45px;
-    height: 45px;
-}
-    .xf-node.xf-end-node .xd-name {
-        margin-left: -2px !important;
-    }
-    .xf-node.xf-end-node .xf-ep {
-        display: none !important;
-    }
-
-/*
-.xf-node.xf-auto-node {
-    border: 3px solid gray;
-    border-radius: 0;
-}
-*/
-
-/*
-.aLabel {
-    -webkit-transition: background-color 0.25s ease-in;
-    -moz-transition: background-color 0.25s ease-in;
-    transition: background-color 0.25s ease-in;
-}
-.aLabel {
-    background-color: white;
-    opacity: 0.8;
-    padding: 0.3em;
-    border-radius: 0.5em;
-    border: 1px solid #346789;
-    cursor: pointer;
-}
-*/
-
-/*
-.xf-line-label.jtk-hover, .jtk-source-hover, .jtk-target-hover {
-    background-color: #1e8151;
-    color: white;
-}
-*/
-
-/* end point, class name fix to xf-ep !! */
-.xf-ep {
-    position: absolute;
-    bottom: 37%;
-    right: 5px;
-    width: 1em;
-    height: 1em;
-    background-color: orange;
-    cursor: pointer;
-    box-shadow: 0 0 2px black;
-    -webkit-transition: -webkit-box-shadow 0.25s ease-in;
-        -moz-transition: -moz-box-shadow 0.25s ease-in;
-        transition: box-shadow 0.25s ease-in;
+/* 節點文字後的小方塊, 用來拖拉流程線 */
+.xf-pin {
+	fill: orange;
+	stroke: red;
+	stroke-width: 1px;
+	cursor: crosshair;	/* 十字形狀 */
 }
 
-.xf-ep:hover {
-    box-shadow: 0 0 6px black;
+/* 流程線 */
+.xf-line {
+	fill: none;
+	stroke: #898484;
+	stroke-width: 2px;
+	/*stroke-linejoin: round;*/
+}
+/* temp line 或無迄點 */
+.xf-line.off {
+	stroke: red;
 }
 
-.zz_statemachine-demo .jtk-endpoint {
-    z-index: 3;
+/* 流程線指定起點位置 */
+	.xf-line.xf-way {
+		stroke-dasharray: 3,3;
+	}
+
+/* line text */
+.xf-line-text {
+	fill: black;	
 }
 
-/* no used
-#opened {
-    left: 10em;
-    top: 5em;
+/* 流程線末端箭頭 */
+.xf-arrow {
+	stroke: #898484;
+	stroke-width: 2px;
+	stroke-linecap: round; /*圓邊*/
+	cursor: crosshair; /* 十字形狀 */
 }
-
-#phone1 {
-    left: 35em;
-    top: 12em;
-    width: 7em;
-}
-
-#inperson {
-    left: 12em;
-    top: 23em;
-}
-
-#phone2 {
-    left: 28em;
-    top: 24em;
-}
-
-#rejected {
-    left: 10em;
-    top: 35em;
-}
-*/
-
-.dragHover {
-    border: 2px solid orange;
-}
-
-path, .jtk-endpoint { cursor:pointer; }
 
 /* context menu */
-/* The whole thing */
 .xf-menu {
-    display: none;
-    z-index: 1000;
-    position: absolute;
-    overflow: hidden;
-    border: 1px solid #CCC;
-    white-space: nowrap;
-    font-family: sans-serif;
-    background: #FFF;
-    color: #333;
-    border-radius: 5px;
-    padding: 0;
-    min-width: 100px;
+	display: none;
+	z-index: 1000;
+	position: absolute;
+	overflow: hidden;
+	border: 1px solid #CCC;
+	white-space: nowrap;
+	font-family: sans-serif;
+	background: #FFF;
+	color: #333;
+	border-radius: 5px;
+	padding: 0;
+	min-width: 100px;
 }
 
-/* Each of the items in the list */
-.xf-menu li {
-    padding: 6px 15px;
-    cursor: pointer;
-    list-style-type: none;
-    transition: all .3s ease;
-}
+	/* Each of the items in the list */
+	.xf-menu li {
+		padding: 6px 15px;
+		cursor: pointer;
+		list-style-type: none;
+		transition: all .3s ease;
+	}
 
-.xf-menu li:hover {
-    background-color: #DEF;
-}
+		.xf-menu li:hover {
+			background-color: #DEF;
+		}
+		.xf-menu li.off {
+			color: #aaa;
+			cursor: not-allowed;
+		}
+
 
 /* form without line */
 /* 停用 xg-row */
@@ -1360,12 +1284,6 @@ table.dataTable thead .sorting_desc_disabled:after {
 body {
     /*padding-top: 50px;*/
     padding-bottom: 20px;
-    font-size: 14px !important;
-}
-
-body, label {
-    color: #424243;
-    font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
 }
 
 /* space in button & icon */

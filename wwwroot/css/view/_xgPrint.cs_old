@@ -1,0 +1,30 @@
+﻿
+/*
+@media print {
+    body > * {
+        display: none;
+    }
+
+    body > .xg-print {
+        display: block;
+    }
+
+}
+*/
+
+/* https://stackoverflow.com/questions/468881/print-div-id-printarea-div-only */
+/*
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #_divPrint, #_divPrint * {
+    visibility: visible;
+  }
+  #_divPrint {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+*/

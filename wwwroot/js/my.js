@@ -865,13 +865,15 @@ var _edit = {
 
 
     /**
-     * setFidTypeVars -> setFidTypes
+     * 初始化變數
+     * setFidTypeVars + setFileVars -> initVars
      * set fid-type variables: fidTypes, fidTypeLen
      * param me {object} EditOne/EditMany object
      * param box {object} container
      * return void
      */
-    setFidTypes: function (me, box) {
+    initVars: function (me, box) {
+        //set fid-type variables: fidTypes, fidTypeLen
         var fidTypes = [];
         box.find(_input.fidFilter()).each(function (i, item) {
             var obj = $(item);
@@ -881,17 +883,8 @@ var _edit = {
         });
         me.fidTypes = fidTypes;
         me.fidTypeLen = me.fidTypes.length;
-    },
 
-    /**
-     * set file related variables: fileFids, fileLen, hasFile
-     * called by EditOne/EditMany init()
-     * param me {edit} EditOne/EditMany variables
-     * param box {object} form or row object
-     * return void
-     */
-    setFileVars: function (me, box) {
-        //var me = this;  //use outside .each()
+        //set file related variables: fileFids, fileLen, hasFile
         me.fileFids = [];      //upload file fid array
         box.find('[data-type=file]').each(function (index, item) {
             me.fileFids[index] = _input.getFid($(item));
@@ -991,7 +984,12 @@ var _file = {
 
     isImageExt: function (ext) {
         return (",jpg,jpeg,png,gif,tif,tiff,").indexOf("," + ext + ",") >= 0;
+    },
+
+    isExcelExt: function (ext) {
+        return (",xls,xlsx,").indexOf("," + ext + ",") >= 0;
     }
+
 };//class
 
 /**
@@ -3787,6 +3785,14 @@ var _str = {
             return null;
         }
     },
+
+    replaceAll: function (str, oldStr, newStr) {
+        // 轉義特殊字元，避免錯誤正則
+        const oldStr2 = oldStr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(oldStr2, 'g');
+        return str.replace(regex, newStr);
+    },
+
 }; //class
 
 //switch radio, 使用 css3 toggle switch
@@ -4233,7 +4239,7 @@ var _var = {
 /**
  * crud edit function
  *   合併 _edit.js
- * 寫入 this properties:
+ * 寫入 _me properties:
  *   fnAfterSwap:
  *   fnAfterOpenEdit:
  *   fnUpdateOrViewA: see _updateOrViewA
@@ -4375,7 +4381,8 @@ function CrudE(edits) {
     //call fnAfterOpenEdit() if existed
     // _afterOpenEdit -> _afterOpen
     this._afterOpenEdit = function(fun, json) {
-        if (_fun.hasValue(_me.fnAfterOpenEdit))
+        //if (_fun.hasValue(_me.fnAfterOpenEdit))
+        if (_me.fnAfterOpenEdit)
             _me.fnAfterOpenEdit(fun, json);
     };
 
@@ -4770,42 +4777,6 @@ function CrudE(edits) {
         result[kid] = key;
         return result;
     };
-
-    /**
-     * setFidTypeVars -> setFidTypes
-     * set fid-type variables: fidTypes, fidTypeLen
-     * param me {object} EditOne/EditMany object
-     * param box {object} container
-     * return void
-    this.setFidTypes = function (me, box) {
-        var fidTypes = [];
-        box.find(_input.fidFilter()).each(function (i, item) {
-            var obj = $(item);
-            var j = i * 2;
-            fidTypes[j] = _input.getFid(obj);
-            fidTypes[j + 1] = _input.getType(obj);
-        });
-        me.fidTypes = fidTypes;
-        me.fidTypeLen = me.fidTypes.length;
-    };
-     */
-
-    /**
-     * set file variables: fileFids, fileLen, hasFile
-     * called by EditOne/EditMany init()
-     * param me {edit} EditOne/EditMany variables
-     * param box {object} form or row object
-     * return void
-    this.setFileVars = function (me, box) {
-        //var me = this;  //use outside .each()
-        me.fileFids = [];      //upload file fid array
-        box.find('[data-type=file]').each(function (index, item) {
-            me.fileFids[index] = _input.getFid($(item));
-        });
-        me.fileLen = me.fileFids.length;
-        me.hasFile = me.fileFids.length > 0; //has input file or not
-    };
-     */
 
     /**
      * getServerFid -> getFileSid
@@ -5292,8 +5263,8 @@ function CrudR(dtConfig, edits, updName) {
      * param toRead {bool} to read mode or not
      */
     this._afterSwap = function (toRead) {
-        if (this.fnAfterSwap)
-            this.fnAfterSwap(toRead);
+        if (_me.fnAfterSwap)
+            _me.fnAfterSwap(toRead);
     };
 
 
@@ -5744,8 +5715,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
                 alert(this.systemError);
             }
 
-            _edit.setFidTypes(this, rowObj);
-            _edit.setFileVars(this, rowObj);
+            _edit.initVars(this, rowObj);
         }
 
         //has edit form or not
@@ -6057,8 +6027,8 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param id {string} row id
      * return {object} row box
      */
-    this.idToRowBox = function (value) {
-        var filter = _input.fidFilter(this.kid) + `[value='${value}']`;
+    this.idToRowBox = function (id) {
+        var filter = _input.fidFilter(this.kid) + `[value='${id}']`;
         return this.eform.find(filter).parent();
     };
 
@@ -6183,17 +6153,19 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
     };
 
     /**
-     * add one row(or empty) into UI
+     * add one row(or empty) into UI, 同時設定新id
      * param {object} (optional) row
      * param {object} (optional) rowsBox, default this.rowsBox
+     * param {int} (optional) newId 新id
      * return {object} row
      */
-    this.addRow = function (row, rowsBox) {
+    this.addRow = function (row, rowsBox, newId) {
         row = row || {};
         rowsBox = this._getRowsBox(rowsBox);
         var obj = this._renderRow(row, rowsBox);
-        this.setNewIdByBox(obj);
-        return obj;
+        newId = this.setNewIdByBox(obj, newId);
+        row[this.kid] = newId;  //寫入新Id for 外面程式 if need
+        return row;
     };
 
     /**
@@ -6320,13 +6292,17 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * set new id by row box
      * public for MyCrud.js, Flow.js
      * param box {object} row box
+     * param newId {int} 外部傳入newId if any
      * return {int} new key index
      */
-    this.setNewIdByBox = function (box) {
-        this.newIndex++;
-        _itext.set(this.kid, this.newIndex, box);
+    this.setNewIdByBox = function (box, newId) {
+        if (newId == null) {
+            this.newIndex++;
+            newId = this.newIndex;
+        }
+        _itext.set(this.kid, newId, box);
         _edit.addIsNew(box);    //增加_IsNew隱藏欄位
-        return this.newIndex;
+        return newId;
     };
 
     /**
@@ -6464,8 +6440,7 @@ function EditOne(kid, eformId) {
             //return;   //not return
         }
 
-        _edit.setFidTypes(this, this.eform);
-        _edit.setFileVars(this, this.eform);
+        _edit.initVars(this, this.eform);
     };
 
     /**
@@ -6579,47 +6554,71 @@ function EditOne(kid, eformId) {
 var _flow = {
 
 	//靜態屬性 node type enum
-	TypeStart: 'S',
-	TypeEnd: 'E',
-	TypeNode: 'N',
+	TypeStart: 'S',		//startNode
+	TypeEnd: 'E',		//endNode
+	TypeNode: 'N',		//normal node
 	//TypeAuto: 'A',	//auto
 };
 
 /**
- * 自定函數:
+ * 自定函數(由flow內部觸發):
  * void fnMoveNode(node, x, y): after move node to (x,y)
- * void fnAddLine(startNodeId, endNodeId): when add line
- * void fnDropLineEnd(oldNode, newNode): after drop line end point
+ * void fnAfterAddLine(json): when add line
+ * void fnShowMenu(isNode, flowItem, event);
+ * void fnAfterMoveLineEnd(oldNode, newNode): after drop line end point
  */
 //控制 FlowNode、FlowLine for 外部程式
 function FlowBase(boxId) {	
 
 	/**
 	 屬性:
-	 boxElm: box element
+	 //boxElm: box element
 	 svg: svg
 	 nodes: nodes
 	 lines: lines
-	 startNode: start node
+	 fromNode: drap start node
 	 onMoveNode: event onMoveNode(node)
 	*/
 
+	//是否可編輯
+	this.isEdit = false;
+
+	//新node/line Id, 自動累加
+	//this.newNodeId = 0;
+	this.newLineId = 0;
+
 	this._init = function (boxId) {
-		this.boxElm = document.getElementById(boxId);
-		this.svg = SVG().addTo(this.boxElm).size('100%', '100%');
+		let boxDom = document.getElementById(boxId);
+		this.svg = SVG().addTo(boxDom).size('100%', '100%');
+		//this.svg.node.style.zIndex = 100;	//在eform上面!! 無效 !!
 
 		this.fnMoveNode = null;
-		this.fnAddLine = null;
-		this.fnRightMenu = null;
-		//this.onMoveNode = onMoveNode;
+		this.fnAfterAddLine = null;
+		this.fnShowMenu = null;
 		//this._reset();
+	};
+
+	/*
+	this.newNodeId = function () {
+		this.newNodeId++;
+		return this.newNodeId;
+	};
+	*/
+	//由元件內部發動, 所以必須提供此功能
+	this.getNewLineId = function () {
+		this.newLineId++;
+		return this.newLineId;
+	};
+
+	this.setEdit = function (status) {
+		this.isEdit = status;
 	};
 
 	//清除全部UI元件
 	this._reset = function () {
 		this.nodes = [];
 		this.lines = [];
-		this.startNode = null;
+		this.fromNode = null;
 
 		//刪除 svg 裡面的全部子元素
 		Array.from(this.svg.node.childNodes).forEach(node => {
@@ -6635,8 +6634,10 @@ function FlowBase(boxId) {
 	};
 
 	this.loadLines = function (rows) {
-		for (var i = 0; i < rows.length; i++)
-			this.addLine(rows[i]);
+		if (rows != null) {
+			for (var i = 0; i < rows.length; i++)
+				this.addLine(rows[i]);
+		}
 	};
 
 	this.addNode = function (json) {
@@ -6648,30 +6649,45 @@ function FlowBase(boxId) {
 		return node;
 	};
 	
-	//addLine(startNode, endNode, id, lineType) {
 	this.addLine = function (json) {
-		//this.lineCount++;
-		//if (id == null)
-		//	id = (this.lines.length + 1) * (-1);
-		let startNode = this.findNode(json.StartNode);
-		let endNode = this.findNode(json.EndNode);
-		return new FlowLine(this, startNode, endNode, json.Id, 'A');
+		return new FlowLine(this, json);
 	};
 	
-	this.drawLineStart = function (startNode) {
-		this.startNode = startNode;
+	this.deleteNode = function (node) {
+		let id = node.getId();
+		this.svg.findOne(`g[data-id="${id}"]`);
+	};
+	
+	this.deleteLine = function (line) {
+		let id = line.getId();
+		this.svg.find(`path[data-id="${id}"]`);	//含path2(data-id相同)
+	};
+	
+	this.drawLineStart = function (fromNode) {
+		this.fromNode = fromNode;
 	};
 
-	//return new line
-	this.drawLineEnd = function (endNode) {
-		var line = new FlowLine(this, this.startNode, endNode);
-		this.startNode = null;
-		return line;
+	//return new line json
+	this.drawLineEnd = function (toNode) {
+		var json = {
+			Id: this.newLineId,
+			FromNodeId: this.fromNode.getId(),
+			ToNodeId: toNode.getId(),
+		};
+		new FlowLine(this, json, this.fromNode, toNode);
+		this.fromNode = null;
+		return json;
 	};
 	
-	this.findNode = function (id) {
+	this.idToNode = function (id) {
 		//elm.node 指向dom
 		return this.nodes.find(node => node.getId() == id);
+	};
+
+	//check has startNode or not
+	this.hasStartNode = function () {
+		//some 用法類似 c# any()
+		return this.nodes.some(node => node.getNodeType() == _flow.TypeStart);
 	};
 
 	//call last
@@ -6680,37 +6696,39 @@ function FlowBase(boxId) {
 } //class FlowBase
 
 /**
- * 流程節點
- * param flowBase {object} FlowBase
- * param json {json} 流程節點資料
+  流程節點
+  屬性:
+    self: this
+    flowBase: FlowBase object
+    svg: flowBase.svg
+    json: node json, 欄位與後端XgFlowE相同: Id(不變), NodeType(不變), Name, PosX, PosY, Width, Height
+    elm: svg group element(與 html element不同)
+    boxElm: border element
+    textElm: text element
+    lines: 進入/離開此節點的流程線
+    width: width
+    height: height
+  param flowBase {object} FlowBase
+  param json {json} 流程節點資料
  */ 
 function FlowNode(flowBase, json) {
-	/**
-	 屬性:
-	 self: this
-	 flowBase: FlowBase object
-	 svg: svg
-	 json: node json, 欄位與後端XgFlowE相同: Id, FlowId, NodeType, Name, PosX, PosY, Width, Height
-	 elm: svg group element(與 html element不同)
-	 boxElm: border element
-	 textElm: text element
-	 lines: 進入/離開此節點的流程線
-	 width: width
-	 height: height
-	*/
-
 	//drag evnet
 	this.DragStart = 'dragstart';
 	this.DragMove = 'dragmove';
 	this.DragEnd = 'dragend';
 
 	//start/end node radius
-	this.MinRadius = 20;
+	//this.MinRadius = 20;
 
 	//normal node size
-	this.MinWidth = 100;
-	this.MinHeight = 50;
-	this.Padding = 15;
+	this.MinWidth = 80;
+	this.MinHeight = 42;
+	this.LineHeight = 18;	//文字行高
+	this.PadTop = 8;
+	this.PadLeft = 15;
+
+	this.PinWidth = 12;
+	this.PinGap = 3;
 
 	this._init = function (flowBase, json) {
 		this.self = this;
@@ -6719,37 +6737,32 @@ function FlowNode(flowBase, json) {
 		this.json = Object.assign({
 			Name: 'Node',
 			NodeType: _flow.TypeNode,
-			PosX: 50,
-			PosY: 50,
-			Width: 100,	//??
-			Height: 50,	//??
+			PosX: json.PosX || 100,
+			PosY: json.PosY || 100,
+			//Width: 100,	//??
+			//Height: 50,	//??
 		}, json);
 
 		//set instance variables
 		this.lines = [];
 
-		this._render();		//draw node first
-		//this._setNodeDrag();	//set node draggable
-		//this._setEventJoint();   //讓connector可拖拉
-	};
-
-	//繪製完整節點, called by initial
-	this._render = function () {
         let nodeType = this.json.NodeType;
         let cssClass = '';
-        let nodeName = '';
+        let nodeText = '';
 
 		// 建立一個 group(有x,y, 沒有大小, 含文字的節點框線), 才能控制文字拖拉
-		this.elm = this.svg.group();
+		this.elm = this.svg
+			.group()
+			.attr('data-id', json.Id)
 
 		let startEnd = this._isStartEnd();
 		if (startEnd) {
             if (nodeType == _flow.TypeStart) {
                 cssClass = 'xf-start';
-				nodeName = _flow.TypeStart;
+				nodeText = _flow.TypeStart;
             } else {
                 cssClass = 'xf-end';
-				nodeName = _flow.TypeEnd;
+				nodeText = _flow.TypeEnd;
             }
 
 			//circle大小不填, 由css設定, 這時radius還沒確定, 不能move(因為會用到radius)
@@ -6758,40 +6771,52 @@ function FlowNode(flowBase, json) {
 				
 			//移動circle時會參考radius, 所以先更新, 從css讀取radius, 而不是從circle建立的屬性 !!
 			let style = window.getComputedStyle(this.boxElm.node);	//不能直接讀取circle屬性
-            let radius = parseFloat(style.getPropertyValue("r"));	//轉浮點
-			this.boxElm.attr("r", radius);
-			
-			let width = radius * 2;
-            this.width = width;		//寫入width, 供後面計算位置
-            this.height = width;	//畫流程線時會用到
+            let radius = parseFloat(style.getPropertyValue('r'));	//轉浮點
+			this.boxElm.attr('r', radius);	//reset radius
+
+			//起迄節點不會改變文字和大小, 直接設定
+			this.textElm = this.elm.text(nodeText)
+				.addClass(cssClass + '-text')
+				.attr({ 'text-anchor': 'middle', 'dominant-baseline': 'middle' }); //水平垂直置中
+
+			//this.textElm.center(radius, radius);
+
+			//let width = radius * 2;
+			//this.boxElm.size(width, width);
+            //this.width = width;		//寫入width, 供後面計算位置
+            //this.height = width;	//畫流程線時會用到
 		} else {
-            nodeName = this.json.Name;
+            nodeText = this.json.Name;
             cssClass = 'xf-node';
 			this.boxElm = this.elm.rect()
-				.addClass(cssClass);
-				//.move(this.json.PosX, this.json.PosY);
+				.addClass(cssClass)
+				.attr({ 'text-anchor': 'middle', 'dominant-baseline': 'middle' }); //水平垂直置中
+			//.move(this.json.PosX, this.json.PosY);
+
+			this.textElm = this.elm.text('')
+				.addClass(cssClass + '-text');
+				//.font({ anchor: 'middle' })
+				//.attr({ 'text-anchor': 'middle' }); // 確保對齊生效
+
+			//一般節點依文字內容自動調整大小
+			this.setName(nodeText, false);
         }
 
 		this.elm.move(this.json.PosX, this.json.PosY);
 
-		//set data-id = node id
-		this._setId(this.json.Id);
-
-		//add 節點文字
-		this.textElm = this.elm.text(nodeName)
-            .addClass(cssClass + '-text')
-            .font({ anchor: 'middle' });
-
-		this._setSize(startEnd);
-
-		//add 連接點 connector(在文字右側), 小方塊, data-nodeElm 記錄節點元素
+		//add 連接點小方塊(pin) if need(在文字右側)
 		if (nodeType != _flow.TypeEnd){
-			this.pointElm = this.elm.rect(12, 12).addClass('xf-connector');
-			this.pointElm.node.dataset.nodeElm = this.elm;
+			this.pinElm = this.elm
+				.rect(this.PinWidth, this.PinWidth)
+				.addClass('xf-pin');
+			this._setPinPos();
 		}
 		
-		this._setChildPos(startEnd);
 		this._setEvent();
+	};
+
+	this.getLines = function () {
+		return this.lines;
 	};
 
 	//是否為起迄節點
@@ -6799,14 +6824,8 @@ function FlowNode(flowBase, json) {
 		return (this.json.NodeType == _flow.TypeStart || this.json.NodeType == _flow.TypeEnd);
 	};
 
-	//設定長寬
-	this._setSize = function (startEnd) {
-		if (!startEnd) {
-			let bbox = this.textElm.bbox();
-			this.width = Math.max(this.MinWidth, bbox.width + this.Padding * 2);
-			this.height = Math.max(this.MinHeight, bbox.height + this.Padding * 2);
-		}
-		this.boxElm.size(this.width, this.height);
+	this.getNodeType = function () {
+		return this.json.NodeType;
 	};
 
 	this.getPos = function () {
@@ -6824,80 +6843,81 @@ function FlowNode(flowBase, json) {
 		return { x: elm.cx(), y: elm.cy() };
 	};
 
-	//設定子元素位置
-	//param startEnd: 如果不是起迄節點要考慮最小寬高
-	this._setChildPos = function (startEnd) {
-		//文字
-		let bbox = this.textElm.bbox();
-		//let centerX = this.elm.x() + this.width / 2;
-		//let centerY = this.elm.y() + this.height / 2;
-		//var box = this.boxElm;
-		//let centerX = box.cx();
-		//let centerY = box.cy();
-		let center = this.getCenter();
-		let size = this.getSize();
-		//let centerY = box.cy();
-        //this.textElm.move(centerX - bbox.width / 2, centerY - bbox.height / 2);
-		//this.textElm.move(bbox.width / 2, bbox.height / 2)
-		//	.center(centerX, centerY);
-		this.textElm.move(size.w / 2, size.h / 2).center(center.x, center.y);
+	//set pin position
+	this._setPinPos = function () {
+		//連接點 右移3px
+		if (!this.pinElm) return;
 
-        //連接點
-		if (this.pointElm)
-			this.pointElm.move(center.x + bbox.width / 2 + 3, center.y - 5);
-	};
+		let bbox = this.textElm.bbox();
+		let center = this.getCenter();
+		this.pinElm.move(center.x + bbox.width / 2 + 3, center.y - 5);
+	}
 
 	this._setEvent = function () {
 		//enable right click menu
-		var me = this;	//FlowNode
+		let me = this;	//FlowNode
+		let flowBase = this.flowBase;
+
 		this.elm.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
-			var flowBase = me.flowBase;
-			if (flowBase.fnRightMenu)
-				flowBase.fnRightMenu(true, me.getId(), event.pageX, event.pageY);
+			if (flowBase.fnShowMenu)
+				flowBase.fnShowMenu(event, true, me);
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
 		this.elm.draggable().on(this.DragMove, () => {
-			this._setChildPos(this._isStartEnd());
-			this.lines.forEach(line => line.render());
+			if (!flowBase.isEdit) return;
+
+			this._drawLines();
 		}).on(this.DragEnd, (event) => {
+			if (!flowBase.isEdit) return;
+
 			let { x, y } = event.detail.box;
 			//console.log(`x=${x}, y=${y}`);
 
 			//trigger event
 			if (this.flowBase.fnMoveNode)
-				this.flowBase.fnMoveNode(this.getId(), x, y);
+				this.flowBase.fnMoveNode(this, x, y);
 		});
 
 		//set connector draggable
-		this._setEventJoint();
+		this._setEventPin();
+	};
+
+	this._drawLines = function () {
+		this.lines.forEach(line => line.render());
 	};
 
 	//set event of node connector
-	//joint表示起始節點內的連接點
-	this._setEventJoint = function () {
-		if (!this.pointElm)
+	//pin表示起始節點內的連接點
+	this._setEventPin = function () {
+		if (!this.pinElm)
 			return;
 		
-		let startElm, startX, startY;
+		let fromDom, startX, startY;
 		let tempLine;
-		let endElm = null;
+		let toElm = null;
+		let me = this;	//flowNode
+		let flowBase = this.flowBase;
 
-		// 啟用 pointElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pointElm !!
-		this.pointElm.draggable().on(this.DragStart, (event) => {
+		// 啟用 pinElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pinElm !!
+		this.pinElm.draggable().on(this.DragStart, (event) => {
+			if (!flowBase.isEdit) return;
+
 			// 初始化線條
-			let { x, y } = this.pointElm.rbox(this.svg); // 使用SVG畫布的座標系
+			let { x, y } = me.pinElm.rbox(me.svg); // 使用SVG畫布的座標系
 			startX = x;
 			startY = y;
-			startElm = this.self.elm;	//this.self指向這個FlowNode
+			fromDom = me.self.elm.node;	//this.self指向這個FlowNode
 
-			tempLine = this.svg.line(startX, startY, startX, startY)
+			tempLine = me.svg.line(startX, startY, startX, startY)
 				.addClass('xf-line off');
 				
-			this.flowBase.drawLineStart(this.self);
+			flowBase.drawLineStart(me.self);
 				
 		}).on(this.DragMove, (event) => {
+			if (!flowBase.isEdit) return;
+
 			//阻止 connector 移動
 			event.preventDefault();
 			
@@ -6912,38 +6932,40 @@ function FlowNode(flowBase, json) {
 			// 檢查座標值是否有效
 			if (isFinite(endX) && isFinite(endY)) {
 				// 將 SVG 座標轉換為檢視座標
-				let svgRect = this.svg.node.getBoundingClientRect();
+				let svgRect = me.svg.node.getBoundingClientRect();
 				let viewPortX = endX + svgRect.x;
 				let viewPortY = endY + svgRect.y;
 
 				// 檢查是否懸停在節點上
 				let overDom = document.elementsFromPoint(viewPortX, viewPortY)
-					.find(elm => elm != startElm && (elm.classList.contains('xf-node') || elm.classList.contains('xf-end')));
+					.find(dom => dom != fromDom && (dom.classList.contains('xf-node') || dom.classList.contains('xf-end')));
 				if (overDom) {
 					let overElm = overDom.instance;	//svg element
-					if (endElm !== overElm) {
-						if (endElm) 
-							this._markNode(endElm, false);
-						endElm = overElm;
-						this._markNode(endElm, true);
+					if (toElm !== overElm) {
+						if (toElm) 
+							me._markNode(toElm, false);
+						toElm = overElm;
+						me._markNode(toElm, true);
 					}
-				} else if (endElm) {
-					this._markNode(endElm, false);
-					endElm = null;
+				} else if (toElm) {
+					me._markNode(toElm, false);
+					toElm = null;
 				}
 			}
 			
 		}).on(this.DragEnd, (event) => {
+			if (!flowBase.isEdit) return;
+
 			// 檢查座標值是否有效
-			if (endElm) {
-				this._markNode(endElm, false);					
-				//this.flowBase.drawLineEnd(this.flowBase.findNode(endElm.node.dataset.id));
-				var line = this.flowBase.drawLineEnd(this.flowBase.findNode(this._getIdByElm(endElm)));
-				endElm = null;
+			if (toElm) {
+				me._markNode(toElm, false);
+				var id = toElm.parent().node.dataset.id;
+				var json = flowBase.drawLineEnd(flowBase.idToNode(id));
+				toElm = null;
 
 				//trigger event
-				if (this.flowBase.fnAddLine)
-					this.flowBase.fnAddLine(line.startNode.getId(), line.endNode.getId());
+				if (flowBase.fnAfterAddLine)
+					flowBase.fnAfterAddLine(json);
 			}
 			tempLine.remove();
 		});
@@ -6958,21 +6980,9 @@ function FlowNode(flowBase, json) {
 		}
 	};
 
-	//id記錄在 boxElm !!
+	//id記錄在 group elm !!
 	this.getId = function () {
-		return this._getIdByElm(this.boxElm);
-	};
-
-	//called by node DragEnd
-	this._getIdByElm = function (boxElm) {
-		return boxElm.node.dataset.id;
-		//return boxElm.dataset.id;
-	};
-
-	//id記錄在 boxElm !!
-	this._setId = function (id) {
-		this.boxElm.node.dataset.id = id;
-		//this.boxElm.dataset.id = id;
+		return this.json.Id;
 	};
 
 	this.addLine = function (line) {
@@ -6984,60 +6994,125 @@ function FlowNode(flowBase, json) {
 		this.lines.splice(index, 1);
 	};
 
+	this.getName = function () {
+		return this.textElm.text();
+	};
+
+	//set node name only for TypeNode, 考慮多行
+	//called by initial, 前端改變node name
+	this.setName = function (name, drawLine) {
+		// 更新文字內容, 後端傳回會加上跳脫字元, js 2021才有 replaceAll, 所以自製
+		var lines = _str.replaceAll(name, '\\n', '\n').split('\n');
+		this.textElm.clear().text(function (add) {
+			lines.forEach((line, i) => {
+				if (i > 0)
+					add.tspan(line).newLine().dy(this.LineHeight);
+				else
+					add.tspan(line);
+			});
+		});
+
+		// 獲取新文字尺寸
+		const bbox = this.textElm.bbox();
+
+		// 更新矩形尺寸
+		var width = Math.max(this.MinWidth, bbox.width + this.PadLeft * 2 + this.PinWidth + this.PinGap * 2);
+		var height = Math.max(this.MinHeight, bbox.height + this.PadTop * 2);
+		this.boxElm.size(Math.round(width), Math.round(height));
+
+		// 重新居中文字
+		this.textElm.center(this.boxElm.cx(), this.boxElm.cy());
+
+		if (drawLine)
+			this._drawLines();
+	};
+
 	//call last
 	this._init(flowBase, json);
 
 }//class FlowNode
 
-//名詞使用 startNode/endNode
-function FlowLine(flowBase, fromNode, toNode, lineType) {
+//相關名詞使用 fromNode/toNode 比較合理
+/**
+  屬性:
+    flowBase: FlowBase object
+    json: flowLine json, 欄位與後端XgFlowE相同: Id(不變), FromNodeId, ToNodeId, FromType(不變), Label
+    svg: svg
+    path: line path
+    path2: for right menu
+	arrow: 末端箭頭
+	textElm: 顯示label
+    fromNode: from node
+    toNode: to node
+    //fromType: 起點位置, A(auto),V(上下),H(左右)
+    //label: 流程線上的文字, 一般是執行條件
+    //isFromTypeAuto:
+    isFromTypeV:
+    isFromTypeH:
+  param flowBase {FlowBase}
+  param json {Json} flowLine 組態 for initial
+  param fromNode {FlowNode?} 如果有值則使用此節點
+  param toNode {FlowNode?} 同 fromNode
+*/
+function FlowLine(flowBase, json, fromNode, toNode) {
 	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
-	this.Max1SegDist = 6;	//2中心點的最大距離, 小於此值可建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑
-	this.Min2NodeDist = 25;	//2節點的最小距離, 大於此值可建立line(1,3線段)
-	this.Min2SegDist = 20;	//建立2線段的最小距離, 中心點和邊
+	/** (起點)中心到(迄點)中心的最大距離 for 建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑 */
+	this.MaxCntCnt1 = 6;
+	/** (起點)邊到(迄點)中心的最小距離 for 建立2線段 */
+	this.MinSideCnt2 = 16;	
+	/** (起點)中心到(迄點)中心的最小距離 for 建立3線段,  2節點的最小距離, 大於此值可建立line(1,3線段) */
+	this.MinCntCnt3 = 20;	
+	/** (起點)邊到(迄點)邊的最小距離 for 建立1,3線段(3線段以2倍距離判斷) */
+	this.MinSideSide13 = 12;	
 
 	//末端箭頭
 	this.ArrowLen = 10; 	//長度
 	this.ArrowWidth = 5; 	//寬度	
 
 	//line type, 起點位置
-	this.TypeAuto = 'A';	//自動
-	this.TypeV = 'V';	//垂直(上下)
-	this.TypeH = 'H';	//水平(左右)
+	this.FromTypeAuto = 'A';	//自動
+	this.FromTypeV = 'V';	//垂直(上下)
+	this.FromTypeH = 'H';	//水平(左右)
 
-	/**
-	 flowBase: FlowBase object
-	 svg: svg
-	 path: line path
-	 fromNode: from node
-	 toNode: to node
-	 lineType: 起點位置, A(auto),U(上下),L(左右)
-	 isTypeAuto:
-	 isTypeV:
-	 isTypeH:
-	*/
-	this._init = function (flowBase, fromNode, toNode, lineType) {
+	//Id 記錄在 json.Id
+	this._init = function (flowBase, json, fromNode, toNode) {
+		json = json || {};
+		json.FromType = json.FromType || this.FromTypeAuto;
+		json.Label = json.Label || '';
+
+		json.Id = json.Id || flowBase.getNewLineId();
 		this.flowBase = flowBase;
+		this.json = json;
 		this.svg = flowBase.svg;
-		this.fromNode = fromNode;
-		this.toNode = toNode;
-		this.path = this.svg.path('').addClass('xf-line');
+		this.fromNode = fromNode || this.flowBase.idToNode(json.FromNodeId);
+		this.toNode = toNode || this.flowBase.idToNode(json.ToNodeId);
+		//this.label = label || '';
+
+		//path
+		this.path = this.svg.path('')
+			.attr('data-id', json.Id)
+			.addClass('xf-line');
 		// 透明的寬線作為觸發區域（放在下面）
 		this.path2 = this.svg.path('')
+			.attr('data-id', json.Id)
 			.fill('none')
 			.stroke({ width: 10, color: 'transparent' }) // 注意：透明但可接收事件
-			.attr({ 'pointer-events': 'stroke' });       // 只針對 stroke 有事件
+			.attr({ 'pointer-events': 'stroke', 'cursor': 'pointer' });       // 只針對 stroke 有事件
 
+		//label
+		this.textElm = this.svg.text(json.Label)
+			.addClass('xf-line-text')
+			.font({ anchor: 'middle' });
 
 		// 用來儲存箭頭的路徑
-		this.arrowPath = this.svg.path('').addClass('xf-arrow');
-		//this.arrowPath2 = this.svg.path('').addClass('xf-arrow');
+		this.arrow = this.svg.path('').addClass('xf-arrow');
+		//this.arrow2 = this.svg.path('').addClass('xf-arrow');
 
 		//add line to from/to node
-		fromNode.addLine(this);
-		toNode.addLine(this);
+		this.fromNode.addLine(this);
+		this.toNode.addLine(this);
 		this._setEvent();
-		this._setType(lineType);
+		this._setFromTypeVars(json.FromType);
 		this.render();
 	};
 
@@ -7045,18 +7120,31 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 		var me = this;	//FlowLine
 		this.path2.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
-			var flowBase = me.flowBase;
-			if (flowBase.fnRightMenu)
-				flowBase.fnRightMenu(false, 'me.getId()', event.pageX, event.pageY);
+			if (me.flowBase.fnShowMenu)
+				me.flowBase.fnShowMenu(event, false, me);
 		});
 	}
 
-	this._setType = function (lineType) {
-		lineType = lineType || this.TypeAuto;
-		this.lineType = lineType;
-		this.isTypeV = (lineType == this.TypeV);
-		this.isTypeH = (lineType == this.TypeH);
-		//this.isTypeAuto = (!this.isTypeV && !this.isTypeH) || (lineType == this.TypeAuto);
+	this._setFromTypeVars = function (fromType) {
+		fromType = fromType || this.FromTypeAuto;
+		this.fromType = fromType;
+		this.isFromTypeV = (fromType == this.FromTypeV);
+		this.isFromTypeH = (fromType == this.FromTypeH);
+		//this.isFromTypeAuto = (!this.isFromTypeV && !this.isFromTypeH) || (fromType == this.FromTypeAuto);
+		var dom = this.path.node;
+		if (fromType == this.FromTypeAuto)
+			dom.classList.remove('xf-way');
+		else
+			dom.classList.add('xf-way');			
+	};
+
+	//?? from text element
+	this.getLabel = function () {
+		return this.label;
+	};
+	
+	this.setLabel = function (label) {
+		this.label = label;
 	};
 
 	/**
@@ -7068,11 +7156,8 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 		//=== from Node ===
 		// 位置和尺寸, x/y為左上方座標
 		const fromPos = this.fromNode.getPos();
-		//const fromY = this.fromNode.boxElm.y();
 		const fromSize = this.fromNode.getSize();
-		//const fromHeight = this.fromNode.height;
-		const fromCntX = fromPos.x + fromSize.w / 2;		//中心點
-		const fromCntY = fromPos.y + fromSize.h / 2;
+		const fromCnt = {x: fromPos.x + fromSize.w / 2, y: fromPos.y + fromSize.h / 2};
 		// 四個邊的中間點
 		const fromUp = { x: fromPos.x + fromSize.w / 2, y: fromPos.y }; // 上邊中點
 		const fromDown = { x: fromPos.x + fromSize.w / 2, y: fromPos.y + fromSize.h };
@@ -7081,74 +7166,95 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 
 		//=== to Node ===
 		const toPos = this.toNode.getPos();
-		//const toY = this.toNode.elm.y();
 		const toSize = this.toNode.getSize();
-		//const toHeight = this.toNode.height;
-		const toCntX = toPos.x + toSize.w / 2;
-		const toCntY = toPos.y + toSize.h / 2;
+		const toCnt = {x: toPos.x + toSize.w / 2, y: toPos.y + toSize.h / 2};
 		// 四個邊的中間點
 		const toUp = { x: toPos.x + toSize.w / 2, y: toPos.y };
 		const toDown = { x: toPos.x + toSize.w / 2, y: toPos.y + toSize.h };
 		const toLeft = { x: toPos.x, y: toPos.y + toSize.h / 2 };
 		const toRight = { x: toPos.x + toSize.w, y: toPos.y + toSize.h / 2 };
 
-		// 判斷 fromNode 和 toNode 的相對位置
-		const isEndRight = toCntX > fromCntX; 	// toNode 在 fromNode 的右側
-		const isEndDown = toCntY > fromCntY; 	// toNode 在 fromNode 的下方
+		/** ToNode 在右邊 */
+		const isToRight = toCnt.x > fromCnt.x; 	// toNode 在 fromNode 的右側
+		/** ToNode 在下面 */
+		const isToDown = toCnt.y > fromCnt.y; 	// toNode 在 fromNode 的下方
 
-		// 是否符合垂直/水平最小距離, 字尾H/V表示距離量測方向
-		const match2NodeDistH = (isEndRight ? toLeft.x - fromRight.x : fromLeft.x - toRight.x) >= this.Min2NodeDist;
-		const match2NodeDistV = (isEndDown ? toUp.y - fromDown.y : fromUp.y - toDown.y) >= this.Min2NodeDist;
+		//計算2個中心點距離
+		const cntCntSize = { w: Math.abs(fromCnt.x - toCnt.x), h: Math.abs(fromCnt.y - toCnt.y) };
 
-		// 是否符合2中心點之間最小距離 for 1線段(否則為3線段)
-		const match1SegDistH = Math.abs(fromCntX - toCntX) <= this.Max1SegDist;
-		const match1SegDistV = Math.abs(fromCntY - toCntY) <= this.Max1SegDist;
+		/** 是否符合2中心點之間最小(水平)距離 for 1線段 */
+		const isMaxCntCnt1H = cntCntSize.w <= this.MaxCntCnt1;
+		/** 是否符合2中心點之間最小(垂直)距離 for 1線段 */
+		const isMaxCntCnt1V = cntCntSize.h <= this.MaxCntCnt1;
 
-		// 是否符合中心點-邊線之間最小距離 for 2線段
-		const match2SegDistIn = Math.abs(fromCntX - toCntX) - toSize.w / 2 >= this.Min2SegDist;
-		const match2SegDistOut = Math.abs(fromCntY - toCntY) - fromSize.h / 2 >= this.Min2SegDist;
+		/** 是否符合起迄點邊線-中心點之間最小距離(水平方向) for 2線段 */
+		const isMinSideCnt2H = cntCntSize.w - fromSize.w / 2 >= this.MinSideCnt2;
+		/** 是否符合起迄點邊線-中心點之間最小距離(垂直方向) for 2線段 */
+		const isMinSideCnt2V = cntCntSize.h - toSize.h / 2 >= this.MinSideCnt2;
+		/** 是否符合起迄點中心點-邊線之間最小距離(水平方向) for 2線段 */
+		const isMinCntSide2H = cntCntSize.w - toSize.w / 2 >= this.MinSideCnt2;
+		/** 是否符合起迄點中心點-邊線之間最小距離(垂直方向) for 2線段 */
+		const isMinCntSide2V = cntCntSize.h - fromSize.h / 2 >= this.MinSideCnt2;
+
+		/** 是否符合垂直/水平最小距離, 字尾H/V表示距離量測方向 */
+		const isMinCntCnt3H = (isToRight ? toLeft.x - fromRight.x : fromLeft.x - toRight.x) >= this.MinCntCnt3;
+		/** 是否符合垂直/水平最小距離, 字尾H/V表示距離量測方向 */
+		const isMinCntCnt3V = (isToDown ? toUp.y - fromDown.y : fromUp.y - toDown.y) >= this.MinCntCnt3;
+
+		//for 計算
+		const sideSideH = (isToRight ? toLeft.x - fromRight.x : fromLeft.x - toRight.x);
+		const sideSideV = (isToDown ? toUp.y - fromDown.y : fromUp.y - toDown.y);
+
+		/** 是否符合邉-邊(水平)最小距離, for 1線段 */
+		const isMinSideSide1H = sideSideH >= this.MinSideSide13;
+		/** 是否符合邉-邊(垂直)最小距離, for 1線段 */
+		const isMinSideSide1V = sideSideV >= this.MinSideSide13;		
+
+		/** 是否符合邉-邊(水平)最小距離, for 3線段 */
+		const isMinSideSide3H = sideSideH >= this.MinSideSide13 * 2;
+		/** 是否符合邉-邊(垂直)最小距離, for 3線段 */
+		const isMinSideSide3V = sideSideV >= this.MinSideSide13 * 2;
 
 		//判斷線段數目(1,2,3), 有4個象限, 先考慮上下再左右
 		let fromPnt, toPnt;
 		let points;
+		let textStartAry = 0;	//label start array in points
 		//let pathStr;
-		if (!this.isTypeH && match1SegDistH && match2NodeDistV) {
+		if (!this.isFromTypeH && isMaxCntCnt1H && isMinSideSide1V) {
 			//1線段-垂直
-			if (isEndDown) {
+			if (isToDown) {
 				fromPnt = fromDown;
 				toPnt = toUp;
 			} else {
 				fromPnt = fromUp;
 				toPnt = toDown;
 			}
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${toPnt.y}`;	//取垂直線
 			points = [fromPnt, { x: fromPnt.x, y: toPnt.y }];
-		} else if (!this.isTypeV && match1SegDistV && match2NodeDistH) {
+		} else if (!this.isFromTypeV && isMaxCntCnt1V && isMinSideSide1H) {
 			//1線段-水平
-			if (isEndRight) {
+			if (isToRight) {
 				fromPnt = fromRight;
 				toPnt = toLeft;
 			} else {
 				fromPnt = fromLeft;
 				toPnt = toRight;
 			}
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${toPnt.x}`;	//取水平線
 			points = [fromPnt, { x: toPnt.x, y: fromPnt.y }];
-		} else if (!this.isTypeV && match2NodeDistH && match2SegDistOut) {
-			//2線段-水平
-			fromPnt = isEndRight ? fromRight : fromLeft;
-			toPnt = isEndDown ? toUp : toDown;
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${toPnt.x} V ${toPnt.y}`;
+			//isMinCntSide2H
+		} else if (!this.isFromTypeV && isMinSideCnt2H && isMinCntSide2V) {
+			//2線段-水平(先考慮)
+			fromPnt = isToRight ? fromRight : fromLeft;
+			toPnt = isToDown ? toUp : toDown;
 			points = [fromPnt, { x: toPnt.x, y: fromPnt.y }, toPnt];
-		} else if (!this.isTypeH && match2NodeDistV && match2SegDistIn) {
+			textStartAry = 1;
+		} else if (!this.isFromTypeH && isMinSideCnt2V && isMinCntSide2H) {
 			//2線段-垂直
-			fromPnt = isEndDown ? fromDown : fromUp;
-			toPnt = isEndRight ? toLeft : toRight;
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${toPnt.y} H ${toPnt.x}`;
+			fromPnt = isToDown ? fromDown : fromUp;
+			toPnt = isToRight ? toLeft : toRight;
 			points = [fromPnt, { x: fromPnt.x, y: toPnt.y }, toPnt];
-		} else if (!this.isTypeH && match2NodeDistV) {
-			//3線段-垂直(2節點內側)
-			if (isEndDown) {
+		} else if (!this.isFromTypeH && isMinSideSide3V && isMinCntCnt3V) {
+			//3線段-垂直(直線型)
+			if (isToDown) {
 				fromPnt = fromDown;
 				toPnt = toUp;
 			} else {
@@ -7157,11 +7263,10 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 			}
 
 			let midY = (fromPnt.y + toPnt.y) / 2;
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} V ${midY} H ${toPnt.x} V ${toPnt.y}`;
 			points = [fromPnt, { x: fromPnt.x, y: midY }, { x: toPnt.x, y: midY }, toPnt];
-		} else if (!this.isTypeV && match2NodeDistH) {
-			//3線段-水平(2節點內側)
-			if (isEndRight) {
+		} else if (!this.isFromTypeV && isMinSideSide3H && isMinCntCnt3H) {
+			//3線段-水平(直線型)
+			if (isToRight) {
 				fromPnt = fromRight;
 				toPnt = toLeft;
 			} else {
@@ -7170,46 +7275,65 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 			}
 
 			let midX = (fromPnt.x + toPnt.x) / 2;
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${midX} V ${toPnt.y} H ${toPnt.x}`;
 			points = [fromPnt, { x: midX, y: fromPnt.y }, { x: midX, y: toPnt.y }, toPnt];
-		} else if (!this.isTypeV) {
-			//3線段-水平(2節點外側)
-			if (isEndRight) {
+			textStartAry = 1;
+		} else if (!this.isFromTypeH && isMinCntCnt3H ) {
+			//3線段-垂直(ㄇ字型)
+			let midY;
+			if (isToDown) {
+				fromPnt = fromDown;
+				toPnt = toDown;
+				midY = Math.max(fromPnt.y, toPnt.y) + this.MinSideSide13;
+			} else {
+				fromPnt = fromUp;
+				toPnt = toUp;
+				midY = Math.min(fromPnt.y, toPnt.y) - this.MinSideSide13;
+			}
+
+			points = [fromPnt, { x: fromPnt.x, y: midY }, { x: toPnt.x, y: midY }, toPnt];
+		} else if (!this.isFromTypeV && isMinCntCnt3V) {
+			//3線段-水平(ㄇ字型)
+			let midX;
+			if (isToRight) {
 				fromPnt = fromRight;
 				toPnt = toRight;
+				midX = Math.max(fromPnt.x, toPnt.x) + this.MinSideSide13;
 			} else {
 				fromPnt = fromLeft;
 				toPnt = toLeft;
+				midX = Math.min(fromPnt.x, toPnt.x) - this.MinSideSide13;
 			}
-			let midX = isEndRight ? Math.max(fromPnt.x, toPnt.x) + this.Min2NodeDist : Math.min(fromPnt.x, toPnt.x) - this.MinSideSide;
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} H ${midX} V ${toPnt.y} H ${toPnt.x}`;
+			//let midX = isToRight ? Math.max(fromPnt.x, toPnt.x) + this.MinCntCnt3 : Math.min(fromPnt.x, toPnt.x) - this.MinSideSide;
 			points = [fromPnt, { x: midX, y: fromPnt.y }, { x: midX, y: toPnt.y }, toPnt];
+			textStartAry = 1;
 		} else {
 			//其他狀況: 用直線(非折線)連接起迄點
-			if (isEndDown) {
-				if (isEndRight) {
-					fromPnt = !this.isTypeH ? fromDown : fromRight;
+			if (isToDown) {
+				if (isToRight) {
+					fromPnt = !this.isFromTypeH ? fromDown : fromRight;
 					toPnt = toLeft;
 				} else {
-					fromPnt = !this.isTypeH ? fromDown : fromLeft;
+					fromPnt = !this.isFromTypeH ? fromDown : fromLeft;
 					toPnt = toRight;
 				}
 			} else {
-				if (isEndRight) {
-					fromPnt = !this.isTypeH ? fromUp : fromRight;
+				if (isToRight) {
+					fromPnt = !this.isFromTypeH ? fromUp : fromRight;
 					toPnt = toLeft;
 				} else {
-					fromPnt = !this.isTypeH ? fromUp : fromLeft;
+					fromPnt = !this.isFromTypeH ? fromUp : fromLeft;
 					toPnt = toRight;
 				}
 			}
-			//pathStr = `M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y}`;
 			points = [fromPnt, toPnt];
 		}
 
 		// 繪製流程線
 		this._drawLine(points);
-		//this.path.plot(pathStr);
+
+		//move label
+		this.textElm.center((points[textStartAry].x + points[textStartAry + 1].x) / 2,
+			(points[textStartAry].y + points[textStartAry + 1].y) / 2);
 	};
 
 	/**
@@ -7219,7 +7343,8 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 		// 生成帶有圓角的折線路徑
 		let pathStr = `M ${points[0].x} ${points[0].y}`; // 移動到起點
 		let pntLen = points.length;
-		let radius = this.Max1SegDist;
+		let radius = this.MaxCntCnt1;
+
 		for (let i = 1; i < pntLen; i++) {
 			const prevPnt = points[i - 1];
 			const nowPnt = points[i];
@@ -7228,26 +7353,37 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 			if (i < pntLen - 1) {
 				const nextPnt = points[i + 1];
 
+				// 計算方向向量
+				const vec1 = {
+					x: nowPnt.x - prevPnt.x,
+					y: nowPnt.y - prevPnt.y
+				};
+				const vec2 = {
+					x: nextPnt.x - nowPnt.x,
+					y: nextPnt.y - nowPnt.y
+				};
+
+				// 單位化向量
+				//const len1 = Math.sqrt(vec1.x ** 2 + vec1.y ** 2);
+				//const len2 = Math.sqrt(vec2.x ** 2 + vec2.y ** 2);
+				const len1 = Math.sqrt(Math.pow(vec1.x, 2) + Math.pow(vec1.y, 2));
+				const len2 = Math.sqrt(Math.pow(vec2.x, 2) + Math.pow(vec2.y, 2));
+
+				const unitVec1 = { x: vec1.x / len1, y: vec1.y / len1 };
+				const unitVec2 = { x: vec2.x / len2, y: vec2.y / len2 };
+
 				// 計算圓角的起始點和結束點
-				const fromAngle = Math.atan2(nowPnt.y - prevPnt.y, nowPnt.x - prevPnt.x);
-				const toAngle = Math.atan2(nextPnt.y - nowPnt.y, nextPnt.x - nowPnt.x);
-
-				const fromOffsetX = radius * Math.cos(fromAngle);
-				const fromOffsetY = radius * Math.sin(fromAngle);
-				const toOffsetX = radius * Math.cos(toAngle);
-				const toOffsetY = radius * Math.sin(toAngle);
-
-				const arcStartX = nowPnt.x - fromOffsetX;
-				const arcStartY = nowPnt.y - fromOffsetY;
-				const arcEndX = nowPnt.x + toOffsetX;
-				const arcEndY = nowPnt.y + toOffsetY;
+				const arcStartX = nowPnt.x - unitVec1.x * radius;
+				const arcStartY = nowPnt.y - unitVec1.y * radius;
+				const arcEndX = nowPnt.x + unitVec2.x * radius;
+				const arcEndY = nowPnt.y + unitVec2.y * radius;
 
 				// 添加直線到圓角的起始點
 				pathStr += ` L ${arcStartX} ${arcStartY}`;
 
-				// 判斷圓弧的方向（順時針或逆時針）
-				const angleDiff = toAngle - fromAngle;
-				const sweepFlag = angleDiff > 0 ? 1 : 0; // 根據角度差決定 sweep-flag
+				// 判斷圓弧的方向（順時針或逆時針）：使用叉積判斷
+				const cross = unitVec1.x * unitVec2.y - unitVec1.y * unitVec2.x;
+				const sweepFlag = cross < 0 ? 0 : 1;
 
 				// 添加圓角（A 指令）
 				pathStr += ` A ${radius} ${radius} 0 0 ${sweepFlag} ${arcEndX} ${arcEndY}`;
@@ -7257,19 +7393,12 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 			}
 		}
 
-		// 繪製流程線
+		// 繪製流程線, path2 for 增加右鍵功能表點擊區域
 		this.path.plot(pathStr);
 		this.path2.plot(pathStr);
 
 		//畫末端箭頭
 		this._drawArrow(points[pntLen - 2], points[pntLen - 1]);
-		/*
-		// 繪製帶有圓角的折線
-		const path = svg.path(pathStr)
-		  .stroke({ width: 2, color: '#000', linecap: 'round', linejoin: 'round' })
-		  .fill('none');
-		*/
-
 	};
 
 	/**
@@ -7290,12 +7419,29 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
 		};
 
 		// 更新箭頭路徑
-		this.arrowPath.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
-		//this.arrowPath1.plot(`M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
+		this.arrow.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
+		//this.arrow2.plot(`M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
+	};
+
+	//id記錄在 path !!
+	this.getId = function () {
+		return this.json.Id;
+	};
+
+	this.getFromType = function () {
+		return this.json.FromType;
+	};
+
+	this.setFromType = function (fromType) {
+		if (fromType == this.json.FromType)
+			return;
+
+		this._setFromTypeVars(fromType);
+		this.render();
 	};
 
 	//call last
-	this._init(flowBase, fromNode, toNode, lineType);
+	this._init(flowBase, json, fromNode, toNode);
 
 }//class FlowLine
 
@@ -7308,9 +7454,9 @@ function FlowLine(flowBase, fromNode, toNode, lineType) {
  * return {FlowForm}
  */ 
 function FlowForm(boxId, mNode, mLine) {
-    /**
-     flowBase: flowBase instance
-    */
+
+    //是否可編輯
+    this.isEdit = false;
 
     /**
      * initial flow
@@ -7330,18 +7476,19 @@ function FlowForm(boxId, mNode, mLine) {
         this.ColSep = ',';
 
         //html filter/class
-        this.NodeFilter = '.xf-node';   //for find node object
+        //this.NodeFilter = '.xf-node';   //for find node object
         this.MenuFilter = '.xf-menu';   //menu for node/line property
-        this.EpFilter = '.xf-ep';       //??node end point
-        this.StartNodeCls = 'xf-start';    //start node class
-        this.EndNodeCls = 'xf-end';        //end node class
+        //this.EpFilter = '.xf-ep';       //??node end point
+        this.StartNodeFilter = '.xf-start';    //start node class
+        //this.EndNodeCls = 'xf-end';        //??end node class
         //this.AutoNodeCls = 'xf-auto-node';      //auto node class
 
         //connection(line) style: start, agree, disagree
         this.InitLineCfg = { stroke: 'blue', strokeWidth: 2 };  //??initial
-        this.OkLineCfg = { stroke: 'green', strokeWidth: 2 };   //??ok
-        this.DenyLineCfg = { stroke: 'red', strokeWidth: 2 };   //??deny(reject)
+        //this.OkLineCfg = { stroke: 'green', strokeWidth: 2 };   //??ok
+        //this.DenyLineCfg = { stroke: 'red', strokeWidth: 2 };   //??deny(reject)
 
+		/*
         //??start node config
         this.StartNodeCfg = {
             filter: this.EpFilter,
@@ -7359,11 +7506,6 @@ function FlowForm(boxId, mNode, mLine) {
                 'action': 'the-action'
             },
             maxConnections: 10,
-            /*
-            onMaxConnections: function (info, e) {
-                alert('Maximum connections (' + info.maxConnections + ') reached');
-            }
-            */
         };
 
         //??end node config
@@ -7373,6 +7515,7 @@ function FlowForm(boxId, mNode, mLine) {
             anchor: ['Top', 'Bottom', 'Left', 'Right'],
             allowLoopback: true,
         };
+		*/
         //#endregion
 
         //#region variables
@@ -7381,13 +7524,14 @@ function FlowForm(boxId, mNode, mLine) {
         this.mLine = mLine;
 
         //this.popupMenu = $('.xf-menu');
-        this.divFlowBox = $('#' + boxId);
-        this.divLinesBox = $('#divLinesBox');       //hidden
-        this.divLineConds = $('#divLineConds');     //div line conds inside modalLineProp
-        this.eformNode = $('#eformNode');           //node edit form
-        this.eformLine = $('#eformLine');           //line edit form
+        //this.divFlowBox = $('#' + boxId);	//??
+        this.divLinesBox = $('#divLinesBox');       //??hidden
+        this.eformNodes = $('#eformNodes');           //nodes edit form for editMany
+        this.eformLines = $('#eformLines');           //lines edit form for editMany
         this.modalNodeProp = $('#modalNodeProp');
         this.modalLineProp = $('#modalLineProp');
+        this.eformNodeProp = this.modalNodeProp.find('form');   //modalNodeProp form
+        this.tbodyLineCond = this.modalLineProp.find('tbody');  //modalLineProp tbody for line conds
 
         //node/line template        
         this.tplNode = $('#tplNode').html();
@@ -7396,13 +7540,12 @@ function FlowForm(boxId, mNode, mLine) {
 
         //now selected type & element
         this.nowIsNode = false;     //true:node, false:line
-        this.nowElm = null;         //node element or connection(line)
+        this.nowFlowItem = null;    //now selected FlowNode/FlowLine
         //#endregion
 
-        //this.condOpExprs/this.condOpShows, match XpCode.Type=LineOp
-        //for show line label
+        //for FlowLine, 對應 XpCode.Type=LineOp, 數對內容為:儲存值/顯示文字(label)
         var condOpMaps = [
-            this.OrSep, ') || (',  //or
+            this.OrSep, ') || (',  	//or, 會自動加上外括號
             this.AndSep, ' && ',    //and
             ',EQ,', '=',
             ',NEQ,', '!=',
@@ -7415,66 +7558,74 @@ function FlowForm(boxId, mNode, mLine) {
         this.condOpShows = [];   //condition op show text
         var j = 0;
         for (var i = 0; i < condOpMaps.length; i = i + 2) {
-            this.condOpExprs[j] = new RegExp(condOpMaps[i], 'g');
+            this.condOpExprs[j] = new RegExp(condOpMaps[i], 'g');	//for find/replace
             this.condOpShows[j] = condOpMaps[i + 1];
             j++;
         }
 
-        /*
-        //get jsplumb instance
-        var flowBox = jsPlumb.getInstance({
-            Container: boxId,
-            //Connector: 'StateMachine',
-            Connector: 'Flowchart',            
-            Endpoint: ['Dot', { radius: 2 }],
-            HoverPaintStyle: { stroke: '#1e8151', strokeWidth: 3 },
-            ConnectionOverlays: [
-                ['Arrow', {
-                    location: 1,
-                    id: 'arrow',
-                    width: 8,
-                    length: 10,
-                    foldback: 0.8,
-                }],
-                ['Label', {
-                    label: '',
-                    id: 'label',
-                    cssClass: 'xf-line-label',
-                }]
-            ],
-        });
-
-        //set one basic connection style 
-        flowBox.registerConnectionType('basic', {
-            anchor: 'Continuous',
-            connector: 'Flowchart',
-            //connector: 'StateMachine',            
-        });
-        */
-
         //set instance first
         //this.flowBase = new FlowBase(boxId, (nodeId, x, y) => this.onMoveNode(nodeId, x, y));
         var flowBase = new FlowBase(boxId);
-        flowBase.fnMoveNode = (nodeId, x, y) => this.onMoveNode(nodeId, x, y);
-        flowBase.fnAddLine = (startId, endId) => this.onAddLine(startId, endId);
-        flowBase.fnRightMenu = (isNode, rowId, mouseX, mouseY) => this.onRightMenu(isNode, rowId, mouseX, mouseY);
+        flowBase.fnMoveNode = (node, x, y) => this.fnMoveNode(node, x, y);
+        flowBase.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
+        flowBase.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
         this.flowBase = flowBase;
 
         //set event
         this._setFlowEvent();
     };
 
-    this.onMoveNode = function (nodeId, x, y) {
-        var rowElm = this.mNode.idToRowBox(nodeId);
-        _form.loadRow(rowElm, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
+    this.fnMoveNode = function (node, x, y) {
+        var rowBox = this.mNode.idToRowBox(node.getId());
+        _form.loadRow(rowBox, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
     };
 
-    this.onAddLine = function (startId, endId) {
-        alert('onAddLine');
+    this.fnAfterAddLine = function (json) {
+        this.mLine.addRow(json, null, json.Id);   //不產生新Id, FlowLine已經產生
     };
 
-    this.onRightMenu = function (isNode, rowId, mouseX, mouseY) {
-        alert(`onRightMenu ${isNode}, rowId=${rowId}`);
+    /**
+     * on show right menu
+     * param isNode {bool} 
+     * param elm {FlowNode/FlowLine} 
+     * param mouseX {int} 
+     * param mouseY {int} 
+     */
+    this.fnShowMenu = function (event, isNode, flowItem) {
+        //set instance variables
+        this.nowIsNode = isNode;
+        this.nowFlowItem = flowItem;
+
+        //一般節點才需要設定屬性
+        var canEdit = isNode
+            ? (this.isEdit && flowItem.getNodeType() == _flow.TypeNode)
+            : this.isEdit;
+
+        //html 不會自動處理自製功能表狀態, 自行配合 css style
+        var css = 'off';
+        var menu = $(this.MenuFilter);
+        if (canEdit) {
+            menu.find('.xd-edit').removeClass(css);
+            menu.find('.xd-delete').removeClass(css);
+        } else {
+            menu.find('.xd-edit').addClass(css);
+            menu.find('.xd-delete').addClass(css);
+        }
+
+        // Show contextmenu
+        menu.finish()
+            .toggle(100)
+            .css({
+                position: 'fixed',  //使用 fixed 定位
+                left: event.clientX + 'px',
+                top: event.clientY + 'px',
+            });
+    };
+
+	//set editable or not
+    this.setEdit = function (status) {
+        this.isEdit = status;
+        this.flowBase.setEdit(status);
     };
 
     /**
@@ -7483,64 +7634,10 @@ function FlowForm(boxId, mNode, mLine) {
      *   2.mouse down to hide context menu
      */
     this._setFlowEvent = function () {
-        var flowBase = this.flowBase;
+
+        //hide context menu
         var me = this;
-
-        // bind a click listener to each connection; the connection is deleted. you could of course
-        // just do this: jsPlumb.bind('click', jsPlumb.detach), but I wanted to make it clear what was
-        // happening.
-        //(定義)Notification a Connection was clicked.
-        /*
-        flowBase.bind('click', function (c) {
-            //this.showNodeProp();
-            this.modalNodeProp.modal('show');
-        });
-        */
-
-        /* todo: temp remark
-        //line(connection) show context menu
-        flowBase.bind('contextmenu', function (elm, event) {
-            //"this" not work here !!
-            me.showPopupMenu(elm, event, false);
-        });
-        */
-
-        /*
-        //event: before build connection
-        //info: connection        
-        //flowBase.bind('connection', function (info) {
-        flowBase.bind('beforeDrop', function (info) {
-            //if (this.loading)
-            //    return true;
-
-            //if connection existed, return false for stop 
-            //info.source did not work here !!
-            var conn = info.connection;
-            if (flowBase.getConnections({ source: conn.source, target: conn.target }).length > 0)
-                return false;
-
-            //get source node & type
-            var prop = me.getLineProp('');
-
-            //set conn style & label
-            conn.setPaintStyle(prop.style);    //real connection
-            me._setLineLabel(conn, prop.label);
-
-            //add parameters(line model) into connection
-            var row = {
-                StartNode: me._elmToNodeValue(conn.source, 'Id'),
-                EndNode: me._elmToNodeValue(conn.target, 'Id'),
-                CondStr: '',
-                Sort: 9,
-            };
-            me._setLineKey(conn, me.addLine(row));
-
-            return true;
-        });
-        */
-
-        //hide context menu (jsPlumb no mousedown event !!)
-        $(document).bind('mousedown', function (e) {
+        $(document).on('mousedown', function (e) {
             //if (_obj.isShow(me.popupMenu))
             //    me.popupMenu.hide(100);
             
@@ -7553,80 +7650,15 @@ function FlowForm(boxId, mNode, mLine) {
     };
 
     /**
-     * set node event & source/target property
-     * param nodeObj {object} node object
-     */
-    /*
-    this._setNodeEvent = function (nodeObj) {
-        //set source & target property
-        var nodeType = _itext.get('NodeType', nodeObj);
-        var flowBase = this.flowBase;
-        var me = this;
-
-        //event: move node (update x,y)
-        //initialise draggable elements.
-        //must put before makeSource/makeTarget !!
-        var nodeElm = nodeObj[0];
-        flowBase.draggable(nodeElm, {
-            grid: [10, 10],
-            //update node position
-            stop: function (params) {
-                //debugger;
-                //var node = $(params.el);
-                var pos = $(params.el).position();
-                _form.loadRow(nodeObj, { PosX: Math.floor(pos.left), PosY: Math.floor(pos.top) });
-            },
-        });
-
-        //build line(connection)
-        //must put after flowBase.draggable() !!
-        if (nodeType != FlowNode.TypeEnd)
-            flowBase.makeSource(nodeElm, this.StartNodeCfg);
-        if (nodeType != FlowNode.TypeStart)
-            flowBase.makeTarget(nodeElm, this.EndNodeCfg);
-
-        //event: show node menu
-        //this._setNodeEvent(nodeObj);
-        nodeObj.on('contextmenu', function (event) {
-            //"this" is not work here !!
-            me.showPopupMenu(event.target, event, true);
-        });
-    };
-    */
-
-    /**
      * load nodes into UI
      * param rows {json} 後端傳回的完整json
      */
     this.loadNodes = function (rows) {
-        //this.flowBase.reset();
-
-        //stop drawing
-        //jsPlumb.setSuspendDrawing(true);
-
-        //empty all nodes first
-        //var box = this.divFlowBox;
-
-        //set nodes class
-        //var rows = _me.crudE.jsonGetRows(json);
-        //for (var i = 0; i < rows.length; i++)
-        //    this._setNodeClass(rows[i]);
-
-        //3rd param reset=false, coz box has other objects, cannot reset
-        this.mNode.loadRowsByRsb(rows, true, this.mNode.eform);
-
+        //EditMany load rows by rowsBox
+        this.mNode.loadRowsByRsb(rows, true);
+		
+		//flow loadNodes
         this.flowBase.loadNodes(rows);
-
-        /*
-        //set nodes event
-        var me = this;
-        box.find(this.NodeFilter).each(function () {
-            me._setNodeEvent($(this));
-        });
-        */
-
-        //start drawing
-        //jsPlumb.setSuspendDrawing(false, true);
     };
 
     /**
@@ -7634,74 +7666,48 @@ function FlowForm(boxId, mNode, mLine) {
      * param rows {rows} line rows
      */
     this.loadLines = function (rows) {
-        //stop drawing
-        //jsPlumb.setSuspendDrawing(true);
+        this.mLine.loadRowsByRsb(rows, true);
 
-
-        //render jsplumb line
-        //var rows = _me.crudE.jsonGetRows(json);
-        //for (var i = 0; i < rows.length; i++)
-        //    this._renderLine(rows[i]);
-
-        //load editMany lines
-        this.mLine.loadRowsByRsb(rows, true, this.mLine.eform);
-
+        //set label
+        if (rows != null) {
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].Label = this._condStrToLabel(rows[i].CondStr);
+            }
+        }
         this.flowBase.loadLines(rows);
-
-        //start drawing
-        //jsPlumb.setSuspendDrawing(false, true);
     };
 
     //#region node function
+
     /**
-     * set node class(_NodeClass), template has this field
-     * param row {json} node row
-     * return {json} new row
-     */
-    /*
-    this._setNodeClass = function (row) {
-        switch (row.NodeType) {
-            case this.StartNode:
-                row._NodeClass = this.StartNodeCls;
-                break;
-            case this.EndNode:
-                row._NodeClass = this.EndNodeCls;
-                break;
-            //case this.AutoNode:
-            //    row._NodeClass = this.AutoNodeCls;
-            //    break;
-            default:
-                //normal node
-                break;
-        }
-
-        return row;
-    };
-    */
-
-    //add new node
-    this.addNode = function (name, nodeType) {
-        //json row initial value
-        var row = {
-            Name: name,
+     * add new node
+     * param nodeType {string}
+     * param name {string} only for normalType node
+     */ 
+    this.addNode = function (nodeType, name) {
+        //mNode新筆一筆資料, 會產生新id
+        var json = {
+            Name: (nodeType == _flow.TypeNode) ? name : '',
             NodeType: nodeType,
             PosX: 100,
             PosY: 100,
         };
+        var row = this.mNode.addRow(json);  //會產生id
+        row.Name += "-" + row.Id;
 
-        var node = this.mNode.addRow(this._setNodeClass(row), this.divFlowBox);
-        this._setNodeEvent(node);   //set node event
+		//flow add node
+		this.flowBase.addNode(row);
     };
 
     /**
      * node id to node object
-     */ 
     this._idToNode = function (id) {
         return this.divFlowBox.find('.xf-node [value=' + id + ']').closest('.xf-node');
     };
+     */
+
     /**
      * inside element to node object
-     */ 
     this._elmToNode = function (elm) {
         return $(elm).closest(this.NodeFilter);
     };
@@ -7709,23 +7715,23 @@ function FlowForm(boxId, mNode, mLine) {
         var node = this._elmToNode(elm);
         return this._boxGetValue(node, fid);
     };
+     */
 
     /**
      * node get field value
      * param node {object} node object
      * param fid {string} field id
      * return {string}
-     */ 
     this._boxGetValue = function (node, fid) {
         return _itext.get(fid, node);
     };
+     */
 
     /**
      * node get field values
      * param node {object} node object
      * param fids {strings} field id array
      * return {json}
-     */ 
     this._boxGetValues = function (node, fids) {
         var json = {};
         for (var i = 0; i < fids.length; i++) {
@@ -7734,28 +7740,27 @@ function FlowForm(boxId, mNode, mLine) {
         }
         return json;
     };
+     */
 
-    this.deleteNode = function (nodeElm) {
-        //delete from & to lines
-        var flowBase = this.flowBase;
-        this.deleteLines(flowBase.getConnections({ source: nodeElm }));
-        this.deleteLines(flowBase.getConnections({ target: nodeElm }));
+    this.deleteNode = function (node) {
+        //delete mNode
+        this.mNode.deleteRow(node.getId());
 
-        //add deleted row of node
-        var node = $(nodeElm);
-        this.mNode.deleteRow(this._getObjKey(node));
+        //delete mLine
+        node.getLines().forEach(line => {
+            this.mLine.deleteRow(line.getId());
+        });
 
-        //delete node 
-        $(nodeElm).remove();
+        //delete flowNode(自動刪除相關流程線) 
+        this.flowBase.deleteNode();
     };
     //#endregion (node function)
 
     //#region line function
     /**
-     * add one line(connector)
+     * ?? add one line(connector)
      * param row {json} line row
      * return void
-     */ 
     this._renderLine = function (row) {
 
         //param 2(reference object) not work here !!
@@ -7776,12 +7781,12 @@ function FlowForm(boxId, mNode, mLine) {
         //set label
         this._setLineLabel(conn, prop.label);
     };
+     */
 
     /**
      * add flow line into hide UI for crud
      * param row {json}
      * return {string} line key
-     */
     this.addLine = function (row) {
         var newLine = $(this.tplLine);      //create row object, no need mustache()
         _form.loadRow(newLine, row);        //row objec to UI
@@ -7789,10 +7794,10 @@ function FlowForm(boxId, mNode, mLine) {
         this.divLinesBox.append(newLine);   //append row object
         return key;
     };
+     */
 
     /**
      * set connection key
-     */ 
     this._setLineKey = function (conn, key) {
         var row = {};
         row['Id'] = key;
@@ -7804,11 +7809,11 @@ function FlowForm(boxId, mNode, mLine) {
         //return (sourceType == this.StartNode || sourceType == this.AutoNode);
         return (sourceType == this.StartNode);
     };
+     */
 
-    /**
+    /** ??
      * get line property: style, label
      * return {json} 
-     */ 
     this.getLineProp = function (condStr) {
         return {
             //type: type,
@@ -7816,16 +7821,18 @@ function FlowForm(boxId, mNode, mLine) {
             label: this._condStrToLabel(condStr),
         }
     };
+     */
 
+    /*
     this._getLineElmKey = function (conn) {
         return conn.getParameters()['Id'];
     };
+    */
 
     /**
      * get object(node/line) key
      * param obj {object}
      * return {string} key value
-     */
     this._getObjKey = function (obj) {
         return _itext.get('Id', obj);
     };
@@ -7837,80 +7844,40 @@ function FlowForm(boxId, mNode, mLine) {
         obj.setLabel(label);
         //conn.getOverlay('label').setLabel(label);
     };
+     */
 
+    /*
     //delete line with warning msg
     this.deleteLineWithMsg = function (conn) {
         _tool.ans('delete this line ?', function () {
             this.deleteLine(conn);
         });
     };
-    //delete line without warning msg
-    this.deleteLine = function (conn) {
-        //add deleted row
-        var json = conn.getParameters();    //model
-        this.mLine.deleteRow(json.Id);
+    */
 
-        //delete conn
-        this.flowBase.deleteConnection(conn);
+    //delete line without warning msg
+    this.deleteLine = function (line) {
+        //delete mLine
+        this.mLine.deleteRow(line.getId());
+
+        //delete flowLine
+        this.flowBase.deleteLine(line);
     };
-    this.deleteLines = function (conns) {
-        for (var i = 0; i < conns.length; i++) {
-            this.deleteLine(conns[i]);
+    /*
+    this.deleteLines = function (lines) {
+        for (var i = 0; i < lines.length; i++) {
+            this.deleteLine(lines[i]);
         }
     };
+    */
     //#endregion (line function)
 
-    /**
-     * show popup menu for node(normal, auto)/line
-     * param elm {element} node element or connection
-     * param event {event}
-     * param isNode {bool} true(node), false(line)
-     */
-    this.showPopupMenu = function (elm, event, isNode) {
-        //stop default context menu 
-        event.preventDefault();
-
-        //set instance variables
-        this.nowIsNode = isNode;
-        this.nowElm = isNode ? $(elm).closest(this.NodeFilter)[0] : elm;
-
-        //set edit status
-        var canEdit = true;
-        var nodeType;
-        if (isNode) {
-            nodeType = this._elmToNodeValue(elm, 'NodeType');
-            //canEdit = (nodeType == this.NormalNode || nodeType == this.AutoNode);
-            canEdit = (nodeType == this.NormalNode);
-        } else {
-            nodeType = this._elmToNodeValue(elm.source, 'NodeType');
-            //canEdit = (nodeType == this.StartNode || nodeType == this.AutoNode);
-            canEdit = (nodeType == FlowNode.TypeStart);
-        }
-        /*
-        //debugger;
-        var item = this.popupMenu.find('.xd-edit');
-        if (canEdit)
-            item.show();
-        else
-            item.hide();
-        */
-
-        // Show contextmenu
-        $(this.MenuFilter).finish()
-        //this.popupMenu.finish()
-            .toggle(100)
-            .css({
-                top: event.pageY + 'px',
-                left: event.pageX + 'px'
-            });
-    };
-
-    //convert condiction string to label string
+    //將Db的條件內容轉換為顯示內容
     this._condStrToLabel = function (str) {
         if (_str.isEmpty(str))
             return '';
 
-        var hasOr = str.indexOf(this.OrSep) > 0;
+        var hasOr = str.indexOf(this.OrSep) > 0;    //先判斷
         for (var i = 0; i < this.condOpExprs.length; i++)
             str = str.replace(this.condOpExprs[i], this.condOpShows[i]);
         if (hasOr)
@@ -7918,38 +7885,39 @@ function FlowForm(boxId, mNode, mLine) {
         return str;
     };
 
-    //convert condStr to List<Cond>
+    //convert condStr to List<Cond> for 顯示編輯畫面
     this._condStrToList = function (str) {
         if (_str.isEmpty(str))
             return null;
 
-        var list = [];
-        var k = 0;
         var orList = str.split(this.OrSep);
         var orLen = orList.length;
         var hasOr = (orLen > 1);
+        var result = [];
+        var ary = 0;
         for (var i = 0; i < orLen; i++) {
             var andList = orList[i].split(this.AndSep);
             for (var j = 0; j < andList.length; j++) {
                 var cols = andList[j].split(this.ColSep);
-                list[k] = {
+                result[ary] = {
                     //AndOr: hasOr ? 'O' : 'A',
                     AndOr: hasOr ? this.OrSep : this.AndSep,
                     Fid: cols[0],
                     Op: cols[1],
                     Value: cols[2],
                 };
-                k++;
+                ary++;
             }
         }
-        return list;
+        return result;
     };
 
+    //編輯畫面讀取的是 condStr, flowLine顯示的是 label
     //get line condition string
-    this._getLineLabel = function () {
+    this._getCondStr = function () {
         var me = this;
         var condStr = '';
-        this.divLineConds.find('tr').each(function (idx) {
+        this.tbodyLineCond.find('tr').each(function (idx) {
             var tr = $(this);
             var str = (idx == 0 ? '' : _iselect.get('AndOr', tr)) +
                 _itext.get('Fid', tr) + me.ColSep +
@@ -7960,29 +7928,34 @@ function FlowForm(boxId, mNode, mLine) {
         return condStr;
     };
 
-    this.showNodeProp = function (nodeType) {
-        var node = this._elmToNode(this.nowElm);
-        var row = this._boxGetValues(node, ['NodeType', 'Name', 'SignerType', 'SignerValue']);
-        _form.loadRow(this.modalNodeProp, row);
+    this.showNodeProp = function (node) {
+        //var node = this._elmToNode(this.nowFlowItem);
+        //var row = this._boxGetValues(node, ['NodeType', 'Name', 'SignerType', 'SignerValue']);
+        //var id = node.getId();
+        var rowBox = this.mNode.idToRowBox(node.getId());
+        _form.loadRow(this.modalNodeProp, _form.toRow(rowBox));
 
         //show modal
         _modal.showO(this.modalNodeProp);   //.modal('show');
     };
 
-    //conn: line connection
-    this.showLineProp = function (conn) {
+    //param line {FlowLine} flow line 
+    this.showLineProp = function (line) {
         //debugger;
-        var form = this.eformLine;  //line prop modal edit form
         //var line = conn.getParameters();   //line model
-        var line = this._connToLine(conn);
+        //var line = this._connToLine(conn);
         //var lineType = line.LineType;
 
+        var rowBox = this.mLine.idToRowBox(line.getId());
+		
         //show fields
         //_iradio.set('LineType', lineType, form);
         //this.onChangeLineType(lineType); //switch input
-        _iread.set('StartNode', this._elmToNodeValue(conn.source, 'Name'), form);
-        _iread.set('EndNode', this._elmToNodeValue(conn.target, 'Name'), form);
-        _itext.set('Sort', this._boxGetValue(line, 'Sort'), form);
+        var form = this.modalLineProp.find('form');
+        _iread.set('FromNodeName', line.fromNode.getName(), form);
+        _iread.set('ToNodeName', line.toNode.getName(), form);
+        _iselect.set('FromType', line.getFromType(), form);
+        _itext.set('Sort', _itext.get('Sort', rowBox), form);
 
         //show modal
         _modal.showO(this.modalLineProp);
@@ -7991,17 +7964,19 @@ function FlowForm(boxId, mNode, mLine) {
         //    line.CondStr = '';
 
         //load line conditions rows
-        this.divLineConds.empty();
-        var condList = this._condStrToList(this._boxGetValue(line, 'CondStr'));
+        this.tbodyLineCond.empty();
+        var condStr = _itext.get('CondStr', rowBox)
+        var condList = this._condStrToList(condStr);
         if (condList != null) {
             for (var i = 0; i < condList.length; i++) {
                 var newCond = $(this.tplLineCond);
                 _form.loadRow(newCond, condList[i]);
-                this.divLineConds.append(newCond);
+                this.tbodyLineCond.append(newCond);
             }
         }
     };
 
+    /*
     //jsplumb connection to line object
     this._connToLine = function (conn) {
         return this._idToLine(this._getLineElmKey(conn));
@@ -8012,52 +7987,85 @@ function FlowForm(boxId, mNode, mLine) {
         return this.divLinesBox.find('.xd-line [value=' + id + ']').closest('.xd-line');
     };
 
+    this._idToLineBox = function (id) {
+        return this.eformLines.find('.xd-line [value=' + id + ']').closest('.xd-line');
+    };
+    */
+
+    this.onAddNode = function (nodeType) {
+        if (nodeType == _flow.TypeStart) {
+            if (this.flowBase.hasStartNode()) {
+                _tool.msg('起始節點已經存在，不可再新增。');
+                return;
+            }
+
+            //add node
+            this.addNode(nodeType);
+        } else if (nodeType == _flow.TypeEnd) {
+            this.addNode(nodeType);
+        } else {
+            this.addNode(_flow.TypeNode, '節點');
+        }
+    };
+
     //#region events
+    /*
     //on add start node
     this.onAddStartNode = function () {
         //check, only one start node allow
-        if (this.divFlowBox.find('.' + this.StartNodeCls).length > 0) {
+        if (this.eformNodes.find(this.StartNodeFilter).length > 0) {
             //_tool.msg(this.R.StartNodeExist);
             _tool.msg('Start Node Already Existed !');
             return;
         }
 
         //add node
-        this.addNode('Start', this.StartNode);
+        this.addNode(_flow.TypeStart);
     };
     //on add end node
     this.onAddEndNode = function () {
-        this.addNode('End', this.EndNode);
+        this.addNode(_flow.TypeEnd);
     };
-    /*
+    //on add normal node
+    this.onAddNormalNode = function () {
+        this.addNode(this.NormalNode, '節點');
+    };
     this.onAddAutoNode = function () {
         this.addNode('Auto', this.AutoNode);
     };
     */
-    //on add normal node
-    this.onAddNormalNode = function () {
-        this.addNode('Node', this.NormalNode);
-    };
+
+    this._menuStatus = function (me) {
+        return !me.classList.contains('off');
+    }
 
     //context menu event
-    this.onMenuEdit = function () {
+    this.onMenuEdit = function (me) {
+        if (!this._menuStatus(me)) return;
+
         if (this.nowIsNode)
-            this.showNodeProp(this._elmToNodeValue(this.nowElm, 'NodeType'));
+            this.showNodeProp(this.nowFlowItem);
         else
-            this.showLineProp(this.nowElm);
+            this.showLineProp(this.nowFlowItem);
     };
 
-    this.onMenuDelete = function () {
+    this.onMenuDelete = function (me) {
+        if (!this._menuStatus(me)) return;
+
         var me = this;
         if (me.nowIsNode) {
-            _tool.ans('delete this node ?', function () {
-                me.deleteNode(me.nowElm);
+            _tool.ans('是否確定刪除這個節點和流程線?', function () {
+                me.deleteNode(me.nowFlowItem);
             });
         } else {
-            _tool.ans('delete this line ?', function () {
-                me.deleteLine(me.nowElm);
+            _tool.ans('是否確定刪除這一條流程線?', function () {
+                me.deleteLine(me.nowFlowItem);
             });
         }
+    };
+
+    this.onMenuView = function (me) {
+        //todo
     };
 
     //onclick add line condition
@@ -8068,7 +8076,7 @@ function FlowForm(boxId, mNode, mLine) {
         };
         var cond = $(Mustache.render(this.tplLineCond, row));
         _form.loadRow(cond, row);        //row objec to UI
-        this.divLineConds.append(cond);
+        this.tbodyLineCond.append(cond);
     };
 
     this.onDeleteLineCond = function (btn) {
@@ -8079,20 +8087,27 @@ function FlowForm(boxId, mNode, mLine) {
     this.onModalNodeOk = function () {
         //check input
 
+        //set new value
+        var row = _form.toRow(this.eformNodeProp);
+
+        //update node display name
+        var node = this.nowFlowItem;
+        var rowBox = this.mNode.idToRowBox(node.getId());
+        var oldName = _itext.get('Name', rowBox);   //get before loadRow()
+        _form.loadRow(rowBox, row);
+
+        if (oldName != row.Name)
+            node.setName(row.Name, true);
+
         //hide modal
         _modal.hideO(this.modalNodeProp);
 
-        //set new value
-        var row = _form.toRow(this.eformNode);
-
-        //update node display name
-        var nodeObj = $(this.nowElm);
-        nodeObj.find('.xd-name').text(row.Name);
-
+        /*
         //update node form fields
         _itext.set('Name', row.Name, nodeObj);
         _itext.set('SignerType', row.SignerType, nodeObj);
         _itext.set('SignerValue', row.SignerValue, nodeObj);
+        */
 
         //change node style, has xf-ep div at the end !!
         //var html = row.Name + '<div class="xf-ep" action="begin"></div>';
@@ -8110,39 +8125,50 @@ function FlowForm(boxId, mNode, mLine) {
     //line prop click ok
     this.onModalLineOk = function () {
         //check input
+		//var form = this.modalLineProp;
 
-        //hide modal
-        _modal.hideO(this.modalLineProp);
-
-        //var lineType = _iradio.get('LineType', this.eformLine);
+        //var lineType = _iradio.get('LineType', this.eformLines);
         //_assert.inArray(lineType, ['0','1','2']);
 
         //conds to string
-        var condStr = this._getLineLabel();
+        //var condStr = this._getCondStr();
 
         //set new value
-        //write into line, this.nowElm is line connection
-        //var form = this.eformLine;
-        var conn = this.nowElm;
+        //write into line, this.nowFlowItem is line connection
+        //var form = this.eformLines;
+        //var conn = this.nowFlowItem;
         //conn.setParameter('LineType', lineType);
-        var row = {
-            CondStr: condStr,
-            Sort: _itext.get('Sort', this.eformLine),
-        };
-        //conn.setParameter('CondStr', condStr);
-        //conn.setParameter('Sort', _itext.get('Sort', form));
-        //var line = conn.getParameters();    //model
-        var line = this._connToLine(conn);
-        _form.loadRow(line, row);
 
+        //update mLine
+        var modal = this.modalLineProp;
+        var row = {
+            CondStr: this._getCondStr(),
+            Sort: _itext.get('Sort', modal),
+            FromType: _iselect.get('FromType', modal),
+        };
+        //var line = this._connToLine(conn);
+        //_form.loadRow(line, row);
+        var line = this.nowFlowItem;
+        var rowBox = this.mLine.idToRowBox(line.getId());
+        _form.loadRow(rowBox, row);
+		
+		//update flowLine
+        line.setLabel(this._condStrToLabel(row.CondStr));
+        line.setFromType(row.FromType);
+		
+        //hide modal
+        _modal.hideO(modal);
+
+		/*
         //change line label
         var prop = this.getLineProp(condStr)
         this._setLineLabel(conn, prop.label);
         conn.setPaintStyle(prop.style);
+		*/
     };
     //#endregion (events)
 
-    //call last
+	//call last
     this._init();
 
 }//class

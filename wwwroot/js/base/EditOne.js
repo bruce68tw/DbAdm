@@ -54,8 +54,7 @@ function EditOne(kid, eformId) {
             //return;   //not return
         }
 
-        _edit.setFidTypes(this, this.eform);
-        _edit.setFileVars(this, this.eform);
+        _edit.initVars(this, this.eform);
     };
 
     /**

@@ -30,13 +30,15 @@ var _edit = {
 
 
     /**
-     * setFidTypeVars -> setFidTypes
+     * 初始化變數
+     * setFidTypeVars + setFileVars -> initVars
      * set fid-type variables: fidTypes, fidTypeLen
      * param me {object} EditOne/EditMany object
      * param box {object} container
      * return void
      */
-    setFidTypes: function (me, box) {
+    initVars: function (me, box) {
+        //set fid-type variables: fidTypes, fidTypeLen
         var fidTypes = [];
         box.find(_input.fidFilter()).each(function (i, item) {
             var obj = $(item);
@@ -46,17 +48,8 @@ var _edit = {
         });
         me.fidTypes = fidTypes;
         me.fidTypeLen = me.fidTypes.length;
-    },
 
-    /**
-     * set file related variables: fileFids, fileLen, hasFile
-     * called by EditOne/EditMany init()
-     * param me {edit} EditOne/EditMany variables
-     * param box {object} form or row object
-     * return void
-     */
-    setFileVars: function (me, box) {
-        //var me = this;  //use outside .each()
+        //set file related variables: fileFids, fileLen, hasFile
         me.fileFids = [];      //upload file fid array
         box.find('[data-type=file]').each(function (index, item) {
             me.fileFids[index] = _input.getFid($(item));
