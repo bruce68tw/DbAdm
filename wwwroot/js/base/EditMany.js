@@ -18,7 +18,8 @@
  * param-1 kid {string} pkey field id(single key)
  * //param-2 eformId {string} (optional) edit form id
  * param-2 rowsBoxId {string} (optional) rows box id
- *   if empty, you must write functions: fnLoadRows、fnGetUpdJson、fnValid
+ *   if empty, you must write functions: fnLoadRows、fnGetUpdJson、fnValid、fnReset，
+ *     新增一筆時設定newId
  * param-3 tplRowId {string} (optional) row template id
  *   tplRowId -> rowTplId
  *   1.if empty, it will log error when call related function.
@@ -640,11 +641,11 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
     };
 
     /**
+     * set this.newId、PKey、_IsNew by row box
      * boxSetNewId -> setNewIdByBox
-     * set new id by row box
      * public for MyCrud.js, Flow.js
      * param box {object} row box
-     * param newId {int} 外部傳入newId if any
+     * param newId {int} 外部傳入newId if any, 如果有值則不會累加 this.newId
      * return {int} new key index
      */
     this.setNewIdByBox = function (box, newId) {
@@ -652,8 +653,11 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             this.newIndex++;
             newId = this.newIndex;
         }
-        _itext.set(this.kid, newId, box);
-        _edit.addIsNew(box);    //增加_IsNew隱藏欄位
+
+        //kid和IsNew必須放在同一層 !!
+        var box2 = _obj.get(this.kid, box).parent();
+        _itext.set(this.kid, newId, box2);
+        _edit.addIsNew(box2);    //增加_IsNew隱藏欄位
         return newId;
     };
 

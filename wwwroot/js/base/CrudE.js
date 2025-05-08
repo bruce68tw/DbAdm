@@ -500,13 +500,17 @@ function CrudE(edits) {
      * return json row
      */
     this.getUpdRow = function (kid, fidTypes, box) {
-        //if key empty then return row
+        //case new return row
         var row = _form.toRow(box);
+        if (_edit.isNewRow(row))
+            return row;
+        /*
         var key = _input.get(kid, box);
         if (_str.isEmpty(key))
             return row;
+        */
 
-        //讀取有異動的欄位
+        //case update: 讀取有異動的欄位
         var diff = false;
         var result = {};
         var fid, ftype, value, obj, old;
@@ -536,7 +540,7 @@ function CrudE(edits) {
         if (!diff)
             return null;
 
-        result[kid] = key;
+        result[kid] = _input.get(kid, box);
         return result;
     };
 

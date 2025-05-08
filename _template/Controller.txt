@@ -35,14 +35,8 @@ namespace {{Project}}.Controllers
         {{/if}}
         {
 	        {{#if ReadSelectCols}}
-			//for read view
+			//for read/edit view
 		        {{#each ReadSelectCols}}
-			{{this}}
-		        {{/each}}
-	        {{/if}}
-	        {{#if EditSelectCols}}
-			//for edit view
-		        {{#each EditSelectCols}}
 			{{this}}
 		        {{/each}}
 	        {{/if}}
@@ -114,7 +108,7 @@ namespace {{Project}}.Controllers
                 {{#if AuthType2}}
         [XgProgAuth(CrudEnum.View)]
                 {{/if}}
-        public async Task<FileResult> ViewFile(string table, string fid, string key, string ext)
+        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
         {
             return await _Xp.View{{ProgCode}}A(fid, key, ext);
         }

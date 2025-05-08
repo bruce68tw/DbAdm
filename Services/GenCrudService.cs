@@ -26,14 +26,14 @@ namespace DbAdm.Services
         private readonly string _tplDir = _Fun.DirRoot + "_template/";
 
         //generated 6 files, 1(template),2(target folder),3(target file)
-        private readonly string[] _crudFiles = new string[] {
+        private readonly string[] _crudFiles = [
             "Controller.txt", "Controllers", "[prog]Controller.cs",
             "ReadService.txt", "Services", "[prog]Read.cs",
             "EditService.txt", "Services", "[prog]Edit.cs",
             "ReadView.txt", "Views/[prog]", "Read.cshtml",
             "EditView.txt", "Views/[prog]", "Edit.cshtml",
             "JS.txt", "wwwroot/js/view", "[prog].js",
-        };
+        ];
 
         //crud files count -> 6
         //private readonly int _crudFileLen;
@@ -250,27 +250,46 @@ namespace DbAdm.Services
                 crud.HasFitemCols = qitems!.Any(a => _Str.IsEmpty(a.LayoutCols));
 
                 //set ReadSelectCols, be [] when null !!
+                //字尾A表示非同步
                 crud.ReadSelectCols = qitems!
                     .Where(a => ddlpTypes.Contains(a.ItemType))
                     .Select(a => (a.ItemData.Length > 0 && a.ItemData[^1] == 'A')
-                        ? $"ViewBag.{a.ItemData} = await _XpCode.{a.ItemData}();"
+                        ? $"ViewBag.{a.ItemData[..^1]} = await _XpCode.{a.ItemData}();"
                         : $"ViewBag.{a.ItemData} = _XpCode.{a.ItemData}();")
                     .Distinct()
                     .ToList();
 
                 #region 4.set fields: EditSelectCols(ReadSelectCols already done)
-                crud.EditSelectCols = _eitems!
+                //排除qitems
+                var qitemDatas = qitems!.Select(a => a.ItemData)
+                    .ToList() ?? [];
+                var editSelectCols = _eitems!
                     .Where(a => ddlpTypes.Contains(a.ItemType) &&
-                        !crud.ReadSelectCols.Contains(a.ItemData))
+                        !qitemDatas.Contains(a.ItemData))
                     .Select(a => (a.ItemData.Length > 0 && a.ItemData[^1] == 'A')
-                        ? $"ViewBag.{a.ItemData} = await _XpCode.{a.ItemData}();"
+                        ? $"ViewBag.{a.ItemData[..^1]} = await _XpCode.{a.ItemData}();"
                         : $"ViewBag.{a.ItemData} = _XpCode.{a.ItemData}();")
                     .Distinct()
                     .ToList();
+                if (editSelectCols != null)
+                    crud.ReadSelectCols.AddRange(editSelectCols);
 
                 //crud.HasSelectA = (crud.ReadSelectCols.Count > 0 || crud.EditSelectCols.Count > 0);
-                crud.HasSelectA = (crud.ReadSelectCols.Any(a => a.Contains("await") ||
-                    crud.EditSelectCols.Any(a => a.Contains("await"))));
+                var asyncCount = crud.ReadSelectCols.Count(a => a.Contains("await"));
+                crud.HasSelectA = asyncCount > 0;
+
+                //加上 Db
+                if (asyncCount > 1)
+                {
+                    var items = crud.ReadSelectCols;
+                    for (i = 0; i < items.Count; i++)
+                    {
+                        if (items[i].Contains("await"))
+                            items[i] = items[i].Replace("()", "(db)");
+                    }
+                    crud.ReadSelectCols.Insert(0, "var db = new Db();");
+                    crud.ReadSelectCols.Add("await db.DisposeAsync();");
+                }
                 #endregion
 
                 //set Fitems, F2items
@@ -477,7 +496,7 @@ namespace DbAdm.Services
                     crud.FileEditTypeArg = $"IFormFile {crud.FileEditArg}";
                     crud.FileEditStrs = new List<string>()
                     {
-                        $"await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.Dir{crud.ProgCode}, {fid2}, nameof({fid2}));"
+                        $"await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.Dir{crud.ProgCode}, {fid2}, nameof({fid2}));"
                     };
                 }
                 else
@@ -493,7 +512,7 @@ namespace DbAdm.Services
                             var fid2 = $"t0_{file.Fid}";
                             crud.FileEditArg += sep + fid2;
                             crud.FileEditTypeArg += sep + $"IFormFile {fid2}";
-                            crud.FileEditStrs.Add($"await _WebFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.Dir{crud.ProgCode}, {fid2}, nameof({fid2}));");
+                            crud.FileEditStrs.Add($"await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.Dir{crud.ProgCode}, {fid2}, nameof({fid2}));");
                         }
                         else
                         {
@@ -501,7 +520,7 @@ namespace DbAdm.Services
                             var fid2 = $"t0{etable.Sort}_{file.Fid}";
                             crud.FileEditArg += sep + fid2;
                             crud.FileEditTypeArg += sep + $"List<IFormFile> {fid2}";
-                            crud.FileEditStrs.Add($"await _WebFile.SaveCrudFilesA(json, service.GetNewKeyJson(), _Xp.Dir{etable.TableCode}, {fid2}, nameof({fid2}));");
+                            crud.FileEditStrs.Add($"await _HttpFile.SaveCrudFilesA(json, service.GetNewKeyJson(), _Xp.Dir{etable.TableCode}, {fid2}, nameof({fid2}));");
                         }
                         sep = ", ";
                     }
@@ -654,8 +673,7 @@ namespace DbAdm.Services
         /// <param name="item"></param>
         private void AddHideStr(CrudEtableDto table, CrudEitem0Dto item)
         {
-            if (table.HideViewStrs == null)
-                table.HideViewStrs = new List<string>();
+            table.HideViewStrs ??= [];
             table.HideViewStrs.Add(ViewHide(item.Fid));
         }
 
@@ -945,9 +963,9 @@ namespace DbAdm.Services
 
         private string ViewSelectRows(CrudEitem0Dto item)
         {
-            var value = _Str.IsEmpty(item.ItemData)
-                ? "??" : item.ItemData;
-            //return KeyValue("Rows", "(List<IdStrDto>)ViewBag." + value);
+            //不取字尾A字元(表示async)
+            var value = _Str.IsEmpty(item.ItemData) ? "??" : 
+                (item.ItemData[^1] == 'A') ? item.ItemData[..^1] : item.ItemData;
             return KeyValue("Rows", "ViewBag." + value);
         }
 

@@ -62,7 +62,7 @@ namespace DbAdm.Models
         /// <summary>
         /// (controller)edit view select/radio col string list
         /// </summary>
-        public List<string>? EditSelectCols { get; set; }
+        //public List<string>? EditSelectCols { get; set; }
 
         /// <summary>
         /// has async ReadSelectCols or EditSelectCols
