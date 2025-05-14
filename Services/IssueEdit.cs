@@ -119,6 +119,7 @@ where r.IssueId=@Id
 			{
 				var newKeyJson = service.GetNewKeyJson();
 				await _HttpFile.SaveCrudFilesA(json, newKeyJson, _Xp.DirIssueFile, t00_FileName, nameof(t00_FileName));
+				await SurveyA(result, service.GetMainKey());		//寄問卷
 			}
 			return result;
 		}
@@ -131,9 +132,34 @@ where r.IssueId=@Id
 			{
 				var newKeyJson = service.GetNewKeyJson();
 				await _HttpFile.SaveCrudFilesA(json, newKeyJson, _Xp.DirIssueFile, t00_FileName, nameof(t00_FileName));
-			}
-			return result;
+                await SurveyA(result, service.GetMainKey());		//寄問卷
+            }
+            return result;
 		}
 
-	} //class
+		//寄送滿意度問卷 if need
+        private async Task SurveyA(ResultDto result, string key)
+		{
+			//檢查結果
+			if (_Result.HasError(result))
+				return;
+
+			//是否符合: 已結案、有回報人、寄送次數為0
+			var sql = $@"
+select Id
+from dbo.Issue
+where 1=1
+and Id='{key}'
+and IsFinish = 1
+and SendTimes = 0
+and isnull(RptUser,'') != '' 
+";
+			if (_Str.IsEmpty(await _Db.GetStrA(sql)))
+				return;
+
+			//寄問卷
+			await new SurveyService().SendSurveyA(key);
+        }
+
+    } //class
 }
