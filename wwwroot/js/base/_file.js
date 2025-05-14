@@ -18,5 +18,10 @@ var _file = {
 
     isImageExt: function (ext) {
         return (",jpg,jpeg,png,gif,tif,tiff,").indexOf("," + ext + ",") >= 0;
+    },
+
+    isExcelExt: function (ext) {
+        return (",xls,xlsx,").indexOf("," + ext + ",") >= 0;
     }
+
 };//class

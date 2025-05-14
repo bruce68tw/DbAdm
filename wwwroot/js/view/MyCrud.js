@@ -54,11 +54,11 @@ var _me = {
 
         //Qitem(Q)
         _me.tplQitem = $('#tplQitem').html();
-        _me.divQitemBody = $('#divQitemBody');
+        _me.tbodyQitem = $('#tbodyQitem');
 
         //Ritem(R)
         _me.tplRitem = $('#tplRitem').html();
-        _me.divRitemBody = $('#divRitemBody');
+        _me.tbodyRitem = $('#tbodyRitem');
 
         //CrudEdit table(use nav)
         _me.navEtable = $('#navEtable');
@@ -68,7 +68,7 @@ var _me = {
 
         //Eitem(E)
         _me.tplEitemTr = $('#tplEitemTr').html();
-        _me.divEitemBody = $('#divEitemBody');
+        //_me.divEitemBody = $('#divEitemBody');
 
         //Item modal(for Q,R,E)
         _me.modalItems = $('#modalItems');    //modal for select items
@@ -141,12 +141,12 @@ var _me = {
     edit0_whenSave: function () {
 
         //qitem set sort
-        _me.divQitemBody.find('.xu-tr').each(function (i, item) {
+        _me.tbodyQitem.find('.xu-tr').each(function (i, item) {
             _itext.set('Sort', i, $(item));
         });
 
         //ritem set sort
-        _me.divRitemBody.find('.xu-tr').each(function (i, item) {
+        _me.tbodyRitem.find('.xu-tr').each(function (i, item) {
             _itext.set('Sort', i, $(item)); 
         });
 
@@ -256,7 +256,7 @@ var _me = {
         return {
             _rows: rows,
             _deletes: _me.mEtable.getDeletes(),
-            _childs: [{ _rows: eitems, _deletes: _me.mEitem.getDeletedStr()}],
+            _childs: [{ _rows: eitems, _deletes: _me.mEitem.getDeletes()}],
         };
     },
 
@@ -270,7 +270,7 @@ var _me = {
             //_me.focusEtableNav(nav);
 
             //validate etable
-            var status = form.valid();
+            status = form.valid();
 
             //validate eitem
             if (status)
@@ -328,7 +328,7 @@ var _me = {
         var box = $(Mustache.render(_me.tplRitem, {}));
         _form.loadRow(box, {});
         _me.mRitem.setNewIdByBox(box);
-        _me.divRitemBody.append(box);
+        _me.tbodyRitem.append(box);
     },
 
     //on change project id
@@ -452,12 +452,12 @@ var _me = {
         var mItem = null;   //editMany 
         if (type === 'Q') {
             //qitem
-            body = _me.divQitemBody;
+            body = _me.tbodyQitem;
             tplItem = _me.tplQitem;
             mItem = _me.mQitem;
         } else if (type === 'R') {
             //ritem
-            body = _me.divRitemBody;
+            body = _me.tbodyRitem;
             tplItem = _me.tplRitem;
             mItem = _me.mRitem;
         } else {
@@ -491,8 +491,8 @@ var _me = {
         var index = _me.etableLen;
         var json = { Index: index };
         var newTab = $(Mustache.render(_me.tplTabEtable, json));
+        debugger;
         _me.mEtable.setNewIdByBox(newTab);    //set new row key !!
-        //debugger;
         _iselect.setItems(_me.TableId, _me.tables, newTab); //set dropdown source
         _me.tabEtable.append(newTab);
 

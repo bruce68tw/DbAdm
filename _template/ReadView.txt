@@ -10,7 +10,7 @@
     <div id="divRead">
 	{{#if HasFindForm}}
 		<form id='formRead' class='xg-form'>
-	{{#Fitems}}
+	{{#Qitems}}
 		{{#if IsGroupStart}}
 			<div class="row">
 		{{/if}}
@@ -22,12 +22,12 @@
 		{{#if IsGroupEnd}}
 			</div>
 		{{/if}}
-	{{/Fitems}}
+	{{/Qitems}}
         </form>
 	{{/if}}
 	{{#if HasFind2Form}}
         <form id='formRead2' class='xg-form'>
-	{{#F2items}}
+	{{#Qitems2}}
 		{{#if IsGroupStart}}
 			<div class="row">
 		{{/if}}
@@ -39,7 +39,7 @@
 		{{#if IsGroupEnd}}
 			</div>
 		{{/if}}
-	{{/F2items}}
+	{{/Qitems2}}
         </form>
 	{{/if}}
 

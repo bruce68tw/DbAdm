@@ -94,9 +94,9 @@ namespace DbAdm.Services
         public static ErrorModel CheckUploadFile(HttpPostedFileBase file, int size, string exts)
         {
             var error = new ErrorModel();
-            if (!_WebFile.CheckFileSize(file, size))
+            if (!_HttpFile.CheckFileSize(file, size))
                 error.ErrorMsg = "上傳檔案大小有誤。";
-            else if(!_WebFile.CheckFileExt(file, exts))
+            else if(!_HttpFile.CheckFileExt(file, exts))
                 error.ErrorMsg = "上傳檔案種類有誤。";
 
             return error;
@@ -114,7 +114,7 @@ namespace DbAdm.Services
                 var path2 = dir + Path.GetFileNameWithoutExtension(name) + "_" + _Date.NowSecStr() + Path.GetExtension(name);
                 File.Move(path, path2);
             }
-            return _WebFile.SaveUploadFile(file, path) ? path : "";
+            return _HttpFile.SaveUploadFile(file, path) ? path : "";
         }
 
         //switch locale

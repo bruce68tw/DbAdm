@@ -73,4 +73,12 @@ var _str = {
             return null;
         }
     },
+
+    replaceAll: function (str, oldStr, newStr) {
+        // 轉義特殊字元，避免錯誤正則
+        const oldStr2 = oldStr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(oldStr2, 'g');
+        return str.replace(regex, newStr);
+    },
+
 }; //class

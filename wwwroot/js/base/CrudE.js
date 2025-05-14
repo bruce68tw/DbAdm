@@ -1,7 +1,7 @@
 ﻿/**
  * crud edit function
  *   合併 _edit.js
- * 寫入 this properties:
+ * 寫入 _me properties:
  *   fnAfterSwap:
  *   fnAfterOpenEdit:
  *   fnUpdateOrViewA: see _updateOrViewA
@@ -143,7 +143,8 @@ function CrudE(edits) {
     //call fnAfterOpenEdit() if existed
     // _afterOpenEdit -> _afterOpen
     this._afterOpenEdit = function(fun, json) {
-        if (_fun.hasValue(_me.fnAfterOpenEdit))
+        //if (_fun.hasValue(_me.fnAfterOpenEdit))
+        if (_me.fnAfterOpenEdit)
             _me.fnAfterOpenEdit(fun, json);
     };
 
@@ -499,13 +500,17 @@ function CrudE(edits) {
      * return json row
      */
     this.getUpdRow = function (kid, fidTypes, box) {
-        //if key empty then return row
+        //case new return row
         var row = _form.toRow(box);
+        if (_edit.isNewRow(row))
+            return row;
+        /*
         var key = _input.get(kid, box);
         if (_str.isEmpty(key))
             return row;
+        */
 
-        //讀取有異動的欄位
+        //case update: 讀取有異動的欄位
         var diff = false;
         var result = {};
         var fid, ftype, value, obj, old;
@@ -535,45 +540,9 @@ function CrudE(edits) {
         if (!diff)
             return null;
 
-        result[kid] = key;
+        result[kid] = _input.get(kid, box);
         return result;
     };
-
-    /**
-     * setFidTypeVars -> setFidTypes
-     * set fid-type variables: fidTypes, fidTypeLen
-     * param me {object} EditOne/EditMany object
-     * param box {object} container
-     * return void
-    this.setFidTypes = function (me, box) {
-        var fidTypes = [];
-        box.find(_input.fidFilter()).each(function (i, item) {
-            var obj = $(item);
-            var j = i * 2;
-            fidTypes[j] = _input.getFid(obj);
-            fidTypes[j + 1] = _input.getType(obj);
-        });
-        me.fidTypes = fidTypes;
-        me.fidTypeLen = me.fidTypes.length;
-    };
-     */
-
-    /**
-     * set file variables: fileFids, fileLen, hasFile
-     * called by EditOne/EditMany init()
-     * param me {edit} EditOne/EditMany variables
-     * param box {object} form or row object
-     * return void
-    this.setFileVars = function (me, box) {
-        //var me = this;  //use outside .each()
-        me.fileFids = [];      //upload file fid array
-        box.find('[data-type=file]').each(function (index, item) {
-            me.fileFids[index] = _input.getFid($(item));
-        });
-        me.fileLen = me.fileFids.length;
-        me.hasFile = me.fileFids.length > 0; //has input file or not
-    };
-     */
 
     /**
      * getServerFid -> getFileSid

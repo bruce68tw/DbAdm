@@ -27,7 +27,7 @@
     <div class="row">
         <!-- left columns -->
         <div class="col-md-6">
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols2, FnOnChange = "_me.onChangeProjectA()" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols2, FnOnChange = "_me.onChangeProject()" })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgCode"].Value, Fid = "ProgCode", MaxLen = 30, Required = true, Cols = cols2 })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgName"].Value, Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols2 })
 
@@ -90,35 +90,6 @@
     </table>
 </form>
 
-<!--template: edit form Qitem -->
-<script id="tplQitem" type="text/template">
-    <tr class="xu-tr">
-        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "CrudId" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "ColumnId" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort" })
-
-        <td>{{Code}}</td>
-        <td>{{Name}}</td>
-        <td width="120px">{{DataType}}</td>
-        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "TableAs" })</td>
-        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "QitemType", 
-           Rows = ViewBag.QitemTypes, AddEmptyRow = false, Value = "T" })</td>
-        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
-        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "Op",
-           Rows = ViewBag.QitemOps,
-           AddEmptyRow = false,
-           Value = "Equal"
-       })</td>
-        @*<td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ExtInfo" })</td>*@
-        <td width="60px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsRange" })</td>
-        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PosGroup" })</td>
-        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LayoutCols" })</td>
-        <td width="60px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsFind2" })</td>
-        <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mQitem" })</td>
-    </tr>
-</script>
-
 <!-- query result buttons -->
 <div class="xg-btns-box">
     <span class="xg-span-label">@R["Ritem"]</span>
@@ -143,6 +114,42 @@
         <tbody id="tbodyRitem"></tbody>
     </table>
 </form>
+
+<!--template: edit form Qitem -->
+<script id="tplQitem" type="text/template">
+    <tr class="xu-tr">
+    @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
+    @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "CrudId" })
+    @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "ColumnId" })
+    @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort" })
+
+        <td>{{Code}}</td>
+        <td>{{Name}}</td>
+        <td width="120px">{{DataType}}</td>
+        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "TableAs" })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto
+       {
+           Fid = "QitemType",
+           Rows = ViewBag.QitemTypes,
+           AddEmptyRow = false,
+           Value = "T"
+       })</td>
+        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto
+       {
+           Fid = "Op",
+           Rows = ViewBag.QitemOps,
+           AddEmptyRow = false,
+           Value = "Equal"
+       })</td>
+    @*<td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ExtInfo" })</td>*@
+        <td width="60px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsRange" })</td>
+        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PosGroup" })</td>
+        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LayoutCols" })</td>
+        <td width="60px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsFind2" })</td>
+        <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mQitem" })</td>
+    </tr>
+</script>
 
 <!--template: eidt form Ritem -->
 <script id="tplRitem" type="text/template">

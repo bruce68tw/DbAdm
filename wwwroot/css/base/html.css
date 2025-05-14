@@ -3,12 +3,6 @@
 body {
     /*padding-top: 50px;*/
     padding-bottom: 20px;
-    font-size: 14px !important;
-}
-
-body, label {
-    color: #424243;
-    font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
 }
 
 /* space in button & icon */
