@@ -1,0 +1,122 @@
+﻿@{ 
+    var importType = ViewBag.ImportType;
+    //var progName = (importType == ImportTypeEstr.DataDict) ? R0["MenuUserImport"].Value
+    //    : "??";
+}
+
+<script type="text/javascript">
+    $(function () {
+        _me.init();
+    });
+
+    var _me = {
+        init: function () {        
+            //datatable config
+            var config = {
+                columns: [
+                    { data: 'OkCount' },
+                    { data: 'FailCount' },
+                    { data: 'TotalCount' },
+                    { data: 'FileName' },
+                    { data: 'CreatorName' },
+                    { data: 'Created' },
+                ],
+                columnDefs: [
+				    { targets: [1], render: function (data, type, full, meta) {
+                        return (data > 0)
+                            ? _str.format('<a href="GetFail?id={0}&name={1}">{2}</a>', full.Id, full.FileName, data)
+                            : data;
+                    }},
+				    { targets: [3], render: function (data, type, full, meta) {
+                        return _str.format('<a href="GetSource?id={0}&name={1}">{2}</a>', full.Id, full.FileName, data);
+                    }},
+				    { targets: [5], render: function (data, type, full, meta) {
+                        return _date.dtsToUiDt(data);
+                    }},
+                ],
+            };
+
+            //initial
+            new CrudR(config);
+            _me.modalImport = $('#modalImport');
+        },
+
+        //on open import modal
+        onOpenImport: function () {
+            _modal.showO(_me.modalImport);
+        },
+
+        //on run import
+        onImport: async function () {
+            var modal = _me.modalImport;
+            var fileObj = modal.find(':file');
+            var file = _ifile.getUploadFile(fileObj);
+            if (file == null) {
+                _tool.msg('請先選取匯入檔案。');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('file', file);
+            await _ajax.getJsonByFdA('Import', formData, function (data) {
+                _modal.hideO(modal);
+                _tool.msg(_str.format('匯入完成。', data.OkCount, data.FailCount));
+                _me.dt.reload();
+            });
+        },
+
+    }; //class
+</script>
+
+@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "匯入資料字典" } })
+<div class="xg-prog">
+    <div id="divRead">
+        <form id='formRead' class='xg-form'>
+            <div class="row">
+                @*await Component.InvokeAsync("XiText", new XiTextDto { title = R["FileName"].Value, fid = "FileName", inRow = true })*@
+                <vc:xi-text dto="@(new XiTextDto { Title = "匯入檔名", Fid = "FileName", InRow = true })"></vc:xi-text>
+                @await Component.InvokeAsync("XgFindTbar")
+            </div>
+        </form>
+
+        <div class='xg-btns-box'>
+            <button type="button" class="btn xg-btn" onclick="_me.onOpenImport()">匯入Excel</button>
+            <a class="btn xg-btn" href="Template">下載範本</a>
+        </div>
+        <table id="tableRead" class="table xg-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>成功筆數</th>
+                    <th>失敗筆數</th>
+                    <th>合計筆數</th>
+                    <th>匯入檔案</th>
+                    <th>建檔人員</th>
+                    <th>建檔日期</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- import modal -->
+<div id='modalImport' class='modal fade'>
+    <div class='modal-dialog' role='document'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h6 class='modal-title'>匯入Excel:</h6>
+                <button type='button' class='close' data-bs-dismiss='modal' aria-label='Close'>
+                    <span aria-hidden='true'>&times;</span>
+                </button>
+            </div>
+            <div class='modal-body' style="padding: 20px 0 30px 50px;">
+                <input type="file">
+                <div id="divMsg" style="color:blue; display:none"></div>
+            </div>
+            <div class='modal-footer'>
+                <button type='button' class='btn btn-secondary xg-btn-size xd-cancel' data-bs-dismiss='modal'>取消</button>
+                <button type='button' class='btn btn-primary xg-btn-size xd-yes' onclick='_me.onImport()'>匯入</button>
+            </div>
+        </div>
+    </div>
+</div>
