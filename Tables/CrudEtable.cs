@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
+namespace DbAdm.Tables;
 
-namespace DbAdm.Tables
+public partial class CrudEtable
 {
-    public partial class CrudEtable
-    {
-        public CrudEtable()
-        {
-            CrudEitem = new HashSet<CrudEitem>();
-        }
+    public string Id { get; set; } = null!;
 
-        public string Id { get; set; }
-        public string CrudId { get; set; }
-        public string TableId { get; set; }
-        public string PkeyFid { get; set; }
-        public string FkeyFid { get; set; }
-        public string AutoIdLen { get; set; }
-        public string Col4 { get; set; }
-        public string OrderBy { get; set; }
-        public int Sort { get; set; }
-        public bool HalfWidth { get; set; }
+    public string CrudId { get; set; } = null!;
 
-        public virtual Crud Crud { get; set; }
-        public virtual ICollection<CrudEitem> CrudEitem { get; set; }
-    }
+    public string TableId { get; set; } = null!;
+
+    public string PkeyFid { get; set; } = null!;
+
+    public string? FkeyFid { get; set; }
+
+    public string Col4 { get; set; } = null!;
+
+    public string OrderBy { get; set; } = null!;
+
+    public int Sort { get; set; }
+
+    public bool HalfWidth { get; set; }
+
+    public string? AutoIdLen { get; set; }
+
+    public virtual ICollection<CrudEitem> CrudEitem { get; set; } = new List<CrudEitem>();
 }

@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
+namespace DbAdm.Tables;
 
-namespace DbAdm.Tables
+public partial class CrudRitem
 {
-    public partial class CrudRitem
-    {
-        public string Id { get; set; }
-        public string CrudId { get; set; }
-        public string ColumnCode { get; set; }
-        public string Name { get; set; }
-        public int Width { get; set; }
-        public string RitemType { get; set; }
-        public int Sort { get; set; }
+    public int Sn { get; set; }
 
-        public virtual Crud Crud { get; set; }
-    }
+    public string Id { get; set; } = null!;
+
+    public string CrudId { get; set; } = null!;
+
+    public string ColumnCode { get; set; } = null!;
+
+    public string Name { get; set; } = null!;
+
+    public int Width { get; set; }
+
+    public string RitemType { get; set; } = null!;
+
+    public int Sort { get; set; }
 }

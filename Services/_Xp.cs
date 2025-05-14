@@ -24,9 +24,11 @@ namespace DbAdm.Services
         //for XpCode
         public const string IssueType = "IssueType";
 
-		//for directory
-		public static string DirBaseUpload = _Fun.Dir("_upload");
+        //for directory
+        public static string DirTpl = _Fun.Dir("_template");
+        public static string DirBaseUpload = _Fun.Dir("_upload");
 		public static string DirIssueFile = DirUpload("Issue");
+        public static string DirDataDict = DirUpload("DataDict");
 
         //from config file
         public static MyConfigDto Config = null!;

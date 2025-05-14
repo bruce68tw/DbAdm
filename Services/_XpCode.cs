@@ -7,6 +7,8 @@ namespace DbAdm.Services
     //與下拉欄位有關
     public static class _XpCode
     {
+        public const string TableType = "TableType";
+
         #region 1.master table to codes
         public static async Task<List<IdStrDto>?> DeptsA(Db? db = null)
         {
@@ -110,6 +112,10 @@ order by Sort
             return await BySqlA(sql, db);
         }
 
+        public static async Task<List<IdStrDto>> TableTypesA(Db? db = null)
+        {
+            return await ByTypeA(TableType, db);
+        }
         public static async Task<List<IdStrDto>> SurveySatisesA(Db? db = null)
         {
             return await ByTypeA("SurveySatis", db);
