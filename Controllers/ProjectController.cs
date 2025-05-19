@@ -106,10 +106,12 @@ namespace DbAdm.Controllers
         /// </summary>
         /// <param name="id">project Id</param>
         /// <returns></returns>
+        /*
         public async Task GenRelat(string id)
         {
             await new GenTableRelatService().RunA(id);
         }
+        */
 
     }//class
 }

@@ -60,6 +60,8 @@
     <None Remove="Models\SessionModel.cs_old" />
     <None Remove="Program.cs_old" />
     <None Remove="Services\GenCrudService.cs_bak" />
+    <None Remove="Services\GenDocuService.cs_old" />
+    <None Remove="Services\GenTableRelatService.cs_old" />
     <None Remove="Services\zz_MyProfile0Service.cs_old" />
     <None Remove="Services\zz__Session.cs_old" />
     <None Remove="Services\_ProgPath.cs_old" />

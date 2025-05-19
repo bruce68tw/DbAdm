@@ -1,5 +1,4 @@
-﻿using Base.Interfaces;
-using Base.Services;
+﻿using Base.Services;
 using BaseApi.Services;
 using DocumentFormat.OpenXml.Packaging;
 using System.Collections.Generic;
@@ -86,77 +85,69 @@ namespace DbAdm.Services
             }
             #endregion
 
-            /*
             #region 3.get memory stream for download file
             var ms = new MemoryStream();
             var tplBytes = File.ReadAllBytes(tplPath);
             ms.Write(tplBytes, 0, tplBytes.Length);
             #endregion
-            */
-            var childs = new List<dynamic>()
-            {
-                tables
-            };
-            var ms = await _Word.TplToMsA(tplPath, null, childs);
 
             //binding stream && docx
-            #region 4.get body/row template string
-            //var wordSet = new WordSetSvc(docx);
-            //var mainTplStr = wordSet.GetMainPartStr();
-
-            //get word body start/end pos
-            //int bodyStart = 0, bodyEnd = 0; //no start/end tag
-            //var bodyTpl = wordSet.GetBodyTpl(mainTplStr);
-
-            //get row template string
-            //int rowStart = 0, rowEnd = 0;
-            /*
-            var rowTpl = wordSet.GetRowTpl(bodyTpl.TplStr);
-            if (rowTpl == null)
+            using (var docx = WordprocessingDocument.Open(ms, true))
             {
-                error = "can not find rowTpl String.";
-                goto lab_error;
-            }
-            */
-            #endregion
+                #region 4.get body/row template string
+                var wordSet = new WordSetSvc(docx);
+                var mainTplStr = wordSet.GetMainPartStr();
 
-            /*
-            //table list loop
-            var bodyLeft = bodyTpl.TplStr[..rowTpl.StartPos];
-            var bodyRight = bodyTpl.TplStr[rowTpl.EndPos..];
-            var fileStr = "";   //file string to echo
-            for (var i = 0; i < tableLen; i++)
-            {
-                #region 5.get table string
-                var tableCode = tables[i].TableCode;
-                var tableCols = tables[i].Cols;
-                fileStr += bodyLeft.Replace("[Table]", tableCode + "(" + tables[i].TableName + ")") +
-                    _Word.TplFillRows(rowTpl.TplStr, tableCols) +
-                    bodyRight;
+                //get word body start/end pos
+                //int bodyStart = 0, bodyEnd = 0; //no start/end tag
+                var bodyTpl = wordSet.GetBodyTpl(mainTplStr);
+
+                //get row template string
+                //int rowStart = 0, rowEnd = 0;
+                var rowTpl = wordSet.GetRowTpl(bodyTpl.TplStr);
+                if (rowTpl == null)
+                {
+                    error = "can not find rowTpl String.";
+                    goto lab_error;
+                }
                 #endregion
 
-                #region 6.add page break if need
-                if (i < tableLen - 1)
-                    fileStr += wordSet.GetPageBreak();
+                //table list loop
+                var bodyLeft = bodyTpl.TplStr[..rowTpl.StartPos];
+                var bodyRight = bodyTpl.TplStr[rowTpl.EndPos..];
+                var fileStr = "";   //file string to echo
+                for (var i = 0; i < tableLen; i++)
+                {
+                    #region 5.get table string
+                    var tableCode = tables[i].TableCode;
+                    var tableCols = tables[i].Cols;
+                    fileStr += bodyLeft.Replace("[Table]", tableCode + "(" + tables[i].TableName + ")") +
+                        _Word.TplFillRows(rowTpl.TplStr, tableCols) +
+                        bodyRight;
+                    #endregion
+
+                    #region 6.add page break if need
+                    if (i < tableLen - 1)
+                        fileStr += wordSet.GetPageBreak();
+                    #endregion
+                }
+
+                #region 7.get file string
+                fileStr = mainTplStr[..bodyTpl.StartPos] +
+                    fileStr +
+                    mainTplStr[(bodyTpl.EndPos + 1)..];
+
+                //write string into docx
+                wordSet.SetMainPartStr(fileStr);
+                #endregion
+
+                #region remark testing code
+                //Debug.Assert(IsDocxValid(doc), "Invalid File!");
+                //no save, but can debug !!
+                //mainPart.Document.Save();
+                //return;
                 #endregion
             }
-
-            #region 7.get file string
-            fileStr = mainTplStr[..bodyTpl.StartPos] +
-                fileStr +
-                mainTplStr[(bodyTpl.EndPos + 1)..];
-
-            //write string into docx
-            wordSet.SetMainPartStr(fileStr);
-            #endregion
-            */
-
-            #region remark testing code
-            //Debug.Assert(IsDocxValid(doc), "Invalid File!");
-            //no save, but can debug !!
-            //mainPart.Document.Save();
-            //return;
-            #endregion
 
             //8.download file
             await _FunApi.ExportByStreamA(ms, "Tables.docx");
