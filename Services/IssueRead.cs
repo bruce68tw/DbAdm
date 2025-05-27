@@ -9,7 +9,9 @@ namespace DbAdm.Services
 {
 	public class IssueRead
     {
-        private string isWatch = "";
+        private string isWatch = "";        //已追踪
+        private string hasRptUser = "";     //有回報人
+        private string hasSurvey = "";      //有收問卷
 
         //sql內有變數isWatch, 改使用函數
         private ReadDto GetDto()
@@ -34,7 +36,10 @@ join dbo.XpCode c on c.Type='{_Xp.IssueType}' and i.IssueType=c.Value
 left join dbo.IssueWatch w on i.Id=w.IssueId and w.WatcherId='{_Fun.UserId()}'
 left join dbo.Survey s on i.Id=s.Id
 /* 判斷是否追踪 */
-where ('{isWatch}'='' or ('{isWatch}'='1' and w.Id is not null) or ('{isWatch}'='0' and w.Id is null))
+where 1=1
+and ('{isWatch}'='' or ('{isWatch}'='1' and w.Id is not null) or ('{isWatch}'='0' and w.Id is null))
+and ('{hasRptUser}'='' or ('{hasRptUser}'='1' and i.RptUser is not null) or ('{hasRptUser}'='0' and i.RptUser is null))
+and ('{hasSurvey}'='' or ('{hasSurvey}'='1' and s.Id is not null) or ('{hasSurvey}'='0' and s.Id is null))
 order by p.Id, pp.Sort, i.Created desc
 ",
                 TableAs = "i",
@@ -45,6 +50,7 @@ order by p.Id, pp.Sort, i.Created desc
                     new() { Fid = "Created", Type = QitemTypeEnum.Date },
                     new() { Fid = "IssueType" },
                     new() { Fid = "Title", Op = ItemOpEstr.Like2 },
+                    new() { Fid = "RptUser" },
                     new() { Fid = "OwnerId" },
                     //new() { Fid = "Creator" },
                     new() { Fid = "IsFinish" },
@@ -60,8 +66,11 @@ order by p.Id, pp.Sort, i.Created desc
         public async Task<JObject?> GetPageA(string ctrl, DtDto dt)
         {
             //底線欄位 _IsWatch 不會自動加入 sql, 手動調整
-            isWatch = _Json.GetFidStr(_Str.ToJson(dt.findJson), "_IsWatch", "");
-			return await new CrudReadSvc().GetPageA(GetDto(), dt, ctrl);
+            var findJson = _Str.ToJson(dt.findJson);
+            isWatch = _Json.GetFidStr(findJson, "_IsWatch", "");
+            hasRptUser = _Json.GetFidStr(findJson, "_HasRptUser", "");
+            hasSurvey = _Json.GetFidStr(findJson, "_HasSurvey", "");
+            return await new CrudReadSvc().GetPageA(GetDto(), dt, ctrl);
         }
 
         //todo

@@ -36,7 +36,7 @@
                     */
                     { targets: [10], render: function (data, type, full, meta) {
                         return _str.notEmpty(full.SurveyId) ? '是' :
-                            (full.IsFinish == 1 && _str.notEmpty(full.RptUser) && full.OwnerId == _fun.userId)
+                            (full.IsFinish == 1 && _str.notEmpty(full.RptUser) && (full.OwnerId == _fun.userId || _fun.userId=='Bruce'))
                                 ? `<button type="button" class="btn xg-btn xg-btn-size" onclick="_me.onSurvey('${full.Id}')">寄問卷</button>`
                                 : '';
                     }},
@@ -82,7 +82,7 @@
                     var ok = (str == '1');
                     _tool.msg(ok ? '成功寄送問卷。' : '無法寄送問卷 !!');
                     if (ok) {
-                        _me.crudR.onFind();
+                        _me.crudR.dt.reload();
                     }
                 });
             });
@@ -234,6 +234,9 @@
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "已結案", Fid = "IsFinish", Rows = ViewBag.YesNos })
             @* 底線欄位 _IsWatch 在後端用程式調整sql *@
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "已追踪", Fid = "_IsWatch", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "有回報人", Fid = "_HasRptUser", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "有收問卷", Fid = "_HasSurvey", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "回報人員", Fid = "RptUser" })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Rows = ViewBag.Users })
             @*
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "建檔人員", Fid = "Creator", Rows = ViewBag.Users })
