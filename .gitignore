@@ -9,6 +9,7 @@ packages/
 zz_*.*
 old/
 wwwroot_old/
+node_modules/
 .config/
 /wwwroot/js/my*.js
 /wwwroot/js/lib*.js
