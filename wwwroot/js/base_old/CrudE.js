@@ -85,7 +85,6 @@ function CrudE(edits) {
         _me.edit0 = this.edit0;
         _me.eform0 = this.eform0;
         _me.hasEdit = hasEdit;
-        _me.divEdit = this.divEdit;
     };
 
     /**

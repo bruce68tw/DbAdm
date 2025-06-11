@@ -105,7 +105,7 @@ var _json = {
 
     //convert string to json array
     strToArray: function (str) {
-        return JSON.parse(str);
+        return $.parseJSON(str);
     },
 
     //find jarray
@@ -159,7 +159,7 @@ var _json = {
                 delete obj[key];
             } else if (_json.isKeyValue(value)) {
                 _json.removeNull(value, level + 1);
-            } else if (Array.isArray(value)) {
+            } else if ($.isArray(value)) {
                 //check
                 var len = value.length;
                 if (len == 0) {

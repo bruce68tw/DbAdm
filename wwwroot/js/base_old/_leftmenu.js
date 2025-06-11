@@ -11,7 +11,7 @@ var _leftmenu = {
 
         //click時, show/hide 下一個 element, 可省去在panel設定id的步驟
         //for left-menu
-        $('.xg-toggle').on('click', function (e) {
+        $('.xg-toggle').click(function (e) {
             e.preventDefault();
 
             var me = $(this);

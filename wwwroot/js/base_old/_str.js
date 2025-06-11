@@ -62,7 +62,7 @@ var _str = {
     },
 
     trim: function (str) {
-        return str.trim();
+        return $.trim(str);
     },
 
     toJson: function (str) {

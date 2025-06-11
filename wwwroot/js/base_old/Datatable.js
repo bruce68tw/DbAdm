@@ -100,12 +100,12 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
                 var filter = $(selector + "_filter input");
                 if (filter.length > 0) {
                     //2.unbind first
-                    filter.off();
+                    filter.unbind();
 
                     //bind key enter for quick search
                     var api = this.api();
-                    filter.on('keyup', function (e) {
-                        if (e.key === 'Enter') {
+                    filter.bind('keyup', function (e) {
+                        if (e.keyCode === 13) {
                             this.resetCount();
 
                             //run search
