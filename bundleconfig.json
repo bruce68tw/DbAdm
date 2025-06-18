@@ -3,7 +3,7 @@
     "outputFileName": "wwwroot/css/lib.css",
     "inputFiles": [
       "wwwroot/css/lib/bootstrap-5.2.3.css",
-      "wwwroot/css/lib/datatables-1.11.5.css",
+      "wwwroot/css/lib/datatables-2.3.2.css",
       "wwwroot/css/lib/bootstrap-datepicker-1.9.css"
       //"wwwroot/css/lib/summernote-bs5.css"
     ]
@@ -25,7 +25,7 @@
       "wwwroot/js/lib/jquery-3.7.1.js",
       "wwwroot/js/lib/bootstrap.bundle-5.2.3.js",
       "wwwroot/js/lib/bootstrap-datepicker-1.9.js",
-      "wwwroot/js/lib/datatables-1.11.5.js",
+      "wwwroot/js/lib/datatables-2.3.2.js",
       "wwwroot/js/lib/jquery.validate-1.19.3-bruce.js",
       "wwwroot/js/lib/jquery.pjax-2.0.1-bruce.js",
       "wwwroot/js/lib/jquery.blockUI-2.7.js",

@@ -86,15 +86,21 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
             },
 
             //default toolbar layout
-            dom: '<"toolbar">t<li>p', 
-
+            //dom: '<"toolbar">t<li>p', 
+            dom: `
+t
+<"row d-flex justify-content-between align-items-center mt-2"
+    <"col d-flex align-items-center gap-2 li-container"li>
+    <"col-auto"p>
+>
+`,
             //call after dataTables initialize
             //1.add toolbar button list if need
             //2.change find action: find after enter !!
             initComplete: function (settings, json) {
                 //1.toolbar
                 if (tbarHtml)
-                    $(this).closest('.dataTables_wrapper').find('div.toolbar').html(tbarHtml);
+                    $(this).closest('.tableRead_wrapper').find('div.toolbar').html(tbarHtml);
 
                 //check filter existed
                 var filter = $(selector + "_filter input");

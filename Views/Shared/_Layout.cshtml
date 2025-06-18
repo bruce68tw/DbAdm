@@ -87,10 +87,8 @@
     <link rel="stylesheet" href="~/css/lib@(min).css?v=@libVer" />
     @RenderSection("styles", required: false)
 
-    <!-- 2.load lib js, 無法加入 bundle -->
+    <!-- 2.load lib js -->
     <script src="~/js/lib@(min).js?v=@libVer"></script>
-    @*<script src="~/js/bootstrap.bundle-5.1.3.min.js?v=@libVer"></script>
-    <script src="~/js/chart-4.4.1.min.js"></script>*@
 
     <!-- 3.load my site js(debug/production mode) !! -->
     <environment include="Production">
@@ -128,7 +126,7 @@
     <partial name="_Top.cshtml" />
 
     @* set height=100% in parent , so that menu be fine for ie & firefox !! *@
-    <div class="d-flex align-items-stretch" style="height:100%">
+    <div class="d-flex align-items-stretch" style="height: calc(100vh - 45px);">
         <!-- left menu -->
         @await Component.InvokeAsync("XgLeftMenu", new { rows = menus })
 

@@ -126,6 +126,10 @@
     <None Include="wwwroot\locale\zh-TW\validate.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\old\" />
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

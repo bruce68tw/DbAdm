@@ -38,10 +38,12 @@
         var data = {
             account: _itext.get('Account', _me.modalUser),
             deptId: _iselect.get('DeptId', _me.modalUser),
+            name: _itext.get('Name', _me.modalUser),
         };
         await _ajax.getJsonA('GetUsers', data, function (rows) {
             _me.modalUserBody.empty();
             for (var i = 0; i < rows.length; i++) {
+                //這裡不必註記"新增"
                 _me.modalUserBody.append($(Mustache.render(_me.tplUser, rows[i])));
             }
         });
