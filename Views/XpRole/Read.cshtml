@@ -29,23 +29,6 @@
     }
 }
 
-<style>
-    /* set scroll table column width(base 1) */
-    #tableUser th:nth-child(1), #tableUser td:nth-child(1) {
-        flex-basis: 60px;
-    }
-    #tableUser th:nth-child(2), #tableUser td:nth-child(2) {
-        flex-basis: 160px;
-    }
-    #tableUser th:nth-child(3), #tableUser td:nth-child(3) {
-        flex-basis: 120px;
-    }
-    /* get remain width */
-    #tableUser th:nth-child(4), #tableUser td:nth-child(4) {
-        flex-grow: 1;
-    }
-</style>
-
 <script src="~/js/view/XpRole.js"></script>
 <script type="text/javascript">
     $(function () {
@@ -85,7 +68,7 @@
 
         <div class='xg-btns-box xg-mt5'>
             <span class="xg-span-label">@R["UserList"]</span>
-            <button type="button" class="btn xg-btn" onclick="_me.onOpenUser()">@R0["Select"]</button>
+            <button type="button" class="btn btn-secondary xg-btn-gray" onclick="_me.onOpenUser()">@R0["Select"]<i class='ico-checked'></i></button>
         </div>
         <form id='eformUserRole' class='xg-form'>
             <table class="table xg-table" cellspacing="0">
@@ -99,27 +82,6 @@
                 </thead>
                 <tbody id="tbodyUserRole"></tbody>
             </table>
-
-            @*
-            <div class='row'>
-                <div class='col-md-2 xg-label'>@R["UserList"]</div>
-                <div class='col-md-8 xg-input'>
-                    <!-- table for control rows column has same width -->
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                        <tbody>
-                            <tr>
-                                <td id="divUsers">
-                                    @foreach (var row in (List<IdStrDto>)ViewBag.Users)
-                                    {
-                                        @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = row.Id, Value = row.Id, Label = row.Str })
-                                    }
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            *@
         </form>
 
         <div class='xg-btns-box'>
@@ -213,24 +175,26 @@
                         @await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Account" })
                     </div>
                     <div class="col-md-4 xg-right">
-                        <button type="button" class="btn btn-success xg-btn-size" onclick="_me.onFindUserA()">查詢</button>
-                        <button type="button" class="btn btn-primary xg-btn-size" onclick="_me.onUserModalOk()">選取</button>
+                        <button type="button" class="btn btn-primary" onclick="_me.onFindUserA()">查詢<i class='ico-find'></i></button>
+                        <button type="button" class="btn btn-secondary" onclick="_me.onUserModalOk()">選取<i class='ico-checked'></i></button>
                     </div>
                 </div>
 
                 <!-- query result list -->
-                <table id="tableUser" class="table xg-table xg-table-vscroll" cellspacing="0" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>@R0["Select"]</th>
-                            <th>@R0["DeptName"]</th>
-                            <th>@R0["Account"]</th>
-                            <th>@R0["UserName"]</th>
-                        </tr>
-                    </thead>
-                    <!-- match tplItemTr -->
-                    <tbody style="height:315px"></tbody>
-                </table>
+                <div class='xg-scroll' style="height:415px">
+                    <table id="tableUser" class="table xg-table" cellspacing="0" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>@R0["Select"]</th>
+                                <th>@R0["DeptName"]</th>
+                                <th>@R0["Account"]</th>
+                                <th>@R0["UserName"]</th>
+                            </tr>
+                        </thead>
+                        <!-- match tplItemTr -->
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

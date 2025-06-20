@@ -66,7 +66,7 @@ new Chart(document.getElementById("chart"), {
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, InputAttr = "onchange=_me.onChgProject(false)" })
                 <span class='col-md-3 xg-find-tbar'>
-                    <button type='button' class='btn xg-btn-size btn-primary' onclick='_me.onFind()'>查詢<i class='ico-find'></i></button>
+                    <button type='button' class='btn btn-primary' onclick='_me.onFind()'>查詢<i class='ico-find'></i></button>
                 </span>
             </div>
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })

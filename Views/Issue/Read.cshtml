@@ -37,7 +37,7 @@
                     { targets: [10], render: function (data, type, full, meta) {
                         return _str.notEmpty(full.SurveyId) ? '是' :
                             (full.IsFinish == 1 && _str.notEmpty(full.RptUser) && (full.OwnerId == _fun.userId || _fun.userId=='Bruce'))
-                                ? `<button type="button" class="btn xg-btn xg-btn-size" onclick="_me.onSurvey('${full.Id}')">寄問卷</button>`
+                                ? `<button type="button" class="btn btn-secondary" onclick="_me.onSurvey('${full.Id}')">寄問卷</button>`
                                 : '';
                     }},
                     { targets: [11], render: function (data, type, full, meta) {
@@ -261,10 +261,10 @@
 
 		<div class='xg-btns-box'>
 			<vc:xg-create/>
-            <button type="button" class="btn xg-btn" onclick="_me.onMyToday()">我的今天資料</button>
-            <button type="button" class="btn xg-btn" onclick="_me.onMyWeek()">我的本週資料</button>
-            <button type="button" class="btn xg-btn" onclick="_me.onMyNotFinish()">我的未結案</button>
-            <button type="button" class="btn xg-btn" onclick="_me.onMyWatch()">我的追踪</button>
+            <button type="button" class="btn xg-btn-gray" onclick="_me.onMyToday()">我的今天資料</button>
+            <button type="button" class="btn xg-btn-gray" onclick="_me.onMyWeek()">我的本週資料</button>
+            <button type="button" class="btn xg-btn-gray" onclick="_me.onMyNotFinish()">我的未結案</button>
+            <button type="button" class="btn xg-btn-gray" onclick="_me.onMyWatch()">我的追踪</button>
         </div>
         <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
             <thead>
@@ -280,7 +280,7 @@
                     <th min-width='65px'>處理人員</th>
                     <th min-width='65px'>寄送次數</th>
                     <th min-width='65px'>已填問卷</th>
-                    <th width ='80px'>功能</th>
+                    <th width ='90px'>功能</th>
                 </tr>
             </thead>
             <tbody></tbody>

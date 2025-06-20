@@ -63,7 +63,7 @@
 <!-- find buttons -->
 <div class="xg-btns-box">
     <span class="xg-span-label">@R["Qitem"]</span>
-    <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("Q")'>@R["GetItem"]</button>
+    <button type='button' class='btn xg-btn-gray' onclick='_me.onOpenItem("Q")'>@R["GetItem"]</button>
 </div>
 
 <!-- find field -->
@@ -94,7 +94,7 @@
 <div class="xg-btns-box">
     <span class="xg-span-label">@R["Ritem"]</span>
     @await Component.InvokeAsync("XgAddRow", "_me.onRitemAdd()")
-    <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("R")'>@R["GetItem"]</button>
+    <button type='button' class='btn xg-btn-gray' onclick='_me.onOpenItem("R")'>@R["GetItem"]</button>
 </div>
 
 <!-- query result fields -->
@@ -170,10 +170,10 @@
 <!-- Table edit form nav/tab/buttons -->
 <div class="xg-btns-box">
     <span class="xg-span-label">@R["EditForm"]</span>
-    <button type='button' class='btn xg-btn' onclick='_me.onEtableAdd()'>@R["Create"]</button>
-    <button type='button' class='btn xg-btn' onclick='_me.onEtableDelete()'>@R["Delete"]</button>
-    <button type='button' class='btn xg-btn' onclick='_me.onEtableLeft()'>@R["MoveLeft"]</button>
-    <button type='button' class='btn xg-btn' onclick='_me.onEtableRight()'>@R["MoveRight"]</button>
+    <button type='button' class='btn xg-bt-grayn' onclick='_me.onEtableAdd()'>@R["Create"]</button>
+    <button type='button' class='btn xg-btn-gray' onclick='_me.onEtableDelete()'>@R["Delete"]</button>
+    <button type='button' class='btn xg-btn-gray' onclick='_me.onEtableLeft()'>@R["MoveLeft"]</button>
+    <button type='button' class='btn xg-btn-gray' onclick='_me.onEtableRight()'>@R["MoveRight"]</button>
 </div>
 <ul class="nav nav-tabs" id="navEtable"></ul>
 <div class="tab-content" id="tabEtable"></div>
@@ -213,7 +213,7 @@
 
         <div class="xg-btns-box">
             <span class="xg-span-label">@R["Eitem"]</span>
-            <button type='button' class='btn xg-btn' onclick='_me.onOpenItem("E")'>@R["GetItem"]</button>
+            <button type='button' class='btn xg-btn-gray' onclick='_me.onOpenItem("E")'>@R["GetItem"]</button>
         </div>
         <form class="xu-form2">
             <table class="table xg-table xg-no-hline" cellspacing="0">

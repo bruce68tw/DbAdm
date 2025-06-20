@@ -81,6 +81,21 @@ tr select {
     padding-right: 3px !important;
 }
 
+.xg-scroll {
+    /*max-height: 300px;*/
+    overflow-y: auto !important;
+}
+
+    .xg-scroll thead th {
+        position: sticky !important;
+        top: 0;
+        z-index: 2;
+    }
+
+    .xg-scroll th, .xg-scroll td {
+        /*min-width: 150px;*/
+    }
+
 @media (max-width:768px) {
     .xg-table {
         /*background: #fff;*/

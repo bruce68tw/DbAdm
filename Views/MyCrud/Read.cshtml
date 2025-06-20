@@ -23,7 +23,7 @@
         <!-- other functions -->
         <div class="xg-btns-box" style="margin-top:5px;">
             @await Component.InvokeAsync("XgCreate", new { fnOnClick = "_me.crudR.onCreate()" })
-            <button type="button" class="btn xg-btn" onclick="_me.onGenCrud()">@R["GenCrud"]</button>
+            <button type="button" class="btn xg-btn-gray" onclick="_me.onGenCrud()">@R["GenCrud"]</button>
         </div>
 
         <!-- result list -->
@@ -34,7 +34,7 @@
                     <th>@R["Project"]</th>
                     <th>@R["ProgCode"]</th>
                     <th>@R["ProgName"]</th>
-                    <th width='80px'>@R["Crud"]</th>
+                    <th width='90px'>@R["Crud"]</th>
                     <th width='100px' class="xg-center">@R["Status"]</th>
                     <th>@R["Created"]</th>
                 </tr>
