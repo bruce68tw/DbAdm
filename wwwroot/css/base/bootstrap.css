@@ -8,8 +8,7 @@
 
 .btn {
     padding: .25rem .5rem !important;
-    margin-right: 3px !important;
-    font-size: .875rem !important;
+    margin-right: 1px !important;
     line-height: 1.5 !important;
     border-radius: .2rem !important;
 }
@@ -26,14 +25,9 @@
 
 /* change height, 38 -> 36 */
 .form-control, select.form-control {
-    font-size: 16px !important;
     height: 36px !important;
     /*padding: 3px 6px !important;*/
 }
-
-    .form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
-        background-color: #eee !important;
-    }
 
 textarea.form-control {
     height: auto !important;

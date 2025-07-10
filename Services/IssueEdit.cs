@@ -113,7 +113,7 @@ where r.IssueId=@Id
 
         public async Task<ResultDto> CreateA(JObject json, List<IFormFile> t00_FileName)
 		{
-			var service = EditService();
+			var service = EditSvc();
 			var result = await service.CreateA(json);
 			if (_Valid.ResultStatus(result))
 			{
@@ -126,7 +126,7 @@ where r.IssueId=@Id
 
 		public async Task<ResultDto> UpdateA(string key, JObject json, List<IFormFile> t00_FileName)
 		{
-			var service = EditService();
+			var service = EditSvc();
 			var result = await service.UpdateA(key, json);
 			if (_Valid.ResultStatus(result))
 			{

@@ -136,3 +136,20 @@ body, label {
         background: #fff !important;
     } 
 }
+
+/* bootstrap */
+.btn {
+    font-size: .875rem !important;
+}
+
+/* change height, 38 -> 36 */
+.form-control, select.form-control {
+    font-size: 16px !important;
+}
+
+    .form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
+        background-color: #eee !important;
+    }
+
+
+

@@ -4,11 +4,11 @@ var _tool = {
 
     init: function () {
         //alert
-        _tool.xgAlert = $('.xg-alert');
         _tool.xgMsg = $('#xgMsg');  //使用id
         _tool.xgAns = $('#xgAns');  //使用id
-        _tool.xgArea = $('#xg-area');
-        _tool.xgImage = $('#xg-image');
+        _tool.xgAlert = $('.xg-alert');
+        _tool.xgArea = $('.xg-area');
+        _tool.xgImage = $('.xg-image');
     },
 
     /**

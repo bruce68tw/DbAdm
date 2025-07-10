@@ -29,12 +29,12 @@ where Id='{projectId}'
 
             if (project == null)
             {
-                result.ErrorMsg = "Project no row";
+                result._ErrorMsg = "Project no row";
                 goto lab_exit;
             }
             else if(_Object.IsEmpty(project["DbName"]) || _Object.IsEmpty(project["ConnectStr"]))
             {
-                result.ErrorMsg = "Project.DbName or ConnectStr is empty.";
+                result._ErrorMsg = "Project.DbName or ConnectStr is empty.";
                 goto lab_exit;
             }
 
@@ -54,7 +54,7 @@ where Id='{projectId}'
                 dbSrc = new Db(project["ConnectStr"]!.ToString());
                 if (!await dbSrc.InitDbA())
                 {
-                    result.ErrorMsg = "Project.ConnectStr is wrong.";
+                    result._ErrorMsg = "Project.ConnectStr is wrong.";
                     goto lab_exit;
                 }
             }
@@ -94,7 +94,7 @@ CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
                 catch (Exception ex)
                 {
                     //_Log.Error("#tmpTable bulk copy failed: " + ex.Message);
-                    result.ErrorMsg = "#tmpTable bulk copy failed. " + ex.Message;
+                    result._ErrorMsg = "#tmpTable bulk copy failed. " + ex.Message;
                     goto lab_exit;
                 }
                 finally
@@ -117,7 +117,7 @@ CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
                 catch (Exception ex)
                 {
                     //_Log.Error("#tmpColumn bulk copy failed: " + ex.Message);
-                    result.ErrorMsg = "#tmpColumn bulk copy failed: " + ex.Message;
+                    result._ErrorMsg = "#tmpColumn bulk copy failed: " + ex.Message;
                     goto lab_exit;
                 }
                 finally

@@ -58,6 +58,16 @@ var _ajax = {
         return await _ajax._rpcA(json, fnOk, block);
     },
 
+    getIntA: async function (url, data, fnOk, block) {
+        var json = {
+            url: url,
+            type: 'POST',
+            data: data,
+            dataType: 'text',   //backend return text(ContentResult with text)
+        };
+        return await _ajax._rpcA(json, fnOk, block);
+    },
+
     /**
      * ajax return html string
      * param fnOk {function} (optional) callback function
@@ -117,9 +127,9 @@ var _ajax = {
      * 使用 async/await 傳回值 for caller 判斷執行結果是否成功
      * param json {json} ajax json
      * param fnOk {function} (optional) callback function
-     * param fnError {function} (optional) callback function
+     * //param fnError {function} (optional) callback function
      * param block {bool/object} block ui or not, default true
-     *   如果要block modal, 必須傳入 modal object !!
+     *   //如果要block modal, 必須傳入 modal object !!
      * return {bool/json/any} ResultDto return null when error
      *   bool: fnOk not empty, return false when error
      *   json/any: fnOk is empty, return null when error
@@ -234,8 +244,8 @@ var _ajax = {
      * param result {ResultDto} error msg
      */ 
     resultToErrMsg: function (result) {
-        return (result.ErrorMsg)
-            ? _ajax.strToErrMsg(result.ErrorMsg)
+        return (result[_fun.FidErrorMsg])
+            ? _ajax.strToErrMsg(result[_fun.FidErrorMsg])
             : '';
     },
 

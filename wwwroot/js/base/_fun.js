@@ -5,6 +5,7 @@ var _fun = {
     //for moment.js, match to _Fun.cs CsDtFmt
     MmDateFmt: 'YYYY/MM/DD',
     MmDtFmt: 'YYYY/MM/DD HH:mm:ss',
+    FidErrorMsg: '_ErrorMsg',
 
     //input field error validation, need match server side _Web.cs
     //jsPath: '../Scripts/',      //js path for load
