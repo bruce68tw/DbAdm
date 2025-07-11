@@ -17,5 +17,3 @@ node_modules/
 /wwwroot/css/lib*.css
 /appsettings.Production.json
 /appsettings.Production-net.json
-/appsettings.Production.json
-/appsettings.Production-net.json
