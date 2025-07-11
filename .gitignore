@@ -15,3 +15,7 @@ node_modules/
 /wwwroot/js/lib*.js
 /wwwroot/css/my*.css
 /wwwroot/css/lib*.css
+/appsettings.Production.json
+/appsettings.Production-net.json
+/appsettings.Production.json
+/appsettings.Production-net.json
