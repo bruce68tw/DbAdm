@@ -1,3 +1,0 @@
-﻿var _locale = {
-
-}; //class
