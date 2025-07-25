@@ -3,11 +3,12 @@
 /* 右上方工具列 */
 .xg-find-tbar {
     padding-top: 8px;
+    display: flex !important;
+    gap: 2px;
 }
 
 /* ?? find form, use $.slideToggle() */
 .xg-find-form {
-    display: none;
     padding: 10px 0 10px 0;
 }
 

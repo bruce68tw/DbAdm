@@ -118,7 +118,7 @@ delete dbo.IssueWatch where IssueId=@IssueId and WatcherId='{_Fun.UserId()}'
         [HttpPost]
         public async Task<string> SendSurvey(string issueId)
         {
-            return await new SurveyService().SendSurveyA(issueId);
+            return await new IssueService().SendSurveyA(issueId);
         }
 
     }//class

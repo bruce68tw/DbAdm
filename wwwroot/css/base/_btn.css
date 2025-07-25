@@ -26,7 +26,8 @@
 /* 用來放多個 button */
 .xg-btns-box {
     padding: 3px 0 3px 0;
-    display: flex;  /* 間距會變小 */
+    display: flex; /* 間距會變小 */
+    gap: 2px;
 }
 
 /* 功能按鈕, 空白則為 basic button */

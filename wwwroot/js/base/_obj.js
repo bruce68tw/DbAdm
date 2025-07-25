@@ -96,4 +96,16 @@ var _obj = {
         return obj.attr(attr);
     },
 
+    show: function (obj) {
+        obj.show();
+    },
+    showByStatus: function (obj, status) {
+        if (status)
+            obj.show();
+        else
+            obj.hide();
+    },
+    hide: function (obj) {
+        obj.hide();
+    },
 }; //class

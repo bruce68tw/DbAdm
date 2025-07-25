@@ -128,7 +128,10 @@
 }
 
 .btn {
-    font-size: 14px;
+    padding: .25rem .5rem !important;
+    margin-right: 1px !important;
+    line-height: 1.5 !important;
+    border-radius: .2rem !important;
 }
 
 /* table button with link style */
@@ -143,14 +146,9 @@
 
 /* change height, 38 -> 36 */
 .form-control, select.form-control {
-    font-size: 16px !important;
     height: 36px !important;
     /*padding: 3px 6px !important;*/
 }
-
-    .form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
-        background-color: #eee !important;
-    }
 
 textarea.form-control {
     height: auto !important;
@@ -312,14 +310,18 @@ body {
     display: inline-block;
 }
 
+/* 使用 flex 系統, 可以控制 gap */
 .xg-left {
-    text-align: left;
+    /*text-align: left;*/
+    justify-content: flex-start !important;
 }
 .xg-center {
-    text-align: center;
+    /*text-align: center;*/
+    justify-content: center !important;
 }
 .xg-right {
-    text-align: right;
+    /*text-align: right;*/
+    justify-content: flex-end !important;
 }
 
 .xg-h10 {
@@ -347,9 +349,11 @@ body {
 
 
 /* 用在 form裡面的 button */
+/*
 .xg-small-btn {
     padding: 2px 5px;
 }
+*/
 
 /* 功能按鈕, 空白則為 basic button 
 .xg-fun-btn {    
@@ -371,30 +375,20 @@ body {
 /* 用來放多個 button */
 .xg-btns-box {
     padding: 3px 0 3px 0;
-    display: flex;  /* 間距會變小 */
+    display: flex; /* 間距會變小 */
+    gap: 2px;
 }
 
 /* 功能按鈕, 空白則為 basic button */
-/* size and gray */
+/* 只設定大小 
 .xg-btn {
     padding: .25rem .5rem;
     margin-right: 3px;
     font-size: .875rem;
     line-height: 1.5;
     border-radius: .2rem;
-    color: #fff;
-    background-color: #6c757d;
-    border-color: #6c757d;
 }
-
-/* 只設定大小 */
-.xg-btn-size {
-    padding: .25rem .5rem;
-    margin-right: 3px;
-    font-size: .875rem;
-    line-height: 1.5;
-    border-radius: .2rem;
-}
+*/
 
 .xg-btn-gray {
     color: #fff;
@@ -449,11 +443,12 @@ span.error {
 /* 右上方工具列 */
 .xg-find-tbar {
     padding-top: 8px;
+    display: flex !important;
+    gap: 2px;
 }
 
 /* ?? find form, use $.slideToggle() */
 .xg-find-form {
-    display: none;
     padding: 10px 0 10px 0;
 }
 
@@ -1102,6 +1097,21 @@ tr select {
     padding-right: 3px !important;
 }
 
+.xg-scroll {
+    /*max-height: 300px;*/
+    overflow-y: auto !important;
+}
+
+    .xg-scroll thead th {
+        position: sticky !important;
+        top: 0;
+        z-index: 2;
+    }
+
+    .xg-scroll th, .xg-scroll td {
+        /*min-width: 150px;*/
+    }
+
 @media (max-width:768px) {
     .xg-table {
         /*background: #fff;*/
@@ -1209,23 +1219,40 @@ tr select {
 }
 */
 
-.xg-image .modal-body {
-    padding: 3px;
+/* 顯示時才設定 display flex, 否則會影響其他畫面無法捉取mouse事件 */
+.xg-image.modal {
+    /*display: flex !important;
+    align-items: center;
+    justify-content: center;*/
 }
+
+.xg-image .modal-dialog {
+    /*display: inline-block;*/
+    display: table;
+    margin: auto;
+    max-width: none;
+}
+
+.xg-image .modal-content,
+.xg-image .modal-body,
 .xg-image .modal-footer {
+    background: white;
     border: none;
-    padding: 5px;
+    padding: 0;
 }
+
 .xg-image img {
-    max-width: 100%;
-    max-height: 100%;
-    height: auto;
+    display: block;
     width: auto;
+    height: auto;
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: auto;
 }
 
 /* When the body has the wait class, we turn
-   the scrollbar off with overflow:hidden */
-body.xg-show-wait {
+the scrollbar off with overflow:hidden */
+body .xg-show-wait {
     overflow: hidden;
 }
 
@@ -1373,3 +1400,20 @@ body, label {
         background: #fff !important;
     } 
 }
+
+/* bootstrap */
+.btn {
+    font-size: .875rem !important;
+}
+
+/* change height, 38 -> 36 */
+.form-control, select.form-control {
+    font-size: 16px !important;
+}
+
+    .form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
+        background-color: #eee !important;
+    }
+
+
+

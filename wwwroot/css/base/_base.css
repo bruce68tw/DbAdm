@@ -14,14 +14,18 @@
     display: inline-block;
 }
 
+/* 使用 flex 系統, 可以控制 gap */
 .xg-left {
-    text-align: left;
+    /*text-align: left;*/
+    justify-content: flex-start !important;
 }
 .xg-center {
-    text-align: center;
+    /*text-align: center;*/
+    justify-content: center !important;
 }
 .xg-right {
-    text-align: right;
+    /*text-align: right;*/
+    justify-content: flex-end !important;
 }
 
 .xg-h10 {

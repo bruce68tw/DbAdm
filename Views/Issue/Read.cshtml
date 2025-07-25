@@ -20,6 +20,7 @@
                     { data: 'Id' },
                     { data: 'Title' },
                     { data: 'IsFinish' },       //7:Issue是否結案
+                    { data: 'FromMgrName' },
                     { data: 'OwnerName' },
                     { data: 'SendTimes' },      //9:寄送問卷次數
                     { data: '_Survey' },        //10.空白(沒有問卷Id && 沒有回報人)/已填問卷(有問卷Id)/寄送問卷(有回報人)
@@ -29,18 +30,13 @@
                     { targets: [7], render: function (data, type, full, meta) {
                         return _me.crudR.dtYesEmpty(data);
                     }},
-                    /*
-                    { targets: [8], render: function (data, type, full, meta) {
-                        return _me.crudR.dtYesEmpty(data);
-                    }},
-                    */
-                    { targets: [10], render: function (data, type, full, meta) {
+                    { targets: [11], render: function (data, type, full, meta) {
                         return _str.notEmpty(full.SurveyId) ? '是' :
                             (full.IsFinish == 1 && _str.notEmpty(full.RptUser) && (full.OwnerId == _fun.userId || _fun.userId=='Bruce'))
                                 ? `<button type="button" class="btn btn-secondary" onclick="_me.onSurvey('${full.Id}')">寄問卷</button>`
                                 : '';
                     }},
-                    { targets: [11], render: function (data, type, full, meta) {
+                    { targets: [12], render: function (data, type, full, meta) {
                         return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                     }},
                 ],
@@ -53,9 +49,17 @@
 
         },
 
+        fnAfterFind: function (result) {
+            $('#SumHours').text(result.SumHours || 0);
+        },
+
         //開啟編輯畫面時自動觸發
+        //如果是主管交辦, 則標題、交辦主管設定唯讀
         fnAfterOpenEdit: function (fun, json) {
-            if (fun == _fun.FunU || fun == _fun.FunV) {
+            var isFunU = (fun == _fun.FunU);
+            var eform = _me.eform0;
+
+            if (isFunU || fun == _fun.FunV) {
                 //設定專案功能欄位
                 _me.onChgProject(true, json.ProgId);
 
@@ -64,11 +68,20 @@
                 _me.hasWatchId = _str.notEmpty(json.WatchId);
                 _me.setWatchBtn(true);
 
+                //set edit status
+                _itext.setEdit('Title', false, eform);
+                _iselect.setEdit('FromMgr', false, eform);
+
                 //設定延續工作按鈕的狀態
                 _me.setKeepBtn(json.OwnerId == _fun.userId);
-            } else {                
-                _iselect.set('OwnerId', _fun.userId, _me.eform0);       //處理人員預設自己
-                _idate.set('WorkDate', _date.uiToday(), _me.eform0);    //工作日期預設今天
+            } else {
+                //新增
+                _iselect.set('OwnerId', _fun.userId, eform);       //處理人員預設自己
+                _idate.set('WorkDate', _date.uiToday(), eform);    //工作日期預設今天
+
+                //set edit status
+                _itext.setEdit('Title', true, eform);
+                _iselect.setEdit('FromMgr', true, eform);
 
                 _me.setWatchBtn(false);
                 _me.setKeepBtn(false);
@@ -167,6 +180,14 @@
             _me.crudR.onFind();
         },
 
+        //我的交辦
+        onMyAsk: function () {
+            var box = _me.crudR.rform;
+            _me.crudR.onResetFind();   //reset
+            _iselect.set('FromMgr', _fun.userId, box);
+            _me.crudR.onFind();
+        },
+
         //加入追踪
         onAddWatch: async()=>{
             _tool.ans('是否確定加入追踪?', async()=>{
@@ -238,9 +259,7 @@
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "有收問卷", Fid = "_HasSurvey", Rows = ViewBag.YesNos })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = "回報人員", Fid = "RptUser" })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Rows = ViewBag.Users })
-            @*
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "建檔人員", Fid = "Creator", Rows = ViewBag.Users })
-            *@
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "交辦主管", Fid = "FromMgr", Rows = ViewBag.Users })
             <div class="row">
                 <div class="col-md-2 xg-label">工作日期</div>
                 <div class="col-md-10 xg-input">
@@ -265,6 +284,8 @@
             <button type="button" class="btn xg-btn-gray" onclick="_me.onMyWeek()">我的本週資料</button>
             <button type="button" class="btn xg-btn-gray" onclick="_me.onMyNotFinish()">我的未結案</button>
             <button type="button" class="btn xg-btn-gray" onclick="_me.onMyWatch()">我的追踪</button>
+            <button type="button" class="btn xg-btn-gray" onclick="_me.onMyAsk()">我的交辦</button>
+            <span style="padding:3px">工作時數合計：<span id="SumHours"></span></span>
         </div>
         <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
             <thead>
@@ -277,6 +298,7 @@
                     <th>資料Id</th>
                     <th max-width='300px'>標題</th>
                     <th min-width='65px'>已結案</th>
+                    <th min-width='65px'>交辦主管</th>
                     <th min-width='65px'>處理人員</th>
                     <th min-width='65px'>寄送次數</th>
                     <th min-width='65px'>已填問卷</th>

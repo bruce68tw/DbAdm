@@ -1,5 +1,6 @@
 ﻿/**
  * 改為非靜態類別
+ * trigger _me.fnAfterFind(result) if any
  * crud read function
  * main for admin Web system
  * this properties:
@@ -62,8 +63,9 @@ function CrudR(dtConfig, edits, updName) {
                 _idate.init(this.rform2);
 
             //4.Create Datatable object
+            //傳入 _me.fnAfterFind if any !!
             if (_var.notEmpty(dtConfig)) {
-                this.dt = new Datatable('#tableRead', 'GetPage', dtConfig, this._getFindCond());
+                this.dt = new Datatable('#tableRead', 'GetPage', dtConfig, this._getFindCond(), null, null, _me.fnAfterFind || null);
             }
         }
 

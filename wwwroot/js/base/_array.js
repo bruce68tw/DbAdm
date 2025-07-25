@@ -29,4 +29,7 @@ var _array = {
         return ary.join(sep);
     },
 
+    isEmpty: function (ary) {
+        return (ary == null || ary.length == 0);
+    },
 };//class

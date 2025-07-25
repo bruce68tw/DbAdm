@@ -43,7 +43,8 @@ where i.Id=@Id
 					new() { Fid = "WorkDate" },
 					new() { Fid = "WorkHours" },
 					new() { Fid = "IsFinish" },
-					new() { Fid = "Title" },
+                    new() { Fid = "FromMgr" },
+                    new() { Fid = "Title" },
 					new() { Fid = "Note" },
 					new() { Fid = "OwnerId" },
 					new() { Fid = "RptDeptCode" },
@@ -119,7 +120,7 @@ where r.IssueId=@Id
 			{
 				var newKeyJson = service.GetNewKeyJson();
 				await _HttpFile.SaveCrudFilesA(json, newKeyJson, _Xp.DirIssueFile, t00_FileName, nameof(t00_FileName));
-				await SurveyA(result, service.GetMainKey());		//寄問卷
+				await CheckCloseA(result, service.GetMainKey());		//寄問卷
 			}
 			return result;
 		}
@@ -132,13 +133,13 @@ where r.IssueId=@Id
 			{
 				var newKeyJson = service.GetNewKeyJson();
 				await _HttpFile.SaveCrudFilesA(json, newKeyJson, _Xp.DirIssueFile, t00_FileName, nameof(t00_FileName));
-                await SurveyA(result, service.GetMainKey());		//寄問卷
+                await CheckCloseA(result, service.GetMainKey());		//寄問卷
             }
             return result;
 		}
 
-		//寄送滿意度問卷 if need
-        private async Task SurveyA(ResultDto result, string key)
+		//如果首次結案, 則進行:結案寄送滿意度問卷、通知交辦主管if need
+        private async Task CheckCloseA(ResultDto result, string key)
 		{
 			//檢查結果
 			if (_Result.HasError(result))
@@ -146,19 +147,24 @@ where r.IssueId=@Id
 
 			//是否符合: 已結案、有回報人、寄送次數為0
 			var sql = $@"
-select Id
+select RptUser, FromMgr
 from dbo.Issue
 where 1=1
 and Id='{key}'
 and IsFinish = 1
 and SendTimes = 0
-and isnull(RptUser,'') != '' 
 ";
-			if (_Str.IsEmpty(await _Db.GetStrA(sql)))
+			var row = await _Db.GetRowA(sql);
+            if (row == null)
 				return;
 
-			//寄問卷
-			await new SurveyService().SendSurveyA(key);
+            //寄問卷 if need(有回報人)
+            if (_Json.NotFidEmpty(row, "RptUser"))
+				await new IssueService().SendSurveyA(key);
+
+            //通知交辦主管 if need
+            if (_Json.NotFidEmpty(row, "FromMgr"))
+                await new IssueService().SendFromMgrA(key);
         }
 
     } //class

@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
 {
-    public class SurveyService
+    public class IssueService
     {
         /// <summary>
         /// 寄送email for 填寫問卷
@@ -88,8 +88,71 @@ where Id=@Id
             return "1";
 
         lab_error:
-            _Log.Error($"SurveyService.cs SendSurveyA() failed: {error} (Issue.Id={issueId})");
+            _Log.Error($"IssueService.cs SendSurveyA() failed: {error} (Issue.Id={issueId})");
 			return "無法寄送問卷，請聯絡管理者。";
+        }
+
+        /// <summary>
+        /// 寄送email 交辦主管
+        /// </summary>
+        /// <param name="issueId"></param>
+        /// <returns>1(成功), or 錯誤訊息</returns>
+        public async Task<string> SendFromMgrA(string issueId)
+        {
+            //讀取收件者
+            var error = "";
+            var sql = @"
+select i.Id, i.Title, i.FromMgr, UserName=u.Name
+from dbo.Issue i
+join dbo.XpUser u on i.OwnerId=u.Id
+where i.Id=@Id
+";
+            //row 的內容會傳入 email template
+            var args = new List<object>() { "Id", issueId };
+            var row = await _Db.GetRowA(sql, args);
+            if (row == null)
+            {
+                error = "找不到Issue資料";
+                goto lab_error;
+            }
+
+            //檢查回報人員編
+            var fromMgr = row!["FromMgr"]!.ToString();
+            if (fromMgr == string.Empty)
+            {
+                error = "[交辦主管]欄位為空白，無法寄送Email。";
+                goto lab_error;
+            }
+
+            //讀取email範本
+            var filePath = _Xp.GetTplPath("EmailFromMgr.html", false);
+            var html = await _File.ToStrA(filePath);
+            if (string.IsNullOrEmpty(html))
+            {
+                error = "找不到範本檔案: " + filePath;
+                goto lab_error;
+            }
+
+            //設定資料 for email template
+            var row2 = new JObject
+            {
+                { "Title", row!["Title"]!.ToString() },
+                { "UserName", row!["UserName"]!.ToString() },
+            };
+
+            //寄送email & 回傳執行結果
+            var email = new EmailDto()
+            {
+                Subject = "主管交辦事項完成通知",
+                ToUsers = [$"{fromMgr}@eden.org.tw"],   //組合email字串, 新格式前面沒有eden
+                Body = _Str.ReplaceJson(html, row2),
+            };
+            await _Email.SendByDtoA(email);
+            return "1";
+
+        lab_error:
+            _Log.Error($"IssueService.cs SendFromMsgA() failed: {error} (Issue.Id={issueId})");
+            return "無法寄送主管交辦完成通知，請聯絡管理者。";
         }
 
     }//class

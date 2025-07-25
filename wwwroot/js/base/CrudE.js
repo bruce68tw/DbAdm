@@ -132,7 +132,7 @@ function CrudE(edits) {
         var childLen = this._getEditChildLen(edit);
         for (var i = 0; i < childLen; i++) {
             var edit2 = this._getEditChild(edit, i);
-            edit2.dataJson = this._getChildJson(json, i);
+            edit2.dataJson = this.getChildJson(json, i);
             edit2.loadRows(this.jsonGetRows(edit2.dataJson));
         }
 
@@ -414,7 +414,8 @@ function CrudE(edits) {
     };
 
     //get child json
-    this._getChildJson = function (upJson, childIdx) {
+    //_getChildJson -> getChildJson
+    this.getChildJson = function (upJson, childIdx) {
         var childs = _edit.Childs;
         return (upJson[childs] == null || upJson[childs].length <= childIdx)
             ? null
@@ -423,7 +424,7 @@ function CrudE(edits) {
 
     //get child rows
     this.getChildRows = function (upJson, childIdx) {
-        var child = this._getChildJson(upJson, childIdx);
+        var child = this.getChildJson(upJson, childIdx);
         return this.jsonGetRows(child);
     };
 
@@ -674,7 +675,7 @@ function CrudE(edits) {
      * return {bool}
      */
     this.onUpdateA = async function(key) {
-        _edit.removeIsNew(this.edit0.eform);    //增加_IsNew隱藏欄位
+        _edit.removeIsNew(this.edit0.eform);    //移除_IsNew隱藏欄位
         return await this._updateOrViewA(_fun.FunU, key);
     };
 

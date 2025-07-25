@@ -3,11 +3,10 @@ using Base.Models;
 using Base.Services;
 using BaseApi.Services;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
-	public class IssueRead
+    public class IssueRead
     {
         private string isWatch = "";        //已追踪
         private string hasRptUser = "";     //有回報人
@@ -25,6 +24,7 @@ select i.*,
     IssueTypeName=c.Name,
     OwnerName=u.Name,
     CreatorName=u2.Name,
+    FromMgrName=u3.Name,
     IsWatch=case when w.Id is null then 0 else 1 end,
     SurveyId=s.Id
 from dbo.Issue i
@@ -32,6 +32,7 @@ join dbo.PrjProg pp on i.ProgId=pp.Id
 join dbo.Project p on pp.ProjectId=p.Id
 join dbo.XpUser u on i.OwnerId=u.Id
 join dbo.XpUser u2 on i.Creator=u2.Id
+left join dbo.XpUser u3 on i.FromMgr=u3.Id
 join dbo.XpCode c on c.Type='{_Xp.IssueType}' and i.IssueType=c.Value
 left join dbo.IssueWatch w on i.Id=w.IssueId and w.WatcherId='{_Fun.UserId()}'
 left join dbo.Survey s on i.Id=s.Id
@@ -53,6 +54,7 @@ order by p.Id, pp.Sort, i.Created desc
                     new() { Fid = "RptUser" },
                     new() { Fid = "OwnerId" },
                     //new() { Fid = "Creator" },
+                    new() { Fid = "FromMgr" },
                     new() { Fid = "IsFinish" },
                     //以下為額外的排序欄位
                     new() { Fid = "ProjectName", Col = "pp.ProjectId" },
@@ -63,6 +65,7 @@ order by p.Id, pp.Sort, i.Created desc
             };
         }
 
+        //傳回額外欄位: 工作時數合計
         public async Task<JObject?> GetPageA(string ctrl, DtDto dt)
         {
             //底線欄位 _IsWatch 不會自動加入 sql, 手動調整
@@ -70,7 +73,20 @@ order by p.Id, pp.Sort, i.Created desc
             isWatch = _Json.GetFidStr(findJson, "_IsWatch", "");
             hasRptUser = _Json.GetFidStr(findJson, "_HasRptUser", "");
             hasSurvey = _Json.GetFidStr(findJson, "_HasSurvey", "");
-            return await new CrudReadSvc().GetPageA(GetDto(), dt, ctrl);
+
+            //先讀取分頁
+            var svc = new CrudReadSvc();
+            var db = svc.GetDb(true);   //外部開啟DB
+            var result = await svc.GetPageA(GetDto(), dt, ctrl);
+
+            //加上工作時數合計
+            var sqlDto = svc.GetSqlDto();
+            var args = svc.GetArgs();
+            var sql = $"select sum(i.WorkHours) {sqlDto.From} {sqlDto.Where}";
+            result!["SumHours"] = await db.GetIntA(sql, args);
+            await db.DisposeAsync();
+
+            return result;
         }
 
         //todo

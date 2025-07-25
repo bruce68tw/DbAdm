@@ -24,9 +24,14 @@
 		@await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Required = true, Rows = ViewBag.Users, InRow = true })
 		@await Component.InvokeAsync("XiDate", new XiDateDto { Title = "工作日期", Fid = "WorkDate", Required = true, InRow = true })
 	</div>
+
+	<div class="row">
+		@await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "交辦主管", Fid = "FromMgr", Rows = ViewBag.Users, InRow = true })
+		@await Component.InvokeAsync("XiInt", new XiIntDto { Title = "工作時數", Fid = "WorkHours", Required = true, InRow = true, Cols = "2,1" })
+	</div>
+
 	<div class="row">
 		@await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "已結案", Fid = "IsFinish", Label = "是", InRow = true })
-		@await Component.InvokeAsync("XiInt", new XiIntDto { Title = "工作時數", Fid = "WorkHours", Required = true, InRow = true, Cols = "2,1" })
 	</div>
 
 	@await Component.InvokeAsync("XiText", new XiTextDto { Title = "標題", Fid = "Title", Required = true, MaxLen = 255, Cols = "2,6" })

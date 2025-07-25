@@ -6,15 +6,18 @@
  * param dtConfig {json} datatables config
  * param findJson {json} (optional) find condition when initial
  * param fnOk {function} (optional) callback after query ok, if empty then show successful msg
- * param tbarHtml {string} (optional) datatable toolbar html for extra button
+ * param tbarHtml {string} (optional) datatable toolbar html for extra button for 客製化 toolbar
+ * param fnAfterFind {function} (optional) 查詢成功後執行, 傳入result, 如果有指定fnOk
  */
-function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml) {
+function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml, fnAfterFind) {
 
     //public property 
     this.dt = null;             //jquery datatables object
     this.findJson = findJson;   //find condition
     this.recordsFiltered = -1;  //found count, -1 for recount, name map to DataTables
     this.defaultShowOk = true;  //whethor show find ok msg, default value
+
+    this._fnAfterFind = fnAfterFind;
 
     //private
     //keep start row idx, false(find), true(save reload)
@@ -173,11 +176,15 @@ t
                             return fnOk(result);
                         } else if (result.data === null || result.data.length === 0) {
                             _tool.alert(_BR.FindNone, 'R');
+                            if (this._fnAfterFind)
+                                this._fnAfterFind({});
                             return [];
                         } else {
                             if (this._nowShowOk)
                                 _tool.alert(_BR.FindOk);
                             this._nowShowOk = this.defaultShowOk;  //reset to default
+                            if (this._fnAfterFind)
+                                this._fnAfterFind(result);
                             return result.data;
                         }
                     }
