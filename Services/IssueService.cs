@@ -102,9 +102,10 @@ where Id=@Id
             //讀取收件者
             var error = "";
             var sql = @"
-select i.Id, i.Title, i.FromMgr, UserName=u.Name
+select i.Id, i.Title, u2.EmpNo, UserName=u.Name
 from dbo.Issue i
 join dbo.XpUser u on i.OwnerId=u.Id
+left join dbo.XpUser u2 on i.FromMgr=u2.Id
 where i.Id=@Id
 ";
             //row 的內容會傳入 email template
@@ -117,10 +118,10 @@ where i.Id=@Id
             }
 
             //檢查回報人員編
-            var fromMgr = row!["FromMgr"]!.ToString();
-            if (fromMgr == string.Empty)
+            var empNo = row!["EmpNo"]!.ToString();
+            if (empNo == string.Empty)
             {
-                error = "[交辦主管]欄位為空白，無法寄送Email。";
+                error = "[交辦主管]的員工編號為空白，無法寄送Email。";
                 goto lab_error;
             }
 
@@ -144,7 +145,7 @@ where i.Id=@Id
             var email = new EmailDto()
             {
                 Subject = "主管交辦事項完成通知",
-                ToUsers = [$"{fromMgr}@eden.org.tw"],   //組合email字串, 新格式前面沒有eden
+                ToUsers = [$"{empNo}@eden.org.tw"],   //組合email字串, 新格式前面沒有eden
                 Body = _Str.ReplaceJson(html, row2),
             };
             await _Email.SendByDtoA(email);

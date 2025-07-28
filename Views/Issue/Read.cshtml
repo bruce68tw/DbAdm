@@ -56,6 +56,7 @@
         //開啟編輯畫面時自動觸發
         //如果是主管交辦, 則標題、交辦主管設定唯讀
         fnAfterOpenEdit: function (fun, json) {
+            const FromMgr = 'FromMgr';
             var isFunU = (fun == _fun.FunU);
             var eform = _me.eform0;
 
@@ -69,8 +70,12 @@
                 _me.setWatchBtn(true);
 
                 //set edit status
-                _itext.setEdit('Title', false, eform);
-                _iselect.setEdit('FromMgr', false, eform);
+
+                if (isFunU){
+                    var hasFromMsg = _str.notEmpty(_iselect.get(FromMgr, eform));
+                    _itext.setEdit('Title', !hasFromMsg, eform);
+                    _iselect.setEdit(FromMgr, !hasFromMsg, eform);
+                }
 
                 //設定延續工作按鈕的狀態
                 _me.setKeepBtn(json.OwnerId == _fun.userId);
@@ -81,7 +86,7 @@
 
                 //set edit status
                 _itext.setEdit('Title', true, eform);
-                _iselect.setEdit('FromMgr', true, eform);
+                _iselect.setEdit(FromMgr, true, eform);
 
                 _me.setWatchBtn(false);
                 _me.setKeepBtn(false);
