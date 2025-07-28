@@ -1,11 +1,8 @@
-﻿using Base.Models;
-using Base.Services;
+﻿using Base.Services;
 using BaseApi.Services;
-using BaseWeb.Services;
 using DbAdm.Models;
 using DbAdm.Tables;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
@@ -46,7 +43,7 @@ namespace DbAdm.Services
         {
             var dir = _Fun.Dir("_template");
             if (hasLocale)
-                dir += _Locale.GetLocaleByUser() + _Fun.DirSep;
+                dir += _Locale.GetLocale() + _Fun.DirSep;
             return dir + fileName;
         }
 

@@ -83,7 +83,8 @@ order by p.Id, pp.Sort, i.Created desc
             var sqlDto = svc.GetSqlDto();
             var args = svc.GetArgs();
             var sql = $"select sum(i.WorkHours) {sqlDto.From} {sqlDto.Where}";
-            result!["SumHours"] = await db.GetIntA(sql, args);
+            var count = await db.GetIntA(sql, args);
+            result!["SumHours"] = count ?? 0;
             await db.DisposeAsync();
 
             return result;

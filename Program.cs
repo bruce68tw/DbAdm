@@ -2,7 +2,7 @@ using Base.Enums;
 using Base.Interfaces;
 using Base.Models;
 using Base.Services;
-using BaseWeb.Services;
+using BaseApi.Services;
 using DbAdm.Models;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -85,7 +85,7 @@ var app = builder.Build();
 
 //initial & set locale
 var isDev = app.Environment.IsDevelopment();
-_Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row);
+_Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row, true);
 await _Locale.SetCultureA(_Fun.Config.Locale);
 
 
