@@ -1,6 +1,8 @@
 ﻿@using Base.Models
 @using DbAdm.Services
+@using Microsoft.AspNetCore.Antiforgery
 @inject IHtmlLocalizer<DbAdm.R0> R0
+@inject IAntiforgery Antiforgery
 
 @{
     //網頁變數
@@ -82,6 +84,8 @@
     <meta charset="utf-8" />
     <title>@_Fun.Config.SystemName</title>
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- 防止 CSRF  -->
+    <meta name="csrf-token" content="@(Antiforgery.GetAndStoreTokens(Context).RequestToken)" />
 
     <!-- 1.load css -->
     <link rel="stylesheet" href="~/css/lib@(min).css?v=@libVer" />

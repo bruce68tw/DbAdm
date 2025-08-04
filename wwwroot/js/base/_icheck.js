@@ -70,6 +70,18 @@ var _icheck = $.extend({}, _ibase, {
     },
 
     /**
+     * get checked checkebox data-value string array
+     * form {object} container
+     * fid {string} (optional '_check0') data-fid value
+     * return {string array}
+     */ 
+    checkAll: function (form, status, fid) {
+        fid = fid || _icheck.Check0Id;
+        var filter = _input.fidFilter(fid);
+        _icheck.setO(form.find(filter), status);
+    },
+
+    /**
      * set checked status for multiple rows
      * form {object} container
      * rows {json array}

@@ -56,6 +56,13 @@ var _fun = {
         _pjax.init('.xu-body');
         _tool.init();
         moment.locale(_fun.locale);
+
+        //資安: 防止CSRF
+        $.ajaxSetup({
+            headers: {
+                'RequestVerificationToken': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
     },
 
     //server need Fun/Hello()

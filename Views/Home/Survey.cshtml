@@ -75,6 +75,7 @@
 
         <h3>工作項目：@ViewBag.IssueTitle</h3>
         <form action=@Url.Action("Survey") method="post">
+            @Html.AntiForgeryToken()  <!-- 資安: 防止CSRF -->
             @* 隱藏欄位傳送後端做驗證 *@
             <input name="SurveyData" type="hidden" value="@ViewBag.SurveyData">
 

@@ -22,7 +22,7 @@ left join [192.168.246.26].[05200169].[dbo].PersonalBasicInfo e on i.RptUser=e.L
 --left join [192.168.246.26].[05200169].[dbo].[HRMS_DEPARTMENT] d on e.[DEPARTMENT_CODE]=d.ID_DEPT
 left join [192.168.246.57].[Warehouse].[dbo].[J_TEAM_DEPT] d on d.DT_YYY='114' and e.DEPARTMENT_CODE=d.ID_DEPT
 where 1=1
-and i.WorkDate >= '2025/5/26'
+and i.WorkDate >= '2025/6/26'
 and i.IssueType in ('UA','UO','UP','US')
 and i.IsFinish=1
 and isnull(i.RptUser,'') != ''

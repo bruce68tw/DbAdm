@@ -18,7 +18,7 @@ join dbo.XpCode c on c.Type='IssueType' and i.IssueType=c.Value
 where 1=1
 --and i.ProjectId='anqEH1QbQR'
 and i.IssueType in ('UA','UO','UP','US')
-and i.Created >= '2025/6/26'
+and i.Created >= '2025/7/1'
 group by p.Name, c.Name
 having count(*) > 1
 order by p.Name, c.Name

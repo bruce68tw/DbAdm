@@ -17,7 +17,7 @@ select a.*,
 from dbo.PrjProg a
 left join dbo.XpUser u on a.Creator=u.Id
 join dbo.Project p on a.ProjectId=p.Id
-order by p.Id, a.Id
+order by p.Id, a.Sort
 ",
             TableAs = "a",
             Items = [

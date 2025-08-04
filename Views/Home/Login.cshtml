@@ -146,6 +146,7 @@
 <body>
     <div id="formBox">
         <form action=@Url.Action("login") method="post">
+            @Html.AntiForgeryToken()  <!-- 資安: 防止CSRF -->
             <input name="FromUrl" type="hidden" value="@Model.FromUrl">
             <div class="box">
                 <h1>登入畫面</h1>
