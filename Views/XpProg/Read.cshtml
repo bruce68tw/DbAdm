@@ -13,9 +13,9 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpProg"].Value } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-        <form id='formRead' class='xg-form'>
+        <form id='formRead' class='x-form'>
             <div class="row">
                 @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProgCode"].Value, Fid = "Code", MaxLen = 30, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar")
@@ -23,10 +23,10 @@
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProgName"].Value, Fid = "Name", MaxLen = 30 })
         </form>
 
-        <div class='xg-btns-box'>
+        <div class='x-btns-box'>
             @await Component.InvokeAsync("XgCreate")
         </div>
-        <table id="tableRead" class="table xg-table" cellspacing="0">
+        <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>@R["ProgCode"]</th>
@@ -41,8 +41,8 @@
         </table>
     </div>
 
-    <div id="divEdit" class="xg-hide">
-        <form id='eform' class='xg-form'>
+    <div id="divEdit" class="d-none">
+        <form id='eform' class='x-form'>
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProgCode"].Value, Fid = "Code", MaxLen = 30, Required = true })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProgName"].Value, Fid = "Name", MaxLen = 30, Required = true })
@@ -55,8 +55,8 @@
             }
 
             <div class="row">
-                <div class="col-md-2 xg-label">@R["CrudFun"]</div>
-                <div class="col-md-9 xg-input" style="padding-top:5px;">
+                <div class="col-md-2 x-label">@R["CrudFun"]</div>
+                <div class="col-md-9 x-input pt-1">
                     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunCreate", Label = R0["Create"].Value })
                     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunRead", Label = R0["Read"].Value })
                     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunUpdate", Label = R0["Update"].Value })
@@ -69,12 +69,12 @@
 
         </form>
 
-        <div class='xg-btns-box xg-mt5'>
-            <span class="xg-span-label">@R["RoleProg"]</span>
+        <div class='x-btns-box mt-1'>
+            <span class="x-span-label">@R["RoleProg"]</span>
             @await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow()")
         </div>
-        <form id='eformRoleProg' class='xg-form' style="border:none;">
-            <table class="table xg-table xg-no-hline" cellspacing="0">
+        <form id='eformRoleProg' class='x-form border-0'>
+            <table class="table x-table x-no-hline" cellspacing="0">
                 <thead>
                     <tr>
                         @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Role"].Value, Required = true })
@@ -103,23 +103,23 @@
 
         @if (isAuthRow)
         {
-            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunCreate" })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunRead", Rows = authRanges })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunUpdate", Rows = authRanges })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunDelete", Rows = authRanges })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunPrint", Rows = authRanges })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunExport", Rows = authRanges })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunView", Rows = authRanges })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunCreate" })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunRead", Rows = authRanges })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunUpdate", Rows = authRanges })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunDelete", Rows = authRanges })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunPrint", Rows = authRanges })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunExport", Rows = authRanges })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "FunView", Rows = authRanges })</td>
         }
         else
         {
-            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunCreate" })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunRead" })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunUpdate" })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunDelete" })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunPrint" })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunExport" })</td>
-            <td class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunView" })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunCreate" })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunRead" })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunUpdate" })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunDelete" })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunPrint" })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunExport" })</td>
+            <td class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunView" })</td>
         }
 
         <td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mRoleProg.onDeleteRow(this)")</td>

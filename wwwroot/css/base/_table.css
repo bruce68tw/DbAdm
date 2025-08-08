@@ -1,12 +1,12 @@
 ﻿
 /* file url */
-.xg-edit-table td {
+.x-edit-table td {
     border-top: none;
     border-bottom: none;
 }
 
 /* include: read, edit table */
-.xg-table {
+.x-table {
     border-collapse: separate !important;
     width: 100% !important;
     font-size: 15px;
@@ -15,7 +15,7 @@
     border-style: solid !important;
 }
 
-    .xg-table th, .xg-table td {
+    .x-table th, .x-table td {
         font-weight: normal !important;
         border-width: 0 1px 1px 0 !important;
         border-color: lightgray !important;
@@ -26,34 +26,34 @@
     }
 
     /*
-    .xg-table th {
+    .x-table th {
         background: #eee;
     }
 
-    .xg-table tr:hover {
+    .x-table tr:hover {
         background: #F6F6F6;
     }
     */
 
-    .xg-table.xg-no-hline {
+    .x-table.x-no-hline {
         border-width: 1px 0 1px 1px !important;
     }
 
-        .xg-table.xg-no-hline td {
+        .x-table.x-no-hline td {
             border-width: 0 1px 0 0 !important;
         }
 
-    .xg-table .xi-check > span {
+    .x-table .xi-check > span {
         top: -15px !important;
         left: 8px !important;
     }
 
 /*
-.xg-table th .xi-check {
+.x-table th .xi-check {
     top: -6px !important;
     left: -3px !important;
 }
-.xg-table tbody .xi-check {
+.x-table tbody .xi-check {
     top: -8px !important;
 }
 */
@@ -74,16 +74,16 @@ table.dataTable thead th {
 
 
 /* table v scroll */
-.xg-table-vscroll {
+.x-table-vscroll {
     border-width: 1px 0 1px 1px !important;
 }
 
-.xg-table-vscroll tbody {
+.x-table-vscroll tbody {
     display: block;
     overflow-y: scroll;
 }
 
-.xg-table-vscroll tr {
+.x-table-vscroll tr {
   display:flex;
 }
 
@@ -96,64 +96,64 @@ tr select {
     padding-right: 3px !important;
 }
 
-.xg-scroll {
+.x-scroll {
     /*max-height: 300px;*/
     overflow-y: auto !important;
 }
 
-    .xg-scroll thead th {
+    .x-scroll thead th {
         position: sticky !important;
         top: 0;
         z-index: 2;
     }
 
-    .xg-scroll th, .xg-scroll td {
+    .x-scroll th, .x-scroll td {
         /*min-width: 150px;*/
     }
 
 @media (max-width:768px) {
-    .xg-table {
+    .x-table {
         /*background: #fff;*/
         overflow: hidden;
         border: none;
     }
 
         /*
-        .xg-table tr:nth-of-type(2n) {
+        .x-table tr:nth-of-type(2n) {
             background: #eee;
         }
-        .xg-table th, .xg-table td {
+        .x-table th, .x-table td {
             margin: 0.5em 1em;
         }
 
-    .xg-table {
+    .x-table {
         min-width: 100%;
     }
         */
 
-    .xg-table tbody {
+    .x-table tbody {
         padding-top: 3px;
     }
 
-        .xg-table th {
+        .x-table th {
             display: none;
         }
 
-        .xg-table td {
+        .x-table td {
             text-align: left;
             display: block;
             border: none !important;
         }
 
-            .xg-table td:first-child {
+            .x-table td:first-child {
                 padding-top: 15px;
                 border-top: 1px solid lightgray !important;
             }
-            .xg-table td:last-child {
+            .x-table td:last-child {
                 padding-bottom: 15px;
             }
 
-            .xg-table td:before {
+            .x-table td:before {
                 content: attr(data-rwd-th);
                 font-weight: bold;
                 /*width: 6.5em;*/
@@ -163,11 +163,11 @@ tr select {
             }
 
         /*
-        .xg-table th, .xg-table td {
+        .x-table th, .x-table td {
             text-align: left;
         }
 
-            .xg-table th, .xg-table td:before {
+            .x-table th, .x-table td:before {
                 color: #D20B2A;
                 font-weight: bold;
             }

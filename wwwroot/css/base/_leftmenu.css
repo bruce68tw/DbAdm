@@ -1,5 +1,5 @@
 ﻿/* 左側功能表 */
-.xg-leftmenu {
+.x-leftmenu {
     margin-left: 0;
     padding: 0;
     /*min-width: 250px;
@@ -11,20 +11,20 @@
     z-index: 1000;
 }
 
-.xg-leftmenu.xg-close {
+.x-leftmenu.x-close {
     transition: 0.5s;
     margin-left: -250px;
 }
 /*
-.xg-leftmenu.xg-close span, 
-.xg-leftmenu.xg-close .xg-arrow {
+.x-leftmenu.x-close span, 
+.x-leftmenu.x-close .x-arrow {
     display: none;
     transition: 0.5s;
 }
 */
 
     /* menu item */
-    .xg-leftmenu li {
+    .x-leftmenu li {
         /*text-indent: 0;*/
         line-height: 42px;
         border-bottom: solid 1px #E5E5E5;
@@ -32,38 +32,38 @@
     }
 
     /* 文字 */
-    .xg-leftmenu a {
+    .x-leftmenu a {
         display: block; /* 選取的有效寬度為100% */
         text-decoration: none !important;
     }
 
-    .xg-leftmenu a:hover {
+    .x-leftmenu a:hover {
         cursor: pointer;
         text-decoration: none; /* remove underline */
     }
 
-.xg-leftmenu a:hover i {
+.x-leftmenu a:hover i {
 }
 
 /* icon */
-.xg-leftmenu i {
+.x-leftmenu i {
     margin-right: 10px;
     padding-left: 12px;
     width: 25px;    /* 讓文字對齊 */
 }
 
-    .xg-leftmenu .xg-arrow:before {
+    .x-leftmenu .x-arrow:before {
         float: right;
         margin-right: 20px;
         font-family: 'icomoon';
         content: "\f107"; /* down arrow */
     }
-    .xg-leftmenu .xg-arrow.xg-open:before {
+    .x-leftmenu .x-arrow.x-open:before {
         content: "\f106";   /* up arrow */
     }
 
 /* 子功能表(第2層) 的外框 */
-.xg-leftmenu-subbox {
+.x-leftmenu-subbox {
     list-style: none;
     /*
     -moz-padding-start: 0;
@@ -75,12 +75,12 @@
     padding: 0;
 }
 
-    .xg-leftmenu-subbox li {
+    .x-leftmenu-subbox li {
         border: none;
     }
 
     /* sub menu text */
-    .xg-leftmenu-subbox a {
+    .x-leftmenu-subbox a {
         /*font-size: 15px;
         color: #fff;*/
         padding-left: 22px;

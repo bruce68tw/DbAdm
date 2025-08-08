@@ -1,25 +1,25 @@
 ﻿
 /* form without line */
-/* 停用 xg-row */
-.xg-form {
+/* 停用 x-row */
+.x-form {
     /*font size same to .form-control*/
     font-size: 16px;
     border: none;
     /*margin-bottom: 0px;*/
 }
 
-    /* 停用 xg-row
-    .xg-form .zz_xg-row {
+    /* 停用 x-row
+    .x-form .zz_x-row {
         margin: 0;
         border: none;
     }
     */
 
-    .xg-form .xg-input {
+    .x-form .x-input {
         padding-top: 7px;
         min-height: 43px;
     }
-    .xg-form.xg-border {
+    .x-form.x-border {
         margin: 0 auto;
         padding: 20px 16px;
         border: solid 1px lightgray !important;
@@ -27,12 +27,12 @@
     }
 
 /* title required sign */
-.xg-required {
+.x-required {
     color: red;
     font-weight: bold;
 }
 
 /* animation */
-.xg-fade.hide {
+.x-fade.hide {
     display: none;
 }

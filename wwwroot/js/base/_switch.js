@@ -5,7 +5,7 @@ var _switch = {
 
     //傳回元件內容字串 for client render
     getText: function (yes, no, width, status, inline, fid, cls) {
-        var inline2 = (inline) ? ' xg-inline' : '';
+        var inline2 = (inline) ? ' x-inline' : '';
         var attr = (fid) ? (' id="' + fid + '"') : '';
         if (status)
             attr += ' checked';

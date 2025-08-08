@@ -150,7 +150,7 @@ var _input = {
     //#region remark code
     /**
      * ??顯示欄位的錯誤訊息, fid欄位會直接加上 error className
-     * 先找 error label, 再找上面相鄰的 object, 然後加入 xg-error
+     * 先找 error label, 再找上面相鄰的 object, 然後加入 x-error
      * param fid {string} 欄位id
      * param msg {string} 顯示訊息, 可為空白, 此時會顯示錯誤外框, 但是無錯誤訊息
      * param box {object} (optional) box(jquery object), for 多筆畫面

@@ -1,11 +1,11 @@
 ﻿/* 輸入欄位的外框 */
-.xg-input {
+.x-input {
     padding-top: 7px;
     min-height: 43px;
 }
 
 @media (max-width:768px) {
-    .xg-input {
+    .x-input {
         padding-top: 0;
     }
 }

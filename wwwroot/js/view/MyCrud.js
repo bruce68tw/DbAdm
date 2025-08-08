@@ -33,7 +33,7 @@ var _me = {
         _me.edit0 = new EditOne();
         _me.mQitem = new EditMany('Id', 'tbodyQitem', 'tplQitem', '.xu-tr');
         _me.mRitem = new EditMany('Id', 'tbodyRitem', 'tplRitem', '.xu-tr');
-        _me.mEtable = new EditMany('Id', null, 'tplTabEtable', '.xg-form');
+        _me.mEtable = new EditMany('Id', null, 'tplTabEtable', '.x-form');
         _me.mEitem = new EditMany('Id', null, 'tplEitemTr', '.xu-tr');
         _me.mEtable._childs = [_me.mEitem];
 
@@ -630,10 +630,10 @@ var _me = {
     },
 
     getEtableForms: function () {
-        return _me.tabEtable.find('.xg-form');
+        return _me.tabEtable.find('.x-form');
     },
     getEtableForm: function (tabObj) {
-        return tabObj.find('.xg-form');
+        return tabObj.find('.x-form');
     },
 
     /*

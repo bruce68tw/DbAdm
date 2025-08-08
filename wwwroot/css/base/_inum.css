@@ -7,7 +7,9 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-/* hide stepper: Firefox */
+
 input[type=number] {
+    text-align: right;
+    /* hide stepper: Firefox */
     -moz-appearance: textfield;
 }

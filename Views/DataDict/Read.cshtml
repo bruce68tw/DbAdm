@@ -34,9 +34,9 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "資料字典維護" } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-        <form id='formRead' class='xg-form xg-mb0'>
+        <form id='formRead' class='x-form mb-0'>
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料表類別", Fid = "TableType", Rows = ViewBag.TableTypes, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
@@ -45,10 +45,10 @@
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位中文名", Fid = "Name", MaxLen = 30, LabelTip = "使用模糊查詢" })
         </form>
 
-        <div class="xg-btns-box">
+        <div class="x-btns-box">
             @await Component.InvokeAsync("XgCreate", new { fnOnClick = "_me.crudR.onCreate()" })
         </div>
-        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table table-bordered x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>資料表類別</th>
@@ -65,7 +65,7 @@
         </table>
     </div>
 
-    <div id="divEdit" class="xg-hide">
+    <div id="divEdit" class="d-none">
         <partial name="Edit" />
     </div>
 </div>

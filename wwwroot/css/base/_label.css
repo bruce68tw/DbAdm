@@ -1,22 +1,22 @@
 ﻿
 /* span label */
-.xg-span-label {
+.x-span-label {
     margin: 3px 3px;
 }
 
-.xg-label {
+.x-label {
     padding: 14px 5px 0 15px;
     border: none;
     text-align: right;
 }
 
 @media (max-width:768px) {
-    .xg-label {
+    .x-label {
         text-align: left;
     }
 }
 
-.xg-vlabel {
+.x-vlabel {
     padding: 14px 0 0 0;
     border: none;
     text-align: left;

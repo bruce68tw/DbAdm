@@ -21,7 +21,7 @@ var _fun = {
     PreBrError: 'B:',
 
     //class name of hide RWD phone
-    HideRwd: 'xg-hide-rwd',
+    HideRwd: 'x-hide-rwd',
     //#endregion
 
     //variables
@@ -32,7 +32,7 @@ var _fun = {
 
     //datatables column define default values
     dtColDef: {
-        className: 'xg-center',
+        className: 'x-center',
         orderable: false,
         targets: '_all',
     },
@@ -105,9 +105,9 @@ var _fun = {
     block: function (obj) {
         var data = {
             message: '' +
-                '<table><tr><td style="height:50px">' +
+                '<table><tr><td class="x-h50">' +
                 '   <i class="spinner ico-spin"></i>' +
-                '   <span style="margin-left:3px; vertical-align:middle;">' + _BR.Working + '</span>' +
+                '   <span class="ms-1 align-middle">' + _BR.Working + '</span>' +
                 '</td></tr></table>',
             css: {
                 padding: '0 30px',
@@ -137,19 +137,19 @@ var _fun = {
         var parent = obj.parentNode;
         if (Regex == "") {
             if (obj.value != "") {
-                obj.parentNode.classList.remove("xg-error");
+                obj.parentNode.classList.remove("x-error");
             }
             else {
-                obj.parentNode.classList.add("xg-error");
+                obj.parentNode.classList.add("x-error");
                 _fun.isCheck = false;
             }
         }
         else {
             if (obj.value.match(new RegExp(Regex)) != null) {
-                obj.parentNode.classList.remove("xg-error");
+                obj.parentNode.classList.remove("x-error");
             }
             else {
-                obj.parentNode.classList.add("xg-error");
+                obj.parentNode.classList.add("x-error");
                 _fun.isCheck = false;
             }
         }
@@ -158,18 +158,18 @@ var _fun = {
      ??
     xgCheckfn: function () {
         _fun.isCheck = true;
-        var Inputs = document.getElementsByClassName('xg-textbox');
+        var Inputs = document.getElementsByClassName('x-textbox');
         for (var i = 0; i < Inputs.length; i++) {
             Inputs[i].childNodes[1].onchange();
         }
-        var selects = document.getElementsByClassName('xg-select');
+        var selects = document.getElementsByClassName('x-select');
         for (var i = 0; i < selects.length; i++) {
             if (selects[i].childNodes[1].value == 0 || selects[i].childNodes[1].value == "") {
-                selects[i].classList.add("xg-error");
+                selects[i].classList.add("x-error");
                 _fun.isCheck = false;
             }
             else {
-                selects[i].classList.remove("xg-error");
+                selects[i].classList.remove("x-error");
             }
         }
         return _fun.isCheck;

@@ -3,7 +3,7 @@
     var longCols = "2,10";
 }
 
-<form class='xg-form xg-mb10' id='eform'>
+<form class='x-form mb-2' id='eform'>
     @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
     @await Component.InvokeAsync("XiText", new XiTextDto { Title = "名稱", Fid = "Name", Value = "", MaxLen = 20, Required = true })
     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProjectCode"].Value, Fid = "Code", Value = "", MaxLen = 30, Required = true })

@@ -1,23 +1,23 @@
 ﻿/* 分頁元件 */
 
 /* 顯示筆數&資訊 */
-.xg-page-menu {
+.x-page-menu {
     float: left;
 }
 
-.xg-page-btns .xg-has-menu {
+.x-page-btns .x-has-menu {
     justify-content: flex-end !important;
 }
-.xg-page-btns .xg-no-menu {
+.x-page-btns .x-no-menu {
     justify-content: center !important;
 }
 
 @media (max-width:768px) {
-    .xg-page-menu {
+    .x-page-menu {
         display: none;
     }
 
-    .xg-page-btns .xg-page-hasmenu {
+    .x-page-btns .x-page-hasmenu {
         justify-content: center !important;
     }
 }

@@ -5,7 +5,7 @@ span.error {
     margin-bottom: 0 !important;
 }
 
-.xg-err {
+.x-err {
     /*border: #5b48e5;
     border-style: solid;
     border-width: thin;*/
@@ -15,7 +15,7 @@ span.error {
 }
 
 /*  */
-.xg-errlab {
+.x-errlab {
     text-align: left;
     font-size: 14px;
     font-weight: lighter;
@@ -24,16 +24,16 @@ span.error {
 }
 
 /* (+)相鄰選擇器, 
-  1.與 xg-error2 相鄰的 error label 要顯示 
-  2.在 xg-error2box 裡面的 error label 要顯示 
-.xg-error + .xg-errorlabel, .xg-errorbox + .xg-errorlabel {
+  1.與 x-error2 相鄰的 error label 要顯示 
+  2.在 x-error2box 裡面的 error label 要顯示 
+.x-error + .x-errorlabel, .x-errorbox + .x-errorlabel {
     display: block !important;
 }
 */
 
-/* 在 xg-error2box 裡面的 input 要顯示錯誤框 */
-/*.xg-errorbox > input,
-.xg-errorbox > button, .xg-errorbox div.xg-icheck {
+/* 在 x-error2box 裡面的 input 要顯示錯誤框 */
+/*.x-errorbox > input,
+.x-errorbox > button, .x-errorbox div.x-icheck {
     border: 1px solid #FF8B55 !important;
 }
 */

@@ -56,14 +56,14 @@ function Page(config) {
 				.replace('_End', end <= arg.filterRows ? end : arg.filterRows)
 				.replace('_Total', arg.filterRows);
 			menu = _str.format(
-				"<div class='xg-page-menu'>" +
+				"<div class='x-page-menu'>" +
 					"<label>{0}<span>{1}</span></label>" +
 				"</div>", menu, info);
 		}
 
 		//set html
 		//pager.addClass('row');	//for layout
-		pager.html(menu + "<div class='xg-page-btns'></div>");
+		pager.html(menu + "<div class='x-page-btns'></div>");
 
 		//register onchange event, this did not work inside !!
 		pager.find('select').change(function () {
@@ -71,14 +71,12 @@ function Page(config) {
 		});
 
 		//initial simplePagin
-		pager.find('.xg-page-btns').pagination({
+		pager.find('.x-page-btns').pagination({
 			currentPage: arg.pageNo,
 			itemsOnPage: arg.pageRows,
 			items: arg.filterRows,
 			//displayedPages: 3,
-			//cssStyle: 'col-md-' + (this.showMenu ? '8' : '12'),	//for layout, will add into ul class(listStyle)
-			//listStyle: 'pagination justify-content-' + (this.showMenu ? 'end' : 'center'),
-			listStyle: 'pagination ' + (this.showMenu ? 'xg-has-menu' : 'xg-no-menu'),
+			listStyle: 'pagination ' + (this.showMenu ? 'x-has-menu' : 'x-no-menu'),
 			prevText: "<",
 			nextText: ">",
 			//prevText: "<i class='fas fa-chevron-left'></i>",
@@ -89,7 +87,7 @@ function Page(config) {
 	};
 
 	this._getMenuHtml = function () {
-		var menu = "<select class='form-select' style='width:80px; display:inline-block'>";
+		var menu = "<select class='form-select x-inline x-w100'>";
 		for (var i = 0; i < this.pageRowList.length; i++) {
 			menu += _str.format("<option value='{0}'{1}>{0}</option>", this.pageRowList[i],
 				this.pageArg.pageRows == this.pageRowList[i] ? ' selected' : '');

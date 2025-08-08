@@ -41,17 +41,17 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "報表-專案工作類別合計" } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-		<form id='formRead' class='xg-form'>
+		<form id='formRead' class='x-form'>
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true, InputAttr = "onchange=_me.onChgProject(false)" })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料種類", Fid = "IssueType", Rows = ViewBag.IssueTypes })
             <div class="row">
-                <div class="col-md-2 xg-label">工作日期</div>
-                <div class="col-md-10 xg-input">
+                <div class="col-md-2 x-label">工作日期</div>
+                <div class="col-md-10 x-input">
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate2", InRow = true })
@@ -59,12 +59,12 @@
             </div>
         </form>
 
-		<div class='xg-btns-box'>
+		<div class='x-btns-box'>
             @await Component.InvokeAsync("XgExport")
-            <button type="button" class="btn xg-btn-gray" onclick="_me.onNowWeek()">本週資料</button>
-            <button type="button" class="btn xg-btn-gray" onclick="_me.onNowMonth()">本月資料</button>
+            <button type="button" class="btn x-btn-gray" onclick="_me.onNowWeek()">本週資料</button>
+            <button type="button" class="btn x-btn-gray" onclick="_me.onNowMonth()">本月資料</button>
         </div>
-        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table table-bordered x-table" cellspacing="0">
             <thead>
                 <tr>
 					<th>專案</th>

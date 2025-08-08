@@ -5,7 +5,7 @@
         display: none;
     }
 
-    body > .xg-print {
+    body > .x-print {
         display: block;
     }
 

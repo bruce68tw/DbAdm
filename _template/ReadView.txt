@@ -6,10 +6,10 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "{{ProgName}}" } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
 	{{#if HasFindForm}}
-		<form id='formRead' class='xg-form'>
+		<form id='formRead' class='x-form'>
 	{{#Qitems}}
 		{{#if IsGroupStart}}
 			<div class="row">
@@ -26,7 +26,7 @@
         </form>
 	{{/if}}
 	{{#if HasFind2Form}}
-        <form id='formRead2' class='xg-form'>
+        <form id='formRead2' class='x-form'>
 	{{#Qitems2}}
 		{{#if IsGroupStart}}
 			<div class="row">
@@ -43,7 +43,7 @@
         </form>
 	{{/if}}
 
-		<div class='xg-btns-box'>
+		<div class='x-btns-box'>
 		{{#if HasCreate}}
 			<vc:xg-create/>
 		{{/if}}
@@ -51,7 +51,7 @@
 			<vc:xg-export/>
 		{{/if}}
         </div>
-        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table table-bordered x-table" cellspacing="0">
             <thead>
                 <tr>
 				{{#Ritems}}
@@ -63,7 +63,7 @@
         </table>
     </div>
 
-    <div id="divEdit" class="xg-hide">
+    <div id="divEdit" class="d-none">
         <partial name="Edit" />
     </div>
 </div>

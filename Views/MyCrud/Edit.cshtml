@@ -18,10 +18,19 @@
     #tableItem th:nth-child(3), #tableItem td:nth-child(3) {
         flex-grow: 1;
     }
+
+    .xu-items{
+        width: 560px; 
+        height: 520px;
+    }
+
+    .xu-tbody{
+        height: 315px;
+    }
 </style>
 
 <!-- main table edit form -->
-<form id='eform' class='xg-form'>
+<form id='eform' class='x-form'>
     @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
 
     <div class="row">
@@ -32,15 +41,15 @@
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgName"].Value, Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols2 })
 
             <div class="row">
-                <div class="col-md-4 xg-label">@R["FunRead"]</div>
-                <div class="col-md-8" style="padding-top:5px;">
+                <div class="col-md-4 x-label">@R["FunRead"]</div>
+                <div class="col-md-8 pt-1">
                     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasExport", IsCheck = true, Label = R["Export"].Value })
                     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasReset", IsCheck = true, Label = R["Reset"].Value })
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 xg-label">@R["FunEdit"]</div>
-                <div class="col-md-8" style="padding-top:5px;">
+                <div class="col-md-4 x-label">@R["FunEdit"]</div>
+                <div class="col-md-8 pt-1">
                     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasCreate", IsCheck = true, Label = R["Create"].Value })
                     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasUpdate", IsCheck = true, Label = R["Update"].Value })
                     @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasDelete", IsCheck = true, Label = R["Delete"].Value })
@@ -61,14 +70,14 @@
 </form>
 
 <!-- find buttons -->
-<div class="xg-btns-box">
-    <span class="xg-span-label">@R["Qitem"]</span>
-    <button type='button' class='btn xg-btn-gray' onclick='_me.onOpenItem("Q")'>@R["GetItem"]</button>
+<div class="x-btns-box">
+    <span class="x-span-label">@R["Qitem"]</span>
+    <button type='button' class='btn x-btn-gray' onclick='_me.onOpenItem("Q")'>@R["GetItem"]</button>
 </div>
 
 <!-- find field -->
-<form class='xg-form' style="border:none">
-    <table class="table xg-table xg-no-hline" cellspacing="0">
+<form class='x-form border-0'>
+    <table class="table x-table x-no-hline" cellspacing="0">
         <thead>
             <tr>
                 <th>@R0["Column"]</th>
@@ -91,15 +100,15 @@
 </form>
 
 <!-- query result buttons -->
-<div class="xg-btns-box">
-    <span class="xg-span-label">@R["Ritem"]</span>
+<div class="x-btns-box">
+    <span class="x-span-label">@R["Ritem"]</span>
     @await Component.InvokeAsync("XgAddRow", "_me.onRitemAdd()")
-    <button type='button' class='btn xg-btn-gray' onclick='_me.onOpenItem("R")'>@R["GetItem"]</button>
+    <button type='button' class='btn x-btn-gray' onclick='_me.onOpenItem("R")'>@R["GetItem"]</button>
 </div>
 
 <!-- query result fields -->
-<form class='xg-form' style="border:none">
-    <table class="table xg-table xg-no-hline" cellspacing="0">
+<form class='x-form border-0'>
+    <table class="table x-table x-no-hline" cellspacing="0">
         <thead>
             <tr>
                 <th>@R0["Column"]</th>
@@ -143,10 +152,10 @@
            Value = "Equal"
        })</td>
     @*<td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ExtInfo" })</td>*@
-        <td width="60px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsRange" })</td>
+        <td width="60px" class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsRange" })</td>
         <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PosGroup" })</td>
         <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LayoutCols" })</td>
-        <td width="60px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsFind2" })</td>
+        <td width="60px" class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsFind2" })</td>
         <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mQitem" })</td>
     </tr>
 </script>
@@ -168,12 +177,12 @@
 </script>
 
 <!-- Table edit form nav/tab/buttons -->
-<div class="xg-btns-box">
-    <span class="xg-span-label">@R["EditForm"]</span>
-    <button type='button' class='btn xg-bt-grayn' onclick='_me.onEtableAdd()'>@R["Create"]</button>
-    <button type='button' class='btn xg-btn-gray' onclick='_me.onEtableDelete()'>@R["Delete"]</button>
-    <button type='button' class='btn xg-btn-gray' onclick='_me.onEtableLeft()'>@R["MoveLeft"]</button>
-    <button type='button' class='btn xg-btn-gray' onclick='_me.onEtableRight()'>@R["MoveRight"]</button>
+<div class="x-btns-box">
+    <span class="x-span-label">@R["EditForm"]</span>
+    <button type='button' class='btn x-bt-grayn' onclick='_me.onEtableAdd()'>@R["Create"]</button>
+    <button type='button' class='btn x-btn-gray' onclick='_me.onEtableDelete()'>@R["Delete"]</button>
+    <button type='button' class='btn x-btn-gray' onclick='_me.onEtableLeft()'>@R["MoveLeft"]</button>
+    <button type='button' class='btn x-btn-gray' onclick='_me.onEtableRight()'>@R["MoveRight"]</button>
 </div>
 <ul class="nav nav-tabs" id="navEtable"></ul>
 <div class="tab-content" id="tabEtable"></div>
@@ -191,8 +200,8 @@
 <!-- template: CrudEdit edit form tab, layout/width fields are dynamic switch -->
 <script id="tplTabEtable" type="text/template">
     <div class="tab-pane xu-edit" id="divEtable{{Index}}">
-        <!-- xg-form also for myCrud.js -->
-        <form class='xg-form' data-index="{{Index}}" style="border:none; margin-top: 10px;">
+        <!-- x-form also for myCrud.js -->
+        <form class='x-form border-0 mt-3' data-index="{{Index}}">
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort" })
 
@@ -211,12 +220,12 @@
             </div>
         </form>
 
-        <div class="xg-btns-box">
-            <span class="xg-span-label">@R["Eitem"]</span>
-            <button type='button' class='btn xg-btn-gray' onclick='_me.onOpenItem("E")'>@R["GetItem"]</button>
+        <div class="x-btns-box">
+            <span class="x-span-label">@R["Eitem"]</span>
+            <button type='button' class='btn x-btn-gray' onclick='_me.onOpenItem("E")'>@R["GetItem"]</button>
         </div>
         <form class="xu-form2">
-            <table class="table xg-table xg-no-hline" cellspacing="0">
+            <table class="table x-table x-no-hline" cellspacing="0">
                 <thead>
                     <tr>
                         <th>@R0["Column"]/@R0["ColName"]<br>@R0["DataType"]</th>
@@ -256,9 +265,9 @@
                          AddEmptyRow = false, Value = "T"
                      })</td>
         <td width="90px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
-        <td width="50px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Required" })</td>
-        <td width="50px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasCreate", IsCheck = true })</td>
-        <td width="50px" class="xg-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasUpdate", IsCheck = true })</td>
+        <td width="50px" class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Required" })</td>
+        <td width="50px" class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasCreate", IsCheck = true })</td>
+        <td width="50px" class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasUpdate", IsCheck = true })</td>
         <td width="110px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PlaceHolder" })</td>
         <td width="70px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue" })</td>
         <td width="110px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "CheckType", Value = "0", Rows = ViewBag.CheckTypes, Required = true, AddEmptyRow = false })</td>
@@ -272,29 +281,29 @@
 
 <!-- multiple row template, must set width, Nullable set false first then front side will set it -->
 <!-- modal: Read item, shared -->
-<div id="modalItems" class="modal fade xg-modal" role="dialog">
+<div id="modalItems" class="modal fade x-modal" role="dialog">
     <div class="modal-dialog">
-        <div class="modal-content" style="width:560px; height:520px;">
+        <div class="modal-content xu-items">
             <div class="modal-header">
                 <div class="modal-title">@R["GetQitem"]</div>
-                <button type='button' class='btn-close' data-bs-dismiss='modal' style='padding:10px 10px;'></button>
+                <button type='button' class='btn-close px-2 py-2' data-bs-dismiss='modal'></button>
             </div>
             <div class="modal-body">
-                <div class="row xg-row" style="margin:5px 5px">
-                    <div class="col-md-2 xg-right" style="padding-top: 6px;">
+                <div class="row x-row mx-1 my-1">
+                    <div class="col-md-2 x-right pt-1">
                         Table
                     </div>
                     <div class="col-md-6">
                         @* 動態讀取下拉欄位資料來源 *@
                         @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "TableId", FnOnChange = "_me.onChangeItemTable(this)" })
                     </div>
-                    <div class="col-md-4 xg-right">
+                    <div class="col-md-4 x-right">
                         <button type="button" class="btn btn-primary" onclick="_me.onItemModalOk()">@R["Sure"]</button>
                     </div>
                 </div>
 
                 <!-- query result list -->
-                <table id="tableItem" class="table xg-table xg-table-vscroll" cellspacing="0" style="width:100%">
+                <table id="tableItem" class="table x-table x-table-vscroll w-100" cellspacing="0">
                     <thead>
                         <tr>
                             <th>@R0["Select"]</th>
@@ -303,7 +312,7 @@
                         </tr>
                     </thead>
                     <!-- match tplItemTr -->
-                    <tbody style="height:315px"></tbody>
+                    <tbody class="xu-tbody"></tbody>
                 </table>
             </div>
         </div>

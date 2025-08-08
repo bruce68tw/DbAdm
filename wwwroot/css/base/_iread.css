@@ -1,24 +1,24 @@
 ﻿/* 唯讀欄位 */
 
 /* 在輸入欄位(右邊)的label, line form(畫面有格線) 時欄位無外框 */
-.xg-lineform .xi-read {
+.x-lineform .xi-read {
     border: none;
     padding-left: 0;
 }
 
 /* 在輸入欄位(右邊)的label*/
-.xg-form .xi-read {
+.x-form .xi-read {
     padding-left: 0;
     border: none;
     margin: 0;
 }
 
 /* edit field style */
-.xg-lineform .xi-read2 {
+.x-lineform .xi-read2 {
     padding-left: 0;
     background-color: #eee
 }
-.xg-form .xi-read2 {
+.x-form .xi-read2 {
     padding-left: 0;
     margin: 0;
     background-color: #eee

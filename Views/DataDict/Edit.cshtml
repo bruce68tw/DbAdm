@@ -1,4 +1,4 @@
-﻿<form id='eform' class='xg-form xg-mb10'>
+﻿<form id='eform' class='x-form mb-2'>
     @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位代碼", Fid = "Code", Required = true, MaxLen = 30 })
     @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位中文名", Fid = "Name", Required = true, MaxLen = 30 })
     @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料表類別", Fid = "TableType", Rows = ViewBag.TableTypes })

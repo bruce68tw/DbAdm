@@ -76,6 +76,10 @@
 		transition: 0.5s;
 		border-left: 1px solid #CCC;
 	}
+
+    .xu-work-area{
+        height: calc(100vh - 45px);
+    }
 </style>
 
 <!DOCTYPE html>
@@ -130,7 +134,7 @@
     <partial name="_Top.cshtml" />
 
     @* set height=100% in parent , so that menu be fine for ie & firefox !! *@
-    <div class="d-flex align-items-stretch" style="height: calc(100vh - 45px);">
+    <div class="d-flex align-items-stretch xu-work-area">
         <!-- left menu -->
         @await Component.InvokeAsync("XgLeftMenu", new { rows = menus })
 

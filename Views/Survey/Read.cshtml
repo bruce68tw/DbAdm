@@ -33,21 +33,21 @@
 @* 3.program name *@
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "滿意度問卷" } })
 
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-        <form id='formRead' class='xg-form'>
+        <form id='formRead' class='x-form'>
             <div class="row">
-                <div class="col-md-2 xg-label">填寫時間</div>
-                <div class="col-md-10 xg-input">
+                <div class="col-md-2 x-label">填寫時間</div>
+                <div class="col-md-3 x-input">
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created2", InRow = true })
-                    @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
                 </div>
+                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
         </form>
 
-        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table table-bordered x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>問題Id</th>
@@ -61,7 +61,7 @@
         </table>
     </div>
 
-    <div id="divEdit" class="xg-hide">
+    <div id="divEdit" class="d-none">
         <partial name="Edit" />
     </div>
 </div>

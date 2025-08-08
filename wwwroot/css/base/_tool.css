@@ -1,6 +1,6 @@
 ﻿
 /* bootstrap alert */
-.xg-alert {
+.x-alert {
     position: fixed; 
     top: 48px; 
     right: 3px; 
@@ -10,7 +10,7 @@
 }
 
 /*
-#xg-wait {
+#x-wait {
     display: none;  
     position: fixed;
     top: 33%;
@@ -18,21 +18,21 @@
 }
 */
 
-/* xg-msg class for both xgMsg & xgAns */
-.xg-msg .modal-dialog {
+/* x-msg class for both xgMsg & xgAns */
+.x-msg .modal-dialog {
     min-width: 280px;
     max-width: 480px;
 }
-.xg-msg .modal-header {
+.x-msg .modal-header {
     border-bottom: none;
     padding: 9px 15px 9px 19px;
     background-color: none;
 }
-.xg-msg .modal-body {
+.x-msg .modal-body {
     font-size: 16px;
     padding: 10px 20px 30px 20px;
 }
-.xg-msg .modal-footer {
+.x-msg .modal-footer {
     border-bottom: none;
     padding: 10px;
 }
@@ -44,28 +44,28 @@
 */
 
 /* 顯示時才設定 display flex, 否則會影響其他畫面無法捉取mouse事件 */
-.xg-image.modal {
+.x-image.modal {
     /*display: flex !important;
     align-items: center;
     justify-content: center;*/
 }
 
-.xg-image .modal-dialog {
+.x-image .modal-dialog {
     /*display: inline-block;*/
     display: table;
     margin: auto;
     max-width: none;
 }
 
-.xg-image .modal-content,
-.xg-image .modal-body,
-.xg-image .modal-footer {
+.x-image .modal-content,
+.x-image .modal-body,
+.x-image .modal-footer {
     background: white;
     border: none;
     padding: 0;
 }
 
-.xg-image img {
+.x-image img {
     display: block;
     width: auto;
     height: auto;
@@ -76,12 +76,12 @@
 
 /* When the body has the wait class, we turn
 the scrollbar off with overflow:hidden */
-body .xg-show-wait {
+body .x-show-wait {
     overflow: hidden;
 }
 
 /* Anytime the body has the wait class, our
    modal element will be visible */
-body.xg-show-wait .xg-wait {
+body.x-show-wait .x-wait {
     display: block;
 }

@@ -1,52 +1,95 @@
-﻿/* 不歸納到某個元件 */
-
-.xg-hide {
-    display: none;
-}
+﻿/* 
+    額外控制輸入欄位寬度(不使用inline style, 避開 CSRF): sm, md, lg
+    padding, margin 使用bootstrap 5
+    自定寬度pixel (bootstrap 5只有相對寬度)
+*/
 
 @media (max-width:768px) {
-    .xg-hide-rwd {
+    .x-hide-rwd {
         display: none !important;
     }
 }
 
-.xg-inline {
+.x-inline {
     display: inline-block;
 }
 
 /* 使用 flex 系統, 可以控制 gap */
-.xg-left {
+.x-left {
     /*text-align: left;*/
     justify-content: flex-start !important;
 }
-.xg-center {
+.x-center {
     /*text-align: center;*/
     justify-content: center !important;
 }
-.xg-right {
+.x-right {
     /*text-align: right;*/
     justify-content: flex-end !important;
 }
 
-.xg-h10 {
+.x-h10 {
     height: 10px !important;
 }
+.x-h50 {
+    height: 50px !important;
+}
 
-.xg-mt0 {
+/*=== width start ===*/
+.x-w100 {
+    width: 100px !important;
+}
+.x-w150 {
+    width: 150px !important;
+}
+.x-w200 {
+    width: 200px !important;
+}
+.x-w250 {
+    width: 250px !important;
+}
+.x-w300 {
+    width: 300px !important;
+}
+.x-w400 {
+    width: 400px !important;
+}
+.x-w500 {
+    width: 500px !important;
+}
+
+.x-wi80 {
+    min-width: 80px !important;
+}
+.x-wi100 {
+    min-width: 100px !important;
+}
+.x-wi125 {
+    min-width: 125px !important;
+}
+.x-wi250 {
+    min-width: 250px !important;
+}
+
+/*=== width end ===*/
+
+/* 改用 bootstrap 5 的 padding, margin
+.x-mt0 {
     margin-top: 0 !important;
 }
-.xg-mt5 {
+.x-mt5 {
     margin-top: 5px !important;
 }
-.xg-mt10 {
+.x-mt10 {
     margin-top: 10px !important;
 }
-.xg-mb0 {
+.x-mb0 {
     margin-bottom: 0 !important;
 }
-.xg-mb5 {
+.x-mb5 {
     margin-bottom: 5px !important;
 }
-.xg-mb10 {
+.x-mb10 {
     margin-bottom: 10px !important;
 }
+*/

@@ -54,31 +54,31 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R["MenuTable"].Value } })
-<div class="xg-prog">
+<div class="x-prog">
     <!-- read form-->
     <div id="divRead">
         <!-- condition -->
-        <form id='formRead' class='xg-form xg-mb0'>
+        <form id='formRead' class='x-form mb-0'>
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true, HasFind2 = true })
             </div>
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Table"].Value, Fid = "Code", MaxLen = 30 })
         </form>
-        <form id='formRead2' class='xg-form'>
+        <form id='formRead2' class='x-form'>
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableName"].Value, Fid = "Name", MaxLen = 30 })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["TranLog"].Value, Fid = "TranLog", Rows = ViewBag.YesNos })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Status"].Value, Fid = "Status", Rows = ViewBag.Statuses })
         </form>
 
-        <div class='xg-btns-box' style="margin-top:5px;">
+        <div class='x-btns-box mt-1'>
             @await Component.InvokeAsync("XgCreate")
             @await Component.InvokeAsync("XgExport")
-            <button type="button" class="btn xg-btn-gray" onclick="_me.onGenWord()">@R["GenDocu"]</button>
+            <button type="button" class="btn x-btn-gray" onclick="_me.onGenWord()">@R["GenDocu"]</button>
         </div>
 
         <!-- result list -->
-        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table table-bordered x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th width="60px">@R["Select"]</th>
@@ -97,7 +97,7 @@
     </div>
 
     <!-- edit form-->
-    <div id="divEdit" class="xg-hide">
+    <div id="divEdit" class="d-none">
         <partial name="Edit" />
     </div>
 </div>

@@ -1,7 +1,7 @@
 ﻿@inject IHtmlLocalizer<DbAdm.R0> R
 
 @* 1.Table *@
-<form id='eform' class='xg-form'>
+<form id='eform' class='x-form'>
     @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
     @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, Required = true })
     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Table"].Value, Fid = "Code", MaxLen = 100, Required = true })
@@ -16,11 +16,11 @@
 </form>
 
 @* 2.Column *@
-<div class='xg-btns-box'>
+<div class='x-btns-box'>
     @await Component.InvokeAsync("XgAddRow", "_me.mCol.onAddRow()")
 </div>
-<form class='xg-form' style="border:none">
-    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+<form class='x-form border-0'>
+    <table class="table table-bordered x-table x-no-hline" cellspacing="0">
         <thead>
             <tr>
                 @* 3.XgTh component *@
@@ -50,7 +50,7 @@
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DataType", Value = "{{DataType}}", MaxLen = 20, Required = true })</td>
         <td class="text-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Nullable", Required = false, Value = "1" })</td>
         <td width="120px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue", Value = "{{DefaultValue}}", MaxLen = 100 })</td>
-        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Sort", Value = "{{Sort}}", MaxLen = 3, Required = false, InputAttr = "width:50px", BoxClass = "xg-center" })</td>
+        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Sort", Value = "{{Sort}}", MaxLen = 3, Required = false, InputAttr = "width:50px", BoxClass = "x-center" })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Note", Value = "{{Note}}", MaxLen = 100 })</td>
         <td class="text-center">@await Component.InvokeAsync("XgDeleteRow", "_me.mCol.onDeleteRow(this)")</td>
         <td class="text-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Status", IsCheck = true, Value = "1" })</td>

@@ -6,9 +6,9 @@ var _tool = {
         //alert
         _tool.xgMsg = $('#xgMsg');  //使用id
         _tool.xgAns = $('#xgAns');  //使用id
-        _tool.xgAlert = $('.xg-alert');
-        _tool.xgArea = $('.xg-area');
-        _tool.xgImage = $('.xg-image');
+        _tool.xgAlert = $('.x-alert');
+        _tool.xgArea = $('.x-area');
+        _tool.xgImage = $('.x-image');
     },
 
     /**
@@ -56,13 +56,13 @@ var _tool = {
 
     //??show waiting
     showWait: function () {
-        //$('body').addClass('xg-show-loading');
-        $('.xg-wait').show();
+        //$('body').addClass('x-show-loading');
+        $('.x-wait').show();
     },
     //??
     hideWait: function () {
-        //$('body').removeClass('xg-show-loading');
-        $('.xg-wait').hide();
+        //$('body').removeClass('x-show-loading');
+        $('.x-wait').hide();
     },
 
     /**

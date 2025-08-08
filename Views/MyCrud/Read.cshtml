@@ -8,11 +8,11 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { R["MenuMyCrud"].Value } })
-<div class="xg-prog">
+<div class="x-prog">
     <!-- read form-->
     <div id="divRead">
         <!-- condition -->
-        <form id='formRead' class='xg-form' style="margin-bottom:0;">
+        <form id='formRead' class='x-form mb-0'>
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId2", Rows = ViewBag.Projects, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar")
@@ -21,21 +21,21 @@
         </form>
 
         <!-- other functions -->
-        <div class="xg-btns-box" style="margin-top:5px;">
+        <div class="x-btns-box mt-1">
             @await Component.InvokeAsync("XgCreate", new { fnOnClick = "_me.crudR.onCreate()" })
-            <button type="button" class="btn xg-btn-gray" onclick="_me.onGenCrud()">@R["GenCrud"]</button>
+            <button type="button" class="btn x-btn-gray" onclick="_me.onGenCrud()">@R["GenCrud"]</button>
         </div>
 
         <!-- result list -->
-        <table id="tableRead" class="table xg-table" cellspacing="0">
+        <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th width="60px" class="xg-center">@R["Select"]</th>
+                    <th width="60px" class="x-center">@R["Select"]</th>
                     <th>@R["Project"]</th>
                     <th>@R["ProgCode"]</th>
                     <th>@R["ProgName"]</th>
                     <th width='90px'>@R["Crud"]</th>
-                    <th width='100px' class="xg-center">@R["Status"]</th>
+                    <th width='100px' class="x-center">@R["Status"]</th>
                     <th>@R["Created"]</th>
                 </tr>
             </thead>
@@ -44,7 +44,7 @@
     </div>
 
     <!-- edit form-->
-    <div id="divEdit" class="xg-hide">
+    <div id="divEdit" class="d-none">
         <partial name="Edit" />
     </div>
 </div>

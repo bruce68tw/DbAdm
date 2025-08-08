@@ -1,5 +1,11 @@
-﻿
+﻿/* date, datetime */
+
 /* match datepicker.css .date setting, for keep input width same to date at query form */
-.xg-date-w {
+.x-date-w {
     width: 180px !important;
+}
+
+.xi-dt-hour, .xi-dt-min {
+    width: 70px; 
+    display: inline-block;
 }

@@ -2,7 +2,7 @@
 var _icolor = {
 
     init: function () {
-        $('.xg-color').colorpicker({
+        $('.x-color').colorpicker({
             //component: true,
             /*
             onchange: function (me, color) {

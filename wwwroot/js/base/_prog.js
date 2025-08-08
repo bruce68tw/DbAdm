@@ -1,12 +1,12 @@
 ﻿
 //program, 包含 crud功能
 var _prog = {
-    //filter: '.xg-prog-path',
+    //filter: '.x-prog-path',
     me: null,
     oriPath: '',    //original path
 
     init: function () {
-        _prog.me = $('.xg-prog-path');
+        _prog.me = $('.x-prog-path');
         _prog.oriPath = _prog.me.text();
     },
 

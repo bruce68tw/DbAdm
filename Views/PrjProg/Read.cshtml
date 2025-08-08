@@ -33,9 +33,9 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "專案功能" } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-		<form id='formRead' class='xg-form'>
+		<form id='formRead' class='x-form'>
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
@@ -43,10 +43,10 @@
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = "功能名稱", Fid = "Name", MaxLen = 30 })
         </form>
 
-		<div class='xg-btns-box'>
+		<div class='x-btns-box'>
 			<vc:xg-create/>
         </div>
-        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table table-bordered x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>專案</th>
@@ -61,7 +61,7 @@
         </table>
     </div>
 
-    <div id="divEdit" class="xg-hide">
+    <div id="divEdit" class="d-none">
         <partial name="Edit" />
     </div>
 </div>

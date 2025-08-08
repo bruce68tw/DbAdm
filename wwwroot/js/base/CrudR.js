@@ -30,7 +30,7 @@ function CrudR(dtConfig, edits, updName) {
      * default datatable column define
      
     dtColDef: {
-        className: 'xg-center',
+        className: 'x-center',
         orderable: false,
         targets: '_all',
     },
@@ -101,9 +101,9 @@ function CrudR(dtConfig, edits, updName) {
         //if (checked)
         //    attr += ' checked';
 
-        //xg-no-label for checked sign position
+        //x-no-label for checked sign position
         return "" +
-            "<label class='xi-check xg-no-label'>" +
+            "<label class='xi-check x-no-label'>" +
             "   <input " + attr + " type='checkbox'>" +
             "   <span class='xi-cspan'></span>" +
             "</label>";

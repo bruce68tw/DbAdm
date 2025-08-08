@@ -1,4 +1,12 @@
-﻿<script type="text/javascript">
+﻿<style>
+    .chart-box {
+        width: 600px;
+        height: 450px;
+        margin: 20px 0 0 150px;
+    }
+</style>
+
+<script type="text/javascript">
     $(function () {
         _me.init();
     });
@@ -62,18 +70,18 @@ new Chart(document.getElementById("chart"), {
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "統計圖-滿意度問卷" } })
 <div class="xp-prog">
     <div id="divRead">
-        <form id='formRead' class='xg-form'>
+        <form id='formRead' class='x-form'>
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, InputAttr = "onchange=_me.onChgProject(false)" })
-                <span class='col-md-3 xg-find-tbar'>
+                <span class='col-md-3 x-find-tbar'>
                     <button type='button' class='btn btn-primary' onclick='_me.onFind()'>查詢<i class='ico-find'></i></button>
                 </span>
             </div>
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Rows = ViewBag.Users })
             <div class="row">
-                <div class="col-md-2 xg-label">填寫時間</div>
-                <div class="col-md-10 xg-input">
+                <div class="col-md-2 x-label">填寫時間</div>
+                <div class="col-md-10 x-input">
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created2", InRow = true })
@@ -81,7 +89,7 @@ new Chart(document.getElementById("chart"), {
             </div>
         </form>
 
-        <div style="width:600px; height:450px; margin: 20px 0 0 150px;">
+        <div class="chart-box">
             <canvas id="chart"></canvas>
         </div>
     </div>

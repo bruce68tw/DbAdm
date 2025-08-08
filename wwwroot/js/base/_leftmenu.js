@@ -3,7 +3,7 @@ var _leftmenu = {
 
     init: function () {
         //set variables
-        _leftmenu.menu = $('.xg-leftmenu');
+        _leftmenu.menu = $('.x-leftmenu');
         //_leftmenu.box = _leftmenu.menu.parent();
         //_leftmenu.body = $('#_Body');
         //_leftmenu.setBoxWidth(true);
@@ -11,13 +11,13 @@ var _leftmenu = {
 
         //click時, show/hide 下一個 element, 可省去在panel設定id的步驟
         //for left-menu
-        $('.xg-toggle').on('click', function (e) {
+        $('.x-toggle').on('click', function (e) {
             e.preventDefault();
 
             var me = $(this);
             me.next().collapse('toggle');
-            var arrow = me.find('.xg-arrow');
-            var clsName= 'xg-open';
+            var arrow = me.find('.x-arrow');
+            var clsName= 'x-open';
             if (arrow.hasClass(clsName))
                 arrow.removeClass(clsName);
             else
@@ -34,6 +34,6 @@ var _leftmenu = {
     */
 
     onToggleMenu: function () {
-        _leftmenu.menu.toggleClass('xg-close');
+        _leftmenu.menu.toggleClass('x-close');
     },
 };

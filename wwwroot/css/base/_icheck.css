@@ -9,7 +9,7 @@
     padding: 0 10px 0 25px; /* for label pos */
 }
     /*
-    .xi-check.xg-in-dt, .xg-radio.xg-in-dt {
+    .xi-check.x-in-dt, .x-radio.x-in-dt {
         margin-top: 10px;
         padding-left: 25px;
     }
@@ -39,7 +39,7 @@
 }
 
     /* for datatable checkbox, no label */
-    .xi-check.xg-no-label > span {
+    .xi-check.x-no-label > span {
         top: -6px !important;
         left: 0 !important;
     }
@@ -50,13 +50,13 @@
 }
 
 /*
-.xi-check.xd-center, .xg-radio.xd-center {	
+.xi-check.xd-center, .x-radio.xd-center {	
     padding:0;
 }
 */
 
 /* 在 datatable裡面有時會置中 
-.xi-check.xd-center > span, .xg-radio.xd-center > span {	
+.xi-check.xd-center > span, .x-radio.xd-center > span {	
 	cursor: pointer;
     position: relative;
     vertical-align: middle;
@@ -112,11 +112,11 @@
 
 
 /* datatable header delete all checkbox */
-.xi-check.xg-delete-all {
+.xi-check.x-delete-all {
     padding-left: 15px;
 }
 
-.xg-delete-all-btn {
+.x-delete-all-btn {
     margin-top: -2px;
     padding: 2px 3px 2px 0;
     background: red;

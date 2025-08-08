@@ -24,15 +24,15 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "設定密碼" } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divEdit">
-        <form class='xg-form' id='eform'>
+        <form class='x-form' id='eform'>
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = "舊密碼", Fid = "OldPwd", MaxLen = 30, IsPwd = true })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = "新密碼", Fid = "NewPwd", MaxLen = 30, Required = true, IsPwd = true })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = "確認新密碼", Fid = "NewPwd2", MaxLen = 30, Required = true, IsPwd = true })
         </form>
     </div>
 </div>
-<div class='xg-center'>
+<div class='x-center'>
     <button type='button' class='btn btn-success' onclick='onSave()'>儲存<i class='ico-save'></i></button>
 </div>

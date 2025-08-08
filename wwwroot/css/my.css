@@ -296,72 +296,72 @@ body {
 }
 /* 不歸納到某個元件 */
 
-.xg-hide {
+.d-none {
     display: none;
 }
 
 @media (max-width:768px) {
-    .xg-hide-rwd {
+    .x-hide-rwd {
         display: none !important;
     }
 }
 
-.xg-inline {
+.x-inline {
     display: inline-block;
 }
 
 /* 使用 flex 系統, 可以控制 gap */
-.xg-left {
+.x-left {
     /*text-align: left;*/
     justify-content: flex-start !important;
 }
-.xg-center {
+.x-center {
     /*text-align: center;*/
     justify-content: center !important;
 }
-.xg-right {
+.x-right {
     /*text-align: right;*/
     justify-content: flex-end !important;
 }
 
-.xg-h10 {
+.x-h10 {
     height: 10px !important;
 }
 
-.xg-mt0 {
+.x-mt0 {
     margin-top: 0 !important;
 }
-.xg-mt5 {
+.x-mt5 {
     margin-top: 5px !important;
 }
-.xg-mt10 {
+.x-mt10 {
     margin-top: 10px !important;
 }
-.xg-mb0 {
+.x-mb0 {
     margin-bottom: 0 !important;
 }
-.xg-mb5 {
+.x-mb5 {
     margin-bottom: 5px !important;
 }
-.xg-mb10 {
+.x-mb10 {
     margin-bottom: 10px !important;
 }
 
 
 /* 用在 form裡面的 button */
 /*
-.xg-small-btn {
+.x-small-btn {
     padding: 2px 5px;
 }
 */
 
 /* 功能按鈕, 空白則為 basic button 
-.xg-fun-btn {    
+.x-fun-btn {    
 }
 */
 
 /* look like link */
-.xg-link-btn {
+.x-link-btn {
     background: none !important;
     /*color: inherit;*/
     border: none;
@@ -373,7 +373,7 @@ body {
 }
 
 /* 用來放多個 button */
-.xg-btns-box {
+.x-btns-box {
     padding: 3px 0 3px 0;
     display: flex; /* 間距會變小 */
     gap: 2px;
@@ -381,7 +381,7 @@ body {
 
 /* 功能按鈕, 空白則為 basic button */
 /* 只設定大小 
-.xg-btn {
+.x-btn {
     padding: .25rem .5rem;
     margin-right: 3px;
     font-size: .875rem;
@@ -390,14 +390,14 @@ body {
 }
 */
 
-.xg-btn-gray {
+.x-btn-gray {
     color: #fff;
     background-color: #6c757d;
     border-color: #6c757d;
 }
 
 /* table row button */
-.xg-row-btn {
+.x-row-btn {
 }
 
 /* jquery validate error label */
@@ -406,7 +406,7 @@ span.error {
     margin-bottom: 0 !important;
 }
 
-.xg-err {
+.x-err {
     /*border: #5b48e5;
     border-style: solid;
     border-width: thin;*/
@@ -416,7 +416,7 @@ span.error {
 }
 
 /*  */
-.xg-errlab {
+.x-errlab {
     text-align: left;
     font-size: 14px;
     font-weight: lighter;
@@ -425,35 +425,35 @@ span.error {
 }
 
 /* (+)相鄰選擇器, 
-  1.與 xg-error2 相鄰的 error label 要顯示 
-  2.在 xg-error2box 裡面的 error label 要顯示 
-.xg-error + .xg-errorlabel, .xg-errorbox + .xg-errorlabel {
+  1.與 x-error2 相鄰的 error label 要顯示 
+  2.在 x-error2box 裡面的 error label 要顯示 
+.x-error + .x-errorlabel, .x-errorbox + .x-errorlabel {
     display: block !important;
 }
 */
 
-/* 在 xg-error2box 裡面的 input 要顯示錯誤框 */
-/*.xg-errorbox > input,
-.xg-errorbox > button, .xg-errorbox div.xg-icheck {
+/* 在 x-error2box 裡面的 input 要顯示錯誤框 */
+/*.x-errorbox > input,
+.x-errorbox > button, .x-errorbox div.x-icheck {
     border: 1px solid #FF8B55 !important;
 }
 */
 /* 查詢畫面 */
 
 /* 右上方工具列 */
-.xg-find-tbar {
+.x-find-tbar {
     padding-top: 8px;
     display: flex !important;
     gap: 2px;
 }
 
 /* ?? find form, use $.slideToggle() */
-.xg-find-form {
+.x-find-form {
     padding: 10px 0 10px 0;
 }
 
     /* init to open status, toggle will add open class */
-    .xg-find-form.open {
+    .x-find-form.open {
         /*display: none;*/
         padding: 10px 0 10px 0;
     }
@@ -584,26 +584,26 @@ span.error {
 
 
 /* form without line */
-/* 停用 xg-row */
-.xg-form {
+/* 停用 x-row */
+.x-form {
     /*font size same to .form-control*/
     font-size: 16px;
     border: none;
     /*margin-bottom: 0px;*/
 }
 
-    /* 停用 xg-row
-    .xg-form .zz_xg-row {
+    /* 停用 x-row
+    .x-form .zz_x-row {
         margin: 0;
         border: none;
     }
     */
 
-    .xg-form .xg-input {
+    .x-form .x-input {
         padding-top: 7px;
         min-height: 43px;
     }
-    .xg-form.xg-border {
+    .x-form.x-border {
         margin: 0 auto;
         padding: 20px 16px;
         border: solid 1px lightgray !important;
@@ -611,13 +611,13 @@ span.error {
     }
 
 /* title required sign */
-.xg-required {
+.x-required {
     color: red;
     font-weight: bold;
 }
 
 /* animation */
-.xg-fade.hide {
+.x-fade.hide {
     display: none;
 }
 
@@ -631,7 +631,7 @@ span.error {
     padding: 0 10px 0 25px; /* for label pos */
 }
     /*
-    .xi-check.xg-in-dt, .xg-radio.xg-in-dt {
+    .xi-check.x-in-dt, .x-radio.x-in-dt {
         margin-top: 10px;
         padding-left: 25px;
     }
@@ -661,7 +661,7 @@ span.error {
 }
 
     /* for datatable checkbox, no label */
-    .xi-check.xg-no-label > span {
+    .xi-check.x-no-label > span {
         top: -6px !important;
         left: 0 !important;
     }
@@ -672,13 +672,13 @@ span.error {
 }
 
 /*
-.xi-check.xd-center, .xg-radio.xd-center {	
+.xi-check.xd-center, .x-radio.xd-center {	
     padding:0;
 }
 */
 
 /* 在 datatable裡面有時會置中 
-.xi-check.xd-center > span, .xg-radio.xd-center > span {	
+.xi-check.xd-center > span, .x-radio.xd-center > span {	
 	cursor: pointer;
     position: relative;
     vertical-align: middle;
@@ -734,18 +734,18 @@ span.error {
 
 
 /* datatable header delete all checkbox */
-.xi-check.xg-delete-all {
+.xi-check.x-delete-all {
     padding-left: 15px;
 }
 
-.xg-delete-all-btn {
+.x-delete-all-btn {
     margin-top: -2px;
     padding: 2px 3px 2px 0;
     background: red;
 }
 
 /* match datepicker.css .date setting, for keep input width same to date at query form */
-.xg-date-w {
+.x-date-w {
     width: 180px !important;
 }
 
@@ -765,13 +765,13 @@ span.error {
     margin-bottom: 0 !important;
 }
 /* 輸入欄位的外框 */
-.xg-input {
+.x-input {
     padding-top: 7px;
     min-height: 43px;
 }
 
 @media (max-width:768px) {
-    .xg-input {
+    .x-input {
         padding-top: 0;
     }
 }
@@ -792,24 +792,24 @@ input[type=number] {
 /* 唯讀欄位 */
 
 /* 在輸入欄位(右邊)的label, line form(畫面有格線) 時欄位無外框 */
-.xg-lineform .xi-read {
+.x-lineform .xi-read {
     border: none;
     padding-left: 0;
 }
 
 /* 在輸入欄位(右邊)的label*/
-.xg-form .xi-read {
+.x-form .xi-read {
     padding-left: 0;
     border: none;
     margin: 0;
 }
 
 /* edit field style */
-.xg-lineform .xi-read2 {
+.x-lineform .xi-read2 {
     padding-left: 0;
     background-color: #eee
 }
-.xg-form .xi-read2 {
+.x-form .xi-read2 {
     padding-left: 0;
     margin: 0;
     background-color: #eee
@@ -817,30 +817,30 @@ input[type=number] {
 
 
 /* span label */
-.xg-span-label {
+.x-span-label {
     margin: 3px 3px;
 }
 
-.xg-label {
+.x-label {
     padding: 14px 5px 0 15px;
     border: none;
     text-align: right;
 }
 
 @media (max-width:768px) {
-    .xg-label {
+    .x-label {
         text-align: left;
     }
 }
 
-.xg-vlabel {
+.x-vlabel {
     padding: 14px 0 0 0;
     border: none;
     text-align: left;
 }
 
 /* 左側功能表 */
-.xg-leftmenu {
+.x-leftmenu {
     margin-left: 0;
     padding: 0;
     /*min-width: 250px;
@@ -852,20 +852,20 @@ input[type=number] {
     z-index: 1000;
 }
 
-.xg-leftmenu.xg-close {
+.x-leftmenu.x-close {
     transition: 0.5s;
     margin-left: -250px;
 }
 /*
-.xg-leftmenu.xg-close span, 
-.xg-leftmenu.xg-close .xg-arrow {
+.x-leftmenu.x-close span, 
+.x-leftmenu.x-close .x-arrow {
     display: none;
     transition: 0.5s;
 }
 */
 
     /* menu item */
-    .xg-leftmenu li {
+    .x-leftmenu li {
         /*text-indent: 0;*/
         line-height: 42px;
         border-bottom: solid 1px #E5E5E5;
@@ -873,38 +873,38 @@ input[type=number] {
     }
 
     /* 文字 */
-    .xg-leftmenu a {
+    .x-leftmenu a {
         display: block; /* 選取的有效寬度為100% */
         text-decoration: none !important;
     }
 
-    .xg-leftmenu a:hover {
+    .x-leftmenu a:hover {
         cursor: pointer;
         text-decoration: none; /* remove underline */
     }
 
-.xg-leftmenu a:hover i {
+.x-leftmenu a:hover i {
 }
 
 /* icon */
-.xg-leftmenu i {
+.x-leftmenu i {
     margin-right: 10px;
     padding-left: 12px;
     width: 25px;    /* 讓文字對齊 */
 }
 
-    .xg-leftmenu .xg-arrow:before {
+    .x-leftmenu .x-arrow:before {
         float: right;
         margin-right: 20px;
         font-family: 'icomoon';
         content: "\f107"; /* down arrow */
     }
-    .xg-leftmenu .xg-arrow.xg-open:before {
+    .x-leftmenu .x-arrow.x-open:before {
         content: "\f106";   /* up arrow */
     }
 
 /* 子功能表(第2層) 的外框 */
-.xg-leftmenu-subbox {
+.x-leftmenu-subbox {
     list-style: none;
     /*
     -moz-padding-start: 0;
@@ -916,40 +916,40 @@ input[type=number] {
     padding: 0;
 }
 
-    .xg-leftmenu-subbox li {
+    .x-leftmenu-subbox li {
         border: none;
     }
 
     /* sub menu text */
-    .xg-leftmenu-subbox a {
+    .x-leftmenu-subbox a {
         /*font-size: 15px;
         color: #fff;*/
         padding-left: 22px;
     }
 /* 彈出式視窗 */
 /*
-.xg-modal .modal-dialog {
+.x-modal .modal-dialog {
     min-width: 200px;
 }
 */
 
-.xg-modal .modal-header {
+.x-modal .modal-header {
     /*height: 10px;*/
     border-bottom: 1px solid #eee;
     padding: 9px 15px 9px 19px;
 }
 
-.xg-modal .modal-title {
+.x-modal .modal-title {
     font-size: 16px;
     color: #3e8cc6;
 }
 
-.xg-modal .modal-body {
+.x-modal .modal-body {
     font-size: 16px;
     padding: 20px 15px 15px 15px;
 }
 
-.xg-modal .modal-footer {
+.x-modal .modal-footer {
     border: none;
     padding: 0 20px 10px;
 }
@@ -957,37 +957,37 @@ input[type=number] {
 /* 分頁元件 */
 
 /* 顯示筆數&資訊 */
-.xg-page-menu {
+.x-page-menu {
     float: left;
 }
 
-.xg-page-btns .xg-has-menu {
+.x-page-btns .x-has-menu {
     justify-content: flex-end !important;
 }
-.xg-page-btns .xg-no-menu {
+.x-page-btns .x-no-menu {
     justify-content: center !important;
 }
 
 @media (max-width:768px) {
-    .xg-page-menu {
+    .x-page-menu {
         display: none;
     }
 
-    .xg-page-btns .xg-page-hasmenu {
+    .x-page-btns .x-page-hasmenu {
         justify-content: center !important;
     }
 }
 /* 右側工作區上方功能名稱 */
 
 /* prog path, razor 只支援 inline style */
-.xg-prog-path {
+.x-prog-path {
     height: 38px;
     padding: 8px 16px;
     font-size: 16px;
     color: #808080;
 }
 
-    .xg-prog-path ul {
+    .x-prog-path ul {
         padding: 10px 0 10px 10px;
         font-size: 15px;
         color: #a5a5a5;
@@ -995,12 +995,12 @@ input[type=number] {
     }
 
 @media (max-width:768px) {
-    .xg-prog-path {
+    .x-prog-path {
         font-style: italic;
     }
 }
 
-.xg-prog {
+.x-prog {
     margin: 5px 15px 10px 15px;
     padding: 15px;
     border: 1px solid #ddd !important;
@@ -1008,7 +1008,7 @@ input[type=number] {
 }
 
 @media (max-width:768px) {
-    .xg-prog {
+    .x-prog {
         border: none !important;
         padding: 0;
     }
@@ -1016,13 +1016,13 @@ input[type=number] {
 
 
 /* file url */
-.xg-edit-table td {
+.x-edit-table td {
     border-top: none;
     border-bottom: none;
 }
 
 /* include: read, edit table */
-.xg-table {
+.x-table {
     border-collapse: separate !important;
     width: 100% !important;
     font-size: 15px;
@@ -1031,7 +1031,7 @@ input[type=number] {
     border-style: solid !important;
 }
 
-    .xg-table th, .xg-table td {
+    .x-table th, .x-table td {
         font-weight: normal !important;
         border-width: 0 1px 1px 0 !important;
         border-color: lightgray !important;
@@ -1042,34 +1042,34 @@ input[type=number] {
     }
 
     /*
-    .xg-table th {
+    .x-table th {
         background: #eee;
     }
 
-    .xg-table tr:hover {
+    .x-table tr:hover {
         background: #F6F6F6;
     }
     */
 
-    .xg-table.xg-no-hline {
+    .x-table.x-no-hline {
         border-width: 1px 0 1px 1px !important;
     }
 
-        .xg-table.xg-no-hline td {
+        .x-table.x-no-hline td {
             border-width: 0 1px 0 0 !important;
         }
 
-    .xg-table .xi-check > span {
+    .x-table .xi-check > span {
         top: -15px !important;
         left: 8px !important;
     }
 
 /*
-.xg-table th .xi-check {
+.x-table th .xi-check {
     top: -6px !important;
     left: -3px !important;
 }
-.xg-table tbody .xi-check {
+.x-table tbody .xi-check {
     top: -8px !important;
 }
 */
@@ -1090,16 +1090,16 @@ table.dataTable thead th {
 
 
 /* table v scroll */
-.xg-table-vscroll {
+.x-table-vscroll {
     border-width: 1px 0 1px 1px !important;
 }
 
-.xg-table-vscroll tbody {
+.x-table-vscroll tbody {
     display: block;
     overflow-y: scroll;
 }
 
-.xg-table-vscroll tr {
+.x-table-vscroll tr {
   display:flex;
 }
 
@@ -1112,64 +1112,64 @@ tr select {
     padding-right: 3px !important;
 }
 
-.xg-scroll {
+.x-scroll {
     /*max-height: 300px;*/
     overflow-y: auto !important;
 }
 
-    .xg-scroll thead th {
+    .x-scroll thead th {
         position: sticky !important;
         top: 0;
         z-index: 2;
     }
 
-    .xg-scroll th, .xg-scroll td {
+    .x-scroll th, .x-scroll td {
         /*min-width: 150px;*/
     }
 
 @media (max-width:768px) {
-    .xg-table {
+    .x-table {
         /*background: #fff;*/
         overflow: hidden;
         border: none;
     }
 
         /*
-        .xg-table tr:nth-of-type(2n) {
+        .x-table tr:nth-of-type(2n) {
             background: #eee;
         }
-        .xg-table th, .xg-table td {
+        .x-table th, .x-table td {
             margin: 0.5em 1em;
         }
 
-    .xg-table {
+    .x-table {
         min-width: 100%;
     }
         */
 
-    .xg-table tbody {
+    .x-table tbody {
         padding-top: 3px;
     }
 
-        .xg-table th {
+        .x-table th {
             display: none;
         }
 
-        .xg-table td {
+        .x-table td {
             text-align: left;
             display: block;
             border: none !important;
         }
 
-            .xg-table td:first-child {
+            .x-table td:first-child {
                 padding-top: 15px;
                 border-top: 1px solid lightgray !important;
             }
-            .xg-table td:last-child {
+            .x-table td:last-child {
                 padding-bottom: 15px;
             }
 
-            .xg-table td:before {
+            .x-table td:before {
                 content: attr(data-rwd-th);
                 font-weight: bold;
                 /*width: 6.5em;*/
@@ -1179,11 +1179,11 @@ tr select {
             }
 
         /*
-        .xg-table th, .xg-table td {
+        .x-table th, .x-table td {
             text-align: left;
         }
 
-            .xg-table th, .xg-table td:before {
+            .x-table th, .x-table td:before {
                 color: #D20B2A;
                 font-weight: bold;
             }
@@ -1191,7 +1191,7 @@ tr select {
 }
 
 /* bootstrap alert */
-.xg-alert {
+.x-alert {
     position: fixed; 
     top: 48px; 
     right: 3px; 
@@ -1201,7 +1201,7 @@ tr select {
 }
 
 /*
-#xg-wait {
+#x-wait {
     display: none;  
     position: fixed;
     top: 33%;
@@ -1209,21 +1209,21 @@ tr select {
 }
 */
 
-/* xg-msg class for both xgMsg & xgAns */
-.xg-msg .modal-dialog {
+/* x-msg class for both xgMsg & xgAns */
+.x-msg .modal-dialog {
     min-width: 280px;
     max-width: 480px;
 }
-.xg-msg .modal-header {
+.x-msg .modal-header {
     border-bottom: none;
     padding: 9px 15px 9px 19px;
     background-color: none;
 }
-.xg-msg .modal-body {
+.x-msg .modal-body {
     font-size: 16px;
     padding: 10px 20px 30px 20px;
 }
-.xg-msg .modal-footer {
+.x-msg .modal-footer {
     border-bottom: none;
     padding: 10px;
 }
@@ -1235,28 +1235,28 @@ tr select {
 */
 
 /* 顯示時才設定 display flex, 否則會影響其他畫面無法捉取mouse事件 */
-.xg-image.modal {
+.x-image.modal {
     /*display: flex !important;
     align-items: center;
     justify-content: center;*/
 }
 
-.xg-image .modal-dialog {
+.x-image .modal-dialog {
     /*display: inline-block;*/
     display: table;
     margin: auto;
     max-width: none;
 }
 
-.xg-image .modal-content,
-.xg-image .modal-body,
-.xg-image .modal-footer {
+.x-image .modal-content,
+.x-image .modal-body,
+.x-image .modal-footer {
     background: white;
     border: none;
     padding: 0;
 }
 
-.xg-image img {
+.x-image img {
     display: block;
     width: auto;
     height: auto;
@@ -1267,13 +1267,13 @@ tr select {
 
 /* When the body has the wait class, we turn
 the scrollbar off with overflow:hidden */
-body .xg-show-wait {
+body .x-show-wait {
     overflow: hidden;
 }
 
 /* Anytime the body has the wait class, our
    modal element will be visible */
-body.xg-show-wait .xg-wait {
+body.x-show-wait .x-wait {
     display: block;
 }
 
@@ -1293,13 +1293,13 @@ body, label {
 }
 
 /* ==== left menu ==== */
-.xg-leftmenu {
+.x-leftmenu {
     background: #E0E0E0;
     border-right: 1px solid #C1C1C1;
 }
 
 /* li(item),a(文字),i(icon) */
-.xg-leftmenu li {
+.x-leftmenu li {
     /*
     color: #fff;
     border-bottom: solid 1px #E5E5E5;
@@ -1307,55 +1307,55 @@ body, label {
 }
 
     /* 文字 */
-    .xg-leftmenu a {
+    .x-leftmenu a {
         font-size: 15px;
         color: #555 !important;
     }
 
 
-.xg-leftmenu a, .xg-leftmenu i {
+.x-leftmenu a, .x-leftmenu i {
     color: #222222 !important;
 }
 
-.xg-leftmenu a:hover, .xg-leftmenu a:hover i {
+.x-leftmenu a:hover, .x-leftmenu a:hover i {
     color: #222222 !important;
     background: #CFCFCF;
 }
 /*
-.xg-leftmenu a:hover i {
+.x-leftmenu a:hover i {
     color: #222222;
     background: #EEEEEE;
 }
 */
 
 /* 子功能表 */
-.xg-leftmenu-subbox {
+.x-leftmenu-subbox {
     background: #FAFAFA;
 }
 
-    .xg-leftmenu-subbox a {
+    .x-leftmenu-subbox a {
         color: #222222;
     }
 
-    .xg-leftmenu-subbox a:hover {
+    .x-leftmenu-subbox a:hover {
         background: #EEEEEE !important;
     }
 
-.xg-table th {
+.x-table th {
     background: #E0E0E0 !important;
 }
 
-.xg-table tr:hover {
+.x-table tr:hover {
     background: #FAFAFA !important;
 }
 
 
 /* ==== modal ==== */
-.xg-modal .modal-header {
+.x-modal .modal-header {
     border-bottom: none;
     background: #FAFAFA;
 }
-.xg-modal .modal-body, .xg-modal .modal-footer {
+.x-modal .modal-body, .x-modal .modal-footer {
     /*background: #404040;*/
 }
 
@@ -1392,7 +1392,7 @@ body, label {
     */
 }
 
-.xg-wait {
+.x-wait {
     font-size: 24px;    
     color: #fff;
     background-color: rgba(0, 0, 0, 0.5); /* 半透明背景色 */
@@ -1411,7 +1411,7 @@ body, label {
 
 
 @media (max-width:768px) {
-    .xg-table {
+    .x-table {
         background: #fff !important;
     } 
 }

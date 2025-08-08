@@ -1,8 +1,8 @@
-﻿<form id='eform' class='xg-form'>
+﻿<form id='eform' class='x-form'>
 	<div class="row">
-		<div class="col-md-2 xg-label">資料Id</div>
-		<div class="col-md-5 xg-input">
-			@await Component.InvokeAsync("XiRead", new XiReadDto { Fid = "Id", InRow = true, InputAttr = "id='Id' style='width:120px'" })
+		<div class="col-md-2 x-label">資料Id</div>
+		<div class="col-md-5 x-input">
+			@await Component.InvokeAsync("XiRead", new XiReadDto { Fid = "Id", InRow = true, InputAttr = "id='Id'", Width = 100 })
 			<button type="button" id="btnAddWatch" class="btn btn-success" onclick="_me.onAddWatch()">加入追踪</button>
 			<button type="button" id="btnDeleteWatch" class="btn btn-danger" onclick="_me.onDeleteWatch()">取消追踪</button>
 			<button type="button" id="btnKeepIssue" class="btn btn-secondary" onclick="_me.onKeepIssue()">延續工作</button>
@@ -48,12 +48,12 @@
 
 </form>
 
-<div class='xg-btns-box'>
-    <span class="xg-span-label">上傳檔案</span>
+<div class='x-btns-box'>
+    <span class="x-span-label">上傳檔案</span>
 	@await Component.InvokeAsync("XgAddRow", "_me.mIssueFile.onAddRow()")
 </div>
-<form id='eformIssueFile' class='xg-form' style="border:none">
-    <table class="table xg-table xg-no-hline" cellspacing="0">
+<form id='eformIssueFile' class='x-form border-0'>
+    <table class="table x-table x-no-hline" cellspacing="0">
         <thead>
             <tr>
 				<th>檔案名稱</th>
@@ -65,12 +65,12 @@
     </table>
 </form>
 
-<div class='xg-btns-box'>
-	<span class="xg-span-label">相關問題</span>
+<div class='x-btns-box'>
+	<span class="x-span-label">相關問題</span>
 	@await Component.InvokeAsync("XgAddRow", "_me.mIssueRelat.onAddRow()")
 </div>
-<form id='eformIssueRelat' class='xg-form' style="border:none">
-	<table class="table xg-table xg-no-hline" cellspacing="0">
+<form id='eformIssueRelat' class='x-form border-0'>
+	<table class="table x-table x-no-hline" cellspacing="0">
 		<thead>
 			<tr>
 				<th>來源問題Id</th>

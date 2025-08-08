@@ -1,4 +1,4 @@
-<form id='eform' class='xg-form'>
+<form id='eform' class='x-form'>
 {{#each MainTable.HideViewStrs}}
 	{{this}}
 {{/each}}
@@ -20,12 +20,12 @@
 </form>
 
 {{#ChildTables}}
-<div class='xg-btns-box'>
-	<span class="xg-span-label">{{TableName}}</span>
+<div class='x-btns-box'>
+	<span class="x-span-label">{{TableName}}</span>
 	@await Component.InvokeAsync("XgAddRow", "_me.m{{TableCode}}.onAddRow()")
 </div>
-<form id='eform{{TableCode}}' class='xg-form' style="border:none;{{#if HalfWidth}} width:50%;{{/if}}">
-    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+<form id='eform{{TableCode}}' class='x-form border-0{{#if HalfWidth}} w-50{{/if}}'>
+    <table class="table table-bordered x-table x-no-hline" cellspacing="0">
         <thead>
             <tr>
 			{{#Eitems}}

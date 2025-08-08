@@ -69,9 +69,9 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "匯入資料字典" } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-        <form id='formRead' class='xg-form'>
+        <form id='formRead' class='x-form'>
             <div class="row">
                 @*await Component.InvokeAsync("XiText", new XiTextDto { title = R["FileName"].Value, fid = "FileName", inRow = true })*@
                 <vc:xi-text dto="@(new XiTextDto { Title = "匯入檔名", Fid = "FileName", InRow = true })"></vc:xi-text>
@@ -79,11 +79,11 @@
             </div>
         </form>
 
-        <div class='xg-btns-box'>
-            <button type="button" class="btn xg-btn-gray" onclick="_me.onOpenImport()">匯入Excel</button>
-            <a class="btn xg-btn-gray" href="Template">下載範本</a>
+        <div class='x-btns-box'>
+            <button type="button" class="btn x-btn-gray" onclick="_me.onOpenImport()">匯入Excel</button>
+            <a class="btn x-btn-gray" href="Template">下載範本</a>
         </div>
-        <table id="tableRead" class="table xg-table" cellspacing="0">
+        <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
                     <th>成功筆數</th>
@@ -109,9 +109,9 @@
                     <span aria-hidden='true'>&times;</span>
                 </button>
             </div>
-            <div class='modal-body' style="padding: 20px 0 30px 50px;">
+            <div class='modal-body p-4'>
                 <input type="file">
-                <div id="divMsg" style="color:blue; display:none"></div>
+                <div id="divMsg" class="d-none text-primary"></div>
             </div>
             <div class='modal-footer'>
                 <button type='button' class='btn btn-secondary xd-cancel' data-bs-dismiss='modal'>取消</button>

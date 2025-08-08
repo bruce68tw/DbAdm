@@ -247,9 +247,9 @@
 </script>
 
 @await Component.InvokeAsync("XgProgPath", new { names = new string[] { "專案工作維護" } })
-<div class="xg-prog">
+<div class="x-prog">
     <div id="divRead">
-		<form id='formRead' class='xg-form'>
+		<form id='formRead' class='x-form'>
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, InputAttr = "onchange=_me.onChgProject(false)" })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
@@ -266,16 +266,16 @@
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Rows = ViewBag.Users })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "交辦主管", Fid = "FromMgr", Rows = ViewBag.Users })
             <div class="row">
-                <div class="col-md-2 xg-label">工作日期</div>
-                <div class="col-md-10 xg-input">
+                <div class="col-md-2 x-label">工作日期</div>
+                <div class="col-md-10 x-input">
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate2", InRow = true })
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2 xg-label">建檔日期</div>
-                <div class="col-md-10 xg-input">
+                <div class="col-md-2 x-label">建檔日期</div>
+                <div class="col-md-10 x-input">
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created2", InRow = true })
@@ -283,16 +283,16 @@
             </div>
         </form>
 
-		<div class='xg-btns-box'>
+		<div class='x-btns-box'>
 			<vc:xg-create/>
-            <button type="button" class="btn xg-btn-gray" onclick="_me.onMyToday()">我的今天資料</button>
-            <button type="button" class="btn xg-btn-gray" onclick="_me.onMyWeek()">我的本週資料</button>
-            <button type="button" class="btn xg-btn-gray" onclick="_me.onMyNotFinish()">我的未結案</button>
-            <button type="button" class="btn xg-btn-gray" onclick="_me.onMyWatch()">我的追踪</button>
-            <button type="button" class="btn xg-btn-gray" onclick="_me.onMyAsk()">我的交辦</button>
-            <span style="padding:3px">工作時數合計：<span id="SumHours"></span></span>
+            <button type="button" class="btn x-btn-gray" onclick="_me.onMyToday()">我的今天資料</button>
+            <button type="button" class="btn x-btn-gray" onclick="_me.onMyWeek()">我的本週資料</button>
+            <button type="button" class="btn x-btn-gray" onclick="_me.onMyNotFinish()">我的未結案</button>
+            <button type="button" class="btn x-btn-gray" onclick="_me.onMyWatch()">我的追踪</button>
+            <button type="button" class="btn x-btn-gray" onclick="_me.onMyAsk()">我的交辦</button>
+            <span class="p-1">工作時數合計：<span id="SumHours"></span></span>
         </div>
-        <table id="tableRead" class="table table-bordered xg-table" cellspacing="0">
+        <table id="tableRead" class="table table-bordered x-table" cellspacing="0">
             <thead>
                 <tr>
 					<th>專案</th>
@@ -314,7 +314,7 @@
         </table>
     </div>
 
-    <div id="divEdit" class="xg-hide">
+    <div id="divEdit" class="d-none">
         <partial name="Edit" />
     </div>
 </div>

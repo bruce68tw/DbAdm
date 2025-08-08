@@ -1,4 +1,4 @@
-﻿<form id='eform' class='xg-form'>
+﻿<form id='eform' class='x-form'>
 	@await Component.InvokeAsync("XiHide", new XiHideDto{ Fid = "Id" })
 	
 	@await Component.InvokeAsync("XiSelect", new XiSelectDto{ Title = "專案Id", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true })
@@ -8,12 +8,12 @@
 	@await Component.InvokeAsync("XiCheck", new XiCheckDto{ Title = "資料狀態", Fid = "Status", Label = "啟用" })
 </form>
 
-<div class='xg-btns-box'>
-	<span class="xg-span-label">欄位檔</span>
+<div class='x-btns-box'>
+	<span class="x-span-label">欄位檔</span>
 	@await Component.InvokeAsync("XgAddRow", "_me.mColumn.onAddRow()")
 </div>
-<form id='eformColumn' class='xg-form' style="border:none;">
-    <table class="table table-bordered xg-table xg-no-hline" cellspacing="0">
+<form id='eformColumn' class='x-form border-0'>
+    <table class="table table-bordered x-table x-no-hline" cellspacing="0">
         <thead>
             <tr>
 				@await Component.InvokeAsync("XgTh", new XgThDto{ Title = "欄位代碼", Required = true })
