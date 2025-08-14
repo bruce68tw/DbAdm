@@ -525,8 +525,8 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * onclick deleteRow
      * param btn {element}
      */
-    this.onDeleteRow = function (btn) {        
-        var box = this._elmToRowBox(btn);
+    this.onDeleteRow = function () {        
+        var box = this._elmToRowBox(_fun.getMe());
         this.deleteRow(_itext.get(this.kid, box), box);
     };
 

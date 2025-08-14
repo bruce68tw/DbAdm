@@ -1,7 +1,7 @@
-﻿@inject IHtmlLocalizer<DbAdm.R0> R
+@inject IHtmlLocalizer<DbAdm.R0> R
 
-<script src="~/js/view/MyCrud.js"></script>
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce" src="~/js/view/MyCrud.js"></script>
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -23,19 +23,19 @@
         <!-- other functions -->
         <div class="x-btns-box mt-1">
             @await Component.InvokeAsync("XgCreate", new { fnOnClick = "_me.crudR.onCreate()" })
-            <button type="button" class="btn x-btn-gray" onclick="_me.onGenCrud()">@R["GenCrud"]</button>
+            <button type="button" class="btn x-btn-gray" data-onclick="_me.onGenCrud">@R["GenCrud"]</button>
         </div>
 
         <!-- result list -->
         <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th width="60px" class="x-center">@R["Select"]</th>
+                    <th class="x-center x-w60">@R["Select"]</th>
                     <th>@R["Project"]</th>
                     <th>@R["ProgCode"]</th>
                     <th>@R["ProgName"]</th>
-                    <th width='90px'>@R["Crud"]</th>
-                    <th width='100px' class="x-center">@R["Status"]</th>
+                    <th class="x-w100">@R["Crud"]</th>
+                    <th class="x-center x-w100">@R["Status"]</th>
                     <th>@R["Created"]</th>
                 </tr>
             </thead>

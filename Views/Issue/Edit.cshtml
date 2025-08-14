@@ -3,9 +3,9 @@
 		<div class="col-md-2 x-label">資料Id</div>
 		<div class="col-md-5 x-input">
 			@await Component.InvokeAsync("XiRead", new XiReadDto { Fid = "Id", InRow = true, InputAttr = "id='Id'", Width = 100 })
-			<button type="button" id="btnAddWatch" class="btn btn-success" onclick="_me.onAddWatch()">加入追踪</button>
-			<button type="button" id="btnDeleteWatch" class="btn btn-danger" onclick="_me.onDeleteWatch()">取消追踪</button>
-			<button type="button" id="btnKeepIssue" class="btn btn-secondary" onclick="_me.onKeepIssue()">延續工作</button>
+			<button type="button" id="btnAddWatch" class="btn btn-success" data-onclick="_me.onAddWatch">加入追踪</button>
+			<button type="button" id="btnDeleteWatch" class="btn btn-danger" data-onclick="_me.onDeleteWatch">取消追踪</button>
+			<button type="button" id="btnKeepIssue" class="btn btn-secondary" data-onclick="_me.onKeepIssue">延續工作</button>
 		</div>
 	</div>
 	<div class="row">

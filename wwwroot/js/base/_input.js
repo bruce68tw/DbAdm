@@ -169,7 +169,7 @@ var _input = {
             label = parent.next();
         //obj.addClass(_fun.errCls);
         label.text(msg);
-        label.show();
+        _obj.show(label);
         //_form.scrollTopError();
     },
      */

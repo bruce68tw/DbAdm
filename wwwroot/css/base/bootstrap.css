@@ -13,6 +13,12 @@
     border-radius: .2rem !important;
 }
 
+    /* space in button & icon */
+    .btn > i {
+        padding-left: 3px;
+    }
+
+
 /* table button with link style */
 .btn-link {
     padding: 0 !important;

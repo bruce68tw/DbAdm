@@ -68,7 +68,7 @@
     }
 }
 
-<style>
+<style nonce="@_Fun.Nonce">
 	.xu-body {
 		display: inline-block;
 		width: 100%;
@@ -96,30 +96,29 @@
     @RenderSection("styles", required: false)
 
     <!-- 2.load lib js -->
-    <script src="~/js/lib@(min).js?v=@libVer"></script>
+    <script nonce="@_Fun.Nonce" src="~/js/lib@(min).js?v=@libVer"></script>
 
     <!-- 3.load my site js(debug/production mode) !! -->
     <environment include="Production">
         <link rel="stylesheet" href="~/css/my@(min).css?v=@myVer" />
-        <script src="~/js/my@(min).js?v=@myVer"></script>
+        <script src="~/js/my@(min).js?v=@myVer" nonce="@_Fun.Nonce"></script>
     </environment>
     <environment include="Development">
         <!-- tail ver will load failed !! -->
         <link rel="stylesheet" asp-href-include="~/css/icomoon.css" />
         <link rel="stylesheet" asp-href-include="~/css/base/*.css" />
         <link rel="stylesheet" asp-href-include="~/css/view/_xgBlue.css" />
-
-        <script asp-src-include="~/js/base/*.js"></script>
-        <script asp-src-include="~/js/view/_*.js"></script>
+        <script nonce="@_Fun.Nonce" asp-src-include="~/js/base/*.js"></script>
+        <script nonce="@_Fun.Nonce" asp-src-include="~/js/view/_*.js"></script>
     </environment>
 
     <!-- 4.load local js -->
-    <script src="~/js/@(locale+min).js?v=@myVer"></script>
+    <script nonce="@_Fun.Nonce" src="~/js/@(locale+min).js?v=@myVer"></script>
 
     @RenderSection("scripts", required: false)
 
     <!-- 5.initial -->
-    <script type="text/javascript">
+    <script nonce="@_Fun.Nonce">
         $(function () {
             _fun.init('@locale');
             _fun.pageRows = 20;

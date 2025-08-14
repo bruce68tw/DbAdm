@@ -1,4 +1,4 @@
-﻿<style>
+﻿<style nonce="@_Fun.Nonce">
     .chart-box {
         width: 600px;
         height: 450px;
@@ -6,7 +6,7 @@
     }
 </style>
 
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -74,7 +74,7 @@ new Chart(document.getElementById("chart"), {
             <div class="row">
                 @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, InputAttr = "onchange=_me.onChgProject(false)" })
                 <span class='col-md-3 x-find-tbar'>
-                    <button type='button' class='btn btn-primary' onclick='_me.onFind()'>查詢<i class='ico-find'></i></button>
+                    <button type='button' class='btn btn-primary' data-onclick='_me.onFind'>查詢<i class='ico-find'></i></button>
                 </span>
             </div>
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })

@@ -47,7 +47,7 @@ var _tool = {
         var box = _tool.xgAlert;
         box.find('.xd-msg').text(msg)
         box.fadeIn(500, function () {
-            box.show();
+            _obj.show(box);
             setTimeout(function () {
                 _tool.onAlertClose();
             }, 5000);   //show 5 seconds
@@ -57,12 +57,12 @@ var _tool = {
     //??show waiting
     showWait: function () {
         //$('body').addClass('x-show-loading');
-        $('.x-wait').show();
+        _obj.show($('.x-wait'));
     },
     //??
     hideWait: function () {
         //$('body').removeClass('x-show-loading');
-        $('.x-wait').hide();
+        _obj.hide($('.x-wait'));
     },
 
     /**
@@ -118,7 +118,7 @@ var _tool = {
     onAlertClose: function () {
         var box = _tool.xgAlert;
         box.fadeOut(500, function () {
-            box.hide();
+            _obj.hide(box);
         });
     },
 

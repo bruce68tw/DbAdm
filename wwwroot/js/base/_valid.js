@@ -36,7 +36,7 @@ var _valid = {
                 box.removeClass(validClass).addClass(errorClass);
                 var errObj = _valid._getError(me);
                 if (errObj != null)
-                    errObj.show();
+                    _obj.show(errObj);
                 return false;
             },
             //清除validation錯誤
@@ -46,7 +46,7 @@ var _valid = {
                 box.removeClass(errorClass).addClass(validClass);
                 var errObj = _valid._getError(me);
                 if (errObj != null)
-                    errObj.hide();
+                    _obj.hide(errObj);
                 return false;
             },
             /*

@@ -167,8 +167,7 @@ function FlowForm(boxId, mNode, mLine) {
             //"this" is not work here !!
             var filter = me.MenuFilter;
             if (!$(e.target).parents(filter).length > 0)
-                $(filter).hide(100);
-            
+                _obj.hide($(filter));            
         });
     };
 

@@ -1,6 +1,6 @@
 ﻿@inject IHtmlLocalizer<DbAdm.R0> R
 
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -74,7 +74,7 @@
         <div class='x-btns-box mt-1'>
             @await Component.InvokeAsync("XgCreate")
             @await Component.InvokeAsync("XgExport")
-            <button type="button" class="btn x-btn-gray" onclick="_me.onGenWord()">@R["GenDocu"]</button>
+            <button type="button" class="btn x-btn-gray" data-onclick="_me.onGenWord">@R["GenDocu"]</button>
         </div>
 
         <!-- result list -->

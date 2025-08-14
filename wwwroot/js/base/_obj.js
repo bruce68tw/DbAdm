@@ -96,16 +96,17 @@ var _obj = {
         return obj.attr(attr);
     },
 
+    //如果使用show()/hide()會動態寫入 inline style, 造成CSRF !!
     show: function (obj) {
-        obj.show();
+        obj.removeClass('d-none');
+    },
+    hide: function (obj) {
+        obj.addClass('d-none');
     },
     showByStatus: function (obj, status) {
         if (status)
-            obj.show();
+            _obj.show(obj);
         else
-            obj.hide();
-    },
-    hide: function (obj) {
-        obj.hide();
+            _obj.hide(obj);
     },
 }; //class

@@ -4,7 +4,7 @@
     //    : "??";
 }
 
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -80,7 +80,7 @@
         </form>
 
         <div class='x-btns-box'>
-            <button type="button" class="btn x-btn-gray" onclick="_me.onOpenImport()">匯入Excel</button>
+            <button type="button" class="btn x-btn-gray" data-onclick="_me.onOpenImport">匯入Excel</button>
             <a class="btn x-btn-gray" href="Template">下載範本</a>
         </div>
         <table id="tableRead" class="table x-table" cellspacing="0">
@@ -115,7 +115,7 @@
             </div>
             <div class='modal-footer'>
                 <button type='button' class='btn btn-secondary xd-cancel' data-bs-dismiss='modal'>取消</button>
-                <button type='button' class='btn btn-primary xd-yes' onclick='_me.onImport()'>匯入</button>
+                <button type='button' class='btn btn-primary xd-yes' data-onclick='_me.onImport'>匯入</button>
             </div>
         </div>
     </div>

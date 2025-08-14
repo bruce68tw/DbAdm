@@ -692,8 +692,8 @@ function CrudE(edits) {
      * param required {bool}
      * param maxLen {int} 
      */
-    this.onOpenModal = function(btn, title, fid, required, maxLen) {
-        var tr = $(btn).closest('tr');
+    this.onOpenModal = function(title, fid, required, maxLen) {
+        var tr = _fun.getMe(true).closest('tr');
         _tool.showArea(title, _itext.get(fid, tr), this.isEditMode(), function(result) {
             _itext.set(fid, result, tr);
         });

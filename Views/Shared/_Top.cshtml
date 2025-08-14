@@ -1,4 +1,4 @@
-﻿<style>
+﻿<style nonce="@_Fun.Nonce">
     .xu-top {
         color: #EAFFFF;
         background: #28C2FE;
@@ -15,7 +15,8 @@
 </style>
 
 <nav class="xu-top navbar navbar-expand navbar-dark">
-    <a class="sidebar-toggle text-light me-3 cursor-pointer" onclick="_leftmenu.onToggleMenu(); return false;">
+    @* onclick 要return false ?? *@
+    <a class="sidebar-toggle text-light me-3 cursor-pointer" data-onclick="_leftmenu.onToggleMenu">
         <span class="navbar-toggler-icon"></span>
     </a>
 

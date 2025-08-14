@@ -15,7 +15,7 @@ namespace DbAdm.Services
                 Table = "dbo.DataDict",
                 PkeyFid = "Code",
                 Col4 = null,
-                CanAddKey = true,
+                AutoIdLen = 0,
                 Items = [
                     new() { Fid = "Code" },
                     new() { Fid = "Name" },

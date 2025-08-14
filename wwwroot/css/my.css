@@ -134,6 +134,12 @@
     border-radius: .2rem !important;
 }
 
+    /* space in button & icon */
+    .btn > i {
+        padding-left: 3px;
+    }
+
+
 /* table button with link style */
 .btn-link {
     padding: 0 !important;
@@ -258,33 +264,28 @@ textarea.form-control {
         right: 5px;
     }
 
-@charset "utf-8";
 
-body {
-    /*padding-top: 50px;*/
-    padding-bottom: 20px;
-}
-
-/* space in button & icon */
-.btn > i {
-    padding-left: 3px;
+/* font icon(icomoom) */
+[class^="ico-"], [class*=" ico-"] {
+    padding: 1px;
 }
 
 /* icomoon spinner */
 @keyframes anim-rotate {
-    0% { transform: rotate(0); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
+
 .spinner {
     vertical-align: middle;
     display: inline-block;
     font-size: 2em;
     animation: anim-rotate 2s infinite steps(12);
-}
-
-/* font icon(icomoom) */
-[class^="ico-"], [class*=" ico-"] {
-    padding: 1px;
 }
 
 .note-toolbar {
@@ -294,10 +295,26 @@ body {
 .note-editable[contenteditable=false] {
     background: #eee !important;
 }
-/* 不歸納到某個元件 */
+/* 
+    額外控制輸入欄位寬度(不使用inline style, 避開 CSRF): sm, md, lg
+    padding, margin 使用bootstrap 5
+    自定寬度pixel (bootstrap 5只有相對寬度)
+*/
 
-.d-none {
-    display: none;
+@charset "utf-8";
+
+body {
+    /*padding-top: 50px;*/
+    padding-bottom: 20px;
+}
+
+.x-on {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+.x-off {
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
 @media (max-width:768px) {
@@ -327,7 +344,73 @@ body {
 .x-h10 {
     height: 10px !important;
 }
+.x-h50 {
+    height: 50px !important;
+}
 
+/*=== width start ===*/
+.x-w50 {
+    width: 50px !important;
+}
+.x-w60 {
+    width: 60px !important;
+}
+.x-w70 {
+    width: 70px !important;
+}
+.x-w80 {
+    width: 80px !important;
+}
+.x-w90 {
+    width: 90px !important;
+}
+.x-w100 {
+    width: 100px !important;
+}
+.x-w120 {
+    width: 120px !important;
+}
+.x-w140 {
+    width: 140px !important;
+}
+.x-w160 {
+    width: 160px !important;
+}
+.x-w180 {
+    width: 180px !important;
+}
+.x-w200 {
+    width: 200px !important;
+}
+.x-w250 {
+    width: 250px !important;
+}
+.x-w300 {
+    width: 300px !important;
+}
+.x-w400 {
+    width: 400px !important;
+}
+.x-w500 {
+    width: 500px !important;
+}
+
+.x-wi80 {
+    min-width: 80px !important;
+}
+.x-wi100 {
+    min-width: 100px !important;
+}
+.x-wi125 {
+    min-width: 125px !important;
+}
+.x-wi250 {
+    min-width: 250px !important;
+}
+
+/*=== width end ===*/
+
+/* 改用 bootstrap 5 的 padding, margin
 .x-mt0 {
     margin-top: 0 !important;
 }
@@ -346,6 +429,7 @@ body {
 .x-mb10 {
     margin-bottom: 10px !important;
 }
+*/
 
 
 /* 用在 form裡面的 button */
@@ -415,7 +499,7 @@ span.error {
     border-width: thin !important;*/
 }
 
-/*  */
+/*  
 .x-errlab {
     text-align: left;
     font-size: 14px;
@@ -423,6 +507,7 @@ span.error {
     color: red;
     display: none;
 }
+*/
 
 /* (+)相鄰選擇器, 
   1.與 x-error2 相鄰的 error label 要顯示 
@@ -440,10 +525,17 @@ span.error {
 */
 /* 查詢畫面 */
 
-/* 右上方工具列 */
+/* 右上方工具列1: 標準模式在col裡面 */
 .x-find-tbar {
-    padding-top: 8px;
-    display: flex !important;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+/* 工具列2: span mode */
+.x-find-tbar2 {
+    display: inline-flex;
+    margin-left: 4px;
     gap: 2px;
 }
 
@@ -616,10 +708,11 @@ span.error {
     font-weight: bold;
 }
 
-/* animation */
+/* animation 
 .x-fade.hide {
     display: none;
 }
+*/
 
 /**
  * checkbox, radio, use pure css, no js
@@ -743,20 +836,30 @@ span.error {
     padding: 2px 3px 2px 0;
     background: red;
 }
+/* date, datetime */
 
 /* match datepicker.css .date setting, for keep input width same to date at query form */
 .x-date-w {
     width: 180px !important;
 }
 
+.xi-dt-hour, .xi-dt-min {
+    width: 70px; 
+    display: inline-block;
+}
 
 /* file url */
-.xi-file-box div a:first-child {
+/* .xi-file-box -> .xi-box-file */
+.xi-box-file {
+    margin-bottom: 0;
+}
+
+.xi-box-file div a:first-child {
     color: blue;
 }
 
 /* note ?? */
-.xi-file-box div:nth-child(3) {
+.xi-box-file div:nth-child(3) {
     color: red;
     font-size: 12px;
 }
@@ -764,6 +867,13 @@ span.error {
 .xi-file {
     margin-bottom: 0 !important;
 }
+
+[data-type="link"] {
+    height: 32px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
 /* 輸入欄位的外框 */
 .x-input {
     padding-top: 7px;
@@ -785,8 +895,10 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-/* hide stepper: Firefox */
+
 input[type=number] {
+    text-align: right;
+    /* hide stepper: Firefox */
     -moz-appearance: textfield;
 }
 /* 唯讀欄位 */
@@ -810,8 +922,6 @@ input[type=number] {
     background-color: #eee
 }
 .x-form .xi-read2 {
-    padding-left: 0;
-    margin: 0;
     background-color: #eee
 }
 
@@ -938,6 +1048,9 @@ input[type=number] {
     border-bottom: 1px solid #eee;
     padding: 9px 15px 9px 19px;
 }
+    .x-modal .modal-header button {
+        padding: 10px 10px;
+    }
 
 .x-modal .modal-title {
     font-size: 16px;
@@ -952,6 +1065,10 @@ input[type=number] {
 .x-modal .modal-footer {
     border: none;
     padding: 0 20px 10px;
+}
+
+.x-modal textarea {
+    width: 100%;
 }
 
 /* 分頁元件 */

@@ -1,9 +1,16 @@
 ﻿/* 查詢畫面 */
 
-/* 右上方工具列 */
+/* 右上方工具列1: 標準模式在col裡面 */
 .x-find-tbar {
-    padding-top: 8px;
-    display: flex !important;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+/* 工具列2: span mode */
+.x-find-tbar2 {
+    display: inline-flex;
+    margin-left: 4px;
     gap: 2px;
 }
 

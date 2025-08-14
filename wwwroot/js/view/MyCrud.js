@@ -1,5 +1,4 @@
 var _me = {
-
     init: function () {
 		//datatable config
 		var config = {

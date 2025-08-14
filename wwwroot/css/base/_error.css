@@ -14,7 +14,7 @@ span.error {
     border-width: thin !important;*/
 }
 
-/*  */
+/*  
 .x-errlab {
     text-align: left;
     font-size: 14px;
@@ -22,6 +22,7 @@ span.error {
     color: red;
     display: none;
 }
+*/
 
 /* (+)相鄰選擇器, 
   1.與 x-error2 相鄰的 error label 要顯示 

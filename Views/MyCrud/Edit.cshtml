@@ -1,11 +1,11 @@
-﻿@inject IHtmlLocalizer<DbAdm.R0> R0
+@inject IHtmlLocalizer<DbAdm.R0> R0
 @inject IViewLocalizer R
 
 @{
     var cols2 = "4,6";     //2 columns per row
 }
 
-<style>
+<style nonce="@_Fun.Nonce">
     /* set scroll table column width(base 1) */
     #tableItem th:nth-child(1), #tableItem td:nth-child(1) {
         flex-basis: 60px;
@@ -35,7 +35,7 @@
 
     <div class="row">
         <!-- left columns -->
-        <div class="col-md-6">
+        <div class="col-md-5">
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols2, FnOnChange = "_me.onChangeProject()" })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgCode"].Value, Fid = "ProgCode", MaxLen = 30, Required = true, Cols = cols2 })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgName"].Value, Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols2 })
@@ -72,7 +72,7 @@
 <!-- find buttons -->
 <div class="x-btns-box">
     <span class="x-span-label">@R["Qitem"]</span>
-    <button type='button' class='btn x-btn-gray' onclick='_me.onOpenItem("Q")'>@R["GetItem"]</button>
+    <button type='button' class='btn x-btn-gray' data-onclick='_me.onOpenItem' data-args='Q'>@R["GetItem"]</button>
 </div>
 
 <!-- find field -->
@@ -102,8 +102,8 @@
 <!-- query result buttons -->
 <div class="x-btns-box">
     <span class="x-span-label">@R["Ritem"]</span>
-    @await Component.InvokeAsync("XgAddRow", "_me.onRitemAdd()")
-    <button type='button' class='btn x-btn-gray' onclick='_me.onOpenItem("R")'>@R["GetItem"]</button>
+    @await Component.InvokeAsync("XgAddRow", "_me.onRitemAdd")
+    <button type='button' class='btn x-btn-gray' data-onclick='_me.onOpenItem' data-args='R'>@R["GetItem"]</button>
 </div>
 
 <!-- query result fields -->
@@ -134,8 +134,8 @@
 
         <td>{{Code}}</td>
         <td>{{Name}}</td>
-        <td width="120px">{{DataType}}</td>
-        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "TableAs" })</td>
+        <td class="x-w120">{{DataType}}</td>
+        <td class="x-w80">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "TableAs" })</td>
         <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto
        {
            Fid = "QitemType",
@@ -152,11 +152,11 @@
            Value = "Equal"
        })</td>
     @*<td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ExtInfo" })</td>*@
-        <td width="60px" class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsRange" })</td>
-        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PosGroup" })</td>
-        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LayoutCols" })</td>
-        <td width="60px" class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsFind2" })</td>
-        <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mQitem" })</td>
+        <td class="x-center x-w60">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsRange" })</td>
+        <td class="x-w80">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PosGroup" })</td>
+        <td class="x-w80">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LayoutCols" })</td>
+        <td class="x-center x-w60">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "IsFind2" })</td>
+        <td class="x-center x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mQitem" })</td>
     </tr>
 </script>
 
@@ -169,20 +169,19 @@
 
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ColumnCode" })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Name" })</td>
-        <td width="100px">@await Component.InvokeAsync("XiInt", new XiIntDto { Fid = "Width" })</td>
+        <td class="x-w100">@await Component.InvokeAsync("XiInt", new XiIntDto { Fid = "Width" })</td>
         <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "RitemType", Rows = ViewBag.RitemTypes, AddEmptyRow = false, Value = "0" })</td>
-        @*<td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ExtInfo" })</td>*@
-        <td width="100px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mRitem" })</td>
+        <td class="text-center x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mRitem" })</td>
     </tr>
 </script>
 
 <!-- Table edit form nav/tab/buttons -->
 <div class="x-btns-box">
     <span class="x-span-label">@R["EditForm"]</span>
-    <button type='button' class='btn x-bt-grayn' onclick='_me.onEtableAdd()'>@R["Create"]</button>
-    <button type='button' class='btn x-btn-gray' onclick='_me.onEtableDelete()'>@R["Delete"]</button>
-    <button type='button' class='btn x-btn-gray' onclick='_me.onEtableLeft()'>@R["MoveLeft"]</button>
-    <button type='button' class='btn x-btn-gray' onclick='_me.onEtableRight()'>@R["MoveRight"]</button>
+    <button type='button' class='btn x-bt-grayn' data-onclick='_me.onEtableAdd'>@R["Create"]</button>
+    <button type='button' class='btn x-btn-gray' data-onclick='_me.onEtableDelete'>@R["Delete"]</button>
+    <button type='button' class='btn x-btn-gray' data-onclick='_me.onEtableLeft'>@R["MoveLeft"]</button>
+    <button type='button' class='btn x-btn-gray' data-onclick='_me.onEtableRight'>@R["MoveRight"]</button>
 </div>
 <ul class="nav nav-tabs" id="navEtable"></ul>
 <div class="tab-content" id="tabEtable"></div>
@@ -192,7 +191,7 @@
 <!-- template: edit form nav, use index to connect nav tab -->
 <script id="tplNavEtable" type="text/template">
     <li class='nav-item' data-index='{{Index}}'>
-        <a class='nav-link' data-bs-toggle='tab' href='#divEtable{{Index}}' onclick='_me.onEtableNav({{Index}})'>
+        <a class='nav-link' data-bs-toggle='tab' href='#divEtable{{Index}}' data-onclick='_me.onEtableNav' data-args='{{Index}}'>
         </a>
     </li>
 </script>
@@ -206,7 +205,7 @@
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort" })
 
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-5">
                     @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Table"].Value, Fid = "TableId", Required = true, Cols = cols2, FnOnChange = "_me.onChangeNowTable({{Index}})" })
                     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Pkey"].Value, Fid = "PkeyFid", MaxLen = 10, Required = true, Cols = cols2 })
                     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Fkey"].Value, Fid = "FkeyFid", MaxLen = 10, Cols = cols2, LabelTip = R["TipFkey"].Value })
@@ -222,7 +221,7 @@
 
         <div class="x-btns-box">
             <span class="x-span-label">@R["Eitem"]</span>
-            <button type='button' class='btn x-btn-gray' onclick='_me.onOpenItem("E")'>@R["GetItem"]</button>
+            <button type='button' class='btn x-btn-gray' data-onclick='_me.onOpenItem' data-args='E'>@R["GetItem"]</button>
         </div>
         <form class="xu-form2">
             <table class="table x-table x-no-hline" cellspacing="0">
@@ -260,22 +259,22 @@
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort", Value = "{{Sort}}" })
 
         <td>{{Code}}/{{Name}}<br>{{DataType}}</td>
-        <td width="120px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "EitemType",
+        <td class="x-w120">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "EitemType",
                          Rows = ViewBag.EitemTypes, Required = true,
                          AddEmptyRow = false, Value = "T"
                      })</td>
-        <td width="90px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
-        <td width="50px" class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Required" })</td>
-        <td width="50px" class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasCreate", IsCheck = true })</td>
-        <td width="50px" class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasUpdate", IsCheck = true })</td>
-        <td width="110px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PlaceHolder" })</td>
-        <td width="70px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue" })</td>
-        <td width="110px">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "CheckType", Value = "0", Rows = ViewBag.CheckTypes, Required = true, AddEmptyRow = false })</td>
-        <td width="90px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "CheckData" })</td>
-        <td width="60px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PosGroup" })</td>
-        <td width="80px" class="xu-layout">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LayoutCols" })</td>
-        <td width="80px" class="xu-width">@await Component.InvokeAsync("XiInt", new XiIntDto { Fid = "Width" })</td>
-        <td width="95px" class="text-center">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mEitem" })</td>
+        <td class="x-w100">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
+        <td class="x-center x-w50">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Required" })</td>
+        <td class="x-center x-w50">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasCreate", IsCheck = true })</td>
+        <td class="x-center x-w50">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasUpdate", IsCheck = true })</td>
+        <td class="x-w100">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PlaceHolder" })</td>
+        <td class="x-w80">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue" })</td>
+        <td class="x-w100">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "CheckType", Value = "0", Rows = ViewBag.CheckTypes, Required = true, AddEmptyRow = false })</td>
+        <td class="x-w100">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "CheckData" })</td>
+        <td class="x-w60">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PosGroup" })</td>
+        <td class="xu-layout x-w80">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LayoutCols" })</td>
+        <td class="xu-width x-w80">@await Component.InvokeAsync("XiInt", new XiIntDto { Fid = "Width" })</td>
+        <td class="text-center  x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mEitem" })</td>
     </tr>
 </script>
 
@@ -298,7 +297,7 @@
                         @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "TableId", FnOnChange = "_me.onChangeItemTable(this)" })
                     </div>
                     <div class="col-md-4 x-right">
-                        <button type="button" class="btn btn-primary" onclick="_me.onItemModalOk()">@R["Sure"]</button>
+                        <button type="button" class="btn btn-primary" data-onclick="_me.onItemModalOk">@R["Sure"]</button>
                     </div>
                 </div>
 

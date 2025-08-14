@@ -2,12 +2,12 @@
 var _table = {
 
     //btn: fun button in tr
-    rowMoveUp: function (btn) {
-        var row = $(btn).closest('tr');
+    rowMoveUp: function () {
+        var row = _fun.getMe(true).closest('tr');
         row.insertBefore(row.prev());
     },
     rowMoveDown: function (btn) {
-        var row = $(btn).closest('tr');
+        var row = _fun.getMe(true).closest('tr');
         row.insertAfter(row.next());
     },
 

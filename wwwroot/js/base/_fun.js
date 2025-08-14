@@ -28,7 +28,12 @@ var _fun = {
     locale: 'zh-TW',    //now locale, _Layout.cshmlt will set
     maxFileSize: 50971520,  //upload file limit(50M)
     isRwd: false,
-    pageRows: 10,   //must be 10,20(not 25),50,100
+    pageRows: 10,   //must be 10,20(not 25),50,100    
+    userId: '',     //now userId
+    nowDom: '',     //now dom event element
+
+    //mid variables
+    //data: {},
 
     //datatables column define default values
     dtColDef: {
@@ -36,12 +41,6 @@ var _fun = {
         orderable: false,
         targets: '_all',
     },
-
-    //now userId
-    userId: '',
-
-    //mid variables
-    //data: {},
 
     //variables ??
     //isCheck: true,
@@ -56,6 +55,11 @@ var _fun = {
         _pjax.init('.xu-body');
         _tool.init();
         moment.locale(_fun.locale);
+
+        //註冊事件, 避免使用inline script for CSRF
+        var body = $('body');
+        _fun.setEvent(body, 'onclick');
+        //_fun.setEvent(body, 'onchange');
 
         //資安: 防止CSRF
         $.ajaxSetup({
@@ -73,11 +77,45 @@ var _fun = {
         });
     },
 
-    /*
-    isNull: function (obj) {
-        return (obj == null);
+    //get 目前event this
+    //param {bool} isObj: true(jQuery object)
+    getMe: function (isObj) {
+        return isObj ? $(_fun.nowDom) : _fun.nowDom;
     },
-    */
+
+    /**
+     * 註冊事件, 避免使用inline script for CSRF
+     * param {object} box 容器
+     * param {string} event name, default onclick
+     */ 
+    setEvent: function (box, eventName) {
+        //eventName ||= 'onclick'; //default event name
+        box.on("click", `[data-${eventName}]`, function () {
+            //set global
+            _fun.nowDom = this;
+
+            var me = $(this);
+            const fnPath = me.data(eventName);  // "_me.crudR.onAddRow"
+            var argsStr = me.data("args");
+            argsStr = (argsStr == null) ? "" : argsStr.toString();  //數字必須轉字串, 否則split error
+            const args = argsStr ? argsStr.split(",") : [];
+
+            //在解析 fnPath 時，不要直接拿到方法後執行，而是保留父物件
+            const parts = fnPath.split(".");
+            let obj = window;
+            for (let i = 0; i < parts.length - 1; i++) {
+                obj = obj[parts[i]];
+            }
+            const fnName = parts[parts.length - 1];
+            const fn = obj[fnName];
+
+            if (typeof fn === "function") {
+                fn.apply(obj, args); // <-- 用 obj 當 this
+            } else {
+                console.warn(`Function ${fnPath} not found`);
+            }
+        });
+    },
 
     /**
      * get default value if need

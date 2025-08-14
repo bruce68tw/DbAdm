@@ -27,7 +27,7 @@ function Page(config) {
 		var arg = this.pageArg;
 		var pager = this.pager;
 		if (arg.filterRows <= 0) {
-			pager.hide();
+			_obj.hide(pager);
 			_tool.msg(_BR.FindNone);
 			return;
 		}

@@ -4,6 +4,22 @@
     自定寬度pixel (bootstrap 5只有相對寬度)
 */
 
+@charset "utf-8";
+
+body {
+    /*padding-top: 50px;*/
+    padding-bottom: 20px;
+}
+
+.x-on {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+.x-off {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
 @media (max-width:768px) {
     .x-hide-rwd {
         display: none !important;
@@ -36,11 +52,35 @@
 }
 
 /*=== width start ===*/
+.x-w50 {
+    width: 50px !important;
+}
+.x-w60 {
+    width: 60px !important;
+}
+.x-w70 {
+    width: 70px !important;
+}
+.x-w80 {
+    width: 80px !important;
+}
+.x-w90 {
+    width: 90px !important;
+}
 .x-w100 {
     width: 100px !important;
 }
-.x-w150 {
-    width: 150px !important;
+.x-w120 {
+    width: 120px !important;
+}
+.x-w140 {
+    width: 140px !important;
+}
+.x-w160 {
+    width: 160px !important;
+}
+.x-w180 {
+    width: 180px !important;
 }
 .x-w200 {
     width: 200px !important;

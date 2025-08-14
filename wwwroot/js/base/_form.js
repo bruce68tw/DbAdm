@@ -127,7 +127,7 @@ var _form = {
             for (var i = 0; i < hides.length; i++) {
                 var form1 = hides[i];
                 form1.fadeOut(500, function () {
-                    form1.hide();
+                    _obj.hide(form1);
                 });
             }
         }
@@ -137,7 +137,7 @@ var _form = {
             for (var i = 0; i < shows.length; i++) {
                 var form2 = shows[i];
                 form2.fadeIn(500, function () {
-                    form2.show();
+                    _obj.show(form2);
                 });
             }
         }

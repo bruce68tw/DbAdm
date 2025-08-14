@@ -1,6 +1,6 @@
 ﻿@inject IHtmlLocalizer<DbAdm.R0> R
 
-<script type="text/javascript">
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -21,10 +21,10 @@
                 columnDefs: [
                     { targets: [4], render: function (data, type, full, meta) {
                         var html = '' +
-                            '<button type="button" class="btn btn-link" onclick="_me.onImport(\'{0}\')">{1}</button> | ' +
-                            '<button type="button" class="btn btn-link" onclick="_me.onGenWord(\'{0}\')">{2}</button> | ' +
-                            /*'<button type="button" class="btn btn-link" onclick="_me.onGenRelat(\'{0}\')">{3}</button> | ' +*/
-                            '<button type="button" class="btn btn-link" onclick="_me.onGenLogSql(\'{0}\')">{3}</button>';
+                            '<button type="button" class="btn btn-link" data-onclick="_me.onImport" data-args="{0}">{1}</button> | ' +
+                            '<button type="button" class="btn btn-link" data-onclick="_me.onGenWord" data-args="{0}">{2}</button> | ' +
+                            /*'<button type="button" class="btn btn-link" data-onclick="_me.onGenRelat(\'{0}\')">{3}</button> | ' +*/
+                            '<button type="button" class="btn btn-link" data-onclick="_me.onGenLogSql" data-args="{0}">{3}</button>';
                         return _str.format(html, full.Id, '@R["ImportDb"]', '@R["GenDocu"]', '@R["GenLogSql"]');
                     }},
                     { targets: [5], render: function (data, type, full, meta) {

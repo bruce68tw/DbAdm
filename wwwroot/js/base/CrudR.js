@@ -172,11 +172,11 @@ function CrudR(dtConfig, edits, updName) {
         fnOnUpdate, fnOnDelete, fnOnView) {
         var funs = '';
         if (hasUpdate)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-pen" title="{2}"></i></button>', ((fnOnUpdate == null) ? '_me.crudR.onUpdateA' : fnOnUpdate), key, _BR.TipUpdate);
+            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnUpdate == null ? '_me.crudR.onUpdateA' : fnOnUpdate)}" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
         if (hasDelete)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\',\'{2}\')"><i class="ico-delete" title="{3}"></i></button>', ((fnOnDelete == null) ? '_me.crudR.onDeleteA' : fnOnDelete), key, rowName, _BR.TipDelete);
+            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnDelete == null ? '_me.crudR.onDeleteA' : fnOnDelete)}" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
         if (hasView)
-            funs += _str.format('<button type="button" class="btn btn-link" onclick="{0}(\'{1}\')"><i class="ico-eye" title="{2}"></i></button>', ((fnOnView == null) ? '_me.crudR.onViewA' : fnOnView), key, _BR.TipView);
+            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnView == null ? '_me.crudR.onViewA' : fnOnView)}" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
         return funs;
     };
 
@@ -226,11 +226,37 @@ function CrudR(dtConfig, edits, updName) {
             newDiv.fadeToggle(500);
         }
         */
+        /*
         oldDiv.fadeOut(200, function () {
             newDiv.fadeIn(500);
             if (fnCallback)
                 fnCallback();
         });
+        */
+        oldDiv.addClass('x-off');
+        setTimeout(() => {
+            oldDiv.addClass('d-none').removeClass('x-off');
+
+            newDiv.removeClass('d-none').addClass('x-on');
+            setTimeout(() => {
+                newDiv.removeClass('x-on');
+                if (fnCallback) fnCallback();
+            }, 500);
+        }, 200);
+
+        /*
+        // fadeOut 用 d-none 隱藏
+        oldDiv.animate({ opacity: 0 }, 200, function () {
+            oldDiv.addClass('d-none').css('opacity', 1);  // 動畫結束後隱藏並還原透明度
+
+            // fadeIn 用 d-none 顯示
+            newDiv.removeClass('d-none').css('opacity', 0).animate({ opacity: 1 }, 500);
+
+            if (fnCallback)
+                fnCallback();
+        });
+        */
+
         /*
         newDiv.fadeIn(500, function () {
             //debugger;
@@ -261,7 +287,7 @@ function CrudR(dtConfig, edits, updName) {
      * back to list form
      */
     this.toReadMode = function () {
-        //this.divReadTool.show();
+        //_obj.show(this.divReadTool);
         _prog.resetPath();
         this.swap(true);
     };

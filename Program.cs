@@ -30,7 +30,8 @@ builder.SetBuilder(config.AllowOrigins);
 //1.config MVC
 //資安: controller 防止 CSRF
 var services = builder.Services;
-services.AddControllersWithViews(opts => { opts.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); })
+//services.AddControllersWithViews(opts => { opts.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); })
+services.AddControllersWithViews()
     //view Localization
     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     //use pascal for newtonSoft json
@@ -79,7 +80,7 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+//app.UseStaticFiles();
 app.UseRouting();
 app.UseCors(); //加上後會套用到全域
 app.UseAuthentication();    //認証
