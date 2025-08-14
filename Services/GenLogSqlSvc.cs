@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
-    public class GenLogSqlService
+    public class GenLogSqlSvc
     {
         /// <summary>
         /// generate trigger sql file

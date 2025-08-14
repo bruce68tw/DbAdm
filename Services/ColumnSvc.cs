@@ -1,10 +1,9 @@
 ﻿using Base.Services;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
-    public class ColumnService
+    public class ColumnSvc
     {
         public async Task<JArray?> GetRowsA(string tableId)
         {

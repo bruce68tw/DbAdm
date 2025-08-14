@@ -74,7 +74,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<string> GenCrud(string keys)
         {
-            var result = await new GenCrudService().RunA(keys);
+            var result = await new GenCrudSvc().RunA(keys);
             return result;
         }
 
@@ -82,7 +82,7 @@ namespace DbAdm.Controllers
         public async Task<ContentResult> GetColumns(string tableId)
         {
             //var tableId = _Datatable.GetFindValue(dt, "tableId");
-            var rows = await new ColumnService().GetRowsA(tableId);
+            var rows = await new ColumnSvc().GetRowsA(tableId);
             return Content(rows == null ? "" : rows.ToString(), ContentTypeEstr.Json);
         }
         #endregion

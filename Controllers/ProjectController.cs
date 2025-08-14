@@ -75,7 +75,7 @@ namespace DbAdm.Controllers
             //檢查權限: 用戶對此筆專案是否有異動權限
             var error = await _Auth.CheckAuthUserA(Ctrl, CrudEnum.Update, "Project", "Creator", id);
             return (error == "")
-                ? Json(await new ImportDbService().RunA(id))
+                ? Json(await new ImportDbSvc().RunA(id))
                 : Json(_Json.GetError(error));
         }
 
@@ -86,7 +86,7 @@ namespace DbAdm.Controllers
         /// <returns></returns>
         public async Task GenWord(string id)
         {
-            await new GenDocuService().RunA(id);
+            await new GenDocuSvc().RunA(id);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace DbAdm.Controllers
         public async Task GenLogSql(string id)
         {
             //raise exception for show default error.
-            if (!await new GenLogSqlService().RunA(id))
+            if (!await new GenLogSqlSvc().RunA(id))
                 _Fun.Except();
         }
 

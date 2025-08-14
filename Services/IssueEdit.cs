@@ -160,11 +160,11 @@ and SendTimes = 0
 
             //寄問卷 if need(有回報人)
             if (_Json.NotFidEmpty(row, "RptUser"))
-				await new IssueService().SendSurveyA(key);
+				await new IssueSvc().SendSurveyA(key);
 
             //通知交辦主管 if need
             if (_Json.NotFidEmpty(row, "FromMgr"))
-                await new IssueService().SendFromMgrA(key);
+                await new IssueSvc().SendFromMgrA(key);
         }
 
     } //class

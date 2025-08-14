@@ -8,7 +8,7 @@ using System.Web;
 namespace DbAdm.Services
 {
     //generate CRUD, use Handlebars.net
-    public class GenCrudService
+    public class GenCrudSvc
     {
         //constant
         const string CommaSep = ", ";       //comma seperator
@@ -39,7 +39,7 @@ namespace DbAdm.Services
         //private readonly int _crudFileLen;
 
         //constructor
-        public GenCrudService()
+        public GenCrudSvc()
         {
             //_crudFileLen = _crudFiles.Length;
         }

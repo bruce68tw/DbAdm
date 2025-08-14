@@ -4,7 +4,7 @@ using BaseApi.Services;
 
 namespace DbAdm.Services
 {
-    public class MyBaseUserService : IBaseUserSvc
+    public class MyBaseUserSvc : IBaseUserSvc
     {
         //get base user info
         public BaseUserDto GetData()

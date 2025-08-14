@@ -22,7 +22,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         override public async Task<JsonResult> Import(IFormFile file)
         {
-            var model = await new DataDictImportService().ImportA(file, this.DirUpload);
+            var model = await new DataDictImportSvc().ImportA(file, this.DirUpload);
             return Json(model);
         }
 

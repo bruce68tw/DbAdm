@@ -8,7 +8,7 @@ using Base.Services;
 namespace DbAdm.Services
 {
     //課程相關
-    public class LoginService
+    public class LoginSvc
     {
         /*
         //return error msg if any

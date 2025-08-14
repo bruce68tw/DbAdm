@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
 {
-    public class IssueService
+    public class IssueSvc
     {
         /// <summary>
         /// 寄送email for 填寫問卷

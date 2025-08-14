@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
-    public class GenDocuService
+    public class GenDocuSvc
     {
         /// <summary>
         /// generate database word document

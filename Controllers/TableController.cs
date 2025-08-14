@@ -89,7 +89,7 @@ namespace DbAdm.Controllers
         public async Task GenWord(string keys)
         {
             var tableIds = keys.Split(',');
-            await new GenDocuService().RunA("", tableIds);
+            await new GenDocuSvc().RunA("", tableIds);
         }
 
     }//class

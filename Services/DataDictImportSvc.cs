@@ -6,7 +6,7 @@ using DbAdm.Tables;
 
 namespace DbAdm.Services
 {
-    public class DataDictImportService
+    public class DataDictImportSvc
     {
         /// <summary>
         /// import excel file

@@ -6,7 +6,6 @@ using BaseApi.Services;
 using BaseWeb.Services;
 using DbAdm.Models;
 using DbAdm.Services;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -46,7 +45,7 @@ services.AddLocalization(opts => opts.ResourcesPath = "Resources");
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 //4.user info for base component
-services.AddSingleton<IBaseUserSvc, MyBaseUserService>();
+services.AddSingleton<IBaseUserSvc, MyBaseUserSvc>();
 
 //5.ado.net for mssql
 services.AddTransient<DbConnection, SqlConnection>();

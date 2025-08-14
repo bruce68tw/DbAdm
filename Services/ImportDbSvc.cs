@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
-    public class ImportDbService
+    public class ImportDbSvc
     {
         //consider different DB engine
         private string _sqlGetTables = "";

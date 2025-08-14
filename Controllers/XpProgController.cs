@@ -26,12 +26,12 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new XgProgR().GetPageA(Ctrl, dt));
+            return JsonToCnt(await new XgProgRead().GetPageA(Ctrl, dt));
         }
 
-        private XgProgE EditService()
+        private XgProgEdit EditService()
         {
-            return new XgProgE(Ctrl);
+            return new XgProgEdit(Ctrl);
         }
 
         [HttpPost]
