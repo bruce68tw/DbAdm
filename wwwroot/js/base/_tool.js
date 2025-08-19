@@ -9,6 +9,7 @@ var _tool = {
         _tool.xgAlert = $('.x-alert');
         _tool.xgArea = $('.x-area');
         _tool.xgImage = $('.x-image');
+        _tool.xgWork = $('.x-work');
     },
 
     /**

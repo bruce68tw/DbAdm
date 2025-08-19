@@ -36,7 +36,7 @@
     <div class="row">
         <!-- left columns -->
         <div class="col-md-5">
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols2, FnOnChange = "_me.onChangeProject()" })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols2, FnOnChange = "_me.onChangeProject" })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgCode"].Value, Fid = "ProgCode", MaxLen = 30, Required = true, Cols = cols2 })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R0["ProgName"].Value, Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols2 })
 
@@ -206,7 +206,7 @@
 
             <div class="row">
                 <div class="col-md-5">
-                    @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Table"].Value, Fid = "TableId", Required = true, Cols = cols2, FnOnChange = "_me.onChangeNowTable({{Index}})" })
+    @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R0["Table"].Value, Fid = "TableId", Required = true, Cols = cols2, FnOnChange = "_me.onChangeNowTable", EventArgs = "{{Index}}" })
                     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Pkey"].Value, Fid = "PkeyFid", MaxLen = 10, Required = true, Cols = cols2 })
                     @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Fkey"].Value, Fid = "FkeyFid", MaxLen = 10, Cols = cols2, LabelTip = R["TipFkey"].Value })
                     @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["AutoIdLen"].Value, Fid = "AutoIdLen", Rows = ViewBag.AutoIdLens, Cols = cols2 })
@@ -294,7 +294,7 @@
                     </div>
                     <div class="col-md-6">
                         @* 動態讀取下拉欄位資料來源 *@
-                        @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "TableId", FnOnChange = "_me.onChangeItemTable(this)" })
+                        @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "TableId", FnOnChange = "_me.onChangeItemTable" })
                     </div>
                     <div class="col-md-4 x-right">
                         <button type="button" class="btn btn-primary" data-onclick="_me.onItemModalOk">@R["Sure"]</button>

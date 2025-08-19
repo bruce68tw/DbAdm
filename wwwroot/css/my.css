@@ -373,6 +373,9 @@ body {
 .x-w140 {
     width: 140px !important;
 }
+.x-w150 {
+    width: 150px !important;
+}
 .x-w160 {
     width: 160px !important;
 }
@@ -824,7 +827,6 @@ span.error {
     background: #eee;
     cursor: auto;
 }
-
 
 /* datatable header delete all checkbox */
 .xi-check.x-delete-all {

@@ -460,8 +460,8 @@ namespace DbAdm.Services
                         HeadStr = "<th></th>",
                         //@await Component.InvokeAsync("XgDeleteRow", "_me.mCol.onDeleteRow(this)")
                         ViewStr = _Str.IsEmpty(table.SortFid)
-                            ? "<td width='60px' class='text-center'>@await Component.InvokeAsync(\"XgDeleteRow\", \"_me.m" + table.TableCode + ".onDeleteRow(this)\")</td>"
-                            : "<td width='100px' class='text-center'>@await Component.InvokeAsync(\"XgDeleteUpDown\", new { mName = \"_me.m" + table.TableCode + "\" })</td>",
+                            ? "<td class='text-center x-w60'>@await Component.InvokeAsync(\"XgDeleteRow\", \"_me.m" + table.TableCode + ".onDeleteRow\")</td>"
+                            : "<td class='text-center x-w100'>@await Component.InvokeAsync(\"XgDeleteUpDown\", new { mName = \"_me.m" + table.TableCode + "\" })</td>",
                     });
                     childTables.Add(table);
                 }

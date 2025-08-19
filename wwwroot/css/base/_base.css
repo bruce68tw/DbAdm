@@ -20,6 +20,27 @@ body {
     transition: opacity 0.2s ease;
 }
 
+/* 全畫面遮罩 */
+.x-work {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.05); /* 用稍淡的暗度，避免過黑 */
+    z-index: 1050; /* 高於 DataTables，但低於 modal */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 遮罩內訊息框 */
+.x-work-msg {
+    background: #fff;
+    padding: 1em 2em;
+    border-radius: 8px;
+    font-size: 1.1em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    color: #333;
+}
+
 @media (max-width:768px) {
     .x-hide-rwd {
         display: none !important;
@@ -75,6 +96,9 @@ body {
 }
 .x-w140 {
     width: 140px !important;
+}
+.x-w150 {
+    width: 150px !important;
 }
 .x-w160 {
     width: 160px !important;

@@ -15,4 +15,15 @@ var _helper = {
             attr += " " + extAttr;
         return _str.trim(attr);
     },
+
+    //參考 _Helper.cs GetEventAttr
+    GetEventAttr: function (fnName, fnValue, args) {
+        if (_str.isEmpty(fnValue))
+            return "";
+
+        var attr = `data-${fnName}='${fnValue}'`;
+        if (_str.notEmpty(args))
+            attr += ` data-args='${args}'`;
+        return attr;
+    },
 };

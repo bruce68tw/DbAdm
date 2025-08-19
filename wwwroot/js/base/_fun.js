@@ -58,8 +58,8 @@ var _fun = {
 
         //註冊事件, 避免使用inline script for CSRF
         var body = $('body');
-        _fun.setEvent(body, 'onclick');
-        //_fun.setEvent(body, 'onchange');
+        _fun.setEvent(body, 'click');   //eventName 不含 on
+        _fun.setEvent(body, 'change');
 
         //資安: 防止CSRF
         $.ajaxSetup({
@@ -86,16 +86,17 @@ var _fun = {
     /**
      * 註冊事件, 避免使用inline script for CSRF
      * param {object} box 容器
-     * param {string} event name, default onclick
+     * param {string} event name(不含on)
      */ 
     setEvent: function (box, eventName) {
         //eventName ||= 'onclick'; //default event name
-        box.on("click", `[data-${eventName}]`, function () {
+        var event2 = 'on' + eventName;
+        box.on(eventName, `[data-${event2}]`, function () {
             //set global
             _fun.nowDom = this;
 
             var me = $(this);
-            const fnPath = me.data(eventName);  // "_me.crudR.onAddRow"
+            const fnPath = me.data(event2);  // "_me.crudR.onAddRow"
             var argsStr = me.data("args");
             argsStr = (argsStr == null) ? "" : argsStr.toString();  //數字必須轉字串, 否則split error
             const args = argsStr ? argsStr.split(",") : [];
@@ -140,32 +141,13 @@ var _fun = {
         });
     },
 
+    //for CSP, 不使用 jQuery.blockUI(), 會有inline style 衝突!!
     block: function (obj) {
-        var data = {
-            message: '' +
-                '<table><tr><td class="x-h50">' +
-                '   <i class="spinner ico-spin"></i>' +
-                '   <span class="ms-1 align-middle">' + _BR.Working + '</span>' +
-                '</td></tr></table>',
-            css: {
-                padding: '0 30px',
-                borderWidth: '2px', //no dash here, use camel or add '
-                width: 'auto',
-                left: '42%',
-            },
-            overlayCSS: { opacity: 0.3 },
-        };
-        if (obj != null && obj.length > 0)
-            $(obj).block(data);
-        else
-            $.blockUI(data);
+        _obj.show(_tool.xgWork);
     },
 
     unBlock: function (obj) {
-        if (obj != null && obj.length > 0)
-            $(obj).unblock();
-        else
-            $.unblockUI();
+        _obj.hide(_tool.xgWork);
     },
 
     //#region remark code

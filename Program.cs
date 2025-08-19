@@ -6,6 +6,7 @@ using BaseApi.Services;
 using BaseWeb.Services;
 using DbAdm.Models;
 using DbAdm.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -29,8 +30,8 @@ builder.SetBuilder(config.AllowOrigins);
 //1.config MVC
 //¸ê¦w: controller ¨¾¤î CSRF
 var services = builder.Services;
-//services.AddControllersWithViews(opts => { opts.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); })
-services.AddControllersWithViews()
+services.AddControllersWithViews(opts => { opts.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); })
+//services.AddControllersWithViews()
     //view Localization
     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     //use pascal for newtonSoft json

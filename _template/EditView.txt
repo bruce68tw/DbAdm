@@ -22,7 +22,7 @@
 {{#ChildTables}}
 <div class='x-btns-box'>
 	<span class="x-span-label">{{TableName}}</span>
-	@await Component.InvokeAsync("XgAddRow", "_me.m{{TableCode}}.onAddRow()")
+	@await Component.InvokeAsync("XgAddRow", "_me.m{{TableCode}}.onAddRow")
 </div>
 <form id='eform{{TableCode}}' class='x-form border-0{{#if HalfWidth}} w-50{{/if}}'>
     <table class="table table-bordered x-table x-no-hline" cellspacing="0">

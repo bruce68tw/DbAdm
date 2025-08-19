@@ -3,7 +3,8 @@
  * create jQuery dataTables object
  * param selector {string} datatable selector
  * param url {string} backend action url
- * param dtConfig {json} datatables config
+ * param dtConfig {json} datatables config, 自定欄位如下：
+ *   showWork: {bool} default false, 查詢時是否顯示作業中...
  * param findJson {json} (optional) find condition when initial
  * param fnOk {function} (optional) callback after query ok, if empty then show successful msg
  * param tbarHtml {string} (optional) datatable toolbar html for extra button for 客製化 toolbar
@@ -16,7 +17,7 @@ function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml, fnAfterFin
     this.findJson = findJson;   //find condition
     this.recordsFiltered = -1;  //found count, -1 for recount, name map to DataTables
     this.defaultShowOk = true;  //whethor show find ok msg, default value
-
+    this.showWork = (dtConfig.showWork == null) ? false : dtConfig.showWork;
     this._fnAfterFind = fnAfterFind;
 
     //private
@@ -235,14 +236,21 @@ t
             };
         }
         */
-        
-        //before/after ajax call, show/hide waiting msg
-        dt.on('preXhr.dt', function (e, settings, data) { _fun.block(); });
-        dt.on('xhr.dt', function (e, settings, data) { _fun.unBlock(); });
-        this.dt = dt.DataTable(config);
 
-        //.DataTables() will return DataTable API instance, but .dataTable() only return jQuery object !!
-        //return { datatable: dt.DataTable(config), findJson: {} };
+        this.dt = dt.DataTable(config);
+        // 在 settings 物件掛自訂屬性
+        this.dt.settings()[0].showWork = this.showWork;
+
+        //before/after ajax call, show/hide waiting msg
+        dt.on('preXhr.dt', function (e, settings, data) {
+            if (settings.showWork)
+                _fun.block();
+        });
+
+        dt.on('xhr.dt', function (e, settings, data) {
+            if (settings.showWork)
+                _fun.unBlock();
+        });
     };
 
     //must put last

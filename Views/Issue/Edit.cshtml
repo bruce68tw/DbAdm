@@ -9,7 +9,7 @@
 		</div>
 	</div>
 	<div class="row">
-		@await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Required = true, Rows = ViewBag.Projects, InputAttr = "onchange=_me.onChgProject(true)", InRow = true })
+		@await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Required = true, Rows = ViewBag.Projects, FnOnChange = "_me.onChgProject", EventArgs = "1",  InRow = true })
 		@await Component.InvokeAsync("XiText", new XiTextDto { Title = "回報單位代號", Fid = "RptDeptCode", MaxLen = 10, Cols = "2,2", InRow = true })
 	</div>
 	<div class="row">
@@ -50,7 +50,7 @@
 
 <div class='x-btns-box'>
     <span class="x-span-label">上傳檔案</span>
-	@await Component.InvokeAsync("XgAddRow", "_me.mIssueFile.onAddRow()")
+	@await Component.InvokeAsync("XgAddRow", "_me.mIssueFile.onAddRow")
 </div>
 <form id='eformIssueFile' class='x-form border-0'>
     <table class="table x-table x-no-hline" cellspacing="0">
@@ -67,7 +67,7 @@
 
 <div class='x-btns-box'>
 	<span class="x-span-label">相關問題</span>
-	@await Component.InvokeAsync("XgAddRow", "_me.mIssueRelat.onAddRow()")
+	@await Component.InvokeAsync("XgAddRow", "_me.mIssueRelat.onAddRow")
 </div>
 <form id='eformIssueRelat' class='x-form border-0'>
 	<table class="table x-table x-no-hline" cellspacing="0">
@@ -90,7 +90,7 @@
 		@await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
 		<td>@await Component.InvokeAsync("XiFile", new XiFileDto { Fid = "FileName" })</td>
 		<td>@await Component.InvokeAsync("XiRead", new XiReadDto { Fid = "Created" })</td>
-		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mIssueFile.onDeleteRow(this)")</td>
+		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mIssueFile.onDeleteRow")</td>
 	</tr>
 </script>
 <script id="tplIssueRelat" type="text/template">
@@ -99,7 +99,7 @@
 		<td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "SourceIssue", Required = true })</td>
 		<td>@await Component.InvokeAsync("XiRead", new XiReadDto { Fid = "Title" })</td>
 		<td>@await Component.InvokeAsync("XiRead", new XiReadDto { Fid = "Created" })</td>
-		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mIssueRelat.onDeleteRow(this)")</td>
+		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mIssueRelat.onDeleteRow")</td>
 	</tr>
 </script>
 

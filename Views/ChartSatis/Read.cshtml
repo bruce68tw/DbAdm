@@ -72,7 +72,7 @@ new Chart(document.getElementById("chart"), {
     <div id="divRead">
         <form id='formRead' class='x-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, InputAttr = "onchange=_me.onChgProject(false)" })
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, FnOnChange = "_me.onChgProject" })
                 <span class='col-md-3 x-find-tbar'>
                     <button type='button' class='btn btn-primary' data-onclick='_me.onFind'>查詢<i class='ico-find'></i></button>
                 </span>

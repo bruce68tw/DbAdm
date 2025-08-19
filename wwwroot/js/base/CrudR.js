@@ -133,13 +133,15 @@ function CrudR(dtConfig, edits, updName) {
         //TODO: pending
         return '';
 
+        /*
         //debugger;
         var checked = _str.toBool(value);
         if (_str.isEmpty(fnOnClick)) {
-            fnOnClick = _str.format("_me.crudR.onSetStatusA(this,\'{0}\')", key);
+            fnOnClick = `_me.crudR.onSetStatusA(this,\'{0}\')`, key);
         }
         //??
         return _icheck.render2(0, '', 1, checked, '', true, '', "onclick=" + fnOnClick);
+        */
     };
 
     this.dtStatusName = function (value) {

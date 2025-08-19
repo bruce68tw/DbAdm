@@ -10,6 +10,7 @@
         init: function () {
             //datatable config
             var config = {
+                //showWork: true,     //顯示作業中
                 pageLength: 50,
                 columns: [
                     { data: 'ProjectName', orderable: true },
@@ -62,7 +63,7 @@
 
             if (isFunU || fun == _fun.FunV) {
                 //設定專案功能欄位
-                _me.onChgProject(true, json.ProgId);
+                _me.onChgProject(1, json.ProgId);
 
                 //設定追踪按鈕
                 _me.issueId = json.Id;
@@ -139,8 +140,9 @@
         },
 
         //on change projectId
+        //此時isEdit為字串, 因為 EventArgs 無法傳bool
         onChgProject: function (isEdit, progId) {
-            _iselect.onChangeParent('_ProjectId', 'ProgId', progId, 'GetPrjProgs', isEdit);
+            _iselect.onChangeParent('_ProjectId', 'ProgId', progId, 'GetPrjProgs', (isEdit == 1));
         },
 
         //onclick viewFile, called by XiFile component
@@ -251,7 +253,7 @@
     <div id="divRead">
 		<form id='formRead' class='x-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, InputAttr = "onchange=_me.onChgProject(false)" })
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, FnOnChange = "_me.onChgProject", EventArgs = "0" })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })

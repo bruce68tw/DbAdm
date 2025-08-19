@@ -29,7 +29,8 @@
       "wwwroot/js/lib/jquery.validate-1.19.3-bruce.js",
       "wwwroot/js/lib/jquery.pjax-2.0.1-bruce.js",
       "wwwroot/js/lib/jquery.blockUI-2.7.js",
-      "wwwroot/js/lib/modernizr-2.8.3.js",
+      //Modernizr 會引發 CSP, 先停用
+      //"wwwroot/js/lib/modernizr-2.8.3.js",
       "wwwroot/js/lib/moment-2.30.1.js",
       "wwwroot/js/lib/mustache-3.1.js",
       "wwwroot/js/lib/chart-4.4.1.js"

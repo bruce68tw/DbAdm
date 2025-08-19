@@ -99,7 +99,7 @@
 
         <div class='x-btns-box mt-1'>
             <span class="x-span-label">@R["RoleProg"]</span>
-            @await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow()")
+            @await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow")
         </div>
         <form id='eformRoleProg' class='x-form border-0'>
             <table class="table x-table x-no-hline" cellspacing="0">
@@ -150,6 +150,6 @@
             <td class="x-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunView" })</td>
         }
 
-        <td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mRoleProg.onDeleteRow(this)")</td>
+        <td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mRoleProg.onDeleteRow")</td>
     </tr>
 </script>
