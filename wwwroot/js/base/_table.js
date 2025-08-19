@@ -6,7 +6,7 @@ var _table = {
         var row = _fun.getMe(true).closest('tr');
         row.insertBefore(row.prev());
     },
-    rowMoveDown: function (btn) {
+    rowMoveDown: function () {
         var row = _fun.getMe(true).closest('tr');
         row.insertAfter(row.next());
     },
