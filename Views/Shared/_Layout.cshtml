@@ -101,7 +101,7 @@
     <!-- 3.load my site js(debug/production mode) !! -->
     <environment include="Production">
         <link rel="stylesheet" href="~/css/my@(min).css?v=@myVer" />
-        <script src="~/js/my@(min).js?v=@myVer" nonce="@_Fun.Nonce"></script>
+        <script nonce="@_Fun.Nonce" src="~/js/my@(min).js?v=@myVer"></script>
     </environment>
     <environment include="Development">
         <!-- tail ver will load failed !! -->
