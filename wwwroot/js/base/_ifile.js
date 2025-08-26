@@ -37,14 +37,16 @@ var _ifile = $.extend({}, _ibase, {
     },
 
     //=== event start ===
-    onOpenFile: function (btn) {
+    onOpenFile: function () {
+        var btn = _fun.getMe();
         var file = _ifile._elmToFile(btn);
         file.focus().trigger('click'); //focus first !!
     },
 
     //file: input element
-    onChangeFile: function (file) {
+    onChangeFile: function () {
         //case of empty file
+        var file = _fun.getMe();
         var obj = _ifile._elmToObj(file);
         var fileObj = $(file);
         var value = file.value; //full path
@@ -77,7 +79,8 @@ var _ifile = $.extend({}, _ibase, {
         _ifile.setO(obj, _file.getFileName(value));
     },
 
-    onDeleteFile: function (btn) {
+    onDeleteFile: function () {
+        var btn = _fun.getMe();
         _ifile.setO(_ifile._elmToObj(btn), '');
     },
     //=== event end ===
@@ -127,7 +130,7 @@ var _ifile = $.extend({}, _ibase, {
      */
     _boxGetLink: function (box) {
         //return box.find('a');
-        return box.find('button').last();
+        return box.find('a').last();
     },
     _boxGetFile: function (box) {
         return box.find(':file');

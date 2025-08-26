@@ -557,12 +557,13 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
     };
 
     /**
+     * onViewFile -> viewFile
      * onclick viewFile
      * param table {string} table name
      * param fid {string}
      * param elm {element} link element
      */
-    this.onViewFile = function (table, fid, elm) {
+    this.viewFile = function (table, fid, elm) {
         var key = this.getKey(this._elmToRowBox(elm));
         _me.crudE.viewFile(table, fid, elm, key);   //非初始階段可以讀取_me.crudE
     };

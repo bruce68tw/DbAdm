@@ -16,18 +16,18 @@ body, label {
 /* === 主畫面 === */
 .x-main-top {
     height: 45px;
-    color: #fff;
-    background: #87c5da;
+    color: #8E959C;
+    background: #D6DDE4;
     border-bottom: 1px solid #8099a5;
 }
 
     .x-main-top i {
         font-size: 20px;
-        color: #fff;
+        color: #8E959C;
     }
 
     .x-main-top a {
-        color: #fff;
+        color: #8E959C;
     }
 
 .x-main-down {
@@ -40,7 +40,7 @@ body, label {
 
 /* === left menu === */
 .x-leftmenu {
-    background: #52ABCB;
+    background: #394750;
     border-right: 1px solid #8099a5;
 }
 
@@ -55,12 +55,12 @@ body, label {
     }
 
     .x-leftmenu a, .x-leftmenu i {
-        color: #fff !important;
+        color: #A9B2B8 !important;
     }
 
         .x-leftmenu a:hover, .x-leftmenu a:hover i {
             color: #fff !important;
-            background: #086384;
+            background: #83CC53;
         }
 
 /* 子功能表 */
@@ -69,11 +69,11 @@ body, label {
 }
 
     .x-leftmenu-subbox a {
-        color: #fff;
+        color: #A9B2B8;
     }
 
         .x-leftmenu-subbox a:hover {
-            background: #086384 !important;
+            background: #83CC53 !important;
         }
 
 

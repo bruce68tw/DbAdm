@@ -149,12 +149,13 @@ function EditOne(kid, eformId) {
     };
 
     /**
+     * onViewFile -> viewFile
      * onclick viewFile
      * param table {string} table name
      * param fid {string}
      * param elm {element} link element
      */
-    this.onViewFile = function (table, fid, elm) {
+    this.viewFile = function (table, fid, elm) {
         var key = this.getKey();
         _me.crudE.viewFile(table, fid, elm, key);
     };

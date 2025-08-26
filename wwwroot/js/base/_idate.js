@@ -76,14 +76,16 @@ var _idate = $.extend({}, _ibase, {
     },
 
     //show/hide datepicker
-    onToggle: function (btn) {
+    onToggle: function () {
+        var btn = _fun.getMe();
         //$(btn).parent().parent().find('input').trigger('focus');
         _idate._elmToBox(btn).datepicker('show');
     },
 
     //reset value
-    onReset: function (btn) {
+    onReset: function () {
         //check input status first
+        var btn = _fun.getMe();
         var box = _idate._elmToBox(btn);
         var input = _idate._boxGetInput(box);
         if (_idate.getEditO(input)) {

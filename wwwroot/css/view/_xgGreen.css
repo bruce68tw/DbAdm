@@ -17,7 +17,7 @@ body, label {
 .x-main-top {
     height: 45px;
     color: #fff;
-    background: #87c5da;
+    background: #CAE6DF;
     border-bottom: 1px solid #8099a5;
 }
 
@@ -40,7 +40,7 @@ body, label {
 
 /* === left menu === */
 .x-leftmenu {
-    background: #52ABCB;
+    background: #BDD9D3;
     border-right: 1px solid #8099a5;
 }
 
@@ -79,11 +79,11 @@ body, label {
 
 /* === table === */
 .x-table th {
-    background: #d6e9f9 !important;
+    background: #E0E0E0 !important;
 }
 
 .x-table tr:hover {
-    background: #e5ecf1 !important;
+    background: #FAFAFA !important;
 }
 
 /* === modal === */

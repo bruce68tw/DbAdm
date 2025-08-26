@@ -142,13 +142,13 @@
         //on change projectId
         //此時isEdit為字串, 因為 EventArgs 無法傳bool
         onChgProject: function (isEdit, progId) {
-            _iselect.onChangeParent('_ProjectId', 'ProgId', progId, 'GetPrjProgs', (isEdit == 1));
+            _iselect.changeParent('_ProjectId', 'ProgId', progId, 'GetPrjProgs', (isEdit == 1));
         },
 
         //onclick viewFile, called by XiFile component
-        onViewFile: function (table, fid, elm) {
+        onViewFile: function (table, fid) {
             if (fid == 'FileName')
-                _me.mIssueFile.onViewFile(table, fid, elm);
+                _me.mIssueFile.viewFile(table, fid, _fun.getMe());
         },
 
         onMyToday: function () {

@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?fjpwrw');
-  src:  url('fonts/icomoon.eot?fjpwrw#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?fjpwrw') format('truetype'),
-    url('fonts/icomoon.woff?fjpwrw') format('woff'),
-    url('fonts/icomoon.svg?fjpwrw#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?2s9l4u');
+  src:  url('fonts/icomoon.eot?2s9l4u#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?2s9l4u') format('truetype'),
+    url('fonts/icomoon.woff?2s9l4u') format('woff'),
+    url('fonts/icomoon.svg?2s9l4u#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -117,6 +117,9 @@
 }
 .ico-exit:before {
   content: "\ea14";
+}
+.ico-menu:before {
+  content: "\f0c9";
 }
 
 
@@ -304,8 +307,9 @@ textarea.form-control {
 @charset "utf-8";
 
 body {
-    /*padding-top: 50px;*/
+    /*padding-top: 50px;
     padding-bottom: 20px;
+    */
 }
 
 .x-on {
@@ -315,6 +319,27 @@ body {
 .x-off {
     opacity: 0;
     transition: opacity 0.2s ease;
+}
+
+/* 全畫面遮罩 */
+.x-work {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.05); /* 用稍淡的暗度，避免過黑 */
+    z-index: 1050; /* 高於 DataTables，但低於 modal */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 遮罩內訊息框 */
+.x-work-msg {
+    background: #fff;
+    padding: 1em 2em;
+    border-radius: 8px;
+    font-size: 1.1em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    color: #333;
 }
 
 @media (max-width:768px) {
@@ -909,6 +934,7 @@ input[type=number] {
 .x-lineform .xi-read {
     border: none;
     padding-left: 0;
+    background-color: transparent !important; /* 沒有背景色 */
 }
 
 /* 在輸入欄位(右邊)的label*/
@@ -916,6 +942,7 @@ input[type=number] {
     padding-left: 0;
     border: none;
     margin: 0;
+    background-color: transparent !important; /* 沒有背景色 */
 }
 
 /* edit field style */
@@ -951,24 +978,60 @@ input[type=number] {
     text-align: left;
 }
 
+/* 主畫面 */
+
+.x-main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.x-main-top {
+    padding: 2px 15px !important;
+}
+    .x-main-top .navbar-brand {
+        cursor: default !important; /* 不會出現小手 */
+    }
+    .x-main-top a {
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .x-main-top li {
+        margin: auto 5px;
+    }
+
+.x-main-down {
+    display: flex;
+}
+
+.x-main-right {
+    flex-grow: 1;
+    transition: 0.5s;
+    border-left: 1px solid #CCC;
+    overflow-y: auto;
+}
+
+
 /* 左側功能表 */
 .x-leftmenu {
     margin-left: 0;
     padding: 0;
-    /*min-width: 250px;
-    max-width: 300px;*/
     width: 250px;
     height: 100%;
-    /*margin: 0;*/
     transition: 0.5s;
     z-index: 1000;
+    overflow-y: auto;
+    display: flex;
+    /* flex-shrink: 0;  不因右側內容撐開而縮小 */
+    flex-direction: column; /* 垂直排列選單項目 */
 }
 
-.x-leftmenu.x-close {
-    transition: 0.5s;
-    margin-left: -250px;
-}
-/*
+    .x-leftmenu.x-close {
+        transition: 0.5s;
+        margin-left: -250px;
+    }
+    /*
 .x-leftmenu.x-close span, 
 .x-leftmenu.x-close .x-arrow {
     display: none;
@@ -990,20 +1053,20 @@ input[type=number] {
         text-decoration: none !important;
     }
 
-    .x-leftmenu a:hover {
-        cursor: pointer;
-        text-decoration: none; /* remove underline */
+        .x-leftmenu a:hover {
+            cursor: pointer;
+            text-decoration: none; /* remove underline */
+        }
+
+            .x-leftmenu a:hover i {
+            }
+
+    /* icon */
+    .x-leftmenu i {
+        margin-right: 10px;
+        padding-left: 12px;
+        width: 25px; /* 讓文字對齊 */
     }
-
-.x-leftmenu a:hover i {
-}
-
-/* icon */
-.x-leftmenu i {
-    margin-right: 10px;
-    padding-left: 12px;
-    width: 25px;    /* 讓文字對齊 */
-}
 
     .x-leftmenu .x-arrow:before {
         float: right;
@@ -1011,8 +1074,9 @@ input[type=number] {
         font-family: 'icomoon';
         content: "\f107"; /* down arrow */
     }
+
     .x-leftmenu .x-arrow.x-open:before {
-        content: "\f106";   /* up arrow */
+        content: "\f106"; /* up arrow */
     }
 
 /* 子功能表(第2層) 的外框 */
@@ -1038,6 +1102,10 @@ input[type=number] {
         color: #fff;*/
         padding-left: 22px;
     }
+
+.x-leftmenu-fill {
+    flex-grow: 1; /* 自動撐滿剩餘空間 */
+}
 /* 彈出式視窗 */
 /*
 .x-modal .modal-dialog {
@@ -1178,6 +1246,10 @@ input[type=number] {
             border-width: 0 1px 0 0 !important;
         }
 
+    .x-table th .xi-check > span {
+        top: 0 !important;
+        left: 0 !important;
+    }
     .x-table .xi-check > span {
         top: -15px !important;
         left: 8px !important;
@@ -1398,7 +1470,7 @@ body.x-show-wait .x-wait {
 
 /* color & font size only */
 
-/* ==== html, body ==== */
+/* === html, body === */
 html, body {
     font-size: 16px !important; /* global */
     font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
@@ -1411,65 +1483,80 @@ body, label {
     /*background: #1A202E;*/
 }
 
-/* ==== left menu ==== */
-.x-leftmenu {
-    background: #E0E0E0;
-    border-right: 1px solid #C1C1C1;
+/* === 主畫面 === */
+.x-main-top {
+    height: 45px;
+    color: #8E959C;
+    background: #D6DDE4;
+    border-bottom: 1px solid #8099a5;
 }
 
-/* li(item),a(文字),i(icon) */
-.x-leftmenu li {
-    /*
-    color: #fff;
-    border-bottom: solid 1px #E5E5E5;
-    */
+    .x-main-top i {
+        font-size: 20px;
+        color: #8E959C;
+    }
+
+    .x-main-top a {
+        color: #8E959C;
+    }
+
+.x-main-down {
+    height: calc(100vh - 45px); /* 減去xu-top高度, 右邊捲軸才能與左邊分開!! */
 }
+
+.x-main-right {
+    background: #f1f1f1;
+}
+
+/* === left menu === */
+.x-leftmenu {
+    background: #394750;
+    border-right: 1px solid #8099a5;
+}
+
+    /* 分隔線 */
+    .x-leftmenu li {
+        border-bottom: solid 1px #8099a5;
+    }
 
     /* 文字 */
     .x-leftmenu a {
         font-size: 15px;
-        color: #555 !important;
     }
 
+    .x-leftmenu a, .x-leftmenu i {
+        color: #A9B2B8 !important;
+    }
 
-.x-leftmenu a, .x-leftmenu i {
-    color: #222222 !important;
-}
-
-.x-leftmenu a:hover, .x-leftmenu a:hover i {
-    color: #222222 !important;
-    background: #CFCFCF;
-}
-/*
-.x-leftmenu a:hover i {
-    color: #222222;
-    background: #EEEEEE;
-}
-*/
+        .x-leftmenu a:hover, .x-leftmenu a:hover i {
+            color: #fff !important;
+            background: #83CC53;
+        }
 
 /* 子功能表 */
 .x-leftmenu-subbox {
-    background: #FAFAFA;
+    background: #4695B2;
 }
 
     .x-leftmenu-subbox a {
-        color: #222222;
+        color: #A9B2B8;
     }
 
-    .x-leftmenu-subbox a:hover {
-        background: #EEEEEE !important;
-    }
+        .x-leftmenu-subbox a:hover {
+            background: #83CC53 !important;
+        }
 
+
+/* === table === */
 .x-table th {
-    background: #E0E0E0 !important;
+    background: #d6e9f9 !important;
 }
 
 .x-table tr:hover {
-    background: #FAFAFA !important;
+    background: #e5ecf1 !important;
 }
 
-
-/* ==== modal ==== */
+/* === modal === */
 .x-modal .modal-header {
     border-bottom: none;
     background: #FAFAFA;
@@ -1477,7 +1564,6 @@ body, label {
 .x-modal .modal-body, .x-modal .modal-footer {
     /*background: #404040;*/
 }
-
 
 /* === checkbox/radio === */
 /* checkbox, span is square/round checked sign */

@@ -10,7 +10,6 @@
     var myVer = _Xp.MyVer;
     var min = _Fun.IsDev ? "" : ".min";   //min js
     var locale = _Locale.GetLocale();
-    //_Locale.SetCulture(locale);
 
     //功能表
     var isNeedLogin = _Fun.IsNeedLogin();
@@ -69,16 +68,10 @@
 }
 
 <style nonce="@_Fun.Nonce">
-	.xu-body {
-		display: inline-block;
-		width: 100%;
-		min-height: 600px;
-		transition: 0.5s;
-		border-left: 1px solid #CCC;
-	}
-
-    .xu-work-area{
-        height: calc(100vh - 45px);
+    .xu-logo {
+        height: 36px;
+        width: auto;
+        padding-right: 6px;
     }
 </style>
 
@@ -107,7 +100,7 @@
         <!-- tail ver will load failed !! -->
         <link rel="stylesheet" asp-href-include="~/css/icomoon.css" />
         <link rel="stylesheet" asp-href-include="~/css/base/*.css" />
-        <link rel="stylesheet" asp-href-include="~/css/view/_xgBlue.css" />
+        <link rel="stylesheet" asp-href-include="~/css/view/_xgGrey.css" />
         <script nonce="@_Fun.Nonce" asp-src-include="~/js/base/*.js"></script>
         <script nonce="@_Fun.Nonce" asp-src-include="~/js/view/_*.js"></script>
     </environment>
@@ -128,17 +121,48 @@
 </head>
 
 <!-- 6.show view -->
-<body>
+<body class="x-main">
     <!-- Top -->
-    <partial name="_Top.cshtml" />
+    <nav class="navbar navbar-expand navbar-dark x-main-top">
+        <a class="sidebar-toggle me-3 cursor-pointer" data-onclick="_leftmenu.onToggleMenu">
+            <i class="ico-menu"></i>
+        </a>
 
-    @* set height=100% in parent , so that menu be fine for ie & firefox !! *@
-    <div class="d-flex align-items-stretch xu-work-area">
+        <!-- Logo -->
+        <img src="/image/logo.png" class="xu-logo">        
+
+        <a class="navbar-brand" href="#">@_Fun.Config.SystemName</a>
+        <div class="navbar-collapse collapse justify-content-end">
+            <ul class="navbar-nav ml-auto">
+                @*
+                <li>
+                @Html.XiSelect("_Locale", _Session.Locale, locales, prop: new PropSelectDto() { AddEmptyRow = false, FnOnChange = "_xp.onChangeLocale" })
+                </li>
+                *@
+
+                <li>
+                    <a class="nav-link" href="@Url.Action("Index", "Home")">
+                        <i class="ico-home"></i>
+                    </a>
+                </li>
+                <li>
+                    @_Fun.GetBaseUser().UserName
+                </li>
+                <li>
+                    <a class="nav-link" title="Logout" href="@Url.Action("Logout", "Home")">
+                        <i class="ico-exit"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="x-main-down">
         <!-- left menu -->
         @await Component.InvokeAsync("XgLeftMenu", new { rows = menus })
 
         <!-- work area -->
-        <div class="xu-body">
+        <div class="x-main-right">
             @RenderBody()
         </div>
     </div>

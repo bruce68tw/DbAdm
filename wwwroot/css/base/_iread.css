@@ -4,6 +4,7 @@
 .x-lineform .xi-read {
     border: none;
     padding-left: 0;
+    background-color: transparent !important; /* 沒有背景色 */
 }
 
 /* 在輸入欄位(右邊)的label*/
@@ -11,6 +12,7 @@
     padding-left: 0;
     border: none;
     margin: 0;
+    background-color: transparent !important; /* 沒有背景色 */
 }
 
 /* edit field style */

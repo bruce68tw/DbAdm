@@ -36,4 +36,22 @@ var _leftmenu = {
     onToggleMenu: function () {
         _leftmenu.menu.toggleClass('x-close');
     },
+
+    getMenuPath: function (me) {
+        let menuName = me.text().trim();
+
+        // 找父層文字
+        let parents = [];
+        me.parents('li').each(function () {
+            let parentLink = $(this).children('.x-toggle');
+            if (parentLink.length) {
+                parents.unshift(parentLink.text().trim()); // 放到前面，形成正確順序
+            }
+        });
+
+        // 組合麵包屑
+        let fullPath = parents.concat(menuName).join(' > ');
+        return fullPath;
+    },
+
 };

@@ -17,7 +17,7 @@ var _helper = {
     },
 
     //參考 _Helper.cs GetEventAttr
-    GetEventAttr: function (fnName, fnValue, args) {
+    getEventAttr: function (fnName, fnValue, args) {
         if (_str.isEmpty(fnValue))
             return "";
 

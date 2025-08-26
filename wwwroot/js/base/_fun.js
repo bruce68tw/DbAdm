@@ -33,7 +33,7 @@ var _fun = {
     nowDom: '',     //now dom event element
 
     //mid variables
-    //data: {},
+    data: {},
 
     //datatables column define default values
     dtColDef: {
@@ -42,8 +42,11 @@ var _fun = {
         targets: '_all',
     },
 
-    //variables ??
-    //isCheck: true,
+    /**
+     * initial
+     * param {string} locale
+     * param {string} pjaxArea Filter
+     */
     init: function (locale) {
         //set jwt token
         //_fun.jwtToken = localStorage.getItem('_jwtToken') || '';
@@ -52,7 +55,7 @@ var _fun = {
         _fun.locale = locale;
         //initial
         _leftmenu.init();
-        _pjax.init('.xu-body');
+        _pjax.init('.x-main-right');
         _tool.init();
         moment.locale(_fun.locale);
 

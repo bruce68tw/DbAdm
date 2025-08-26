@@ -10,6 +10,12 @@ var _pjax = {
         var docu = $(document);
         docu.pjax('[data-pjax]', boxFt, { type: 'POST' });
 
+        //點擊功能項目時記錄功能名稱
+        docu.on('click', '.x-leftmenu [data-pjax]', function () {
+            var menuPath = _leftmenu.getMenuPath($(this));
+            _prog.storeProgPath(menuPath);
+        });
+
 		/*
         //PJAX請求前
         docu.on('pjax:beforeSend', function (event, xhr, opts) {
@@ -36,21 +42,6 @@ var _pjax = {
             return false;
         });
 
-        /*
-        $(document).on('ready pjax:success', box, function () {
-            debugger;
-        });
-        $(document).on('ready pjax:end', box, function () {
-            debugger;
-        });
-        $(document).on('ready pjax:complete', box, function () {
-            debugger;
-        });
-        
-        $(document).ready(function () {
-            debugger;
-        });
-        */
         //選擇性 binding event
         //xd-bind 只有用在這裡
         //debugger;

@@ -1,0 +1,128 @@
+﻿/* 主畫面 */
+
+.x-main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.x-main-top {
+    padding: 2px 15px !important;
+}
+    .x-main-top .navbar-brand {
+        cursor: default !important; /* 不會出現小手 */
+    }
+    .x-main-top a {
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .x-main-top li {
+        margin: auto 5px;
+    }
+
+.x-main-down {
+    display: flex;
+}
+
+.x-main-right {
+    flex-grow: 1;
+    transition: 0.5s;
+    border-left: 1px solid #CCC;
+    overflow-y: auto;
+}
+
+
+/* 左側功能表 */
+.x-leftmenu {
+    margin-left: 0;
+    padding: 0;
+    width: 250px;
+    height: 100%;
+    transition: 0.5s;
+    z-index: 1000;
+    overflow-y: auto;
+    display: flex;
+    /* flex-shrink: 0;  不因右側內容撐開而縮小 */
+    flex-direction: column; /* 垂直排列選單項目 */
+}
+
+    .x-leftmenu.x-close {
+        transition: 0.5s;
+        margin-left: -250px;
+    }
+    /*
+.x-leftmenu.x-close span, 
+.x-leftmenu.x-close .x-arrow {
+    display: none;
+    transition: 0.5s;
+}
+*/
+
+    /* menu item */
+    .x-leftmenu li {
+        /*text-indent: 0;*/
+        line-height: 42px;
+        border-bottom: solid 1px #E5E5E5;
+        /*color: #fff;*/
+    }
+
+    /* 文字 */
+    .x-leftmenu a {
+        display: block; /* 選取的有效寬度為100% */
+        text-decoration: none !important;
+    }
+
+        .x-leftmenu a:hover {
+            cursor: pointer;
+            text-decoration: none; /* remove underline */
+        }
+
+            .x-leftmenu a:hover i {
+            }
+
+    /* icon */
+    .x-leftmenu i {
+        margin-right: 10px;
+        padding-left: 12px;
+        width: 25px; /* 讓文字對齊 */
+    }
+
+    .x-leftmenu .x-arrow:before {
+        float: right;
+        margin-right: 20px;
+        font-family: 'icomoon';
+        content: "\f107"; /* down arrow */
+    }
+
+    .x-leftmenu .x-arrow.x-open:before {
+        content: "\f106"; /* up arrow */
+    }
+
+/* 子功能表(第2層) 的外框 */
+.x-leftmenu-subbox {
+    list-style: none;
+    /*
+    -moz-padding-start: 0;
+    -webkit-padding-start: 0;
+    -khtml-padding-start: 0;
+    -o-padding-start: 0;
+    padding-start: 0;
+    */
+    padding: 0;
+}
+
+    .x-leftmenu-subbox li {
+        border: none;
+    }
+
+    /* sub menu text */
+    .x-leftmenu-subbox a {
+        /*font-size: 15px;
+        color: #fff;*/
+        padding-left: 22px;
+    }
+
+.x-leftmenu-fill {
+    flex-grow: 1; /* 自動撐滿剩餘空間 */
+}
