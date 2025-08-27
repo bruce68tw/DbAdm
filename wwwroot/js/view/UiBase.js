@@ -2,8 +2,9 @@
 //靜態類別 for UiBase.js only
 var _uiType = {
 	Col: 'C',
-	Table: 'T',
+	Box: 'B',
 	Group: 'G',
+	Table: 'T',
 };
 
 /**
@@ -14,26 +15,20 @@ var _uiType = {
  * void fnAfterMoveLineEnd(oldNode, newNode): after drop line end point
  */
 //控制 UiItem、FlowLine for 外部程式
-function UiBase(boxId) {	
+/**
+ 屬性:
+ //boxElm: box element
+ //svg: svg
+ items: items
+ lines: lines
+ fromNode: drap start node
+ onMoveNode: event onMoveNode(node)
+*/
+class UiBase {
 
-	/**
-	 屬性:
-	 //boxElm: box element
-	 //svg: svg
-	 items: items
-	 lines: lines
-	 fromNode: drap start node
-	 onMoveNode: event onMoveNode(node)
-	*/
+	constructor(boxId) {
+		this.boxId = boxId;
 
-	//是否可編輯
-	this.isEdit = false;
-
-	//新node/line Id, 自動累加
-	this.newItemId = 0;		//for node type
-	//this.newLineId = 0;
-
-	this._init = function (boxId) {
 		let boxDom = document.getElementById(boxId);
 		//this.svg = SVG().addTo(boxDom).size('100%', '100%');
 
@@ -41,7 +36,27 @@ function UiBase(boxId) {
 		this.fnAfterAddLine = null;
 		this.fnShowMenu = null;
 		//this._reset();
-	};
+	}
+
+
+	//是否可編輯
+	isEdit = false;
+
+	//新node/line Id, 自動累加
+	newItemId = 0;		//for node type
+	//this.newLineId = 0;
+
+	/*
+	_init(boxId) {
+		let boxDom = document.getElementById(boxId);
+		//this.svg = SVG().addTo(boxDom).size('100%', '100%');
+
+		this.fnMoveItem = null;
+		this.fnAfterAddLine = null;
+		this.fnShowMenu = null;
+		//this._reset();
+	}
+	*/
 
 	/*
 	this.newItemId = function () {
@@ -51,10 +66,10 @@ function UiBase(boxId) {
 	*/
 
 	//get new node id
-	this.getNewItemId = function () {
+	getNewItemId() {
 		this.newItemId++;
 		return this.newItemId;
-	};
+	}
 
 	/*
 	//由元件內部發動, 所以必須提供此功能
@@ -64,12 +79,12 @@ function UiBase(boxId) {
 	};
 	*/
 
-	this.setEdit = function (status) {
+	setEdit(status) {
 		this.isEdit = status;
-	};
+	}
 
 	//清除全部UI元件
-	this.reset = function () {
+	reset() {
 		this.items = [];
 		//this.lines = [];
 		this.fromNode = null;
@@ -80,14 +95,14 @@ function UiBase(boxId) {
 			node.remove();
 		});
 		*/
-	};
+	}
 
 	//載入items & lines
-	this.loadItems = function (rows) {
+	loadItems(rows) {
 		this.reset();
 		for (var i = 0; i < rows.length; i++)
 			this.addItem(rows[i]);
-	};
+	}
 
 	/*
 	this.loadLines = function (rows) {
@@ -98,14 +113,25 @@ function UiBase(boxId) {
 	};
 	*/
 
-	this.addItem = function (json) {
+	addItem(json) {
 		//this.nodeCount++;
 		//if (json.id == null)
 		//	json.id = (this.items.length + 1) * (-1);
-		let item = new UiItem(this, json);
+		var itemType = json.ItemType;
+		let item = (itemType == _uiType.Col) ? new UiCol(this, json) :
+			(itemType == _uiType.Box) ? new UiBox(this, json) :
+			(itemType == _uiType.Group) ? new UiGroup(this, json) :
+			(itemType == _uiType.Table) ? new UiTable(this, json) :
+			null;
+
+		if (item == null) {
+			console.log(`json.ItemType is wrong.(${json.ItemType})`);
+			return null;
+		}
+
 		this.items.push(item);
 		return item;
-	};
+	}
 
 	/*
 	this.addLine = function (json) {
@@ -113,10 +139,12 @@ function UiBase(boxId) {
 	};
 	*/
 
-	this.deleteItem = function (item) {
+	deleteItem(item) {
 		let id = item.getId();
 		//this.svg.findOne(`g[data-id="${id}"]`).remove();
-	};
+
+		//todo remove items[] element
+	}
 
 	/*
 	this.deleteLine = function (line) {
@@ -141,10 +169,10 @@ function UiBase(boxId) {
 	};
 	*/
 
-	this.idToItem = function (id) {
+	idToItem(id) {
 		//elm.node 指向dom
 		return this.items.find(a => a.getId() == id);
-	};
+	}
 
 	/*
 	//check has startNode or not
@@ -155,7 +183,7 @@ function UiBase(boxId) {
 	*/
 
 	//call last
-	this._init(boxId);
+	//this._init(boxId);
 
 } //class FlowBase
 
@@ -175,26 +203,31 @@ function UiBase(boxId) {
   param uiBase {object} FlowBase
   param json {json} 流程節點資料
  */ 
-function UiItem(uiBase, json) {
-	//drag evnet
-	this.DragStart = 'dragstart';
-	this.DragMove = 'dragmove';
-	this.DragEnd = 'dragend';
+class UiItem {
 
-	//start/end node radius
-	//this.MinRadius = 20;
+	constructor(uiBase, json) {
+		//drag evnet
+		this.DragStart = 'dragstart';
+		this.DragMove = 'dragmove';
+		this.DragEnd = 'dragend';
 
-	//normal node size
-	this.MinWidth = 80;
-	this.MinHeight = 42;
-	this.LineHeight = 18;	//文字行高
-	this.PadTop = 8;
-	this.PadLeft = 15;
+		//start/end node radius
+		//this.MinRadius = 20;
 
-	this.PinWidth = 12;
-	this.PinGap = 3;
+		//normal node size
+		this.MinWidth = 80;
+		this.MinHeight = 42;
+		this.LineHeight = 18;	//文字行高
+		this.PadTop = 8;
+		this.PadLeft = 15;
 
-	this._init = function (uiBase, json) {
+		this.PinWidth = 12;
+		this.PinGap = 3;
+
+		this._init(uiBase, json);
+	}
+
+	_init(uiBase, json) {
 		this.self = this;
 		this.uiBase = uiBase;
 		//this.svg = uiBase.svg;
@@ -280,7 +313,7 @@ function UiItem(uiBase, json) {
 		}
 
 		this._setEvent();
-	};
+	}
 
 	/*
 	this.getLines = function () {
@@ -293,27 +326,28 @@ function UiItem(uiBase, json) {
 	};
 	*/
 
-	this.getItemType = function () {
+	getItemType() {
 		return this.json.ItemType;
-	};
+	}
 
-	this.getPos = function () {
+	/*
+	getPos() {
 		let elm = this.elm;
 		return { x: elm.x(), y: elm.y() };
-	};
+	}
 
-	this.getSize = function () {
+	getSize() {
 		let elm = this.boxElm;
 		return { w: elm.width(), h: elm.height() };
-	};
+	}
 
-	this.getCenter = function () {
+	getCenter() {
 		let elm = this.boxElm;
 		return { x: elm.cx(), y: elm.cy() };
-	};
+	}
 
 	//set pin position
-	this._setPinPos = function () {
+	_setPinPos() {
 		//連接點 右移3px
 		if (!this.pinElm) return;
 
@@ -321,8 +355,9 @@ function UiItem(uiBase, json) {
 		let center = this.getCenter();
 		this.pinElm.move(center.x + bbox.width / 2 + 3, center.y - 5);
 	}
+	*/
 
-	this._setEvent = function () {
+	_setEvent() {
 		//enable right click menu
 		let me = this;	//UiItem
 		let uiBase = this.uiBase;
@@ -350,8 +385,8 @@ function UiItem(uiBase, json) {
 		});
 
 		//set connector draggable
-		this._setEventPin();
-	};
+		//this._setEventPin();
+	}
 
 	/*
 	this._drawLines = function () {
@@ -359,9 +394,10 @@ function UiItem(uiBase, json) {
 	};
 	*/
 
+	/*
 	//set event of node connector
 	//pin表示起始節點內的連接點
-	this._setEventPin = function () {
+	_setEventPin() {
 		if (!this.pinElm)
 			return;
 
@@ -375,58 +411,11 @@ function UiItem(uiBase, json) {
 		this.pinElm.draggable().on(this.DragStart, (event) => {
 			if (!uiBase.isEdit) return;
 
-			/*
-			// 初始化線條
-			let { x, y } = me.pinElm.rbox(me.svg); // 使用SVG畫布的座標系
-			startX = x;
-			startY = y;
-			fromDom = me.self.elm.node;	//this.self指向這個UiItem
-
-			tempLine = me.svg.line(startX, startY, startX, startY)
-				.addClass('xf-line off');
-
-			uiBase.drawLineStart(me.self);
-			*/
-
 		}).on(this.DragMove, (event) => {
 			if (!uiBase.isEdit) return;
 
 			//阻止 connector 移動
 			event.preventDefault();
-
-			/*
-			// 獲取拖拽的目標座標（相對於 SVG 畫布）
-			let { x, y } = event.detail.box;
-			let endX = x;
-			let endY = y;
-
-			// 更新線條的終點
-			tempLine.plot(startX, startY, endX, endY);
-
-			// 檢查座標值是否有效
-			if (isFinite(endX) && isFinite(endY)) {
-				// 將 SVG 座標轉換為檢視座標
-				let svgRect = me.svg.node.getBoundingClientRect();
-				let viewPortX = endX + svgRect.x;
-				let viewPortY = endY + svgRect.y;
-
-				// 檢查是否懸停在節點上
-				let overDom = document.elementsFromPoint(viewPortX, viewPortY)
-					.find(dom => dom != fromDom && (dom.classList.contains('xf-node') || dom.classList.contains('xf-end')));
-				if (overDom) {
-					let overElm = overDom.instance;	//svg element
-					if (toElm !== overElm) {
-						if (toElm)
-							me._markItem(toElm, false);
-						toElm = overElm;
-						me._markItem(toElm, true);
-					}
-				} else if (toElm) {
-					me._markItem(toElm, false);
-					toElm = null;
-				}
-			}
-			*/
 
 		}).on(this.DragEnd, (event) => {
 			if (!uiBase.isEdit) return;
@@ -444,21 +433,22 @@ function UiItem(uiBase, json) {
 			}
 			tempLine.remove();
 		});
-	};
+	}
+	*/
 
 	//high light node
-	this._markItem = function (elm, status) {
+	_markItem(elm, status) {
 		if (status) {
 			elm.node.classList.add('on');
 		} else {
 			elm.node.classList.remove('on');
 		}
-	};
+	}
 
 	//id記錄在 group elm !!
-	this.getId = function () {
+	getId() {
 		return this.json.Id;
-	};
+	}
 
 	/*
 	this.addLine = function (line) {
@@ -471,9 +461,9 @@ function UiItem(uiBase, json) {
 	};
 	*/
 
-	this.getName = function () {
+	getName() {
 		return this.nameElm.text();
-	};
+	}
 
 	/**
 	 * set node name only for TypeNode, 考慮多行
@@ -481,7 +471,7 @@ function UiItem(uiBase, json) {
 	 * param name {string} 
 	 * param drawLine {bool} re-draw line or not
 	 */ 
-	this.setName = function (name, drawLine) {
+	setName(name, drawLine) {
 		// 更新文字內容, 後端傳回會加上跳脫字元, js 2021才有 replaceAll, 所以自製
 		var lines = _str.replaceAll(name, '\\n', '\n').split('\n');
 		this.nameElm.clear().text(function (add) {
@@ -506,9 +496,26 @@ function UiItem(uiBase, json) {
 
 		if (drawLine)
 			this._drawLines();
-	};
+	}
 
 	//call last
-	this._init(uiBase, json);
+	//this._init(uiBase, json);
 
 }//class UiItem
+
+
+//輸入欄位
+class UiCol extends UiItem {
+
+}
+class UiBox extends UiItem {
+
+}
+
+class UiGroup extends UiItem {
+
+}
+
+class UiTable extends UiItem {
+
+}
