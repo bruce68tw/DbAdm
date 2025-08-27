@@ -7,7 +7,6 @@ using BaseWeb.Services;
 using DbAdm.Models;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Razor;
 using System.Data.Common;
 using System.Data.SqlClient;
 
@@ -33,14 +32,14 @@ var services = builder.Services;
 services.AddControllersWithViews(opts => { opts.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); })
 //services.AddControllersWithViews()
     //view Localization
-    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    //.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     //use pascal for newtonSoft json
     .AddNewtonsoftJson(opts => { opts.UseMemberCasing(); })
     //use pascal for MVC json
     .AddJsonOptions(opts => { opts.JsonSerializerOptions.PropertyNamingPolicy = null; });
 
 //2.set Resources path
-services.AddLocalization(opts => opts.ResourcesPath = "Resources");
+//services.AddLocalization(opts => opts.ResourcesPath = "Resources");
 
 //3.http context
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -91,6 +90,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Login}/{id?}");
 
-app.SetApp();   //資安設定, 參考WebExt.cs
+app.SetApp();   //資安設定, 參考_WebExt.cs
 app.Run();
 #endregion

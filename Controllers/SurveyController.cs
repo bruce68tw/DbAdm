@@ -23,7 +23,7 @@ namespace DbAdm.Controllers
             return JsonToCnt(await new SurveyRead().GetPageA(dt));
         }
 
-        private SurveyEdit EditService()
+        private SurveyEdit EditSvc()
         {
             return new SurveyEdit(Ctrl);
         }
@@ -32,7 +32,7 @@ namespace DbAdm.Controllers
         [XgProgAuth(CrudEnum.View)]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonA(key));
+            return JsonToCnt(await EditSvc().GetViewJsonA(key));
         }
 
     }//class

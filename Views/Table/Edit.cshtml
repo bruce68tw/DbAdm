@@ -1,21 +1,17 @@
-﻿@inject IHtmlLocalizer<DbAdm.R0> R
-
-@* 1.Table *@
-<form id='eform' class='x-form'>
+﻿<form id='eform' class='x-form'>
     @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-    @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, Required = true })
-    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Table"].Value, Fid = "Code", MaxLen = 100, Required = true })
-    @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableName"].Value, Fid = "Name", MaxLen = 30 })
-    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["TranLog"].Value, Fid = "TranLog", Value = "1", Label = R["Yes"].Value })
-    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["Status"].Value, Fid = "Status", IsCheck = true, Value = "1", Label = R["Active"].Value })
+    @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true })
+    @await Component.InvokeAsync("XiText", new XiTextDto { Title = "資料表", Fid = "Code", MaxLen = 100, Required = true })
+    @await Component.InvokeAsync("XiText", new XiTextDto { Title = "資料表名稱", Fid = "Name", MaxLen = 30 })
+    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "異動記錄", Fid = "TranLog", Value = "1", Label = "是" })
+    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "資料狀態", Fid = "Status", IsCheck = true, Value = "1", Label = "啟用" })
 
     <div class="row">
-        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Creator"].Value, Fid = "CreatorName", InRow = true, Cols = "2,3" })
-        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = R["Created"].Value, Fid = "Created", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
+        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = "建檔人員", Fid = "CreatorName", InRow = true, Cols = "2,3" })
+        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = "建檔時間", Fid = "Created", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
     </div>
 </form>
 
-@* 2.Column *@
 <div class='x-btns-box'>
     @await Component.InvokeAsync("XgAddRow", "_me.mCol.onAddRow")
 </div>
@@ -24,24 +20,22 @@
         <thead>
             <tr>
                 @* 3.XgTh component *@
-                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Column"].Value, Required = true })
-                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["ColName"].Value })
-                @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["DataType"].Value, Required = true })
-                <th>@R["Nullable"]</th>
-                <th>@R["Default"]</th>
-                <th>@R["Sort"]</th>
-                <th>@R["Note"]</th>
-                <th>@R["Crud"]</th>
-                <th>@R["Status"]</th>
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = "欄位", Required = true })
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = "欄位名稱" })
+                @await Component.InvokeAsync("XgTh", new XgThDto { Title = "資料型態", Required = true })
+                <th>可空值</th>
+                <th>預設值</th>
+                <th>排序</th>
+                <th>說明</th>
+                <th>維護</th>
+                <th>資料狀態</th>
             </tr>
         </thead>
-
         <tbody id="tbodyCol"></tbody>
     </table>
 </form>
 <vc:xg-save-back />
 
-@* 4.row template, set td width, Nullable set false first then set by js *@
 <script id="tplCol" type="text/template">
     <tr>
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })

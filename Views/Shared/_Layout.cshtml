@@ -1,7 +1,6 @@
 ﻿@using Base.Models
 @using DbAdm.Services
 @using Microsoft.AspNetCore.Antiforgery
-@inject IHtmlLocalizer<DbAdm.R0> R0
 @inject IAntiforgery Antiforgery
 
 @{
@@ -12,8 +11,11 @@
     var locale = _Locale.GetLocale();
 
     //功能表
-    var isNeedLogin = _Fun.IsNeedLogin();
-    var menus = new List<MenuDto>();
+    //var isNeedLogin = _Fun.IsNeedLogin();
+    var menus = await _Auth.GetMenuA();
+    _Auth.FilterMenu(menus);
+    /*
+    //var menus = new List<MenuDto>();
     var setPwd = new MenuDto() { Code = "SetPwd", Name = R0["MenuSetPwd"].Value, Url = "/SetPwd/Index" };
     if (isNeedLogin && !_Fun.HasPwd())
     {
@@ -38,13 +40,12 @@
             new() { Code = "ChartSatis", Name = "統計圖-滿意度問卷", Url = "/ChartSatis/Read" },
             new() { Code = "DataDict", Name = "資料字典維護", Url = "/DataDict/Read" },
             new() { Code = "DataDictImport", Name = "匯入資料字典", Url = "/DataDictImport/Read" },
-            /* test sub menu
-            new() { Name = "第5個功能群組", Items = new List<MenuDto>()
-            {
-                new() { Name = "功能5-1", Url = "/Project/Read" },
-                new() { Name = "功能5-2", Url = "/Project/Read" },
-            }},
-            */
+            //test sub menu
+            //new() { Name = "第5個功能群組", Items = new List<MenuDto>()
+            //{
+            //    new() { Name = "功能5-1", Url = "/Project/Read" },
+            //    new() { Name = "功能5-2", Url = "/Project/Read" },
+            //}},
         });
 
         //如果需要登入, 則加上這些功能
@@ -65,6 +66,7 @@
     {
         _Auth.FilterMenu(menus);
     }
+    */
 }
 
 <style nonce="@_Fun.Nonce">

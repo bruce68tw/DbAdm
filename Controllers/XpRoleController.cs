@@ -16,12 +16,11 @@ namespace DbAdm.Controllers
         public async Task<ActionResult> Read()
         {
             //for edit view
-            await using (var db = new Db())
-            {
-                ViewBag.Users = await _XpCode.UsersA(db);
-                ViewBag.AuthRanges = await _XpCode.AuthRangesA(db);
-                ViewBag.Depts = await _XpCode.DeptsA(db);
-            }
+            await using var db = new Db();
+            ViewBag.Users = await _XpCode.UsersA(db);
+            ViewBag.Depts = await _XpCode.DeptsA(db);
+            ViewBag.Progs = await _XpCode.ProgsA(db);
+            ViewBag.AuthRanges = await _XpCode.AuthRangesA(db);
             return View();
         }
 
@@ -31,7 +30,7 @@ namespace DbAdm.Controllers
             return JsonToCnt(await new XpRoleRead().GetPageA(Ctrl, dt));
         }
 
-        private XpRoleEdit EditService()
+        private XpRoleEdit EditSvc()
         {
             return new XpRoleEdit(Ctrl);
         }
@@ -39,31 +38,31 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json)!));
+            return Json(await EditSvc().CreateA(_Str.ToJson(json)!));
         }
 
         [HttpPost]
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
+            return Json(await EditSvc().UpdateA(key, _Str.ToJson(json)!));
         }
 
         [HttpPost]
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteA(key));
+            return Json(await EditSvc().DeleteA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonA(key));
+            return JsonToCnt(await EditSvc().GetUpdJsonA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonA(key));
+            return JsonToCnt(await EditSvc().GetViewJsonA(key));
         }
 
         //get user list for modal

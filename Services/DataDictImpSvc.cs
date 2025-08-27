@@ -6,7 +6,7 @@ using DbAdm.Tables;
 
 namespace DbAdm.Services
 {
-    public class DataDictImportSvc
+    public class DataDictImpSvc
     {
         /// <summary>
         /// import excel file
@@ -21,6 +21,7 @@ namespace DbAdm.Services
                 TplPath = _Xp.DirTpl + "DataDict.xlsx",
                 FnSaveImportRows = FnSaveImportRows,
                 CreatorName = _Fun.GetBaseUser().UserName,
+                ExcelFids = ["TableType", "Code", "Name", "DataType", "Nullable", "DefaultValue", "Note"],
             };
             return await _HttpExcel.ImportByFileA(file, dirUpload, importDto);
         }

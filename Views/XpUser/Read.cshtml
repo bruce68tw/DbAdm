@@ -1,7 +1,4 @@
-﻿@inject IHtmlLocalizer<DbAdm.R0> R0
-@inject IViewLocalizer R
-
-<script nonce="@_Fun.Nonce">
+﻿<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -36,15 +33,15 @@
     }; //class
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpUser"].Value } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
         <form id='formRead' class='x-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Account"].Value, Fid = "Account", MaxLen = 20, InRow = true })
+                @await Component.InvokeAsync("XiText", new XiTextDto { Title = "帳號", Fid = "Account", MaxLen = 20, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["UserName"].Value, Fid = "Name", MaxLen = 20 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "用戶名稱", Fid = "Name", MaxLen = 20 })
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "部門", Fid = "DeptId", Rows = ViewBag.Depts })
         </form>
 
@@ -54,11 +51,11 @@
         <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th>@R["Account"]</th>
-                    <th>@R["UserName"]</th>
-                    <th>部門</th>
-                    <th>@R0["Status"]</th>
-                    <th>@R0["Crud"]</th>
+                    <th>帳號</th>
+                    <th>用戶名稱</th>
+                    <th>部門名稱</th>
+                    <th>資料狀態</th>
+                    <th>維護</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -68,19 +65,19 @@
     <div id="divEdit" class="d-none">
         <form id='eform' class='x-form mb-0'>
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Account"].Value, Fid = "Account", Required = true, MaxLen = 20 })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["UserName"].Value, Fid = "Name", Required = true, MaxLen = 20 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "帳號", Fid = "Account", Required = true, MaxLen = 20 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "用戶名稱", Fid = "Name", Required = true, MaxLen = 20 })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = "員工編號", Fid = "EmpNo", Required = true, MaxLen = 10 })
             @*
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Pwd"].Value, Fid = "Pwd", IsPwd = true, MaxLen = 32 })
             *@
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["DeptName"].Value, Fid = "DeptId", Rows = ViewBag.Depts })
-            @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R0["Status"].Value, Fid = "Status", Label = R0["Active"].Value })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "部門名稱", Fid = "DeptId", Rows = ViewBag.Depts })
+            @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "資料狀態", Fid = "Status", Label = "啟用" })
         </form>
 
         <form class='x-form'>
             <div class='row'>
-                <div class='col-md-2 x-label'>@R["RoleList"]</div>
+                <div class='col-md-2 x-label'>角色清單</div>
                 <div class='col-md-8 x-input'>
                     <!-- table for control rows column has same width -->
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">

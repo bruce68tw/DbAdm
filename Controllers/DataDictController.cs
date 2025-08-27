@@ -25,7 +25,7 @@ namespace DbAdm.Controllers
             return JsonToCnt(await new DataDictRead().GetPageA(dt));
         }
 
-        private DataDictEdit EditService()
+        private DataDictEdit EditSvc()
         {
             return new DataDictEdit(Ctrl);
         }
@@ -33,33 +33,33 @@ namespace DbAdm.Controllers
         [XgProgAuth(CrudEnum.Create)]
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json)!));
+            return Json(await EditSvc().CreateA(_Str.ToJson(json)!));
         }
 
         [XgProgAuth(CrudEnum.Update)]
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
+            return Json(await EditSvc().UpdateA(key, _Str.ToJson(json)!));
         }
 
         [XgProgAuth(CrudEnum.Delete)]
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteA(key));
+            return Json(await EditSvc().DeleteA(key));
         }
 
         [HttpPost]
         [XgProgAuth(CrudEnum.Update)]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonA(key));
+            return JsonToCnt(await EditSvc().GetUpdJsonA(key));
         }
 
         [HttpPost]
         [XgProgAuth(CrudEnum.View)]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonA(key));
+            return JsonToCnt(await EditSvc().GetViewJsonA(key));
         }
 
     }//class

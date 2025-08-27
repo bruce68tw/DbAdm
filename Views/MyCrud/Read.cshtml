@@ -1,5 +1,3 @@
-@inject IHtmlLocalizer<DbAdm.R0> R
-
 <script nonce="@_Fun.Nonce" src="~/js/view/MyCrud.js"></script>
 <script nonce="@_Fun.Nonce">
     $(function () {
@@ -7,36 +5,36 @@
     });
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R["MenuMyCrud"].Value } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <!-- read form-->
     <div id="divRead">
         <!-- condition -->
         <form id='formRead' class='x-form mb-0'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId2", Rows = ViewBag.Projects, InRow = true })
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId2", Rows = ViewBag.Projects, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar")
             </div>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProgCode"].Value, Fid = "ProgCode" })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "功能代碼", Fid = "ProgCode" })
         </form>
 
         <!-- other functions -->
         <div class="x-btns-box mt-1">
             <vc:xg-create/>
-            <button type="button" class="btn x-btn-gray" data-onclick="_me.onGenCrud">@R["GenCrud"]</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onGenCrud">產生CRUD</button>
         </div>
 
         <!-- result list -->
         <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th class="x-center x-w60">@R["Select"]</th>
-                    <th>@R["Project"]</th>
-                    <th>@R["ProgCode"]</th>
-                    <th>@R["ProgName"]</th>
-                    <th class="x-w100">@R["Crud"]</th>
-                    <th class="x-center x-w100">@R["Status"]</th>
-                    <th>@R["Created"]</th>
+                    <th class="x-center x-w60">選取</th>
+                    <th>專案</th>
+                    <th>功能代碼</th>
+                    <th>功能名稱</th>
+                    <th class="x-w100">維護</th>
+                    <th class="x-center x-w100">資料狀態</th>
+                    <th>建檔時間</th>
                 </tr>
             </thead>
             <tbody></tbody>

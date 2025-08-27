@@ -120,9 +120,10 @@ function CrudE(edits) {
      */
 
     /**
+     * _loadJson -> loadJson
      * load row(include childs) into UI
      */
-    this._loadJson = function(json) {
+    this.loadJson = function(json) {
         //load master(single) row
         var edit = this.edit0;
         edit.loadRow(json);
@@ -142,18 +143,19 @@ function CrudE(edits) {
     };
 
     //call fnAfterOpenEdit() if existed
-    // _afterOpenEdit -> _afterOpen
-    this._afterOpenEdit = function(fun, json) {
+    // _afterOpenEdit -> afterOpen
+    this.afterOpen = function(fun, json) {
         //if (_fun.hasValue(_me.fnAfterOpenEdit))
         if (_me.fnAfterOpenEdit)
             _me.fnAfterOpenEdit(fun, json);
     };
 
     /**
+     * _setEditStatus -> setEditStatus
      * set all forms fields edit status
      * param fun {string} C,U,V
      */ 
-    this._setEditStatus = function(fun) {
+    this.setEditStatus = function(fun) {
         //if (fun === this._nowFun)
         //    return;
 
@@ -375,9 +377,9 @@ function CrudE(edits) {
         var act = (fun == _fun.FunU)
             ? 'GetUpdJson' : 'GetViewJson';
         return await _ajax.getJsonA(act, { key: key }, function (json) {
-            me._loadJson(json);
-            me._setEditStatus(fun);
-            me._afterOpenEdit(fun, json);
+            me.loadJson(json);
+            me.setEditStatus(fun);
+            me.afterOpen(fun, json);
             _me.crudR.toEditMode(fun);
         });
     };
@@ -454,7 +456,7 @@ function CrudE(edits) {
      */
     this.editToNew = function () {
         var fun = _fun.FunC;
-        this._setEditStatus(fun);
+        this.setEditStatus(fun);
         this.edit0.resetKey();
         _prog.setPath(fun);
     };
@@ -665,8 +667,8 @@ function CrudE(edits) {
     this.onCreate = function() {
         var fun = _fun.FunC;
         this._resetForm(this.edit0);   //reset first
-        this._setEditStatus(fun);
-        this._afterOpenEdit(fun, null);
+        this.setEditStatus(fun);
+        this.afterOpen(fun, null);
     };
 
     /**

@@ -1,8 +1,4 @@
-﻿@* //修改:如果沒有多國語則不必寫這行 *@
-@inject IHtmlLocalizer<DbAdm.R0> R
-
-@* 2.initial *@
-<script nonce="@_Fun.Nonce">
+﻿<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -40,50 +36,40 @@
     }; //class
 </script>
 
-@* 3.program name *@
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R["MenuColumn"].Value } })
-
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
-        @* //修改:查詢欄位 *@
         <form id='formRead' class='x-form mb-0'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
-
-                @* 工具列 *@
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true, HasFind2 = true })
             </div>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Table"].Value, Fid = "TableCode", MaxLen = 30 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "資料表", Fid = "TableCode", MaxLen = 30 })
         </form>
 
-        @* //修改:進階查詢欄位, 如果沒有則可以省略 *@
         <form id='formRead2' class='x-form mb-0'>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Column"].Value, Fid = "Code", LabelTip = "使用模糊查詢",  MaxLen = 30 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位", Fid = "Code", LabelTip = "使用模糊查詢",  MaxLen = 30 })
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位名稱", Fid = "Name", LabelTip = "使用模糊查詢", MaxLen = 30 })
         </form>
         <div class="x-h10"></div>
 
-        @* //修改:查詢結果欄位header, 多國語部分可以直接用文字 *@
         <table id="tableRead" class="table table-bordered x-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th>@R["Project"]</th>
-                    <th>@R["Table"]</th>
-                    <th>@R["Column"]</th>
-                    <th>@R["ColName"]</th>
-                    <th>@R["DataType"]</th>
-                    <th>@R["Creator"]</th>
-                    <th width='90px'>@R["Crud"]</th>
-                    <th width='110px'>@R["Status"]</th>
+                    <th>專案</th>
+                    <th>資料表</th>
+                    <th>欄位</th>
+                    <th>欄位名稱</th>
+                    <th>資料型態</th>
+                    <th>建檔人員</th>
+                    <th width='90px'>維護</th>
+                    <th width='110px'>資料狀態</th>
                 </tr>
             </thead>
-
-            @* 8.query result table rows *@
             <tbody></tbody>
         </table>
     </div>
 
-    @* 8.edit form *@
     <div id="divEdit" class="d-none">
         <partial name="Edit" />
     </div>

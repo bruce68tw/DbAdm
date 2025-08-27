@@ -1,7 +1,5 @@
 ﻿@{ 
     var importType = ViewBag.ImportType;
-    //var progName = (importType == ImportTypeEstr.DataDict) ? R0["MenuUserImport"].Value
-    //    : "??";
 }
 
 <script nonce="@_Fun.Nonce">
@@ -68,7 +66,7 @@
     }; //class
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "匯入資料字典" } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
         <form id='formRead' class='x-form'>
@@ -80,8 +78,8 @@
         </form>
 
         <div class='x-btns-box'>
-            <button type="button" class="btn x-btn-gray" data-onclick="_me.onOpenImport">匯入Excel</button>
-            <a class="btn x-btn-gray" href="Template">下載範本</a>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenImport">匯入Excel</button>
+            <a class="btn btn-secondary" href="Template">下載範本</a>
         </div>
         <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>

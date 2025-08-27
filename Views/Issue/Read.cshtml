@@ -248,7 +248,7 @@
     }; //class
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "專案工作維護" } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
 		<form id='formRead' class='x-form'>
@@ -287,11 +287,11 @@
 
 		<div class='x-btns-box'>
 			<vc:xg-create/>
-            <button type="button" class="btn x-btn-gray" data-onclick="_me.onMyToday">我的今天資料</button>
-            <button type="button" class="btn x-btn-gray" data-onclick="_me.onMyWeek">我的本週資料</button>
-            <button type="button" class="btn x-btn-gray" data-onclick="_me.onMyNotFinish">我的未結案</button>
-            <button type="button" class="btn x-btn-gray" data-onclick="_me.onMyWatch">我的追踪</button>
-            <button type="button" class="btn x-btn-gray" data-onclick="_me.onMyAsk">我的交辦</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onMyToday">我的今天資料</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onMyWeek">我的本週資料</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onMyNotFinish">我的未結案</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onMyWatch">我的追踪</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onMyAsk">我的交辦</button>
             <span class="p-1">工作時數合計：<span id="SumHours"></span></span>
         </div>
         <table id="tableRead" class="table table-bordered x-table" cellspacing="0">

@@ -1,11 +1,10 @@
-﻿@inject IHtmlLocalizer<DbAdm.R0> R0
-@inject IViewLocalizer R
-@{
+﻿@{
     var isAuthRow = _Fun.IsAuthTypeRow();
     var authRanges = (List<IdStrDto>)ViewBag.AuthRanges;
-    var progs = GetProgs(); //for select input
+    //var progs = GetProgs(); //for select input
 }
 
+@*
 @functions {
     //re-set menu.Name(add locale)
     public List<IdStrDto> GetProgs()
@@ -28,6 +27,7 @@
         };
     }
 }
+*@
 
 <style nonce="@_Fun.Nonce">
     .xu-user {
@@ -137,12 +137,12 @@
     }; //class
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpRole"].Value } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
         <form id='formRead' class='x-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["RoleName"].Value, Fid = "Name", MaxLen = 30, InRow = true })
+                @await Component.InvokeAsync("XiText", new XiTextDto { Title = "角色名稱", Fid = "Name", MaxLen = 30, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
         </form>
@@ -153,8 +153,8 @@
         <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th>@R["RoleName"]</th>
-                    <th>@R0["Crud"]</th>
+                    <th>角色名稱</th>
+                    <th>維護</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -164,21 +164,21 @@
     <div id="divEdit" class="d-none">
         <form id='eform' class='x-form'>
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["RoleName"].Value, Fid = "Name", MaxLen = 30, Required = true })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "角色名稱", Fid = "Name", MaxLen = 30, Required = true })
         </form>
 
         <div class='x-btns-box mt-1'>
-            <span class="x-span-label">@R["UserList"]</span>
-            <button type="button" class="btn btn-secondary x-btn-gray" data-onclick="_me.onOpenUser">@R0["Select"]<i class='ico-checked'></i></button>
+            <span class="x-span-label">用戶清單</span>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenUser">選取<i class='ico-checked'></i></button>
         </div>
         <form id='eformUserRole' class='x-form'>
             <table class="table x-table" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>@R0["DeptName"]</th>
-                        <th>@R0["Account"]</th>
-                        <th>@R0["UserName"]</th>
-                        <th>@R0["Crud"]</th>
+                        <th>部門名稱</th>
+                        <th>帳號</th>
+                        <th>用戶名稱</th>
+                        <th>維護</th>
                     </tr>
                 </thead>
                 <tbody id="tbodyUserRole"></tbody>
@@ -186,22 +186,22 @@
         </form>
 
         <div class='x-btns-box'>
-            <span class="x-span-label">@R["RoleProg"]</span>
+            <span class="x-span-label">角色功能</span>
             @await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow")
         </div>
         <form id='eformRoleProg' class='x-form border-0'>
             <table class="table x-table x-no-hline" cellspacing="0">
                 <thead>
                     <tr>
-                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Prog"].Value, Tip = "欄位前面有*表示有資料權限",  Required = true })
-                        <th>@R0["Create"]</th>
-                        <th>@R0["Read"]</th>
-                        <th>@R0["Update"]</th>
-                        <th>@R0["Delete"]</th>
-                        <th>@R0["Print"]</th>
-                        <th>@R0["Export"]</th>
-                        <th>@R0["View"]</th>
-                        <th>@R0["Crud"]</th>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = "功能", Tip = "欄位前面有*表示有資料權限",  Required = true })
+                        <th>新增</th>
+                        <th>查詢</th>
+                        <th>修改</th>
+                        <th>刪除</th>
+                        <th>列印</th>
+                        <th>匯出</th>
+                        <th>檢視</th>
+                        <th>維護</th>
                     </tr>
                 </thead>
                 <tbody id="tbodyRoleProg"></tbody>
@@ -228,7 +228,7 @@
     <tr>
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "RoleId" })
-        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "ProgId", Rows = progs, Required = true })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "ProgId", Rows = ViewBag.Progs, Required = true })</td>
 
         @if (isAuthRow)
         {
@@ -265,13 +265,13 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-1">
-                    <div class="col-md-3 x-right pt-2">@R0["DeptName"]</div>
+                    <div class="col-md-3 x-right pt-2">部門名稱</div>
                     <div class="col-md-5">
                         @await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "DeptId", Rows = ViewBag.Depts })
                     </div>
                 </div>
                 <div class="row mb-1">
-                    <div class="col-md-3 x-right pt-2">@R0["Account"]</div>
+                    <div class="col-md-3 x-right pt-2">帳號</div>
                     <div class="col-md-5">
                         @await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Account" })
                     </div>
@@ -286,10 +286,10 @@
                     <table id="tableUser" class="table x-table w-100" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>@R0["Select"]</th>
-                                <th>@R0["DeptName"]</th>
-                                <th>@R0["Account"]</th>
-                                <th>@R0["UserName"]</th>
+                                <th>選取</th>
+                                <th>部門名稱</th>
+                                <th>帳號</th>
+                                <th>用戶名稱</th>
                             </tr>
                         </thead>
                         <!-- match tplItemTr -->

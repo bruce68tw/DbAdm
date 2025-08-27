@@ -7,10 +7,10 @@ namespace DbAdm.Controllers
 {
     //1.inherit
     [XgProgAuth]
-    public class DataDictImportController : XpImportController
+    public class DataDictImpController : XpImportController
     {
         //2.constructor
-        public DataDictImportController()
+        public DataDictImpController()
         {
             //ProgName = "Import User";
             ImportType = ImportTypeEstr.DataDict;
@@ -22,7 +22,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         override public async Task<JsonResult> Import(IFormFile file)
         {
-            var model = await new DataDictImportSvc().ImportA(file, this.DirUpload);
+            var model = await new DataDictImpSvc().ImportA(file, DirUpload);
             return Json(model);
         }
 

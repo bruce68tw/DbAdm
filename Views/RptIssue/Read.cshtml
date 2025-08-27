@@ -40,7 +40,7 @@
     }; //class
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "報表-專案工作類別合計" } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
 		<form id='formRead' class='x-form'>
@@ -61,8 +61,8 @@
 
 		<div class='x-btns-box'>
             @await Component.InvokeAsync("XgExport")
-            <button type="button" class="btn x-btn-gray" data-onclick="_me.onNowWeek">本週資料</button>
-            <button type="button" class="btn x-btn-gray" data-onclick="_me.onNowMonth">本月資料</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onNowWeek">本週資料</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onNowMonth">本月資料</button>
         </div>
         <table id="tableRead" class="table table-bordered x-table" cellspacing="0">
             <thead>

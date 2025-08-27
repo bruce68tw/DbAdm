@@ -1,6 +1,4 @@
-﻿@inject IHtmlLocalizer<DbAdm.R0> R0
-@inject IViewLocalizer R
-@{ 
+﻿@{ 
     var isAuthRow = _Fun.IsAuthTypeRow();
     var authRanges = (List<IdStrDto>)ViewBag.AuthRanges;
 }
@@ -40,15 +38,15 @@
     }; //class
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R0["MenuXpProg"].Value } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
         <form id='formRead' class='x-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProgCode"].Value, Fid = "Code", MaxLen = 30, InRow = true })
+                @await Component.InvokeAsync("XiText", new XiTextDto { Title = "功能代碼", Fid = "Code", MaxLen = 30, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar")
             </div>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProgName"].Value, Fid = "Name", MaxLen = 30 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "功能名稱", Fid = "Name", MaxLen = 30 })
         </form>
 
         <div class='x-btns-box'>
@@ -57,12 +55,12 @@
         <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th>@R["ProgCode"]</th>
-                    <th>@R["ProgName"]</th>
+                    <th>功能代碼</th>
+                    <th>功能名稱</th>
                     <th>Url</th>
-                    <th>@R["AuthRow"]</th>
-                    <th width="80px">@R0["Sort"]</th>
-                    <th width="100px">@R0["Crud"]</th>
+                    <th>資料等級權限</th>
+                    <th width="80px">排序</th>
+                    <th width="100px">維護</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -72,48 +70,48 @@
     <div id="divEdit" class="d-none">
         <form id='eform' class='x-form'>
             @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProgCode"].Value, Fid = "Code", MaxLen = 30, Required = true })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["ProgName"].Value, Fid = "Name", MaxLen = 30, Required = true })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "功能代碼", Fid = "Code", MaxLen = 30, Required = true })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "功能名稱", Fid = "Name", MaxLen = 30, Required = true })
             @*await Component.InvokeAsync("XiText", new XiTextDto { Title = "Icon", Fid = "Icon", MaxLen = 20 })*@
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = "Url", Fid = "Url", MaxLen = 100, Required = true })
-            @await Component.InvokeAsync("XiInt", new XiIntDto { Title = R0["Sort"].Value, Fid = "Sort", Required = true, Cols = "2,1" })
+            @await Component.InvokeAsync("XiInt", new XiIntDto { Title = "排序", Fid = "Sort", Required = true, Cols = "2,1" })
             @if (isAuthRow)
             {
-                @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = R["AuthRow"].Value, Fid = "AuthRow", Label = R0["Yes"].Value })
+                @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "資料等級權限", Fid = "AuthRow", Label = "是" })
             }
 
             <div class="row">
-                <div class="col-md-2 x-label">@R["CrudFun"]</div>
+                <div class="col-md-2 x-label">CRUD功能</div>
                 <div class="col-md-9 x-input pt-1">
-                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunCreate", Label = R0["Create"].Value })
-                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunRead", Label = R0["Read"].Value })
-                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunUpdate", Label = R0["Update"].Value })
-                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunDelete", Label = R0["Delete"].Value })
-                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunPrint", Label = R0["Print"].Value })
-                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunExport", Label = R0["Export"].Value })
-                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunView", Label = R0["View"].Value })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunCreate", Label = "新增" })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunRead", Label = "查詢" })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunUpdate", Label = "修改" })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunDelete", Label = "刪除" })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunPrint", Label = "列印" })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunExport", Label = "匯出" })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "FunView", Label = "檢視" })
                 </div>
             </div>
 
         </form>
 
         <div class='x-btns-box mt-1'>
-            <span class="x-span-label">@R["RoleProg"]</span>
+            <span class="x-span-label">角色功能</span>
             @await Component.InvokeAsync("XgAddRow", "_me.mRoleProg.onAddRow")
         </div>
         <form id='eformRoleProg' class='x-form border-0'>
             <table class="table x-table x-no-hline" cellspacing="0">
                 <thead>
                     <tr>
-                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = R["Role"].Value, Required = true })
-                        <th>@R0["Create"]</th>
-                        <th>@R0["Read"]</th>
-                        <th>@R0["Update"]</th>
-                        <th>@R0["Delete"]</th>
-                        <th>@R0["Print"]</th>
-                        <th>@R0["Export"]</th>
-                        <th>@R0["View"]</th>
-                        <th>@R0["Crud"]</th>
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = "角色", Required = true })
+                        <th>新增</th>
+                        <th>查詢</th>
+                        <th>修改</th>
+                        <th>刪除</th>
+                        <th>列印</th>
+                        <th>匯出</th>
+                        <th>檢視</th>
+                        <th>維護</th>
                     </tr>
                 </thead>
                 <tbody id="tbodyRoleProg"></tbody>

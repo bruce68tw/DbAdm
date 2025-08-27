@@ -31,7 +31,7 @@ namespace DbAdm.Controllers
             return JsonToCnt(await new IssueRead().GetPageA(Ctrl, dt));
         }
 
-        private IssueEdit EditService()
+        private IssueEdit EditSvc()
         {
             return new IssueEdit(Ctrl);
         }
@@ -40,35 +40,35 @@ namespace DbAdm.Controllers
         [XgProgAuth(CrudEnum.Update)]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonA(key));
+            return JsonToCnt(await EditSvc().GetUpdJsonA(key));
         }
 
         [HttpPost]
         [XgProgAuth(CrudEnum.View)]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonA(key));
+            return JsonToCnt(await EditSvc().GetViewJsonA(key));
         }
 
         [HttpPost]
         [XgProgAuth(CrudEnum.Create)]
 		public async Task<JsonResult> Create(string json, List<IFormFile> t00_FileName)
 		{
-			return Json(await EditService().CreateA(_Str.ToJson(json)!, t00_FileName));
+			return Json(await EditSvc().CreateA(_Str.ToJson(json)!, t00_FileName));
 		}
 
 		[HttpPost]
         [XgProgAuth(CrudEnum.Update)]
         public async Task<JsonResult> Update(string key, string json, List<IFormFile> t00_FileName)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!, t00_FileName));
+            return Json(await EditSvc().UpdateA(key, _Str.ToJson(json)!, t00_FileName));
         }
 
         [HttpPost]
         [XgProgAuth(CrudEnum.Delete)]
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteA(key));
+            return Json(await EditSvc().DeleteA(key));
         }
 
         [HttpPost]

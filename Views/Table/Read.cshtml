@@ -1,6 +1,4 @@
-﻿@inject IHtmlLocalizer<DbAdm.R0> R
-
-<script nonce="@_Fun.Nonce">
+﻿<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -53,43 +51,43 @@
     }; //class
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { R["MenuTable"].Value } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <!-- read form-->
     <div id="divRead">
         <!-- condition -->
         <form id='formRead' class='x-form mb-0'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Project"].Value, Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
+                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true, HasFind2 = true })
             </div>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Table"].Value, Fid = "Code", MaxLen = 30 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "資料表", Fid = "Code", MaxLen = 30 })
         </form>
         <form id='formRead2' class='x-form'>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["TableName"].Value, Fid = "Name", MaxLen = 30 })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["TranLog"].Value, Fid = "TranLog", Rows = ViewBag.YesNos })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = R["Status"].Value, Fid = "Status", Rows = ViewBag.Statuses })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "資料表名稱", Fid = "Name", MaxLen = 30 })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "異動記錄", Fid = "TranLog", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料狀態", Fid = "Status", Rows = ViewBag.Statuses })
         </form>
 
         <div class='x-btns-box mt-1'>
             @await Component.InvokeAsync("XgCreate")
             @await Component.InvokeAsync("XgExport")
-            <button type="button" class="btn x-btn-gray" data-onclick="_me.onGenWord">@R["GenDocu"]</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onGenWord">產生文件</button>
         </div>
 
         <!-- result list -->
         <table id="tableRead" class="table table-bordered x-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th width="60px">@R["Select"]</th>
-                    <th>@R["Project"]</th>
-                    <th>@R["DbName"]</th>
-                    <th>@R["Table"]</th>
-                    <th>@R["TableName"]</th>
-                    <th>@R["Creator"]</th>
-                    <th width='90px'>@R["TranLog"]</th>
-                    <th width='90px'>@R["Crud"]</th>
-                    <th width='110px'>@R["Status"]</th>
+                    <th width="60px">選取</th>
+                    <th>專案</th>
+                    <th>資料庫</th>
+                    <th>資料表</th>
+                    <th>資料表名稱</th>
+                    <th>建檔人員</th>
+                    <th width='90px'>異動記錄</th>
+                    <th width='90px'>維護</th>
+                    <th width='110px'>資料狀態</th>
                 </tr>
             </thead>
             <tbody></tbody>

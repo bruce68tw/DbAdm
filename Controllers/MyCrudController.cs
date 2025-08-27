@@ -32,7 +32,7 @@ namespace DbAdm.Controllers
         }
         #endregion
 
-        private MyCrudEdit EditService()
+        private MyCrudEdit EditSvc()
         {
             return new MyCrudEdit(Ctrl);
         }
@@ -41,27 +41,27 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetUpdJson(string key)
         {
-            return JsonToCnt(await EditService().GetUpdJsonA(key));
+            return JsonToCnt(await EditSvc().GetUpdJsonA(key));
         }
 
         [HttpPost]
         public async Task<ContentResult> GetViewJson(string key)
         {
-            return JsonToCnt(await EditService().GetViewJsonA(key));
+            return JsonToCnt(await EditSvc().GetViewJsonA(key));
         }
 
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditService().DeleteA(key));
+            return Json(await EditSvc().DeleteA(key));
         }
 
         public async Task<JsonResult> Create(string json)
         {
-            return Json(await EditService().CreateA(_Str.ToJson(json)!));
+            return Json(await EditSvc().CreateA(_Str.ToJson(json)!));
         }
         public async Task<JsonResult> Update(string key, string json)
         {
-            return Json(await EditService().UpdateA(key, _Str.ToJson(json)!));
+            return Json(await EditSvc().UpdateA(key, _Str.ToJson(json)!));
         }
         #endregion
 

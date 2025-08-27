@@ -1,6 +1,4 @@
-﻿@inject IHtmlLocalizer<DbAdm.R0> R
-
-<script nonce="@_Fun.Nonce">
+﻿<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -24,7 +22,7 @@
                             '<button type="button" class="btn btn-link" data-onclick="_me.onImport" data-args="{0}">{1}</button> | ' +
                             '<button type="button" class="btn btn-link" data-onclick="_me.onGenWord" data-args="{0}">{2}</button> | ' +
                             '<button type="button" class="btn btn-link" data-onclick="_me.onGenLogSql" data-args="{0}">{3}</button>';
-                        return _str.format(html, full.Id, '@R["ImportDb"]', '@R["GenDocu"]', '@R["GenLogSql"]');
+                            return _str.format(html, full.Id, '匯入結構', '產生文件', '產生異動SQL');
                     }},
                     { targets: [5], render: function (data, type, full, meta) {
                             return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
@@ -42,7 +40,7 @@
         //import excel into Db
         onImport: async function (id) {
             _me.prjId = id;
-            _tool.ans('@R["SureImportDb"]', async function () {
+            _tool.ans('是否確定匯入資料庫結構?', async function () {
                 await _ajax.getJsonA('Import', { id: _me.prjId }, function (data) {
                     _tool.msg(_BR.Done);
                 });
@@ -51,7 +49,7 @@
 
         //generate docx file
         onGenWord: function (id) {
-            _tool.ans('@R["SureGenDocu"]', function () {
+            _tool.ans('是否確定產生資料庫文件?', function () {
                 window.location = 'GenWord?id=' + id;
             });
         },
@@ -59,7 +57,7 @@
         /*
         //generate txt file for table relationship
         onGenRelat: function (id) {
-            _tool.ans('@R["SureGenRelat"]', function () {
+            _tool.ans('是否確定產生資料表產生關聯?', function () {
                 window.location = 'GenRelat?id=' + id;
             });
         },
@@ -67,7 +65,7 @@
 
         //generate tranlog sql file
         onGenLogSql: function (id) {
-            _tool.ans('@R["SureGenLogSql"]', function () {
+            _tool.ans('是否確定產生異動SQL檔案?', function () {
                 window.location = 'GenLogSql?id=' + id;
             });
         },
@@ -75,7 +73,7 @@
     }; //class
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new string[] { R["MenuProject"].Value })
+<vc:xg-prog-path />
 <div class="x-prog">
     <!-- read form-->
     <div id="divRead">
@@ -85,13 +83,13 @@
         <table id="tableRead" class="table table-bordered x-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th>@R["Project"]</th>
+                    <th>專案</th>
                     <th>程式代碼</th>
-                    <th>@R["DbName"]</th>
-                    <th>@R["Creator"]</th>
-                    <th>@R["Fun"]</th>
-                    <th width='90px'>@R["Crud"]</th>
-                    <th width='90px'>@R["Status"]</th>
+                    <th>資料庫</th>
+                    <th>建檔人員</th>
+                    <th>功能</th>
+                    <th width='90px'>維護</th>
+                    <th width='90px'>資料狀態</th>
                 </tr>
             </thead>
             <tbody></tbody>

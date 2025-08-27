@@ -8,6 +8,7 @@ namespace DbAdm.Services
     public static class _XpCode
     {
         public const string TableType = "TableType";
+        public const string UiItemType = "UiItemType";
 
         #region 1.master table to codes
         public static async Task<List<IdStrDto>?> DeptsA(Db? db = null)
@@ -28,6 +29,17 @@ namespace DbAdm.Services
             return await _Db.TableToCodesA("Reporter", db);
         }
         */
+        public static async Task<List<IdStrDto>?> ProgsA(Db? db = null)
+        {
+            var sql = @"
+select 
+    Id, [Name] as Str
+from dbo.XpProg
+order by Sort
+";
+            return await BySqlA(sql, db);
+        }
+
         public static async Task<List<IdStrDto>?> ProjectsA(Db? db = null)
         {
             //return await _Db.TableToCodesA("Project", db);
@@ -38,12 +50,11 @@ from dbo.Project
 order by [Name]
 ";
             return await BySqlA(sql, db);
-
         }
 
         #endregion
 
-        /*
+        /* remark
         public static async Task<List<IdStrDto>> TableToCodesA(string table, Db? db = null)
         {
             var sql = $@"
@@ -69,36 +80,6 @@ order by Id
 
         #region 2.XpCode to codes
 
-        private static async Task<List<IdStrDto>> BySqlA(string sql, Db? db = null)
-        {
-            return await _Db.SqlToCodesA(sql, null, db) ?? [];
-        }
-
-        //get by XpCode.Type
-        private static async Task<List<IdStrDto>> ByTypeA(string type, Db? db = null)
-        {
-            var sql = string.Format(@"
-select 
-    Value as Id, [Name] as Str
-from dbo.XpCode
-where Type='{0}'
-order by Sort
-", type);
-            return await BySqlA(sql, db);
-        }
-
-        private static async Task<List<IdStrExtDto>> ByTypeExtA(string type, Db? db = null)
-        {
-            var sql = string.Format(@"
-select 
-    Value as Id, [Name] as Str, Ext
-from dbo.XpCode
-where Type='{0}'
-order by Sort
-", type);
-            return await _Db.SqlToCodeExtsA(sql, null, db) ?? [];
-        }
-
         public static async Task<List<IdStrDto>> QitemTypesA(Db? db = null)
         {
             var sql = @"
@@ -112,6 +93,10 @@ order by Sort
             return await BySqlA(sql, db);
         }
 
+        public static async Task<List<IdStrDto>> UiItemTypesA(Db? db = null)
+        {
+            return await ByTypeA(UiItemType, db);
+        }
         public static async Task<List<IdStrDto>> TableTypesA(Db? db = null)
         {
             return await ByTypeA(TableType, db);
@@ -153,6 +138,36 @@ order by Sort
         public static async Task<List<IdStrDto>> IssueTypesA(Db? db = null)
         {
             return await ByTypeA(_Xp.IssueType, db);
+        }
+
+        private static async Task<List<IdStrDto>> BySqlA(string sql, Db? db = null)
+        {
+            return await _Db.SqlToCodesA(sql, null, db) ?? [];
+        }
+
+        //get by XpCode.Type
+        private static async Task<List<IdStrDto>> ByTypeA(string type, Db? db = null)
+        {
+            var sql = string.Format(@"
+select 
+    Value as Id, [Name] as Str
+from dbo.XpCode
+where Type='{0}'
+order by Sort
+", type);
+            return await BySqlA(sql, db);
+        }
+
+        private static async Task<List<IdStrExtDto>> ByTypeExtA(string type, Db? db = null)
+        {
+            var sql = string.Format(@"
+select 
+    Value as Id, [Name] as Str, Ext
+from dbo.XpCode
+where Type='{0}'
+order by Sort
+", type);
+            return await _Db.SqlToCodeExtsA(sql, null, db) ?? [];
         }
         #endregion
 
