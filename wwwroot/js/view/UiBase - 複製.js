@@ -1,3 +1,4 @@
+
 //ui item type
 var EstrUiType = {
 	Col: 'C',
@@ -26,6 +27,24 @@ var EstrInputType = {
 	ReadOnly: 'RO',
 };
 
+
+/**
+ * 自定函數(由flow內部觸發):
+ * void fnMoveNode(node, x, y): after move node to (x,y)
+ * void fnAfterAddLine(json): when add line
+ * void fnShowMenu(isNode, flowItem, event);
+ * void fnAfterMoveLineEnd(oldNode, newNode): after drop line end point
+ */
+//控制 UiItem、FlowLine for 外部程式
+/**
+ 屬性:
+ //boxElm: box element
+ //svg: svg
+ items: items
+ lines: lines
+ fromNode: drap start node
+ onMoveNode: event onMoveNode(node)
+*/
 class UiBase {
 
 	constructor(boxId) {
@@ -46,8 +65,30 @@ class UiBase {
 
 		//新node/line Id, 自動累加
 		this.newItemId = 0;		//for node type
+		//this.newLineId = 0;
 
+		//this._reset();
 	}
+
+
+	/*
+	_init(boxId) {
+		let boxDom = document.getElementById(boxId);
+		//this.svg = SVG().addTo(boxDom).size('100%', '100%');
+
+		this.fnMoveItem = null;
+		this.fnAfterAddLine = null;
+		this.fnShowMenu = null;
+		//this._reset();
+	}
+	*/
+
+	/*
+	this.newItemId = function () {
+		this.newItemId++;
+		return this.newItemId;
+	};
+	*/
 
 	//get new node id
 	getNewItemId() {
@@ -89,24 +130,21 @@ class UiBase {
 	};
 	*/
 
-	async addItem(json, box) {
+	addItem(json) {
 		//this.nodeCount++;
 		//if (json.id == null)
 		//	json.id = (this.items.length + 1) * (-1);
 		var itemType = json.ItemType;
 		let item = (itemType == EstrUiType.Col) ? new UiCol(this, json) :
 			(itemType == EstrUiType.Box) ? new UiBox(this, json) :
-				(itemType == EstrUiType.Group) ? new UiGroup(this, json) :
-					(itemType == EstrUiType.Table) ? new UiTable(this, json) :
-						null;
+			(itemType == EstrUiType.Group) ? new UiGroup(this, json) :
+			(itemType == EstrUiType.Table) ? new UiTable(this, json) :
+			null;
 
 		if (item == null) {
 			console.log(`json.ItemType is wrong.(${json.ItemType})`);
 			return null;
 		}
-
-		var html = await item.newHtml(json);
-		box.append(html);
 
 		this.items.push(item);
 		return item;
@@ -166,7 +204,22 @@ class UiBase {
 
 } //class UiBase
 
-
+/**
+  流程節點
+  屬性:
+    self: this
+    uiBase: FlowBase object
+    svg: uiBase.svg
+    json: node json, 欄位與後端XgFlowE相同: Id(不變), NodeType(不變), Name, PosX, PosY, Width, Height
+    elm: svg group element(與 html element不同)
+    boxElm: border element
+    textElm: text element
+    lines: 進入/離開此節點的流程線
+    width: width
+    height: height
+  param uiBase {object} FlowBase
+  param json {json} 流程節點資料
+ */ 
 class UiItem {
 
 	constructor(uiBase, json) {
@@ -190,7 +243,6 @@ class UiItem {
 	_init(uiBase, json) {
 		this.self = this;
 		this.uiBase = uiBase;
-		/*
 		this.json = Object.assign({
 			Name: 'Node',
 			NodeType: EstrNodeType.Node,
@@ -204,8 +256,73 @@ class UiItem {
 		let nodeType = this.json.NodeType;
 		let cssClass = '';
 		let nodeText = '';
+
+		// 建立一個 group(有x,y, 沒有大小, 含文字的節點框線), 才能控制文字拖拉
+		//??
+		/*
+		this.elm = this.svg
+			.group()
+			.attr('data-id', json.Id)
 		*/
-		//this._setEvent();
+
+		let startEnd = this._isStartEnd();
+		if (startEnd) {
+			if (nodeType == EstrNodeType.Start) {
+				cssClass = 'xf-start';
+				nodeText = EstrNodeType.Start;
+			} else {
+				cssClass = 'xf-end';
+				nodeText = EstrNodeType.End;
+			}
+
+			//circle大小不填, 由css設定, 這時radius還沒確定, 不能move(因為會用到radius)
+			this.boxElm = this.elm.circle()
+				.addClass(cssClass);
+
+			//移動circle時會參考radius, 所以先更新, 從css讀取radius, 而不是從circle建立的屬性 !!
+			let style = window.getComputedStyle(this.boxElm.node);	//不能直接讀取circle屬性
+			let radius = parseFloat(style.getPropertyValue('r'));	//轉浮點
+			this.boxElm.attr('r', radius);	//reset radius
+
+			//起迄節點不會改變文字和大小, 直接設定
+			this.nameElm = this.elm.text(nodeText)
+				.addClass(cssClass + '-text')
+				.attr({ 'text-anchor': 'middle', 'dominant-baseline': 'middle' }); //水平垂直置中
+
+			//this.nameElm.center(radius, radius);
+
+			//let width = radius * 2;
+			//this.boxElm.size(width, width);
+			//this.width = width;		//寫入width, 供後面計算位置
+			//this.height = width;	//畫流程線時會用到
+		} else {
+			nodeText = this.json.Name;
+			cssClass = 'xf-node';
+			this.boxElm = this.elm.rect()
+				.addClass(cssClass)
+				.attr({ 'text-anchor': 'middle', 'dominant-baseline': 'middle' }); //水平垂直置中
+			//.move(this.json.PosX, this.json.PosY);
+
+			this.nameElm = this.elm.text('')
+				.addClass(cssClass + '-text');
+			//.font({ anchor: 'middle' })
+			//.attr({ 'text-anchor': 'middle' }); // 確保對齊生效
+
+			//一般節點依文字內容自動調整大小
+			this.setName(nodeText, false);
+		}
+
+		this.elm.move(this.json.PosX, this.json.PosY);
+
+		//add 連接點小方塊(pin) if need(在文字右側)
+		if (nodeType != EstrNodeType.End) {
+			this.pinElm = this.elm
+				.rect(this.PinWidth, this.PinWidth)
+				.addClass('xf-pin');
+			this._setPinPos();
+		}
+
+		this._setEvent();
 	}
 
 	//(子代覆寫)傳回html內容
@@ -368,7 +485,7 @@ class UiItem {
 	 * called by initial, 前端改變node name
 	 * param name {string} 
 	 * param drawLine {bool} re-draw line or not
-	 */
+	 */ 
 	setName(name, drawLine) {
 		// 更新文字內容, 後端傳回會加上跳脫字元, js 2021才有 replaceAll, 所以自製
 		var lines = _str.replaceAll(name, '\\n', '\n').split('\n');
@@ -404,27 +521,23 @@ class UiItem {
 
 //輸入欄位
 class UiCol extends UiItem {
-	/*
-	constructor(json) {
-	}
-	*/
-
 	//(子代覆寫)傳回html內容
-	async newHtml(json) {
+	newHtml(json) {
 		var inputType = json.InputType;
 		if (_str.isEmpty(inputType))
 			return '';
 
 		var inputTypeJson = this.uiBase.inputTypeJson;
 		if (inputTypeJson[inputType] == null) {
-			var html = await _ajax.getStrA('GetInputHtml', { inputType: 'aaa' });
-			inputTypeJson[inputType] = html;
+			await _ajax.getStrA('GetInputHtml', { inputType: 'aaa' }, (html) => {
+				var aa = 'aa';
+			});
 		}
-		return inputTypeJson[inputType];
+		var tpl = inputTypeJson[inputType];
+		return '';
 	}
 
 }
-
 class UiBox extends UiItem {
 
 }

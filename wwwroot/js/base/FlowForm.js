@@ -116,7 +116,7 @@ function FlowForm(boxId, mNode, mLine) {
 
         //一般節點才需要設定屬性
         var canEdit = isNode
-            ? (this.isEdit && flowItem.getNodeType() == _flow.TypeNode)
+            ? (this.isEdit && flowItem.getNodeType() == EstrNodeType.Node)
             : this.isEdit;
 
         //html 不會自動處理自製功能表狀態, 自行配合 css style
@@ -160,7 +160,7 @@ function FlowForm(boxId, mNode, mLine) {
 
         //hide context menu
         var me = this;
-        $(document).on('mousedown', function (e) {
+        $(document).on(EstrMouse.MouseDown, function (e) {
             //if (_obj.isShow(me.popupMenu))
             //    me.popupMenu.hide(100);
             
@@ -209,9 +209,9 @@ function FlowForm(boxId, mNode, mLine) {
     this.addNode = function (nodeType, name) {
 
         var name = '';
-        if (nodeType == _flow.TypeStart) {
+        if (nodeType == EstrNodeType.Start) {
             name = 'S';
-        } else if (nodeType == _flow.TypeEnd) {
+        } else if (nodeType == EstrNodeType.End) {
             name = 'E';
         } else {
             name = '節點-' + this.flowBase.getNewNodeId();
@@ -525,7 +525,7 @@ function FlowForm(boxId, mNode, mLine) {
     */
 
     this.onAddNode = function (nodeType) {
-        if (nodeType == _flow.TypeStart && this.flowBase.hasStartNode()) {
+        if (nodeType == EstrNodeType.Start && this.flowBase.hasStartNode()) {
             _tool.msg('起始節點已經存在，不可再新增。');
             return;
         }
@@ -546,11 +546,11 @@ function FlowForm(boxId, mNode, mLine) {
         }
 
         //add node
-        this.addNode(_flow.TypeStart);
+        this.addNode(EstrNodeType.Start);
     };
     //on add end node
     this.onAddEndNode = function () {
-        this.addNode(_flow.TypeEnd);
+        this.addNode(EstrNodeType.End);
     };
     //on add normal node
     this.onAddNormalNode = function () {

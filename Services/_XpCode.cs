@@ -80,6 +80,7 @@ order by Id
 
         #region 2.XpCode to codes
 
+        //讀取 XpCode.Type='EitemType' and Ext = 'Q'
         public static async Task<List<IdStrDto>> QitemTypesA(Db? db = null)
         {
             var sql = @"

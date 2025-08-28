@@ -3,9 +3,9 @@ var _json = {
 
     /**
      add json object into another object
-     @param {object} source source object
-     @param {object} target target object
-     @return {object}
+     param {object} source source object
+     param {object} target target object
+     return {object}
      */
     /*
     addJson: function (source, target) {

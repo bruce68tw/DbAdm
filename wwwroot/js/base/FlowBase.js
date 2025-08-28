@@ -1,20 +1,10 @@
-
-//靜態類別 for FlowBase.js only
-var _flow = {
-
-	//靜態屬性 node type enum
-	TypeStart: 'S',		//startNode
-	TypeEnd: 'E',		//endNode
-	TypeNode: 'N',		//normal node
-	//TypeAuto: 'A',	//auto
-};
-
 /**
- * 自定函數(由flow內部觸發):
- * void fnMoveNode(node, x, y): after move node to (x,y)
- * void fnAfterAddLine(json): when add line
- * void fnShowMenu(isNode, flowItem, event);
- * void fnAfterMoveLineEnd(oldNode, newNode): after drop line end point
+ * 建立 FlowBase 簡化外部程式, 考慮模組化, 所以不使用jQuery
+ * 自定函數如下(由flow內部觸發):
+ *   void fnMoveNode(node, x, y): after move node to (x,y)
+ *   void fnAfterAddLine(json): when add line
+ *   void fnShowMenu(isNode, flowItem, event);
+ *   void fnAfterMoveLineEnd(oldNode, newNode): after drop line end point
  */
 //控制 FlowNode、FlowLine for 外部程式
 function FlowBase(boxId) {	
@@ -143,7 +133,7 @@ function FlowBase(boxId) {
 	//check has startNode or not
 	this.hasStartNode = function () {
 		//some 用法類似 c# any()
-		return this.nodes.some(node => node.getNodeType() == _flow.TypeStart);
+		return this.nodes.some(node => node.getNodeType() == EstrNodeType.Start);
 	};
 
 	//call last
@@ -169,9 +159,9 @@ function FlowBase(boxId) {
  */ 
 function FlowNode(flowBase, json) {
 	//drag evnet
-	this.DragStart = 'dragstart';
-	this.DragMove = 'dragmove';
-	this.DragEnd = 'dragend';
+	//this.DragStart = 'dragstart';
+	//this.DragMove = 'dragmove';
+	//this.DragEnd = 'dragend';
 
 	//start/end node radius
 	//this.MinRadius = 20;
@@ -192,7 +182,7 @@ function FlowNode(flowBase, json) {
 		this.svg = flowBase.svg;
 		this.json = Object.assign({
 			Name: 'Node',
-			NodeType: _flow.TypeNode,
+			NodeType: EstrNodeType.Node,
 			PosX: json.PosX || 100,
 			PosY: json.PosY || 100,
 			//Width: 100,	//??
@@ -213,12 +203,12 @@ function FlowNode(flowBase, json) {
 
 		let startEnd = this._isStartEnd();
 		if (startEnd) {
-			if (nodeType == _flow.TypeStart) {
+			if (nodeType == EstrNodeType.Start) {
 				cssClass = 'xf-start';
-				nodeText = _flow.TypeStart;
+				nodeText = EstrNodeType.Start;
 			} else {
 				cssClass = 'xf-end';
-				nodeText = _flow.TypeEnd;
+				nodeText = EstrNodeType.End;
 			}
 
 			//circle大小不填, 由css設定, 這時radius還沒確定, 不能move(因為會用到radius)
@@ -261,7 +251,7 @@ function FlowNode(flowBase, json) {
 		this.elm.move(this.json.PosX, this.json.PosY);
 
 		//add 連接點小方塊(pin) if need(在文字右側)
-		if (nodeType != _flow.TypeEnd) {
+		if (nodeType != EstrNodeType.End) {
 			this.pinElm = this.elm
 				.rect(this.PinWidth, this.PinWidth)
 				.addClass('xf-pin');
@@ -277,7 +267,7 @@ function FlowNode(flowBase, json) {
 
 	//是否為起迄節點
 	this._isStartEnd = function () {
-		return (this.json.NodeType == _flow.TypeStart || this.json.NodeType == _flow.TypeEnd);
+		return (this.json.NodeType == EstrNodeType.Start || this.json.NodeType == EstrNodeType.End);
 	};
 
 	this.getNodeType = function () {
@@ -321,11 +311,11 @@ function FlowNode(flowBase, json) {
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
-		this.elm.draggable().on(this.DragMove, () => {
+		this.elm.draggable().on(EstrMouse.DragMove, () => {
 			if (!flowBase.isEdit) return;
 
 			this._drawLines();
-		}).on(this.DragEnd, (event) => {
+		}).on(EstrMouse.DragEnd, (event) => {
 			if (!flowBase.isEdit) return;
 
 			let { x, y } = event.detail.box;
@@ -357,7 +347,7 @@ function FlowNode(flowBase, json) {
 		let flowBase = this.flowBase;
 
 		// 啟用 pinElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pinElm !!
-		this.pinElm.draggable().on(this.DragStart, (event) => {
+		this.pinElm.draggable().on(EstrMouse.DragStart, (event) => {
 			if (!flowBase.isEdit) return;
 
 			// 初始化線條
@@ -371,7 +361,7 @@ function FlowNode(flowBase, json) {
 
 			flowBase.drawLineStart(me.self);
 
-		}).on(this.DragMove, (event) => {
+		}).on(EstrMouse.DragMove, (event) => {
 			if (!flowBase.isEdit) return;
 
 			//阻止 connector 移動
@@ -409,7 +399,7 @@ function FlowNode(flowBase, json) {
 				}
 			}
 
-		}).on(this.DragEnd, (event) => {
+		}).on(EstrMouse.DragEnd, (event) => {
 			if (!flowBase.isEdit) return;
 
 			// 檢查座標值是否有效

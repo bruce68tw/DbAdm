@@ -111,8 +111,8 @@ function CrudE(edits) {
     /*
     _getJsonAndSetMode = async function(key, fun) {
         //_me.crudR.toUpdateMode(key);
-        var act = (fun == _fun.FunU) ? 'GetUpdJson' :
-            (fun == _fun.FunV) ? 'GetViewJson' : '';
+        var act = (fun == EstrFun.Update) ? 'GetUpdJson' :
+            (fun == EstrFun.View) ? 'GetViewJson' : '';
         await _ajax.getJsonA(act, { key: key }, function(data) {
             _me.crudR.toEditMode(fun, data);
         });
@@ -160,9 +160,9 @@ function CrudE(edits) {
         //    return;
 
         /*
-        var isView = (fun == _fun.FunV);
-        var run = (isView && this._nowFun != _fun.FunV) ? true :
-            (!isView && this._nowFun == _fun.FunV) ? true :
+        var isView = (fun == EstrFun.View);
+        var run = (isView && this._nowFun != EstrFun.View) ? true :
+            (!isView && this._nowFun == EstrFun.View) ? true :
             false;
         */
         //set variables
@@ -173,19 +173,19 @@ function CrudE(edits) {
         var box = this.divEdit;
         var eform = this.edit0.eform;
         var items = box.find('input, textarea, select, button');
-        if (fun == _fun.FunV) {
+        if (fun == EstrFun.View) {
             _edit.removeIsNew(eform);
             items.prop('disabled', true)
             box.find('#btnToRead').prop('disabled', false);
             _ihtml.setEdits(box, '', false);
-        } else if (fun == _fun.FunC) {
+        } else if (fun == EstrFun.Create) {
             _edit.addIsNew(eform);    //增加_IsNew隱藏欄位
             var dataEdit = '[data-edit=U]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
-        } else if (fun == _fun.FunU) {
+        } else if (fun == EstrFun.Update) {
             _edit.removeIsNew(eform);
             var dataEdit = '[data-edit=C]';
             items.prop('disabled', false)
@@ -365,7 +365,7 @@ function CrudE(edits) {
      * check current is create/update mode or not
      */
     this.isEditMode = function() {
-        return (this._nowFun !== _fun.FunV);
+        return (this._nowFun !== EstrFun.View);
     };
 
     //return {bool}
@@ -374,7 +374,7 @@ function CrudE(edits) {
             return await _me.fnUpdateOrViewA(fun, key);
 
         var me = this;
-        var act = (fun == _fun.FunU)
+        var act = (fun == EstrFun.Update)
             ? 'GetUpdJson' : 'GetViewJson';
         return await _ajax.getJsonA(act, { key: key }, function (json) {
             me.loadJson(json);
@@ -455,7 +455,7 @@ function CrudE(edits) {
      * 將目前畫面資料轉變為新資料
      */
     this.editToNew = function () {
-        var fun = _fun.FunC;
+        var fun = EstrFun.Create;
         this.setEditStatus(fun);
         this.edit0.resetKey();
         _prog.setPath(fun);
@@ -665,7 +665,7 @@ function CrudE(edits) {
      * onclick Create button
      */
     this.onCreate = function() {
-        var fun = _fun.FunC;
+        var fun = EstrFun.Create;
         this._resetForm(this.edit0);   //reset first
         this.setEditStatus(fun);
         this.afterOpen(fun, null);
@@ -678,12 +678,12 @@ function CrudE(edits) {
      */
     this.onUpdateA = async function(key) {
         _edit.removeIsNew(this.edit0.eform);    //移除_IsNew隱藏欄位
-        return await this._updateOrViewA(_fun.FunU, key);
+        return await this._updateOrViewA(EstrFun.Update, key);
     };
 
     //return { bool }
     this.onViewA = async function(key) {
-        return await this._updateOrViewA(_fun.FunV, key);
+        return await this._updateOrViewA(EstrFun.View, key);
     };
 
     /**

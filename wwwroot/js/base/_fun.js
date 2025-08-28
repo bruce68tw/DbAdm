@@ -10,13 +10,6 @@ var _fun = {
     //input field error validation, need match server side _Web.cs
     //jsPath: '../Scripts/',      //js path for load
 
-    //for mapping to backend
-    FunC: 'C',     //create
-    FunR: 'R',     //read
-    FunU: 'U',     //update
-    FunD: 'D',     //delete, for input file
-    FunV: 'V',     //view row
-
     //error BR code, same to _Fun.PreBrError, fixed len to 2
     PreBrError: 'B:',
 

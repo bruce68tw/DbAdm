@@ -3,12 +3,14 @@ using Base.Models;
 using Base.Services;
 using BaseApi.Attributes;
 using BaseApi.Controllers;
+using BaseWeb.Models;
+using BaseWeb.Services;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DbAdm.Controllers
 {
-    [XgLogin]
+    //[XgLogin]
     public class UiController : BaseCtrl
     {
         [XgProgAuth(CrudEnum.Read)]
@@ -60,6 +62,14 @@ namespace DbAdm.Controllers
         public async Task<ContentResult> GetViewJson(string key)
         {
             return JsonToCnt(await EditSvc().GetViewJsonA(key));
+        }
+
+        //傳回輸入欄位html, 必須傳回ViewComponentResult, 前端收到為字串
+        [HttpPost]
+        //[XgProgAuth(CrudEnum.View)]
+        public string GetInputHtml(string inputType)
+        {
+            return _Input.XiText(new XiTextDto());
         }
 
     }//class

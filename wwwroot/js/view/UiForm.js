@@ -3,9 +3,10 @@
  * 處理 UI 元素和多筆資料之間的轉換
  * param boxId {string} edit canvas id
  * param mItem {EditMany}
+ * param ftWorkArea {string} filter of work area
  * return {UiForm}
  */ 
-function UiForm(boxId, mItem) {
+function UiForm(boxId, mItem, ftWorkArea) {
 
     //是否可編輯
     this.isEdit = false;
@@ -15,65 +16,28 @@ function UiForm(boxId, mItem) {
      */ 
     this._init = function () {
         //#region constant
-        //and/or seperator for line condition
-        //js only replace first found, so use regular, value is same to code.type=AndOr
-        this.OrSep = '{O}';  
-        this.AndSep = '{A}';
-        this.ColSep = ',';
 
         //html filter/class
         this.MenuFilter = '.xf-menu';   //menu for node/line property
-        this.StartNodeFilter = '.xf-start';    //start node class
 
-        //connection(line) style: start, agree, disagree
-        this.InitLineCfg = { stroke: 'blue', strokeWidth: 2 };  //??initial
         //#endregion
 
         //#region variables
         //editMany
         this.mItem = mItem;
-        //this.mLine = mLine;
 
-        //this.popupMenu = $('.xf-menu');
-        //this.divFlowBox = $('#' + boxId);	//??
-        //this.divLinesBox = $('#divLinesBox');       //??hidden
         this.eformItems = $('#eformItems');           //nodes edit form for editMany
-        //this.eformLines = $('#eformLines');           //lines edit form for editMany
         this.modalItemProp = $('#modalItemProp');
-        //this.modalLineProp = $('#modalLineProp');
         this.eformItemProp = this.modalItemProp.find('form');   //modalNodeProp form
-        //this.tbodyLineCond = this.modalLineProp.find('tbody');  //modalLineProp tbody for line conds
 
         //node/line template        
         this.tplItem = $('#tplItem').html();
-        //this.tplLine = $('#tplLine').html();
-        //this.tplLineCond = $('#tplLineCond').html();
 
-        //now selected type & element
-        this.nowIsNode = false;     //true:node, false:line
-        this.nowFlowItem = null;    //now selected FlowNode/FlowLine
-
-        /*
-        //for FlowLine, 對應 XpCode.Type=LineOp, 數對內容為:儲存值/顯示文字(label)
-        var condOpMaps = [
-            this.OrSep, ') || (',  	//or, 會自動加上外括號
-            this.AndSep, ' && ',    //and
-            ',EQ,', '=',
-            ',NEQ,', '!=',
-            ',GT,', '>',
-            ',GE,', '>=',
-            ',ST,', '<',
-            ',SE,', '<=',
-        ];
-        this.condOpExprs = [];   //condition op regular expression
-        this.condOpShows = [];   //condition op show text
-        var j = 0;
-        for (var i = 0; i < condOpMaps.length; i = i + 2) {
-            this.condOpExprs[j] = new RegExp(condOpMaps[i], 'g');	//for find/replace
-            this.condOpShows[j] = condOpMaps[i + 1];
-            j++;
-        }
-        */
+        //now container for add item
+        this.divEdit = $('#' + boxId);
+        this.workArea = this.divEdit.find(ftWorkArea);
+        this.nowBox = this.workArea;
+        //this.nowFlowItem = null;    //now selected FlowNode/FlowLine
 
         //set instance first
         var uiBase = new UiBase(boxId);
@@ -92,12 +56,6 @@ function UiForm(boxId, mItem) {
         _form.loadRow(rowBox, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
     };
 
-    /*
-    this.fnAfterAddLine = function (json) {
-        this.mLine.addRow(json, null, json.Id);   //不產生新Id, FlowLine已經產生
-    };
-    */
-
     /**
      * on show right menu
      * param isNode {bool} 
@@ -112,7 +70,7 @@ function UiForm(boxId, mItem) {
 
         //一般節點才需要設定屬性
         var canEdit = isNode
-            ? (this.isEdit && flowItem.getNodeType() == _flow.TypeNode)
+            ? (this.isEdit && flowItem.getNodeType() == EstrNodeType.Node)
             : this.isEdit;
 
         //html 不會自動處理自製功能表狀態, 自行配合 css style
@@ -180,48 +138,12 @@ function UiForm(boxId, mItem) {
     };
 
     //#region node function
-
-    /**
-     * add new node
-     * param nodeType {string}
-     * param name {string} only for normalType node
-     */ 
-    this.addItem = function (nodeType, name) {
-
-        var name = '';
-        if (nodeType == _flow.TypeStart) {
-            name = 'S';
-        } else if (nodeType == _flow.TypeEnd) {
-            name = 'E';
-        } else {
-            name = '節點-' + this.uiBase.getNewItemId();
-        }
-
-        //mItem新筆一筆資料, 會產生新id
-        var json = {
-            Name: name,
-            NodeType: nodeType,
-            PosX: 100,
-            PosY: 100,
-        };
-        var row = this.mItem.addRow(json);  //會產生id
-        //row.Name += "-" + row.Id;
-
-		//flow add node
-		this.uiBase.addItem(row);
+    this.addItem = function (json) {
+        this.uiBase.addItem(json, this.nowBox);
     };
 
-    this.deleteItem = function (node) {
-        //delete mItem
-        this.mItem.deleteRow(node.getId());
-
-        //delete mLine
-        node.getLines().forEach(line => {
-            this.mLine.deleteRow(line.getId());
-        });
-
-        //delete  
-        this.uiBase.deleteItem();
+    this.deleteItem = function (json) {
+        this.uiBase.deleteItem(json);
     };
     //#endregion (node function)
 
@@ -235,46 +157,6 @@ function UiForm(boxId, mItem) {
         this.uiBase.deleteLine(line);
     };
     //#endregion (line function)
-
-    //將Db的條件內容轉換為顯示內容
-    this._condStrToLabel = function (str) {
-        if (_str.isEmpty(str))
-            return '';
-
-        var hasOr = str.indexOf(this.OrSep) > 0;    //先判斷
-        for (var i = 0; i < this.condOpExprs.length; i++)
-            str = str.replace(this.condOpExprs[i], this.condOpShows[i]);
-        if (hasOr)
-            str = '(' + str + ')';
-        return str;
-    };
-
-    //convert condStr to List<Cond> for 顯示編輯畫面
-    this._condStrToList = function (str) {
-        if (_str.isEmpty(str))
-            return null;
-
-        var orList = str.split(this.OrSep);
-        var orLen = orList.length;
-        var hasOr = (orLen > 1);
-        var result = [];
-        var ary = 0;
-        for (var i = 0; i < orLen; i++) {
-            var andList = orList[i].split(this.AndSep);
-            for (var j = 0; j < andList.length; j++) {
-                var cols = andList[j].split(this.ColSep);
-                result[ary] = {
-                    //AndOr: hasOr ? 'O' : 'A',
-                    AndOr: hasOr ? this.OrSep : this.AndSep,
-                    Fid: cols[0],
-                    Op: cols[1],
-                    Value: cols[2],
-                };
-                ary++;
-            }
-        }
-        return result;
-    };
 
     //編輯畫面讀取的是 condStr, flowLine顯示的是 label
     //get line condition string
@@ -304,44 +186,12 @@ function UiForm(boxId, mItem) {
     };
 
     //param line {FlowLine} flow line 
-    this.showLineProp = function (line) {
-        //debugger;
-        //var line = conn.getParameters();   //line model
-        //var line = this._connToLine(conn);
-        //var lineType = line.LineType;
-
-        var rowBox = this.mLine.idToRowBox(line.getId());
-		
-        //show fields
-        //_iradio.set('LineType', lineType, form);
-        //this.onChangeLineType(lineType); //switch input
-        var form = this.modalLineProp.find('form');
-        _iread.set('FromColName', line.fromCol.getName(), form);
-        _iread.set('ToNodeName', line.toNode.getName(), form);
-        _iselect.set('FromType', line.getFromType(), form);
-        _itext.set('Sort', _itext.get('Sort', rowBox), form);
-
-        //show modal
-        _modal.showO(this.modalLineProp);
-
-        //if (!this.isLineCondMode(lineType))
-        //    line.CondStr = '';
-
-        //load line conditions rows
-        this.tbodyLineCond.empty();
-        var condStr = _itext.get('CondStr', rowBox)
-        var condList = this._condStrToList(condStr);
-        if (condList != null) {
-            for (var i = 0; i < condList.length; i++) {
-                var newCond = $(this.tplLineCond);
-                _form.loadRow(newCond, condList[i]);
-                this.tbodyLineCond.append(newCond);
-            }
-        }
-    };
-
-    this.onAddCol = function () {
-        this.addItem(itemType);
+    this.onAddCol = async function () {
+        var json = {
+            ItemType: EstrUiType.Col,
+            InputType: EstrInputType.Text,
+        };
+        await this.addItem(json);
     };
     this.onAddBox = function () {
         this.addItem(itemType);
@@ -388,21 +238,6 @@ function UiForm(boxId, mItem) {
         //todo
     };
 
-    //onclick add line condition
-    this.onAddLineCond = function () {
-        var row = {
-            AndOr: this.AndSep,
-            Op: 'eq',
-        };
-        var cond = $(Mustache.render(this.tplLineCond, row));
-        _form.loadRow(cond, row);        //row objec to UI
-        this.tbodyLineCond.append(cond);
-    };
-
-    this.onDeleteLineCond = function (btn) {
-        $(btn).closest('tr').remove();
-    };
-
     //node prop onclick ok
     this.onModalItemOk = function () {
         //check input
@@ -422,31 +257,6 @@ function UiForm(boxId, mItem) {
         //hide modal
         _modal.hideO(this.modalItemProp);
     };
-
-    //line prop click ok
-    this.onModalLineOk = function () {
-        //check input
-		//var form = this.modalLineProp;
-
-        //update mLine
-        var modal = this.modalLineProp;
-        var row = {
-            CondStr: this._getCondStr(),
-            Sort: _itext.get('Sort', modal),
-            FromType: _iselect.get('FromType', modal),
-        };
-        var line = this.nowFlowItem;
-        var rowBox = this.mLine.idToRowBox(line.getId());
-        _form.loadRow(rowBox, row);
-		
-		//update flowLine
-        line.setLabel(this._condStrToLabel(row.CondStr));
-        line.setFromType(row.FromType);
-		
-        //hide modal
-        _modal.hideO(modal);
-    };
-    //#endregion (events)
 
 	//call last
     this._init();

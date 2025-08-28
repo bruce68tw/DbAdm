@@ -53,7 +53,7 @@
             new CrudR(config, [null, _me.mItem]);
 
             //initial flow edit form
-            _me.uiForm = new UiForm('divEdit', _me.mItem);
+            _me.uiForm = new UiForm('divEdit', _me.mItem, '.xu-ui-area');
 
             //custom function
             _me.mItem.fnLoadRows = _me.mItem_loadRows;
@@ -86,11 +86,11 @@
         //auto called !!
         //reset when create
         fnAfterOpenEdit: function (fun, json) {
-            var isAdd = (fun === _fun.FunC);
+            var isAdd = (fun === EstrFun.Create);
             if (isAdd) {
                 _me.uiForm.reset();
             }
-            _me.uiForm.setEdit(isAdd || (fun === _fun.FunU));
+            _me.uiForm.setEdit(isAdd || (fun === EstrFun.Update));
         },
 
         /**
@@ -102,7 +102,7 @@
          * returns {bool}
          */
         fnUpdateOrViewA: async function (fun, key) {
-            var act = (fun == _fun.FunU)
+            var act = (fun == EstrFun.Update)
                 ? 'GetUpdJson' : 'GetViewJson';
             return await _ajax.getJsonA(act, { key: key }, function (json) {
                 //show container first

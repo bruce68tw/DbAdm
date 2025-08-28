@@ -37,9 +37,9 @@ var _prog = {
      * param fun {string} fun mode
      */
     setPath: function (fun, updName) {
-        var name = (fun == _fun.FunC) ? _BR.Create :
-            (fun == _fun.FunV) ? _BR.View :
-            (fun != _fun.FunU) ? '??' :
+        var name = (fun == EstrFun.Create) ? _BR.Create :
+            (fun == EstrFun.View) ? _BR.View :
+            (fun != EstrFun.Update) ? '??' :
             _str.isEmpty(updName) ? _BR.Update :
             updName;
         _prog.setFunName(name);
