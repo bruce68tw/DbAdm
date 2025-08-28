@@ -8,6 +8,11 @@
  */ 
 function UiForm(boxId, mItem, ftWorkArea) {
 
+    //欄位id, title, 後端傳回後再取代
+    this.Fid = '_fid_';
+    this.Title = '_title_';
+    this.Cols = '2,3';
+
     //是否可編輯
     this.isEdit = false;
 
@@ -25,6 +30,8 @@ function UiForm(boxId, mItem, ftWorkArea) {
         //#region variables
         //editMany
         this.mItem = mItem;
+
+        this.newColNo = 0;
 
         this.eformItems = $('#eformItems');           //nodes edit form for editMany
         this.modalItemProp = $('#modalItemProp');
@@ -187,11 +194,18 @@ function UiForm(boxId, mItem, ftWorkArea) {
 
     //param line {FlowLine} flow line 
     this.onAddCol = async function () {
+        this.newColNo++;
+        /*
         var json = {
             ItemType: EstrUiType.Col,
             InputType: EstrInputType.Text,
+            Code: this.Fid + this.newColNo,
+            Name: this.Title + this.newColNo,
         };
-        await this.addItem(json);
+        */
+        var fid = 'field' + this.newColNo;
+        var title = '欄位' + this.newColNo;
+        await this.uiBase.addCol(this.nowBox, EstrInputType.Text, fid, title, this.Cols);
     };
     this.onAddBox = function () {
         this.addItem(itemType);

@@ -710,9 +710,9 @@ namespace DbAdm.Services
                     return "";
 
                 case QEitemTypeEstr.Text:
-                case QEitemTypeEstr.TextArea:
+                case QEitemTypeEstr.Textarea:
                 case QEitemTypeEstr.Password:
-                    var compType = (item.ItemType == QEitemTypeEstr.TextArea) 
+                    var compType = (item.ItemType == QEitemTypeEstr.Textarea) 
                         ? "XiTextarea" : "XiText";
                     str = CompStart(compType) + 
                         ConcatViewCols(
@@ -753,7 +753,7 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case QEitemTypeEstr.CheckBox:
+                case QEitemTypeEstr.Check:
                     center = true;
                     str = CompStart("XiCheck") + 
                         ConcatViewCols(

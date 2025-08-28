@@ -34,8 +34,12 @@ class UiBase {
 		let boxDom = document.getElementById(boxId);
 		//this.svg = SVG().addTo(boxDom).size('100%', '100%');
 
+		//constant
+		this.Fid = '_fid_';
+		this.Title = '_title_';
+
 		//記錄各種輸入欄位模版, 減少後端傳回
-		this.inputTypeJson = {};
+		this.inputJson = {};
 
 		this.fnMoveItem = null;
 		this.fnAfterAddLine = null;
@@ -89,6 +93,27 @@ class UiBase {
 	};
 	*/
 
+	async addCol(box, inputType, fid, title, layout) {
+		var item = new UiCol(this);
+		/*
+		if (item == null) {
+			console.log(`json.ItemType is wrong.(${json.ItemType})`);
+			return null;
+		}
+		*/
+
+		//產生UI元件
+		//, inputType, fid, title, layout
+		var html = await item.newHtml(inputType, this.Fid, this.Title, layout);
+		html = _str.replaceAll(html, this.Fid, fid);
+		html = _str.replaceAll(html, this.Title, title);
+		box.append(html);
+
+		this.newItemId++;
+		this.items.push(item);
+		return item;
+	}
+
 	async addItem(json, box) {
 		//this.nodeCount++;
 		//if (json.id == null)
@@ -96,18 +121,20 @@ class UiBase {
 		var itemType = json.ItemType;
 		let item = (itemType == EstrUiType.Col) ? new UiCol(this, json) :
 			(itemType == EstrUiType.Box) ? new UiBox(this, json) :
-				(itemType == EstrUiType.Group) ? new UiGroup(this, json) :
-					(itemType == EstrUiType.Table) ? new UiTable(this, json) :
-						null;
+			(itemType == EstrUiType.Group) ? new UiGroup(this, json) :
+			(itemType == EstrUiType.Table) ? new UiTable(this, json) :
+			null;
 
 		if (item == null) {
 			console.log(`json.ItemType is wrong.(${json.ItemType})`);
 			return null;
 		}
 
+		//產生UI元件
 		var html = await item.newHtml(json);
 		box.append(html);
 
+		this.newItemId++;
 		this.items.push(item);
 		return item;
 	}
@@ -169,11 +196,12 @@ class UiBase {
 
 class UiItem {
 
-	constructor(uiBase, json) {
+	constructor(uiBase) {
 
 		//start/end node radius
 		//this.MinRadius = 20;
 
+		/*
 		//normal node size
 		this.MinWidth = 80;
 		this.MinHeight = 42;
@@ -183,28 +211,11 @@ class UiItem {
 
 		this.PinWidth = 12;
 		this.PinGap = 3;
+		*/
 
-		this._init(uiBase, json);
-	}
-
-	_init(uiBase, json) {
 		this.self = this;
 		this.uiBase = uiBase;
-		/*
-		this.json = Object.assign({
-			Name: 'Node',
-			NodeType: EstrNodeType.Node,
-			PosX: json.PosX || 100,
-			PosY: json.PosY || 100,
-		}, json);
 
-		//set instance variables
-		//this.lines = [];
-
-		let nodeType = this.json.NodeType;
-		let cssClass = '';
-		let nodeText = '';
-		*/
 		//this._setEvent();
 	}
 
@@ -410,17 +421,25 @@ class UiCol extends UiItem {
 	*/
 
 	//(子代覆寫)傳回html內容
-	async newHtml(json) {
+	async newHtml(inputType, fid, title, cols) {
+		/*
 		var inputType = json.InputType;
 		if (_str.isEmpty(inputType))
 			return '';
+		*/
 
-		var inputTypeJson = this.uiBase.inputTypeJson;
-		if (inputTypeJson[inputType] == null) {
-			var html = await _ajax.getStrA('GetInputHtml', { inputType: 'aaa' });
-			inputTypeJson[inputType] = html;
+		var inputJson = this.uiBase.inputJson;
+		if (inputJson[inputType] == null) {
+			var data = {
+				inputType: inputType,
+				fid: fid,
+				title: title,
+				cols: cols,
+			};
+			var html = await _ajax.getStrA('GetInputHtml', data);
+			inputJson[inputType] = html;
 		}
-		return inputTypeJson[inputType];
+		return inputJson[inputType];
 	}
 
 }
