@@ -266,23 +266,29 @@ class UiItem {
 	}
 	*/
 
+	//定義通用事件
 	_setEvent() {
+		//點擊右鍵顯示menu(for col, table, group only)
+		//mouse over 顯示拖拉圖示
+		//drag over 顯示拖放位置
+		//drag end 移動位置
+
 		//enable right click menu
 		let me = this;	//UiItem
 		let uiBase = this.uiBase;
 
-		this.elm.node.addEventListener('contextmenu', function (event) {
+		this.elm.node.addEventListener(EstrMouse.RightMenu, function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			if (uiBase.fnShowMenu)
 				uiBase.fnShowMenu(event, true, me);
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
-		this.elm.draggable().on(this.DragMove, () => {
+		this.elm.draggable().on(EstrMouse.DragMove, () => {
 			if (!uiBase.isEdit) return;
 
 			this._drawLines();
-		}).on(this.DragEnd, (event) => {
+		}).on(EstrMouse.DragEnd, (event) => {
 			if (!uiBase.isEdit) return;
 
 			let { x, y } = event.detail.box;
@@ -415,10 +421,36 @@ class UiItem {
 
 //輸入欄位
 class UiCol extends UiItem {
-	/*
-	constructor(json) {
+	constructor(uiBase) {
+
+		//註冊事件
+		// 啟用 pinElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pinElm !!
+		this.pinElm.draggable().on(EstrMouse.DragStart, (event) => {
+			if (!uiBase.isEdit) return;
+
+		}).on(EstrMouse.DragMove, (event) => {
+			if (!uiBase.isEdit) return;
+
+			//阻止 connector 移動
+			event.preventDefault();
+
+		}).on(EstrMouse.DragEnd, (event) => {
+			if (!uiBase.isEdit) return;
+
+			// 檢查座標值是否有效
+			if (toElm) {
+				me._markItem(toElm, false);
+				var id = toElm.parent().node.dataset.id;
+				var json = uiBase.drawLineEnd(uiBase.idToItem(id));
+				toElm = null;
+
+				//trigger event
+				if (uiBase.fnAfterAddLine)
+					uiBase.fnAfterAddLine(json);
+			}
+			tempLine.remove();
+		});
 	}
-	*/
 
 	//(子代覆寫)傳回html內容
 	async newHtml(inputType, fid, title, cols) {

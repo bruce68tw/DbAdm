@@ -5,5 +5,6 @@ var EstrMouse = {
     DragMove: 'dragmove',
     DragEnd: 'dragend',
     MouseDown: 'mousedown',
+    RightMenu: 'contextmenu',
 
 };
