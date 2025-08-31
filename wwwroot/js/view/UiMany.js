@@ -1,12 +1,12 @@
 ﻿/**
- * 參考 FlowForm.js
+ * 控制 EditMany, 參考 FlowMany.js
  * 處理 UI 元素和多筆資料之間的轉換
  * param boxId {string} edit canvas id
  * param mItem {EditMany}
  * param ftWorkArea {string} filter of work area
- * return {UiForm}
+ * return {UiMany}
  */ 
-function UiForm(boxId, mItem, ftWorkArea) {
+function UiMany(boxId, ftWorkArea, mItem, mCol) {
 
     //欄位id, title, 後端傳回後再取代
     this.Fid = '_fid_';
@@ -30,6 +30,7 @@ function UiForm(boxId, mItem, ftWorkArea) {
         //#region variables
         //editMany
         this.mItem = mItem;
+        this.mCol = mCol;
 
         this.newColNo = 0;
 
@@ -43,15 +44,15 @@ function UiForm(boxId, mItem, ftWorkArea) {
         //now container for add item
         this.divEdit = $('#' + boxId);
         this.workArea = this.divEdit.find(ftWorkArea);
-        this.nowBox = this.workArea;
+        //this.nowBox = this.workArea;
         //this.nowFlowItem = null;    //now selected FlowNode/FlowLine
 
         //set instance first
-        var uiBase = new UiBase(boxId);
-        uiBase.fnMoveItem = (node, x, y) => this.fnMoveItem(node, x, y);
-        uiBase.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
-        uiBase.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
-        this.uiBase = uiBase;
+        var uiView = new UiView(boxId);
+        uiView.fnMoveItem = (node, x, y) => this.fnMoveItem(node, x, y);
+        uiView.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
+        uiView.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
+        this.uiView = uiView;
         //#endregion
 
         //set event
@@ -103,13 +104,13 @@ function UiForm(boxId, mItem, ftWorkArea) {
 
     //清除UI & flow元件
     this.reset = function () {
-        this.uiBase.reset();
+        this.uiView.reset();
     };
 
 	//set editable or not
     this.setEdit = function (status) {
         this.isEdit = status;
-        this.uiBase.setEdit(status);
+        this.uiView.setEdit(status);
     };
 
     /**
@@ -141,16 +142,16 @@ function UiForm(boxId, mItem, ftWorkArea) {
         this.mItem.loadRowsByRsb(rows, true);
 		
 		//flow loadItems
-        this.uiBase.loadItems(rows);
+        this.uiView.loadItems(rows);
     };
 
     //#region node function
     this.addItem = function (json) {
-        this.uiBase.addItem(json, this.nowBox);
+        this.uiView.addItem(json);
     };
 
     this.deleteItem = function (json) {
-        this.uiBase.deleteItem(json);
+        this.uiView.deleteItem(json);
     };
     //#endregion (node function)
 
@@ -161,7 +162,7 @@ function UiForm(boxId, mItem, ftWorkArea) {
         this.mLine.deleteRow(line.getId());
 
         //delete flowLine
-        this.uiBase.deleteLine(line);
+        this.uiView.deleteLine(line);
     };
     //#endregion (line function)
 
@@ -194,18 +195,23 @@ function UiForm(boxId, mItem, ftWorkArea) {
 
     //param line {FlowLine} flow line 
     this.onAddCol = async function () {
+        //mItem新筆一筆資料, 會產生新id
         this.newColNo++;
-        /*
+        var code = 'field' + this.newColNo;
+        var name = '欄位' + this.newColNo;
         var json = {
             ItemType: EstrUiType.Col,
-            InputType: EstrInputType.Text,
-            Code: this.Fid + this.newColNo,
-            Name: this.Title + this.newColNo,
+            Required: false, 
+            Info: `${code},${name}`,
+            //Code: 'field' + this.newColNo,
+            //Name: '欄位' + this.newColNo,
         };
-        */
-        var fid = 'field' + this.newColNo;
-        var title = '欄位' + this.newColNo;
-        await this.uiBase.addCol(this.nowBox, EstrInputType.Text, fid, title, this.Cols);
+        var row = this.mItem.addRow(json);  //會產生id
+        row.Fid = code;
+        row.Title = name;
+        //row.Name += "-" + row.Id;
+
+        await this.uiView.addCol(EstrInputType.Text, row);
     };
     this.onAddBox = function () {
         this.addItem(itemType);

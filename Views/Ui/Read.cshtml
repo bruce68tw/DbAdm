@@ -248,6 +248,10 @@
         <!-- uiItems editMany -->
         <form id='eformItems' class='d-none'>
         </form>
+
+        <!-- uiCols editMany -->
+        <form id='eformCols' class='d-none'>
+        </form>
     </div>
 </div>
 
@@ -259,20 +263,27 @@
     <li data-onclick="_me.uiForm.onMenuView" class="xd-view">View</li>
 </ul>
 
-<!-- uiItem template, 透過EditMany傳送後端update DB, _isnew(lower case !!), _key are need !!
-    template內必須加上型別, 使用vc語法時, 無法使用model !!
--->
+<!-- uiItem template for eformItems -->
 <script id="tplItem" type="text/template">
     <div class="xd-tr">
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Id" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "UiId" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "ItemType" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "InputType" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Label" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Fid" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Nullable" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Sort" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "SpanMode" })
+        <vc:xi-hide dto='new() { Fid = "Id" }' />
+        <vc:xi-hide dto='new() { Fid = "UiId" }' />
+        <vc:xi-hide dto='new() { Fid = "ItemType" }' />
+        <vc:xi-hide dto='new() { Fid = "Info" }' />
+        <vc:xi-hide dto='new() { Fid = "Sort" }' />
+    </div>
+</script>
+
+<!-- uiCol template for eformCols -->
+<script id="tplCol" type="text/template">
+    <div class="xd-tr">
+        <vc:xi-hide dto='new() { Fid = "Id" }' />
+        <vc:xi-hide dto='new() { Fid = "UiId" }' />
+        <vc:xi-hide dto='new() { Fid = "InputType" }' />
+        <vc:xi-hide dto='new() { Fid = "Code" }' />
+        <vc:xi-hide dto='new() { Fid = "Name" }' />
+        <vc:xi-hide dto='new() { Fid = "Required" }' />
+        <vc:xi-hide dto='new() { Fid = "Sort" }' />
     </div>
 </script>
 

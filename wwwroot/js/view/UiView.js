@@ -1,56 +1,215 @@
 //ui item type
 var EstrUiType = {
 	Col: 'C',
-	Box: 'B',
-	Group: 'G',
-	Table: 'T',
+	Box: 'B',		//只能放 group, col
+	Group: 'G',		
+	Table: 'TA',	//只能放 col
+	TabPage: 'TP',	//只能放 box, group, col
 };
 
 //input type, 對應 XpCode.Type=InputType、QEitemTypeEstr.cs
 var EstrInputType = {
-	Hide: 'H',
-	Text: 'T',
-	TextArea: 'TA',
-	Integer: 'INT',
-	Decimal: 'DEC',
-	Select: 'S',
-	CheckBox: 'C',
-	Radio: 'R',
+	Check: 'C',
 	Date: 'D',
 	DateTime: 'DT',
+	Decimal: 'DEC',
 	File: 'F',
+	//Hide: 'H',
 	Html: 'HTML',
-	Sort: 'SO',
+	Integer: 'INT',
 	Modal: 'MO',
-	Password: 'PWD',
-	ReadOnly: 'RO',
+	//Password: 'PWD',
+	Radio: 'R',
+	Read: 'RO',
+	Select: 'S',
+	//Sort: 'SO',
+	Text: 'T',
+	Textarea: 'TA',
 };
 
-class UiBase {
+/**
+ * 處理畫面操作, 包含基本元件
+ */
+class UiView {
 
 	constructor(boxId) {
-		this.boxId = boxId;
+		this.box = $('#' + boxId);
 
-		let boxDom = document.getElementById(boxId);
+		//let boxDom = document.getElementById(boxId);
 		//this.svg = SVG().addTo(boxDom).size('100%', '100%');
 
 		//constant
+		//使用這2個欄位傳到後端建立元件, 傳到前端後再取代成實際屬性
 		this.Fid = '_fid_';
 		this.Title = '_title_';
 
-		//記錄各種輸入欄位模版, 減少後端傳回
-		this.inputJson = {};
+		//包含欄位:ItemType, Item, Childs
+		this.items = [];
 
-		this.fnMoveItem = null;
-		this.fnAfterAddLine = null;
-		this.fnShowMenu = null;
+		//新node/line Id, 自動累加
+		this.newItemId = 0;
+
+		//儲存各種輸入欄位模版, 減少後端傳回
+		this.colJson = {};
+
+		this.nowBoxElm = null;
+
+		//this.fnMoveItem = null;
+		//this.fnAfterAddLine = null;
+		//this.fnShowMenu = null;
 
 		//是否可編輯
 		this.isEdit = false;
 
-		//新node/line Id, 自動累加
-		this.newItemId = 0;		//for node type
+	}
 
+	getUiType(item) {
+		//get id
+		var id = this.getItemId(item);
+
+		this.newItemId++;
+		return this.newItemId;
+	}
+
+	getItemId(item) {
+		//get id
+
+		this.newItemId++;
+		return this.newItemId;
+	}
+
+	/**
+	 * add col
+	 * param {string} inputType
+	 * param {json} json 包含欄位: fid, title, required
+	 * returns
+	 */
+	async addCol(inputType, json) {
+		var item = new UiCol(this);
+		/*
+		if (item == null) {
+			console.log(`json.ItemType is wrong.(${json.ItemType})`);
+			return null;
+		}
+		*/
+
+		//get set colJson
+		var colJson = this.uiView.colJson;
+		if (colJson[inputType] == null) {
+			var data = {
+				inputType: inputType,
+				fid: this.Fid,		//前端重設
+				title: this.Title,	//前端重設
+				cols: '2,3',		//前端重設
+				required: 1,		//前端重設
+			};
+			var tpl = await _ajax.getStrA('GetColHtml', data);
+			colJson[inputType] = tpl;
+		}
+
+		//render ui
+		//設定實際fid, title
+		var html = colJson[inputType];
+		html = _str.replaceAll(html, this.Fid, fid);	//多個取代
+		html = _str.replaceAll(html, this.Title, title);
+
+		//如果上層為box, 則cols改為4,6, 單個取代
+		if (this.upIsBox()) {
+			html = html.replace('col-md-2', 'col-md-4')
+				.replace('col-md-3', 'col-md-6');
+		}
+
+		//如果required=false, 則加上class d-none
+		if (!json.Required) {
+			html = $(html);		//轉Object
+			html.find('.x-required').addClass('d-none');
+		}
+		box.append(html);
+
+		/*
+		//add into EditMany mItem
+		//加到 items
+		this.newItemId++;
+		this.items.push(item);
+		return item;
+		*/
+	}
+
+	//上層是否為box
+	upIsBox() {
+		return (_itext.get('ItemType', $(this.nowBoxElm)) == EstrUiType.Box);
+	}
+
+	elmToItem(elm) {
+		//elm.node 指向dom
+		return this.items.find(a => a.getId() == id);
+	}
+
+	idToItem(id) {
+		//elm.node 指向dom
+		return this.items.find(a => a.getId() == id);
+	}
+
+	async addItem(json, box) {
+		//this.nodeCount++;
+		//if (json.id == null)
+		//	json.id = (this.items.length + 1) * (-1);
+		var itemType = json.ItemType;
+		let item = (itemType == EstrUiType.Col) ? new UiCol(this, json) :
+			(itemType == EstrUiType.Box) ? new UiBox(this, json) :
+			(itemType == EstrUiType.Group) ? new UiGroup(this, json) :
+			(itemType == EstrUiType.Table) ? new UiTable(this, json) :
+			null;
+
+		if (item == null) {
+			console.log(`json.ItemType is wrong.(${json.ItemType})`);
+			return null;
+		}
+
+		//產生UI元件
+		var html = await item.newHtml(json);
+		box.append(html);
+
+		this.newItemId++;
+		this.items.push(item);
+		return item;
+	}
+
+	//定義通用事件
+	_setEvent() {
+		//點擊右鍵顯示menu(for col, table, group only)
+		//mouse over 顯示拖拉圖示
+		//drag over 顯示拖放位置
+		//drag end 移動位置
+
+		//enable right click menu
+		let me = this;	//UiItem
+		let uiView = this.uiView;
+
+		this.elm.node.addEventListener(EstrMouse.RightMenu, function (event) {
+			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
+			if (uiView.fnShowMenu)
+				uiView.fnShowMenu(event, true, me);
+		});
+
+		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
+		this.elm.draggable().on(EstrMouse.DragMove, () => {
+			if (!uiView.isEdit) return;
+
+			this._drawLines();
+		}).on(EstrMouse.DragEnd, (event) => {
+			if (!uiView.isEdit) return;
+
+			let { x, y } = event.detail.box;
+			//console.log(`x=${x}, y=${y}`);
+
+			//trigger event
+			if (this.uiView.fnMoveItem)
+				this.uiView.fnMoveItem(this, x, y);
+		});
+
+		//set connector draggable
+		//this._setEventPin();
 	}
 
 	//get new node id
@@ -93,52 +252,6 @@ class UiBase {
 	};
 	*/
 
-	async addCol(box, inputType, fid, title, layout) {
-		var item = new UiCol(this);
-		/*
-		if (item == null) {
-			console.log(`json.ItemType is wrong.(${json.ItemType})`);
-			return null;
-		}
-		*/
-
-		//產生UI元件
-		//, inputType, fid, title, layout
-		var html = await item.newHtml(inputType, this.Fid, this.Title, layout);
-		html = _str.replaceAll(html, this.Fid, fid);
-		html = _str.replaceAll(html, this.Title, title);
-		box.append(html);
-
-		this.newItemId++;
-		this.items.push(item);
-		return item;
-	}
-
-	async addItem(json, box) {
-		//this.nodeCount++;
-		//if (json.id == null)
-		//	json.id = (this.items.length + 1) * (-1);
-		var itemType = json.ItemType;
-		let item = (itemType == EstrUiType.Col) ? new UiCol(this, json) :
-			(itemType == EstrUiType.Box) ? new UiBox(this, json) :
-			(itemType == EstrUiType.Group) ? new UiGroup(this, json) :
-			(itemType == EstrUiType.Table) ? new UiTable(this, json) :
-			null;
-
-		if (item == null) {
-			console.log(`json.ItemType is wrong.(${json.ItemType})`);
-			return null;
-		}
-
-		//產生UI元件
-		var html = await item.newHtml(json);
-		box.append(html);
-
-		this.newItemId++;
-		this.items.push(item);
-		return item;
-	}
-
 	/*
 	this.addLine = function (json) {
 		return new FlowLine(this, json);
@@ -175,11 +288,6 @@ class UiBase {
 	};
 	*/
 
-	idToItem(id) {
-		//elm.node 指向dom
-		return this.items.find(a => a.getId() == id);
-	}
-
 	/*
 	//check has startNode or not
 	this.hasStartNode = function () {
@@ -191,12 +299,12 @@ class UiBase {
 	//call last
 	//this._init(boxId);
 
-} //class UiBase
+} //class UiView
 
 
 class UiItem {
 
-	constructor(uiBase) {
+	constructor(uiView) {
 
 		//start/end node radius
 		//this.MinRadius = 20;
@@ -213,10 +321,14 @@ class UiItem {
 		this.PinGap = 3;
 		*/
 
+		//set variables
 		this.self = this;
-		this.uiBase = uiBase;
+		this.uiView = uiView;
 
-		//this._setEvent();
+		//render元件
+
+		//set event
+		this._setEvent();
 	}
 
 	//(子代覆寫)傳回html內容
@@ -275,28 +387,28 @@ class UiItem {
 
 		//enable right click menu
 		let me = this;	//UiItem
-		let uiBase = this.uiBase;
+		let uiView = this.uiView;
 
 		this.elm.node.addEventListener(EstrMouse.RightMenu, function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
-			if (uiBase.fnShowMenu)
-				uiBase.fnShowMenu(event, true, me);
+			if (uiView.fnShowMenu)
+				uiView.fnShowMenu(event, true, me);
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
 		this.elm.draggable().on(EstrMouse.DragMove, () => {
-			if (!uiBase.isEdit) return;
+			if (!uiView.isEdit) return;
 
 			this._drawLines();
 		}).on(EstrMouse.DragEnd, (event) => {
-			if (!uiBase.isEdit) return;
+			if (!uiView.isEdit) return;
 
 			let { x, y } = event.detail.box;
 			//console.log(`x=${x}, y=${y}`);
 
 			//trigger event
-			if (this.uiBase.fnMoveItem)
-				this.uiBase.fnMoveItem(this, x, y);
+			if (this.uiView.fnMoveItem)
+				this.uiView.fnMoveItem(this, x, y);
 		});
 
 		//set connector draggable
@@ -320,31 +432,31 @@ class UiItem {
 		let tempLine;
 		let toElm = null;
 		let me = this;	//flowNode
-		let uiBase = this.uiBase;
+		let uiView = this.uiView;
 
 		// 啟用 pinElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pinElm !!
 		this.pinElm.draggable().on(EstrMouse.DragStart, (event) => {
-			if (!uiBase.isEdit) return;
+			if (!uiView.isEdit) return;
 
 		}).on(EstrMouse.DragMove, (event) => {
-			if (!uiBase.isEdit) return;
+			if (!uiView.isEdit) return;
 
 			//阻止 connector 移動
 			event.preventDefault();
 
 		}).on(EstrMouse.DragEnd, (event) => {
-			if (!uiBase.isEdit) return;
+			if (!uiView.isEdit) return;
 
 			// 檢查座標值是否有效
 			if (toElm) {
 				me._markItem(toElm, false);
 				var id = toElm.parent().node.dataset.id;
-				var json = uiBase.drawLineEnd(uiBase.idToItem(id));
+				var json = uiView.drawLineEnd(uiView.idToItem(id));
 				toElm = null;
 
 				//trigger event
-				if (uiBase.fnAfterAddLine)
-					uiBase.fnAfterAddLine(json);
+				if (uiView.fnAfterAddLine)
+					uiView.fnAfterAddLine(json);
 			}
 			tempLine.remove();
 		});
@@ -414,39 +526,39 @@ class UiItem {
 	}
 
 	//call last
-	//this._init(uiBase, json);
+	//this._init(uiView, json);
 
 }//class UiItem
 
 
 //輸入欄位
 class UiCol extends UiItem {
-	constructor(uiBase) {
+	constructor(uiView) {
 
 		//註冊事件
 		// 啟用 pinElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pinElm !!
 		this.pinElm.draggable().on(EstrMouse.DragStart, (event) => {
-			if (!uiBase.isEdit) return;
+			if (!uiView.isEdit) return;
 
 		}).on(EstrMouse.DragMove, (event) => {
-			if (!uiBase.isEdit) return;
+			if (!uiView.isEdit) return;
 
 			//阻止 connector 移動
 			event.preventDefault();
 
 		}).on(EstrMouse.DragEnd, (event) => {
-			if (!uiBase.isEdit) return;
+			if (!uiView.isEdit) return;
 
 			// 檢查座標值是否有效
 			if (toElm) {
 				me._markItem(toElm, false);
 				var id = toElm.parent().node.dataset.id;
-				var json = uiBase.drawLineEnd(uiBase.idToItem(id));
+				var json = uiView.drawLineEnd(uiView.idToItem(id));
 				toElm = null;
 
 				//trigger event
-				if (uiBase.fnAfterAddLine)
-					uiBase.fnAfterAddLine(json);
+				if (uiView.fnAfterAddLine)
+					uiView.fnAfterAddLine(json);
 			}
 			tempLine.remove();
 		});
@@ -460,18 +572,18 @@ class UiCol extends UiItem {
 			return '';
 		*/
 
-		var inputJson = this.uiBase.inputJson;
-		if (inputJson[inputType] == null) {
+		var colJson = this.uiView.colJson;
+		if (colJson[inputType] == null) {
 			var data = {
 				inputType: inputType,
 				fid: fid,
 				title: title,
 				cols: cols,
 			};
-			var html = await _ajax.getStrA('GetInputHtml', data);
-			inputJson[inputType] = html;
+			var html = await _ajax.getStrA('GetColHtml', data);
+			colJson[inputType] = html;
 		}
-		return inputJson[inputType];
+		return colJson[inputType];
 	}
 
 }
