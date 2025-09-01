@@ -16,8 +16,8 @@
     }
 </style>
 
-<script nonce="@_Fun.Nonce" src="~/js/view/UiBase.js"></script>
-<script nonce="@_Fun.Nonce" src="~/js/view/UiForm.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/UiView.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/UiMany.js"></script>
 <script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
@@ -47,17 +47,24 @@
             _me.divEditTbar = $('#divEditTbar');
 
             //initial edit one/many, rowsBox(參數2) 使用 eform
-            _me.mItem = new EditMany('Id', 'eformItems', 'tplItem', '.xd-tr');
+            _me.mItem = new EditMany('Id', 'eformItems', 'tplItem', '.xd-tr', 'Sort');
+            //_me.mCol = new EditMany('Id', 'eformCols', 'tplCol', '.xd-tr', 'Sort');
             //_me.mLine = new EditMany('Id', 'eformLines', 'tplLine', '.xd-tr', 'Sort');
             new CrudR(config, [null, _me.mItem]);
 
             //initial flow edit form
-            _me.uiForm = new UiForm('divEdit', _me.mItem, '.xu-ui-area');
+            _me.uiMany = new UiMany('#divEdit', '.xu-ui-area', _me.mItem);
 
             //custom function
             _me.mItem.fnLoadRows = _me.mItem_loadRows;
             _me.mItem.fnGetUpdJson = _me.mItem_getUpdJson;
             _me.mItem.fnValid = _me.mItem_valid;
+            //
+            /*
+            _me.mCol.fnLoadRows = _me.mCol_loadRows;
+            _me.mCol.fnGetUpdJson = _me.mCol_getUpdJson;
+            _me.mCol.fnValid = _me.mCol_valid;
+            */
 
             //for flow test
             //_me.divFlowTest = $('#divFlowTest');
@@ -87,9 +94,9 @@
         fnAfterOpenEdit: function (fun, json) {
             var isAdd = (fun === EstrFun.Create);
             if (isAdd) {
-                _me.uiForm.reset();
+                _me.uiMany.reset();
             }
-            _me.uiForm.setEdit(isAdd || (fun === EstrFun.Update));
+            _me.uiMany.setEdit(isAdd || (fun === EstrFun.Update));
         },
 
         /**
@@ -116,7 +123,7 @@
         //#region mItem/mLine custom function
         //load nodes
         mItem_loadRows: function (rows) {
-            _me.uiForm.loadNodes(rows);
+            _me.uiMany.loadNodes(rows);
         },
 
         //getUpdJson
@@ -131,7 +138,7 @@
 
         /*
         mLine_loadRows: function (rows) {
-            _me.uiForm.loadLines(rows);
+            _me.uiMany.loadLines(rows);
         },
 
         //getUpdJson
@@ -222,7 +229,7 @@
     </div>
 
     <div id="divEdit" class="d-flex d-none vh-100">
-        <!-- eform 在 uiForm 下面, 使用 z-index無效, 改用 width -->
+        <!-- eform 在 uiMany 下面, 使用 z-index無效, 改用 width -->
         <form id='eform' class='x-form x-w100 me-2 vh-100'>
             <vc:xi-hide dto='new() { Fid = "Id" }' />
             <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text w-150" , InputTip = "畫面代碼",  InputAttr = "title=畫面代碼" }' />
@@ -231,10 +238,10 @@
             <!-- add outer div for validate msg layout -->
             <div>
                 <div class="btn-group-vertical ms-1" role="group" aria-label="button group vertical">
-                    <button type="button" class="btn xf-node" data-onclick="_me.uiForm.onAddCol" Title='增加輸入欄位'>輸入欄位</button>
-                    <button type="button" class="btn xf-start" data-onclick="_me.uiForm.onAddBox" Title='增加2欄位的容器'>2欄容器</button>
-                    <button type="button" class="btn xf-end" data-onclick="_me.uiForm.onAddGroup" Title='增加Group文字'>Group文字</button>
-                    <button type="button" class="btn xf-end" data-onclick="_me.uiForm.onAddTable" Title='增加Table'>多筆表格</button>
+                    <button type="button" class="btn xf-node" data-onclick="_me.uiMany.onAddCol" Title='增加輸入欄位'>輸入欄位</button>
+                    <button type="button" class="btn xf-start" data-onclick="_me.uiMany.onAddBox" Title='增加2欄位的容器'>2欄容器</button>
+                    <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddGroup" Title='增加Group文字'>Group文字</button>
+                    <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddTable" Title='增加Table'>多筆表格</button>
                 </div>
             </div>
             <div class="xu-eform-tail">
@@ -258,9 +265,9 @@
 
 <!-- context menu for node & line, xf means flow -->
 <ul class='xf-menu'>
-    <li data-onclick="_me.uiForm.onMenuEdit" class="xd-edit">Edit</li>
-    <li data-onclick="_me.uiForm.onMenuDelete" class="xd-delete">Delete</li>
-    <li data-onclick="_me.uiForm.onMenuView" class="xd-view">View</li>
+    <li data-onclick="_me.uiMany.onMenuEdit" class="xd-edit">Edit</li>
+    <li data-onclick="_me.uiMany.onMenuDelete" class="xd-delete">Delete</li>
+    <li data-onclick="_me.uiMany.onMenuView" class="xd-view">View</li>
 </ul>
 
 <!-- uiItem template for eformItems -->
@@ -305,7 +312,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" data-onclick="_me.uiForm.onModalNodeOk">確定</button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalNodeOk">確定</button>
             </div>
         </div>
     </div>

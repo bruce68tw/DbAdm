@@ -6,21 +6,16 @@
  * param ftWorkArea {string} filter of work area
  * return {UiMany}
  */ 
-function UiMany(boxId, ftWorkArea, mItem, mCol) {
+class UiMany {
 
-    //欄位id, title, 後端傳回後再取代
-    this.Fid = '_fid_';
-    this.Title = '_title_';
-    this.Cols = '2,3';
+    constructor(boxId, ftWorkArea, mItem, mCol) {
+        //欄位id, title, 後端傳回後再取代
+        this.Fid = '_fid_';
+        this.Title = '_title_';
+        //this.Cols = '2,3';
 
-    //是否可編輯
-    this.isEdit = false;
-
-    /**
-     * initial flow
-     */ 
-    this._init = function () {
-        //#region constant
+        //是否可編輯
+        this.isEdit = false;
 
         //html filter/class
         this.MenuFilter = '.xf-menu';   //menu for node/line property
@@ -32,6 +27,7 @@ function UiMany(boxId, ftWorkArea, mItem, mCol) {
         this.mItem = mItem;
         this.mCol = mCol;
 
+        this.newItemNo = 0;
         this.newColNo = 0;
 
         this.eformItems = $('#eformItems');           //nodes edit form for editMany
@@ -49,20 +45,21 @@ function UiMany(boxId, ftWorkArea, mItem, mCol) {
 
         //set instance first
         var uiView = new UiView(boxId);
-        uiView.fnMoveItem = (node, x, y) => this.fnMoveItem(node, x, y);
-        uiView.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
-        uiView.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
+        //uiView.fnMoveItem = (node, x, y) => this.fnMoveItem(node, x, y);
+        //uiView.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
+        //uiView.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
         this.uiView = uiView;
         //#endregion
 
         //set event
         this._setFlowEvent();
-    };
+    }
 
-    this.fnMoveItem = function (node, x, y) {
+
+    fnMoveItem(node, x, y) {
         var rowBox = this.mItem.idToRowBox(node.getId());
         _form.loadRow(rowBox, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
-    };
+    }
 
     /**
      * on show right menu
@@ -71,7 +68,7 @@ function UiMany(boxId, ftWorkArea, mItem, mCol) {
      * param mouseX {int} 
      * param mouseY {int} 
      */
-    this.fnShowMenu = function (event, isNode, flowItem) {
+    fnShowMenu(event, isNode, flowItem) {
         //set instance variables
         this.nowIsNode = isNode;
         this.nowFlowItem = flowItem;
@@ -100,25 +97,25 @@ function UiMany(boxId, ftWorkArea, mItem, mCol) {
                 left: event.clientX + 'px',
                 top: event.clientY + 'px',
             });
-    };
+    }
 
     //清除UI & flow元件
-    this.reset = function () {
+    reset() {
         this.uiView.reset();
-    };
+    }
 
 	//set editable or not
-    this.setEdit = function (status) {
+    setEdit(status) {
         this.isEdit = status;
         this.uiView.setEdit(status);
-    };
+    }
 
     /**
      * set flow events:
      *   1.line right click to show context menu
      *   2.mouse down to hide context menu
      */
-    this._setFlowEvent = function () {
+    _setFlowEvent() {
 
         //hide context menu
         var me = this;
@@ -131,44 +128,44 @@ function UiMany(boxId, ftWorkArea, mItem, mCol) {
             if (!$(e.target).parents(filter).length > 0)
                 _obj.hide($(filter));            
         });
-    };
+    }
 
     /**
      * load nodes into UI
      * param rows {json} 後端傳回的完整json
      */
-    this.loadItems = function (rows) {
+    loadItems(rows) {
         //EditMany load rows by rowsBox
         this.mItem.loadRowsByRsb(rows, true);
 		
 		//flow loadItems
         this.uiView.loadItems(rows);
-    };
+    }
 
     //#region node function
-    this.addItem = function (json) {
+    addItem(json) {
         this.uiView.addItem(json);
-    };
+    }
 
-    this.deleteItem = function (json) {
+    deleteItem(json) {
         this.uiView.deleteItem(json);
-    };
+    }
     //#endregion (node function)
 
 
     //delete line without warning msg
-    this.deleteLine = function (line) {
+    deleteLine(line) {
         //delete mLine
         this.mLine.deleteRow(line.getId());
 
         //delete flowLine
         this.uiView.deleteLine(line);
-    };
+    }
     //#endregion (line function)
 
     //編輯畫面讀取的是 condStr, flowLine顯示的是 label
     //get line condition string
-    this._getCondStr = function () {
+    _getCondStr() {
         var me = this;
         var condStr = '';
         this.tbodyLineCond.find('tr').each(function (idx) {
@@ -180,9 +177,9 @@ function UiMany(boxId, ftWorkArea, mItem, mCol) {
             condStr += str;
         });
         return condStr;
-    };
+    }
 
-    this.showItemProp = function (node) {
+    showItemProp(node) {
         //var node = this._elmToItem(this.nowFlowItem);
         //var row = this._boxGetValues(node, ['NodeType', 'Name', 'SignerType', 'SignerValue']);
         //var id = node.getId();
@@ -191,55 +188,55 @@ function UiMany(boxId, ftWorkArea, mItem, mCol) {
 
         //show modal
         _modal.showO(this.modalItemProp);   //.modal('show');
-    };
+    }
 
-    //param line {FlowLine} flow line 
-    this.onAddCol = async function () {
+    //param line {FlowLine} flow line
+    async onAddCol() {
         //mItem新筆一筆資料, 會產生新id
         this.newColNo++;
         var code = 'field' + this.newColNo;
         var name = '欄位' + this.newColNo;
+        //配合後端DB, 欄位使用大camel
         var json = {
             ItemType: EstrUiType.Col,
-            Required: false, 
+            //Required: false, 
             Info: `${code},${name}`,
-            //Code: 'field' + this.newColNo,
-            //Name: '欄位' + this.newColNo,
         };
         var row = this.mItem.addRow(json);  //會產生id
         row.Fid = code;
         row.Title = name;
+        row.Required = false;
         //row.Name += "-" + row.Id;
 
         await this.uiView.addCol(EstrInputType.Text, row);
-    };
-    this.onAddBox = function () {
+    }
+    onAddBox() {
         this.addItem(itemType);
-    };
-    this.onAddGroup = function () {
+    }
+    onAddGroup() {
         this.addItem(itemType);
-    };
-    this.onAddTable = function () {
+    }
+    onAddTable() {
         this.addItem(itemType);
-    };
+    }
 
     //#region events
 
-    this._menuStatus = function (me) {
+    _menuStatus(me) {
         return !me.classList.contains('off');
     }
 
     //context menu event
-    this.onMenuEdit = function (me) {
+    onMenuEdit(me) {
         if (!this._menuStatus(me)) return;
 
         if (this.nowIsNode)
             this.showItemProp(this.nowFlowItem);
         else
             this.showLineProp(this.nowFlowItem);
-    };
+    }
 
-    this.onMenuDelete = function (me) {
+    onMenuDelete(me) {
         if (!this._menuStatus(me)) return;
 
         var me = this;
@@ -252,14 +249,14 @@ function UiMany(boxId, ftWorkArea, mItem, mCol) {
                 me.deleteLine(me.nowFlowItem);
             });
         }
-    };
+    }
 
-    this.onMenuView = function (me) {
+    onMenuView(me) {
         //todo
-    };
+    }
 
     //node prop onclick ok
-    this.onModalItemOk = function () {
+    onModalItemOk() {
         //check input
 
         //set new value
@@ -276,9 +273,9 @@ function UiMany(boxId, ftWorkArea, mItem, mCol) {
 
         //hide modal
         _modal.hideO(this.modalItemProp);
-    };
+    }
 
 	//call last
-    this._init();
+    //this._init();
 
 }//class

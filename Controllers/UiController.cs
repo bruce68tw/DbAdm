@@ -68,44 +68,27 @@ namespace DbAdm.Controllers
         //傳回輸入欄位html, 必須傳回ViewComponentResult, 前端收到為字串
         [HttpPost]
         //[XgProgAuth(CrudEnum.View)]
-        public string GetColHtml(string inputType, string fid, string title, string cols)
+        public string GetColHtml(string inputType, string fid, string title)
         {
-            XiBaseDto data = new() { Fid = fid, Title = title, Cols = cols };
-            switch (inputType)
+            //固定 Cols = "2,3", Required = true, 前端自行調整
+            XiBaseDto data = new() { Fid = fid, Title = title, Cols = "2,3", Required = true };
+            return inputType switch
             {
-                case QEitemTypeEstr.Check:
-                    return _Input.XiCheck((XiCheckDto)data);
-                case QEitemTypeEstr.Date:
-                    return _Input.XiDate((XiDateDto)data);
-                case QEitemTypeEstr.DateTime:
-                    return _Input.XiDt((XiDtDto)data);
-                case QEitemTypeEstr.Decimal:
-                    return _Input.XiDec((XiDecDto)data);
-                case QEitemTypeEstr.File:
-                    return _Input.XiFile((XiFileDto)data);
-                case QEitemTypeEstr.Hide:
-                    return _Input.XiHide(new XiHideDto() { Fid = fid });
-                case QEitemTypeEstr.Html:
-                    return _Input.XiHtml((XiHtmlDto)data);
-                case QEitemTypeEstr.Integer:
-                    return _Input.XiInt((XiIntDto)data);
-                //case QEitemTypeEstr.Modal:
-                //    return _Input.XiModal((XiModalDto) { Fid = fid, Title = title });
-                //case QEitemTypeEstr.Password:
-                //    return _Input.XiPassword((XiDto) { Fid = fid, Title = title });
-                case QEitemTypeEstr.Radio:
-                    return _Input.XiRadio((XiRadioDto)data);
-                case QEitemTypeEstr.ReadOnly:
-                    return _Input.XiRead((XiReadDto)data);
-                case QEitemTypeEstr.Select:
-                    return _Input.XiSelect((XiSelectDto)data);
-                //case QEitemTypeEstr.Sort:
-                //    return _Input.Xi((XiDto) { Fid = fid, Title = title });
-                case QEitemTypeEstr.Textarea:
-                    return _Input.XiTextarea((XiTextareaDto)data);
-                default:
-                    return _Input.XiText(new XiTextDto() { Fid = fid, Title = title, Cols = cols });
-            }
+                //無法直接轉型, 只能用Copy
+                QEitemTypeEstr.Check => _Input.XiCheck(_Model.Copy<XiBaseDto, XiCheckDto>(data)),
+                QEitemTypeEstr.Date => _Input.XiDate(_Model.Copy<XiBaseDto, XiDateDto>(data)),
+                QEitemTypeEstr.DateTime => _Input.XiDt(_Model.Copy<XiBaseDto, XiDtDto>(data)),
+                QEitemTypeEstr.Decimal => _Input.XiDec(_Model.Copy<XiBaseDto, XiDecDto>(data)),
+                QEitemTypeEstr.File => _Input.XiFile(_Model.Copy<XiBaseDto, XiFileDto>(data)),
+                QEitemTypeEstr.Hide => _Input.XiHide(new XiHideDto() { Fid = fid }),
+                QEitemTypeEstr.Html => _Input.XiHtml(_Model.Copy<XiBaseDto, XiHtmlDto>(data)),
+                QEitemTypeEstr.Integer => _Input.XiInt(_Model.Copy<XiBaseDto, XiIntDto>(data)),
+                QEitemTypeEstr.Radio => _Input.XiRadio(_Model.Copy<XiBaseDto, XiRadioDto>(data)),
+                QEitemTypeEstr.ReadOnly => _Input.XiRead(_Model.Copy<XiBaseDto, XiReadDto>(data)),
+                QEitemTypeEstr.Select => _Input.XiSelect(_Model.Copy<XiBaseDto, XiSelectDto>(data)),
+                QEitemTypeEstr.Textarea => _Input.XiTextarea(_Model.Copy<XiBaseDto, XiTextareaDto>(data)),
+                _ => _Input.XiText(_Model.Copy<XiBaseDto, XiTextDto>(data)),
+            };
         }
 
     }//class

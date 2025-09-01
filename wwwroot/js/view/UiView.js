@@ -28,7 +28,7 @@ var EstrInputType = {
 };
 
 /**
- * 處理畫面操作, 包含基本元件
+ * 處理畫面操作, 包含基本元件, 使用jQuery
  */
 class UiView {
 
@@ -81,11 +81,11 @@ class UiView {
 	/**
 	 * add col
 	 * param {string} inputType
-	 * param {json} json 包含欄位: fid, title, required
+	 * param {json} json 包含欄位: Fid, Title, Required
 	 * returns
 	 */
 	async addCol(inputType, json) {
-		var item = new UiCol(this);
+		var col = new UiCol(this);
 		/*
 		if (item == null) {
 			console.log(`json.ItemType is wrong.(${json.ItemType})`);
@@ -100,8 +100,8 @@ class UiView {
 				inputType: inputType,
 				fid: this.Fid,		//前端重設
 				title: this.Title,	//前端重設
-				cols: '2,3',		//前端重設
-				required: 1,		//前端重設
+				//Cols: '2,3',		//前端重設
+				//Required: 1,		//前端重設
 			};
 			var tpl = await _ajax.getStrA('GetColHtml', data);
 			colJson[inputType] = tpl;
@@ -120,11 +120,14 @@ class UiView {
 		}
 
 		//如果required=false, 則加上class d-none
+		var obj = $(html);
 		if (!json.Required) {
-			html = $(html);		//轉Object
-			html.find('.x-required').addClass('d-none');
+			obj.find('.x-required').addClass('d-none');
 		}
-		box.append(html);
+
+		//註冊事件
+
+		box.append(obj);
 
 		/*
 		//add into EditMany mItem
@@ -176,24 +179,25 @@ class UiView {
 	}
 
 	//定義通用事件
-	_setEvent() {
+	_setEvent(obj) {
 		//點擊右鍵顯示menu(for col, table, group only)
 		//mouse over 顯示拖拉圖示
 		//drag over 顯示拖放位置
 		//drag end 移動位置
 
 		//enable right click menu
-		let me = this;	//UiItem
-		let uiView = this.uiView;
+		var me = this;	//UiItem
+		var uiView = this.uiView;
+		var elm = obj[0];
 
-		this.elm.node.addEventListener(EstrMouse.RightMenu, function (event) {
-			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
+		obj.on(EstrMouse.RightMenu, function (e) {
+			e.preventDefault();  // 取消瀏覽器預設右鍵選單
 			if (uiView.fnShowMenu)
-				uiView.fnShowMenu(event, true, me);
+				uiView.fnShowMenu(e, true, me);
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
-		this.elm.draggable().on(EstrMouse.DragMove, () => {
+		elm.draggable().on(EstrMouse.DragMove, () => {
 			if (!uiView.isEdit) return;
 
 			this._drawLines();
@@ -204,8 +208,8 @@ class UiView {
 			//console.log(`x=${x}, y=${y}`);
 
 			//trigger event
-			if (this.uiView.fnMoveItem)
-				this.uiView.fnMoveItem(this, x, y);
+			if (uiView.fnMoveItem)
+				uiView.fnMoveItem(this, x, y);
 		});
 
 		//set connector draggable

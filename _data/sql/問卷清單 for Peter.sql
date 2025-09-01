@@ -27,6 +27,7 @@ and i.IssueType in ('UA','UO','UP','US')
 and i.IsFinish=1
 and isnull(i.RptUser,'') != ''
 --and isnull(i.RptDeptCode,'') = ''
+--and i.Id='y91llwPtVX'
 order by p.Name
 
 /*
