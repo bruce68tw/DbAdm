@@ -32,8 +32,8 @@ var EstrInputType = {
  */
 class UiView {
 
-	constructor(boxId) {
-		this.box = $('#' + boxId);
+	constructor(ftWorkArea) {
+		this.box = $(ftWorkArea);
 
 		//let boxDom = document.getElementById(boxId);
 		//this.svg = SVG().addTo(boxDom).size('100%', '100%');
@@ -85,16 +85,16 @@ class UiView {
 	 * returns
 	 */
 	async addCol(inputType, json) {
-		var col = new UiCol(this);
+		//var col = new UiCol(this);
 		/*
 		if (item == null) {
 			console.log(`json.ItemType is wrong.(${json.ItemType})`);
 			return null;
 		}
 		*/
-
+		debugger;
 		//get set colJson
-		var colJson = this.uiView.colJson;
+		var colJson = this.colJson;
 		if (colJson[inputType] == null) {
 			var data = {
 				inputType: inputType,
@@ -110,8 +110,8 @@ class UiView {
 		//render ui
 		//設定實際fid, title
 		var html = colJson[inputType];
-		html = _str.replaceAll(html, this.Fid, fid);	//多個取代
-		html = _str.replaceAll(html, this.Title, title);
+		html = _str.replaceAll(html, this.Fid, json.Fid);	//多個取代
+		html = _str.replaceAll(html, this.Title, json.Title);
 
 		//如果上層為box, 則cols改為4,6, 單個取代
 		if (this.upIsBox()) {
@@ -126,6 +126,7 @@ class UiView {
 		}
 
 		//註冊事件
+		this._setEvent(obj);
 
 		box.append(obj);
 
@@ -200,16 +201,16 @@ class UiView {
 		elm.draggable().on(EstrMouse.DragMove, () => {
 			if (!uiView.isEdit) return;
 
-			this._drawLines();
+			//this._drawLines();
 		}).on(EstrMouse.DragEnd, (event) => {
 			if (!uiView.isEdit) return;
 
-			let { x, y } = event.detail.box;
+			//let { x, y } = event.detail.box;
 			//console.log(`x=${x}, y=${y}`);
 
 			//trigger event
-			if (uiView.fnMoveItem)
-				uiView.fnMoveItem(this, x, y);
+			//if (uiView.fnMoveItem)
+			//	uiView.fnMoveItem(this, x, y);
 		});
 
 		//set connector draggable
@@ -391,7 +392,7 @@ class UiItem {
 
 		//enable right click menu
 		let me = this;	//UiItem
-		let uiView = this.uiView;
+		//let uiView = this.uiView;
 
 		this.elm.node.addEventListener(EstrMouse.RightMenu, function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
@@ -411,8 +412,8 @@ class UiItem {
 			//console.log(`x=${x}, y=${y}`);
 
 			//trigger event
-			if (this.uiView.fnMoveItem)
-				this.uiView.fnMoveItem(this, x, y);
+			if (this.fnMoveItem)
+				this.fnMoveItem(this, x, y);
 		});
 
 		//set connector draggable

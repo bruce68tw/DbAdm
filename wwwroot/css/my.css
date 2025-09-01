@@ -500,13 +500,13 @@ body {
     line-height: 1.5;
     border-radius: .2rem;
 }
-*/
 
-.btn-secondary {
+.x-btn-gray {
     color: #fff;
     background-color: #6c757d;
     border-color: #6c757d;
 }
+*/
 
 /* table row button */
 .x-row-btn {
@@ -1516,7 +1516,7 @@ body, label {
 
     /* 分隔線 */
     .x-leftmenu li {
-        border-bottom: solid 1px #8099a5;
+        border-bottom: solid 1px #535a5e;
     }
 
     /* 文字 */

@@ -273,7 +273,8 @@
 <!-- uiItem template for eformItems -->
 <script id="tplItem" type="text/template">
     <div class="xd-tr">
-        <vc:xi-hide dto='new() { Fid = "Id" }' />
+    @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Id" })
+        <vc:xi-hide dto='new() { Fid = "Id2" }' />
         <vc:xi-hide dto='new() { Fid = "UiId" }' />
         <vc:xi-hide dto='new() { Fid = "ItemType" }' />
         <vc:xi-hide dto='new() { Fid = "Info" }' />

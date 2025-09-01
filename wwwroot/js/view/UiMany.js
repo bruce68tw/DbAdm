@@ -8,7 +8,8 @@
  */ 
 class UiMany {
 
-    constructor(boxId, ftWorkArea, mItem, mCol) {
+    constructor(ftBox, ftWorkArea, mItem) {
+        debugger;
         //欄位id, title, 後端傳回後再取代
         this.Fid = '_fid_';
         this.Title = '_title_';
@@ -25,7 +26,7 @@ class UiMany {
         //#region variables
         //editMany
         this.mItem = mItem;
-        this.mCol = mCol;
+        //this.mCol = mCol;
 
         this.newItemNo = 0;
         this.newColNo = 0;
@@ -38,13 +39,13 @@ class UiMany {
         this.tplItem = $('#tplItem').html();
 
         //now container for add item
-        this.divEdit = $('#' + boxId);
+        this.divEdit = $(ftBox);
         this.workArea = this.divEdit.find(ftWorkArea);
         //this.nowBox = this.workArea;
         //this.nowFlowItem = null;    //now selected FlowNode/FlowLine
 
         //set instance first
-        var uiView = new UiView(boxId);
+        var uiView = new UiView(ftWorkArea);
         //uiView.fnMoveItem = (node, x, y) => this.fnMoveItem(node, x, y);
         //uiView.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
         //uiView.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
