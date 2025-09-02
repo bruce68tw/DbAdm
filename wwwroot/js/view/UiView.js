@@ -1,7 +1,7 @@
 //ui item type
 var EstrUiType = {
 	Col: 'C',
-	Box: 'B',		//只能放 group, col
+	Row: 'R',		//只有2欄位, 只能放 group, col
 	Group: 'G',		
 	Table: 'TA',	//只能放 col
 	TabPage: 'TP',	//只能放 box, group, col
@@ -32,14 +32,17 @@ var EstrInputType = {
  */
 class UiView {
 
-	constructor(ftWorkArea) {
-		this.box = $(ftWorkArea);
+	constructor(ftWorkArea, ftMovePos) {
+		this.area = $(ftWorkArea);
+		this.areaElm = this.area[0];
+		this.movePos = $(ftMovePos);
 
 		//let boxDom = document.getElementById(boxId);
 		//this.svg = SVG().addTo(boxDom).size('100%', '100%');
 
 		//constant
 		//使用這2個欄位傳到後端建立元件, 傳到前端後再取代成實際屬性
+		this.XdItem = 'xd-item';	//item class
 		this.Fid = '_fid_';
 		this.Title = '_title_';
 
@@ -54,6 +57,10 @@ class UiView {
 
 		this.nowBoxElm = null;
 
+		//移動中item element
+		this.dragItemElm = null;
+		this.dragItemType = '';
+
 		//this.fnMoveItem = null;
 		//this.fnAfterAddLine = null;
 		//this.fnShowMenu = null;
@@ -61,6 +68,67 @@ class UiView {
 		//是否可編輯
 		this.isEdit = false;
 
+		var me = this.area;
+		this.area.on(EstrMouse.MouseMove, function (e) {
+			if (me.dragItemElm == null) return;
+			if (e.target == me.areaElm) return;
+
+			//e.target 為目前經過的 element
+			//禁止的情形
+
+			//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
+
+			e.target;
+
+			if (!isDown) return;
+			$("#box").css({
+				left: e.clientX - offsetX,
+				top: e.clientY - offsetY
+			});
+		});
+	}
+
+	//定義通用事件
+	_setEvent(obj) {
+		//點擊右鍵顯示menu(for col, table, group only)
+		//mouse over 顯示拖拉圖示
+		//drag over 顯示拖放位置
+		//drag end 移動位置
+
+		//enable right click menu
+		var me = this;	//UiItem
+		//var uiView = this.uiView;
+		//var elm = obj[0];
+
+		obj.on(EstrMouse.RightMenu, function (e) {
+			e.preventDefault();  // 取消瀏覽器預設右鍵選單
+			if (me.fnShowMenu)
+				me.fnShowMenu(e, true, me);
+		});
+
+		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
+		obj.on(EstrMouse.MouseDown, () => {
+			if (!me.isEdit) return;
+
+			//記錄物件
+			me.dragItemElm = this;
+			var upBox = $(this).closest('.' + me.XdItem);
+
+			//this._drawLines();
+		}).on(EstrMouse.MouseUp, (e) => {
+			if (!me.isEdit) return;
+
+			//let { x, y } = e.detail.box;
+			//console.log(`x=${x}, y=${y}`);
+
+			//移動物件, trigger event
+			//if (uiView.fnMoveItem)
+			//	uiView.fnMoveItem(this, x, y);
+			me.dragItemElm = null;
+		});
+
+		//set connector draggable
+		//this._setEventPin();
 	}
 
 	getUiType(item) {
@@ -78,6 +146,10 @@ class UiView {
 		return this.newItemId;
 	}
 
+	setEdit(status) {
+		this.isEdit = status;
+	}
+
 	/**
 	 * add col
 	 * param {string} inputType
@@ -92,7 +164,7 @@ class UiView {
 			return null;
 		}
 		*/
-		debugger;
+		//debugger;
 		//get set colJson
 		var colJson = this.colJson;
 		if (colJson[inputType] == null) {
@@ -109,18 +181,20 @@ class UiView {
 
 		//render ui
 		//設定實際fid, title
+		debugger;
 		var html = colJson[inputType];
 		html = _str.replaceAll(html, this.Fid, json.Fid);	//多個取代
 		html = _str.replaceAll(html, this.Title, json.Title);
 
 		//如果上層為box, 則cols改為4,6, 單個取代
-		if (this.upIsBox()) {
+		if (this.upIsRow()) {
 			html = html.replace('col-md-2', 'col-md-4')
 				.replace('col-md-3', 'col-md-6');
 		}
 
 		//如果required=false, 則加上class d-none
 		var obj = $(html);
+		this.addXdItem(obj);
 		if (!json.Required) {
 			obj.find('.x-required').addClass('d-none');
 		}
@@ -139,28 +213,35 @@ class UiView {
 		*/
 	}
 
-	//上層是否為box
-	upIsBox() {
-		return (_itext.get('ItemType', $(this.nowBoxElm)) == EstrUiType.Box);
+	addXdItem(obj) {
+		obj.addClass(this.XdItem);
 	}
 
+	//上層是否為box
+	upIsRow() {
+		return (_itext.get('ItemType', $(this.nowBoxElm)) == EstrUiType.Row);
+	}
+
+	/*
 	elmToItem(elm) {
 		//elm.node 指向dom
 		return this.items.find(a => a.getId() == id);
 	}
+	*/
 
 	idToItem(id) {
 		//elm.node 指向dom
 		return this.items.find(a => a.getId() == id);
 	}
 
+	//??
 	async addItem(json, box) {
 		//this.nodeCount++;
 		//if (json.id == null)
 		//	json.id = (this.items.length + 1) * (-1);
 		var itemType = json.ItemType;
 		let item = (itemType == EstrUiType.Col) ? new UiCol(this, json) :
-			(itemType == EstrUiType.Box) ? new UiBox(this, json) :
+			(itemType == EstrUiType.Row) ? new UiBox(this, json) :
 			(itemType == EstrUiType.Group) ? new UiGroup(this, json) :
 			(itemType == EstrUiType.Table) ? new UiTable(this, json) :
 			null;
@@ -179,52 +260,10 @@ class UiView {
 		return item;
 	}
 
-	//定義通用事件
-	_setEvent(obj) {
-		//點擊右鍵顯示menu(for col, table, group only)
-		//mouse over 顯示拖拉圖示
-		//drag over 顯示拖放位置
-		//drag end 移動位置
-
-		//enable right click menu
-		var me = this;	//UiItem
-		var uiView = this.uiView;
-		var elm = obj[0];
-
-		obj.on(EstrMouse.RightMenu, function (e) {
-			e.preventDefault();  // 取消瀏覽器預設右鍵選單
-			if (uiView.fnShowMenu)
-				uiView.fnShowMenu(e, true, me);
-		});
-
-		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
-		elm.draggable().on(EstrMouse.DragMove, () => {
-			if (!uiView.isEdit) return;
-
-			//this._drawLines();
-		}).on(EstrMouse.DragEnd, (event) => {
-			if (!uiView.isEdit) return;
-
-			//let { x, y } = event.detail.box;
-			//console.log(`x=${x}, y=${y}`);
-
-			//trigger event
-			//if (uiView.fnMoveItem)
-			//	uiView.fnMoveItem(this, x, y);
-		});
-
-		//set connector draggable
-		//this._setEventPin();
-	}
-
 	//get new node id
 	getNewItemId() {
 		this.newItemId++;
 		return this.newItemId;
-	}
-
-	setEdit(status) {
-		this.isEdit = status;
 	}
 
 	//清除全部UI元件
@@ -593,6 +632,7 @@ class UiCol extends UiItem {
 
 }
 
+/*
 class UiBox extends UiItem {
 
 }
@@ -604,3 +644,4 @@ class UiGroup extends UiItem {
 class UiTable extends UiItem {
 
 }
+*/

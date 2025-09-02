@@ -311,6 +311,7 @@ function FlowNode(flowBase, json) {
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
+		//draggable 來自 svg.draggable.js
 		this.elm.draggable().on(EstrMouse.DragMove, () => {
 			if (!flowBase.isEdit) return;
 

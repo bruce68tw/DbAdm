@@ -8,8 +8,7 @@
  */ 
 class UiMany {
 
-    constructor(ftBox, ftWorkArea, mItem) {
-        debugger;
+    constructor(mItem, ftBox, ftWorkArea, ftMovePos) {
         //欄位id, title, 後端傳回後再取代
         this.Fid = '_fid_';
         this.Title = '_title_';
@@ -40,12 +39,13 @@ class UiMany {
 
         //now container for add item
         this.divEdit = $(ftBox);
-        this.workArea = this.divEdit.find(ftWorkArea);
+        //this.workArea = this.divEdit.find(ftWorkArea);
+
         //this.nowBox = this.workArea;
         //this.nowFlowItem = null;    //now selected FlowNode/FlowLine
 
         //set instance first
-        var uiView = new UiView(ftWorkArea);
+        var uiView = new UiView(ftWorkArea, ftMovePos);
         //uiView.fnMoveItem = (node, x, y) => this.fnMoveItem(node, x, y);
         //uiView.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
         //uiView.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);

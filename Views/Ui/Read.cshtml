@@ -14,6 +14,12 @@
     .xu-eform-tail {
         flex-grow: 1;
     }
+
+    .xu-move-pos {
+        height: 20px;
+        border: 2px dashed #007bff;
+        margin-bottom: 5px;
+    }
 </style>
 
 <script nonce="@_Fun.Nonce" src="~/js/view/UiView.js"></script>
@@ -53,7 +59,7 @@
             new CrudR(config, [null, _me.mItem]);
 
             //initial flow edit form
-            _me.uiMany = new UiMany('#divEdit', '.xu-ui-area', _me.mItem);
+            _me.uiMany = new UiMany(_me.mItem, '#divEdit', '.xu-ui-area', '.xu-move-pos');
 
             //custom function
             _me.mItem.fnLoadRows = _me.mItem_loadRows;
@@ -269,6 +275,9 @@
     <li data-onclick="_me.uiMany.onMenuDelete" class="xd-delete">Delete</li>
     <li data-onclick="_me.uiMany.onMenuView" class="xd-view">View</li>
 </ul>
+
+<!-- 移動位置的註記 -->
+<div class="xu-move-pos d-none"></div>
 
 <!-- uiItem template for eformItems -->
 <script id="tplItem" type="text/template">
