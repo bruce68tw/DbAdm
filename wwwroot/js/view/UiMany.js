@@ -199,7 +199,7 @@ class UiMany {
         var name = '欄位' + this.newColNo;
         //配合後端DB, 欄位使用大camel
         var json = {
-            ItemType: EstrUiType.Col,
+            ItemType: EstrItemType.Col,
             //Required: false, 
             Info: `${code},${name}`,
         };

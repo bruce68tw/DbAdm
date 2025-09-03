@@ -3,22 +3,38 @@
 }
 
 <style nonce="@_Fun.Nonce" >
+    /* UiMany */
     #divEdit {
         display: flex;
         flex-direction: row;
-    }
-    .xu-ui-area {
-        flex-grow: 1;
-        border: 1px solid #ddd !important;
     }
     .xu-eform-tail {
         flex-grow: 1;
     }
 
+    .xu-ui-area {
+        flex-grow: 1;
+        border: 1px solid #ddd !important;
+    }
+
+    /* UiView */
     .xu-move-pos {
         height: 20px;
         border: 2px dashed #007bff;
         margin-bottom: 5px;
+    }
+    /* 拖拉按鈕 */
+    .btn-drag {
+        display: none; /* hover 顯示 */
+        pointer-events: auto; /* 按鈕可點擊 */
+        background: transparent;
+        border: none;
+        cursor: grab;
+        font-size: 18px;
+    }
+
+    .xd-item:hover .btn-drag {
+        display: inline-flex;
     }
 </style>
 

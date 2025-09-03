@@ -1,5 +1,5 @@
 //ui item type
-var EstrUiType = {
+var EstrItemType = {
 	Col: 'C',
 	Group: 'G',		
 	Row: 'R',		//只有2欄位, 只能放 group, col
@@ -59,6 +59,7 @@ class UiView {
 		//this.nowBox = null;
 
 		//移動中item element
+		this.dragItem = null;
 		this.dragItemElm = null;
 		this.dragItemType = '';
 		this.dragIsBox = false;		//drag item is box
@@ -93,7 +94,7 @@ class UiView {
 			}
 
 			/*
-var EstrUiType = {
+var EstrItemType = {
 	Col: 'C',
 	Group: 'G',		
 	Row: 'R',		//只有2欄位, 只能放 group, col
@@ -105,9 +106,9 @@ var EstrUiType = {
 
 			//禁止移動的情形
 			if (me.dropBoxType != null) {
-				if (me.dropBoxType == EstrUiType.Table) {
+				if (me.dropBoxType == EstrItemType.Table) {
 					//table不能放group
-					if (me.dragItemType == EstrUiType.Group)
+					if (me.dragItemType == EstrItemType.Group)
 						return;
 				} else {
 					//case row, tagPage
@@ -117,14 +118,7 @@ var EstrUiType = {
 			}
 
 			//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
-
-			e.target;
-
-			if (!isDown) return;
-			$("#box").css({
-				left: e.clientX - offsetX,
-				top: e.clientY - offsetY
-			});
+			me.dragItem.insertAfter(me.movePos);
 		});
 	}
 
@@ -155,7 +149,7 @@ var EstrUiType = {
 			me.dragItemElm = this;
 			me.dragItem = $(this);
 			me.dragItemType = me.getItemType(me.dragItem);
-			me.dragIsBox = (me.dragItemType != EstrUiType.Col && me.dragItemType != EstrUiType.Group);
+			me.dragIsBox = (me.dragItemType != EstrItemType.Col && me.dragItemType != EstrItemType.Group);
 
 			//this._drawLines();
 		}).on(EstrMouse.MouseUp, (e) => {
@@ -221,7 +215,7 @@ var EstrUiType = {
 
 		//render ui
 		//設定實際fid, title
-		debugger;
+		//debugger;
 		var html = colJson[inputType];
 		html = _str.replaceAll(html, this.Fid, json.Fid);	//多個取代
 		html = _str.replaceAll(html, this.Title, json.Title);
@@ -234,7 +228,7 @@ var EstrUiType = {
 
 		//如果required=false, 則加上class d-none
 		var obj = $(html);
-		this.addItemProp(obj, EstrUiType.Col);
+		this.addItemProp(obj, EstrItemType.Col);
 		if (!json.Required) {
 			obj.find('.x-required').addClass('d-none');
 		}
@@ -242,7 +236,8 @@ var EstrUiType = {
 		//註冊事件
 		this._setEvent(obj);
 
-		box.append(obj);
+		//增加item
+		(this.dropBox || this.area).append(obj);
 
 		/*
 		//add into EditMany mItem
@@ -261,7 +256,7 @@ var EstrUiType = {
 
 	//上層是否為box
 	upIsRow() {
-		return (this.getItemType(this.dropBox) == EstrUiType.Row);
+		return (this.dropBox != null && this.getItemType(this.dropBox) == EstrItemType.Row);
 	}
 
 	/*
@@ -282,10 +277,10 @@ var EstrUiType = {
 		//if (json.id == null)
 		//	json.id = (this.items.length + 1) * (-1);
 		var itemType = json.ItemType;
-		let item = (itemType == EstrUiType.Col) ? new UiCol(this, json) :
-			(itemType == EstrUiType.Row) ? new UiBox(this, json) :
-			(itemType == EstrUiType.Group) ? new UiGroup(this, json) :
-			(itemType == EstrUiType.Table) ? new UiTable(this, json) :
+		let item = (itemType == EstrItemType.Col) ? new UiCol(this, json) :
+			(itemType == EstrItemType.Row) ? new UiBox(this, json) :
+			(itemType == EstrItemType.Group) ? new UiGroup(this, json) :
+			(itemType == EstrItemType.Table) ? new UiTable(this, json) :
 			null;
 
 		if (item == null) {
