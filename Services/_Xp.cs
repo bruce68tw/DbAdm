@@ -14,7 +14,7 @@ namespace DbAdm.Services
 
         //public const string MyVer = "20201228f";     //for my.js/css
         public static string MyVer = _Date.NowSecStr(); //for my.js/css
-        public const string LibVer = "20250813";       //for lib.js/css
+        public const string LibVer = "20250815";       //for lib.js/css
 
         //public static string PlsSelect = _Locale.GetBaseRes().PlsSelect;
 

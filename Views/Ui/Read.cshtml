@@ -24,17 +24,24 @@
         margin-bottom: 5px;
     }
     /* 拖拉按鈕 */
-    .btn-drag {
+    .xd-drag-ico {
         display: none; /* hover 顯示 */
         pointer-events: auto; /* 按鈕可點擊 */
+        color: gray;
         background: transparent;
         border: none;
         cursor: grab;
         font-size: 18px;
+        margin: 0 5px;
     }
 
-    .xd-item:hover .btn-drag {
+    /* drag mode 才會加上 xd-drag */
+    .xd-item:hover .xd-drag-ico {
         display: inline-flex;
+    }
+    /* 當外層有 xd-hover 時，強制隱藏 */
+    .xd-drag .xd-item:hover .xd-drag-ico {
+        display: none;
     }
 </style>
 
