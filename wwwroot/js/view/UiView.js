@@ -46,7 +46,8 @@ class UiView {
 		this.Title = '_title_';
 		this.ItemType = 'itemtype';	//data item type
 		this.ClsItem = 'xd-item';	//item class
-		this.ClsDrag = 'xd-drag';	//加在 area
+		this.ClsDragging = 'xd-dragging';	//加在 area
+		this.ClsDragItem = 'xd-drag-item';	//加在 item, 表示目前作業item
 		this.ClsDragIcon = 'xd-drag-ico';
 
 		//包含欄位:ItemType, Item, Childs
@@ -138,34 +139,23 @@ class UiView {
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
 		//mouseMove事件對象為 document
-		item.find('.' + me.ClsDragIcon).on(EstrMouse.MouseDown, () => {
+		item.find('.' + me.ClsDragIcon).on(EstrMouse.MouseDown, function (e) {
 			if (!me.isEdit) return;
 
 			//記錄目前移動的Item element
-			me.area.addClass(me.ClsDrag);
 			me.dragging = true;
+			me.area.addClass(me.ClsDragging);
 			me.dragItem = me.elmToItem(this);
+			me.dragItem.addClass(me.ClsDragItem);
 			me.dragItemElm = me.dragItem[0];
 			me.dragItemType = me.getItemType(me.dragItem);
 			me.dragIsBox = (me.dragItemType != EstrItemType.Col && me.dragItemType != EstrItemType.Group);
 
 			//this._drawLines();
-		}).on(EstrMouse.MouseUp, (e) => {
+		/*
+		}).on(EstrMouse.MouseUp, function (e) {
 			me.mouseUp();
-			/*
-			if (!me.isEdit) return;
-
-			//let { x, y } = e.detail.box;
-			//console.log(`x=${x}, y=${y}`);
-
-			//移動物件, trigger event
-			//if (uiView.fnMoveItem)
-			//	uiView.fnMoveItem(this, x, y);
-			me.area.removeClass(me.ClsDrag);
-			me.dragging = false;
-			me.dragItem = null;
-			me.dragItemElm = null;
-			*/
+		*/
 		});
 
 		//set connector draggable
@@ -174,8 +164,10 @@ class UiView {
 
 	mouseUp() {
 		if (!this.isEdit) return;
+		if (!this.dragging) return;
 
 		this.area.removeClass(this.ClsDrag);
+		this.dragItem.removeClass(this.ClsDragItem);
 		this.dragging = false;
 		this.dragItem = null;
 		this.dragItemElm = null;
@@ -269,7 +261,7 @@ class UiView {
 
 	//內部element to Item object
 	elmToItem(elm) {
-		return $(elm).closest(this.ClsItem);
+		return $(elm).closest('.' + this.ClsItem);
 	}
 
 	idToItem(id) {

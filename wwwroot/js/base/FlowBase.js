@@ -299,6 +299,7 @@ function FlowNode(flowBase, json) {
 		this.pinElm.move(center.x + bbox.width / 2 + 3, center.y - 5);
 	}
 
+	//node event
 	this._setEvent = function () {
 		//enable right click menu
 		let me = this;	//FlowNode
