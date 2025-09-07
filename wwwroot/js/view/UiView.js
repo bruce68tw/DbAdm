@@ -67,6 +67,9 @@ class UiView {
 		this.dragItemType = '';
 		this.dragIsBox = false;		//drag item is box
 
+		this.dragIcon = null;
+		this.dragIconElm = null;
+
 		//moving target item element
 		this.dropItem = null;		//moving target Item object
 		this.dropBox = null;		//moving target Box object, null表示workArea
@@ -118,7 +121,7 @@ class UiView {
 		});
 	}
 
-	//定義通用事件
+	//item事件
 	_setEvent(item) {
 		//點擊右鍵顯示menu(for col, table, group only)
 		//mouse over 顯示拖拉圖示
@@ -129,6 +132,14 @@ class UiView {
 		//var uiView = this.uiView;
 		//var elm = obj[0];
 
+		//set drag icon event
+		var icon = item.find('.' + me.ClsDragIcon);
+		icon.on(EstrMouse.MouseDown, function (e) {
+			$(this).closest('.' + me.ClsItem).attr("draggable", true);
+		}).on(EstrMouse.MouseUp, function (e) {
+			$(this).closest('.' + me.ClsItem).attr("draggable", false);
+		});
+
 		//右鍵選單
 		var me = this;	//UiItem
 		item.on(EstrMouse.RightMenu, function (e) {
@@ -138,8 +149,46 @@ class UiView {
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
+		//draggable 來自 svg.draggable.js
+		item.on(EstrMouse.DragStart, () => {
+			if (!me.isEdit) return;
+
+			//記錄目前移動的Item element
+			me.dragging = true;
+			me.area.addClass(me.ClsDragging);
+			me.dragItem = me.elmToItem(this);
+			me.dragItem.addClass(me.ClsDragItem);
+			me.dragItemElm = me.dragItem[0];
+			me.dragItemType = me.getItemType(me.dragItem);
+			me.dragIsBox = (me.dragItemType != EstrItemType.Col && me.dragItemType != EstrItemType.Group);
+
+		}).on(EstrMouse.DragMove, () => {
+			if (!me.isEdit) return;
+
+			this._drawLines();
+		}).on(EstrMouse.DragEnd, (event) => {
+			if (!me.isEdit) return;
+
+			let { x, y } = event.detail.box;
+			//console.log(`x=${x}, y=${y}`);
+
+			//trigger event
+			if (this.flowBase.fnMoveNode)
+				this.flowBase.fnMoveNode(this, x, y);
+		});
+
+		//set drag icon draggable
+		//this._setEventDrag(item);
+	}
+
+	//設定 drag icon event
+	_setEventDrag(item) {
+		//if (!this.dragIcon) return;
+
+		var me = this;	//UiItem
+		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
 		//mouseMove事件對象為 document
-		item.find('.' + me.ClsDragIcon).on(EstrMouse.MouseDown, function (e) {
+		item.find('.' + me.ClsDragIcon).on(EstrMouse.DragStart, function (e) {
 			if (!me.isEdit) return;
 
 			//記錄目前移動的Item element
@@ -152,14 +201,65 @@ class UiView {
 			me.dragIsBox = (me.dragItemType != EstrItemType.Col && me.dragItemType != EstrItemType.Group);
 
 			//this._drawLines();
-		/*
-		}).on(EstrMouse.MouseUp, function (e) {
-			me.mouseUp();
-		*/
-		});
+			/*
+			}).on(EstrMouse.MouseUp, function (e) {
+				me.mouseUp();
+			*/
 
-		//set connector draggable
-		//this._setEventPin();
+		}).on(EstrMouse.DragMove, (event) => {
+			if (!me.isEdit) return;
+
+			//阻止 connector 移動
+			event.preventDefault();
+
+			// 獲取拖拽的目標座標（相對於 SVG 畫布）
+			let { x, y } = event.detail.box;
+			let endX = x;
+			let endY = y;
+
+			// 更新線條的終點
+			tempLine.plot(startX, startY, endX, endY);
+
+			// 檢查座標值是否有效
+			if (isFinite(endX) && isFinite(endY)) {
+				// 將 SVG 座標轉換為檢視座標
+				let svgRect = me.svg.node.getBoundingClientRect();
+				let viewPortX = endX + svgRect.x;
+				let viewPortY = endY + svgRect.y;
+
+				// 檢查是否懸停在節點上
+				let overDom = document.elementsFromPoint(viewPortX, viewPortY)
+					.find(dom => dom != fromDom && (dom.classList.contains('xf-node') || dom.classList.contains('xf-end')));
+				if (overDom) {
+					let overElm = overDom.instance;	//svg element
+					if (toElm !== overElm) {
+						if (toElm)
+							me._markNode(toElm, false);
+						toElm = overElm;
+						me._markNode(toElm, true);
+					}
+				} else if (toElm) {
+					me._markNode(toElm, false);
+					toElm = null;
+				}
+			}
+
+		}).on(EstrMouse.DragEnd, (event) => {
+			if (!flowBase.isEdit) return;
+
+			// 檢查座標值是否有效
+			if (toElm) {
+				me._markNode(toElm, false);
+				var id = toElm.parent().node.dataset.id;
+				var json = flowBase.drawLineEnd(flowBase.idToNode(id));
+				toElm = null;
+
+				//trigger event
+				if (flowBase.fnAfterAddLine)
+					flowBase.fnAfterAddLine(json);
+			}
+			tempLine.remove();
+		});
 	}
 
 	mouseUp() {
