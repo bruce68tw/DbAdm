@@ -87,7 +87,7 @@
             new CrudR(config, [null, _me.mItem]);
 
             //initial flow edit form
-            _me.uiMany = new UiMany(_me.mItem, '#divEdit', '.xu-ui-area', '.xu-move-pos');
+            _me.uiMany = new UiMany(_me.mItem, '#divEdit', '.xu-ui-area', '.xu-drag-box', '.xu-drop-line');
 
             //custom function
             _me.mItem.fnLoadRows = _me.mItem_loadRows;
@@ -304,8 +304,11 @@
     <li data-onclick="_me.uiMany.onMenuView" class="xd-view">View</li>
 </ul>
 
+<!-- 移動item時顯示的示意外框 -->
+<div class="xu-drag-box d-none"></div>
+
 <!-- 移動位置的註記 -->
-<div class="xu-move-pos d-none"></div>
+<div class="xu-drop-line d-none"></div>
 
 <!-- uiItem template for eformItems -->
 <script id="tplItem" type="text/template">

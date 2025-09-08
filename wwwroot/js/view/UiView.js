@@ -32,21 +32,23 @@ var EstrInputType = {
  */
 class UiView {
 
-	constructor(ftWorkArea, ftMovePos) {
-		this.area = $(ftWorkArea);
-		this.areaElm = this.area[0];
-		this.movePos = $(ftMovePos);
+	constructor(ftWorkArea, ftDragBox, ftDropLine) {
+		//值不會變, 使用大camel
+		this.Area = $(ftWorkArea);
+		this.AreaElm = this.Area[0];
+		this.DragBox = $(ftDragBox);
+		this.DropLine = $(ftDropLine);
 
 		//let boxDom = document.getElementById(boxId);
 		//this.svg = SVG().addTo(boxDom).size('100%', '100%');
 
 		//constant
-		//使用這2個欄位傳到後端建立元件, 傳到前端後再取代成實際屬性
+		//使用Fid, Title這2個欄位值傳到後端建立元件, 傳到前端後再取代成實際屬性
 		this.Fid = '_fid_';
 		this.Title = '_title_';
 		this.ItemType = 'itemtype';	//data item type
 		this.ClsItem = 'xd-item';	//item class
-		this.ClsDragging = 'xd-dragging';	//加在 area
+		this.ClsDragging = 'xd-dragging';	//加在 Area
 		this.ClsDragItem = 'xd-drag-item';	//加在 item, 表示目前作業item
 		this.ClsDragIcon = 'xd-drag-ico';
 
@@ -62,6 +64,8 @@ class UiView {
 		//this.nowBox = null;
 
 		//移動中item element
+		this.canDrop = false;		//target正確才會true
+		this.dragging = false;
 		this.dragItem = null;
 		this.dragItemElm = null;
 		this.dragItemType = '';
@@ -82,12 +86,10 @@ class UiView {
 		//是否可編輯
 		this.isEdit = true;	//temp to true
 
-		this.dragging = false;
-
 		var me = this;
-		this.area.on(EstrMouse.MouseMove, function (e) {
+		this.Area.on(EstrMouse.MouseMove, function (e) {
 			if (me.dragItemElm == null) return;
-			if (e.target == me.areaElm) return;
+			if (e.target == me.AreaElm) return;
 
 			//e.target 為目前經過的 element
 			var clsItem = '.' + me.ClsItem;
@@ -115,7 +117,7 @@ class UiView {
 			}
 
 			//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
-			me.dragItem.insertAfter(me.movePos);
+			me.dragItem.insertAfter(me.DropLine);
 		}).on(EstrMouse.MouseUp, function (e) {
 			me.mouseUp();
 		});
@@ -133,52 +135,100 @@ class UiView {
 		//var elm = obj[0];
 
 		//set drag icon event
+		var me = this;	//UiItem
 		var icon = item.find('.' + me.ClsDragIcon);
+		var ftItem = '.' + me.ClsItem;
 		icon.on(EstrMouse.MouseDown, function (e) {
-			$(this).closest('.' + me.ClsItem).attr("draggable", true);
+			//set item draggable
+			$(this).closest(ftItem).attr("draggable", true);
 		}).on(EstrMouse.MouseUp, function (e) {
-			$(this).closest('.' + me.ClsItem).attr("draggable", false);
+			//stop item draggable
+			$(this).closest(ftItem).attr("draggable", false);
 		});
 
 		//右鍵選單
-		var me = this;	//UiItem
 		item.on(EstrMouse.RightMenu, function (e) {
 			e.preventDefault();  // 取消瀏覽器預設右鍵選單
 			if (me.fnShowMenu)
 				me.fnShowMenu(e, true, me);
 		});
 
-		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
-		//draggable 來自 svg.draggable.js
-		item.on(EstrMouse.DragStart, () => {
+		//item drag start: 設定instance variables
+		item.on(EstrMouse.DragStart, function (e) {
 			if (!me.isEdit) return;
 
 			//記錄目前移動的Item element
 			me.dragging = true;
-			me.area.addClass(me.ClsDragging);
+			me.Area.addClass(me.ClsDragging);
 			me.dragItem = me.elmToItem(this);
 			me.dragItem.addClass(me.ClsDragItem);
 			me.dragItemElm = me.dragItem[0];
 			me.dragItemType = me.getItemType(me.dragItem);
 			me.dragIsBox = (me.dragItemType != EstrItemType.Col && me.dragItemType != EstrItemType.Group);
 
-		}).on(EstrMouse.DragMove, () => {
+		//drag move: 顯示移動位置
+		}).on(EstrMouse.DragMove, function (e) {
 			if (!me.isEdit) return;
 
-			this._drawLines();
-		}).on(EstrMouse.DragEnd, (event) => {
+			//判斷顯示target在上或下
+			if (me.dragItemElm == null) return;
+			//if (e.target == me.AreaElm) return;
+
+			//e.target 為目前經過的 element
+			//var clsItem = '.' + me.ClsItem;
+			var dropItem = $(e.target).closest(clsItem);
+			if (dropItem == null) return;
+
+			//set instance variables
+			if (me.dropItem != dropItem) {
+				me.dropItem = dropItem;
+				me.dropBox = dropItem.parent(ftItem).first();
+				me.dropBoxType = (me.dropBox.len == 0) ? null : me.dropBox.data(me.ItemType);
+			}
+
+			//禁止移動的情形
+			if (me.dropBoxType != null) {
+				if (me.dropBoxType == EstrItemType.Table) {
+					//table內不能放group
+					if (me.dragItemType == EstrItemType.Group) {
+						me._stopDrop();
+						return;
+					}
+				} else {
+					//row, tabPage 內不能放 box
+					if (me.dragIsBox) {
+						me._stopDrop();
+						return;
+					}
+				}
+			}
+
+			//set instance
+			me.canDrop = true;
+
+			//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
+			me.dragItem.insertAfter(me.DropLine);
+
+		//drag end: 移動位置, 還原instance variables
+		}).on(EstrMouse.DragEnd, (e) => {
 			if (!me.isEdit) return;
 
-			let { x, y } = event.detail.box;
+			/*
+			let { x, y } = e.detail.box;
 			//console.log(`x=${x}, y=${y}`);
 
 			//trigger event
 			if (this.flowBase.fnMoveNode)
 				this.flowBase.fnMoveNode(this, x, y);
+			*/
 		});
 
 		//set drag icon draggable
 		//this._setEventDrag(item);
+	}
+
+	_stopDrop() {
+		this.canDrop = false;
 	}
 
 	//設定 drag icon event
@@ -193,7 +243,7 @@ class UiView {
 
 			//記錄目前移動的Item element
 			me.dragging = true;
-			me.area.addClass(me.ClsDragging);
+			me.Area.addClass(me.ClsDragging);
 			me.dragItem = me.elmToItem(this);
 			me.dragItem.addClass(me.ClsDragItem);
 			me.dragItemElm = me.dragItem[0];
@@ -266,7 +316,7 @@ class UiView {
 		if (!this.isEdit) return;
 		if (!this.dragging) return;
 
-		this.area.removeClass(this.ClsDrag);
+		this.Area.removeClass(this.ClsDrag);
 		this.dragItem.removeClass(this.ClsDragItem);
 		this.dragging = false;
 		this.dragItem = null;
@@ -342,7 +392,7 @@ class UiView {
 		this._setEvent(item);
 
 		//增加item
-		(this.dropBox || this.area).append(item);
+		(this.dropBox || this.Area).append(item);
 	}
 
 	//加入item屬性: .xd-item, data-itemtype

@@ -8,7 +8,7 @@
  */ 
 class UiMany {
 
-    constructor(mItem, ftBox, ftWorkArea, ftMovePos) {
+    constructor(mItem, ftBox, ftWorkArea, ftDragBox, ftDropLine) {
         //欄位id, title, 後端傳回後再取代
         this.Fid = '_fid_';
         this.Title = '_title_';
@@ -45,7 +45,7 @@ class UiMany {
         //this.nowFlowItem = null;    //now selected FlowNode/FlowLine
 
         //set instance first
-        var uiView = new UiView(ftWorkArea, ftMovePos);
+        var uiView = new UiView(ftWorkArea, ftDragBox, ftDropLine);
         //uiView.fnMoveItem = (node, x, y) => this.fnMoveItem(node, x, y);
         //uiView.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
         //uiView.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
