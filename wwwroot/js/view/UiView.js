@@ -86,11 +86,21 @@ class UiView {
 		//是否可編輯
 		this.isEdit = true;	//temp to true
 
+		this._setEventDragBox();
+
 		var me = this;
-		this.Area.on(EstrMouse.MouseMove, function (e) {
+		//this.Area.on(EstrMouse.MouseMove, function (e) {
+		this.Area.on("mousemove.drag", function (e) {
+			
 			if (me.dragItemElm == null) return;
 			if (e.target == me.AreaElm) return;
 
+			me.DragBox.css({
+				left: e.pageX - offsetX,
+				top: e.pageY - offsetY
+			});
+
+			/*
 			//e.target 為目前經過的 element
 			var clsItem = '.' + me.ClsItem;
 			var dropItem = $(e.target).closest(clsItem);
@@ -118,43 +128,16 @@ class UiView {
 
 			//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
 			me.dragItem.insertAfter(me.DropLine);
+			*/
 		}).on(EstrMouse.MouseUp, function (e) {
-			me.mouseUp();
+			//me.mouseUp();
 		});
 	}
 
-	//item事件
-	_setEvent(item) {
-		//點擊右鍵顯示menu(for col, table, group only)
-		//mouse over 顯示拖拉圖示
-		//drag over 顯示拖放位置
-		//drag end 移動位置
-
-		//enable right click menu
-		//var uiView = this.uiView;
-		//var elm = obj[0];
-
-		//set drag icon event
-		var me = this;	//UiItem
-		var icon = item.find('.' + me.ClsDragIcon);
-		var ftItem = '.' + me.ClsItem;
-		icon.on(EstrMouse.MouseDown, function (e) {
-			//set item draggable
-			$(this).closest(ftItem).attr("draggable", true);
-		}).on(EstrMouse.MouseUp, function (e) {
-			//stop item draggable
-			$(this).closest(ftItem).attr("draggable", false);
-		});
-
-		//右鍵選單
-		item.on(EstrMouse.RightMenu, function (e) {
-			e.preventDefault();  // 取消瀏覽器預設右鍵選單
-			if (me.fnShowMenu)
-				me.fnShowMenu(e, true, me);
-		});
-
+	_setEventDragBox() {
 		//item drag start: 設定instance variables
-		item.on(EstrMouse.DragStart, function (e) {
+		var me = this;
+		this.DragBox.on(EstrMouse.DragStart, function (e) {
 			if (!me.isEdit) return;
 
 			//記錄目前移動的Item element
@@ -209,10 +192,11 @@ class UiView {
 			//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
 			me.dragItem.insertAfter(me.DropLine);
 
-		//drag end: 移動位置, 還原instance variables
+			//drag end: 移動位置, 還原instance variables
 		}).on(EstrMouse.DragEnd, (e) => {
 			if (!me.isEdit) return;
 
+			me.DragBox.addClass('d-none');
 			/*
 			let { x, y } = e.detail.box;
 			//console.log(`x=${x}, y=${y}`);
@@ -222,94 +206,40 @@ class UiView {
 				this.flowBase.fnMoveNode(this, x, y);
 			*/
 		});
+	}
 
-		//set drag icon draggable
-		//this._setEventDrag(item);
+	//item事件
+	_setEventItem(item) {
+		//set drag icon event
+		var me = this;	//UiItem
+		var icon = item.find('.' + me.ClsDragIcon);
+		var ftItem = '.' + me.ClsItem;
+		icon.on(EstrMouse.MouseDown, function (e) {
+			me.DragBox.css({
+				left: e.pageX + 10,
+				top: e.pageY + 10
+			});
+			me.DragBox.removeClass('d-none');
+
+			//set item draggable
+			me.DragBox.attr("draggable", true);
+		/*
+		}).on(EstrMouse.MouseUp, function (e) {
+			//stop item draggable
+			me.DragBox.attr("draggable", false);
+		*/
+		});
+
+		//右鍵選單
+		item.on(EstrMouse.RightMenu, function (e) {
+			e.preventDefault();  // 取消瀏覽器預設右鍵選單
+			if (me.fnShowMenu)
+				me.fnShowMenu(e, true, me);
+		});
 	}
 
 	_stopDrop() {
 		this.canDrop = false;
-	}
-
-	//設定 drag icon event
-	_setEventDrag(item) {
-		//if (!this.dragIcon) return;
-
-		var me = this;	//UiItem
-		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
-		//mouseMove事件對象為 document
-		item.find('.' + me.ClsDragIcon).on(EstrMouse.DragStart, function (e) {
-			if (!me.isEdit) return;
-
-			//記錄目前移動的Item element
-			me.dragging = true;
-			me.Area.addClass(me.ClsDragging);
-			me.dragItem = me.elmToItem(this);
-			me.dragItem.addClass(me.ClsDragItem);
-			me.dragItemElm = me.dragItem[0];
-			me.dragItemType = me.getItemType(me.dragItem);
-			me.dragIsBox = (me.dragItemType != EstrItemType.Col && me.dragItemType != EstrItemType.Group);
-
-			//this._drawLines();
-			/*
-			}).on(EstrMouse.MouseUp, function (e) {
-				me.mouseUp();
-			*/
-
-		}).on(EstrMouse.DragMove, (event) => {
-			if (!me.isEdit) return;
-
-			//阻止 connector 移動
-			event.preventDefault();
-
-			// 獲取拖拽的目標座標（相對於 SVG 畫布）
-			let { x, y } = event.detail.box;
-			let endX = x;
-			let endY = y;
-
-			// 更新線條的終點
-			tempLine.plot(startX, startY, endX, endY);
-
-			// 檢查座標值是否有效
-			if (isFinite(endX) && isFinite(endY)) {
-				// 將 SVG 座標轉換為檢視座標
-				let svgRect = me.svg.node.getBoundingClientRect();
-				let viewPortX = endX + svgRect.x;
-				let viewPortY = endY + svgRect.y;
-
-				// 檢查是否懸停在節點上
-				let overDom = document.elementsFromPoint(viewPortX, viewPortY)
-					.find(dom => dom != fromDom && (dom.classList.contains('xf-node') || dom.classList.contains('xf-end')));
-				if (overDom) {
-					let overElm = overDom.instance;	//svg element
-					if (toElm !== overElm) {
-						if (toElm)
-							me._markNode(toElm, false);
-						toElm = overElm;
-						me._markNode(toElm, true);
-					}
-				} else if (toElm) {
-					me._markNode(toElm, false);
-					toElm = null;
-				}
-			}
-
-		}).on(EstrMouse.DragEnd, (event) => {
-			if (!flowBase.isEdit) return;
-
-			// 檢查座標值是否有效
-			if (toElm) {
-				me._markNode(toElm, false);
-				var id = toElm.parent().node.dataset.id;
-				var json = flowBase.drawLineEnd(flowBase.idToNode(id));
-				toElm = null;
-
-				//trigger event
-				if (flowBase.fnAfterAddLine)
-					flowBase.fnAfterAddLine(json);
-			}
-			tempLine.remove();
-		});
 	}
 
 	mouseUp() {
@@ -389,7 +319,7 @@ class UiView {
 		}
 
 		//註冊事件
-		this._setEvent(item);
+		this._setEventItem(item);
 
 		//增加item
 		(this.dropBox || this.Area).append(item);
@@ -529,304 +459,3 @@ class UiView {
 	//this._init(boxId);
 
 } //class UiView
-
-
-class UiItem {
-
-	constructor(uiView) {
-
-		//start/end node radius
-		//this.MinRadius = 20;
-
-		/*
-		//normal node size
-		this.MinWidth = 80;
-		this.MinHeight = 42;
-		this.LineHeight = 18;	//文字行高
-		this.PadTop = 8;
-		this.PadLeft = 15;
-
-		this.PinWidth = 12;
-		this.PinGap = 3;
-		*/
-
-		//set variables
-		this.self = this;
-		this.uiView = uiView;
-
-		//render元件
-
-		//set event
-		this._setEvent();
-	}
-
-	//(子代覆寫)傳回html內容
-	newHtml(json) {
-		return '';
-	}
-
-	/*
-	this.getLines = function () {
-		return this.lines;
-	};
-
-	//是否為起迄節點
-	this._isStartEnd = function () {
-		return (this.json.NodeType == EstrNodeType.Start || this.json.NodeType == EstrNodeType.End);
-	};
-	*/
-
-	getItemType() {
-		return this.json.ItemType;
-	}
-
-	/*
-	getPos() {
-		let elm = this.elm;
-		return { x: elm.x(), y: elm.y() };
-	}
-
-	getSize() {
-		let elm = this.boxElm;
-		return { w: elm.width(), h: elm.height() };
-	}
-
-	getCenter() {
-		let elm = this.boxElm;
-		return { x: elm.cx(), y: elm.cy() };
-	}
-
-	//set pin position
-	_setPinPos() {
-		//連接點 右移3px
-		if (!this.pinElm) return;
-
-		let bbox = this.nameElm.bbox();
-		let center = this.getCenter();
-		this.pinElm.move(center.x + bbox.width / 2 + 3, center.y - 5);
-	}
-	*/
-
-	//定義通用事件
-	_setEvent() {
-		//點擊右鍵顯示menu(for col, table, group only)
-		//mouse over 顯示拖拉圖示
-		//drag over 顯示拖放位置
-		//drag end 移動位置
-
-		//enable right click menu
-		let me = this;	//UiItem
-		//let uiView = this.uiView;
-
-		this.elm.node.addEventListener(EstrMouse.RightMenu, function (event) {
-			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
-			if (uiView.fnShowMenu)
-				uiView.fnShowMenu(event, true, me);
-		});
-
-		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
-		this.elm.draggable().on(EstrMouse.DragMove, () => {
-			if (!uiView.isEdit) return;
-
-			this._drawLines();
-		}).on(EstrMouse.DragEnd, (event) => {
-			if (!uiView.isEdit) return;
-
-			let { x, y } = event.detail.box;
-			//console.log(`x=${x}, y=${y}`);
-
-			//trigger event
-			if (this.fnMoveItem)
-				this.fnMoveItem(this, x, y);
-		});
-
-		//set connector draggable
-		//this._setEventPin();
-	}
-
-	/*
-	this._drawLines = function () {
-		this.lines.forEach(line => line.render());
-	};
-	*/
-
-	/*
-	//set event of node connector
-	//pin表示起始節點內的連接點
-	_setEventPin() {
-		if (!this.pinElm)
-			return;
-
-		let fromDom, startX, startY;
-		let tempLine;
-		let toElm = null;
-		let me = this;	//flowNode
-		let uiView = this.uiView;
-
-		// 啟用 pinElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pinElm !!
-		this.pinElm.draggable().on(EstrMouse.DragStart, (event) => {
-			if (!uiView.isEdit) return;
-
-		}).on(EstrMouse.DragMove, (event) => {
-			if (!uiView.isEdit) return;
-
-			//阻止 connector 移動
-			event.preventDefault();
-
-		}).on(EstrMouse.DragEnd, (event) => {
-			if (!uiView.isEdit) return;
-
-			// 檢查座標值是否有效
-			if (toElm) {
-				me._markItem(toElm, false);
-				var id = toElm.parent().node.dataset.id;
-				var json = uiView.drawLineEnd(uiView.idToItem(id));
-				toElm = null;
-
-				//trigger event
-				if (uiView.fnAfterAddLine)
-					uiView.fnAfterAddLine(json);
-			}
-			tempLine.remove();
-		});
-	}
-	*/
-
-	//high light node
-	_markItem(elm, status) {
-		if (status) {
-			elm.node.classList.add('on');
-		} else {
-			elm.node.classList.remove('on');
-		}
-	}
-
-	//id記錄在 group elm !!
-	getId() {
-		return this.json.Id;
-	}
-
-	/*
-	this.addLine = function (line) {
-		this.lines.push(line);
-	};
-
-	this.deleteLine = function (line) {
-		let index = this.lines.findIndex(item => item.Id == line.Id);
-		this.lines.splice(index, 1);
-	};
-	*/
-
-	getName() {
-		return this.nameElm.text();
-	}
-
-	/**
-	 * set node name only for TypeNode, 考慮多行
-	 * called by initial, 前端改變node name
-	 * param name {string} 
-	 * param drawLine {bool} re-draw line or not
-	 */
-	setName(name, drawLine) {
-		// 更新文字內容, 後端傳回會加上跳脫字元, js 2021才有 replaceAll, 所以自製
-		var lines = _str.replaceAll(name, '\\n', '\n').split('\n');
-		this.nameElm.clear().text(function (add) {
-			lines.forEach((line, i) => {
-				if (i > 0)
-					add.tspan(line).newLine().dy(this.LineHeight);
-				else
-					add.tspan(line);
-			});
-		});
-
-		// 獲取新文字尺寸
-		const bbox = this.nameElm.bbox();
-
-		// 更新矩形尺寸
-		var width = Math.max(this.MinWidth, bbox.width + this.PadLeft * 2 + this.PinWidth + this.PinGap * 2);
-		var height = Math.max(this.MinHeight, bbox.height + this.PadTop * 2);
-		this.boxElm.size(Math.round(width), Math.round(height));
-
-		// 重新居中文字
-		this.nameElm.center(this.boxElm.cx(), this.boxElm.cy());
-
-		if (drawLine)
-			this._drawLines();
-	}
-
-	//call last
-	//this._init(uiView, json);
-
-}//class UiItem
-
-
-//輸入欄位
-class UiCol extends UiItem {
-	constructor(uiView) {
-
-		//註冊事件
-		// 啟用 pinElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pinElm !!
-		this.pinElm.draggable().on(EstrMouse.DragStart, (event) => {
-			if (!uiView.isEdit) return;
-
-		}).on(EstrMouse.DragMove, (event) => {
-			if (!uiView.isEdit) return;
-
-			//阻止 connector 移動
-			event.preventDefault();
-
-		}).on(EstrMouse.DragEnd, (event) => {
-			if (!uiView.isEdit) return;
-
-			// 檢查座標值是否有效
-			if (toElm) {
-				me._markItem(toElm, false);
-				var id = toElm.parent().node.dataset.id;
-				var json = uiView.drawLineEnd(uiView.idToItem(id));
-				toElm = null;
-
-				//trigger event
-				if (uiView.fnAfterAddLine)
-					uiView.fnAfterAddLine(json);
-			}
-			tempLine.remove();
-		});
-	}
-
-	//(子代覆寫)傳回html內容
-	async newHtml(inputType, fid, title, cols) {
-		/*
-		var inputType = json.InputType;
-		if (_str.isEmpty(inputType))
-			return '';
-		*/
-
-		var colJson = this.uiView.colJson;
-		if (colJson[inputType] == null) {
-			var data = {
-				inputType: inputType,
-				fid: fid,
-				title: title,
-				cols: cols,
-			};
-			var html = await _ajax.getStrA('GetColHtml', data);
-			colJson[inputType] = html;
-		}
-		return colJson[inputType];
-	}
-
-}
-
-/*
-class UiBox extends UiItem {
-
-}
-
-class UiGroup extends UiItem {
-
-}
-
-class UiTable extends UiItem {
-
-}
-*/
