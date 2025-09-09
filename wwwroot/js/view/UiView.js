@@ -90,8 +90,49 @@ class UiView {
 
 		var me = this;
 		//this.Area.on(EstrMouse.MouseMove, function (e) {
-		this.Area.on("mousemove.drag", function (e) {
-			
+		this.Area.on(EstrMouse.MouseMove, function (e) {
+			if (!me.isEdit) return;
+
+			//判斷顯示target在上或下
+			if (me.dragItemElm == null) return;
+			//if (e.target == me.AreaElm) return;
+
+			//e.target 為目前經過的 element
+			var ftItem = '.' + me.ClsItem;
+			var dropItem = $(e.target).closest(ftItem);
+			if (dropItem == null) return;
+
+			//set instance variables
+			if (me.dropItem != dropItem) {
+				me.dropItem = dropItem;
+				me.dropBox = dropItem.parent(ftItem).first();
+				me.dropBoxType = (me.dropBox.len == 0) ? null : me.dropBox.data(me.ItemType);
+			}
+
+			//禁止移動的情形
+			if (me.dropBoxType != null) {
+				if (me.dropBoxType == EstrItemType.Table) {
+					//table內不能放group
+					if (me.dragItemType == EstrItemType.Group) {
+						me._stopDrop();
+						return;
+					}
+				} else {
+					//row, tabPage 內不能放 box
+					if (me.dragIsBox) {
+						me._stopDrop();
+						return;
+					}
+				}
+			}
+
+			//set instance
+			me.canDrop = true;
+
+			//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
+			me.dragItem.insertAfter(me.DropLine);
+
+			/*
 			if (me.dragItemElm == null) return;
 			if (e.target == me.AreaElm) return;
 
@@ -99,6 +140,7 @@ class UiView {
 				left: e.pageX - offsetX,
 				top: e.pageY - offsetY
 			});
+			*/
 
 			/*
 			//e.target 為目前經過的 element
@@ -130,10 +172,11 @@ class UiView {
 			me.dragItem.insertAfter(me.DropLine);
 			*/
 		}).on(EstrMouse.MouseUp, function (e) {
-			//me.mouseUp();
+			me.mouseUp();
 		});
 	}
 
+	/*
 	_setEventDragBox() {
 		//item drag start: 設定instance variables
 		var me = this;
@@ -197,16 +240,9 @@ class UiView {
 			if (!me.isEdit) return;
 
 			me.DragBox.addClass('d-none');
-			/*
-			let { x, y } = e.detail.box;
-			//console.log(`x=${x}, y=${y}`);
-
-			//trigger event
-			if (this.flowBase.fnMoveNode)
-				this.flowBase.fnMoveNode(this, x, y);
-			*/
 		});
 	}
+	*/
 
 	//item事件
 	_setEventItem(item) {
@@ -215,6 +251,18 @@ class UiView {
 		var icon = item.find('.' + me.ClsDragIcon);
 		var ftItem = '.' + me.ClsItem;
 		icon.on(EstrMouse.MouseDown, function (e) {
+			if (!me.isEdit) return;
+
+			//記錄目前移動的Item element
+			me.dragging = true;
+			me.Area.addClass(me.ClsDragging);
+			me.dragItem = me.elmToItem(this);
+			me.dragItem.addClass(me.ClsDragItem);
+			me.dragItemElm = me.dragItem[0];
+			me.dragItemType = me.getItemType(me.dragItem);
+			me.dragIsBox = (me.dragItemType != EstrItemType.Col && me.dragItemType != EstrItemType.Group);
+
+			//show drag box
 			me.DragBox.css({
 				left: e.pageX + 10,
 				top: e.pageY + 10
@@ -222,7 +270,7 @@ class UiView {
 			me.DragBox.removeClass('d-none');
 
 			//set item draggable
-			me.DragBox.attr("draggable", true);
+			//me.DragBox.attr("draggable", true);
 		/*
 		}).on(EstrMouse.MouseUp, function (e) {
 			//stop item draggable
