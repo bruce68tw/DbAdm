@@ -18,13 +18,13 @@
     }
 
     /* UiView */
-    .xu-move-pos {
+    .xu-drop-line {
         height: 20px;
         border: 2px dashed #007bff;
-        margin-bottom: 5px;
+        /*margin-bottom: 5px;*/
     }
     /* 拖拉按鈕 */
-    .xd-drag-ico {
+    .xu-drag-ico {
         display: none; /* hover 顯示 */
         pointer-events: auto; /* 按鈕可點擊 */
         color: gray;
@@ -36,20 +36,23 @@
     }
 
     /* item hover 顯示 */
-    .xd-item:hover .xd-drag-ico {
+    .xu-item:hover .xu-drag-ico {
         display: inline-flex;
     }
 
-    /* dragged item 強制顯示 */
-    .xd-drag-item:hover .xd-drag-ico {
+    /* dragged item 強制顯示 
+    .xu-drag-item:hover .xu-drag-ico {
         display: inline-flex !important;
     }
+    */
     /* dragging(加在area) 時其他item不顯示 */
-    .xd-dragging .xd-drag-ico {
-        display: none;
+    .xu-dragging .xu-drag-ico {
+        display: none !important;
     }
 
     .xu-drag-box {
+        height: 30px;
+        width: 150px;
         position: absolute;
         pointer-events: none;
         border: 1px solid #007bff;

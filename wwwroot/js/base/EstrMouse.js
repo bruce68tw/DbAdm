@@ -3,6 +3,7 @@ var EstrMouse = {
     RightMenu: 'contextmenu',
     MouseDown: 'mousedown',
     MouseUp: 'mouseup',
+    MouseMove: 'mousemove',
     MouseEnter: 'mouseenter',
     MouseLeave: 'mouseleave',
     DragStart: 'dragstart',

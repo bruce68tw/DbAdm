@@ -47,10 +47,10 @@ class UiView {
 		this.Fid = '_fid_';
 		this.Title = '_title_';
 		this.ItemType = 'itemtype';	//data item type
-		this.ClsItem = 'xd-item';	//item class
-		this.ClsDragging = 'xd-dragging';	//加在 Area
-		this.ClsDragItem = 'xd-drag-item';	//加在 item, 表示目前作業item
-		this.ClsDragIcon = 'xd-drag-ico';
+		this.ClsItem = 'xu-item';	//item class
+		this.ClsDragging = 'xu-dragging';	//加在 Area
+		this.ClsDragItem = 'xu-drag-item';	//加在 item, 表示目前作業item
+		this.ClsDragIcon = 'xu-drag-ico';
 
 		//包含欄位:ItemType, Item, Childs
 		this.items = [];
@@ -86,7 +86,7 @@ class UiView {
 		//是否可編輯
 		this.isEdit = true;	//temp to true
 
-		this._setEventDragBox();
+		//this._setEventDragBox();
 
 		var me = this;
 		//this.Area.on(EstrMouse.MouseMove, function (e) {
@@ -128,9 +128,12 @@ class UiView {
 
 			//set instance
 			me.canDrop = true;
+			_obj.show(me.DropLine);
 
 			//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
-			me.dragItem.insertAfter(me.DropLine);
+			me.DropLine.insertAfter(me.dropItem);
+
+			me._moveDragBox(e);
 
 			/*
 			if (me.dragItemElm == null) return;
@@ -172,6 +175,8 @@ class UiView {
 			me.dragItem.insertAfter(me.DropLine);
 			*/
 		}).on(EstrMouse.MouseUp, function (e) {
+			if (!me.isEdit) return;
+
 			me.mouseUp();
 		});
 	}
@@ -249,9 +254,11 @@ class UiView {
 		//set drag icon event
 		var me = this;	//UiItem
 		var icon = item.find('.' + me.ClsDragIcon);
-		var ftItem = '.' + me.ClsItem;
+		//var ftItem = '.' + me.ClsItem;
 		icon.on(EstrMouse.MouseDown, function (e) {
 			if (!me.isEdit) return;
+
+			e.preventDefault();   //阻止文字被選取
 
 			//記錄目前移動的Item element
 			me.dragging = true;
@@ -263,11 +270,8 @@ class UiView {
 			me.dragIsBox = (me.dragItemType != EstrItemType.Col && me.dragItemType != EstrItemType.Group);
 
 			//show drag box
-			me.DragBox.css({
-				left: e.pageX + 10,
-				top: e.pageY + 10
-			});
-			me.DragBox.removeClass('d-none');
+			me._moveDragBox(e);
+			_obj.show(me.DragBox);
 
 			//set item draggable
 			//me.DragBox.attr("draggable", true);
@@ -286,19 +290,34 @@ class UiView {
 		});
 	}
 
+	_moveDragBox(e) {
+		this.DragBox.css({
+			left: e.pageX + 2,
+			top: e.pageY - 2,
+		});
+	}
+
 	_stopDrop() {
 		this.canDrop = false;
+		_obj.hide(this.DropLine);
 	}
 
 	mouseUp() {
+		//console.log('mouseUp');
 		if (!this.isEdit) return;
 		if (!this.dragging) return;
 
-		this.Area.removeClass(this.ClsDrag);
+		//move
+		this.dragItem.insertAfter(this.dropItem);
+
+		//reset
+		this.Area.removeClass(this.ClsDragging);
 		this.dragItem.removeClass(this.ClsDragItem);
 		this.dragging = false;
 		this.dragItem = null;
 		this.dragItemElm = null;
+		_obj.hide(this.DragBox);
+		this._stopDrop();
 	}
 
 	//get item type
@@ -359,11 +378,11 @@ class UiView {
 				.replace('col-md-3', 'col-md-6');
 		}
 
-		//如果required=false, 則加上class d-none
+		//如果required=false, 則hide
 		var item = $(html);
 		this.addItemProp(item, EstrItemType.Col);
 		if (!json.Required) {
-			item.find('.x-required').addClass('d-none');
+			_obj.hide(item.find('.x-required'));
 		}
 
 		//註冊事件
@@ -373,7 +392,7 @@ class UiView {
 		(this.dropBox || this.Area).append(item);
 	}
 
-	//加入item屬性: .xd-item, data-itemtype
+	//加入item屬性: .xu-item, data-itemtype
 	addItemProp(item, itemType) {
 		item.addClass(this.ClsItem);
 		item.data(this.ItemType, itemType);
