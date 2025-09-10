@@ -34,23 +34,24 @@ var EstrInputType = {
 class UiView {
 
 	//建構子不能執行非同步
-	constructor(ftWorkArea, ftDragBox, ftDropLine) {
-		//值不會變, 使用大camel
+	constructor(ftWorkArea) {
+		//內容不會變, 使用大camel
 		this.Area = $(ftWorkArea);
-		this.AreaElm = this.Area[0];
-		this.DragBox = $(ftDragBox);
-		this.DropLine = $(ftDropLine);
-
+		//this.AreaElm = this.Area[0];
+		
 		//constant
 		//使用Fid, Title這2個欄位值傳到後端建立元件, 傳到前端後再取代成實際屬性
 		this.Fid = '_fid_';
 		this.Title = '_title_';
 		this.ItemType = 'itemtype';	//data item type
 		this.ClsItem = 'xu-item';	//item class
+		this.FtItem = '.' + this.ClsItem;	//item filter
+		this.ClsRowCol = 'xu-row-col';		//row col 
 		this.ClsDragArea = 'xu-drag-area';	//加在 Area
-		//this.ClsDragItem = 'xu-drag-item';	//加在 item, 表示目前作業item
 		this.ClsDragIcon = 'xu-drag-ico';
 		this.DragIconHtml = `<i class='ico-arrow4 ${this.ClsDragIcon}'></i>`;
+		this.DragBox = $('.xu-drag-box');		//拖拉時顯示的示意方框
+		this.DropLine = $('.xu-drop-line');		//drop時顯示的位置線
 
 		//包含欄位:ItemType, Item, Childs
 		this.items = [];
@@ -70,15 +71,15 @@ class UiView {
 		this.canDrop = false;		//target正確才會true
 		this.dragging = false;
 		this.dragItem = null;
-		this.dragItemElm = null;
+		//this.dragItemElm = null;
 		this.dragItemType = '';
 		this.dragIsBox = false;		//drag item is box
-
 		this.dragIcon = null;
-		this.dragIconElm = null;
+		//this.dragIconElm = null;
 
 		//moving target item element
 		this.dropItem = null;		//moving target Item object
+		this.dropItemType = null;	//moving target Item type
 		this.dropBox = null;		//moving target Box object, null表示workArea
 		this.dropBoxType = null;	//moving target Box ItemType, null表示workArea
 
@@ -102,20 +103,29 @@ class UiView {
 
 	_onMouseMove(e) {
 		//判斷顯示target在上或下
-		if (this.dragItemElm == null) return;
+		if (this.dragItem == null) return;
 		//if (e.target == this.AreaElm) return;
 
 		//e.target 為目前經過的 element
-		var ftItem = '.' + this.ClsItem;
-		var dropItem = $(e.target).closest(ftItem);
-		if (dropItem == null) return;
+		var dropItem = $(e.target).closest(this.FtItem);
+		if (_obj.isEmpty(dropItem)) return;
 
 		//set instance variables
-		if (this.dropItem != dropItem) {
-			this.dropItem = dropItem;
-			this.dropBox = dropItem.parent(ftItem).first();
-			this.dropBoxType = (this.dropBox.len == 0) ? null : this.dropBox.data(this.ItemType);
+		if (this.dropItem == dropItem) return;
+
+		this.dropItem = dropItem;
+		this.dropItemType = this._getItemType(dropItem);
+
+		//調整, todo: 其他 itemtype
+		if (this.dropItemType == EstrItemType.Row) {
+			this.dropBox = dropItem;
+			this.dropBoxType = this.dropItemType;
+		} else {
+			this.dropBox = dropItem.parent(this.FtItem).first();
+			this.dropBoxType = _obj.isEmpty(this.dropBox)
+				? null : this.dropBox.data(this.ItemType);
 		}
+		console.log(`dropItemType=${this.dropItemType}`);
 
 		//禁止移動的情形
 		if (this.dropBoxType != null) {
@@ -136,11 +146,19 @@ class UiView {
 
 		//set instance
 		this.canDrop = true;
+
+		//顯示 target drop line
 		_obj.show(this.DropLine);
 
-		//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
-		this.DropLine.insertAfter(this.dropItem);
-		this._moveDragBox(e);	//移動 drag box 到 mouse 位置
+		//todo: 如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
+		if (this.dropBox != null) {
+			this.dropBox.append(this.DropLine);
+		} else {
+			this.DropLine.insertAfter(this.dropItem);
+		}
+
+		//移動 drag box 到 mouse 位置
+		this._moveDragBox(e);
 	}
 
 	_onMouseUp(e) {
@@ -155,7 +173,7 @@ class UiView {
 		//this.dragItem.removeClass(this.ClsDragItem);
 		this.dragging = false;
 		this.dragItem = null;
-		this.dragItemElm = null;
+		//this.dragItemElm = null;
 		_obj.hide(this.DragBox);
 		this._stopDrop();
 	}
@@ -165,7 +183,6 @@ class UiView {
 		//set drag icon event
 		var me = this;	//UiItem
 		var icon = item.find('.' + me.ClsDragIcon);
-		//var ftItem = '.' + me.ClsItem;
 		icon.on(EstrMouse.MouseDown, function (e) {
 			if (!me.isEdit) return;
 
@@ -176,7 +193,7 @@ class UiView {
 			me.Area.addClass(me.ClsDragArea);
 			me.dragItem = me._elmToItem(this);
 			//me.dragItem.addClass(me.ClsDragItem);
-			me.dragItemElm = me.dragItem[0];
+			//me.dragItemElm = me.dragItem[0];
 			me.dragItemType = me._getItemType(me.dragItem);
 			me.dragIsBox = (me.dragItemType != EstrItemType.Col && me.dragItemType != EstrItemType.Group);
 
@@ -257,8 +274,8 @@ class UiView {
 	addRow() {
 		var html = `
 <div class='row'>
-	<div class='col-md-6 xu-col'></div>
-	<div class='col-md-6 xu-col'></div>
+	<div class='col-md-6 ${this.ClsRowCol}'></div>
+	<div class='col-md-6 ${this.ClsRowCol}'></div>
 </div>
         `;
 		//label左邊加上drag icon
@@ -279,7 +296,8 @@ class UiView {
 		this._setEventItem(item);
 
 		//append item
-		(this.dropBox || this.Area).append(item);
+		var box = _obj.isEmpty(this.dropBox) ? this.Area : this.dropBox;
+		box.append(item);
 	}
 
 	/*
@@ -328,7 +346,7 @@ class UiView {
 
 	//內部element to Item object
 	_elmToItem(elm) {
-		return $(elm).closest('.' + this.ClsItem);
+		return $(elm).closest(this.FtItem);
 	}
 
 	idToItem(id) {

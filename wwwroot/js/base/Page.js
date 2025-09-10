@@ -135,11 +135,11 @@ function Page(config) {
 		}
 
 		var linker = this.linker;
-		if (_obj.isExist(linker)) {
+		if (_obj.isEmpty(linker)) {
+			window.location = url;
+		} else {
 			linker.attr('href', url);
 			linker.trigger('click');
-		} else {
-			window.location = url;
         }
 	};
 

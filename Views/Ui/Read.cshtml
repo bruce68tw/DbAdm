@@ -63,7 +63,7 @@
     }
 
     /* row 格式加框線、高度 */
-    .xu-col {
+    .xu-row-col {
         min-height: 50px;
         border: 1px solid #007bff;
     }
@@ -106,7 +106,7 @@
             new CrudR(config, [null, _me.mItem]);
 
             //initial flow edit form
-            _me.uiMany = new UiMany(_me.mItem, '#divEdit', '.xu-ui-area', '.xu-drag-box', '.xu-drop-line');
+            _me.uiMany = new UiMany(_me.mItem, '#divEdit', '.xu-ui-area');
 
             //custom function
             _me.mItem.fnLoadRows = _me.mItem_loadRows;
@@ -292,8 +292,8 @@
             <div>
                 <div class="btn-group-vertical ms-1" role="group" aria-label="button group vertical">
                     <button type="button" class="btn xf-node" data-onclick="_me.uiMany.onAddCol" Title='增加輸入欄位'>輸入欄位</button>
-                    <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddGroup" Title='增加Group文字'>Group文字</button>
-                    <button type="button" class="btn xf-start" data-onclick="_me.uiMany.onAddRow" Title='增加2欄位的容器'>2欄容器</button>
+                    <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddGroup" Title='增加分群文字'>分群文字</button>
+                    <button type="button" class="btn xf-start" data-onclick="_me.uiMany.onAddRow" Title='增加欄位容器'>欄位容器</button>
                     <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddTable" Title='增加Table'>多筆表格</button>
                 </div>
             </div>

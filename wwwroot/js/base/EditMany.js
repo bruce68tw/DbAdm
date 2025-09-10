@@ -552,7 +552,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             deletes[rowLen] = key;
 
         //remove UI row if need
-        if (_obj.isExist(rowBox))
+        if (_obj.notEmpty(rowBox))
             rowBox.remove();
     };
 

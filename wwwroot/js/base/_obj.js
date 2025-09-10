@@ -84,8 +84,16 @@ var _obj = {
     /**
      * check object existed or not
      */
+    isEmpty: function (obj) {
+        return (obj == null || obj.length == 0);
+    },
+
+    /**
+     * isExist -> notEmpty
+     * check object existed or not
+     */
     isExist: function (obj) {
-        return (obj !== undefined && obj !== null && obj.length > 0);
+        return !_obj.isEmpty(obj);
     },
 
     /**
