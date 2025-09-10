@@ -68,10 +68,10 @@ namespace DbAdm.Controllers
         //傳回輸入欄位html, 必須傳回ViewComponentResult, 前端收到為字串
         [HttpPost]
         //[XgProgAuth(CrudEnum.View)]
-        public string GetColHtml(string inputType, string fid, string title)
+        public string GetColHtml(string inputType, string fid, string title, string cols, int required)
         {
             //固定 Cols = "2,3", Required = true, 前端自行調整
-            XiBaseDto data = new() { Fid = fid, Title = title, Cols = "2,3", Required = true };
+            XiBaseDto data = new() { Fid = fid, Title = title, Cols = cols, Required = (required == 1) };
             return inputType switch
             {
                 //無法直接轉型, 只能用Copy
@@ -89,6 +89,12 @@ namespace DbAdm.Controllers
                 QEitemTypeEstr.Textarea => _Input.XiTextarea(_Model.Copy<XiBaseDto, XiTextareaDto>(data)),
                 _ => _Input.XiText(_Model.Copy<XiBaseDto, XiTextDto>(data)),
             };
+        }
+
+        [HttpPost]
+        public string GetGroupHtml(string label)
+        {
+            return _Input.XgGroup(label, false);
         }
 
     }//class

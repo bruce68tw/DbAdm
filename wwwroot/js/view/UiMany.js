@@ -209,13 +209,13 @@ class UiMany {
         row.Required = false;
         //row.Name += "-" + row.Id;
 
-        await this.uiView.addCol(EstrInputType.Text, row);
+        await this.uiView.addColA(EstrInputType.Text, row);
     }
-    onAddBox() {
-        this.addItem(itemType);
+    async onAddGroup() {
+        await this.uiView.addGroupA('欄位群組');
     }
-    onAddGroup() {
-        this.addItem(itemType);
+    onAddRow() {
+        this.uiView.addRow();
     }
     onAddTable() {
         this.addItem(itemType);

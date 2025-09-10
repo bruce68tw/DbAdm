@@ -19,9 +19,9 @@
 
     /* UiView */
     .xu-drop-line {
-        height: 20px;
-        border: 2px dashed #007bff;
-        /*margin-bottom: 5px;*/
+        height: 0; /* 不佔高度 */
+        border-top: 2px solid #007bff; /* 改成實線/虛線都可以 */
+        margin: 4px 0; /* 與上下元素留一點距離 */
     }
     /* 拖拉按鈕 */
     .xu-drag-ico {
@@ -46,7 +46,7 @@
     }
     */
     /* dragging(加在area) 時其他item不顯示 */
-    .xu-dragging .xu-drag-ico {
+    .xu-drag-area .xu-drag-ico {
         display: none !important;
     }
 
@@ -60,6 +60,12 @@
         padding: 5px 10px;
         border-radius: 4px;
         z-index: 2000;
+    }
+
+    /* row 格式加框線、高度 */
+    .xu-col {
+        min-height: 50px;
+        border: 1px solid #007bff;
     }
 </style>
 
@@ -286,8 +292,8 @@
             <div>
                 <div class="btn-group-vertical ms-1" role="group" aria-label="button group vertical">
                     <button type="button" class="btn xf-node" data-onclick="_me.uiMany.onAddCol" Title='增加輸入欄位'>輸入欄位</button>
-                    <button type="button" class="btn xf-start" data-onclick="_me.uiMany.onAddBox" Title='增加2欄位的容器'>2欄容器</button>
                     <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddGroup" Title='增加Group文字'>Group文字</button>
+                    <button type="button" class="btn xf-start" data-onclick="_me.uiMany.onAddRow" Title='增加2欄位的容器'>2欄容器</button>
                     <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddTable" Title='增加Table'>多筆表格</button>
                 </div>
             </div>

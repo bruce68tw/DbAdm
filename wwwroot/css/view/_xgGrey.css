@@ -9,6 +9,26 @@ html, body {
 body, label {
     /* color: #9797AB !important;*/
 }
+
+/* chart.js */
+.chart-title {
+    font-size: 24px;
+}
+
+/* bootstrap */
+.btn {
+    font-size: .875rem !important;
+}
+
+/* change height, 38 -> 36 */
+.form-control, select.form-control {
+    font-size: 16px !important;
+}
+
+.form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
+    background-color: #eee !important;
+}
+
 .form-control, .form-select {
     /*background: #1A202E;*/
 }
@@ -139,31 +159,26 @@ body, label {
     margin-bottom: 10px;
 }
 
-/* chart.js */
-.chart-title {
-    font-size: 24px;
+/*=== 欄位分群 ===*/
+/* Label + Icon */
+.x-group-label {
+    font-weight: 600;
+    color: #0d6efd;
 }
 
+    .x-group-label i {
+        font-size: 0.9rem;
+        color: #0d6efd;
+    }
+
+/* 點狀分隔線 */
+.x-group-line {
+    color: #0d6efd;
+    font-size: 0.9rem;
+}
 
 @media (max-width:768px) {
     .x-table {
         background: #fff !important;
     } 
 }
-
-/* bootstrap */
-.btn {
-    font-size: .875rem !important;
-}
-
-/* change height, 38 -> 36 */
-.form-control, select.form-control {
-    font-size: 16px !important;
-}
-
-    .form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
-        background-color: #eee !important;
-    }
-
-
-

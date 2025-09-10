@@ -29,9 +29,11 @@ var EstrInputType = {
 
 /**
  * 處理畫面操作, 包含基本元件, 使用jQuery
+ * ItemType Col欄位和Group由後端傳入, Row、Table、TabPage由前端產生
  */
 class UiView {
 
+	//建構子不能執行非同步
 	constructor(ftWorkArea, ftDragBox, ftDropLine) {
 		//值不會變, 使用大camel
 		this.Area = $(ftWorkArea);
@@ -39,18 +41,16 @@ class UiView {
 		this.DragBox = $(ftDragBox);
 		this.DropLine = $(ftDropLine);
 
-		//let boxDom = document.getElementById(boxId);
-		//this.svg = SVG().addTo(boxDom).size('100%', '100%');
-
 		//constant
 		//使用Fid, Title這2個欄位值傳到後端建立元件, 傳到前端後再取代成實際屬性
 		this.Fid = '_fid_';
 		this.Title = '_title_';
 		this.ItemType = 'itemtype';	//data item type
 		this.ClsItem = 'xu-item';	//item class
-		this.ClsDragging = 'xu-dragging';	//加在 Area
-		this.ClsDragItem = 'xu-drag-item';	//加在 item, 表示目前作業item
+		this.ClsDragArea = 'xu-drag-area';	//加在 Area
+		//this.ClsDragItem = 'xu-drag-item';	//加在 item, 表示目前作業item
 		this.ClsDragIcon = 'xu-drag-ico';
+		this.DragIconHtml = `<i class='ico-arrow4 ${this.ClsDragIcon}'></i>`;
 
 		//包含欄位:ItemType, Item, Childs
 		this.items = [];
@@ -60,6 +60,9 @@ class UiView {
 
 		//儲存各種輸入欄位模版, 減少後端傳回
 		this.colJson = {};
+
+		//儲存group html, 後端傳回
+		this.groupHtml = '';
 
 		//this.nowBox = null;
 
@@ -86,168 +89,76 @@ class UiView {
 		//是否可編輯
 		this.isEdit = true;	//temp to true
 
-		//this._setEventDragBox();
-
+		//註冊area事件
 		var me = this;
-		//this.Area.on(EstrMouse.MouseMove, function (e) {
 		this.Area.on(EstrMouse.MouseMove, function (e) {
-			if (!me.isEdit) return;
-
-			//判斷顯示target在上或下
-			if (me.dragItemElm == null) return;
-			//if (e.target == me.AreaElm) return;
-
-			//e.target 為目前經過的 element
-			var ftItem = '.' + me.ClsItem;
-			var dropItem = $(e.target).closest(ftItem);
-			if (dropItem == null) return;
-
-			//set instance variables
-			if (me.dropItem != dropItem) {
-				me.dropItem = dropItem;
-				me.dropBox = dropItem.parent(ftItem).first();
-				me.dropBoxType = (me.dropBox.len == 0) ? null : me.dropBox.data(me.ItemType);
-			}
-
-			//禁止移動的情形
-			if (me.dropBoxType != null) {
-				if (me.dropBoxType == EstrItemType.Table) {
-					//table內不能放group
-					if (me.dragItemType == EstrItemType.Group) {
-						me._stopDrop();
-						return;
-					}
-				} else {
-					//row, tabPage 內不能放 box
-					if (me.dragIsBox) {
-						me._stopDrop();
-						return;
-					}
-				}
-			}
-
-			//set instance
-			me.canDrop = true;
-			_obj.show(me.DropLine);
-
-			//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
-			me.DropLine.insertAfter(me.dropItem);
-
-			me._moveDragBox(e);
-
-			/*
-			if (me.dragItemElm == null) return;
-			if (e.target == me.AreaElm) return;
-
-			me.DragBox.css({
-				left: e.pageX - offsetX,
-				top: e.pageY - offsetY
-			});
-			*/
-
-			/*
-			//e.target 為目前經過的 element
-			var clsItem = '.' + me.ClsItem;
-			var dropItem = $(e.target).closest(clsItem);
-			if (dropItem == null) return;
-
-			//set instance variables
-			if (me.dropItem != dropItem) {
-				me.dropItem = dropItem;
-				me.dropBox = dropItem.closest(clsItem);
-				me.dropBoxType = (me.dropBox.len == 0) ? null : me.dropBox.data(me.ItemType);
-			}
-
-			//禁止移動的情形
-			if (me.dropBoxType != null) {
-				if (me.dropBoxType == EstrItemType.Table) {
-					//table不能放group
-					if (me.dragItemType == EstrItemType.Group)
-						return;
-				} else {
-					//case row, tagPage
-					if (me.dragIsBox)
-						return;
-				}
-			}
-
-			//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
-			me.dragItem.insertAfter(me.DropLine);
-			*/
+			if (me.isEdit)
+				me._onMouseMove(e);
 		}).on(EstrMouse.MouseUp, function (e) {
-			if (!me.isEdit) return;
-
-			me.mouseUp();
+			if (me.isEdit)
+				me._onMouseUp(e);
 		});
 	}
 
-	/*
-	_setEventDragBox() {
-		//item drag start: 設定instance variables
-		var me = this;
-		this.DragBox.on(EstrMouse.DragStart, function (e) {
-			if (!me.isEdit) return;
+	_onMouseMove(e) {
+		//判斷顯示target在上或下
+		if (this.dragItemElm == null) return;
+		//if (e.target == this.AreaElm) return;
 
-			//記錄目前移動的Item element
-			me.dragging = true;
-			me.Area.addClass(me.ClsDragging);
-			me.dragItem = me.elmToItem(this);
-			me.dragItem.addClass(me.ClsDragItem);
-			me.dragItemElm = me.dragItem[0];
-			me.dragItemType = me.getItemType(me.dragItem);
-			me.dragIsBox = (me.dragItemType != EstrItemType.Col && me.dragItemType != EstrItemType.Group);
+		//e.target 為目前經過的 element
+		var ftItem = '.' + this.ClsItem;
+		var dropItem = $(e.target).closest(ftItem);
+		if (dropItem == null) return;
 
-		//drag move: 顯示移動位置
-		}).on(EstrMouse.DragMove, function (e) {
-			if (!me.isEdit) return;
+		//set instance variables
+		if (this.dropItem != dropItem) {
+			this.dropItem = dropItem;
+			this.dropBox = dropItem.parent(ftItem).first();
+			this.dropBoxType = (this.dropBox.len == 0) ? null : this.dropBox.data(this.ItemType);
+		}
 
-			//判斷顯示target在上或下
-			if (me.dragItemElm == null) return;
-			//if (e.target == me.AreaElm) return;
-
-			//e.target 為目前經過的 element
-			//var clsItem = '.' + me.ClsItem;
-			var dropItem = $(e.target).closest(clsItem);
-			if (dropItem == null) return;
-
-			//set instance variables
-			if (me.dropItem != dropItem) {
-				me.dropItem = dropItem;
-				me.dropBox = dropItem.parent(ftItem).first();
-				me.dropBoxType = (me.dropBox.len == 0) ? null : me.dropBox.data(me.ItemType);
-			}
-
-			//禁止移動的情形
-			if (me.dropBoxType != null) {
-				if (me.dropBoxType == EstrItemType.Table) {
-					//table內不能放group
-					if (me.dragItemType == EstrItemType.Group) {
-						me._stopDrop();
-						return;
-					}
-				} else {
-					//row, tabPage 內不能放 box
-					if (me.dragIsBox) {
-						me._stopDrop();
-						return;
-					}
+		//禁止移動的情形
+		if (this.dropBoxType != null) {
+			if (this.dropBoxType == EstrItemType.Table) {
+				//table內不能放group
+				if (this.dragItemType == EstrItemType.Group) {
+					this._stopDrop();
+					return;
+				}
+			} else {
+				//row, tabPage 內不能放 box
+				if (this.dragIsBox) {
+					this._stopDrop();
+					return;
 				}
 			}
+		}
 
-			//set instance
-			me.canDrop = true;
+		//set instance
+		this.canDrop = true;
+		_obj.show(this.DropLine);
 
-			//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
-			me.dragItem.insertAfter(me.DropLine);
-
-			//drag end: 移動位置, 還原instance variables
-		}).on(EstrMouse.DragEnd, (e) => {
-			if (!me.isEdit) return;
-
-			me.DragBox.addClass('d-none');
-		});
+		//如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
+		this.DropLine.insertAfter(this.dropItem);
+		this._moveDragBox(e);	//移動 drag box 到 mouse 位置
 	}
-	*/
+
+	_onMouseUp(e) {
+		//console.log('_mouseUp');
+		if (!this.dragging) return;
+
+		//move item
+		this.dragItem.insertAfter(this.dropItem);
+
+		//reset
+		this.Area.removeClass(this.ClsDragArea);
+		//this.dragItem.removeClass(this.ClsDragItem);
+		this.dragging = false;
+		this.dragItem = null;
+		this.dragItemElm = null;
+		_obj.hide(this.DragBox);
+		this._stopDrop();
+	}
 
 	//item事件
 	_setEventItem(item) {
@@ -262,24 +173,16 @@ class UiView {
 
 			//記錄目前移動的Item element
 			me.dragging = true;
-			me.Area.addClass(me.ClsDragging);
-			me.dragItem = me.elmToItem(this);
-			me.dragItem.addClass(me.ClsDragItem);
+			me.Area.addClass(me.ClsDragArea);
+			me.dragItem = me._elmToItem(this);
+			//me.dragItem.addClass(me.ClsDragItem);
 			me.dragItemElm = me.dragItem[0];
-			me.dragItemType = me.getItemType(me.dragItem);
+			me.dragItemType = me._getItemType(me.dragItem);
 			me.dragIsBox = (me.dragItemType != EstrItemType.Col && me.dragItemType != EstrItemType.Group);
 
-			//show drag box
+			//move & show drag box
 			me._moveDragBox(e);
 			_obj.show(me.DragBox);
-
-			//set item draggable
-			//me.DragBox.attr("draggable", true);
-		/*
-		}).on(EstrMouse.MouseUp, function (e) {
-			//stop item draggable
-			me.DragBox.attr("draggable", false);
-		*/
 		});
 
 		//右鍵選單
@@ -289,6 +192,106 @@ class UiView {
 				me.fnShowMenu(e, true, me);
 		});
 	}
+
+	/**
+	 * add col
+	 * param {string} inputType
+	 * param {json} json 包含欄位: Fid, Title, Required
+	 * returns
+	 */
+	async addColA(inputType, json) {
+		//get set colJson
+		var colJson = this.colJson;
+		if (colJson[inputType] == null) {
+			var data = {
+				inputType: inputType,
+				fid: this.Fid,		//前端重設
+				title: this.Title,	//前端重設
+				cols: '2,3',		//前端重設
+				required: 1,		//前端重設
+			};
+			var tpl = await _ajax.getStrA('GetColHtml', data);
+			colJson[inputType] = tpl;
+		}
+
+		//render ui
+		//設定實際fid, title
+		var html = colJson[inputType];
+		html = _str.replaceAll(html, this.Fid, json.Fid);	//多個取代
+		html = _str.replaceAll(html, this.Title, json.Title);
+
+		//如果上層為box, 則cols修改2,3 -> 4,6, 單個取代
+		if (this._upIsRow()) {
+			html = html.replace('col-md-2', 'col-md-4')
+				.replace('col-md-3', 'col-md-6');
+		}
+
+		//如果required=false, 則hide
+		var item = $(html);
+		//this._setItemProp(item, EstrItemType.Col);
+		if (!json.Required) {
+			_obj.hide(item.find('.x-required'));
+		}
+
+		//label左邊加上drag icon
+		item.find('.x-label').prepend(this.DragIconHtml);
+
+		//render item
+		this._renderItem(EstrItemType.Col, item);
+	}
+
+	async addGroupA(label) {
+		//get set colJson
+		if (_str.isEmpty(this.groupHtml))
+			this.groupHtml = await _ajax.getStrA('GetGroupHtml', { label: label });
+
+		//label左邊加上drag icon
+		var item = $(this.groupHtml);
+		//item.find('.x-group-label').prepend(this.DragIconHtml);
+		item.prepend(this.DragIconHtml);
+
+		//render item
+		this._renderItem(EstrItemType.Group, item);
+	}
+
+	addRow() {
+		var html = `
+<div class='row'>
+	<div class='col-md-6 xu-col'></div>
+	<div class='col-md-6 xu-col'></div>
+</div>
+        `;
+		//label左邊加上drag icon
+		var item = $(html);
+		//item.find('div').first().prepend(this.DragIconHtml);
+		item.prepend(this.DragIconHtml);
+
+		//render item
+		this._renderItem(EstrItemType.Row, item);
+	}
+
+	_renderItem(itemType, item) {
+		//加入item屬性: .xu-item, data-itemtype
+		item.addClass(this.ClsItem);
+		item.data(this.ItemType, itemType);
+
+		//註冊事件
+		this._setEventItem(item);
+
+		//append item
+		(this.dropBox || this.Area).append(item);
+	}
+
+	/*
+	//加入item屬性: .xu-item, data-itemtype
+	_setItemProp(item, itemType) {
+		item.addClass(this.ClsItem);
+		item.data(this.ItemType, itemType);
+
+		//label左邊加上drag icon
+		item.find('.x-label').prepend(`<i class='ico-arrow4 ${this.ClsDragIcon}'></i>`);
+	}
+	*/
 
 	_moveDragBox(e) {
 		this.DragBox.css({
@@ -302,26 +305,8 @@ class UiView {
 		_obj.hide(this.DropLine);
 	}
 
-	mouseUp() {
-		//console.log('mouseUp');
-		if (!this.isEdit) return;
-		if (!this.dragging) return;
-
-		//move
-		this.dragItem.insertAfter(this.dropItem);
-
-		//reset
-		this.Area.removeClass(this.ClsDragging);
-		this.dragItem.removeClass(this.ClsDragItem);
-		this.dragging = false;
-		this.dragItem = null;
-		this.dragItemElm = null;
-		_obj.hide(this.DragBox);
-		this._stopDrop();
-	}
-
 	//get item type
-	getItemType(item) {
+	_getItemType(item) {
 		return item.data(this.ItemType);
 	}
 
@@ -336,78 +321,13 @@ class UiView {
 		this.isEdit = status;
 	}
 
-	/**
-	 * add col
-	 * param {string} inputType
-	 * param {json} json 包含欄位: Fid, Title, Required
-	 * returns
-	 */
-	async addCol(inputType, json) {
-		//var col = new UiCol(this);
-		/*
-		if (item == null) {
-			console.log(`json.ItemType is wrong.(${json.ItemType})`);
-			return null;
-		}
-		*/
-		//debugger;
-		//get set colJson
-		var colJson = this.colJson;
-		if (colJson[inputType] == null) {
-			var data = {
-				inputType: inputType,
-				fid: this.Fid,		//前端重設
-				title: this.Title,	//前端重設
-				//Cols: '2,3',		//前端重設
-				//Required: 1,		//前端重設
-			};
-			var tpl = await _ajax.getStrA('GetColHtml', data);
-			colJson[inputType] = tpl;
-		}
-
-		//render ui
-		//設定實際fid, title
-		//debugger;
-		var html = colJson[inputType];
-		html = _str.replaceAll(html, this.Fid, json.Fid);	//多個取代
-		html = _str.replaceAll(html, this.Title, json.Title);
-
-		//如果上層為box, 則cols改為4,6, 單個取代
-		if (this.upIsRow()) {
-			html = html.replace('col-md-2', 'col-md-4')
-				.replace('col-md-3', 'col-md-6');
-		}
-
-		//如果required=false, 則hide
-		var item = $(html);
-		this.addItemProp(item, EstrItemType.Col);
-		if (!json.Required) {
-			_obj.hide(item.find('.x-required'));
-		}
-
-		//註冊事件
-		this._setEventItem(item);
-
-		//增加item
-		(this.dropBox || this.Area).append(item);
-	}
-
-	//加入item屬性: .xu-item, data-itemtype
-	addItemProp(item, itemType) {
-		item.addClass(this.ClsItem);
-		item.data(this.ItemType, itemType);
-
-		//label左邊加上drag icon
-		item.find('.x-label').prepend(`<i class='ico-arrow4 ${this.ClsDragIcon}'></i>`);
-	}
-
 	//上層是否為box
-	upIsRow() {
-		return (this.dropBox != null && this.getItemType(this.dropBox) == EstrItemType.Row);
+	_upIsRow() {
+		return (this.dropBox != null && this._getItemType(this.dropBox) == EstrItemType.Row);
 	}
 
 	//內部element to Item object
-	elmToItem(elm) {
+	_elmToItem(elm) {
 		return $(elm).closest('.' + this.ClsItem);
 	}
 
