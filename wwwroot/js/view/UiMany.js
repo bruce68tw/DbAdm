@@ -218,7 +218,7 @@ class UiMany {
         this.uiView.addRow();
     }
     onAddTable() {
-        this.addItem(itemType);
+        this.uiView.addTable();
     }
 
     //#region events

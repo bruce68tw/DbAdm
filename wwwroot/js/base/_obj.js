@@ -92,7 +92,7 @@ var _obj = {
      * isExist -> notEmpty
      * check object existed or not
      */
-    isExist: function (obj) {
+    notEmpty: function (obj) {
         return !_obj.isEmpty(obj);
     },
 
@@ -117,4 +117,15 @@ var _obj = {
         else
             _obj.hide(obj);
     },
+
+    /**
+     * jquery data() 只寫入 jquery 暫存, 不寫入 DOM !!
+     * param {object} obj
+     * param {string} fid
+     * param {string} value
+     */
+    setData: function (obj, fid, value) {
+        obj.attr('data-' + fid, value);
+    },
+
 }; //class
