@@ -67,7 +67,7 @@ class UiView {
 
 		//this.nowBox = null;
 
-		//移動中item element
+		//移動中item element, Box表示外層Item
 		this.canDrop = false;		//target正確才會true
 		this.dragging = false;
 		this.dragItem = null;
@@ -130,21 +130,25 @@ class UiView {
 		this.dropItemType = this._getItemType(dropItem);
 
 		//調整, todo: 其他 itemtype
-		if (this.dropItemType == EstrItemType.Row) {
-			this.dropIsBox = true;
-			this.dropCont = $(this.dropElm);	//row col
-			this.dropBoxType = this._getItemType(this._getBox(dropItem));
-		} else {
-			this.dropIsBox = false;	//todo: 加入其他判斷
-			this.dropCont = this._getBox(dropItem);	//上一層item
-			if (this.dropCont == null) {
-				//debugger;
-				var aa = "aa";
-			}
-			this.dropBoxType = this._getItemType(this.dropCont);
+		switch (this.dropItemType) {
+			case EstrItemType.Row:
+				this.dropIsBox = true;
+				this.dropCont = $(this.dropElm);	//row col
+				this.dropBoxType = this._getItemType(this._getBox(dropItem));
+				break;
+			case EstrItemType.Table:
+				this.dropIsBox = true;
+				this.dropCont = $(this.dropElm);	//table td
+				this.dropBoxType = this._getItemType(this._getBox(dropItem));
+				break;
+			default:
+				this.dropIsBox = false;	//todo: 加入其他判斷
+				this.dropCont = this._getBox(dropItem);	//上一層item
+				this.dropBoxType = this._getItemType(this.dropCont);
 		}
+
 		//console.log(`dropItemType=${this.dropItemType}`);
-		console.log('_onMouseMove-3');
+		//console.log('_onMouseMove-3');
 
 		//禁止移動的情形
 		if (this.dropBoxType != null) {
@@ -184,18 +188,35 @@ class UiView {
 		if (!this.dragging) return;
 
 		if (this.canDrop) {
-			//移入/移出 Row時必須調整大小 only for 互斥(a ^ b 或是 a !== b)
 			var dragBox = this._getBox(this.dragItem);
-			var dragBoxIsRow = _obj.isEmpty(dragBox) ? false : (this._getItemType(dragBox) == EstrItemType.Row);
+			var dragBoxType = this._getItemType(dragBox);
+
+			//移入/移出 Table 必須刪除/增加label
+			var checkType = EstrItemType.Table;
+			var tableData = this._isItemTypeXor(checkType, dragBoxType);
+			if (tableData.isXor)
+				this._resetItemByTable(this.dragItem, tableData.dropInBox);
+
+			//移入/移出 Row時必須調整大小 only for 互斥(a ^ b 或是 a !== b)
+			checkType = EstrItemType.Row;
+			var data = this._isItemTypeXor(checkType, dragBoxType);
+			if (data.isXor)
+				this._resetItemByRow(this.dragItem, data.dropInBox);
+			/*
+			var dragBoxIsRow = (dragBoxType === EstrItemType.Row);
 			var dropBoxIsRow = (this.dropBoxType === EstrItemType.Row);
 			if (dragBoxIsRow !== dropBoxIsRow || dragBoxIsRow !== this.dropIsBox)
-				this.resizeItem(this.dragItem, (dropBoxIsRow || this.dropIsBox));
+				this._resetItemByRow(this.dragItem, (dropBoxIsRow || this.dropIsBox));
+			*/
 
-			//move item
-			if (this.dropIsBox)
+			//move item, tableData.isXor 的情形已經在前面處理!!
+			if (tableData.isXor) {
+				//do nothing !!
+			} else if (this.dropIsBox) {
 				this.dropCont.append(this.dragItem);
-			else
+			} else {
 				this.dragItem.insertAfter(this.dropItem);
+			}
 		}
 
 		//reset
@@ -208,6 +229,22 @@ class UiView {
 		//this.dragItemElm = null;
 		_obj.hide(this.DragBox);
 		this._stopDrop();
+	}
+
+	//互斥檢查 for 移入/移出 的itemType
+	//param {string} checkType: 要檢查的 itemType
+	//param {string} dropType: drop itemType
+	//return {json} 有2個欄位:isXor(是否互斥), dropInBox(drop item 在指定類型的Box裡面)
+	_isItemTypeXor(checkType, dragBoxType) {
+		var dragBoxYes = (dragBoxType === checkType);
+		var dropBoxYes = (this.dropBoxType === checkType);
+		var dropItemYes = (this.dropItemType === checkType);
+		var dropInBox = (dropBoxYes || dropItemYes);
+		return { 
+			isXor: dragBoxYes !== dropInBox,
+			dropInBox: dropInBox
+		};
+		//(dragBoxYes !== dropBoxYes || dragBoxYes !== );
 	}
 
 	//傳回上一層item, 沒有則傳回null
@@ -283,7 +320,7 @@ class UiView {
 		//如果上層為box, 則cols修改2,3 -> 4,6, 單個取代
 		var item = $(html);
 		if (this._boxIsRow())
-			this.resizeItem(item, true);
+			this._resetItemByRow(item, true);
 
 		//如果required=false, 則hide
 		if (!json.Required)
@@ -298,7 +335,7 @@ class UiView {
 
 	//重設item寬度
 	//param {bool} inBox: in box or not
-	resizeItem(item, inBox) {
+	_resetItemByRow(item, inBox) {
 		var labelF, labelT, inputF, inputT;
 		if (inBox) {
 			labelF = 'col-md-2';
@@ -313,6 +350,22 @@ class UiView {
 		}
 		item.find('.x-label').removeClass(labelF).addClass(labelT);
 		item.find('.x-input').removeClass(inputF).addClass(inputT);
+	}
+
+	//移除/增加 label
+	_resetItemByTable(item, inBox) {
+		if (inBox) {
+			//移除 label, input使用clone, item remove後才不會有殘留的 x-label !!
+			//var input = item.find('.x-input').children().first().clone();
+			var input = $(item.find('.x-input').html());
+			input.addClass(this.ClsItem);
+			//return input;
+			//item.replaceWith(input);
+			this.dropCont.append(input);	//append new
+			item.remove();	//remove old
+		} else {
+			//todo
+		}
 	}
 
 	async addGroupA(label) {
@@ -387,7 +440,7 @@ class UiView {
 		item.prepend(this.DragIconHtml);
 
 		//render item
-		this._renderItem(item, EstrItemType.Row);
+		this._renderItem(item, EstrItemType.Table);
 	}
 
 	_renderItem(item, itemType) {
