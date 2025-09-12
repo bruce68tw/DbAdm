@@ -80,14 +80,14 @@ order by Id
 
         #region 2.XpCode to codes
 
-        //讀取 XpCode.Type='EitemType' and Ext = 'Q'
-        public static async Task<List<IdStrDto>> QitemTypesA(Db? db = null)
+        //讀取 XpCode.Type='InputType' and Ext = 'Q'
+        public static async Task<List<IdStrDto>> InputTypesQA(Db? db = null)
         {
             var sql = @"
 select 
     Value as Id, [Name] as Str
 from dbo.XpCode
-where Type='EitemType'
+where Type='InputType'
 and Ext='Q'
 order by Sort
 ";
@@ -112,9 +112,9 @@ order by Sort
             return await ByTypeA("RitemType", db);
         }
 
-        public static async Task<List<IdStrDto>> EitemTypesA(Db? db = null)
+        public static async Task<List<IdStrDto>> InputTypesA(Db? db = null)
         {
-            return await ByTypeA("EitemType", db);
+            return await ByTypeA("InputType", db);
         }
 
         public static async Task<List<IdStrDto>> CheckTypesA(Db? db = null)

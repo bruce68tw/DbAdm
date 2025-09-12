@@ -15,7 +15,7 @@ public partial class CrudQitem
 
     public string TableAs { get; set; } = null!;
 
-    public string QitemType { get; set; } = null!;
+    public string InputType { get; set; } = null!;
 
     public string? ItemData { get; set; }
 

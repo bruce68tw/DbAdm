@@ -13,7 +13,7 @@ public partial class CrudEitem
 
     public string ColumnId { get; set; } = null!;
 
-    public string EitemType { get; set; } = null!;
+    public string InputType { get; set; } = null!;
 
     public string? ItemData { get; set; }
 

@@ -2,12 +2,13 @@
 namespace DbAdm.Enums
 {
     /// <summary>
+    /// 停用!!
     /// input type, mapping to XpCode.Type=EitemType(for both Eitem & Qitem)
     /// </summary>
     public class QEitemTypeEstr
     {
         //normal text input, no validation, map to XpCode.Type=EitemType, Ext=Q when need
-        public const string Check = "C";     //Q(means also for Qitem)
+        public const string Check = "C";        //Q(means also for Qitem)
         public const string Date = "D";         //Q
         public const string DateTime = "DT";    //Q
         public const string Decimal = "DEC";    //Q

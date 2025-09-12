@@ -7,8 +7,6 @@
         public string CrudId { get; set; } = "";
         public string EtableId { get; set; } = "";
 
-        //public string EitemType { get; set; }
-
         public bool HasCreate { get; set; }
         public bool HasUpdate { get; set; }
 

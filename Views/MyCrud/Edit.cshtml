@@ -135,8 +135,8 @@
         <td class="x-w80">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "TableAs" })</td>
         <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto
        {
-           Fid = "QitemType",
-           Rows = ViewBag.QitemTypes,
+           Fid = "InputType",
+           Rows = ViewBag.InputTypesQ,
            AddEmptyRow = false,
            Value = "T"
        })</td>
@@ -255,10 +255,7 @@
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort", Value = "{{Sort}}" })
 
         <td>{{Code}}/{{Name}}<br>{{DataType}}</td>
-        <td class="x-w120">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "EitemType",
-                         Rows = ViewBag.EitemTypes, Required = true,
-                         AddEmptyRow = false, Value = "T"
-                     })</td>
+        <td class="x-w120">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, AddEmptyRow = false, Value = "T" })</td>
         <td class="x-w100">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
         <td class="x-center x-w50">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Required" })</td>
         <td class="x-center x-w50">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasCreate", IsCheck = true })</td>

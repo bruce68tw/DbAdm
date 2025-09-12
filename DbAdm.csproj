@@ -57,6 +57,7 @@
 
   <ItemGroup>
     <None Remove="Controllers\MyController.cs_old" />
+    <None Remove="Enums\QEitemTypeEstr.cs_old" />
     <None Remove="key.Development.txt" />
     <None Remove="key.Production.txt" />
     <None Remove="Models\CrudFitemDto.cs_old" />

@@ -103,7 +103,7 @@ namespace DbAdm.Services
                            PlaceHolder = "",
                            IsFind2 = q.IsFind2,
                            Op = q.Op,
-                           ItemType = q.QitemType,
+                           InputType = q.InputType,
                            ItemData = q.ItemData,
                        })
                        .ToList();
@@ -159,7 +159,7 @@ namespace DbAdm.Services
                            HasUpdate = e.HasUpdate,
                            CheckType = e.CheckType,
                            CheckData = e.CheckData,
-                           ItemType = e.EitemType,
+                           InputType = e.InputType,
                            ItemData = e.ItemData,
                            PosGroup = e.PosGroup,
                            LayoutCols = e.LayoutCols,
@@ -218,7 +218,7 @@ namespace DbAdm.Services
 
             #region 2.set fields: crud.RsItemStrs && IsGroup, IsGroupStart, IsGroupEnd
             //dropdown list types
-            var ddlpTypes = new List<string>() { QEitemTypeEstr.Select, QEitemTypeEstr.Radio };
+            var ddlpTypes = new List<string>() { InputTypeEstr.Select, InputTypeEstr.Radio };
             var qitemLen = (qitems == null) ? 0 : qitems.Count;
             int i;
             if (qitemLen > 0)
@@ -252,7 +252,7 @@ namespace DbAdm.Services
                 //set ReadSelectCols, be [] when null !!
                 //字尾A表示非同步
                 crud.ReadSelectCols = qitems!
-                    .Where(a => ddlpTypes.Contains(a.ItemType))
+                    .Where(a => ddlpTypes.Contains(a.InputType))
                     .Select(a => (a.ItemData.Length > 0 && a.ItemData[^1] == 'A')
                         ? $"ViewBag.{a.ItemData[..^1]} = await _XpCode.{a.ItemData}();"
                         : $"ViewBag.{a.ItemData} = _XpCode.{a.ItemData}();")
@@ -264,7 +264,7 @@ namespace DbAdm.Services
                 var qitemDatas = qitems!.Select(a => a.ItemData)
                     .ToList() ?? [];
                 var editSelectCols = _eitems!
-                    .Where(a => ddlpTypes.Contains(a.ItemType) &&
+                    .Where(a => ddlpTypes.Contains(a.InputType) &&
                         !qitemDatas.Contains(a.ItemData))
                     .Select(a => (a.ItemData.Length > 0 && a.ItemData[^1] == 'A')
                         ? $"ViewBag.{a.ItemData[..^1]} = await _XpCode.{a.ItemData}();"
@@ -419,7 +419,7 @@ namespace DbAdm.Services
                     eitem.ViewStr = ViewItemStr(etable, eitem, isTable);
 
                     //add hide field string for modal input(textArea)
-                    if (eitem.ItemType == QEitemTypeEstr.Modal)
+                    if (eitem.InputType == InputTypeEstr.Modal)
                         AddHideStr(etable, eitem);
 
                     //child table set table header
@@ -452,7 +452,7 @@ namespace DbAdm.Services
                     var table = etables[i];
                     table.Sort = i - 1;     //base 0
                     table.SortFid = table.Eitems
-                        .Where(a => a.ItemType == QEitemTypeEstr.Sort)
+                        .Where(a => a.InputType == InputTypeEstr.Sort)
                         .Select(a => a.Fid)
                         .FirstOrDefault()!;
                     table.Eitems.Add(new CrudEitemDto()
@@ -476,9 +476,9 @@ namespace DbAdm.Services
             #region File
             //set crud.HasFile
             var files = etables.SelectMany(a => a.Eitems)
-                .Where(a => a.ItemType == QEitemTypeEstr.File)
+                .Where(a => a.InputType == InputTypeEstr.File)
                 .ToList();
-            //crud.HasFile = etables.SelectMany(a => a.Eitems).Any(b => b.ItemType == QEitemTypeEstr.File);
+            //crud.HasFile = etables.SelectMany(a => a.Eitems).Any(b => b.ItemType == InputTypeEstr.File);
             crud.HasFile = (files != null && files.Count > 0);
             if (crud.HasFile)
             {
@@ -701,24 +701,24 @@ namespace DbAdm.Services
             var center = false;
             var name = isMany ? "" : item.Name;
             string str;
-            switch (item.ItemType)
+            switch (item.InputType)
             {
-                case QEitemTypeEstr.Hide:
-                case QEitemTypeEstr.Sort:
+                case InputTypeEstr.Hide:
+                case InputTypeEstr.Sort:
                     //no need consider in table or not
                     AddHideStr(table, item);
                     return "";
 
-                case QEitemTypeEstr.Text:
-                case QEitemTypeEstr.Textarea:
-                case QEitemTypeEstr.Password:
-                    var compType = (item.ItemType == QEitemTypeEstr.Textarea) 
+                case InputTypeEstr.Text:
+                case InputTypeEstr.Textarea:
+                case InputTypeEstr.Password:
+                    var compType = (item.InputType == InputTypeEstr.Textarea) 
                         ? "XiTextarea" : "XiText";
                     str = CompStart(compType) + 
                         ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
-                            (item.ItemType == QEitemTypeEstr.Password) ? KeyValue("IsPwd", "true") : "",
+                            (item.InputType == InputTypeEstr.Password) ? KeyValue("IsPwd", "true") : "",
                             ViewMaxLen(item.DataType),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
@@ -726,7 +726,7 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case QEitemTypeEstr.Html:
+                case InputTypeEstr.Html:
                     str = CompStart("XiHtml") +
                         ConcatViewCols(
                             ViewTitle(name),
@@ -738,9 +738,9 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case QEitemTypeEstr.Integer:
-                case QEitemTypeEstr.Decimal:
-                    var type2 = (item.ItemType == QEitemTypeEstr.Integer)
+                case InputTypeEstr.Integer:
+                case InputTypeEstr.Decimal:
+                    var type2 = (item.InputType == InputTypeEstr.Integer)
                         ? "XiInt" : "XiDec";
                     str = CompStart(type2) +
                         ConcatViewCols(
@@ -753,7 +753,7 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case QEitemTypeEstr.Check:
+                case InputTypeEstr.Check:
                     center = true;
                     str = CompStart("XiCheck") + 
                         ConcatViewCols(
@@ -765,7 +765,7 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case QEitemTypeEstr.Radio:
+                case InputTypeEstr.Radio:
                     center = true;
                     str = CompStart("XiRadio") +
                         ConcatViewCols(
@@ -777,7 +777,7 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case QEitemTypeEstr.Date:
+                case InputTypeEstr.Date:
                     str = CompStart("XiDate") +
                         ConcatViewCols(
                             ViewTitle(name),
@@ -788,7 +788,7 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case QEitemTypeEstr.DateTime:
+                case InputTypeEstr.DateTime:
                     str = CompStart("XiDt") +
                         ConcatViewCols(
                             ViewTitle(name),
@@ -799,7 +799,7 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case QEitemTypeEstr.Select:
+                case InputTypeEstr.Select:
                     str = CompStart("XiSelect") + 
                         ConcatViewCols(
                             ViewTitle(name),
@@ -811,7 +811,7 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case QEitemTypeEstr.File:
+                case InputTypeEstr.File:
                     str = CompStart("XiFile") + 
                         ConcatViewCols(
                             ViewTitle(name),
@@ -822,7 +822,7 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case QEitemTypeEstr.Modal:
+                case InputTypeEstr.Modal:
                     item.Width = 85;
                     center = true;
                     //item.Name for modal title
@@ -835,7 +835,7 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case QEitemTypeEstr.ReadOnly:
+                case InputTypeEstr.ReadOnly:
                     str = CompStart("XiRead") +
                         ConcatViewCols(
                             ViewTitle(name),
@@ -889,7 +889,7 @@ namespace DbAdm.Services
         private string EViewHeadStr(CrudEitemDto item)
         {
             //skip some types
-            if (item.ItemType == QEitemTypeEstr.Hide || item.ItemType == QEitemTypeEstr.Sort)
+            if (item.InputType == InputTypeEstr.Hide || item.InputType == InputTypeEstr.Sort)
                 return "";
 
             //@await Component.InvokeAsync("XgTh", new { title = "XXX", required = true })

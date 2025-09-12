@@ -137,7 +137,7 @@ public partial class MyContext : DbContext
             entity.Property(e => e.DefaultValue)
                 .HasMaxLength(10)
                 .IsUnicode(false);
-            entity.Property(e => e.EitemType)
+            entity.Property(e => e.InputType)
                 .HasMaxLength(10)
                 .IsUnicode(false);
             entity.Property(e => e.EtableId)
@@ -215,7 +215,7 @@ public partial class MyContext : DbContext
             entity.Property(e => e.PosGroup)
                 .HasMaxLength(10)
                 .IsUnicode(false);
-            entity.Property(e => e.QitemType)
+            entity.Property(e => e.InputType)
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.TableAs)

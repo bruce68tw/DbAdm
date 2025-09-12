@@ -12,7 +12,7 @@
         public string CheckType { get; set; } = "";
         public string CheckData { get; set; } = "";
 
-        public string ItemType { get; set; } = "";
+        public string InputType { get; set; } = "";
         public string ItemData { get; set; } = "";
         public string PosGroup { get; set; } = "";
         public string LayoutCols { get; set; } = "";

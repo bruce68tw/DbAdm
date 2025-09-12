@@ -1,0 +1,27 @@
+1.copy XpCode.Type='InputType' from local to remote DB
+2.CrudQitem/CrudEitem add InputType field varchar(10) null
+3.寫入CrudQitem.InputType, 執行：
+
+select q2.QitemType, a.Value, q2.*
+--update q2 set InputType=a.Value
+from dbo.CrudQitem q2
+join (
+	select c2.Value, c.Name, q.* 
+	from dbo.CrudQitem q
+	join dbo.XpCode c on c.Type='EitemType' and q.QitemType=c.Value
+	join dbo.XpCode c2 on c2.Type='InputType' and c.Name=c2.Name
+) a on q2.QitemType=a.QitemType
+
+4.寫入CrudEitem.InputType, 執行：
+
+select q2.EitemType, a.Value, q2.*
+--update q2 set InputType=a.Value
+from dbo.CrudEitem q2
+join (
+	select c2.Value, c.Name, q.* 
+	from dbo.CrudEitem q
+	join dbo.XpCode c on c.Type='EitemType' and q.EitemType=c.Value
+	join dbo.XpCode c2 on c2.Type='InputType' and c.Name=c2.Name
+) a on q2.EitemType=a.EitemType
+s
+5.set CrudQitem/CrudEitem InputType not null

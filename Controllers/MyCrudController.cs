@@ -16,8 +16,8 @@ namespace DbAdm.Controllers
             await using var db = new Db();
             ViewBag.Projects = await _XpCode.ProjectsA(db);
             ViewBag.RitemTypes = await _XpCode.RitemTypesA(db);
-            ViewBag.QitemTypes = await _XpCode.QitemTypesA(db);
-            ViewBag.EitemTypes = await _XpCode.EitemTypesA(db);
+            ViewBag.InputTypesQ = await _XpCode.InputTypesQA(db);
+            ViewBag.InputTypes = await _XpCode.InputTypesA(db);
             ViewBag.CheckTypes = await _XpCode.CheckTypesA(db);
             ViewBag.QitemOps = await _XpCode.QitemOpsA(db);
             ViewBag.AuthTypes = await _XpCode.AuthTypesA(db);
