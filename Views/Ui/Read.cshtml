@@ -23,32 +23,17 @@
         border-top: 2px solid #007bff; /* 改成實線/虛線都可以 */
         margin: 4px 0; /* 與上下元素留一點距離 */
     }
-    /* 拖拉按鈕 */
-    .xu-drag-ico {
-        display: none; /* hover 顯示 */
-        pointer-events: auto; /* 按鈕可點擊 */
-        color: gray;
-        background: transparent;
-        border: none;
+
+    .xu-item {
         cursor: grab;
-        font-size: 18px;
-        margin: 0 5px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        transition: border-color 0.2s;
     }
-
-    /* item hover 顯示 */
-    .xu-item:hover .xu-drag-ico {
-        display: inline-flex;
-    }
-
-    /* dragged item 強制顯示 
-    .xu-drag-item:hover .xu-drag-ico {
-        display: inline-flex !important;
-    }
-    */
-    /* dragging(加在area) 時其他item不顯示 */
-    .xu-dragging .xu-drag-ico {
-        display: none !important;
-    }
+        /* item hover 顯示 */
+        .xu-item:hover {
+            border-color: #888;
+        }
 
     .xu-drag-box {
         height: 30px;

@@ -209,7 +209,7 @@ class UiMany {
         row.Required = false;
         //row.Name += "-" + row.Id;
 
-        await this.uiView.addColA(EstrInputType.Text, row);
+        await this.uiView.addInputA(EstrInputType.Text, row);
     }
     async onAddGroup() {
         await this.uiView.addGroupA('欄位群組');

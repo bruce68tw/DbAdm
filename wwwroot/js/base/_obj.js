@@ -128,4 +128,9 @@ var _obj = {
         obj.attr('data-' + fid, value);
     },
 
+    //傳回小寫tagName
+    tagName: function (obj) {
+        return obj[0].tagName.toLowerCase();
+    },
+
 }; //class
