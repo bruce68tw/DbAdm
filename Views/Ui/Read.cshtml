@@ -35,6 +35,7 @@
             border-color: #888;
         }
 
+    /*
     .xu-drag-box {
         height: 30px;
         width: 150px;
@@ -46,6 +47,7 @@
         border-radius: 4px;
         z-index: 2000;
     }
+    */
 
     /* row 格式加框線、高度 */
     .xu-row-col {
@@ -276,9 +278,9 @@
             <!-- add outer div for validate msg layout -->
             <div>
                 <div class="btn-group-vertical ms-1" role="group" aria-label="button group vertical">
-                    <button type="button" class="btn xf-node" data-onclick="_me.uiMany.onAddCol" Title='增加輸入欄位'>輸入欄位</button>
-                    <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddGroup" Title='增加分群文字'>分群文字</button>
+                    <button type="button" class="btn xf-node" data-onclick="_me.uiMany.onAddInput" Title='增加輸入欄位'>輸入欄位</button>
                     <button type="button" class="btn xf-start" data-onclick="_me.uiMany.onAddRow" Title='增加欄位容器'>欄位容器</button>
+                    <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddGroup" Title='增加分群文字'>分群文字</button>
                     <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddTable" Title='增加Table'>多筆表格</button>
                 </div>
             </div>
@@ -308,10 +310,10 @@
     <li data-onclick="_me.uiMany.onMenuView" class="xd-view">View</li>
 </ul>
 
-<!-- 移動item時顯示的示意外框 -->
+<!-- 移動item時顯示的示意外框 
 <div class="xu-drag-box d-none"></div>
-
-<!-- 移動位置的註記 -->
+-->
+<!-- drop位置的線狀註記 -->
 <div class="xu-drop-line d-none"></div>
 
 <!-- uiItem template for eformItems -->
@@ -339,8 +341,8 @@
     </div>
 </script>
 
-<!-- 欄位內容 modal -->
-<div id="modalItemProp" class="modal fade x-modal" role="dialog">
+<!-- input 欄位內容 modal -->
+<div id="modalInputProp" class="modal fade x-modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -357,7 +359,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalNodeOk">確定</button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalInputOk">確定</button>
             </div>
         </div>
     </div>

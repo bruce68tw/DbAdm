@@ -12,13 +12,13 @@ class UiMany {
         //欄位id, title, 後端傳回後再取代
         this.Fid = '_fid_';
         this.Title = '_title_';
+        this.FtMenu = '.xf-menu';   //right menu filter
         //this.Cols = '2,3';
 
         //是否可編輯
         this.isEdit = false;
 
         //html filter/class
-        this.MenuFilter = '.xf-menu';   //menu for node/line property
 
         //#endregion
 
@@ -31,8 +31,8 @@ class UiMany {
         this.newColNo = 0;
 
         this.eformItems = $('#eformItems');           //nodes edit form for editMany
-        this.modalItemProp = $('#modalItemProp');
-        this.eformItemProp = this.modalItemProp.find('form');   //modalNodeProp form
+        this.modalInputProp = $('#modalInputProp');
+        this.eformItemProp = this.modalInputProp.find('form');   //modalNodeProp form
 
         //node/line template        
         this.tplItem = $('#tplItem').html();
@@ -53,7 +53,7 @@ class UiMany {
         //#endregion
 
         //todo set event
-        this._setFlowEvent();
+        this._setEvent();
     }
 
     /*
@@ -85,7 +85,8 @@ class UiMany {
 
         //html 不會自動處理自製功能表狀態, 自行配合 css style
         var css = 'off';
-        var menu = $(this.MenuFilter);
+        var menu = $(this.FtMenu);
+        _obj.show(menu);
         if (canEdit) {
             menu.find('.xd-edit').removeClass(css);
             menu.find('.xd-delete').removeClass(css);
@@ -94,21 +95,11 @@ class UiMany {
             menu.find('.xd-delete').addClass(css);
         }
 
-        /*
+        //視覺效果較好
         menu.css({
             top: e.pageY,
             left: e.pageX
-        }).show();
-        */
-
-        // Show contextmenu
-        menu.finish()
-            .toggle(100)
-            .css({
-                position: 'fixed',  //使用 fixed 定位
-                left: e.clientX + 'px',
-                top: e.clientY + 'px',
-            });
+        }).show();        
     }
 
     /**
@@ -116,30 +107,17 @@ class UiMany {
      *   1.line right click to show context menu
      *   2.mouse down to hide context menu
      */
-    _setFlowEvent() {
+    _setEvent() {
         //hide context menu
         var me = this;
         $(document).on(EstrMouse.MouseDown, function (e) {
-            //if (_obj.isShow(me.popupMenu))
-            //    me.popupMenu.hide(100);
-
-            //"this" is not work here !!
-            var filter = me.MenuFilter;
-            if (!$(e.target).parents(filter).length > 0) {
-                //_obj.hide($(filter));
+            //右鍵是3，左鍵是1，中鍵是2, 不處理右鍵，避免提前 hide
+            if (e.which != 3) {
+                var filter = me.FtMenu;
+                if ($(e.target).parents(filter).length == 0)
+                    _obj.hide($(filter));
             }
         });
-
-        /*
-        //$(document).on('mousedown', function (e) {
-        $(document).on('click', function (e) {
-            //if (e.button === 0) {
-            var filter = me.MenuFilter;
-            if ($(e.target).closest(filter).length === 0)
-                _obj.hide($(filter));
-            //}
-        });
-        */
     }
 
     //清除UI & flow元件
@@ -202,19 +180,19 @@ class UiMany {
         return condStr;
     }
 
-    showItemProp(node) {
+    showInputProp(node) {
         //var node = this._elmToItem(this.nowFlowItem);
         //var row = this._boxGetValues(node, ['NodeType', 'Name', 'SignerType', 'SignerValue']);
         //var id = node.getId();
         var rowBox = this.mItem.idToRowBox(node.getId());
-        _form.loadRow(this.modalItemProp, _form.toRow(rowBox));
+        _form.loadRow(this.modalInputProp, _form.toRow(rowBox));
 
         //show modal
-        _modal.showO(this.modalItemProp);   //.modal('show');
+        _modal.showO(this.modalInputProp);   //.modal('show');
     }
 
     //param line {FlowLine} flow line
-    async onAddCol() {
+    async onAddInput() {
         //mItem新筆一筆資料, 會產生新id
         this.newColNo++;
         var code = 'field' + this.newColNo;
@@ -254,7 +232,7 @@ class UiMany {
         if (!this._menuStatus(me)) return;
 
         if (this.nowIsNode)
-            this.showItemProp(this.nowFlowItem);
+            this.showInputProp(this.nowFlowItem);
         else
             this.showLineProp(this.nowFlowItem);
     }
@@ -295,7 +273,7 @@ class UiMany {
             node.setName(row.Name, true);
 
         //hide modal
-        _modal.hideO(this.modalItemProp);
+        _modal.hideO(this.modalInputProp);
     }
 
 	//call last

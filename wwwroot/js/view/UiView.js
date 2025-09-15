@@ -42,7 +42,7 @@ class UiView {
 		this.ClsItem = 'xu-item';	//item class
 		this.ClsRowCol = 'xu-row-col';		//row col 
 		this.ClsDragging = 'xu-dragging';	//加在 Area
-		this.DragBox = $('.xu-drag-box');		//拖拉時顯示的示意方框
+		//this.DragBox = $('.xu-drag-box');		//拖拉時顯示的示意方框
 		this.DropLine = $('.xu-drop-line');		//drop時顯示的位置線
 		this.FtItem = '.' + this.ClsItem;	//item filter
 		this.FtLabel = '.x-label';	//item label
@@ -113,13 +113,13 @@ class UiView {
 		drag.boxType = this._getItemType(this._getBox(drag.item));
 
 		//move & show drag box
-		this._moveDragBox(e);
-		_obj.show(this.DragBox);
+		//this._moveDragBox(e);
+		//_obj.show(this.DragBox);
 	}
 
 	_onDragOver(e) {		
 		e.preventDefault();		//允許drop, 不會顯示禁止icon
-		this._moveDragBox(e);	//移動 drag box 到 mouse 位置 first
+		//this._moveDragBox(e);	//移動 drag box 到 mouse 位置 first
 
 		//console.log('_onDragOver-1');
 		
@@ -234,9 +234,13 @@ class UiView {
 			dropObj.append(this.DropLine);
 		} else {
 			//判斷drop位置在item的上或下方
-			var dragRect = this.DragBox[0].getBoundingClientRect();
+			//var dragRect = this.DragBox[0].getBoundingClientRect();
+			//var dragRect = drag.item[0].getBoundingClientRect();
 			var dropRect = drop.item[0].getBoundingClientRect();
-			var isUp = (dragRect.top < dropRect.top + dropRect.height / 2);
+			//var isUp = (dragRect.top < dropRect.top + dropRect.height / 2);
+			// 滑鼠在 drop.item 的相對位置
+			var mouseY = e.clientY;
+			var isUp = (mouseY < dropRect.top + dropRect.height / 2);
 			//console.log(`dragRect.top=${dragRect.top}, drop pos=${dropRect.top + dropRect.height / 2}`);
 			if (isUp) {
 				this.DropLine.insertBefore(drop.item);
@@ -268,7 +272,7 @@ class UiView {
 		}
 
 		//reset
-		_obj.hide(this.DragBox);
+		//_obj.hide(this.DragBox);
 		_obj.hide(this.DropLine);
 		this._setDragging(false);
 		this._stopDrop('');
