@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?s1qjvo');
-  src:  url('fonts/icomoon.eot?s1qjvo#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?s1qjvo') format('truetype'),
-    url('fonts/icomoon.woff?s1qjvo') format('woff'),
-    url('fonts/icomoon.svg?s1qjvo#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?43j0xt');
+  src:  url('fonts/icomoon.eot?43j0xt#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?43j0xt') format('truetype'),
+    url('fonts/icomoon.woff?43j0xt') format('woff'),
+    url('fonts/icomoon.svg?43j0xt#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.ico-spin:before {
+  content: "\e97c";
+}
+.ico-checked:before {
+  content: "\ea10";
+}
+.ico-speaker:before {
+  content: "\ea27";
+}
 .ico-arrow4:before {
   content: "\f047";
 }
@@ -118,14 +127,8 @@
 .ico-menu:before {
   content: "\f0c9";
 }
-.ico-spin:before {
-  content: "\e97c";
-}
-.ico-checked:before {
-  content: "\ea10";
-}
-.ico-speaker:before {
-  content: "\ea27";
+.ico-close:before {
+  content: "\f114";
 }
 
 
@@ -919,6 +922,40 @@ span.error {
     }
 }
 
+/*=== 欄位分群 ===*/
+.x-group {
+    display: flex;
+    align-items: center;
+    margin: 20px 0 8px;
+}
+
+/* Label + Icon */
+.x-group-label {
+    /*font-weight: 600;
+    color: #0d6efd;*/
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+    .x-group-label i {
+        margin-left: 6px;
+        /*font-size: 0.9rem;
+        color: #0d6efd;*/
+    }
+
+/* 點狀分隔線 */
+.x-group-line {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    /*color: #0d6efd;
+    font-size: 0.9rem;*/
+    letter-spacing: 6px; /* 調整點之間的間距 */
+}
+
 
 /* number input */
 /* hide stepper: Chrome, Safari, Edge, Opera */
@@ -1485,6 +1522,26 @@ html, body {
 body, label {
     /* color: #9797AB !important;*/
 }
+
+/* chart.js */
+.chart-title {
+    font-size: 24px;
+}
+
+/* bootstrap */
+.btn {
+    font-size: .875rem !important;
+}
+
+/* change height, 38 -> 36 */
+.form-control, select.form-control {
+    font-size: 16px !important;
+}
+
+.form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
+    background-color: #eee !important;
+}
+
 .form-control, .form-select {
     /*background: #1A202E;*/
 }
@@ -1615,31 +1672,26 @@ body, label {
     margin-bottom: 10px;
 }
 
-/* chart.js */
-.chart-title {
-    font-size: 24px;
+/*=== 欄位分群 ===*/
+/* Label + Icon */
+.x-group-label {
+    font-weight: 600;
+    color: #0d6efd;
 }
 
+    .x-group-label i {
+        font-size: 0.9rem;
+        color: #0d6efd;
+    }
+
+/* 點狀分隔線 */
+.x-group-line {
+    color: #0d6efd;
+    font-size: 0.9rem;
+}
 
 @media (max-width:768px) {
     .x-table {
         background: #fff !important;
     } 
 }
-
-/* bootstrap */
-.btn {
-    font-size: .875rem !important;
-}
-
-/* change height, 38 -> 36 */
-.form-control, select.form-control {
-    font-size: 16px !important;
-}
-
-    .form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
-        background-color: #eee !important;
-    }
-
-
-

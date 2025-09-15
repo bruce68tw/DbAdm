@@ -13,6 +13,7 @@
     border-width: 1px 0 0 1px !important;
     border-color: lightgray !important;
     border-style: solid !important;
+    margin-bottom: 0;
 }
 
     .x-table th, .x-table td {

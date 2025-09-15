@@ -48,6 +48,12 @@ class UiView {
 		this.FtLabel = '.x-label';	//item label
 		this.FtInput = '.x-input';	//item input
 		this.ItemType = 'itemtype';	//data item type
+		//
+		this.NameInput = '[輸入欄位]';
+		this.NameGroup = '[分群文字]';
+		this.NameRow = '[欄位容器]';
+		this.NameTable = '[多筆表格]';
+		this.NameTabPage = '[多頁容器]';
 
 		this.isEdit = true;		//是否可編輯, temp to true	
 		//this.items = [];		//包含欄位:ItemType, Item, Childs		
@@ -63,7 +69,7 @@ class UiView {
 		this.dropElm = null;	//drop參照的element, 與 item 不是同一個
 		this.dropArea = null;	//實際drop的container object, 不一定是item類型, null表示workArea
 		this.dropError = '';	//drop error message
-		this.dropBoxMultiItem = false;	//drop box has multiple item or not
+		this.dropInBox = false;	//drop in box
 
 		//this.fnMoveItem = null;
 		//this.fnAfterAddLine = null;
@@ -74,8 +80,11 @@ class UiView {
 		var me = this;
 		this.Area.on(EstrMouse.RightMenu, ".xu-item", function (e) {
 			e.preventDefault();  // 取消瀏覽器預設右鍵選單
-			if (me.fnShowMenu)
+			//e.stopPropagation(); // 阻止冒泡，避免先被 document 的 mousedown 處理
+
+			if (me.fnShowMenu) {
 				me.fnShowMenu(e, true, me);
+			}
 		});
 
 		//drag/drop 事件
@@ -100,20 +109,12 @@ class UiView {
 		var drag = this.dragItem;
 		drag.item = $(e.target);
 		drag.itemType = this._getItemType(drag.item);
-		drag.isBox = this._itemIsBox(drag.itemType);
+		drag.isBox = this._isBox(drag.itemType);
 		drag.boxType = this._getItemType(this._getBox(drag.item));
 
 		//move & show drag box
 		this._moveDragBox(e);
 		_obj.show(this.DragBox);
-	}
-
-	_setDragging(status) {
-		this.dragging = status;
-		if (status)
-			this.Area.addClass(this.ClsDragging);
-		else
-			this.Area.removeClass(this.ClsDragging);
 	}
 
 	_onDragOver(e) {		
@@ -132,116 +133,118 @@ class UiView {
 		if (_obj.isEmpty(dropItem)) return;
 		//#endregion
 
-		//console.log('_onMouseMove-2');
+		console.log('_onDragOver-2');
 
 		//set instance variables
 		this.dropElm = dropElm;
 
 		//set this.dropItem
-		var dropIsItem = dropObj.hasClass(this.ClsItem);
-		var dropTagName = _obj.tagName(dropObj);
+		var drag = this.dragItem;
 		var drop = this.dropItem;
 		drop.item = dropItem;
 		drop.itemType = this._getItemType(dropItem);
-		drop.isBox = !dropObj.hasClass(this.ClsItem);
-		drop.boxType = this._getItemType(this._getBox(dropItem));
+		drop.isBox = this._isBox(drop.itemType);
+		drop.boxType = drop.isBox
+			? drop.itemType : this._getItemType(this._getBox(dropItem));
+
+		//判斷 drag item 是否 drop into box 裡面
+		//var dropIsItem = dropObj.hasClass(this.ClsItem);
+		//var dropTagName = _obj.tagName(dropObj);
+		//var dropInBox = 
+		//var dropContIsEmpty = (dropObj.find(this.FtItem).length == 0);
+		this.dropInBox = 
+			(drop.itemType == EstrItemType.Row && !dropObj.hasClass(this.ClsItem)) ||
+			(drop.itemType == EstrItemType.Table && _obj.tagName(dropObj) == 'td') ||
+			(drop.itemType == EstrItemType.TabPage && dropObj.hasClass('tab-pane'));
+
+		console.log(`dragType=${drag.itemType}, dropType=${drop.itemType}, boxType=${drop.boxType}, dropInBox=${this.dropInBox}`);
+
 		/*
-		if (drop.isBox) {
-			switch (drop.itemType) {
+		 x軸: drop, y軸: drag 
+		 Input 和 Group drag/drop 的情形相同(!isBox), 但訊息有些不同
+		 !dropInBox 則都可以 drop
+		 I-R-T-TP: drop到Input外面-input在Row裡面-input在Table裡面-input在TabPage裡面
+					I-R-T-TP	R-In	T-In	TP-In
+		 ---------------------------------------------
+		 I/G		O-O-x-O		O-O		O-O		O-O
+		 Row		O-x-x-O		O-x		O-x		O-O
+		 Table		O-x-x-x		O-x		O-x		O-x
+		 TabPage	O-x-x-x		O-x		O-x		O-x
+		*/
+
+		//(只考慮)不能drop時, 記錄error message, 在後面顯示
+		//!dropInBox 則都可以 drop
+		//this.dropError = '';	//reset first
+		var error = '';
+		var dragName = '';
+		if (drop.boxType != null || this.dropInBox) {
+			switch (drag.itemType) {
+				/*
+				case EstrItemType.Input:
+					if (drop.itemType == EstrItemType.Table && !dropContIsEmpty)
+						error = `${this.NameTable}只能放一個${this.NameInput}。`;
+					break;
+				*/
+				case EstrItemType.Group:
+					if (drop.boxType == EstrItemType.Table)
+						error = `${this.NameGroup}不能放在${this.NameTable}裡面。`;
+					break;
+				case EstrItemType.Row:
+					dragName = this.NameRow;
+					switch (drop.itemType) {
+						case EstrItemType.Row:
+							error = `${dragName}不能放在${this.NameRow}裡面。`;
+							break;
+						case EstrItemType.Table:
+							error = `${dragName}不能放在${this.NameTable}裡面。`;
+							break;
+						case EstrItemType.Input:
+						case EstrItemType.Group:
+							if (drop.boxType == EstrItemType.Row) {
+								error = `${dragName}不能放在${this.NameRow}裡面。`;
+							} else if (drop.boxType == EstrItemType.Table) {
+								error = `${dragName}不能放在${this.NameTable}裡面。`;
+							}
+							break;
+					}
+					break;
 				case EstrItemType.Table:
-					//只能放一個input在td, 
-					//this.dropArea = $(this.dropElm);	//table td
-					drop.boxType = this._getItemType(this._getBox(dropItem));
-					break;
 				case EstrItemType.TabPage:
-					//只能input、Row
-					//this.dropArea = $(this.dropElm);	//row col
-					drop.boxType = this._getItemType(this._getBox(dropItem));
+					dragName = (drag.itemType == EstrItemType.Table)
+						? this.NameTable : this.NameTabPage;
+					if (drop.isBox) {
+						error = `${dragName}不能放在${this._typeToName(drop.itemType)}裡面。`;
+					} else {
+						error = `${dragName}不能放在${this._typeToName(drop.boxType)}裡面。`;
+					}
 					break;
-				default:	//Row
-					//只能放input
-					drop.boxType = this._getItemType(this.dropArea);
-			}
-
-			this.dropArea = $(dropElm);
-			drop.boxType = this._getItemType(this._getBox(dropItem));
-		} else {
-			this.dropArea = this._getBox(dropItem);	//上一層item
-			drop.boxType = this._getItemType(this.dropArea);
-		}
-		*/
-
-		/*
-		//調整, todo: 其他 itemtype
-		switch (drop.itemType) {
-			case EstrItemType.Row:
-				//this.dropArea = $(this.dropElm);	//row col
-				drop.isBox = true;
-				drop.boxType = this._getItemType(this._getBox(dropItem));
-				break;
-			case EstrItemType.Table:
-				//this.dropArea = $(this.dropElm);	//table td
-				drop.isBox = true;
-				drop.boxType = this._getItemType(this._getBox(dropItem));
-				break;
-			default:
-				//this.dropArea = this._getBox(dropItem);	//上一層item
-				drop.isBox = false;	//todo: 加入其他判斷
-				drop.boxType = this._getItemType(this.dropArea);
-		}
-
-		//set this.dropArea
-		this.dropArea = drop.isBox
-			? $(this.dropElm)
-			: this._getBox(dropItem);	//上一層item
-		*/
-
-		if ($(dropElm).closest(".x-table th").length > 0) return;
-
-		//不能drop時, 記錄error message, 後面顯示
-		this.dropError = '';	//reset first
-		var drag = this.dragItem;
-		if (drop.boxType != null) {
-			if (drop.boxType == EstrItemType.Table) {
-				//table內不能放group
-				if (drag.itemType == EstrItemType.Group) {
-					this._stopDrop('[群組文字]不能放在Table裡面。');
-					return;
-				}
-			} else {
-				//row, tabPage 內不能放 box
-				if (drag.isBox) {
-					this._stopDrop('[容器]類不能放在[欄位容器]、[多頁]裡面。');
-					return;
-				}
 			}
 		}
-		//console.log('_onMouseMove-4');
 
-		// 判斷 A 是否在 B 上方
-		const isAbove = (nodeA, nodeB) => {
-			const rectA = nodeA.getBoundingClientRect();
-			const rectB = nodeB.getBoundingClientRect();
-			return rectA.top + rectA.height / 2 < rectB.top + rectB.height / 2;
-		};
-
-		if (isAbove(draggingEle, target)) {
-			list.insertBefore(placeholder, target);
-		} else {
-			list.insertBefore(placeholder, target.nextSibling);
-		}
-
-		//顯示 target drop line
+		//always 顯示 target drop line
 		_obj.show(this.DropLine);
 
-		//判斷顯示target在上或下
-		//todo: 如果target元素 sort=1, 須判斷移到上方或下方, 否則為下方
-		if (drop.isBox)
-			this.dropArea.append(this.DropLine);
-		else
-			this.DropLine.insertAfter(drop.item);
+		if (error != '')
+			this.dropError = error;
 
-		//console.log('_onMouseMove-5');
+		if (this.dropInBox) {
+			//調整 drop line 位置
+			//var dropTagName = _obj.tagName(dropObj);
+
+			dropObj.append(this.DropLine);
+		} else {
+			//判斷drop位置在item的上或下方
+			var dragRect = this.DragBox[0].getBoundingClientRect();
+			var dropRect = drop.item[0].getBoundingClientRect();
+			var isUp = (dragRect.top < dropRect.top + dropRect.height / 2);
+			//console.log(`dragRect.top=${dragRect.top}, drop pos=${dropRect.top + dropRect.height / 2}`);
+			if (isUp) {
+				this.DropLine.insertBefore(drop.item);
+			} else {
+				this.DropLine.insertAfter(drop.item);
+				//console.log('insertAfter');
+			}
+		}
 	}
 
 	_onDragEnd(e) {
@@ -251,28 +254,17 @@ class UiView {
 			var drag = this.dragItem;
 			var drop = this.dropItem;
 
-			//移入/移出 Table 必須刪除/增加label
-			var checkType = EstrItemType.Table;
-			var tableData = this._isItemTypeXor(checkType, drag.boxType);
-			if (tableData.isXor)
-				this._resetItemByTable(drag.item, tableData.dropInBox);
+			//移入/移出 Table 必須刪除/增加label first(only for 互斥, a ^ b 或是 a !== b)
+			var data = this._isBoxTypeXor(EstrItemType.Table);
+			if (data.isXor)
+				this._resetItemByTable(drag.item, data.dropInBox);
 
-			//移入/移出 Row時必須調整大小 only for 互斥(a ^ b 或是 a !== b)
-			checkType = EstrItemType.Row;
-			var data = this._isItemTypeXor(checkType, drag.boxType);
+			//移入/移出 Row時必須調整大小(互斥同上)
+			data = this._isBoxTypeXor(EstrItemType.Row);
 			if (data.isXor)
 				this._resetItemByRow(drag.item, data.dropInBox);
 
-			//move item, tableData.isXor 的情形已經在前面處理!!
-			/*
-			if (tableData.isXor) {
-				//do nothing !!
-			} else if (drop.isBox) {
-			*/
-			if (drop.isBox)
-				this.dropArea.append(drag.item);
-			else
-				drag.item.insertAfter(drop.item);
+			drag.item.insertAfter(this.DropLine);
 		}
 
 		//reset
@@ -284,24 +276,51 @@ class UiView {
 		this.dropItem = new StItem();
 	}
 
+	_setDragging(status) {
+		this.dragging = status;
+		if (status)
+			this.Area.addClass(this.ClsDragging);
+		else
+			this.Area.removeClass(this.ClsDragging);
+	}
+
+	_typeToName(type) {
+		switch (type) {
+			case EstrItemType.Input:
+				return this.NameInput;
+			case EstrItemType.Group:
+				return this.NameGroup;
+			case EstrItemType.Row:
+				return this.NameRow;
+			case EstrItemType.Table:
+				return this.NameTable;
+			case EstrItemType.TabPage:
+				return this.NameTabPage;
+		}
+	}
+
 	_stopDrop(error) {
 		this.dropError = error;
 		//this.canDrop = false;
 	}
 
-	//互斥檢查 for 移入/移出 的itemType
+	//互斥檢查 for 移入/移出 的boxType
 	//param {string} checkType: 要檢查的 itemType
 	//param {string} dropType: drop itemType
-	//return {json} 有2個欄位:isXor(是否互斥), dropInBox(drop item 在指定類型的Box裡面)
-	_isItemTypeXor(checkType, dragBoxType) {
-		var dragBoxYes = (dragBoxType === checkType);
-		var dropBoxYes = (this.dropItem.boxType === checkType);
+	//return {bool} 是否互斥
+	_isBoxTypeXor(checkType) {
+		var dragBoxYes = (this.dragItem.boxType === checkType);
+		var dropBoxYes = (this.dropItem.boxType === checkType && this.dropInBox);// ||
+			//(this.dropItem.boxType === checkType && this.dropInBox));
+		return {
+			isXor: dragBoxYes !== dropBoxYes,
+			dropInBox: dropBoxYes,
+		};
+		//return (dragBoxYes !== dropBoxYes);
+		/*
 		var dropItemYes = (this.dropItem.itemType === checkType);
 		var dropInBox = (dropBoxYes || dropItemYes);
-		return { 
-			isXor: dragBoxYes !== dropInBox,
-			dropInBox: dropInBox
-		};
+		*/
 	}
 
 	//傳回上一層item, 沒有則傳回null
@@ -310,9 +329,9 @@ class UiView {
 		return _obj.isEmpty(box) ? null : box;
 	}
 
-	_itemIsBox(type) {
+	_isBox(type) {
 		return (type == EstrItemType.Row ||
-			type == EstrItemType.Group ||
+			type == EstrItemType.Table ||
 			type == EstrItemType.TabPage);
 	}
 
@@ -406,9 +425,9 @@ class UiView {
 	}
 
 	addRow() {
-		//加上my-2上下空間, 才能drop !!
+		//加上py-2上下空間, 才能drop, dragOver時e.target為本身item !!
 		var html = `
-<div class='row my-2'>
+<div class='row py-2'>
 	<div class='col-md-6 ${this.ClsRowCol}'></div>
 	<div class='col-md-6 ${this.ClsRowCol}'></div>
 </div>
@@ -419,9 +438,9 @@ class UiView {
 	}
 
 	addTable() {
-		//加上my-2上下空間, 才能drop !!
+		//只有drop在 td才是dropInBox !!
 		var html = `
-<div>
+<div class='py-2'>
 	<div class="x-btns-box">
 		<span class="x-span-label">角色功能</span>
 		<button type="button" data-onclick="_me.mRoleProg.onAddRow" class="btn btn-success">新增一列

@@ -48,19 +48,20 @@ class UiMany {
         var uiView = new UiView(ftWorkArea);
         //uiView.fnMoveItem = (node, x, y) => this.fnMoveItem(node, x, y);
         //uiView.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
-        //uiView.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
+        uiView.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
         this.uiView = uiView;
         //#endregion
 
-        //set event
+        //todo set event
         this._setFlowEvent();
     }
 
-
+    /*
     fnMoveItem(node, x, y) {
         var rowBox = this.mItem.idToRowBox(node.getId());
         _form.loadRow(rowBox, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
     }
+    */
 
     /**
      * on show right menu
@@ -69,15 +70,18 @@ class UiMany {
      * param mouseX {int} 
      * param mouseY {int} 
      */
-    fnShowMenu(event, isNode, flowItem) {
+    fnShowMenu(e, item, itemType) {
         //set instance variables
-        this.nowIsNode = isNode;
-        this.nowFlowItem = flowItem;
+        //this.nowIsNode = isNode;
+        //this.nowFlowItem = flowItem;
 
         //一般節點才需要設定屬性
+        var canEdit = true;
+        /*
         var canEdit = isNode
             ? (this.isEdit && flowItem.getNodeType() == EstrNodeType.Node)
             : this.isEdit;
+        */
 
         //html 不會自動處理自製功能表狀態, 自行配合 css style
         var css = 'off';
@@ -90,14 +94,52 @@ class UiMany {
             menu.find('.xd-delete').addClass(css);
         }
 
+        /*
+        menu.css({
+            top: e.pageY,
+            left: e.pageX
+        }).show();
+        */
+
         // Show contextmenu
         menu.finish()
             .toggle(100)
             .css({
                 position: 'fixed',  //使用 fixed 定位
-                left: event.clientX + 'px',
-                top: event.clientY + 'px',
+                left: e.clientX + 'px',
+                top: e.clientY + 'px',
             });
+    }
+
+    /**
+     * set flow events:
+     *   1.line right click to show context menu
+     *   2.mouse down to hide context menu
+     */
+    _setFlowEvent() {
+        //hide context menu
+        var me = this;
+        $(document).on(EstrMouse.MouseDown, function (e) {
+            //if (_obj.isShow(me.popupMenu))
+            //    me.popupMenu.hide(100);
+
+            //"this" is not work here !!
+            var filter = me.MenuFilter;
+            if (!$(e.target).parents(filter).length > 0) {
+                //_obj.hide($(filter));
+            }
+        });
+
+        /*
+        //$(document).on('mousedown', function (e) {
+        $(document).on('click', function (e) {
+            //if (e.button === 0) {
+            var filter = me.MenuFilter;
+            if ($(e.target).closest(filter).length === 0)
+                _obj.hide($(filter));
+            //}
+        });
+        */
     }
 
     //清除UI & flow元件
@@ -109,26 +151,6 @@ class UiMany {
     setEdit(status) {
         this.isEdit = status;
         this.uiView.setEdit(status);
-    }
-
-    /**
-     * set flow events:
-     *   1.line right click to show context menu
-     *   2.mouse down to hide context menu
-     */
-    _setFlowEvent() {
-
-        //hide context menu
-        var me = this;
-        $(document).on('mousedown', function (e) {
-            //if (_obj.isShow(me.popupMenu))
-            //    me.popupMenu.hide(100);
-            
-            //"this" not work here !!
-            var filter = me.MenuFilter;
-            if (!$(e.target).parents(filter).length > 0)
-                _obj.hide($(filter));            
-        });
     }
 
     /**
