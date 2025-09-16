@@ -138,6 +138,16 @@ body {
 
 /*=== width end ===*/
 
+.x-vh15 {
+    margin-top: 15vh !important; /* 視窗高度的 1/4 */
+}
+.x-vh20 {
+    margin-top: 20vh !important; /* 視窗高度的 1/4 */
+}
+.x-vh25 {
+    margin-top: 25vh !important; /* 視窗高度的 1/4 */
+}
+
 /* 改用 bootstrap 5 的 padding, margin
 .x-mt0 {
     margin-top: 0 !important;

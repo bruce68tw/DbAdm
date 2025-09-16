@@ -35,10 +35,13 @@ class UiView {
 		this.ClsDragging = 'xu-dragging';	//加在 Area
 		//this.DragBox = $('.xu-drag-box');		//拖拉時顯示的示意方框
 		this.DropLine = $('.xu-drop-line');		//drop時顯示的位置線
+		this.FtMenu = '.xf-menu';   //right menu filter
 		this.FtItem = '.' + this.ClsItem;	//item filter
 		this.FtLabel = '.x-label';	//item label
 		this.FtInput = '.x-input';	//item input
 		this.ItemType = 'itemtype';	//data item type
+		this.ModalInputProp = $('#modalInputProp');
+		this.EformInputProp = this.ModalInputProp.find('form');   //modalNodeProp form
 		//
 		this.NameInput = '[輸入欄位]';
 		this.NameGroup = '[分群文字]';
@@ -69,12 +72,23 @@ class UiView {
 		//work area註冊全域事件
 		//右鍵選單事件
 		var me = this;
-		this.Area.on(EstrMouse.RightMenu, ".xu-item", function (e) {
+		this.Area.on(EstrMouse.RightMenu, this.FtItem, function (e) {
 			e.preventDefault();  // 取消瀏覽器預設右鍵選單
 			//e.stopPropagation(); // 阻止冒泡，避免先被 document 的 mousedown 處理
 
-			if (me.fnShowMenu) {
-				me.fnShowMenu(e, true, me);
+			//if (me.fnShowMenu) {
+				//var item = me._elmToItem(e.target);
+				me._onShowMenu(e);
+			//}
+		});
+
+		//mouse down時hide right menu
+		$(document).on(EstrMouse.MouseDown, function (e) {
+			//右鍵是3，左鍵是1，中鍵是2, 不處理右鍵，避免提前 hide
+			if (e.which != 3) {
+				var filter = me.FtMenu;
+				if ($(e.target).parents(filter).length == 0)
+					_obj.hide($(filter));
 			}
 		});
 
@@ -99,8 +113,8 @@ class UiView {
 		//記錄目前移動的Item element
 		var drag = this.dragItem;
 		drag.item = $(e.target);
-		drag.itemType = this._getItemType(drag.item);
-		drag.boxType = this._getItemType(this._getBox(drag.item));
+		drag.itemType = this.getItemType(drag.item);
+		drag.boxType = this.getItemType(this._getBox(drag.item));
 		//drag.isBox = this._isBox(drag.itemType);
 	}
 
@@ -126,10 +140,10 @@ class UiView {
 		var drag = this.dragItem;
 		var drop = this.dropItem;
 		drop.item = dropItem;
-		drop.itemType = this._getItemType(dropItem);
+		drop.itemType = this.getItemType(dropItem);
 		//drop.isBox = this._isBox(drop.itemType);
 		//drop.boxType = drop.isBox
-		//	? drop.itemType : this._getItemType(this._getBox(dropItem));
+		//	? drop.itemType : this.getItemType(this._getBox(dropItem));
 
 		//判斷 drag item 是否 drop into box 裡面
 		var dropInBox = 
@@ -139,8 +153,10 @@ class UiView {
 		//drop boxType表示 "drag item" drop進去的box item, 沒有則為null
 		drop.boxType = dropInBox
 			? drop.itemType
-			: this._getItemType(this._getBox(dropItem));
-		//console.log(`dragType=${drag.itemType}, dropType=${drop.itemType}, boxType=${drop.boxType}, dropInBox=${dropInBox}`);
+			: this.getItemType(this._getBox(dropItem));
+
+		//for debug
+		console.log(`dragType=${drag.itemType}, dropType=${drop.itemType}, drop.boxType=${drop.boxType}, dropInBox=${dropInBox}`);
 
 		/*
 		 x軸: drop, y軸: drag 
@@ -206,8 +222,7 @@ class UiView {
 		}
 
 		//記錄 dropError 在 onDragEnd 顯示
-		if (error != '')
-			this.dropError = error;
+		this.dropError = error;
 
 		//always 顯示 target drop line
 		_obj.show(this.DropLine);
@@ -232,7 +247,7 @@ class UiView {
 	_onDragEnd(e) {
 		if (this.dropError != '') {
 			_tool.msg(this.dropError);
-			this.dropError = '';
+			//this.dropError = '';
 		} else {
 			var drag = this.dragItem;
 			var drop = this.dropItem;
@@ -317,9 +332,10 @@ class UiView {
 	 * param {json} json 包含欄位: Fid, Title, Required
 	 * returns
 	 */
-	async addInputA(inputType, json) {
+	async addInputA(json) {
 		//get set inputJson
 		var inputJson = this.inputJson;
+		var inputType = json.InputType;
 		if (inputJson[inputType] == null) {
 			var data = {
 				inputType: inputType,
@@ -346,6 +362,9 @@ class UiView {
 		//如果required=false, 則hide
 		if (!json.Required)
 			_obj.hide(item.find('.x-required'));
+
+		//寫入item的data-info
+		this._objSetInfo(item, json);
 
 		//render item
 		this._renderItem(item, EstrItemType.Input, true);
@@ -451,13 +470,11 @@ class UiView {
 
 	_renderItem(item, itemType, append) {
 		//加入item屬性: .xu-item, data-itemtype
-		//table有上方addRow, 下方table(才是xu-item)
-		//var item2 = (itemType == EstrItemType.Table) ? item.find('.x-table') : item;
 		item.addClass(this.ClsItem);
 		item.attr("draggable", true);
 		_obj.setData(item, this.ItemType, itemType);	//jquery data() 只寫入暫存, 使用 _obj !!
 
-		//append 整個item, 不是item2 !!
+		//append 整個item
 		if (append) {
 			var box = _obj.isEmpty(this.dropArea) ? this.Area : this.dropArea;
 			box.append(item);
@@ -471,8 +488,10 @@ class UiView {
 		});
 	}
 
-	//get item type
-	_getItemType(item) {
+	/**
+	 * get item type, also called outside
+	 */ 
+	getItemType(item) {
 		return _obj.isEmpty(item)
 			? null : item.data(this.ItemType);
 	}
@@ -491,7 +510,7 @@ class UiView {
 
 	//?? 上層是否為box
 	_boxIsRow() {
-		return (this.dropBox != null && this._getItemType(this.dropBox) == EstrItemType.Row);
+		return (this.dropBox != null && this.getItemType(this.dropBox) == EstrItemType.Row);
 	}
 
 	//內部element to Item object
@@ -573,5 +592,165 @@ class UiView {
 		return this.items.some(node => node.getNodeType() == EstrNodeType.Start);
 	};
 	*/
+
+	//#region input modal
+
+	showInputProp() {
+		//var node = this._elmToItem(this.nowFlowItem);
+		//var row = this._boxGetValues(node, ['NodeType', 'Name', 'SignerType', 'SignerValue']);
+		//var id = node.getId();
+
+		//var rowBox = this.mItem.idToRowBox(node.getId());
+		//var rowBox = {};
+		var form = this.ModalInputProp;
+		this._objLoadInfo(form, this._objGetInfo(this.nowItem));
+		_modal.showO(form);
+	}
+
+	//param line {FlowLine} flow line
+	async onAddInput() {
+		//mItem新筆一筆資料, 會產生新id
+		this.newColNo++;
+		var code = 'field' + this.newColNo;
+		var name = '欄位' + this.newColNo;
+		//配合後端DB, 欄位使用大camel
+		var json = {
+			ItemType: EstrItemType.Input,
+			//Required: false, 
+			Info: `${code},${name}`,
+		};
+		//var row = this.mItem.addRow(json);  //會產生id
+		var row = {
+			Fid: code,
+			Title: name,
+			Required: true,
+			InputType: EstrInputType.Text,
+		};
+		//row.Name += "-" + row.Id;
+
+		await this.addInputA(row);
+	}
+	async onAddGroup() {
+		await this.addGroupA('欄位群組');
+	}
+	onAddRow() {
+		this.addRow();
+	}
+	onAddTable() {
+		this.addTable();
+	}
+
+	/**
+	 * on show right menu
+	 * param isNode {bool} 
+	 * param item {object} 
+	 */
+	_onShowMenu(e) {
+		//set instance variables
+		//this.nowIsNode = isNode;
+		//this.nowFlowItem = flowItem;
+
+		//set instance variables
+		this.nowItem = this._elmToItem(e.target);
+
+		//一般節點才需要設定屬性
+		var canEdit = true;
+		/*
+		var canEdit = isNode
+			? (this.isEdit && flowItem.getNodeType() == EstrNodeType.Node)
+			: this.isEdit;
+		*/
+
+		//html 不會自動處理自製功能表狀態, 自行配合 css style
+		var css = 'off';
+		var menu = $(this.FtMenu);
+		_obj.show(menu);
+		if (canEdit) {
+			menu.find('.xd-edit').removeClass(css);
+			menu.find('.xd-delete').removeClass(css);
+		} else {
+			menu.find('.xd-edit').addClass(css);
+			menu.find('.xd-delete').addClass(css);
+		}
+
+		//視覺效果較好
+		menu.css({
+			top: e.pageY,
+			left: e.pageX
+		}).show();
+	}
+
+	//region events
+	//check menu item status
+	_menuStatus(me) {
+		return !me.classList.contains('off');
+	}
+
+	//context menu event
+	onMenuEdit() {
+		if (!this._menuStatus(_fun.getMe()))
+			return;
+
+		var itemType = this.getItemType(this.nowItem);
+		switch (itemType) {
+			case EstrItemType.Input:
+				this.showInputProp();
+				break;
+			//todo
+		}
+	}
+
+	onMenuDelete(me) {
+		if (!this._menuStatus(_fun.getMe())) return;
+
+		var me = this;
+		if (me.nowIsNode) {
+			_tool.ans('是否確定刪除這個節點和流程線?', function () {
+				me.deleteItem(me.nowFlowItem);
+			});
+		} else {
+			_tool.ans('是否確定刪除這一條流程線?', function () {
+				me.deleteLine(me.nowFlowItem);
+			});
+		}
+	}
+
+	onMenuView(me) {
+		//todo
+	}
+
+	_objLoadInfo(obj, json) {
+		_form.loadRow(obj, json);
+	}
+	_objGetInfo(obj) {
+		return _obj.getData(obj, 'info');	//會直接傳回json(自動判斷&轉型)
+	}
+	_objSetInfo(obj, json) {
+		_obj.setData(obj, 'info', _json.toStr(json));
+	}
+
+	//node prop onclick ok
+	onModalInputOk() {
+		//check input
+
+		//set new value
+		var form = this.EformInputProp;
+		var row = _form.toRow(form);
+		_obj.setData(form, 'info', row);
+
+		//update node display name
+		var node = this.nowFlowItem;
+		var rowBox = this.mItem.idToRowBox(node.getId());
+		var oldName = _itext.get('Name', rowBox);   //get before loadRow()
+		_form.loadRow(rowBox, row);
+
+		if (oldName != row.Name)
+			node.setName(row.Name, true);
+
+		//hide modal
+		_modal.hideO(this.ModalInputProp);
+	}
+
+	//#endregion
 
 } //class UiView

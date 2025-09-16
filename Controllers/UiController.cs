@@ -17,7 +17,9 @@ namespace DbAdm.Controllers
         [XgProgAuth(CrudEnum.Read)]
         public async Task<ActionResult> Read()
         {
-            ViewBag.Projects = await _XpCode.ProjectsA();
+            await using var db = new Db();
+            ViewBag.Projects = await _XpCode.ProjectsA(db);
+            ViewBag.InputTypes = await _XpCode.InputTypesA(db);
             return View();
         }
 

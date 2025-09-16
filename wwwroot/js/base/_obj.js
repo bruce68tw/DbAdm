@@ -118,6 +118,10 @@ var _obj = {
             _obj.hide(obj);
     },
 
+    getData: function (obj, fid) {
+        return obj.data(fid);
+    },
+
     /**
      * jquery data() 只寫入 jquery 暫存, 不寫入 DOM !!
      * param {object} obj

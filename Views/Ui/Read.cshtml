@@ -54,6 +54,10 @@
         min-height: 50px;
         border: 1px solid #007bff;
     }
+
+    .xu-item-modal {
+        margin-top: 25vh !important; /* 視窗高度的 1/4 */
+    }
 </style>
 
 <script nonce="@_Fun.Nonce" src="~/js/view/UiView.js"></script>
@@ -94,6 +98,7 @@
 
             //initial flow edit form
             _me.uiMany = new UiMany(_me.mItem, '#divEdit', '.xu-ui-area');
+            _me.uiView = _me.uiMany.uiView;
 
             //custom function
             _me.mItem.fnLoadRows = _me.mItem_loadRows;
@@ -278,10 +283,10 @@
             <!-- add outer div for validate msg layout -->
             <div>
                 <div class="btn-group-vertical ms-1" role="group" aria-label="button group vertical">
-                    <button type="button" class="btn xf-node" data-onclick="_me.uiMany.onAddInput" Title='增加輸入欄位'>輸入欄位</button>
-                    <button type="button" class="btn xf-start" data-onclick="_me.uiMany.onAddRow" Title='增加欄位容器'>欄位容器</button>
-                    <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddGroup" Title='增加分群文字'>分群文字</button>
-                    <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddTable" Title='增加Table'>多筆表格</button>
+                    <button type="button" class="btn xf-node" data-onclick="_me.uiView.onAddInput" Title='增加輸入欄位'>輸入欄位</button>
+                    <button type="button" class="btn xf-start" data-onclick="_me.uiView.onAddRow" Title='增加欄位容器'>欄位容器</button>
+                    <button type="button" class="btn xf-end" data-onclick="_me.uiView.onAddGroup" Title='增加分群文字'>分群文字</button>
+                    <button type="button" class="btn xf-end" data-onclick="_me.uiView.onAddTable" Title='增加Table'>多筆表格</button>
                 </div>
             </div>
             <div class="xu-eform-tail">
@@ -305,9 +310,9 @@
 
 <!-- context menu for node & line, xf means flow -->
 <ul class='xf-menu'>
-    <li data-onclick="_me.uiMany.onMenuEdit" class="xd-edit">Edit</li>
-    <li data-onclick="_me.uiMany.onMenuDelete" class="xd-delete">Delete</li>
-    <li data-onclick="_me.uiMany.onMenuView" class="xd-view">View</li>
+    <li data-onclick="_me.uiView.onMenuEdit" class="xd-edit">Edit</li>
+    <li data-onclick="_me.uiView.onMenuDelete" class="xd-delete">Delete</li>
+    <li data-onclick="_me.uiView.onMenuView" class="xd-view">View</li>
 </ul>
 
 <!-- 移動item時顯示的示意外框 
@@ -343,23 +348,27 @@
 
 <!-- input 欄位內容 modal -->
 <div id="modalInputProp" class="modal fade x-modal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg x-vh15">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">設定欄位內容</div>
-                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal x-form pt-1 pe-5">
-                    <vc:xi-hide dto='new() { Fid="NodeType" }' />
-                    <vc:xi-text dto='new() { Title="標題", Fid="Name" , MaxLen=30, Required=true, Cols=cols }' />
-                    <vc:xi-select dto='new() { Title = "欄位種類", Fid = "SignerType", Rows = ViewBag.SignerTypes, Required = true, Cols = cols }' />
-                    <vc:xi-text dto='new() { Title = "簽核者內容值", Fid = "SignerValue", MaxLen = 30, Cols = cols }' />
+                    <vc:xi-hide dto='new() { Fid="Id" }' />
+                    <vc:xi-text dto='new() { Title="標題", Fid="Title" , MaxLen=30, Cols=cols }' />
+                    <vc:xi-text dto='new() { Title="欄位Id", Fid="Fid" , MaxLen=30, Required = true, Cols=cols }' />
+                    <vc:xi-select dto='new() { Title = "欄位種類", Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, Cols = cols }' />
+                    <vc:xi-check dto='new() { Title = "必填", Fid = "Required", Label = "是", Cols = cols }' />
+                    <vc:xi-text dto='new() { Title="標題提示文字", Fid="LabelTip" , MaxLen=30, Cols=cols }' />
+                    <vc:xi-text dto='new() { Title="欄位後面文字", Fid="InputNote" , MaxLen=100, Cols=cols }' />
+                    <vc:xi-text dto='new() { Title = "欄位其他資訊", Fid = "ExtInfo", MaxLen = 100, Cols = cols, LabelTip = "select/radio:選項清單" }' />
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalInputOk">確定</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.uiView.onModalInputOk">確定<i class='ico-checked'></i></button>
             </div>
         </div>
     </div>
