@@ -8,6 +8,7 @@ var EstrMouse = {
     MouseLeave: 'mouseleave',
     DragStart: 'dragstart',
     DragEnd: 'dragend',
+    DragMove: 'dragmove',
     DragOver: 'dragover',
     DragEnter: 'dragenter',
     DragLeave: 'dragleave',

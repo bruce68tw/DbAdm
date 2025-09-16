@@ -1,5 +1,6 @@
 /**
- * 建立 FlowBase 簡化外部程式, 考慮模組化, 所以不使用jQuery
+ * FlowBase -> FlowView
+ * 建立 FlowView 簡化外部程式, 考慮模組化, 所以不使用jQuery
  * 自定函數如下(由flow內部觸發):
  *   void fnMoveNode(node, x, y): after move node to (x,y)
  *   void fnAfterAddLine(json): when add line
@@ -7,7 +8,7 @@
  *   void fnAfterMoveLineEnd(oldNode, newNode): after drop line end point
  */
 //控制 FlowNode、FlowLine for 外部程式
-function FlowBase(boxId) {	
+class FlowView {	
 
 	/**
 	 屬性:
@@ -19,14 +20,14 @@ function FlowBase(boxId) {
 	 onMoveNode: event onMoveNode(node)
 	*/
 
-	//是否可編輯
-	this.isEdit = false;
+	constructor(boxId) {
+		//是否可編輯
+		this.isEdit = false;
 
-	//新node/line Id, 自動累加
-	this.newNodeId = 0;		//for node type
-	this.newLineId = 0;
+		//新node/line Id, 自動累加
+		this.newNodeId = 0;		//for node type
+		this.newLineId = 0;
 
-	this._init = function (boxId) {
 		let boxDom = document.getElementById(boxId);
 		this.svg = SVG().addTo(boxDom).size('100%', '100%');
 		//this.svg.node.style.zIndex = 100;	//在eform上面!! 無效 !!
@@ -35,33 +36,33 @@ function FlowBase(boxId) {
 		this.fnAfterAddLine = null;
 		this.fnShowMenu = null;
 		//this._reset();
-	};
+	}
 
 	/*
-	this.newNodeId = function () {
+	newNodeId() {
 		this.newNodeId++;
 		return this.newNodeId;
-	};
+	}
 	*/
 
 	//get new node id
-	this.getNewNodeId = function () {
+	getNewNodeId() {
 		this.newNodeId++;
 		return this.newNodeId;
-	};
+	}
 
 	//由元件內部發動, 所以必須提供此功能
-	this.getNewLineId = function () {
+	getNewLineId() {
 		this.newLineId++;
 		return this.newLineId;
-	};
+	}
 
-	this.setEdit = function (status) {
+	setEdit(status) {
 		this.isEdit = status;
-	};
+	}
 
 	//清除全部UI元件
-	this.reset = function () {
+	reset() {
 		this.nodes = [];
 		this.lines = [];
 		this.fromNode = null;
@@ -70,51 +71,51 @@ function FlowBase(boxId) {
 		Array.from(this.svg.node.childNodes).forEach(node => {
 			node.remove();
 		});
-	};
+	}
 
 	//載入nodes & lines
-	this.loadNodes = function (rows) {
+	loadNodes(rows) {
 		this.reset();
 		for (var i = 0; i < rows.length; i++)
 			this.addNode(rows[i]);
-	};
+	}
 
-	this.loadLines = function (rows) {
+	loadLines(rows) {
 		if (rows != null) {
 			for (var i = 0; i < rows.length; i++)
 				this.addLine(rows[i]);
 		}
-	};
+	}
 
-	this.addNode = function (json) {
+	addNode(json) {
 		//this.nodeCount++;
 		//if (json.id == null)
 		//	json.id = (this.nodes.length + 1) * (-1);
 		let node = new FlowNode(this, json);
 		this.nodes.push(node);
 		return node;
-	};
+	}
 	
-	this.addLine = function (json) {
+	addLine(json) {
 		return new FlowLine(this, json);
-	};
+	}
 	
-	this.deleteNode = function (node) {
+	deleteNode(node) {
 		let id = node.getId();
 		this.svg.findOne(`g[data-id="${id}"]`).remove();
-	};
+	}
 	
-	this.deleteLine = function (line) {
+	deleteLine(line) {
 		let id = line.getId();
 		this.svg.find(`path[data-id="${id}"]`).remove();	//含path2(data-id相同)
-	};
+	}
 	
-	this.drawLineStart = function (fromNode) {
+	drawLineStart(fromNode) {
 		this.fromNode = fromNode;
-	};
+	}
 
 	//return new line json
-	this.drawLineEnd = function (toNode) {
+	drawLineEnd(toNode) {
 		var json = {
 			Id: this.newLineId,
 			FromNodeId: this.fromNode.getId(),
@@ -123,30 +124,26 @@ function FlowBase(boxId) {
 		new FlowLine(this, json, this.fromNode, toNode);
 		this.fromNode = null;
 		return json;
-	};
+	}
 	
-	this.idToNode = function (id) {
+	idToNode(id) {
 		//elm.node 指向dom
 		return this.nodes.find(node => node.getId() == id);
-	};
+	}
 
 	//check has startNode or not
-	this.hasStartNode = function () {
+	hasStartNode() {
 		//some 用法類似 c# any()
 		return this.nodes.some(node => node.getNodeType() == EstrNodeType.Start);
-	};
-
-	//call last
-	this._init(boxId);
-
-} //class FlowBase
+	}
+} //class FlowView
 
 /**
   流程節點
   屬性:
     self: this
-    flowBase: FlowBase object
-    svg: flowBase.svg
+    flowView: FlowView object
+    svg: flowView.svg
     json: node json, 欄位與後端XgFlowE相同: Id(不變), NodeType(不變), Name, PosX, PosY, Width, Height
     elm: svg group element(與 html element不同)
     boxElm: border element
@@ -154,32 +151,25 @@ function FlowBase(boxId) {
     lines: 進入/離開此節點的流程線
     width: width
     height: height
-  param flowBase {object} FlowBase
+  param flowView {object} FlowView
   param json {json} 流程節點資料
  */ 
-function FlowNode(flowBase, json) {
-	//drag evnet
-	//this.DragStart = 'dragstart';
-	//this.DragMove = 'dragmove';
-	//this.DragEnd = 'dragend';
+class FlowNode {
 
-	//start/end node radius
-	//this.MinRadius = 20;
+	constructor(flowView, json) {
+		//normal node size
+		this.MinWidth = 80;
+		this.MinHeight = 42;
+		this.LineHeight = 18;	//文字行高
+		this.PadTop = 8;
+		this.PadLeft = 15;
 
-	//normal node size
-	this.MinWidth = 80;
-	this.MinHeight = 42;
-	this.LineHeight = 18;	//文字行高
-	this.PadTop = 8;
-	this.PadLeft = 15;
+		this.PinWidth = 12;
+		this.PinGap = 3;
 
-	this.PinWidth = 12;
-	this.PinGap = 3;
-
-	this._init = function (flowBase, json) {
 		this.self = this;
-		this.flowBase = flowBase;
-		this.svg = flowBase.svg;
+		this.flowView = flowView;
+		this.svg = flowView.svg;
 		this.json = Object.assign({
 			Name: 'Node',
 			NodeType: EstrNodeType.Node,
@@ -259,38 +249,38 @@ function FlowNode(flowBase, json) {
 		}
 
 		this._setEvent();
-	};
+	}
 
-	this.getLines = function () {
+	getLines() {
 		return this.lines;
-	};
+	}
 
 	//是否為起迄節點
-	this._isStartEnd = function () {
+	_isStartEnd() {
 		return (this.json.NodeType == EstrNodeType.Start || this.json.NodeType == EstrNodeType.End);
-	};
+	}
 
-	this.getNodeType = function () {
+	getNodeType() {
 		return this.json.NodeType;
-	};
+	}
 
-	this.getPos = function () {
+	getPos() {
 		let elm = this.elm;
 		return { x: elm.x(), y: elm.y() };
-	};
+	}
 
-	this.getSize = function () {
+	getSize() {
 		let elm = this.boxElm;
 		return { w: elm.width(), h: elm.height() };
-	};
+	}
 
-	this.getCenter = function () {
+	getCenter() {
 		let elm = this.boxElm;
 		return { x: elm.cx(), y: elm.cy() };
-	};
+	}
 
 	//set pin position
-	this._setPinPos = function () {
+	_setPinPos() {
 		//連接點 右移3px
 		if (!this.pinElm) return;
 
@@ -300,45 +290,45 @@ function FlowNode(flowBase, json) {
 	}
 
 	//node event
-	this._setEvent = function () {
+	_setEvent() {
 		//enable right click menu
 		let me = this;	//FlowNode
-		let flowBase = this.flowBase;
+		let flowView = this.flowView;
 
-		this.elm.node.addEventListener('contextmenu', function (event) {
-			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
-			if (flowBase.fnShowMenu)
-				flowBase.fnShowMenu(event, true, me);
+		this.elm.node.addEventListener('contextmenu', function (e) {
+			e.preventDefault(); // 阻止瀏覽器的右鍵功能表
+			if (flowView.fnShowMenu)
+				flowView.fnShowMenu(e, true, me);
 		});
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
 		//draggable 來自 svg.draggable.js
-		this.elm.draggable().on(EstrMouse.DragMove, () => {
-			if (!flowBase.isEdit) return;
+		this.elm.draggable().on(EstrMouse.DragMove, function (e) {
+			if (!flowView.isEdit) return;
 
-			this._drawLines();
-		}).on(EstrMouse.DragEnd, (event) => {
-			if (!flowBase.isEdit) return;
+			me._drawLines();
+		}).on(EstrMouse.DragEnd, function (e) {
+			if (!flowView.isEdit) return;
 
-			let { x, y } = event.detail.box;
+			let { x, y } = e.detail.box;
 			//console.log(`x=${x}, y=${y}`);
 
 			//trigger event
-			if (this.flowBase.fnMoveNode)
-				this.flowBase.fnMoveNode(this, x, y);
+			if (me.flowView.fnMoveNode)
+				me.flowView.fnMoveNode(me, x, y);
 		});
 
 		//set connector draggable
 		this._setEventPin();
-	};
+	}
 
-	this._drawLines = function () {
+	_drawLines() {
 		this.lines.forEach(line => line.render());
-	};
+	}
 
 	//set event of node connector
 	//pin表示起始節點內的連接點
-	this._setEventPin = function () {
+	_setEventPin() {
 		if (!this.pinElm)
 			return;
 
@@ -346,11 +336,11 @@ function FlowNode(flowBase, json) {
 		let tempLine;
 		let toElm = null;
 		let me = this;	//flowNode
-		let flowBase = this.flowBase;
+		let flowView = this.flowView;
 
 		// 啟用 pinElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pinElm !!
 		this.pinElm.draggable().on(EstrMouse.DragStart, (event) => {
-			if (!flowBase.isEdit) return;
+			if (!flowView.isEdit) return;
 
 			// 初始化線條
 			let { x, y } = me.pinElm.rbox(me.svg); // 使用SVG畫布的座標系
@@ -361,10 +351,10 @@ function FlowNode(flowBase, json) {
 			tempLine = me.svg.line(startX, startY, startX, startY)
 				.addClass('xf-line off');
 
-			flowBase.drawLineStart(me.self);
+			flowView.drawLineStart(me.self);
 
 		}).on(EstrMouse.DragMove, (event) => {
-			if (!flowBase.isEdit) return;
+			if (!flowView.isEdit) return;
 
 			//阻止 connector 移動
 			event.preventDefault();
@@ -402,49 +392,49 @@ function FlowNode(flowBase, json) {
 			}
 
 		}).on(EstrMouse.DragEnd, (event) => {
-			if (!flowBase.isEdit) return;
+			if (!flowView.isEdit) return;
 
 			// 檢查座標值是否有效
 			if (toElm) {
 				me._markNode(toElm, false);
 				var id = toElm.parent().node.dataset.id;
-				var json = flowBase.drawLineEnd(flowBase.idToNode(id));
+				var json = flowView.drawLineEnd(flowView.idToNode(id));
 				toElm = null;
 
 				//trigger event
-				if (flowBase.fnAfterAddLine)
-					flowBase.fnAfterAddLine(json);
+				if (flowView.fnAfterAddLine)
+					flowView.fnAfterAddLine(json);
 			}
 			tempLine.remove();
 		});
-	};
+	}
 
 	//high light node
-	this._markNode = function (elm, status) {
+	_markNode(elm, status) {
 		if (status) {
 			elm.node.classList.add('on');
 		} else {
 			elm.node.classList.remove('on');
 		}
-	};
+	}
 
 	//id記錄在 group elm !!
-	this.getId = function () {
+	getId() {
 		return this.json.Id;
-	};
+	}
 
-	this.addLine = function (line) {
+	addLine(line) {
 		this.lines.push(line);
-	};
+	}
 
-	this.deleteLine = function (line) {
+	deleteLine(line) {
 		let index = this.lines.findIndex(item => item.Id == line.Id);
 		this.lines.splice(index, 1);
-	};
+	}
 
-	this.getName = function () {
+	getName() {
 		return this.nameElm.text();
-	};
+	}
 
 	/**
 	 * set node name only for TypeNode, 考慮多行
@@ -452,7 +442,7 @@ function FlowNode(flowBase, json) {
 	 * param name {string} 
 	 * param drawLine {bool} re-draw line or not
 	 */ 
-	this.setName = function (name, drawLine) {
+	setName(name, drawLine) {
 		// 更新文字內容, 後端傳回會加上跳脫字元, js 2021才有 replaceAll, 所以自製
 		var lines = _str.replaceAll(name, '\\n', '\n').split('\n');
 		this.nameElm.clear().text(function (add) {
@@ -477,17 +467,13 @@ function FlowNode(flowBase, json) {
 
 		if (drawLine)
 			this._drawLines();
-	};
-
-	//call last
-	this._init(flowBase, json);
-
+	}
 }//class FlowNode
 
 //相關名詞使用 fromNode/toNode 比較合理
 /**
   屬性:
-    flowBase: FlowBase object
+    flowView: FlowView object
     json: flowLine json, 欄位與後端XgFlowE相同: Id(不變), FromNodeId, ToNodeId, FromType(不變), Label
     svg: svg
     path: line path
@@ -501,45 +487,45 @@ function FlowNode(flowBase, json) {
     //isFromTypeAuto:
     isFromTypeV:
     isFromTypeH:
-  param flowBase {FlowBase}
+  param flowView {FlowView}
   param json {Json} flowLine 組態 for initial
   param fromNode {FlowNode?} 如果有值則使用此節點
   param toNode {FlowNode?} 同 fromNode
 */
 
-function FlowLine(flowBase, json, fromNode, toNode) {
-	//Cnt:中心點, Side:節點邊界, 數值20大約1公分
-	/** (起點)中心到(迄點)中心的最大距離 for 建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑 */
-	this.MaxCntCnt1 = 6;
-	/** (起點)邊到(迄點)中心的最小距離 for 建立2線段 */
-	this.MinSideCnt2 = 16;
-	/** (起點)中心到(迄點)中心的最小距離 for 建立3線段,  2節點的最小距離, 大於此值可建立line(1,3線段) */
-	this.MinCntCnt3 = 20;
-	/** (起點)邊到(迄點)邊的最小距離 for 建立1,3線段(3線段以2倍距離判斷) */
-	this.MinSideSide13 = 12;
+class FlowLine {
 
-	//末端箭頭
-	this.ArrowLen = 10; 	//長度
-	this.ArrowWidth = 5; 	//寬度	
+	constructor(flowView, json, fromNode, toNode) {
+		//Cnt:中心點, Side:節點邊界, 數值20大約1公分
+		/** (起點)中心到(迄點)中心的最大距離 for 建立1線段(表示在同一水平/垂直位置), 同時用於折線圓角半徑 */
+		this.MaxCntCnt1 = 6;
+		/** (起點)邊到(迄點)中心的最小距離 for 建立2線段 */
+		this.MinSideCnt2 = 16;
+		/** (起點)中心到(迄點)中心的最小距離 for 建立3線段,  2節點的最小距離, 大於此值可建立line(1,3線段) */
+		this.MinCntCnt3 = 20;
+		/** (起點)邊到(迄點)邊的最小距離 for 建立1,3線段(3線段以2倍距離判斷) */
+		this.MinSideSide13 = 12;
 
-	//line type, 起點位置
-	this.FromTypeAuto = 'A';	//自動
-	this.FromTypeV = 'V';	//垂直(上下)
-	this.FromTypeH = 'H';	//水平(左右)
+		//末端箭頭
+		this.ArrowLen = 10; 	//長度
+		this.ArrowWidth = 5; 	//寬度	
 
-	//initial
-	this._init = function (flowBase, json, fromNode, toNode) {
+		//line type, 起點位置
+		this.FromTypeAuto = 'A';	//自動
+		this.FromTypeV = 'V';	//垂直(上下)
+		this.FromTypeH = 'H';	//水平(左右)
+
 		json = json || {};
 		json.FromType = json.FromType || this.FromTypeAuto;
 		json.Label = json.Label || '';
-		json.Id = json.Id || flowBase.getNewLineId();
+		json.Id = json.Id || flowView.getNewLineId();
 
 		//#region set instance variables
-		this.flowBase = flowBase;
+		this.flowView = flowView;
 		this.json = json;
-		this.svg = flowBase.svg;
-		this.fromNode = fromNode || this.flowBase.idToNode(json.FromNodeId);
-		this.toNode = toNode || this.flowBase.idToNode(json.ToNodeId);
+		this.svg = flowView.svg;
+		this.fromNode = fromNode || this.flowView.idToNode(json.FromNodeId);
+		this.toNode = toNode || this.flowView.idToNode(json.ToNodeId);
 		//this.label = label || '';
 
 		//path
@@ -570,9 +556,9 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 		this.toNode.addLine(this);
 		this._setEvent();
 		this.render();
-	};
+	}
 
-	this._setFromTypeVars = function (fromType) {
+	_setFromTypeVars(fromType) {
 		fromType = fromType || this.FromTypeAuto;
 		this.fromType = fromType;
 		this.isFromTypeV = (fromType == this.FromTypeV);
@@ -583,33 +569,33 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 			dom.classList.remove('xf-way');
 		else
 			dom.classList.add('xf-way');
-	};
+	}
 
-	this._setEvent = function () {
+	_setEvent() {
 		var me = this;	//FlowLine
 		this.path2.node.addEventListener('contextmenu', function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
-			if (me.flowBase.fnShowMenu)
-				me.flowBase.fnShowMenu(event, false, me);
+			if (me.flowView.fnShowMenu)
+				me.flowView.fnShowMenu(event, false, me);
 		});
 	}
 
 	/*
 	//?? from text element
-	this.getLabel = function () {
+	getLabel() {
 		return this.label;
-	};
+	}
 	*/
 
-	this.setLabel = function (label) {
+	setLabel(label) {
 		this.labelElm.text(label);
-	};
+	}
 
 	/**
 	 * 依次考慮使用1線段、2線段、3線段
-	 * public for FlowBase.js
+	 * public for FlowView.js
 	 */
-	this.render = function () {
+	render() {
 
 		//#region 計算流程線render位置
 		//=== from Node ===
@@ -794,12 +780,12 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 		//move label
 		this.labelElm.center((points[textStartAry].x + points[textStartAry + 1].x) / 2,
 			(points[textStartAry].y + points[textStartAry + 1].y) / 2);
-	};
+	}
 
 	/**
 	 * 繪製流程線部分
 	 */
-	this._drawLine = function (points) {
+	_drawLine(points) {
 		// 生成帶有圓角的折線路徑
 		let pathStr = `M ${points[0].x} ${points[0].y}`; // 移動到起點
 		let pntLen = points.length;
@@ -859,12 +845,12 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 
 		//畫末端箭頭
 		this._drawArrow(points[pntLen - 2], points[pntLen - 1]);
-	};
+	}
 
 	/**
 	 * 繪製末端箭頭部分, 利用2個傳入端點計算斜率
 	 */
-	this._drawArrow = function (fromPnt, toPnt) {
+	_drawArrow(fromPnt, toPnt) {
 		// 計算箭頭的方向
 		const angle = Math.atan2(toPnt.y - fromPnt.y, toPnt.x - fromPnt.x); // 計算角度
 
@@ -881,26 +867,23 @@ function FlowLine(flowBase, json, fromNode, toNode) {
 		// 更新箭頭路徑
 		this.arrow.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
 		//this.arrow2.plot(`M ${fromPnt.x} ${fromPnt.y} L ${toPnt.x} ${toPnt.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
-	};
+	}
 
 	//id記錄在 path !!
-	this.getId = function () {
+	getId() {
 		return this.json.Id;
-	};
+	}
 
-	this.getFromType = function () {
+	getFromType() {
 		return this.json.FromType;
-	};
+	}
 
-	this.setFromType = function (fromType) {
+	setFromType(fromType) {
 		if (fromType == this.json.FromType)
 			return;
 
 		this._setFromTypeVars(fromType);
 		this.render();
-	};
-
-	//call last
-	this._init(flowBase, json, fromNode, toNode);
+	}
 
 }//class FlowLine

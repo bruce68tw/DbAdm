@@ -1,20 +1,14 @@
 ﻿/**
+ * FlowForm -> FlowMany
  * 處理 flow UI 元素和資料(mNode, mLine)之間的轉換
  * workflow component
  * param boxId {string} edit canvas id
  * param mNode {EditMany}
  * param mLine {EditMany}
- * return {FlowForm}
  */ 
-function FlowForm(boxId, mNode, mLine) {
+class FlowMany {
 
-    //是否可編輯
-    this.isEdit = false;
-
-    /**
-     * initial flow
-     */ 
-    this._init = function () {
+    constructor(boxId, mNode, mLine) {
         //#region constant
         //and/or seperator for line condition
         //js only replace first found, so use regular, value is same to code.type=AndOr
@@ -23,11 +17,11 @@ function FlowForm(boxId, mNode, mLine) {
         this.ColSep = ',';
 
         //html filter/class
-        //this.NodeFilter = '.xf-node';   //for find node object
-        this.MenuFilter = '.xf-menu';   //menu for node/line property
-        //this.EpFilter = '.xf-ep';       //??node end point
-        this.StartNodeFilter = '.xf-start';    //start node class
-        //this.EndNodeCls = 'xf-end';        //??end node class
+        //this.NodeFilter = '.xf-node';     //for find node object
+        this.FtMenu = '.xf-menu';           //menu for node/line property
+        //this.EpFilter = '.xf-ep';         //??node end point
+        this.FtStartNode = '.xf-start';     //start node class
+        //this.EndNodeCls = 'xf-end';       //??end node class
         //this.AutoNodeCls = 'xf-auto-node';      //auto node class
 
         //connection(line) style: start, agree, disagree
@@ -36,6 +30,9 @@ function FlowForm(boxId, mNode, mLine) {
         //this.DenyLineCfg = { stroke: 'red', strokeWidth: 2 };   //??deny(reject)
 
         //#endregion
+
+        //是否可編輯
+        this.isEdit = false;
 
         //#region variables
         //editMany
@@ -82,25 +79,25 @@ function FlowForm(boxId, mNode, mLine) {
         }
 
         //set instance first
-        var flowBase = new FlowBase(boxId);
-        flowBase.fnMoveNode = (node, x, y) => this.fnMoveNode(node, x, y);
-        flowBase.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
-        flowBase.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
-        this.flowBase = flowBase;
+        var flowView = new FlowView(boxId);
+        flowView.fnMoveNode = (node, x, y) => this.fnMoveNode(node, x, y);
+        flowView.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
+        flowView.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);
+        this.flowView = flowView;
         //#endregion
 
         //set event
         this._setFlowEvent();
-    };
+    }
 
-    this.fnMoveNode = function (node, x, y) {
+    fnMoveNode(node, x, y) {
         var rowBox = this.mNode.idToRowBox(node.getId());
         _form.loadRow(rowBox, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
-    };
+    }
 
-    this.fnAfterAddLine = function (json) {
+    fnAfterAddLine(json) {
         this.mLine.addRow(json, null, json.Id);   //不產生新Id, FlowLine已經產生
-    };
+    }
 
     /**
      * on show right menu
@@ -109,7 +106,7 @@ function FlowForm(boxId, mNode, mLine) {
      * param mouseX {int} 
      * param mouseY {int} 
      */
-    this.fnShowMenu = function (event, isNode, flowItem) {
+    fnShowMenu(event, isNode, flowItem) {
         //set instance variables
         this.nowIsNode = isNode;
         this.nowFlowItem = flowItem;
@@ -121,7 +118,7 @@ function FlowForm(boxId, mNode, mLine) {
 
         //html 不會自動處理自製功能表狀態, 自行配合 css style
         var css = 'off';
-        var menu = $(this.MenuFilter);
+        var menu = $(this.FtMenu);
         if (canEdit) {
             menu.find('.xd-edit').removeClass(css);
             menu.find('.xd-delete').removeClass(css);
@@ -138,25 +135,25 @@ function FlowForm(boxId, mNode, mLine) {
                 left: event.clientX + 'px',
                 top: event.clientY + 'px',
             });
-    };
+    }
 
     //清除UI & flow元件
-    this.reset = function () {
-        this.flowBase.reset();
-    };
+    reset() {
+        this.flowView.reset();
+    }
 
 	//set editable or not
-    this.setEdit = function (status) {
+    setEdit(status) {
         this.isEdit = status;
-        this.flowBase.setEdit(status);
-    };
+        this.flowView.setEdit(status);
+    }
 
     /**
      * set flow events:
      *   1.line right click to show context menu
      *   2.mouse down to hide context menu
      */
-    this._setFlowEvent = function () {
+    _setFlowEvent() {
 
         //hide context menu
         var me = this;
@@ -165,29 +162,29 @@ function FlowForm(boxId, mNode, mLine) {
             //    me.popupMenu.hide(100);
             
             //"this" is not work here !!
-            var filter = me.MenuFilter;
+            var filter = me.FtMenu;
             if (!$(e.target).parents(filter).length > 0)
                 _obj.hide($(filter));            
         });
-    };
+    }
 
     /**
      * load nodes into UI
      * param rows {json} 後端傳回的完整json
      */
-    this.loadNodes = function (rows) {
+    loadNodes(rows) {
         //EditMany load rows by rowsBox
         this.mNode.loadRowsByRsb(rows, true);
 		
 		//flow loadNodes
-        this.flowBase.loadNodes(rows);
-    };
+        this.flowView.loadNodes(rows);
+    }
 
     /**
      * load nodes into UI(hide)
      * param rows {rows} line rows
      */
-    this.loadLines = function (rows) {
+    loadLines(rows) {
         this.mLine.loadRowsByRsb(rows, true);
 
         //set label
@@ -196,8 +193,8 @@ function FlowForm(boxId, mNode, mLine) {
                 rows[i].Label = this._condStrToLabel(rows[i].CondStr);
             }
         }
-        this.flowBase.loadLines(rows);
-    };
+        this.flowView.loadLines(rows);
+    }
 
     //#region node function
 
@@ -206,7 +203,7 @@ function FlowForm(boxId, mNode, mLine) {
      * param nodeType {string}
      * param name {string} only for normalType node
      */ 
-    this.addNode = function (nodeType, name) {
+    addNode(nodeType, name) {
 
         var name = '';
         if (nodeType == EstrNodeType.Start) {
@@ -214,7 +211,7 @@ function FlowForm(boxId, mNode, mLine) {
         } else if (nodeType == EstrNodeType.End) {
             name = 'E';
         } else {
-            name = '節點-' + this.flowBase.getNewNodeId();
+            name = '節點-' + this.flowView.getNewNodeId();
         }
 
         //mNode新筆一筆資料, 會產生新id
@@ -228,25 +225,25 @@ function FlowForm(boxId, mNode, mLine) {
         //row.Name += "-" + row.Id;
 
 		//flow add node
-		this.flowBase.addNode(row);
-    };
+		this.flowView.addNode(row);
+    }
 
     /**
      * node id to node object
-    this._idToNode = function (id) {
+    _idToNode(id) {
         return this.divFlowBox.find('.xf-node [value=' + id + ']').closest('.xf-node');
-    };
+    }
      */
 
     /**
      * inside element to node object
-    this._elmToNode = function (elm) {
+    _elmToNode(elm) {
         return $(elm).closest(this.NodeFilter);
-    };
-    this._elmToNodeValue = function (elm, fid) {
+    }
+    _elmToNodeValue(elm, fid) {
         var node = this._elmToNode(elm);
         return this._boxGetValue(node, fid);
-    };
+    }
      */
 
     /**
@@ -254,9 +251,9 @@ function FlowForm(boxId, mNode, mLine) {
      * param node {object} node object
      * param fid {string} field id
      * return {string}
-    this._boxGetValue = function (node, fid) {
+    _boxGetValue(node, fid) {
         return _itext.get(fid, node);
-    };
+    }
      */
 
     /**
@@ -264,17 +261,17 @@ function FlowForm(boxId, mNode, mLine) {
      * param node {object} node object
      * param fids {strings} field id array
      * return {json}
-    this._boxGetValues = function (node, fids) {
+    _boxGetValues(node, fids) {
         var json = {};
         for (var i = 0; i < fids.length; i++) {
             var fid = fids[i];
             json[fid] = _itext.get(fid, node);
         }
         return json;
-    };
+    }
      */
 
-    this.deleteNode = function (node) {
+    deleteNode(node) {
         //delete mNode
         this.mNode.deleteRow(node.getId());
 
@@ -284,8 +281,8 @@ function FlowForm(boxId, mNode, mLine) {
         });
 
         //delete flowNode(自動刪除相關流程線) 
-        this.flowBase.deleteNode();
-    };
+        this.flowView.deleteNode();
+    }
     //#endregion (node function)
 
     //#region line function
@@ -293,12 +290,12 @@ function FlowForm(boxId, mNode, mLine) {
      * ?? add one line(connector)
      * param row {json} line row
      * return void
-    this._renderLine = function (row) {
+    _renderLine(row) {
 
         //param 2(reference object) not work here !!
         var prop = this.getLineProp(row.CondStr);    //get line style & label
         //debugger;
-        var conn = this.flowBase.connect({
+        var conn = this.flowView.connect({
             //type: 'basic',
             source: this._idToNode(row.StartNode),
             target: this._idToNode(row.EndNode),
@@ -312,100 +309,100 @@ function FlowForm(boxId, mNode, mLine) {
 
         //set label
         this._setLineLabel(conn, prop.label);
-    };
+    }
      */
 
     /**
      * add flow line into hide UI for crud
      * param row {json}
      * return {string} line key
-    this.addLine = function (row) {
+    addLine(row) {
         var newLine = $(this.tplLine);      //create row object, no need mustache()
         _form.loadRow(newLine, row);        //row objec to UI
         var key = this.mLine.setNewIdByBox(newLine);   //set new key
         this.divLinesBox.append(newLine);   //append row object
         return key;
-    };
+    }
      */
 
     /**
      * set connection key
-    this._setLineKey = function (conn, key) {
+    _setLineKey(conn, key) {
         var row = {};
         row['Id'] = key;
         conn.setParameters(row);
-    };
+    }
 
     //is line source node a condition mode(true) or yes/no type(false)
-    this._isSourceCondMode = function (sourceType) {
+    _isSourceCondMode(sourceType) {
         //return (sourceType == this.StartNode || sourceType == this.AutoNode);
         return (sourceType == this.StartNode);
-    };
+    }
      */
 
     /** ??
      * get line property: style, label
      * return {json} 
-    this.getLineProp = function (condStr) {
+    getLineProp(condStr) {
         return {
             //type: type,
             style: this.InitLineCfg,
             label: this._condStrToLabel(condStr),
         }
-    };
+    }
      */
 
     /*
-    this._getLineElmKey = function (conn) {
+    _getLineElmKey(conn) {
         return conn.getParameters()['Id'];
-    };
+    }
     */
 
     /**
      * get object(node/line) key
      * param obj {object}
      * return {string} key value
-    this._getObjKey = function (obj) {
+    _getObjKey(obj) {
         return _itext.get('Id', obj);
-    };
+    }
 
     //set connection label
-    this._setLineLabel = function (conn, label) {
+    _setLineLabel(conn, label) {
         var obj = conn.getOverlay('label');
         obj.setVisible(_str.notEmpty(label));
         obj.setLabel(label);
         //conn.getOverlay('label').setLabel(label);
-    };
+    }
      */
 
     /*
     //delete line with warning msg
-    this.deleteLineWithMsg = function (conn) {
+    deleteLineWithMsg(conn) {
         _tool.ans('delete this line ?', function () {
             this.deleteLine(conn);
         });
-    };
+    }
     */
 
     //delete line without warning msg
-    this.deleteLine = function (line) {
+    deleteLine(line) {
         //delete mLine
         this.mLine.deleteRow(line.getId());
 
         //delete flowLine
-        this.flowBase.deleteLine(line);
-    };
+        this.flowView.deleteLine(line);
+    }
     /*
-    this.deleteLines = function (lines) {
+    deleteLines(lines) {
         for (var i = 0; i < lines.length; i++) {
             this.deleteLine(lines[i]);
         }
-    };
+    }
     */
     //#endregion (line function)
 
     //將Db的條件內容轉換為顯示內容
-    this._condStrToLabel = function (str) {
+    _condStrToLabel(str) {
         if (_str.isEmpty(str))
             return '';
 
@@ -415,10 +412,10 @@ function FlowForm(boxId, mNode, mLine) {
         if (hasOr)
             str = '(' + str + ')';
         return str;
-    };
+    }
 
     //convert condStr to List<Cond> for 顯示編輯畫面
-    this._condStrToList = function (str) {
+    _condStrToList(str) {
         if (_str.isEmpty(str))
             return null;
 
@@ -442,11 +439,11 @@ function FlowForm(boxId, mNode, mLine) {
             }
         }
         return result;
-    };
+    }
 
     //編輯畫面讀取的是 condStr, flowLine顯示的是 label
     //get line condition string
-    this._getCondStr = function () {
+    _getCondStr() {
         var me = this;
         var condStr = '';
         this.tbodyLineCond.find('tr').each(function (idx) {
@@ -458,9 +455,9 @@ function FlowForm(boxId, mNode, mLine) {
             condStr += str;
         });
         return condStr;
-    };
+    }
 
-    this.showNodeProp = function (node) {
+    showNodeProp(node) {
         //var node = this._elmToNode(this.nowFlowItem);
         //var row = this._boxGetValues(node, ['NodeType', 'Name', 'SignerType', 'SignerValue']);
         //var id = node.getId();
@@ -469,10 +466,10 @@ function FlowForm(boxId, mNode, mLine) {
 
         //show modal
         _modal.showO(this.modalNodeProp);   //.modal('show');
-    };
+    }
 
     //param line {FlowLine} flow line 
-    this.showLineProp = function (line) {
+    showLineProp(line) {
         //debugger;
         //var line = conn.getParameters();   //line model
         //var line = this._connToLine(conn);
@@ -506,40 +503,40 @@ function FlowForm(boxId, mNode, mLine) {
                 this.tbodyLineCond.append(newCond);
             }
         }
-    };
+    }
 
     /*
     //jsplumb connection to line object
-    this._connToLine = function (conn) {
+    _connToLine(conn) {
         return this._idToLine(this._getLineElmKey(conn));
-    };
+    }
 
     //id to line object
-    this._idToLine = function (id) {
+    _idToLine(id) {
         return this.divLinesBox.find('.xd-line [value=' + id + ']').closest('.xd-line');
-    };
+    }
 
-    this._idToLineBox = function (id) {
+    _idToLineBox(id) {
         return this.eformLines.find('.xd-line [value=' + id + ']').closest('.xd-line');
-    };
+    }
     */
 
-    this.onAddNode = function (nodeType) {
-        if (nodeType == EstrNodeType.Start && this.flowBase.hasStartNode()) {
+    onAddNode(nodeType) {
+        if (nodeType == EstrNodeType.Start && this.flowView.hasStartNode()) {
             _tool.msg('起始節點已經存在，不可再新增。');
             return;
         }
 
         //add node
         this.addNode(nodeType);
-    };
+    }
 
     //#region events
     /*
     //on add start node
-    this.onAddStartNode = function () {
+    onAddStartNode() {
         //check, only one start node allow
-        if (this.eformNodes.find(this.StartNodeFilter).length > 0) {
+        if (this.eformNodes.find(this.FtStartNode).length > 0) {
             //_tool.msg(this.R.StartNodeExist);
             _tool.msg('Start Node Already Existed !');
             return;
@@ -547,35 +544,35 @@ function FlowForm(boxId, mNode, mLine) {
 
         //add node
         this.addNode(EstrNodeType.Start);
-    };
+    }
     //on add end node
-    this.onAddEndNode = function () {
+    onAddEndNode() {
         this.addNode(EstrNodeType.End);
-    };
+    }
     //on add normal node
-    this.onAddNormalNode = function () {
+    onAddNormalNode() {
         this.addNode(this.NormalNode, '節點');
-    };
-    this.onAddAutoNode = function () {
+    }
+    onAddAutoNode() {
         this.addNode('Auto', this.AutoNode);
-    };
+    }
     */
 
-    this._menuStatus = function (me) {
+    _menuStatus(me) {
         return !me.classList.contains('off');
     }
 
     //context menu event
-    this.onMenuEdit = function (me) {
+    onMenuEdit(me) {
         if (!this._menuStatus(me)) return;
 
         if (this.nowIsNode)
             this.showNodeProp(this.nowFlowItem);
         else
             this.showLineProp(this.nowFlowItem);
-    };
+    }
 
-    this.onMenuDelete = function (me) {
+    onMenuDelete(me) {
         if (!this._menuStatus(me)) return;
 
         var me = this;
@@ -588,14 +585,14 @@ function FlowForm(boxId, mNode, mLine) {
                 me.deleteLine(me.nowFlowItem);
             });
         }
-    };
+    }
 
-    this.onMenuView = function (me) {
+    onMenuView(me) {
         //todo
-    };
+    }
 
     //onclick add line condition
-    this.onAddLineCond = function () {
+    onAddLineCond() {
         var row = {
             AndOr: this.AndSep,
             Op: 'eq',
@@ -603,14 +600,14 @@ function FlowForm(boxId, mNode, mLine) {
         var cond = $(Mustache.render(this.tplLineCond, row));
         _form.loadRow(cond, row);        //row objec to UI
         this.tbodyLineCond.append(cond);
-    };
+    }
 
-    this.onDeleteLineCond = function (btn) {
+    onDeleteLineCond(btn) {
         $(btn).closest('tr').remove();
-    };
+    }
 
     //node prop onclick ok
-    this.onModalNodeOk = function () {
+    onModalNodeOk() {
         //check input
 
         //set new value
@@ -646,10 +643,10 @@ function FlowForm(boxId, mNode, mLine) {
         else
             nodeObj.removeClass(this.AutoNodeCls);
         */
-    };
+    }
 
     //line prop click ok
-    this.onModalLineOk = function () {
+    onModalLineOk() {
         //check input
 		//var form = this.modalLineProp;
 
@@ -670,10 +667,10 @@ function FlowForm(boxId, mNode, mLine) {
 		
         //hide modal
         _modal.hideO(modal);
-    };
+    }
     //#endregion (events)
 
 	//call last
-    this._init();
+    //this._init();
 
 }//class
