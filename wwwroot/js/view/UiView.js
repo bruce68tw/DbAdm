@@ -50,9 +50,11 @@ class UiView {
 		this.NameTabPage = '[多頁容器]';
 
 		this.isEdit = true;		//是否可編輯, temp to true	
+		this.nowItem = null;
+		this.nowInputType = '';
 		//this.items = [];		//包含欄位:ItemType, Item, Childs		
-		this.newItemId = 0;		//新node/line Id, 自動累加		
-		this.inputJson = {};		//儲存各種輸入欄位模版, 減少後端傳回		
+		this.newItemId = 0;		//新item Id, 自動累減, 使用負數!!		
+		this.inputJson = {};	//儲存各種輸入欄位模版, 減少後端傳回		
 		this.groupHtml = '';	//儲存group html, 後端傳回
 
 		//drag/drop相關, Box表示外層Item
@@ -113,8 +115,8 @@ class UiView {
 		//記錄目前移動的Item element
 		var drag = this.dragItem;
 		drag.item = $(e.target);
-		drag.itemType = this.getItemType(drag.item);
-		drag.boxType = this.getItemType(this._getBox(drag.item));
+		drag.itemType = this._getItemType(drag.item);
+		drag.boxType = this._getItemType(this._getBox(drag.item));
 		//drag.isBox = this._isBox(drag.itemType);
 	}
 
@@ -140,10 +142,10 @@ class UiView {
 		var drag = this.dragItem;
 		var drop = this.dropItem;
 		drop.item = dropItem;
-		drop.itemType = this.getItemType(dropItem);
+		drop.itemType = this._getItemType(dropItem);
 		//drop.isBox = this._isBox(drop.itemType);
 		//drop.boxType = drop.isBox
-		//	? drop.itemType : this.getItemType(this._getBox(dropItem));
+		//	? drop.itemType : this._getItemType(this._getBox(dropItem));
 
 		//判斷 drag item 是否 drop into box 裡面
 		var dropInBox = 
@@ -153,7 +155,7 @@ class UiView {
 		//drop boxType表示 "drag item" drop進去的box item, 沒有則為null
 		drop.boxType = dropInBox
 			? drop.itemType
-			: this.getItemType(this._getBox(dropItem));
+			: this._getItemType(this._getBox(dropItem));
 
 		//for debug
 		console.log(`dragType=${drag.itemType}, dropType=${drop.itemType}, drop.boxType=${drop.boxType}, dropInBox=${dropInBox}`);
@@ -327,12 +329,48 @@ class UiView {
 	}
 
 	/**
+	 * 傳回 input item 
+	 * param {json} json 包含欄位: Fid, Title, Required
+	 */ 
+	async _getInputA(json) {
+		var inputJson = this.inputJson;
+		var inputType = json.InputType;
+		if (inputJson[inputType] == null) {
+			var data = {
+				inputType: inputType,
+				fid: this.Fid,		//前端重設以下4欄位
+				title: this.Title,
+				cols: '2,3',
+				required: 0,
+			};
+			var tpl = await _ajax.getStrA('GetInputHtml', data);
+			inputJson[inputType] = tpl;
+		}
+
+		//render ui
+		//設定實際fid, title
+		var html = inputJson[inputType];
+		html = _str.replaceAll(html, this.Fid, json.Fid);	//多個取代
+		html = _str.replaceAll(html, this.Title, json.Title);
+
+		//如果上層為box, 則cols修改2,3 -> 4,6, 單個取代
+		var item = $(html);
+
+		//如果required=false, 則hide
+		if (!json.Required)
+			_obj.hide(item.find('.x-required'));
+
+		return item;
+	}
+
+	/**
 	 * add col
 	 * param {string} inputType
 	 * param {json} json 包含欄位: Fid, Title, Required
 	 * returns
 	 */
 	async addInputA(json) {
+		/*
 		//get set inputJson
 		var inputJson = this.inputJson;
 		var inputType = json.InputType;
@@ -354,16 +392,19 @@ class UiView {
 		html = _str.replaceAll(html, this.Fid, json.Fid);	//多個取代
 		html = _str.replaceAll(html, this.Title, json.Title);
 
-		//如果上層為box, 則cols修改2,3 -> 4,6, 單個取代
+		//如果required=false, 則hide
 		var item = $(html);
+		if (!json.Required)
+			_obj.hide(item.find('.x-required'));
+		*/
+
+		var item = await this._getInputA(json);
+
+		//如果上層為box, 則cols修改2,3 -> 4,6, 單個取代
 		if (this._boxIsRow())
 			this._resetItemByRow(item, true);
 
-		//如果required=false, 則hide
-		if (!json.Required)
-			_obj.hide(item.find('.x-required'));
-
-		//寫入item的data-info
+		//最後寫入item的data-info
 		this._objSetInfo(item, json);
 
 		//render item
@@ -491,11 +532,12 @@ class UiView {
 	/**
 	 * get item type, also called outside
 	 */ 
-	getItemType(item) {
+	_getItemType(item) {
 		return _obj.isEmpty(item)
 			? null : item.data(this.ItemType);
 	}
 
+	/*
 	//??
 	getItemId(item) {
 		//get id
@@ -503,6 +545,7 @@ class UiView {
 		this.newItemId++;
 		return this.newItemId;
 	}
+	*/
 
 	setEdit(status) {
 		this.isEdit = status;
@@ -510,7 +553,7 @@ class UiView {
 
 	//?? 上層是否為box
 	_boxIsRow() {
-		return (this.dropBox != null && this.getItemType(this.dropBox) == EstrItemType.Row);
+		return (this.dropBox != null && this._getItemType(this.dropBox) == EstrItemType.Row);
 	}
 
 	//內部element to Item object
@@ -551,8 +594,8 @@ class UiView {
 	}
 
 	//get new node id
-	getNewItemId() {
-		this.newItemId++;
+	_getNewItemId() {
+		this.newItemId--;
 		return this.newItemId;
 	}
 
@@ -603,12 +646,15 @@ class UiView {
 		//var rowBox = this.mItem.idToRowBox(node.getId());
 		//var rowBox = {};
 		var form = this.ModalInputProp;
-		this._objLoadInfo(form, this._objGetInfo(this.nowItem));
+		var info = this._objGetInfo(this.nowItem);
+		this.nowInputType = info.InputType;
+		this._objLoadInfo(form, info);
 		_modal.showO(form);
 	}
 
 	//param line {FlowLine} flow line
 	async onAddInput() {
+		/*
 		//mItem新筆一筆資料, 會產生新id
 		this.newColNo++;
 		var code = 'field' + this.newColNo;
@@ -620,13 +666,17 @@ class UiView {
 			Info: `${code},${name}`,
 		};
 		//var row = this.mItem.addRow(json);  //會產生id
+		*/
+
+		var newId = this._getNewItemId();
+		var newId2 = Math.abs(newId);
 		var row = {
-			Fid: code,
-			Title: name,
-			Required: true,
+			Id: newId,
+			Fid: '_field' + newId2,		//前面加底線for註記為需要調整
+			Title: '欄位' + newId2,
+			Required: false,
 			InputType: EstrInputType.Text,
 		};
-		//row.Name += "-" + row.Id;
 
 		await this.addInputA(row);
 	}
@@ -691,7 +741,7 @@ class UiView {
 		if (!this._menuStatus(_fun.getMe()))
 			return;
 
-		var itemType = this.getItemType(this.nowItem);
+		var itemType = this._getItemType(this.nowItem);
 		switch (itemType) {
 			case EstrItemType.Input:
 				this.showInputProp();
@@ -722,33 +772,44 @@ class UiView {
 	_objLoadInfo(obj, json) {
 		_form.loadRow(obj, json);
 	}
+	//操作DOM元素, 使用 _dom
 	_objGetInfo(obj) {
-		return _obj.getData(obj, 'info');	//會直接傳回json(自動判斷&轉型)
+		//return _obj.getData(obj, 'info');	//會直接傳回json(自動判斷&轉型)
+		var str = _dom.getData(obj[0], 'info');	//傳回字串
+		return _str.toJson(str);
 	}
 	_objSetInfo(obj, json) {
-		_obj.setData(obj, 'info', _json.toStr(json));
+		_dom.setData(obj[0], 'info', _json.toStr(json));
 	}
 
 	//node prop onclick ok
-	onModalInputOk() {
+	async onModalInputOk() {
 		//check input
 
-		//set new value
-		var form = this.EformInputProp;
-		var row = _form.toRow(form);
-		_obj.setData(form, 'info', row);
-
-		//update node display name
-		var node = this.nowFlowItem;
-		var rowBox = this.mItem.idToRowBox(node.getId());
-		var oldName = _itext.get('Name', rowBox);   //get before loadRow()
-		_form.loadRow(rowBox, row);
-
-		if (oldName != row.Name)
-			node.setName(row.Name, true);
+		//update data-info
+		//this._objSetInfo(this.nowItem, _form.toRow(this.EformInputProp));
+		await this._updateInputA(_form.toRow(this.EformInputProp));
 
 		//hide modal
 		_modal.hideO(this.ModalInputProp);
+	}
+
+	async _updateInputA(json) {
+		//update data-info
+		var item = this.nowItem;
+		this._objSetInfo(item, json);
+
+		//如果改變 itemType, 要更新input的部分
+		var newType = json.InputType;
+		if (this.nowInputType != newType) {
+			//var html = this.inputJson[newType];
+			var newItem = await this._getInputA(json);
+			var inputHtml = newItem.find(this.FtInput).html();
+			item.find(this.FtInput).html(inputHtml);
+		}
+
+		//update ui
+
 	}
 
 	//#endregion
