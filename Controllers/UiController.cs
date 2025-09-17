@@ -96,9 +96,9 @@ namespace DbAdm.Controllers
         }
 
         [HttpPost]
-        public string GetGroupHtml(string label)
+        public string GetGroupHtml(string title)
         {
-            return _Input.XgGroup(label, false);
+            return _Input.XgGroup(title, false);
         }
 
     }//class

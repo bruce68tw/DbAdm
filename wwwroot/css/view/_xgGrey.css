@@ -161,12 +161,12 @@ body, label {
 
 /*=== 欄位分群 ===*/
 /* Label + Icon */
-.x-group-label {
+.x-group-title {
     font-weight: 600;
     color: #0d6efd;
 }
 
-    .x-group-label i {
+    .x-group-title i {
         font-size: 0.9rem;
         color: #0d6efd;
     }

@@ -17,8 +17,8 @@
     margin: 20px 0 8px;
 }
 
-/* Label + Icon */
-.x-group-label {
+/* Title + Icon */
+.x-group-title {
     /*font-weight: 600;
     color: #0d6efd;*/
     white-space: nowrap;
@@ -27,7 +27,7 @@
     margin-right: 10px;
 }
 
-    .x-group-label i {
+    .x-group-title i {
         margin-left: 6px;
         /*font-size: 0.9rem;
         color: #0d6efd;*/

@@ -447,6 +447,16 @@ body {
 
 /*=== width end ===*/
 
+.x-vh15 {
+    margin-top: 15vh !important; /* 視窗高度的 1/4 */
+}
+.x-vh20 {
+    margin-top: 20vh !important; /* 視窗高度的 1/4 */
+}
+.x-vh25 {
+    margin-top: 25vh !important; /* 視窗高度的 1/4 */
+}
+
 /* 改用 bootstrap 5 的 padding, margin
 .x-mt0 {
     margin-top: 0 !important;
@@ -929,8 +939,8 @@ span.error {
     margin: 20px 0 8px;
 }
 
-/* Label + Icon */
-.x-group-label {
+/* Title + Icon */
+.x-group-title {
     /*font-weight: 600;
     color: #0d6efd;*/
     white-space: nowrap;
@@ -939,7 +949,7 @@ span.error {
     margin-right: 10px;
 }
 
-    .x-group-label i {
+    .x-group-title i {
         margin-left: 6px;
         /*font-size: 0.9rem;
         color: #0d6efd;*/
@@ -1259,6 +1269,7 @@ input[type=number] {
     border-width: 1px 0 0 1px !important;
     border-color: lightgray !important;
     border-style: solid !important;
+    margin-bottom: 0;
 }
 
     .x-table th, .x-table td {
@@ -1674,12 +1685,12 @@ body, label {
 
 /*=== 欄位分群 ===*/
 /* Label + Icon */
-.x-group-label {
+.x-group-title {
     font-weight: 600;
     color: #0d6efd;
 }
 
-    .x-group-label i {
+    .x-group-title i {
         font-size: 0.9rem;
         color: #0d6efd;
     }
