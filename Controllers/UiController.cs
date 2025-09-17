@@ -70,10 +70,12 @@ namespace DbAdm.Controllers
         //傳回輸入欄位html, 必須傳回ViewComponentResult, 前端收到為字串
         [HttpPost]
         //[XgProgAuth(CrudEnum.View)]
-        public string GetInputHtml(string inputType, string fid, string title, string cols, int required)
+        public string GetInputHtml(string inputType, string fid, string title, 
+            string labelTip, string inputNote, string cols, bool required)
         {
             //固定 Cols = "2,3", Required = true, 前端自行調整
-            XiBaseDto data = new() { Fid = fid, Title = title, Cols = cols, Required = (required == 1) };
+            XiBaseDto data = new() { Fid = fid, Title = title, InputNote = inputNote, 
+                LabelTip = labelTip, Cols = cols, Required = required };
             return inputType switch
             {
                 //無法直接轉型, 只能用Copy

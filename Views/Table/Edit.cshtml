@@ -44,7 +44,7 @@
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DataType", Value = "{{DataType}}", MaxLen = 20, Required = true })</td>
         <td class="text-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Nullable", Required = false, Value = "1" })</td>
         <td width="120px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue", Value = "{{DefaultValue}}", MaxLen = 100 })</td>
-        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Sort", Value = "{{Sort}}", MaxLen = 3, Required = false, InputAttr = "width:50px", BoxClass = "x-center" })</td>
+        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Sort", Value = "{{Sort}}", MaxLen = 3, Required = false, InputAttr = "width:50px", ClsBox = "x-center" })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Note", Value = "{{Note}}", MaxLen = 100 })</td>
         <td class="text-center">@await Component.InvokeAsync("XgDeleteRow", "_me.mCol.onDeleteRow")</td>
         <td class="text-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Status", IsCheck = true, Value = "1" })</td>

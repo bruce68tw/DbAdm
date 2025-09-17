@@ -1,14 +1,14 @@
 ﻿/**
  * FlowForm -> FlowMany
- * 處理 flow UI 元素和資料(mNode, mLine)之間的轉換
+ * 處理 flow UI 元素和多筆資料(mNode, mLine)之間的轉換
  * workflow component
- * param boxId {string} edit canvas id
+ * param areaId {string} editor work area id
  * param mNode {EditMany}
  * param mLine {EditMany}
  */ 
 class FlowMany {
 
-    constructor(boxId, mNode, mLine) {
+    constructor(areaId, mNode, mLine) {
         //#region constant
         //and/or seperator for line condition
         //js only replace first found, so use regular, value is same to code.type=AndOr
@@ -40,7 +40,7 @@ class FlowMany {
         this.mLine = mLine;
 
         //this.popupMenu = $('.xf-menu');
-        //this.divFlowBox = $('#' + boxId);	//??
+        //this.divFlowBox = $('#' + areaId);	//??
         this.divLinesBox = $('#divLinesBox');       //??hidden
         this.eformNodes = $('#eformNodes');           //nodes edit form for editMany
         this.eformLines = $('#eformLines');           //lines edit form for editMany
@@ -79,7 +79,7 @@ class FlowMany {
         }
 
         //set instance first
-        var flowView = new FlowView(boxId);
+        var flowView = new FlowView(areaId);
         flowView.fnMoveNode = (node, x, y) => this.fnMoveNode(node, x, y);
         flowView.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
         flowView.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem);

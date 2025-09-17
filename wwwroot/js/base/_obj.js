@@ -111,8 +111,10 @@ var _obj = {
     hide: function (obj) {
         obj.addClass('d-none');
     },
+
+    //status可能傳入文字!!
     showByStatus: function (obj, status) {
-        if (status)
+        if (_var.toBool(status))
             _obj.show(obj);
         else
             _obj.hide(obj);

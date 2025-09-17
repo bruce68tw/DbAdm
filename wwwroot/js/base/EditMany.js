@@ -83,7 +83,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         }
 
         this.deletedRows = [];  //deleted key string array
-        this.newIndex = 0;      //new row serial no
+        this.newIndex = 0;      //new row serial no, 使用負數來表示新資料
     };
 
     /**
@@ -651,7 +651,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      */
     this.setNewIdByBox = function (box, newId) {
         if (newId == null) {
-            this.newIndex++;
+            this.newIndex--;    //使用負數
             newId = this.newIndex;
         }
 

@@ -97,8 +97,8 @@
             new CrudR(config, [null, _me.mItem]);
 
             //initial flow edit form
-            _me.uiMany = new UiMany(_me.mItem, '#divEdit', '.xu-ui-area');
-            _me.uiView = _me.uiMany.uiView;
+            _me.uiMany = new UiMany('.xu-ui-area', _me.mItem);
+            //_me.uiView = _me.uiMany.uiView;
 
             //custom function
             _me.mItem.fnLoadRows = _me.mItem_loadRows;
@@ -277,16 +277,16 @@
         <!-- eform 在 uiMany 下面, 使用 z-index無效, 改用 width -->
         <form id='eform' class='x-form x-w100 me-2 vh-100'>
             <vc:xi-hide dto='new() { Fid = "Id" }' />
-            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, BoxClass = "xu-text w-150" , InputTip = "畫面代碼",  InputAttr = "title=畫面代碼" }' />
-            <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, BoxClass = "xu-text w-150", InputTip = "畫面名稱", InputAttr = "title=畫面名稱" }' />
+            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, ClsBox = "xu-text w-150" , InputTip = "畫面代碼",  InputAttr = "title=畫面代碼" }' />
+            <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, ClsBox = "xu-text w-150", InputTip = "畫面名稱", InputAttr = "title=畫面名稱" }' />
 
             <!-- add outer div for validate msg layout -->
             <div>
                 <div class="btn-group-vertical ms-1" role="group" aria-label="button group vertical">
-                    <button type="button" class="btn xf-node" data-onclick="_me.uiView.onAddInput" Title='增加輸入欄位'>輸入欄位</button>
-                    <button type="button" class="btn xf-start" data-onclick="_me.uiView.onAddRow" Title='增加欄位容器'>欄位容器</button>
-                    <button type="button" class="btn xf-end" data-onclick="_me.uiView.onAddGroup" Title='增加分群文字'>分群文字</button>
-                    <button type="button" class="btn xf-end" data-onclick="_me.uiView.onAddTable" Title='增加Table'>多筆表格</button>
+                    <button type="button" class="btn xf-node" data-onclick="_me.uiMany.onAddInput" Title='增加輸入欄位'>輸入欄位</button>
+                    <button type="button" class="btn xf-start" data-onclick="_me.uiMany.onAddRow" Title='增加欄位容器'>欄位容器</button>
+                    <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddGroup" Title='增加分群文字'>分群文字</button>
+                    <button type="button" class="btn xf-end" data-onclick="_me.uiMany.onAddTable" Title='增加Table'>多筆表格</button>
                 </div>
             </div>
             <div class="xu-eform-tail">
@@ -310,9 +310,9 @@
 
 <!-- context menu for node & line, xf means flow -->
 <ul class='xf-menu'>
-    <li data-onclick="_me.uiView.onMenuEdit" class="xd-edit">Edit</li>
-    <li data-onclick="_me.uiView.onMenuDelete" class="xd-delete">Delete</li>
-    <li data-onclick="_me.uiView.onMenuView" class="xd-view">View</li>
+    <li data-onclick="_me.uiMany.onMenuEdit" class="xd-edit">Edit</li>
+    <li data-onclick="_me.uiMany.onMenuDelete" class="xd-delete">Delete</li>
+    <li data-onclick="_me.uiMany.onMenuView" class="xd-view">View</li>
 </ul>
 
 <!-- 移動item時顯示的示意外框 
@@ -321,28 +321,15 @@
 <!-- drop位置的線狀註記 -->
 <div class="xu-drop-line d-none"></div>
 
-<!-- uiItem template for eformItems -->
+<!-- uiItem template for eformItems, template不可使用 vc:格式!! -->
 <script id="tplItem" type="text/template">
     <div class="xd-tr">
-    @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Id" })
-        <vc:xi-hide dto='new() { Fid = "Id2" }' />
-        <vc:xi-hide dto='new() { Fid = "UiId" }' />
-        <vc:xi-hide dto='new() { Fid = "ItemType" }' />
-        <vc:xi-hide dto='new() { Fid = "Info" }' />
-        <vc:xi-hide dto='new() { Fid = "Sort" }' />
-    </div>
-</script>
-
-<!-- uiCol template for eformCols -->
-<script id="tplCol" type="text/template">
-    <div class="xd-tr">
-        <vc:xi-hide dto='new() { Fid = "Id" }' />
-        <vc:xi-hide dto='new() { Fid = "UiId" }' />
-        <vc:xi-hide dto='new() { Fid = "InputType" }' />
-        <vc:xi-hide dto='new() { Fid = "Code" }' />
-        <vc:xi-hide dto='new() { Fid = "Name" }' />
-        <vc:xi-hide dto='new() { Fid = "Required" }' />
-        <vc:xi-hide dto='new() { Fid = "Sort" }' />
+        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Id" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "UiId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "BoxId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "ItemType" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Info" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Sort" })
     </div>
 </script>
 
@@ -368,7 +355,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
-                <button type="button" class="btn btn-primary" data-onclick="_me.uiView.onModalInputOk">確定<i class='ico-checked'></i></button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalInputOk">確定<i class='ico-checked'></i></button>
             </div>
         </div>
     </div>

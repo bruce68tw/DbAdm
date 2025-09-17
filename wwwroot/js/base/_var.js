@@ -19,4 +19,8 @@ var _var = {
         return (typeof value !== 'object' && !Array.isArray(value));
     },
 
+    //使用 == 模型比對即可 !!
+    toBool: function (val) {
+        return (val == '1' || val == true || val == 'True');
+    },
 };

@@ -50,7 +50,8 @@ var _str = {
     },
 
     toBool: function (val) {
-        return (val == '1' || val == true || val == 'True');
+        //return (val === '1' || val === true || val === 'True');
+        return _var.toBool(val);
     },
 
     //合併多個欄位成為字串??
