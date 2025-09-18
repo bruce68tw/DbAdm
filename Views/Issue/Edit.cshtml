@@ -14,7 +14,7 @@
 	</div>
 	<div class="row">
 		@await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Required = true, InRow = true })
-		@await Component.InvokeAsync("XiText", new XiTextDto { Title = "回報人員編", Fid = "RptUser", Cols = "2,2", MaxLen = 10, InRow = true, LabelTip = "此欄位用於寄送意度調查問卷。" })
+		@await Component.InvokeAsync("XiText", new XiTextDto { Title = "回報人員編", Fid = "RptUser", Cols = "2,2", MaxLen = 10, InRow = true, TitleTip = "此欄位用於寄送意度調查問卷。" })
 	</div>
 	<div class="row">
 		@await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料種類", Required = true, Fid = "IssueType", Rows = ViewBag.IssueTypes, InRow = true })

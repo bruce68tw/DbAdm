@@ -325,7 +325,7 @@ class UiView {
 		const Fid = '_fid_';
 		const Title = '_title_';
 		const Cols = '2,3';					//default input cols
-		const LabelTip = '_labelTip_';
+		const TitleTip = '_titleTip_';
 		const InputNote = '_inputNote_';
 
 		//讀取後端欄位 if need
@@ -334,11 +334,11 @@ class UiView {
 		if (inputJson[inputType] == null) {
 			let data = {
 				inputType: inputType,
-				fid: Fid,		//前端重設以下欄位
 				title: Title,
+				titleTip: TitleTip,
+				fid: Fid,		//前端重設以下欄位
 				cols: Cols,
 				required: true,		//後端先傳回req mark, 前端若無則hide
-				labelTip: LabelTip,
 				inputNote: InputNote,
 			};
 			let tpl = await _ajax.getStrA('GetInputHtml', data);
@@ -510,8 +510,8 @@ class UiView {
 		_obj.showByStatus(item.find(this.FtReq), row.Required);
 
 		//labelTip show/hide, update text
-		_obj.showByStatus(item.find(this.FtTipIcon), _str.notEmpty(row.LabelTip));
-		item.find(this.FtLabel).attr('title', row.LabelTip);	//設定label的 title屬性
+		_obj.showByStatus(item.find(this.FtTipIcon), _str.notEmpty(row.TitleTip));
+		item.find(this.FtLabel).attr('title', row.TitleTip);	//設定label的 title屬性
 
 		//inputNote show/hide, update text
 		let note = item.find(this.FtInputNote);

@@ -115,7 +115,7 @@ class UiMany {
             Title: '欄位' + this.newInputNo,
             Required: true,
             Cols: this.uiView.Cols,
-            LabelTip: 'label tip 測試',
+            TitleTip: 'label tip 測試',
             InputNote: 'input note 測試',
         };
 

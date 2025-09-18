@@ -48,8 +48,8 @@
         </form>
 
         <form id='formRead2' class='x-form mb-0'>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位", Fid = "Code", LabelTip = "使用模糊查詢",  MaxLen = 30 })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位名稱", Fid = "Name", LabelTip = "使用模糊查詢", MaxLen = 30 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位", Fid = "Code", TitleTip = "使用模糊查詢",  MaxLen = 30 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位名稱", Fid = "Name", TitleTip = "使用模糊查詢", MaxLen = 30 })
         </form>
         <div class="x-h10"></div>
 

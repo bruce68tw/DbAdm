@@ -75,7 +75,7 @@ namespace DbAdm.Controllers
         {
             //固定 Cols = "2,3", Required = true, 前端自行調整
             XiBaseDto data = new() { Fid = fid, Title = title, InputNote = inputNote, 
-                LabelTip = labelTip, Cols = cols, Required = required };
+                TitleTip = labelTip, Cols = cols, Required = required };
             return inputType switch
             {
                 //無法直接轉型, 只能用Copy

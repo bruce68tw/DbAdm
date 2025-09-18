@@ -60,8 +60,8 @@
         <div class="col-md-6">
             @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "權限種類", Fid = "AuthType", Rows = ViewBag.AuthTypes, Required = true, Cols = cols2 })
             @await Component.InvokeAsync("XiRadio", new XiRadioDto { Title = "查詢Label位置", Fid = "LabelHori", Rows = _Str.ToIdStrs("1,水平,0,垂直"), Cols = cols2 })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "Table別名", Fid = "TableAs", MaxLen = 10, Cols = cols2, LabelTip = "資料表別名" })
-            @await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Title = "讀取資料 Sql", Fid = "ReadSql", Required = true, LabelTip = "讀取資料 Sql", Cols = "4,8", RowsCount = 5 })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "Table別名", Fid = "TableAs", MaxLen = 10, Cols = cols2, TitleTip = "資料表別名" })
+            @await Component.InvokeAsync("XiTextarea", new XiTextareaDto { Title = "讀取資料 Sql", Fid = "ReadSql", Required = true, TitleTip = "讀取資料 Sql", Cols = "4,8", RowsCount = 5 })
         </div>
     </div>
 </form>
@@ -204,13 +204,13 @@
                 <div class="col-md-5">
                     @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料表", Fid = "TableId", Required = true, Cols = cols2, FnOnChange = "_me.onChangeNowTable", EventArgs = "{{Index}}" })
                     @await Component.InvokeAsync("XiText", new XiTextDto { Title = "主鍵Id", Fid = "PkeyFid", MaxLen = 10, Required = true, Cols = cols2 })
-                    @await Component.InvokeAsync("XiText", new XiTextDto { Title = "外鍵Id", Fid = "FkeyFid", MaxLen = 10, Cols = cols2, LabelTip = "2nd Table則為必填" })
+                    @await Component.InvokeAsync("XiText", new XiTextDto { Title = "外鍵Id", Fid = "FkeyFid", MaxLen = 10, Cols = cols2, TitleTip = "2nd Table則為必填" })
                     @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "自動Id長度", Fid = "AutoIdLen", Rows = ViewBag.AutoIdLens, Cols = cols2 })
                 </div>
                 <div class="col-md-6">
-                    @await Component.InvokeAsync("XiText", new XiTextDto { Title = "Order By", Fid = "OrderBy", MaxLen = 10, Cols = cols2, LabelTip = "不含 order by 關鍵字" })
-                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "Col4", Fid = "Col4", Label = "是", Cols = cols2, LabelTip = "是否有 Creator,Created,Reviser,Revised" })
-                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "一半寬度", Fid = "HalfWidth", Label = "是", Cols = cols2, LabelTip = "多筆編輯畫面使用一半寬度" })
+                    @await Component.InvokeAsync("XiText", new XiTextDto { Title = "Order By", Fid = "OrderBy", MaxLen = 10, Cols = cols2, TitleTip = "不含 order by 關鍵字" })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "Col4", Fid = "Col4", Label = "是", Cols = cols2, TitleTip = "是否有 Creator,Created,Reviser,Revised" })
+                    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "一半寬度", Fid = "HalfWidth", Label = "是", Cols = cols2, TitleTip = "多筆編輯畫面使用一半寬度" })
                 </div>
             </div>
         </form>
@@ -235,7 +235,7 @@
                         <th>驗証資料</th>
                         @await Component.InvokeAsync("XgTh", new XgThDto { Title = "群組", Tip = "相同的群組將排在同一列" })
                         <!-- xu-layout, xu-width for control show/hide -->
-                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = "佈局", Tip = "Label,欄位寬度(逗號分隔)", ExtClass = "xu-layout" })
+                        @await Component.InvokeAsync("XgTh", new XgThDto { Title = "佈局", Tip = "Label,欄位寬度(逗號分隔)", ClsExt = "xu-layout" })
                         <th class="xu-width">寬度</th>
                         <th>維護</th>
                     </tr>

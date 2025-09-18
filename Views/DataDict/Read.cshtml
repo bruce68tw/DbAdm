@@ -42,7 +42,7 @@
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
             @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位代碼", Fid = "Code", MaxLen = 30 })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位中文名", Fid = "Name", MaxLen = 30, LabelTip = "使用模糊查詢" })
+            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位中文名", Fid = "Name", MaxLen = 30, TitleTip = "使用模糊查詢" })
         </form>
 
         <div class="x-btns-box">
