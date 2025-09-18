@@ -46,6 +46,8 @@ class UiView {
 		this.FtTipIcon = '.ico-info';		//label tip icon
 		this.FtInputNote = '.x-input-note';	//input note
 		this.FtGroupTitle = '.x-group-title';	//group title
+		this.FtTable = '.x-table';				//table
+		this.FtTableTitle = '.x-span-label';	//table title, todo: ??		
 		//
 		this.NameInput = '[輸入欄位]';
 		this.NameGroup = '[分群文字]';
@@ -402,7 +404,7 @@ class UiView {
 		this._renderItem(id, item, EstrItemType.Row, true);
 	}
 
-	addTable(id) {
+	addTable(id, json) {
 		let html = `
 <div class='py-2'>
 	<div class="x-btns-box">
@@ -411,24 +413,13 @@ class UiView {
 			<i class="ico-plus"></i>
 		</button>
 	</div>
-
 	<table class="table x-table x-no-hline" cellspacing="0">
 		<thead>
 			<tr>
-				<th>欄位1</th>
-				<th>欄位2</th>
-				<th>欄位3</th>
-				<th>欄位4</th>
-				<th>欄位5</th>
 			</tr>
 		</thead>
-		<tbody id="tbodyRoleProg">
+		<tbody>
 			<tr>
-				<td class="xu-td"></td>
-				<td class="xu-td"></td>
-				<td class="xu-td"></td>
-				<td class="xu-td"></td>
-				<td class="xu-td"></td>
 			</tr>
 		</tbody>
 	</table>
@@ -436,6 +427,7 @@ class UiView {
 `;
 		//render item
 		let item = $(html);
+		this._rowToTable(json, item);	//row to table
 		this._renderItem(id, item, EstrItemType.Table, true);
 	}
 
@@ -482,7 +474,8 @@ class UiView {
 
 	//只更新畫面上看的到的部分即可
 	//called by UiMany only !!
-	async rowToItemA(row, item) {
+	async rowToItemA(row, item, fnCallback) {
+		let callback = true;
 		switch (this.getItemType(item)) {
 			case EstrItemType.Input:
 				await this._rowToInputA(row, item);
@@ -492,12 +485,17 @@ class UiView {
 				break;
 			case EstrItemType.Row:
 				//do nothing
-				break;
+				return;
 			case EstrItemType.Table:
+				callback = false;	//必須先判斷
+				this._rowToTable(row, item, fnCallback);
 				break;
 			case EstrItemType.TabPage:
 				break;
 		}
+
+		if (callback)
+			fnCallback();
 	}
 
 	//row to input item ui
@@ -527,6 +525,58 @@ class UiView {
 		}
 		*/
 	}
+
+	//row to input item ui
+	//called by: 1.新增, 2.改變欄位數
+	//param fnCallback 可為空
+	_rowToTable(row, item, fnCallback) {
+		//update Header		
+		let oldLen = item.find('th').length;		//old th list
+		let heads = row.Heads.split(',');	//new list
+		if (oldLen > heads.length) {
+			_tool.ans('是否確定減少欄位數目，尾端欄位將會被移除?', () => this._rowToTable2(row, item, oldLen, heads, fnCallback));
+		} else {
+			this._rowToTable2(row, item, oldLen, heads, fnCallback);
+		}
+	}
+	//called by _rowToTable
+	_rowToTable2(row, item, oldLen, heads, fnCallback) {
+		let newLen = heads.length;
+		let headBox = item.find('thead tr');
+		let bodyBox = item.find('tbody tr');
+		let addLen = newLen - oldLen;	//增加的欄位數
+		let ids = [];
+		if (addLen > 0) {
+			//append th
+			for (let i = oldLen; i < newLen; i++) {
+				headBox.append('<th></th>');
+				bodyBox.append('<td class="xu-td"></td>');
+			}
+		} else if (addLen < 0) {
+			//找右側n個td裡面的data-id, 包含子item
+			let tdList = bodyBox.find('td').slice(addLen);
+			ids = tdList.find('[data-id]').map(function () {
+				return $(this).data('id');
+			}).get();
+
+			//remove th & td
+			headBox.find('th').slice(addLen).remove();
+			tdList.remove();
+		}
+
+		//update table title
+		item.find(this.FtTableTitle).text(row.Title);
+
+		//update table heads, 如果使用箭頭函數則this會指向 UiView本身!!
+		headBox.find('th').each(function(i){
+			$(this).text(heads[i]);
+		});
+
+		//傳回deleted id list
+		if (fnCallback)
+			fnCallback(ids);
+	}
+
 
 	//移除/增加 label, 直接搬到item, 因為內容有變
 	//called by mouseUp

@@ -127,7 +127,7 @@ class UiMany {
     }
     async onAddGroup() {
         let infoJson = {
-            Title: '欄位群組',
+            Title: '分群文字',
         };
 
         //add to mItem
@@ -145,10 +145,15 @@ class UiMany {
     }
     onAddTable() {
         //add to mItem
-        let row = this._mItemAddRow(EstrItemType.Table);
+        let infoJson = {
+            Table: '_table',
+            Title: '資料名稱',
+            Heads: '欄位1,欄位2,欄位3,欄位4,欄位5',
+        };
+        let row = this._mItemAddRow(EstrItemType.Table, infoJson);
 
         //add to UI
-        this.uiView.addTable(row.Id);
+        this.uiView.addTable(row.Id, infoJson);
     }
 
     onAddTabPage() {
@@ -240,16 +245,26 @@ class UiMany {
                 break;
         }
 
-        //update mItem
-        let json = _form.toRow(modal);    //直接讀取modal內欄位
-        let rowBox = this.mItem.idToRowBox(this.nowItemId);
-        _form.loadRow(rowBox, json);
+        //update ui first, Table必須先判斷, 所以傳入函數
+        var me = this;
+        //ModalTable/ModalTabPage 時回傳ids(要刪除的id字串陣列, 不為null)
+        let infoJson = _form.toRow(modal);    //直接讀取modal內欄位, 內容為 Info 欄位
+        await this.uiView.rowToItemA(infoJson, this.nowItem, function (ids) {
+            if (me.nowItemType == EstrItemType.Table && ids.length > 0) {
+                //刪除多筆
+                //alert(`ids=${ids}`);
+                for (let i = 0; i < ids.length; i++) {
+                    me.mItem.deleteRow(ids[i], me.mItem.idToRowBox(ids[i]));
+                }
+            }
 
-        //update ui
-        await this.uiView.rowToItemA(json, this.nowItem);
+            //成功後 update mItem 裡面的 Info 欄位 only
+            let rowBox = me.mItem.idToRowBox(me.nowItemId);
+            _form.loadRow(rowBox, { Info: _json.toStr(infoJson) });
 
-        //hide modal
-        _modal.hideO(modal);
+            //hide modal
+            _modal.hideO(modal);
+        });
     }
     //#endregion
 

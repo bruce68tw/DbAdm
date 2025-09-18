@@ -21,7 +21,7 @@
  *   if empty, you must write functions: fnLoadRows、fnGetUpdJson、fnValid、fnReset，
  *     新增一筆時設定newId
  * param-3 tplRowId {string} (optional) row template id
- *   tplRowId -> rowTplId
+ *   //tplRowId -> rowTplId
  *   1.if empty, it will log error when call related function.
  *   2.system get fid-type from this variables
  *   3.called by singleFormLoadRow、loadRowsByRsb、_renderRow
@@ -552,6 +552,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             deletes[rowLen] = key;
 
         //remove UI row if need
+        //rowBox = rowBox || this.rowsBox;
         if (_obj.notEmpty(rowBox))
             rowBox.remove();
     };
