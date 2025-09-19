@@ -41,10 +41,7 @@ namespace DbAdm.Services
 
         public static string GetTplPath(string fileName, bool hasLocale)
         {
-            var dir = _Fun.Dir("_template");
-            if (hasLocale)
-                dir += _Locale.GetLocale() + _Fun.DirSep;
-            return dir + fileName;
+            return $"{DirTpl}{(hasLocale ? _Locale.GetLocale() : "")}/{fileName}";
         }
 
         /*

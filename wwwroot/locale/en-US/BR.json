@@ -8,17 +8,16 @@
   "BtnExport": "Export",
   "BtnReset": "Reset",
   "BtnOpen": "Open",
-
   "BtnYes": "Yes",
   "BtnCancel": "Cancel",
   "BtnClose": "Close",
-
-  "PlsSelect": "-Select-",
 
   "TipUpdate": "修改這筆資料",
   "TipDelete": "刪除這筆資料",
   "TipView": "檢視這筆資料",
   "TipDeleteRow": "Delete this Row",
 
+  "NoAuth": "您沒有執行此功能的相關權限，請洽管理者。",
+  "PlsSelect": "-Select-",
   "Working": "Working..."
 }
