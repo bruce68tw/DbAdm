@@ -137,7 +137,7 @@
        {
            Fid = "InputType",
            Rows = ViewBag.InputTypesQ,
-           AddEmptyRow = false,
+           AddEmpty = false,
            Value = "T"
        })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
@@ -145,7 +145,7 @@
        {
            Fid = "Op",
            Rows = ViewBag.QitemOps,
-           AddEmptyRow = false,
+           AddEmpty = false,
            Value = "Equal"
        })</td>
     @*<td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ExtInfo" })</td>*@
@@ -167,7 +167,7 @@
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ColumnCode" })</td>
         <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Name" })</td>
         <td class="x-w100">@await Component.InvokeAsync("XiInt", new XiIntDto { Fid = "Width" })</td>
-        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "RitemType", Rows = ViewBag.RitemTypes, AddEmptyRow = false, Value = "0" })</td>
+        <td>@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "RitemType", Rows = ViewBag.RitemTypes, AddEmpty = false, Value = "0" })</td>
         <td class="text-center x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mRitem" })</td>
     </tr>
 </script>
@@ -255,14 +255,14 @@
         @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Sort", Value = "{{Sort}}" })
 
         <td>{{Code}}/{{Name}}<br>{{DataType}}</td>
-        <td class="x-w120">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, AddEmptyRow = false, Value = "T" })</td>
+        <td class="x-w120">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, AddEmpty = false, Value = "T" })</td>
         <td class="x-w100">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "ItemData" })</td>
         <td class="x-center x-w50">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Required" })</td>
         <td class="x-center x-w50">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasCreate", IsCheck = true })</td>
         <td class="x-center x-w50">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "HasUpdate", IsCheck = true })</td>
         <td class="x-w100">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PlaceHolder" })</td>
         <td class="x-w80">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue" })</td>
-        <td class="x-w100">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "CheckType", Value = "0", Rows = ViewBag.CheckTypes, Required = true, AddEmptyRow = false })</td>
+        <td class="x-w100">@await Component.InvokeAsync("XiSelect", new XiSelectDto { Fid = "CheckType", Value = "0", Rows = ViewBag.CheckTypes, Required = true, AddEmpty = false })</td>
         <td class="x-w100">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "CheckData" })</td>
         <td class="x-w60">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "PosGroup" })</td>
         <td class="xu-layout x-w80">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "LayoutCols" })</td>
