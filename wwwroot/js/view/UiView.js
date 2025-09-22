@@ -91,8 +91,9 @@ class UiView {
 			if (me.isEdit)
 				me._onDragStart(e);
 		}).on(EstrMouse.DragOver, function (e) {
-			if (me.dragging)
-				me._onDragOver(e);
+			e.preventDefault();		//允許drop, 不會顯示禁止icon
+			//if (me.dragging)
+			//	me._onDragOver(e);
 		}).on(EstrMouse.DragEnd, function (e) {
 			//drop成功或失敗都會觸發
 			if (me.dragging)
