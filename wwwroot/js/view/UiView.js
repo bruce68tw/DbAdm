@@ -3,7 +3,7 @@ let EstrItemType = {
 	Input: 'I',
 	Group: 'G',		
 	Row: 'R',		//只有2欄位, 只能放 group, col
-	Table: 'TA',	//只能放 col
+	Table: 'T',		//只能放 col
 	TabPage: 'TP',	//只能放 box, group, col
 };
 
@@ -64,6 +64,7 @@ class UiView {
 		this.dragItem = new StItem();
 		this.dropItem = new StItem();		
 		//
+		this.dragIsNew = false;	//true表示從button drag
 		this.dragging = false;
 		this.dropElm = null;	//drop參照的element, 與 item 不是同一個
 		this.dropArea = null;	//實際drop的container object, 不一定是item類型, null表示workArea
@@ -91,9 +92,9 @@ class UiView {
 			if (me.isEdit)
 				me._onDragStart(e);
 		}).on(EstrMouse.DragOver, function (e) {
-			e.preventDefault();		//允許drop, 不會顯示禁止icon
-			//if (me.dragging)
-			//	me._onDragOver(e);
+			//e.preventDefault();		//允許drop, 不會顯示禁止icon
+			if (me.dragging)
+				me._onDragOver(e);
 		}).on(EstrMouse.DragEnd, function (e) {
 			//drop成功或失敗都會觸發
 			if (me.dragging)
@@ -123,10 +124,11 @@ class UiView {
 		let dropElm = e.target;		//e.target 為目前經過的 element
 		if (this.dropElm == dropElm) return;	//相同 element 不處理
 
-		//drop 必須是 item
+		//get drop item, 空值表示 area
 		let dropObj = $(dropElm);
 		let dropItem = dropObj.closest(this.FtItem);
-		if (_obj.isEmpty(dropItem)) return;
+		let hasItem = _obj.notEmpty(dropItem);
+		//if (_obj.isEmpty(dropItem)) return;
 		//#endregion
 
 		//console.log('_onDragOver-2');
@@ -141,19 +143,22 @@ class UiView {
 		drop.itemType = this.getItemType(dropItem);
 
 		//判斷 drag item 是否 drop into box 裡面
-		let dropInBox = 
-			(drop.itemType == EstrItemType.Row && !dropObj.hasClass(this.ClsItem)) ||
-			(drop.itemType == EstrItemType.Table && _obj.tagName(dropObj) == 'td') ||
-			(drop.itemType == EstrItemType.TabPage && dropObj.hasClass('tab-pane'));
-		//drop boxType表示 "drag item" drop進去的box item, 沒有則為null
-		if (dropInBox) {
-			drop.boxType = drop.itemType;
-			drop.boxId = this.getItemId(dropItem);
-		} else {
-			var box = this._getBox(dropItem);
-			drop.boxType = this.getItemType(box);
-			drop.boxId = (box == null) ? '0' : this.getItemId(box);
-		}		
+		let dropInBox = false;
+		if (hasItem) {
+			dropInBox =
+				(drop.itemType == EstrItemType.Row && !dropObj.hasClass(this.ClsItem)) ||
+				(drop.itemType == EstrItemType.Table && _obj.tagName(dropObj) == 'td') ||
+				(drop.itemType == EstrItemType.TabPage && dropObj.hasClass('tab-pane'));
+			//drop boxType表示 "drag item" drop進去的box item, 沒有則為null
+			if (dropInBox) {
+				drop.boxType = drop.itemType;
+				drop.boxId = this.getItemId(dropItem);
+			} else {
+				var box = this._getBox(dropItem);
+				drop.boxType = this.getItemType(box);
+				drop.boxId = (box == null) ? '0' : this.getItemId(box);
+			}
+		}
 
 		//debug
 		//console.log(`dragType=${drag.itemType}, dropType=${drop.itemType}, drop.boxType=${drop.boxType}, dropInBox=${dropInBox}`);
@@ -175,8 +180,7 @@ class UiView {
 		//!dropInBox 則都可以 drop
 		let error = '';
 		let dragName = '';
-		let dropIsBox = this._isBox(drop.itemType);
-		if (drop.boxType != null) {
+		if (hasItem && drop.boxType != null) {
 			switch (drag.itemType) {
 				/*
 				case EstrItemType.Input:
@@ -211,6 +215,7 @@ class UiView {
 				case EstrItemType.TabPage:
 					dragName = (drag.itemType == EstrItemType.Table)
 						? this.NameTable : this.NameTabPage;
+					let dropIsBox = this._isBox(drop.itemType);
 					if (dropIsBox) {
 						error = `${dragName}不能放在${this._typeToName(drop.itemType)}裡面。`;
 					} else {
@@ -226,7 +231,7 @@ class UiView {
 		//always 顯示 target drop line
 		_obj.show(this.DropLine);
 
-		if (dropInBox) {
+		if (dropInBox || !hasItem) {
 			dropObj.append(this.DropLine);
 		} else {
 			//判斷drop位置在item的上或下方
@@ -248,6 +253,12 @@ class UiView {
 			_tool.msg(this.dropError);
 			//this.dropError = '';
 		} else {
+			//create new item if need
+			if (this.dragIsNew) {
+				//here!!
+				//let item = 
+			}
+
 			let drag = this.dragItem;
 			let drop = this.dropItem;
 
@@ -274,6 +285,14 @@ class UiView {
 		this._setDragging(false);
 		this.dragItem = new StItem();
 		this.dropItem = new StItem();
+	}
+
+	//drag by button
+	//also called by Read.cshtml
+	dragOutside(status, itemType) {
+		this.dragIsNew = status;
+		this.dragItem.itemType = itemType;
+		this._setDragging(status);
 	}
 
 	_setDragging(status) {

@@ -105,7 +105,7 @@ class UiMany {
         return this.mItem.addRow(itemJson);  //會產生id
     }
 
-    async onAddInput() {
+    async addInput() {
         //set info json first
         this.newInputNo++;
         let infoJson = {

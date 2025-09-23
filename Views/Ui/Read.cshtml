@@ -86,8 +86,10 @@
 
         //註刪button dragstart事件
         _me.divEdit.on(EstrMouse.DragStart, ".xu-btn", function(e) {
-            //dragData = { type: "button" };
-            //e.originalEvent.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+            let itemType = $(e.target).data("type");
+            _me.uiView.dragOutside(true, itemType);
+        }).on(EstrMouse.DragEnd, function (e) {
+            _me.uiView.dragOutside(false);
         });
     });
 
@@ -122,7 +124,7 @@
 
             //initial flow edit form
             _me.uiMany = new UiMany('.xu-ui-area', _me.mItem);
-            //_me.uiView = _me.uiMany.uiView;
+            _me.uiView = _me.uiMany.uiView;     //可直接控制 uiView, 不必經過 uiMany !!
 
             //custom function
             _me.mItem.fnLoadRows = _me.mItem_loadRows;
@@ -313,10 +315,10 @@
             <!-- add outer div for validate msg layout -->
             <div>
                 <div class="btn-group-vertical ms-1" role="group" aria-label="button group vertical">
-                    <button type="button" class="btn xu-btn" data-onclick="_me.uiMany.onAddInput" Title='增加輸入欄位' draggable='true'>輸入欄位</button>
-                    <button type="button" class="btn xu-btn" data-onclick="_me.uiMany.onAddGroup" Title='增加分群文字' draggable='true'>分群文字</button>
-                    <button type="button" class="btn xu-btn" data-onclick="_me.uiMany.onAddRow" Title='增加欄位容器' draggable='true'>欄位容器</button>
-                    <button type="button" class="btn xu-btn" data-onclick="_me.uiMany.onAddTable" Title='增加Table' draggable='true'>多筆表格</button>
+                    <button type="button" class="btn xu-btn" data-type="I" Title='增加輸入欄位' draggable='true'>輸入欄位</button>
+                    <button type="button" class="btn xu-btn" data-type="G" Title='增加分群文字' draggable='true'>分群文字</button>
+                    <button type="button" class="btn xu-btn" data-type="R" Title='增加欄位容器' draggable='true'>欄位容器</button>
+                    <button type="button" class="btn xu-btn" data-type="T" Title='增加Table' draggable='true'>多筆表格</button>
                 </div>
             </div>
             <div class="xu-eform-tail">
