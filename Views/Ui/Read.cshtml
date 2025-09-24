@@ -87,9 +87,9 @@
         //註刪button dragstart事件
         _me.divEdit.on(EstrMouse.DragStart, ".xu-btn", function(e) {
             let itemType = $(e.target).data("type");
-            _me.uiView.dragOutside(true, itemType);
+            _me.uiMany.startDragBtn(true, itemType);
         }).on(EstrMouse.DragEnd, function (e) {
-            _me.uiView.dragOutside(false);
+            _me.uiMany.startDragBtn(false);
         });
     });
 
@@ -124,7 +124,7 @@
 
             //initial flow edit form
             _me.uiMany = new UiMany('.xu-ui-area', _me.mItem);
-            _me.uiView = _me.uiMany.uiView;     //可直接控制 uiView, 不必經過 uiMany !!
+            //_me.uiView = _me.uiMany.uiView;     //可直接控制 uiView, 不必經過 uiMany !!
 
             //custom function
             _me.mItem.fnLoadRows = _me.mItem_loadRows;

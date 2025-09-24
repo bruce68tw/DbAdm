@@ -37,6 +37,7 @@ class UiMany {
         let uiView = new UiView(ftWorkArea);
         uiView.fnMoveBox = (itemId, newBoxId) => this.fnMoveBox(itemId, newBoxId);
         uiView.fnShowMenu = (event, item) => this.fnShowMenu(event, item);
+        uiView.fnDropNewItem = (event, item) => this.fnDropNewItem(event, item);
         this.uiView = uiView;
 
         //mouse down時hide right menu
@@ -91,10 +92,30 @@ class UiMany {
             left: e.pageX
         }).show();
     }
+
+    fnAddItem(itemType) {
+        switch (itemType) {
+            case EstrItemType.Input:
+                return this._addInput();
+            case EstrItemType.Group:
+                return this._addGroup();
+            case EstrItemType.Row:
+                return this._addRow();
+            case EstrItemType.Table:
+                return this._addTable();
+            case EstrItemType.TabPage:
+                return this._addTabPage();
+        }
+    }
     //#endregion
 
     //#region 功能按鈕相關
-    //retur nrow
+    //drag by button
+    startDragBtn(status, itemType) {
+        this.uiView.startDragBtn(status, itemType);
+    }
+
+    //return row
     _mItemAddRow(itemType, infoJson) {
         //配合後端DB, 欄位使用大camel
         let itemJson = {
@@ -105,7 +126,7 @@ class UiMany {
         return this.mItem.addRow(itemJson);  //會產生id
     }
 
-    async addInput() {
+    _addInput() {
         //set info json first
         this.newInputNo++;
         let infoJson = {
@@ -120,43 +141,44 @@ class UiMany {
         };
 
         //add to mItem, 會產生id
-        let row = this._mItemAddRow(EstrItemType.Input, infoJson);
+        return this._mItemAddRow(EstrItemType.Input, infoJson);
 
         //add to UI
-        await this.uiView.addInputA(row.Id, infoJson);
+        //await this.uiView.addInputA(row.Id, infoJson);
     }
-    async onAddGroup() {
+    _addGroup() {
         let infoJson = {
             Title: '分群文字',
         };
 
         //add to mItem
-        let row = this._mItemAddRow(EstrItemType.Group, infoJson);
+        return this._mItemAddRow(EstrItemType.Group, infoJson);
 
         //add to UI
-        await this.uiView.addGroupA(row.Id, infoJson);
+        //await this.uiView.addGroupA(row.Id, infoJson);
     }
-    onAddRow() {
+    _addRow() {
         //add to mItem
-        let row = this._mItemAddRow(EstrItemType.Row);
+        return this._mItemAddRow(EstrItemType.Row);
 
         //add to UI
-        this.uiView.addRow(row.Id);
+        //this.uiView.addRow(row.Id);
     }
-    onAddTable() {
+    _addTable() {
         //add to mItem
         let infoJson = {
             Table: '_table',
             Title: '資料名稱',
             Heads: '欄位1,欄位2,欄位3,欄位4,欄位5',
         };
-        let row = this._mItemAddRow(EstrItemType.Table, infoJson);
+        return this._mItemAddRow(EstrItemType.Table, infoJson);
 
         //add to UI
-        this.uiView.addTable(row.Id, infoJson);
+        //this.uiView.addTable(row.Id, infoJson);
     }
 
-    onAddTabPage() {
+    //todo
+    _addTabPage() {
     }
     //#endregion
 

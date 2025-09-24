@@ -70,9 +70,9 @@ class UiView {
 		this.dropArea = null;	//實際drop的container object, 不一定是item類型, null表示workArea
 		this.dropError = '';	//drop error message
 
-		this.fnMoveBox = null;
-		//this.fnAfterAddLine = null;
-		this.fnShowMenu = null;
+		this.fnMoveBox = null;	//item 移動到不同box時觸發, function(itemId, newBoxId)
+		this.fnShowMenu = null;	//顯示右鍵選單, function(e, item)
+		this.fnAddItem = null;	//add new item, function(itemType), return new row
 
 		//work area註冊全域事件
 		//右鍵選單事件
@@ -98,7 +98,7 @@ class UiView {
 		}).on(EstrMouse.DragEnd, function (e) {
 			//drop成功或失敗都會觸發
 			if (me.dragging)
-				me._onDragEnd(e);
+				await me._onDragEnd(e);
 		});
 	}
 
@@ -248,19 +248,21 @@ class UiView {
 		}
 	}
 
-	_onDragEnd(e) {
+	async _onDragEnd(e) {
 		if (this.dropError != '') {
 			_tool.msg(this.dropError);
 			//this.dropError = '';
 		} else {
-			//create new item if need
-			if (this.dragIsNew) {
-				//here!!
-				//let item = 
-			}
-
 			let drag = this.dragItem;
 			let drop = this.dropItem;
+
+			//create new item if need
+			if (this.dragIsNew) {
+				let itemType = this.dragItem.itemType;
+				let row = this.fnAddItem(itemType);
+				let item = await this._addItemA(itemType, row.Id, row);
+				drag.item = item;
+			}
 
 			//移入/移出 Table 必須刪除/增加label first(only for 互斥, a^b 或是 a !== b)
 			let checkType = EstrItemType.Table;
@@ -288,8 +290,8 @@ class UiView {
 	}
 
 	//drag by button
-	//also called by Read.cshtml
-	dragOutside(status, itemType) {
+	//also called by uiMany
+	startDragBtn(status, itemType) {
 		this.dragIsNew = status;
 		this.dragItem.itemType = itemType;
 		this._setDragging(status);
@@ -376,13 +378,38 @@ class UiView {
 		return item;
 	}
 
+	//?? 上層是否為box
+	_boxIsRow() {
+		return (this.dropBox != null && this.getItemType(this.dropBox) == EstrItemType.Row);
+	}
+
+	async _addItemA(itemType, itemId, json) {
+		switch (itemType) {
+			case EstrItemType.Input:
+				await this_addInputA(itemId, json);
+				break;
+			case EstrItemType.Group:
+				await this_addGroupA(itemId, json);
+				break;
+			case EstrItemType.Row:
+				this_addRow(itemId);
+				break;
+			case EstrItemType.Table:
+				this_addTable(itemId, json);
+				break;
+			case EstrItemType.TabPage:
+				this_addTabPage(itemId, json);
+				break;
+		}
+	}
+
 	/**
 	 * add col
 	 * param {string} id
 	 * param {json} json 包含欄位: Fid, Title, Required
-	 * returns
+	 * returns item
 	 */
-	async addInputA(id, json) {
+	async _addInputA(id, json) {
 		//get item
 		let item = await this._getInputA(json);
 
@@ -394,24 +421,20 @@ class UiView {
 		//this.objSetInfo(item, json);
 
 		//render item
-		this._renderItem(id, item, EstrItemType.Input, true);
+		this._itemAddProp(id, item, EstrItemType.Input);
+		return item;
 	}
 
-	//?? 上層是否為box
-	_boxIsRow() {
-		return (this.dropBox != null && this.getItemType(this.dropBox) == EstrItemType.Row);
-	}
-
-	async addGroupA(id, json) {
+	async _addGroupA(id, json) {
 		if (_str.isEmpty(this.groupHtml))
 			this.groupHtml = await _ajax.getStrA('GetGroupHtml', { title: json.Title });
 
 		//render item
 		let item = $(this.groupHtml);
-		this._renderItem(id, item, EstrItemType.Group, true);
+		this._itemAddProp(id, item, EstrItemType.Group);
 	}
 
-	addRow(id) {
+	_addRow(id) {
 		//加上py-2上下空間, 才能drop, dragOver時e.target為本身item !!
 		let html = `
 <div class='row py-2'>
@@ -421,10 +444,10 @@ class UiView {
 `;
 		//render item
 		let item = $(html);
-		this._renderItem(id, item, EstrItemType.Row, true);
+		this._itemAddProp(id, item, EstrItemType.Row);
 	}
 
-	addTable(id, json) {
+	_addTable(id, json) {
 		let html = `
 <div class='py-2'>
 	<div class="x-btns-box">
@@ -448,21 +471,20 @@ class UiView {
 		//render item
 		let item = $(html);
 		this._rowToTable(json, item);	//row to table
-		this._renderItem(id, item, EstrItemType.Table, true);
+		this._itemAddProp(id, item, EstrItemType.Table);
 	}
 
-	_renderItem(id, item, itemType, append) {
+	//todo
+	_addTabPage(id, json) {
+	}
+
+	//item 加入共用屬性
+	_itemAddProp(id, item, itemType) {
 		//加入item屬性: .xu-item, data-itemtype
 		item.addClass(this.ClsItem);
 		item.attr("draggable", true);
 		_obj.setData(item, this.DataId, id);	//jquery data() 只寫入暫存, 使用 _obj(設定屬性) !!
 		_obj.setData(item, this.DataItemType, itemType);
-
-		//append 整個item
-		if (append) {
-			let box = _obj.isEmpty(this.dropArea) ? this.Area : this.dropArea;
-			box.append(item);
-		}
 	}
 	//#endregion
 
@@ -666,6 +688,7 @@ class UiView {
 		this.isEdit = status;
 	}
 
+	/*
 	//??
 	async addItem(json, box) {
 		//this.nodeCount++;
@@ -691,6 +714,7 @@ class UiView {
 		this.items.push(item);
 		return item;
 	}
+	*/
 	//#endregion
 
 	/*
