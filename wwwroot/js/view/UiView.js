@@ -301,9 +301,9 @@ class UiView {
 
 	_setDragging(status) {
 		this.dragging = status;
-		if (status)
+		if (status) {
 			this.Area.addClass(this.ClsDragging);
-		else {
+		} else {
 			this.dragIsNew = false;
 			this.Area.removeClass(this.ClsDragging);
 		}
@@ -345,11 +345,38 @@ class UiView {
 	//#endregion
 
 	//#region 新增 item
+	//?? 上層是否為box
+	_boxIsRow() {
+		return (this.dropBox != null && this.getItemType(this.dropBox) == EstrItemType.Row);
+	}
+
+	//called onDragEnd時建立新item 
+	async _addItemA(itemType, itemId, json) {
+		switch (itemType) {
+			case EstrItemType.Input:
+				return await this._addInputA(itemId, json);
+			case EstrItemType.Group:
+				return await this._addGroupA(itemId, json);
+			case EstrItemType.Row:
+				return this._addRow(itemId, json);
+			case EstrItemType.Table:
+				return this._addTable(itemId, json);
+			case EstrItemType.TabPage:
+				return this._addTabPage(itemId, json);
+		}
+	}
+
 	/**
-	 * 傳回 input item 
+	 * add input
+	 * called _addItemA
+	 * param {string} id
 	 * param {json} json 包含欄位: Fid, Title, Required
-	 */ 
-	async _getInputA(json) {
+	 * returns item
+	 */
+	async _addInputA(id, json) {
+		//get item
+		//let item = await this._getNewInputA(json);
+
 		const Fid = '_fid_';
 		const Title = '_title_';
 		//const Cols = '2,3';					//default input cols
@@ -377,44 +404,16 @@ class UiView {
 		//html = _str.replaceAll(html, Fid, json.Fid);	//多個取代
 		//html = _str.replaceAll(html, Title, json.Title);
 
+		//get box css col num
+		//if (this.dropItem.boxType == EstrItemType.Row) {
+		//}
+
 		let item = $(inputJson[inputType]);
 		await this._rowToInputA(json, item);
-		return item;
-	}
-
-	//?? 上層是否為box
-	_boxIsRow() {
-		return (this.dropBox != null && this.getItemType(this.dropBox) == EstrItemType.Row);
-	}
-
-	async _addItemA(itemType, itemId, json) {
-		switch (itemType) {
-			case EstrItemType.Input:
-				return await this._addInputA(itemId, json);
-			case EstrItemType.Group:
-				return await this._addGroupA(itemId, json);
-			case EstrItemType.Row:
-				return this._addRow(itemId, json);
-			case EstrItemType.Table:
-				return this._addTable(itemId, json);
-			case EstrItemType.TabPage:
-				return this._addTabPage(itemId, json);
-		}
-	}
-
-	/**
-	 * add col
-	 * param {string} id
-	 * param {json} json 包含欄位: Fid, Title, Required
-	 * returns item
-	 */
-	async _addInputA(id, json) {
-		//get item
-		let item = await this._getInputA(json);
 
 		//todo: 如果上層為box, 則cols修改2,3 -> 4,6, 單個取代
-		if (this._boxIsRow())
-			this._resetItemByRow(item, true);
+		//if (this._boxIsRow())
+		//	this._resetItemByRow(item, true);
 
 		//最後寫入item的data-info
 		//this.objSetInfo(item, json);
@@ -520,11 +519,12 @@ class UiView {
 	}
 
 	//只更新畫面上看的到的部分即可
-	//called by UiMany only !!
+	//called by UiMany(修改item內容) only !!
 	async rowToItemA(row, item, fnCallback) {
 		let callback = true;
 		switch (this.getItemType(item)) {
 			case EstrItemType.Input:
+				//此時欄位寬度不會改變, 傳入0
 				await this._rowToInputA(row, item);
 				break;
 			case EstrItemType.Group:
@@ -545,9 +545,13 @@ class UiView {
 			fnCallback();
 	}
 
-	//row to input item ui
+	/**
+	 * row to input item
+	 * called: _getNewInputA, rowToItemA
+	 * //param {int} boxColNum Box 欄位格子數 0,4,6,8,12(0表示不會改變)
+	 */ 
 	async _rowToInputA(row, item) {
-		//label
+		//set label
 		//jQuery會移除子節點required, 改用DOM(label順序:req、title、tip)
 		item.find(this.FtLabel)[0].childNodes[1].nodeValue = row.Title;
 
@@ -564,6 +568,8 @@ class UiView {
 		note.text(row.InputNote);
 
 		//todo: 欄位寬度調整 row.Cols 和 '2,3' 比較(考慮Auto)
+		//if (boxColNum > 0) {
+		//}
 
 		/* todo: temp remark
 		//如果改變 inputType, 必須更新item 的x-input內容
