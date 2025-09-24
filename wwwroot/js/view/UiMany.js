@@ -37,7 +37,7 @@ class UiMany {
         let uiView = new UiView(ftWorkArea);
         uiView.fnMoveBox = (itemId, newBoxId) => this.fnMoveBox(itemId, newBoxId);
         uiView.fnShowMenu = (event, item) => this.fnShowMenu(event, item);
-        uiView.fnDropNewItem = (event, item) => this.fnDropNewItem(event, item);
+        uiView.fnAddItem = (itemType) => this.fnAddItem(itemType);
         this.uiView = uiView;
 
         //mouse down時hide right menu
@@ -109,12 +109,19 @@ class UiMany {
     }
     //#endregion
 
-    //#region 功能按鈕相關
+    //#region Read.cshtml -> uiView
     //drag by button
     startDragBtn(status, itemType) {
         this.uiView.startDragBtn(status, itemType);
     }
 
+    async onDragEnd(e) {
+        await this.uiView.onDragEnd(e);
+    }
+
+    //#endregion
+
+    //#region 功能按鈕相關
     //return row
     _mItemAddRow(itemType, infoJson) {
         //配合後端DB, 欄位使用大camel
@@ -127,6 +134,7 @@ class UiMany {
     }
 
     _addInput() {
+        //使用畫面上的設定ColsType
         //set info json first
         this.newInputNo++;
         let infoJson = {
@@ -135,9 +143,9 @@ class UiMany {
             Fid: '_fid' + this.newInputNo,		//前面加底線for註記為需要調整
             Title: '欄位' + this.newInputNo,
             Required: true,
-            Cols: this.uiView.Cols,
-            TitleTip: 'label tip 測試',
-            InputNote: 'input note 測試',
+            Cols: _iselect.get('ColsType', _me.eform0),
+            //TitleTip: 'label tip 測試',
+            //InputNote: 'input note 測試',
         };
 
         //add to mItem, 會產生id
@@ -158,8 +166,13 @@ class UiMany {
         //await this.uiView.addGroupA(row.Id, infoJson);
     }
     _addRow() {
+        //使用畫面上的設定RowType
+        let infoJson = {
+            RowType: _iselect.get('RowType', _me.eform0),
+        };
+
         //add to mItem
-        return this._mItemAddRow(EstrItemType.Row);
+        return this._mItemAddRow(EstrItemType.Row, infoJson);
 
         //add to UI
         //this.uiView.addRow(row.Id);

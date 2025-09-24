@@ -3,16 +3,19 @@
     List<IdStrDto> colsTypes = 
     [
         new(){ Id = "A", Str = "自動" },
-        new(){ Id = "1", Str = "2,3" },
-        new(){ Id = "2", Str = "4,6" },
-        new(){ Id = "3", Str = "2,2" },
+        new(){ Id = "2,3", Str = "2,3" },
+        new(){ Id = "4,6", Str = "4,6" },
+        new(){ Id = "2,2", Str = "2,2" },
+        new(){ Id = "1,2", Str = "1,2" },
     ];
     List<IdStrDto> rowTypes =
     [
-        new(){ Id = "2", Str = "2欄" },
-        new(){ Id = "3", Str = "3欄" },
-        new(){ Id = "2BS", Str = "2欄:大,小" },
-        new(){ Id = "2SB", Str = "2欄:小,大" },
+        new(){ Id = "6,6", Str = "2欄" },
+        new(){ Id = "4,4,4", Str = "3欄" },
+        new(){ Id = "4,8", Str = "4,8" },
+        new(){ Id = "8,4", Str = "8,4" },
+        //new(){ Id = "5,7", Str = "5,7" },
+        //new(){ Id = "7,5", Str = "7,5" },
     ];
 }
 
@@ -89,7 +92,8 @@
             let itemType = $(e.target).data("type");
             _me.uiMany.startDragBtn(true, itemType);
         }).on(EstrMouse.DragEnd, function (e) {
-            _me.uiMany.startDragBtn(false);
+            //不會觸發工作區的 dragEnd, 這裡必須寫
+            _me.uiMany.onDragEnd(e);
         });
     });
 
@@ -310,7 +314,7 @@
             <div class="xu-label">欄位格式</div>
             <vc:xi-select dto='new() { Fid = "ColsType", Rows = colsTypes, AddEmpty = false, ClsBox = "xu-input w-150" }' />
             <div class="xu-label">欄位容器格式</div>
-            <vc:xi-select dto='new() { Fid = "RowsType", Rows = rowTypes, AddEmpty = false, ClsBox = "xu-input w-150" }' />
+            <vc:xi-select dto='new() { Fid = "RowType", Rows = rowTypes, AddEmpty = false, ClsBox = "xu-input w-150" }' />
 
             <!-- add outer div for validate msg layout -->
             <div>

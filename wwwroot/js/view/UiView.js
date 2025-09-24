@@ -38,6 +38,7 @@ class UiView {
 		this.ClsDragging = 'xu-dragging';	//加在 Area
 		this.DataId = 'id';					//for data-id
 		this.DataItemType = 'itemtype';		//for data-itemtype
+		this.DefaultCols = '2,3';			//default Cols
 		this.DropLine = $('.xu-drop-line');	//drop時顯示的位置線
 		this.FtItem = '.' + this.ClsItem;	//item filter
 		this.FtLabel = '.x-label';			//item label
@@ -92,13 +93,11 @@ class UiView {
 			if (me.isEdit)
 				me._onDragStart(e);
 		}).on(EstrMouse.DragOver, function (e) {
-			//e.preventDefault();		//允許drop, 不會顯示禁止icon
 			if (me.dragging)
 				me._onDragOver(e);
 		}).on(EstrMouse.DragEnd, function (e) {
-			//drop成功或失敗都會觸發
-			if (me.dragging)
-				await me._onDragEnd(e);
+			//drop成功或失敗都會觸發, dragging在函數裡面判斷
+			me.onDragEnd(e);
 		});
 	}
 
@@ -119,7 +118,7 @@ class UiView {
 
 	_onDragOver(e) {		
 		e.preventDefault();		//允許drop, 不會顯示禁止icon
-		
+
 		//#region 不能drop的情形, 不顯示訊息
 		let dropElm = e.target;		//e.target 為目前經過的 element
 		if (this.dropElm == dropElm) return;	//相同 element 不處理
@@ -248,7 +247,10 @@ class UiView {
 		}
 	}
 
-	async _onDragEnd(e) {
+	//also called by uiMany
+	async onDragEnd(e) {
+		if (!this.dragging) return;
+
 		if (this.dropError != '') {
 			_tool.msg(this.dropError);
 			//this.dropError = '';
@@ -260,7 +262,7 @@ class UiView {
 			if (this.dragIsNew) {
 				let itemType = this.dragItem.itemType;
 				let row = this.fnAddItem(itemType);
-				let item = await this._addItemA(itemType, row.Id, row);
+				let item = await this._addItemA(itemType, row.Id, _str.toJson(row.Info));
 				drag.item = item;
 			}
 
@@ -301,8 +303,10 @@ class UiView {
 		this.dragging = status;
 		if (status)
 			this.Area.addClass(this.ClsDragging);
-		else
+		else {
+			this.dragIsNew = false;
 			this.Area.removeClass(this.ClsDragging);
+		}
 	}
 
 	//#endregion
@@ -348,7 +352,7 @@ class UiView {
 	async _getInputA(json) {
 		const Fid = '_fid_';
 		const Title = '_title_';
-		const Cols = '2,3';					//default input cols
+		//const Cols = '2,3';					//default input cols
 		const TitleTip = '_titleTip_';
 		const InputNote = '_inputNote_';
 
@@ -361,7 +365,7 @@ class UiView {
 				title: Title,
 				titleTip: TitleTip,
 				fid: Fid,		//前端重設以下欄位
-				cols: Cols,
+				cols: this.DefaultCols,
 				required: true,		//後端先傳回req mark, 前端若無則hide
 				inputNote: InputNote,
 			};
@@ -386,20 +390,15 @@ class UiView {
 	async _addItemA(itemType, itemId, json) {
 		switch (itemType) {
 			case EstrItemType.Input:
-				await this_addInputA(itemId, json);
-				break;
+				return await this._addInputA(itemId, json);
 			case EstrItemType.Group:
-				await this_addGroupA(itemId, json);
-				break;
+				return await this._addGroupA(itemId, json);
 			case EstrItemType.Row:
-				this_addRow(itemId);
-				break;
+				return this._addRow(itemId, json);
 			case EstrItemType.Table:
-				this_addTable(itemId, json);
-				break;
+				return this._addTable(itemId, json);
 			case EstrItemType.TabPage:
-				this_addTabPage(itemId, json);
-				break;
+				return this._addTabPage(itemId, json);
 		}
 	}
 
@@ -413,7 +412,7 @@ class UiView {
 		//get item
 		let item = await this._getInputA(json);
 
-		//如果上層為box, 則cols修改2,3 -> 4,6, 單個取代
+		//todo: 如果上層為box, 則cols修改2,3 -> 4,6, 單個取代
 		if (this._boxIsRow())
 			this._resetItemByRow(item, true);
 
@@ -432,19 +431,23 @@ class UiView {
 		//render item
 		let item = $(this.groupHtml);
 		this._itemAddProp(id, item, EstrItemType.Group);
+		return item;
 	}
 
-	_addRow(id) {
+	_addRow(id, json) {
 		//加上py-2上下空間, 才能drop, dragOver時e.target為本身item !!
-		let html = `
-<div class='row py-2'>
-	<div class='col-md-6 ${this.ClsRowCol}'></div>
-	<div class='col-md-6 ${this.ClsRowCol}'></div>
-</div>
-`;
+		let cls = this.ClsRowCol;
+		let cols = json.RowType.split(',');
+		let html = '';
+		for (let i=0; i<cols.length; i++) {
+			html += `<div class='col-md-${cols[i]} ${cls}'></div>`;
+		}
+		html = `<div class='row py-2'>${html}</div>`;
+
 		//render item
 		let item = $(html);
 		this._itemAddProp(id, item, EstrItemType.Row);
+		return item;
 	}
 
 	_addTable(id, json) {
@@ -472,10 +475,12 @@ class UiView {
 		let item = $(html);
 		this._rowToTable(json, item);	//row to table
 		this._itemAddProp(id, item, EstrItemType.Table);
+		return item;
 	}
 
 	//todo
 	_addTabPage(id, json) {
+		//return item;
 	}
 
 	//item 加入共用屬性
@@ -558,6 +563,8 @@ class UiView {
 		_obj.showByStatus(note, _str.notEmpty(row.InputNote));
 		note.text(row.InputNote);
 
+		//todo: 欄位寬度調整 row.Cols 和 '2,3' 比較(考慮Auto)
+
 		/* todo: temp remark
 		//如果改變 inputType, 必須更新item 的x-input內容
 		if (this._getInputType(item) != row.InputType) {
@@ -566,6 +573,14 @@ class UiView {
 			item.find(this.FtInput).html(inputHtml);
 		}
 		*/
+	}
+
+	//取 col-md- 後面的"文數字"
+	_getColCssTail(obj) {
+		return obj.attr('class')
+			.split(/\s+/)
+			.find(a => a.startsWith('col-md-'))
+			.split('-')[2];
 	}
 
 	//row to input item ui
