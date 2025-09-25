@@ -37,7 +37,7 @@
 function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
 
     /**
-     * initial & and instance variables (this.validator by _valid.init())
+     * initial & set instance variables (this.validator by _valid.init())
      * call by this
      */ 
     this.init = function () {

@@ -83,6 +83,10 @@ var _json = {
         return (json == null || $.isEmptyObject(json));
     },
 
+    notEmpty: function (json) {
+        return !_json.isEmpty(json);
+    },
+
     //check is key-value pair
     isKeyValue: function (value) {
         return (Object.prototype.toString.call(value) === '[object Object]');

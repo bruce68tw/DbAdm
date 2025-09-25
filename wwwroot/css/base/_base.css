@@ -138,6 +138,12 @@ body {
 
 /*=== width end ===*/
 
+.x-vh5 {
+    margin-top: 5vh !important; /* 視窗高度的 1/4 */
+}
+.x-vh10 {
+    margin-top: 10vh !important; /* 視窗高度的 1/4 */
+}
 .x-vh15 {
     margin-top: 15vh !important; /* 視窗高度的 1/4 */
 }

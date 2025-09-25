@@ -23,7 +23,7 @@ class UiMany {
         this.nowItemType = '';
         this.mItem = mItem;     //editMany
         this.newInputNo = 0;    //for fid、title, 累加, 不會當做主key
-        this.eformItems = $('#eformItems');           //nodes edit form for editMany        
+        this.eformItems = $('#eformItems');     //nodes edit form for editMany        
         this.tplItem = $('#tplItem').html();    //item template
 
         //now container for add item
@@ -52,7 +52,7 @@ class UiMany {
         });
     }
 
-    //#region callback 函數
+    //#region callback 函數 called by uiView
     //item 改變 box 
     fnMoveBox(itemId, newBoxId) {
         let rowBox = this.mItem.idToRowBox(itemId);
@@ -116,6 +116,7 @@ class UiMany {
     }
 
     async onDragEnd(e) {
+        //傳入參數2=true, 表示外部觸發
         await this.uiView.onDragEnd(e);
     }
 
@@ -143,7 +144,7 @@ class UiMany {
             Fid: '_fid' + this.newInputNo,		//前面加底線for註記為需要調整
             Title: '欄位' + this.newInputNo,
             Required: true,
-            Cols: _iselect.get('ColsType', _me.eform0),
+            Cols: this.uiView.DefaultCols,
             //TitleTip: 'label tip 測試',
             //InputNote: 'input note 測試',
         };
@@ -317,23 +318,26 @@ class UiMany {
     }
 
     /**
-     * load nodes into UI
-     * param rows {json} 後端傳回的完整json
+     * json array to new items
+     * param {json array} jsons: 巢狀資料
      */
-    loadItems(rows) {
+    async loadJsonsA(jsons) {
         //EditMany load rows by rowsBox
-        this.mItem.loadRowsByRsb(rows, true);
+        //json array to rows, 同時設定new Id(負數)
+        //this.mItem.loadRowsByRsb(jsons, true);
 
         //ui loadItems
-        this.uiView.loadItems(rows);
+        await this.uiView.loadJsons(jsons);
     }
 
+    /*
     //??
     addItem(json) {
         //add mLine
 
         this.uiView.addItem(json);
     }
+    */
     //#endregion
 
 }//class

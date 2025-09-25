@@ -88,8 +88,8 @@
         _me.init();
 
         //註刪button dragstart事件
-        _me.divEdit.on(EstrMouse.DragStart, ".xu-btn", function(e) {
-            let itemType = $(e.target).data("type");
+        _me.divEdit.on(EstrMouse.DragStart, '.xu-btn', function(e) {
+            let itemType = $(e.target).data('type');
             _me.uiMany.startDragBtn(true, itemType);
         }).on(EstrMouse.DragEnd, function (e) {
             //不會觸發工作區的 dragEnd, 這裡必須寫
@@ -117,8 +117,12 @@
                 ],
             };
 
+            //instance variables
+            _me.modalImport = $('#modalImport');
+            _me.modalExport = $('#modalExport');
+
             //save, back button
-            _me.divEditTbar = $('#divEditTbar');
+            //_me.divEditTbar = $('#divEditTbar');
 
             //initial edit one/many, rowsBox(參數2) 使用 eform
             _me.mItem = new EditMany('Id', 'eformItems', 'tplItem', '.xd-tr', 'Sort');
@@ -146,6 +150,33 @@
             //_me.nowFlowCode = '';
         },
 
+        onOpenImport: function () {
+            _modal.showO(_me.modalImport);
+        },
+
+        //匯入json(巢狀格式)
+        async onImport: function () {
+            var value = _itext.get('Import', _me.modalImport).trim();
+            if (_str.isEmpty(value)) {
+                _tool.msg('匯入資料不可空白。');
+                return;
+            }
+
+            //加入大括號 for json 格式
+            if (value.substring(0, 1) != '{')
+                value = '{' + value + '}';
+
+            //string to json
+            var jsons = _str.toJson(value);
+            if (v == null) {
+                _tool.msg('匯入資料必須是Json格式。');
+                return;
+            }
+
+            await this.uiMany.loadJsons(jsons);
+            _modal.hideO(_me.modalImport);
+        },
+
         //generate json
         onGenJson: function () {
             var values = _icheck.getCheckeds(_me.crudR.divRead);
@@ -157,11 +188,7 @@
 
         //auto called
         fnAfterSwap: function (toRead) {
-            if (toRead) {
-                _obj.hide(_me.divEditTbar);
-            } else {
-                _obj.show(_me.divEditTbar);
-            }
+            _obj.showByStatus($('.xu-tbar'), !toRead);
         },
 
         //auto called !!
@@ -264,10 +291,16 @@
 </script>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <vc:xg-prog-path />
     </div>
-    <div class="col-md-6 d-none pt-2" id="divEditTbar">
+    <div class="col-md-4 d-none pt-2 xu-tbar">
+        <div class="x-btns-box x-center">
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenImport">Json匯入畫面</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenExport">匯出畫面</button>
+        </div>
+    </div>
+    <div class="col-md-4 d-none pt-2 xu-tbar">
         <vc:xg-save-back align="right me-3" />
     </div>
 </div>
@@ -311,8 +344,10 @@
             <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, ClsBox = "xu-input w-150" }' />
             <div class="xu-label">功能名稱</div>
             <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, ClsBox = "xu-input w-150" }' />
+            @*
             <div class="xu-label">欄位格式</div>
             <vc:xi-select dto='new() { Fid = "ColsType", Rows = colsTypes, AddEmpty = false, ClsBox = "xu-input w-150" }' />
+            *@
             <div class="xu-label">欄位容器格式</div>
             <vc:xi-select dto='new() { Fid = "RowType", Rows = rowTypes, AddEmpty = false, ClsBox = "xu-input w-150" }' />
 
@@ -438,6 +473,28 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
                 <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal: 匯入, 點擊外部不關閉 -->
+<div id="modalImport" class="modal fade x-modal" data-bs-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-lg x-vh5">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Json匯入畫面</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal x-form pt-1 pe-5">
+                    <vc:xi-hide dto='new() { Fid = "Id" }' />
+                    <vc:xi-textarea dto='new() { Title = "Json資料", Fid = "Import", RowsCount = 25, Cols = "2,10", Required = true }' />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onImport">確定<i class='ico-checked'></i></button>
             </div>
         </div>
     </div>

@@ -139,4 +139,8 @@ var _obj = {
         return obj[0].tagName.toLowerCase();
     },
 
+    //rename css class
+    renameCss: function (obj, oldCss, newCss) {
+        obj.removeClass(oldCss).addClass(newCss);
+    }
 }; //class

@@ -58,7 +58,7 @@ class UiView {
 
 		this.isEdit = true;		//是否可編輯, temp to true	
 		this.newItemId = 0;		//新item Id, 自動累減, 使用負數!!		
-		this.inputJson = {};	//儲存各種輸入欄位模版, 減少後端傳回		
+		this.inputMap = {};		//儲存各種輸入欄位模版, 減少後端傳回		
 		this.groupHtml = '';	//儲存group html, 後端傳回
 
 		//drag/drop相關, Box表示外層Item
@@ -160,7 +160,10 @@ class UiView {
 		}
 
 		//debug
-		//console.log(`dragType=${drag.itemType}, dropType=${drop.itemType}, drop.boxType=${drop.boxType}, dropInBox=${dropInBox}`);
+		console.log(`dragType=${drag.itemType}, 
+			dropType=${drop.itemType}, drop.boxType=${drop.boxType}, 
+			up css=${dropObj.attr('class')}, up item count=${dropObj.find(this.FtItem).length}, 
+			dropInBox=${dropInBox}`);
 
 		/*
 		 x軸: drop, y軸: drag 
@@ -181,12 +184,12 @@ class UiView {
 		let dragName = '';
 		if (hasItem && drop.boxType != null) {
 			switch (drag.itemType) {
-				/*
 				case EstrItemType.Input:
-					if (drop.itemType == EstrItemType.Table && !dropContIsEmpty)
-						error = `${this.NameTable}只能放一個${this.NameInput}。`;
+					if (drop.boxType == EstrItemType.Table) {
+						if (drop.itemType == EstrItemType.Input || dropObj.find(this.FtItem).length > 0)
+							error = `${this.NameTable}只能放一個${this.NameInput}。`;
+					}
 					break;
-				*/
 				case EstrItemType.Group:
 					if (drop.boxType == EstrItemType.Table)
 						error = `${this.NameGroup}不能放在${this.NameTable}裡面。`;
@@ -247,34 +250,56 @@ class UiView {
 		}
 	}
 
-	//also called by uiMany
+	//also called by uiMany drag/drop button
 	async onDragEnd(e) {
 		if (!this.dragging) return;
 
+		//工作區內外都可以觸發 DragEnd, 利用mouse座標來判斷
+		const rect = this.Area[0].getBoundingClientRect();
+		const x = e.clientX;
+		const y = e.clientY;
+		const inArea = (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom);
+
 		if (this.dropError != '') {
 			_tool.msg(this.dropError);
-			//this.dropError = '';
-		} else {
+		} else if (inArea) {
 			let drag = this.dragItem;
 			let drop = this.dropItem;
+			let dragType = this.dragItem.itemType;	//drag button時會設定this.dragItem.itemType
 
 			//create new item if need
 			if (this.dragIsNew) {
-				let itemType = this.dragItem.itemType;
-				let row = this.fnAddItem(itemType);
-				let item = await this._addItemA(itemType, row.Id, _str.toJson(row.Info));
+				let row = this.fnAddItem(dragType);
+				let item = await this._newItemA(dragType, row.Id, _str.toJson(row.Info));
 				drag.item = item;
 			}
 
-			//移入/移出 Table 必須刪除/增加label first(only for 互斥, a^b 或是 a !== b)
-			let checkType = EstrItemType.Table;
-			if (this._isBoxTypeXor(checkType))
-				this._resetItemByTable(drag.item, (drop.boxType == checkType));
+			/*
+			//resize dragItem
+			if (drag.boxType != EstrItemType.Table && drop.boxType == EstrItemType.Table) {
+				this._resizeItemByTable(drag.item);
+			} else if (drag.boxType != EstrItemType.Row && drop.boxType == EstrItemType.Row) {
+				this._resizeItemByRow(drag.item);
+			}
+			*/
 
-			//移入/移出 Row時必須調整大小(互斥同上)
-			checkType = EstrItemType.Row;
-			if (this._isBoxTypeXor(checkType))
-				this._resetItemByRow(drag.item, (drop.boxType == checkType));
+			//drag/drop時才需要處理
+			//移入/移出 Row時調整大小(互斥判斷: a^b 或是 a !== b)
+			if (dragType == EstrItemType.Input) {
+				let checkType = EstrItemType.Row;
+				if (this._isBoxTypeXor(checkType)) {
+					let inTable = (drop.boxType == checkType);
+					let gridNum = inTable
+						? this._getUpGridNum(this.DropLine)	//利用dropLine讀取上層grid num
+						: 0;
+					this._resizeItemByRow(drag.item, inTable, gridNum);
+				}
+
+				//移入/移出 Table時 show/hide label、note(互斥同上)
+				checkType = EstrItemType.Table;
+				if (this._isBoxTypeXor(checkType))
+					this._resizeItemByTable(drag.item, (drop.boxType == checkType));
+			}
 
 			//item移到 drog line的位置
 			drag.item.insertAfter(this.DropLine);
@@ -284,35 +309,53 @@ class UiView {
 				this.fnMoveBox(this.getItemId(drag.item), drop.boxId);
 		}
 
-		//reset
-		_obj.hide(this.DropLine);
+		//reset variables
 		this._setDragging(false);
-		this.dragItem = new StItem();
-		this.dropItem = new StItem();
+	}
+
+	//box item add child item
+	_boxAddItem(box, boxType, item, info) {
+		switch (boxType) {
+			case EstrItemType.Row:
+				//col位置
+				box.append(item);
+				break;
+			case EstrItemType.Table:
+				//td位置
+				break;
+			case EstrItemType.TabPage:
+				//page位置
+				break;
+		}
 	}
 
 	//drag by button
 	//also called by uiMany
 	startDragBtn(status, itemType) {
+		this._setDragging(status);	//call first !!
 		this.dragIsNew = status;
 		this.dragItem.itemType = itemType;
-		this._setDragging(status);
 	}
 
 	_setDragging(status) {
-		this.dragging = status;
 		if (status) {
+			this.dragging = true;
+			this.dragItem = new StItem();
+			this.dropItem = new StItem();
+			this.dropElm = null;
 			this.Area.addClass(this.ClsDragging);
 		} else {
-			this.dragIsNew = false;
+			this.dragging = false;
+			this.dragIsNew = false;	//reset
 			this.Area.removeClass(this.ClsDragging);
+			_obj.hide(this.DropLine);
 		}
 	}
 
 	//#endregion
 
 	//#region 判斷 & 轉換
-	//item type to name
+	//item type to item show name
 	_typeToName(itemType) {
 		switch (itemType) {
 			case EstrItemType.Input:
@@ -345,87 +388,79 @@ class UiView {
 	//#endregion
 
 	//#region 新增 item
+	/*
 	//?? 上層是否為box
 	_boxIsRow() {
 		return (this.dropBox != null && this.getItemType(this.dropBox) == EstrItemType.Row);
 	}
+	*/
 
-	//called onDragEnd時建立新item 
-	async _addItemA(itemType, itemId, json) {
+	//called onDragEnd 時建立新item 
+	//param {json} info: item info 資訊
+	async _newItemA(itemType, itemId, info) {
 		switch (itemType) {
 			case EstrItemType.Input:
-				return await this._addInputA(itemId, json);
+				return await this._newInputA(itemId, info);
 			case EstrItemType.Group:
-				return await this._addGroupA(itemId, json);
+				return await this._newGroupA(itemId, info);
 			case EstrItemType.Row:
-				return this._addRow(itemId, json);
+				return this._newRow(itemId, info);
 			case EstrItemType.Table:
-				return this._addTable(itemId, json);
+				return this._newTable(itemId, info);
 			case EstrItemType.TabPage:
-				return this._addTabPage(itemId, json);
+				return this._newTabPage(itemId, info);
 		}
 	}
 
 	/**
 	 * add input
-	 * called _addItemA
+	 * called _newItemA
 	 * param {string} id
-	 * param {json} json 包含欄位: Fid, Title, Required
+	 * param {json} info 包含欄位: Fid, Title, Required
 	 * returns item
 	 */
-	async _addInputA(id, json) {
-		//get item
-		//let item = await this._getNewInputA(json);
-
+	async _newInputA(id, info) {
+		//constant
 		const Fid = '_fid_';
 		const Title = '_title_';
-		//const Cols = '2,3';					//default input cols
 		const TitleTip = '_titleTip_';
 		const InputNote = '_inputNote_';
 
-		//讀取後端欄位 if need
-		let inputJson = this.inputJson;
-		let inputType = json.InputType;
-		if (inputJson[inputType] == null) {
+		//讀取後端輸入欄位template if need
+		let map = this.inputMap;
+		let inputType = info.InputType;
+		if (map[inputType] == null) {
 			let data = {
 				inputType: inputType,
 				title: Title,
 				titleTip: TitleTip,
-				fid: Fid,		//前端重設以下欄位
-				cols: this.DefaultCols,
+				fid: Fid,			//前端重設以下欄位
 				required: true,		//後端先傳回req mark, 前端若無則hide
+				cols: this.DefaultCols,
 				inputNote: InputNote,
 			};
 			let tpl = await _ajax.getStrA('GetInputHtml', data);
-			inputJson[inputType] = tpl;
+			map[inputType] = tpl;
 		}
 
-		//換成實際的 fid, title
-		//html = _str.replaceAll(html, Fid, json.Fid);	//多個取代
-		//html = _str.replaceAll(html, Title, json.Title);
-
-		//get box css col num
-		//if (this.dropItem.boxType == EstrItemType.Row) {
-		//}
-
-		let item = $(inputJson[inputType]);
-		await this._rowToInputA(json, item);
+		let item = $(map[inputType]);
+		await this._rowToInputA(info, item);
 
 		//todo: 如果上層為box, 則cols修改2,3 -> 4,6, 單個取代
 		//if (this._boxIsRow())
-		//	this._resetItemByRow(item, true);
+		//	this._resizeItemByRow(item, true);
 
 		//最後寫入item的data-info
-		//this.objSetInfo(item, json);
+		//this.objSetInfo(item, info);
 
 		//render item
 		this._itemAddProp(id, item, EstrItemType.Input);
 		return item;
 	}
 
-	async _addGroupA(id, json) {
+	async _newGroupA(id, info) {
 		if (_str.isEmpty(this.groupHtml))
-			this.groupHtml = await _ajax.getStrA('GetGroupHtml', { title: json.Title });
+			this.groupHtml = await _ajax.getStrA('GetGroupHtml', { title: info.Title });
 
 		//render item
 		let item = $(this.groupHtml);
@@ -433,10 +468,10 @@ class UiView {
 		return item;
 	}
 
-	_addRow(id, json) {
+	_newRow(id, info) {
 		//加上py-2上下空間, 才能drop, dragOver時e.target為本身item !!
 		let cls = this.ClsRowCol;
-		let cols = json.RowType.split(',');
+		let cols = info.RowType.split(',');
 		let html = '';
 		for (let i=0; i<cols.length; i++) {
 			html += `<div class='col-md-${cols[i]} ${cls}'></div>`;
@@ -449,7 +484,7 @@ class UiView {
 		return item;
 	}
 
-	_addTable(id, json) {
+	_newTable(id, info) {
 		let html = `
 <div class='py-2'>
 	<div class="x-btns-box">
@@ -472,13 +507,13 @@ class UiView {
 `;
 		//render item
 		let item = $(html);
-		this._rowToTable(json, item);	//row to table
+		this._rowToTable(info, item);	//row to table
 		this._itemAddProp(id, item, EstrItemType.Table);
 		return item;
 	}
 
 	//todo
-	_addTabPage(id, json) {
+	_newTabPage(id, info) {
 		//return item;
 	}
 
@@ -487,38 +522,119 @@ class UiView {
 		//加入item屬性: .xu-item, data-itemtype
 		item.addClass(this.ClsItem);
 		item.attr("draggable", true);
-		_obj.setData(item, this.DataId, id);	//jquery data() 只寫入暫存, 使用 _obj(設定屬性) !!
+		//_obj.setData(item, this.DataId, id);	//jquery data() 只寫入暫存, 使用 _obj(設定屬性) !!
 		_obj.setData(item, this.DataItemType, itemType);
 	}
 	//#endregion
 
-	//#region 更新 item 外觀
-	//重設item寬度
-	//param {bool} inBox: in box or not
-	_resetItemByRow(item, inBox) {
-		if (inBox) {
-			this._labelSetCol(item, 2, 4);
-			this._inputSetCol(item, 3, 6);
-		} else {
-			this._labelSetCol(item, 4, 2);
-			this._inputSetCol(item, 6, 3);
-		}
+	_noteSetStatus(note) {
+		_obj.showByStatus(note, (note.text().trim() != ''));
 	}
 
-	_labelSetCol(item, oldCls, newCls) {
-		this._itemSetCol(item, true, oldCls, newCls);
+	//#region 更新 item 外觀
+	//移除/增加 label & inputNote, 直接搬到table, 因為內容有變
+	//called by mouseUp
+	//param {bool} inBox: drop位置是否在Table裡面
+	_resizeItemByTable(item, inBox) {
+		let label = item.find(this.FtLabel);
+		let note = item.find(this.FtInputNote);
+		this._objSetRwd(item.find(this.FtInput), !inBox);
+		if (inBox) {
+			_obj.hide(label);
+			_obj.hide(note);
+		} else {
+			_obj.show(label);
+			this._noteSetStatus(note);
+		}
+
+		/*
+		let label = dragItem.find(this.FtLabel);
+		let input = dragItem.find(this.FtInputNote);
+		let css = this._getGridCss();
+		if (inBox) {
+			_obj.hide(dragItem.find(this.FtLabel));
+			_obj.hide(dragItem.find(this.FtInputNote));
+			this._inputSetGrid(dragItem, 3, '3a');	//讓RWD失效
+			this._inputSetGrid(dragItem, 6, '6a');
+		} else {
+			_obj.show(dragItem.find(this.FtLabel));
+			_obj.show(dragItem.find(this.FtInputNote));
+			this._inputSetGrid(dragItem, '3a', 3);
+			this._inputSetGrid(dragItem, '6a', 6);
+		}
+		*/
 	}
-	_inputSetCol(item, oldCls, newCls) {
-		this._itemSetCol(item, false, oldCls, newCls);
+
+	//重設item寬度, 不處理show/hide
+	//param {bool} inBox: in box or not
+	//param {int} contGridNum: inBox=true時必須傳入, drop container object(row col)
+	_resizeItemByRow(item, inBox, contGridNum) {
+		//是否有inputNote
+		let label = item.find(this.FtLabel);
+		let input = item.find(this.FtInput);
+		let note = item.find(this.FtInputNote);
+		let list = !inBox ? this.DefaultCols :
+			(contGridNum == 6) ? '4,6' :
+			(note.text().trim() != '') ? '3,6' : '6,6';
+		let cols = list.split(',');
+		this._objSetGrid(label, cols[0]);
+		this._objSetGrid(input, cols[1]);
+		/*
+		if (inBox) {
+			_obj.show(label);
+			_obj.show(input);
+			_obj.show(label);
+			cols = (dropBoxGridNum == 6) ? '4,6' :
+				hasNote ? '3,6' : '6,6';
+
+			this._labelSetGrid(item, 2, 4);
+			this._inputSetGrid(item, 3, 6);
+		} else {
+			let cols = ;
+			this._labelSetGrid(item, 4, 2);
+			this._inputSetGrid(item, 6, 3);
+		}
+		*/
 	}
-	_itemSetCol(item, isLabel, oldCls, newCls) {
+
+	//啟動/停用 css RWD
+	//param {bool} status
+	_objSetRwd(obj, status) {
+		const tail = 'h';
+		let css = this._getGridCss(obj);
+		let findTail = css.endsWith(tail);
+		if (status && findTail) {
+			//啟動
+			_obj.renameCss(obj, css, css.slice(0, -1));	//移除最後一個字元
+		} else if (!status && !findTail) {
+			//停用
+			_obj.renameCss(obj, css, css + tail);	//讓RWD失效
+        }
+	}
+
+	//設定css grid
+	//param {int} colNum 新的 col-md- 數字
+	_objSetGrid(obj, colNum) {
+		_obj.renameCss(obj, this._getGridCss(obj), 'col-md-' + colNum);
+	}
+
+	/*
+	_labelSetGrid(item, oldCls, newCls) {
+		this._itemSetGrid(item, this.FtLabel, oldCls, newCls);
+	}
+	_inputSetGrid(item, oldCls, newCls) {
+		this._itemSetGrid(item, this.FtInput, oldCls, newCls);
+	}
+	//設定css grid, 'setGrid' 比較達意
+	_itemSetGrid(item, filter, oldCls, newCls) {
 		let cls = `col-md-${oldCls}`;
-		let obj = item.find(isLabel ? this.FtLabel : this.FtInput);
+		let obj = item.find(filter);
 		if (obj.hasClass(cls))
 			obj.removeClass(cls).addClass(`col-md-${newCls}`);
 	}
+	*/
 
-	//只更新畫面上看的到的部分即可
+	//更新畫面上的可視部分
 	//called by UiMany(修改item內容) only !!
 	async rowToItemA(row, item, fnCallback) {
 		let callback = true;
@@ -528,7 +644,7 @@ class UiView {
 				await this._rowToInputA(row, item);
 				break;
 			case EstrItemType.Group:
-				item.find(this.FtGroupTitle).text(row.Title);
+				item.find(this.FtGroupTitle).text(row.Title || '');
 				break;
 			case EstrItemType.Row:
 				//do nothing
@@ -564,8 +680,9 @@ class UiView {
 
 		//inputNote show/hide, update text
 		let note = item.find(this.FtInputNote);
-		_obj.showByStatus(note, _str.notEmpty(row.InputNote));
-		note.text(row.InputNote);
+		//_obj.showByStatus(note, _str.notEmpty(row.InputNote));
+		note.text(row.InputNote || '');		//若為undefined, .text(xx)不會生效
+		this._noteSetStatus(note);
 
 		//todo: 欄位寬度調整 row.Cols 和 '2,3' 比較(考慮Auto)
 		//if (boxColNum > 0) {
@@ -581,12 +698,18 @@ class UiView {
 		*/
 	}
 
-	//取 col-md- 後面的"文數字"
-	_getColCssTail(obj) {
+	//讀取上層 col-md- 後面的"文數字"
+	_getUpGridNum(obj) {
+		let col = obj.closest("[class*='col-md-']"); 
+		return this._getGridCss(col).split('-')[2];
+	}
+
+	//get col css class
+	_getGridCss(obj) {
 		return obj.attr('class')
 			.split(/\s+/)
-			.find(a => a.startsWith('col-md-'))
-			.split('-')[2];
+			.find(a => a.startsWith('col-md-'));
+			//.split('-')[2];
 	}
 
 	//row to input item ui
@@ -628,11 +751,11 @@ class UiView {
 		}
 
 		//update table title
-		item.find(this.FtTableTitle).text(row.Title);
+		item.find(this.FtTableTitle).text(row.Title || '');
 
 		//update table heads, 如果使用箭頭函數則this會指向 UiView本身!!
 		headBox.find('th').each(function(i){
-			$(this).text(heads[i]);
+			$(this).text(heads[i] || '');
 		});
 
 		//傳回deleted id list
@@ -640,33 +763,40 @@ class UiView {
 			fnCallback(ids);
 	}
 
-
-	//移除/增加 label, 直接搬到item, 因為內容有變
-	//called by mouseUp
-	_resetItemByTable(item, inBox) {
-		if (inBox) {
-			_obj.hide(item.find(this.FtLabel));
-			_obj.hide(item.find(this.FtInputNote));
-			this._inputSetCol(item, 3, '3a');	//讓RWD失效
-			this._inputSetCol(item, 6, '6a');
-		} else {
-			_obj.show(item.find(this.FtLabel));
-			_obj.show(item.find(this.FtInputNote));
-			this._inputSetCol(item, '3a', 3);
-			this._inputSetCol(item, '6a', 6);
-		}
-	}
-
 	//清空工作區
 	reset() {
 		this.Area.empty();
 	}
 
-	//載入items
-	loadItems(rows) {
-		this.reset();
-		for (let i = 0; i < rows.length; i++)
-			this.addItem(rows[i]);
+	//載入item list(非巢狀資料)
+	loadRows(rows) {
+		//todo: 轉成巢狀
+		let jsons = null;
+
+		this.loadJsons(jsons);
+	}
+
+	//載入items(巢狀格式), recursive!!
+	//param {json array} jsons: 內含Id
+	async loadJsonsA(jsons, level, area) {
+		this.reset();	//reset first
+
+		level ||= 0;
+		area ||= this.Area;
+		if (level > 5) {
+			console.log('UiView.js loadItems() level > 5 !!');
+			return;
+		}
+
+		for (let i = 0; i < jsons.length; i++) {
+			let json = jsons[i];
+			let item = await this._newItemA(json.ItemType, json.Id, _str.toJson(json.Info));
+
+			//recursive load childs
+			if (_json.notEmpty(json.Childs)) {
+				await this.loadJsonsA(json.Childs, level+1, item);
+			}
+		}
 	}
 
 	//刪除item, 包含子item
