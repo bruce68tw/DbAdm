@@ -327,7 +327,7 @@ class UiMany {
         //this.mItem.loadRowsByRsb(jsons, true);
 
         //ui loadItems
-        await this.uiView.loadJsons(jsons);
+        await this.uiView.loadJsonsA(jsons);
     }
 
     /*

@@ -314,19 +314,34 @@ class UiView {
 	}
 
 	//box item add child item
-	_boxAddItem(box, boxType, item, info) {
+	//param {object) box
+	//param {string) null 表示工作區
+	//param {object) item
+	//param {int) childNo
+	_boxAddItem(box, boxType, item, childNo) {
+		let cont;
+		//let no = info.ChildNo;
 		switch (boxType) {
+			case null:
+				cont = this.Area;
+				break;
 			case EstrItemType.Row:
 				//col位置
-				box.append(item);
+				cont = box.children().eq(childNo);
 				break;
 			case EstrItemType.Table:
 				//td位置
+				cont = box.find("tbody tr").eq(0).find("td").eq(childNo);
 				break;
 			case EstrItemType.TabPage:
+				//todo
 				//page位置
 				break;
+			default:
+				return;
 		}
+
+		cont.append(item);
 	}
 
 	//drag by button
@@ -769,28 +784,34 @@ class UiView {
 	}
 
 	//載入item list(非巢狀資料)
-	loadRows(rows) {
+	async loadRowsA(rows) {
 		//todo: 轉成巢狀
 		let jsons = null;
 
-		this.loadJsons(jsons);
+		await this.loadJsonsA(jsons);
 	}
 
-	//載入items(巢狀格式), recursive!!
+	//載入items(巢狀格式), recursive, 此時Info欄位內容為Json, 不是Json字串 !!
 	//param {json array} jsons: 內含Id
-	async loadJsonsA(jsons, level, area) {
-		this.reset();	//reset first
+	async loadJsonsA(jsons, level, box) {
+		//this.reset();	//reset first
 
 		level ||= 0;
-		area ||= this.Area;
+		//area ||= this.Area;
 		if (level > 5) {
 			console.log('UiView.js loadItems() level > 5 !!');
 			return;
 		}
 
+		let boxType = (box == null) ? null : this.getItemType(box);
 		for (let i = 0; i < jsons.length; i++) {
 			let json = jsons[i];
-			let item = await this._newItemA(json.ItemType, json.Id, _str.toJson(json.Info));
+			if (_json.isEmpty(json))
+				continue;
+
+			//let info = _str.toJson(json.Info);
+			let item = await this._newItemA(json.ItemType, json.Id, json.Info);
+			this._boxAddItem(box, boxType, item, i);
 
 			//recursive load childs
 			if (_json.notEmpty(json.Childs)) {

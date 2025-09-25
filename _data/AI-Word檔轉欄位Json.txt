@@ -1,0 +1,109 @@
+把以下 word 輸入表單轉成json, 同時依照下面的規則:
+json包括4種資料, 以 Item 稱呼, 每個 Item 有以下欄位:
+  1.Info: Item 的綜合資訊, 內容為包含多個欄位的 json 字串
+  2.ItemType: Item 種類, 有以下4種:
+    a.輸入欄位: 用 'I' 表示, Info欄位內容有:
+	  a1.Title: 左邊的欄位名稱
+	  a2.Required: 是否必填
+	  a3.Cols: grid排版, 例如 '2,3' 表示 Title 為 col-md-2, 輸入欄位為 col-md-3
+	  a4.InputType: 輸入欄位, 有以下幾種:
+        b1.文字: 用 'text' 表示
+	    b2.數字: 用 'int' 表示
+	    b3.日期: 用 'date' 表示
+	    b4.CheckBox: 用 'check' 表示
+	    b5.Radio: 用 'radio' 表示, ExtInfo 欄位儲存選項清單, 以逗號分隔
+	    b6.下拉式: 用 'select' 表示, ExtInfo 欄位儲存選項清單, 以逗號分隔
+	    b7.多行: 用 'textarea' 表示
+	  a5.ExtInfo: 額外的欄位資訊
+    b.分群文字: 用 'G' 表示, Info欄位內容有:
+	  a1.Title: 顥示的文字
+    c.欄位容器: 用 'R' 表示, 它是一個2或3欄的 row 容器, 可以放 輸入欄位、分群文字, 它有Childs欄位, Info欄位內容有:
+    d.多筆表格: 用 'T' 表示, 是一個table, 用來維護多筆資料, 綜合資訊包括:
+	  a1.Table: 要維護的資料表名稱
+	  a2.Title: 功能名稱
+	  a3.Heads: 表頭欄位清單, 以逗號分隔
+	  a4.Childs: 是一個陣列, 內容為 Item 清單	
+  3.Childs: 是一個陣列, 包含n個元素, 元素內容也是陣列, 內容為 Item 清單	
+	  
+以下 json 範例由上到下包含:
+1.分群文字
+2.文字輸入欄位
+3.欄位容器, 左右各為 下拉式輸入欄位、Radio欄位
+4.多筆表格, 包含3個文字欄位
+
+{
+	ItemType: 'G',
+	Info: {
+		Title: '分群1'
+	},
+},  
+{
+	ItemType: 'I',
+	Info: {
+		Title: '欄位1', 
+		InputType: 'text', 
+		Required: true, 
+		Cols: '2,3'
+	},
+},  
+{
+	ItemType: 'R',
+	Info: {
+		RowType: '6,6'
+	},
+	Childs: [
+		[
+			{
+				ItemType: 'I',
+				Info: {
+					Title: '欄位2',
+					InputType: 'select',
+					Cols: '4,6',
+					ExtInfo: '選項1,選項2,選項3'
+				},			
+			},
+		],
+		[
+			{
+				ItemType: 'I',
+				Info: {
+					Title: '欄位3',
+					InputType: 'radio',
+					Cols: '4,6',
+					ExtInfo: '選項a,選項b,選項c'
+				},			
+			},
+		],	
+	],
+},  
+{
+	ItemType: 'T',
+	Info: {
+		Title: '資料表1',
+		Table: 'table1',
+		Heads: '欄位1,欄位2,欄位3'
+	},
+	Childs: [
+		{
+			ItemType: 'I',
+			Info: {
+				Title: '欄位1',
+				InputType: 'text'
+			},
+		},  
+		{
+			ItemType: 'I',
+			Info: {
+				Title: '欄位2',
+				InputType: 'text'
+			},
+		},  
+		{
+			ItemType: 'I',
+			Info: {
+				Title: '欄位3',
+				InputType: 'text'
+			},
+		},  
+	],
+}, 

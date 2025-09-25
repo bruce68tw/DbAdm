@@ -1,5 +1,6 @@
 ﻿@{
     var cols = "4,6";
+    /*
     List<IdStrDto> colsTypes = 
     [
         new(){ Id = "A", Str = "自動" },
@@ -8,14 +9,13 @@
         new(){ Id = "2,2", Str = "2,2" },
         new(){ Id = "1,2", Str = "1,2" },
     ];
+    */
     List<IdStrDto> rowTypes =
     [
         new(){ Id = "6,6", Str = "2欄" },
         new(){ Id = "4,4,4", Str = "3欄" },
-        new(){ Id = "4,8", Str = "4,8" },
-        new(){ Id = "8,4", Str = "8,4" },
-        //new(){ Id = "5,7", Str = "5,7" },
-        //new(){ Id = "7,5", Str = "7,5" },
+        new(){ Id = "4,8", Str = "2欄(小,大)" },
+        new(){ Id = "8,4", Str = "2欄(大,小)" },
     ];
 }
 
@@ -155,7 +155,7 @@
         },
 
         //匯入json(巢狀格式)
-        async onImport: function () {
+        onImport: async function () {
             var value = _itext.get('Import', _me.modalImport).trim();
             if (_str.isEmpty(value)) {
                 _tool.msg('匯入資料不可空白。');
@@ -163,17 +163,17 @@
             }
 
             //加入大括號 for json 格式
-            if (value.substring(0, 1) != '{')
-                value = '{' + value + '}';
+            //if (value.substring(0, 1) != '{')
+            //    value = '{' + value + '}';
 
             //string to json
             var jsons = _str.toJson(value);
-            if (v == null) {
+            if (jsons == null) {
                 _tool.msg('匯入資料必須是Json格式。');
                 return;
             }
 
-            await this.uiMany.loadJsons(jsons);
+            await this.uiMany.loadJsonsA(jsons);
             _modal.hideO(_me.modalImport);
         },
 
@@ -414,8 +414,8 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal x-form pt-1 pe-5">
-                    <vc:xi-hide dto='new() { Fid="Id" }' />
-                    <vc:xi-text dto='new() { Title="標題", Fid="Title" , MaxLen=30, Cols=cols }' />
+                    <vc:xi-hide dto='new() { Fid = "Id" }' />
+                    <vc:xi-text dto='new() { Title = "標題", Fid = "Title", MaxLen = 30, Cols = cols }' />
                     <vc:xi-text dto='new() { Title="欄位Id", Fid="Fid" , MaxLen=30, Required = true, Cols=cols }' />
                     <vc:xi-select dto='new() { Title = "欄位種類", Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, Cols = cols }' />
                     <vc:xi-check dto='new() { Title = "必填", Fid = "Required", Label = "是", Cols = cols }' />
@@ -494,7 +494,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
-                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onImport">確定<i class='ico-checked'></i></button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.onImport">確定<i class='ico-checked'></i></button>
             </div>
         </div>
     </div>
