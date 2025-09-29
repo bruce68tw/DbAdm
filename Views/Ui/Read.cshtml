@@ -19,7 +19,12 @@
     ];
 }
 
-<style nonce="@_Fun.Nonce" >
+<style nonce="@_Fun.Nonce">
+    /* placeholder 顯示 Fid */
+    input::placeholder {
+        color: darkgrey;
+    }
+
     /* UiMany */
     #divEdit {
         display: flex;
@@ -30,7 +35,14 @@
     }
 
     .xu-ui-area {
+        /*
         flex-grow: 1;
+        min-height: 500px;
+        height: auto;
+        */
+        min-height: 500px;
+        width: calc(100vw - 100px); /* 工具列寬度 100px */
+        align-self: flex-start;
         border: 1px solid #ddd !important;
     }
 
@@ -151,6 +163,10 @@
         },
 
         onOpenImport: function () {
+            //clear first
+            _itext.set('Import', '', _me.modalImport);
+
+            //open modal
             _modal.showO(_me.modalImport);
         },
 
@@ -175,6 +191,17 @@
 
             await this.uiMany.loadJsonsA(jsons);
             _modal.hideO(_me.modalImport);
+        },
+
+        onExport: async function () {
+            const obj = { name: "Bruce", age: 30 };
+            const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
+
+            //create link & click
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "data.json";
+            link.click();
         },
 
         //generate json
@@ -296,8 +323,8 @@
     </div>
     <div class="col-md-4 d-none pt-2 xu-tbar">
         <div class="x-btns-box x-center">
-            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenImport">Json匯入畫面</button>
-            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenExport">匯出畫面</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenImport">Json匯入畫面...</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onExport">匯出畫面</button>
         </div>
     </div>
     <div class="col-md-4 d-none pt-2 xu-tbar">

@@ -1,0 +1,130 @@
+把以下 word 輸入表單轉成 json, 並遵循以下*號規則：
+*json 內容包括4種資料, 以 Item 稱呼, 每個 Item 有以下欄位：
+  1.Info：Item 的綜合資訊, 內容為包含多個欄位的 json 字串
+  2.ItemType：Item 種類, 有以下4種：
+    a.輸入欄位：用 'I' 表示, Info欄位內容有：
+	  a1.Title：左邊的欄位名稱
+	  a2.Fid：對應存取的後端資料表欄位名稱, 命名參考後面的規則
+	  a3.Required：是否必填
+	  a4.Cols：grid排版, 例如 '2,3' 表示 Title 為 col-md-2, 輸入欄位為 col-md-3
+	  a5.ExtInfo：額外的欄位資訊
+	  a6.InputType：輸入欄位, 有以下幾種：
+        b1.文字：用 'text' 表示
+	    b2.數字：用 'int' 表示
+	    b3.日期：用 'date' 表示
+	    b4.CheckBox：用 'check' 表示
+	    b5.Radio：用 'radio' 表示, ExtInfo 欄位儲存選項清單, 以逗號分隔
+	    b6.下拉式：用 'select' 表示, ExtInfo 欄位儲存選項清單, 以逗號分隔
+	    b7.多行：用 'textarea' 表示
+    b.分群文字：用 'G' 表示, Info欄位內容有：
+	  a1.Title：顥示的文字
+    c.欄位容器：用 'R' 表示, 它是一個排版用途的 Row 容器, 包含2或3個欄位; 有ChildArray, Info欄位內容有：
+	  a1.RowType：例如：'6,6' 表示有2個 Col, grid寬度都是6, 允許的值為 '6,6','4,4,4','8,4','4,8'
+    d.多筆表格：用 'T' 表示, 是一個table, 用來維護多筆資料, 有Childs, Info欄位內容有：
+	  a1.Table：要維護的資料表名稱
+	  a2.Title：功能名稱
+	  a3.Heads：表頭欄位清單, 以逗號分隔, 欄位數量和Childs Item數量相同
+  3.Childs：是個1維陣列, 包含n個Item	
+  4.ChildArray：是個2維陣列
+	  
+*排版規則為：
+1.Input 是其中一種 Item
+2.單行單一 Input 在左邊：不必使用 R Item 包起來，設定 Info.Cols="2,3"
+3.單行單一 Input 在右邊：使用 R Item，ChildArray[0]=null，ChildArray[1]=[Input]
+4.單行單一 textarea Input：若不在 R Item → Info.Cols="2,8"；若在 R Item → Info.Cols="4,8"
+5.單行 2 個 Item：使用 R Item，設定 RowType="6,6"，ChildArray[0]=[左Item]，ChildArray[1]=[右Item]
+6.單行 3 個 Item：使用 R Item，設定 RowType="4,4,4"
+7.R Item 的 Col 與 Info.Cols 對應規則：
+  a.若該欄位寬度=4或8：Info.Cols="6,6"
+  b.若該欄位寬度=6：Info.Cols="4,6"
+
+*Input Item 的 Info.Fid 命名規則：
+1.Id表示欄位唯一值
+2.UserId表示對應 User 資料表的 Id 欄位, 以此類推
+3.名稱後面有 No 表示編號
+4.建檔人員、建檔時間、修改人員、修改時間 4個欄位使用 Creator、Created、Reviser、Revised 表示
+5.欄位名稱使用單詞或是複合字, 單字超過6個字母使用縮寫
+6.依照 Input Item 中文名稱推論合理的 Fid
+
+*以下 json 範例由上到下包含：
+1.分群文字
+2.文字輸入欄位
+3.欄位容器有2個欄位, 左右各為：1個下拉式輸入欄位、1個Radio欄位
+4.多筆表格, 包含3個文字欄位
+
+{
+	ItemType: 'G',
+	Info: {
+		Title: '分群1'
+	},
+},  
+{
+	ItemType: 'I',
+	Info: {
+		Title: '欄位1', 
+		InputType: 'text', 
+		Required: true, 
+		Cols: '2,3'
+	},
+},  
+{
+	ItemType: 'R',
+	Info: {
+		RowType: '6,6'
+	},
+	ChildArray: [
+		[
+			{
+				ItemType: 'I',
+				Info: {
+					Title: '欄位2',
+					InputType: 'select',
+					Cols: '4,6',
+					ExtInfo: '選項1,選項2,選項3'
+				},			
+			},
+		],
+		[
+			{
+				ItemType: 'I',
+				Info: {
+					Title: '欄位3',
+					InputType: 'radio',
+					Cols: '4,6',
+					ExtInfo: '選項a,選項b,選項c'
+				},			
+			},
+		],	
+	],
+},  
+{
+	ItemType: 'T',
+	Info: {
+		Title: '資料表1',
+		Table: 'table1',
+		Heads: '欄位1,欄位2,欄位3'
+	},
+	Childs: [
+		{
+			ItemType: 'I',
+			Info: {
+				Title: '欄位1',
+				InputType: 'text'
+			},
+		},  
+		{
+			ItemType: 'I',
+			Info: {
+				Title: '欄位2',
+				InputType: 'text'
+			},
+		},  
+		{
+			ItemType: 'I',
+			Info: {
+				Title: '欄位3',
+				InputType: 'text'
+			},
+		},  
+	],
+}, 

@@ -314,11 +314,12 @@ class UiView {
 	}
 
 	//box item add child item
+	//called by LoadJsons
 	//param {object) box
-	//param {string) null 表示工作區
+	//param {string) boxType, null 表示工作區
 	//param {object) item
 	//param {int) childNo
-	_boxAddItem(box, boxType, item, childNo) {
+	_boxAddItem(box, boxType, childNo, item) {
 		let cont;
 		//let no = info.ChildNo;
 		switch (boxType) {
@@ -330,7 +331,10 @@ class UiView {
 				cont = box.children().eq(childNo);
 				break;
 			case EstrItemType.Table:
-				//td位置
+				//hide label, inputNote
+				this._resizeItemByTable(item, true);
+
+				//td位置: tr第0列
 				cont = box.find("tbody tr").eq(0).find("td").eq(childNo);
 				break;
 			case EstrItemType.TabPage:
@@ -410,7 +414,8 @@ class UiView {
 	}
 	*/
 
-	//called onDragEnd 時建立新item 
+	//產生新item
+	//called: onDragEnd、loadJsonsA 
 	//param {json} info: item info 資訊
 	async _newItemA(itemType, itemId, info) {
 		switch (itemType) {
@@ -458,12 +463,15 @@ class UiView {
 			map[inputType] = tpl;
 		}
 
-		let item = $(map[inputType]);
-		await this._rowToInputA(info, item);
+		//replace fid, title, titleTip, inputNote
+		let html = map[inputType];
+		html = _str.replaceAll(html, Fid, info.Fid)
+			.replace(Title, info.Title)
+			.replace(TitleTip, info.TitleTip || '')
+			.replace(InputNote, info.InputNote || '');
 
-		//todo: 如果上層為box, 則cols修改2,3 -> 4,6, 單個取代
-		//if (this._boxIsRow())
-		//	this._resizeItemByRow(item, true);
+		let item = $(html);
+		await this._rowToInputA(info, item);
 
 		//最後寫入item的data-info
 		//this.objSetInfo(item, info);
@@ -553,7 +561,7 @@ class UiView {
 	_resizeItemByTable(item, inBox) {
 		let label = item.find(this.FtLabel);
 		let note = item.find(this.FtInputNote);
-		this._objSetRwd(item.find(this.FtInput), !inBox);
+		this._objShowGrid(item.find(this.FtInput), !inBox);
 		if (inBox) {
 			_obj.hide(label);
 			_obj.hide(note);
@@ -594,27 +602,11 @@ class UiView {
 		let cols = list.split(',');
 		this._objSetGrid(label, cols[0]);
 		this._objSetGrid(input, cols[1]);
-		/*
-		if (inBox) {
-			_obj.show(label);
-			_obj.show(input);
-			_obj.show(label);
-			cols = (dropBoxGridNum == 6) ? '4,6' :
-				hasNote ? '3,6' : '6,6';
-
-			this._labelSetGrid(item, 2, 4);
-			this._inputSetGrid(item, 3, 6);
-		} else {
-			let cols = ;
-			this._labelSetGrid(item, 4, 2);
-			this._inputSetGrid(item, 6, 3);
-		}
-		*/
 	}
 
 	//啟動/停用 css RWD
 	//param {bool} status
-	_objSetRwd(obj, status) {
+	_objShowGrid(obj, status) {
 		const tail = 'h';
 		let css = this._getGridCss(obj);
 		let findTail = css.endsWith(tail);
@@ -681,32 +673,47 @@ class UiView {
 	 * called: _getNewInputA, rowToItemA
 	 * //param {int} boxColNum Box 欄位格子數 0,4,6,8,12(0表示不會改變)
 	 */ 
-	async _rowToInputA(row, item) {
-		//set label
-		//jQuery會移除子節點required, 改用DOM(label順序:req、title、tip)
-		item.find(this.FtLabel)[0].childNodes[1].nodeValue = row.Title;
+	async _rowToInputA(info, item) {
+		//resize input item
+		let label = item.find(this.FtLabel);
+		let input = item.find(this.FtInput);
+		let cols = (info.Cols || this.DefaultCols).split(',');
+		this._objSetGrid(label, cols[0]);
+		this._objSetGrid(input, cols[1]);
 
-		//required show/hide
-		_obj.showByStatus(item.find(this.FtReq), row.Required);
-
-		//labelTip show/hide, update text
-		_obj.showByStatus(item.find(this.FtTipIcon), _str.notEmpty(row.TitleTip));
-		item.find(this.FtLabel).attr('title', row.TitleTip);	//設定label的 title屬性
-
-		//inputNote show/hide, update text
-		let note = item.find(this.FtInputNote);
-		//_obj.showByStatus(note, _str.notEmpty(row.InputNote));
-		note.text(row.InputNote || '');		//若為undefined, .text(xx)不會生效
-		this._noteSetStatus(note);
-
-		//todo: 欄位寬度調整 row.Cols 和 '2,3' 比較(考慮Auto)
-		//if (boxColNum > 0) {
+		//fid -> value
+		/*
+		let type = info.InputType;
+		if (type != EstrInputType.Check &&
+			type != EstrInputType.Radio &&
+			type != EstrInputType.Date) {
+		*/
+			//_input.set(info.Fid, info.Fid, input);
+			_input.getObj(info.Fid, input, info.InputType)
+				.attr('placeholder', info.Fid);
 		//}
+
+		//set label text
+		//jQuery會移除子節點required, 改用DOM(label順序:req、title、tip)
+		//label[0].childNodes[1].nodeValue = info.Title;
+
+		//show/hide required
+		_obj.showByStatus(item.find(this.FtReq), info.Required);
+
+		//show/hide labelTip, update text
+		_obj.showByStatus(item.find(this.FtTipIcon), _str.notEmpty(info.TitleTip));
+		//label.attr('title', info.TitleTip);	//設定label的 title屬性
+
+		//show/hide inputNote, update text
+		//let note = item.find(this.FtInputNote);
+		//_obj.showByStatus(note, _str.notEmpty(info.InputNote));
+		//note.text(info.InputNote || '');		//若為undefined, .text(xx)不會生效
+		this._noteSetStatus(item.find(this.FtInputNote));
 
 		/* todo: temp remark
 		//如果改變 inputType, 必須更新item 的x-input內容
-		if (this._getInputType(item) != row.InputType) {
-			let newItem = await this._getInputA(row);
+		if (this._getInputType(item) != info.InputType) {
+			let newItem = await this._getInputA(info);
 			let inputHtml = newItem.find(this.FtInput).html();
 			item.find(this.FtInput).html(inputHtml);
 		}
@@ -793,11 +800,12 @@ class UiView {
 
 	//載入items(巢狀格式), recursive, 此時Info欄位內容為Json, 不是Json字串 !!
 	//param {json array} jsons: 內含Id
-	async loadJsonsA(jsons, level, box) {
+	async loadJsonsA(jsons, level, box, childNo) {
 		//this.reset();	//reset first
+		if (jsons == null || jsons.length == 0)
+			return;
 
 		level ||= 0;
-		//area ||= this.Area;
 		if (level > 5) {
 			console.log('UiView.js loadItems() level > 5 !!');
 			return;
@@ -809,13 +817,27 @@ class UiView {
 			if (_json.isEmpty(json))
 				continue;
 
-			//let info = _str.toJson(json.Info);
+			//json.Info 為 Json 型態, 不是字串
 			let item = await this._newItemA(json.ItemType, json.Id, json.Info);
-			this._boxAddItem(box, boxType, item, i);
+			this._boxAddItem(box, boxType, childNo, item);
 
-			//recursive load childs
+			//load childs(1維陣列, ex: Table) or childArray(2維陣列, ex: Row, TabPage)
 			if (_json.notEmpty(json.Childs)) {
-				await this.loadJsonsA(json.Childs, level+1, item);
+				//load childs(1維), 直接add item, 不使用recursive
+				let childs = json.Childs;
+				for (let j = 0; j < childs.length; j++) {
+					let json2 = childs[j];
+					let item2 = await this._newItemA(json2.ItemType, json2.Id, json2.Info);					
+					this._boxAddItem(item, json.ItemType, j, item2);
+				}
+			} else if (_json.notEmpty(json.ChildArray)) {
+				//recursive load childArray(2維)
+				let childArray = json.ChildArray;
+				for (let j = 0; j < childArray.length; j++) {
+					let childs = childArray[j];
+					if (childs != null && childs.length > 0)
+						await this.loadJsonsA(childs, level + 1, item, j);
+				}
 			}
 		}
 	}

@@ -1,0 +1,283 @@
+[
+  {
+    "ItemType": "G",
+    "Info": {
+      "Title": "設備報修單"
+    }
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "申請日期",
+      "Fid": "ApplyDate",
+      "Required": true,
+      "Cols": "2,3",
+      "InputType": "date"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "申請人",
+            "Fid": "Applicant",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "申請部門",
+            "Fid": "ApplyDept",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "設備名稱",
+            "Fid": "DeviceName",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "報修時間",
+            "Fid": "RepairTime",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "date"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "設備型號",
+            "Fid": "DeviceModel",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "設備編號",
+            "Fid": "DeviceNo",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "故障原因",
+      "Fid": "FaultReason",
+      "Required": true,
+      "Cols": "2,8",
+      "InputType": "textarea"
+    }
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "檢查狀況",
+      "Fid": "CheckStatus",
+      "Required": false,
+      "Cols": "2,8",
+      "InputType": "textarea"
+    }
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "故障等級",
+      "Fid": "FaultLevel",
+      "Required": true,
+      "Cols": "2,8",
+      "InputType": "text"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "起修時間",
+            "Fid": "StartRepairTime",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "date"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "完工日期",
+            "Fid": "FinishDate",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "date"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "T",
+    "Info": {
+      "Title": "修理項目",
+      "Table": "RepairItems",
+      "Heads": "項目,名稱規格,數量,金額,小計,備註"
+    },
+    "Childs": [
+      {
+        "ItemType": "I",
+        "Info": {
+          "Title": "名稱規格",
+          "Fid": "ItemSpec",
+          "Required": true,
+          "InputType": "text"
+        }
+      },
+      {
+        "ItemType": "I",
+        "Info": {
+          "Title": "數量",
+          "Fid": "Qty",
+          "Required": true,
+          "InputType": "int"
+        }
+      },
+      {
+        "ItemType": "I",
+        "Info": {
+          "Title": "金額",
+          "Fid": "Amount",
+          "Required": true,
+          "InputType": "int"
+        }
+      },
+      {
+        "ItemType": "I",
+        "Info": {
+          "Title": "小計",
+          "Fid": "Subtotal",
+          "Required": false,
+          "InputType": "int"
+        }
+      },
+      {
+        "ItemType": "I",
+        "Info": {
+          "Title": "備註",
+          "Fid": "Remark",
+          "Required": false,
+          "InputType": "text"
+        }
+      }
+    ]
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "設備管理員結論",
+      "Fid": "ManagerConclusion",
+      "Required": false,
+      "Cols": "2,8",
+      "InputType": "textarea"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "設備管理員確認",
+            "Fid": "ManagerConfirm",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "報修人確認",
+            "Fid": "RepairerConfirm",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "備註",
+      "Fid": "Note",
+      "Required": false,
+      "Cols": "2,8",
+      "InputType": "textarea"
+    }
+  }
+]

@@ -57,6 +57,7 @@ var _input = {
      * set input value by object
      * param obj {object}
      * param value {object}
+     * param box {object} for radio
      * param type {string} optional, data-type
      */ 
     setO: function (obj, value, box, type) {
