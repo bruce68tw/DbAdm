@@ -59,33 +59,19 @@
 
     .xu-item {
         cursor: grab;
-        border: 1px solid transparent;
+        border: 2px solid transparent;
         border-radius: 4px;
         transition: border-color 0.2s;
     }
-        /* item hover 顯示 */
-        .xu-item:hover {
-            border-color: #888;
+        /* hover 顯示外框, 只顯示一層 */
+        .xu-item:hover:not(:has(.xu-item:hover)) {
+            border-color: green;
         }
-
-    /*
-    .xu-drag-box {
-        height: 30px;
-        width: 150px;
-        position: absolute;
-        pointer-events: none;
-        border: 1px solid #007bff;
-        background: rgba(0,123,255,0.1);
-        padding: 5px 10px;
-        border-radius: 4px;
-        z-index: 2000;
-    }
-    */
 
     /* row 格式加框線、高度 */
     .xu-row-col {
         min-height: 50px;
-        border: 1px solid #007bff;
+        border: 1px solid lightblue;
     }
 
     .xu-item-modal {
@@ -194,10 +180,17 @@
         },
 
         onExport: async function () {
-            const obj = { name: "Bruce", age: 30 };
-            const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
+            //get jsons
+            let jsons = this.uiMany.getJsons();
+            if (_json.isEmpty(jsons)) {
+                _tool.msg('目前畫面無任何資料。');
+                return;
+            }
 
-            //create link & click
+            //jsons to blob
+            const blob = new Blob([JSON.stringify(jsons, null, 2)], { type: "application/json" });
+
+            //create link & trigger click
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = "data.json";

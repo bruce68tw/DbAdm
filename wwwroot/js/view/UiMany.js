@@ -63,8 +63,8 @@ class UiMany {
     fnShowMenu(e, item) {
         //set instance variables
         this.nowItem = item;
-        this.nowItemId = this.uiView.getItemId(item);
-        this.nowItemType = this.uiView.getItemType(item);
+        this.nowItemId = this.uiView.itemGetId(item);
+        this.nowItemType = this.uiView.itemGetType(item);
 
         //todo
         let canEdit = true;
@@ -233,9 +233,10 @@ class UiMany {
         }
 
         //load info to modal
-        var rowBox = this.mItem.idToRowBox(this.nowItemId);
-        var row = _str.toJson(_itext.get('Info', rowBox));
-        _form.loadRow(modal, row);
+        //var rowBox = this.mItem.idToRowBox(this.nowItemId);
+        //var info = _str.toJson(_itext.get('Info', rowBox));
+        let info = this.uiView.itemGetInfo(this.nowItem);
+        _form.loadRow(modal, info);
 
         //show modal
         _modal.showO(modal);
@@ -285,7 +286,7 @@ class UiMany {
         var me = this;
         //ModalTable/ModalTabPage 時回傳ids(要刪除的id字串陣列, 不為null)
         let infoJson = _form.toRow(modal);    //直接讀取modal內欄位, 內容為 Info 欄位
-        await this.uiView.rowToItemA(infoJson, this.nowItem, function (ids) {
+        await this.uiView.InfoToItemA(infoJson, this.nowItem, function (ids) {
             if (me.nowItemType == EstrItemType.Table && ids.length > 0) {
                 //刪除多筆
                 //alert(`ids=${ids}`);
@@ -328,6 +329,10 @@ class UiMany {
 
         //ui loadItems
         await this.uiView.loadJsonsA(jsons);
+    }
+
+    getJsons() {
+        return this.uiView.getJsons();
     }
 
     /*
