@@ -10,7 +10,7 @@
  * 屬性: 參考 init()
  * 
  * 自定函數:
- *   void fnLoadJson(json) -> fnLoadRows(rows)：show json to form, use loadJson instead of loadRows for more situation !!
+ *   void fnLoadRows(rows)(old: fnLoadJson(json))：show json to form, use loadJson instead of loadRows for more situation !!
  *   json fnGetUpdJson(upKey)：get updated json by form
  *   bool fnValid()：validate check
  *   void fnReset()：reset
@@ -263,10 +263,9 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
     /**
      * loadRowsByBox(rowsBox, rows, reset) -> loadRowsByRsb(rows, reset, rowsBox)
      * load rows by rowsBox also set old value
-     * param rowsBox {object} rows box object
      * param rows {jsons}
-     * param reset {bool} (default true) reset rowsBox first.
-     * param rowsBox {object} (optional) rows box object, default this.rowsBox
+     * param reset {bool} (true) reset rowsBox first.
+     * param rowsBox {object} (this.rowsBox) rows box object 
      */ 
     this.loadRowsByRsb = function (rows, reset, rowsBox) {
         if (!this._checkRowTpl())

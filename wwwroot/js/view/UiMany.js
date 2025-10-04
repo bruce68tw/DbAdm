@@ -8,6 +8,10 @@
  */ 
 class UiMany {
 
+    /**
+     * @param {string} ftWorkArea
+     * @param {EditMany} mItem
+     */
     constructor(ftWorkArea, mItem) {
         //const
         this.FtMenu = '.xf-menu';   //right menu filter
@@ -318,14 +322,74 @@ class UiMany {
         this.uiView.setEdit(status);
     }
 
+    async loadRowsA(rows) {
+        //EditMany load rows by rowsBox
+        this.mItem.loadRowsByRsb(rows, true);
+
+        //rows to jsons
+        let jsons = this._rowsToJsons(rows);
+
+        //ui loadItems
+        await this.uiView.loadJsonsA(jsons);
+    }
+
+    //(by AI) rows to jsons
+    _rowsToJsons(rows) {
+        const map = new Map();
+
+        // 初始化每個節點，加上 children 陣列
+        rows.forEach(r => map.set(r.Id, { ...r, children: [] }));
+
+        const jsons = [];
+        rows.forEach(r => {
+            if (r.UpId && map.has(r.UpId)) {
+                // 有父層就掛到父層的 children
+                map.get(r.UpId).children.push(map.get(r.Id));
+            } else {
+                // 沒有父層的就是 root
+                jsons.push(map.get(r.Id));
+            }
+        });
+
+        // 排序: 先根層、再每個 children 按 Sort 排序
+        function sortTree(nodes) {
+            nodes.sort((a, b) => a.Sort - b.Sort);
+            nodes.forEach(n => sortTree(n.children));
+        }
+        sortTree(jsons);
+
+        return jsons;
+    }
+
+    //(by AI) jsons to rows
+    _jsonsToRows(jsons) {
+        const rows = [];
+
+        function traverse(nodes, parentId = null) {
+            nodes.forEach(n => {
+                rows.push(n);
+
+                if (n.children && n.children.length > 0) {
+                    traverse(n.children, n.Id);
+                }
+            });
+        }
+
+        traverse(jsons);
+        return rows;
+    }
+
     /**
      * json array to new items
      * param {json array} jsons: 巢狀資料
      */
     async loadJsonsA(jsons) {
+        //jsons to rows
+        let rows = this._jsonsToRows(jsons);
+
         //EditMany load rows by rowsBox
         //json array to rows, 同時設定new Id(負數)
-        //this.mItem.loadRowsByRsb(jsons, true);
+        this.mItem.loadRowsByRsb(rows, true);
 
         //ui loadItems
         await this.uiView.loadJsonsA(jsons);
