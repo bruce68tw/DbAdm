@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es6",
+    "rootDir": "./_tsBase",
+    "outDir": "./wwwroot/js_new",
+    "strict": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "mapRoot": "./wwwroot/map",
+    "esModuleInterop": true,
+    "inlineSources": true
+  },
+  "include": [
+    "_tsBase/**/*.ts"
+  ]
+}

@@ -1,0 +1,1 @@
+{"version":3,"file":"_Locale.js","sourceRoot":"","sources":["../../../base/_Locale.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,OAAO,OAAO,OAAO;CAE3B,CAAC,OAAO","sourcesContent":["export default class _Locale {\r\n\r\n} //class"]}
