@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "es6",
+    "module": "esnext",
+    "moduleResolution": "node",
     "rootDir": "./_tsBase",
     "outDir": "./wwwroot/js_new",
     "strict": true,
@@ -9,9 +10,11 @@
     "sourceMap": true,
     "mapRoot": "./wwwroot/map",
     "esModuleInterop": true,
-    "inlineSources": true
+    "inlineSources": true,
+    "types": [ "jquery" ]
   },
   "include": [
-    "_tsBase/**/*.ts"
+    "_tsBase/**/*.ts",
+    "_tsView/**/*.ts"
   ]
 }

@@ -1,5 +1,5 @@
 //resource for js base component
-export default class _BR {
+export default class BR {
 
     //=== moment.js convert these to UI format ===
     static readonly MmUiDateFmt: string = 'YYYY/MM/DD';          //match bootstrap-datepicker.js format property

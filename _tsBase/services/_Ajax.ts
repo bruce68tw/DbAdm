@@ -5,8 +5,9 @@ import _Jwt from "./_Jwt";
 import _Str from "./_Str";
 import _Tool from "./_Tool";
 import _Json from "./_Json";
-import _BR from "./_BR";
+//import _BR from "./_BR";
 // 假設 $ 來自 jQuery
+import $ from "jquery";
 
 /**
  * jquery ajax call
@@ -141,7 +142,7 @@ export default class _Ajax {
      * boolean: fnOk not empty, return false when error
      * json/any: fnOk is empty, return null when error
      */
-    private static async _rpcA(json: any, fnOk?: (result: any) => void | null, block?: boolean | JQuery<HTMLElement>): Promise<boolean | any> {
+    private static async _rpcA(json:any, fnOk?:(result: any) => void | null, block?: boolean | true): Promise<boolean | any> {
         if (_Var.isEmpty(block)) block = true;
         if (block) _Fun.block(block);
 
@@ -224,8 +225,9 @@ export default class _Ajax {
         //case of BR error msg
         const fid = str.substring(2);
         // 假設 _BR[fid] 存在
-        return (_BR[fid])
-            ? _BR[fid]
+        let br = _BR as any; 
+        return (br[fid])
+            ? br[fid]
             : _Str.format('_ajax.strToErrMsg() failed, no BR Fid={0}', fid);
     }
 

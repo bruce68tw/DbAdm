@@ -72,6 +72,7 @@
     <None Remove="Services\_ProgPath.cs_old" />
     <None Remove="Startup.cs.bak" />
     <None Remove="Startup.cs_old" />
+    <None Remove="tsconfig.json_old" />
     <None Remove="Views\Shared\Error.cshtml_old" />
     <None Remove="Views\Shared\zz_Top.cshtml_old" />
     <None Remove="_image\noImage.jpg" />
@@ -85,6 +86,7 @@
 	<Compile Remove="Controllers\TestController.cs" />
 	<Content Include="key.Development.txt" />
 	<Content Include="key.Production.txt" />
+	<Content Include="tsconfig.json_old" />
     <Content Include="Views\Shared\Error.cshtml_old" />
     <Content Include="_image\noImage.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -132,10 +134,6 @@
     <None Include="wwwroot\locale\zh-TW\dataTables.txt" />
     <None Include="wwwroot\locale\zh-TW\_BR.js" />
     <None Include="wwwroot\locale\zh-TW\validate.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="_tsView\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

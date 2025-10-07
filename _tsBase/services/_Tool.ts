@@ -20,7 +20,7 @@ export default class _Tool {
     private static _fnOnAnsNo: Function | null = null;
     private static _fnOnAreaYes: Function | null = null;
 
-    public static init(): void {
+    static init(): void {
         //alert
         _Tool.xgMsg = $('#xgMsg');  //使用id
         _Tool.xgAns = $('#xgAns');  //使用id
@@ -35,7 +35,7 @@ export default class _Tool {
      * param msg {string} html or string
      * param fnClose {function} callback function
      */
-    public static msg(msg: string, fnClose?: Function): void {
+    static msg(msg: string, fnClose?: Function): void {
         const box = _Tool.xgMsg;
         if (!box) return;
 
@@ -52,7 +52,7 @@ export default class _Tool {
      * @param fnYes {function}
      * @param fnNo {function}
      */
-    public static ans(msg: string, fnYes: Function, fnNo?: Function): void {
+    static ans(msg: string, fnYes: Function, fnNo?: Function): void {
         const box = _Tool.xgAns;
         if (!box) return;
 
@@ -69,7 +69,7 @@ export default class _Tool {
      * param {string} msg
      * param {string} color: default blue, R(red)
      */
-    public static alert(msg: string, color?: string): void {
+    static alert(msg: string, color?: string): void {
         const box = _Tool.xgAlert;
         if (!box) return;
 
@@ -83,12 +83,12 @@ export default class _Tool {
     }
 
     //??show waiting
-    public static showWait(): void {
+    static showWait(): void {
         //$('body').addClass('x-show-loading');
         _Obj.show($('.x-wait'));
     }
     //??
-    public static hideWait(): void {
+    static hideWait(): void {
         //$('body').removeClass('x-show-loading');
         _Obj.hide($('.x-wait'));
     }
@@ -100,7 +100,7 @@ export default class _Tool {
      * param isEdit {boolean} true:edit, false:readonly
      * param fnOk {function} function of onOk
      */
-    public static showArea(title: string, value: string, isEdit: boolean, fnOk: Function): void {
+    static showArea(title: string, value: string, isEdit: boolean, fnOk: Function): void {
         //set title
         const box = _Tool.xgArea;
         if (!box) return;
@@ -121,7 +121,7 @@ export default class _Tool {
         _Modal.showO(box);
     }
 
-    public static onAreaYes(): void {
+    static onAreaYes(): void {
         const box = _Tool.xgArea;
         if (!box) return;
 
@@ -138,7 +138,7 @@ export default class _Tool {
      * param fileName {string} image file name without path
      * param imageSrc {string} image src
      */ 
-    public static showImage(fileName: string, imageSrc: string): void {
+    static showImage(fileName: string, imageSrc: string): void {
         const box = _Tool.xgImage;
         if (!box) return;
 
@@ -150,7 +150,7 @@ export default class _Tool {
     /**
      * onclick alert close button
      */
-    public static onAlertClose(): void {
+    static onAlertClose(): void {
         const box = _Tool.xgAlert;
         if (!box) return;
 
@@ -163,14 +163,14 @@ export default class _Tool {
      * triggered when user click confirmation yes button
      * called by XgAnsHelper
      */
-    public static onAnsYes(): void {
+    static onAnsYes(): void {
         if (_Tool._fnOnAnsYes && _Tool.xgAns) {
             _Modal.hideO(_Tool.xgAns);
             _Tool._fnOnAnsYes();
         }
     }
     
-    public static onAnsNo(): void {
+    static onAnsNo(): void {
         if (_Tool._fnOnAnsNo)
             _Tool._fnOnAnsNo();
         if (_Tool.xgAns) {
@@ -178,7 +178,7 @@ export default class _Tool {
         }
     }
     
-    public static onMsgClose(): void {
+    static onMsgClose(): void {
         if (_Tool._fnOnMsgClose)
             _Tool._fnOnMsgClose();
         if (_Tool.xgMsg) {

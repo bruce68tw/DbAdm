@@ -7,7 +7,6 @@ using BaseWeb.Services;
 using DbAdm.Models;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
 using System.Data.Common;
 using System.Data.SqlClient;
 
@@ -72,27 +71,11 @@ if (isDev)
 {
     //app.UseMigrationsEndPoint();
     app.UseDeveloperExceptionPage();
-
-    // 開發模式：提供原始碼 (ts/css)
-    app.UseStaticFiles(new StaticFileOptions
-    {
-        FileProvider = new PhysicalFileProvider(
-            Path.Combine(builder.Environment.ContentRootPath, "..", "Base/BaseFront")),
-        RequestPath = "/BaseFront"
-    });
 }
 else
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();  //for https, default HSTS 30 days. for change see https://aka.ms/aspnetcore-hsts.
-
-    // 正式模式：提供 Vite build 輸出
-    app.UseStaticFiles(new StaticFileOptions
-    {
-        FileProvider = new PhysicalFileProvider(
-            Path.Combine(builder.Environment.ContentRootPath, "..", "Base/BaseFront/dist")),
-        RequestPath = "/BaseFront"
-    });
 }
 
 app.UseHttpsRedirection();
