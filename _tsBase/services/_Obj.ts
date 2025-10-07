@@ -10,7 +10,7 @@ export default class _Obj {
     /**
      * get object by name for input field
      */
-    public static get(fid: string, box: JQuery<HTMLElement>): JQuery<HTMLElement> | null {
+    static get(fid: string, box: JQuery): JQueryN {
         // Assuming _input.fidFilter is on a class named _Input
         return _Obj.getF(_Input.fidFilter(fid), box);
     }
@@ -18,7 +18,7 @@ export default class _Obj {
     /**
      * get object by filter string
      */
-    public static getF(ft: string, box: JQuery<HTMLElement>): JQuery<HTMLElement> | null {
+    static getF(ft: string, box: JQuery): JQueryN {
         const obj = box.find(ft);
         if (obj.length === 0) {
             //_log.info('_obj.js getF() found none. (filter=' + ft + ')');
@@ -31,13 +31,13 @@ export default class _Obj {
     /**
      * get object by name
      */
-    public static getN(name: string, box: JQuery<HTMLElement>): JQuery<HTMLElement> | null {
+    static getN(name: string, box: JQuery): JQueryN {
         return _Obj.getF('[name=' + name + ']', box);
     }
 
     /**
      * get object by data-id
-    public static getD(val: string, box: JQuery<HTMLElement>): JQuery<HTMLElement> | null {
+    static getD(val: string, box: JQuery): JQueryN {
         return _Obj.getF('[data-id=' + val + ']', box);
     }
      */
@@ -45,7 +45,7 @@ export default class _Obj {
     /**
      * get object by value
      */
-    public static getV(val: string, box: JQuery<HTMLElement>): JQuery<HTMLElement> | null {
+    static getV(val: string, box: JQuery): JQueryN {
         return _Obj.getF('[value=' + val + ']', box);
     }
 
@@ -53,7 +53,7 @@ export default class _Obj {
      * for none input object
      * get object by id for none input field, like button
      */
-    public static getById(id: string, box: JQuery<HTMLElement>): JQuery<HTMLElement> | null {
+    static getById(id: string, box: JQuery): JQueryN {
         return _Obj.getF('#' + id, box);
     }
 
@@ -61,20 +61,20 @@ export default class _Obj {
     /**
      * get id of object
      */
-    public static getId(obj: JQuery<HTMLElement>): string {
-        return (obj.length > 0) ? obj.attr('id') ?? '' : '';
+    static getId(obj: JQueryN): string {
+        return _Obj.isEmpty(obj) ? '' : obj!.attr('id') ?? '';
     }
 
     /**
      * get name of object
      */
-    public static getName(obj: JQuery<HTMLElement>): string {
-        return (obj.length > 0) ? obj.attr('name') ?? '' : '';
+    static getName(obj: JQueryN): string {
+        return _Obj.isEmpty(obj) ? '' : obj!.attr('name') ?? '';
     }
 
     /**
      * get data-id of object
-    public static getDid(obj: JQuery<HTMLElement>): string {
+    static getDid(obj: JQuery): string {
         return (obj.length > 0) ? obj.data('id') : '';
     }
      */
@@ -82,15 +82,15 @@ export default class _Obj {
     /**
      * check object is visible or not
      */
-    public static isShow(obj: JQuery<HTMLElement>): boolean {
+    static isShow(obj: JQuery): boolean {
         return obj.is(':visible');
     }
 
     /**
      * check object existed or not
      */
-    public static isEmpty(obj: JQuery<HTMLElement> | null): boolean {
-        // Modified signature to accept JQuery<HTMLElement> | null for robustness
+    static isEmpty(obj: JQueryN): boolean {
+        // Modified signature to accept JQueryN for robustness
         return (obj == null || obj.length === 0);
     }
 
@@ -98,7 +98,7 @@ export default class _Obj {
      * isExist -> notEmpty
      * check object existed or not
      */
-    public static notEmpty(obj: JQuery<HTMLElement> | null): boolean {
+    static notEmpty(obj: JQueryN): boolean {
         return !_Obj.isEmpty(obj);
     }
 
@@ -106,22 +106,22 @@ export default class _Obj {
      * check object has attribute or not
      * return boolean
      */
-    public static hasAttr(obj: JQuery<HTMLElement>, attr: string): string | undefined {
+    static hasAttr(obj: JQuery, attr: string): string | undefined {
         // Added 'attr' parameter as it was missing and assumed to be a string return type
         return obj.attr(attr);
     }
 
     //如果使用show()/hide()會動態寫入 inline style, 造成CSRF !!
-    public static show(obj: JQuery<HTMLElement>): void {
+    static show(obj: JQuery): void {
         obj.removeClass('d-none');
     }
 
-    public static hide(obj: JQuery<HTMLElement>): void {
+    static hide(obj: JQuery): void {
         obj.addClass('d-none');
     }
 
     //status可能傳入文字!!
-    public static showByStatus(obj: JQuery<HTMLElement>, status: any): void {
+    static showByStatus(obj: JQuery, status: any): void {
         // Assuming _var.toBool is on a class named _Var
         if (_Var.toBool(status))
             _Obj.show(obj);
@@ -129,7 +129,7 @@ export default class _Obj {
             _Obj.hide(obj);
     }
 
-    public static getData(obj: JQuery<HTMLElement>, fid: string): any {
+    static getData(obj: JQuery, fid: string): any {
         return obj.data(fid);
     }
 
@@ -139,18 +139,18 @@ export default class _Obj {
      * param {string} fid
      * param {string} value
      */
-    public static setData(obj: JQuery<HTMLElement>, fid: string, value: string): void {
+    static setData(obj: JQuery, fid: string, value: string): void {
         obj.attr('data-' + fid, value);
     }
 
     //傳回小寫tagName
-    public static tagName(obj: JQuery<HTMLElement>): string {
+    static tagName(obj: JQuery): string {
         // Added null check for robustness, assuming the JQuery object contains elements
         return obj[0] ? obj[0].tagName.toLowerCase() : '';
     }
 
     //rename css class
-    public static renameCss(obj: JQuery<HTMLElement>, oldCss: string, newCss: string): void {
+    static renameCss(obj: JQuery, oldCss: string, newCss: string): void {
         obj.removeClass(oldCss).addClass(newCss);
     }
 } //class

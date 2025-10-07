@@ -11,7 +11,7 @@ export default class _Pjax {
      * initial
      * param {string} boxFt : box(container) filter
      */
-    public static init(boxFt: string): void {
+    static init(boxFt: string): void {
         //if skip 'POST', it will trigger twice !!
         const docu = $(document);
         // Assuming $.fn.pjax is available via a definition file or installed typings

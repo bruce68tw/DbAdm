@@ -11,7 +11,7 @@ declare var QRCode: any;
 //https://github.com/davidshimjs/qrcodejs
 export default class _Qrcode {
 
-    public static set(id: string, box: JQuery<HTMLElement>, url: string, width?: number): any {
+    static set(id: string, box: JQuery, url: string, width?: number): any {
         const obj = _Obj.getById(id, box);
         // 確保找到元素，否則 setO 會失敗
         if (obj === null) {
@@ -21,7 +21,7 @@ export default class _Qrcode {
         return _Qrcode.setO(obj, url, width);
     }
 
-    public static setO(obj: JQuery<HTMLElement>, url: string, width?: number): any {
+    static setO(obj: JQuery, url: string, width?: number): any {
         const qrWidth = width || 128;
 
         //return new QRCode(document.getElementById(id), {

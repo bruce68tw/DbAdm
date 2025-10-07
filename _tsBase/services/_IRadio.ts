@@ -116,7 +116,8 @@ export default class _IRadio extends _IBase {
      @param {string} extProp (optional) extProp
      @return {string} html string.
     */
-    static render(fid?: string, label?: string, checked?: boolean, value?: string | number, editable?: boolean, extClass?: string, extProp?: string): string {
+    static render(fid?: string, label?: string, checked?: boolean,
+        value?: string | number, editable?: boolean, extClass?: string, extProp?: string): string {
         const html = "" +
             "<label class='xi-check {0}'>" +
             "   <input type='radio'{1}>{2}" +

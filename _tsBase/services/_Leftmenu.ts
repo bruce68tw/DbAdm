@@ -4,7 +4,7 @@
     //private static box: JQuery;
     //private static body: JQuery;
 
-    public static init(): void {
+    static init(): void {
         //set variables
         _Leftmenu.menu = $('.x-leftmenu');
         //_Leftmenu.box = _Leftmenu.menu.parent();
@@ -30,17 +30,17 @@
 
     /*
     //set width for container of left menu
-    public static setBoxWidth(isOpen: boolean): void {
+    static setBoxWidth(isOpen: boolean): void {
         const fid = isOpen ? 'max-width' : 'min-width';
         //_Leftmenu.box.css('width', _Leftmenu.menu.data(fid) + 'px');
     },
     */
 
-    public static onToggleMenu(): void {
+    static onToggleMenu(): void {
         _Leftmenu.menu.toggleClass('x-close');
     }
 
-    public static getMenuPath(me: JQuery): string {
+    static getMenuPath(me: JQuery): string {
         const menuName = me.text().trim();
 
         // 找父層文字

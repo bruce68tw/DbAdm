@@ -7,7 +7,7 @@ import _Tool from "./_Tool";
 import _Json from "./_Json";
 //import _BR from "./_BR";
 // 假設 $ 來自 jQuery
-import $ from "jquery";
+//import $ from "jquery";
 
 /**
  * jquery ajax call
@@ -144,7 +144,7 @@ export default class _Ajax {
      */
     private static async _rpcA(json:any, fnOk?:(result: any) => void | null, block?: boolean | true): Promise<boolean | any> {
         if (_Var.isEmpty(block)) block = true;
-        if (block) _Fun.block(block);
+        if (block) _Fun.block();
 
         //改用 async/await
         let status = false;
@@ -187,7 +187,7 @@ export default class _Ajax {
             console.error(error);
         }
 
-        if (block) _Fun.unBlock(block);
+        if (block) _Fun.unBlock();
         return (fnOk == null) ? result : status;
     }
 

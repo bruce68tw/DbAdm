@@ -27,7 +27,7 @@ export default class _Form {
      * param form {object} input form
      * return {json}
      */
-    public static toRow(form: JQuery<HTMLElement>): { [key: string]: any } {
+    static toRow(form: JQuery<HTMLElement>): { [key: string]: any } {
         //skip link & read fields
         let row: { [key: string]: any } = {};
         form.find(_Input.fidFilter()).filter(':not(.xi-unsave)').each(function () {
@@ -67,7 +67,7 @@ export default class _Form {
         */
     }
 
-    public static toRowStr(form: JQuery<HTMLElement>): string {
+    static toRowStr(form: JQuery<HTMLElement>): string {
         return JSON.stringify(_Form.toRow(form));
     }
 
@@ -76,7 +76,7 @@ export default class _Form {
      * param form {object} form or box object
      * param json {json}
      */
-    public static loadRow(form: JQuery<HTMLElement>, row: { [key: string]: any }): void {
+    static loadRow(form: JQuery<HTMLElement>, row: { [key: string]: any }): void {
         for (const key in row)
             _Input.set(key, row[key], form);
     }
@@ -85,7 +85,7 @@ export default class _Form {
      * reset all inputs with name attribute
      * param form {object}
      */
-    public static reset(form: JQuery<HTMLElement>): void {
+    static reset(form: JQuery<HTMLElement>): void {
         form.find(_Input.fidFilter()).each(function () {
             _Input.setO($(this), '', form);
         });
@@ -94,7 +94,7 @@ export default class _Form {
     /**
      * check has file input or not
      */
-    public static hasFile(form: JQuery<HTMLElement>): boolean {
+    static hasFile(form: JQuery<HTMLElement>): boolean {
         return (form.find(':file').length > 0);
     }
 
@@ -103,7 +103,7 @@ export default class _Form {
      * param form {object} jquery form/box
      * param status {bool} edit status
      */
-    public static setEdit(form: JQuery<HTMLElement>, status: boolean): void {
+    static setEdit(form: JQuery<HTMLElement>, status: boolean): void {
         //text & textArea
         _IText.setEditO(form.find('input:text'), status);
         _ITextarea.setEditO(form.find('textarea'), status);
@@ -139,7 +139,7 @@ export default class _Form {
      * param hides {array} object array to hide
      * param shows {array} object array to show
      */
-    public static hideShow(hides: JQuery<HTMLElement>[] | null, shows: JQuery<HTMLElement>[] | null): void {
+    static hideShow(hides: JQuery<HTMLElement>[] | null, shows: JQuery<HTMLElement>[] | null): void {
         //hide first
         if (hides) {
             for (let i = 0; i < hides.length; i++) {

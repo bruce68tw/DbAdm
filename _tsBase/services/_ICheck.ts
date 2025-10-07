@@ -74,7 +74,7 @@ export default class _ICheck extends _IBase {
     static getCheckeds(form: JQuery, fid?: string): string[] {
         fid = fid || _ICheck.Check0Id;
         const ary: string[] = [];
-        _Obj.getF(_Input.fidFilter(fid) + ':checked', form).each(function (i) {
+        _Obj.getF(_Input.fidFilter(fid) + ':checked', form)!.each(function (i) {
             // @ts-ignore: data('value') is expected to return a string or equivalent
             ary[i] = $(this).data('value');
         });

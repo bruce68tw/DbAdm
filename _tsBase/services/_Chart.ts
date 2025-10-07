@@ -1,4 +1,9 @@
-﻿// 假設的依賴靜態類別
+﻿import { Chart } from "chart.js";
+
+// 這行很重要：要先註冊所有內建組件
+//Chart.register(...registerables);
+
+// 假設的依賴靜態類別
 import _Json from "./_Json";
 // 假設 Chart 來自 Chart.js 函式庫，且其類型已定義
 
@@ -20,7 +25,7 @@ export default class _Chart {
     //_nowChart: any = null; // 註解掉的屬性
 
     //彩虹顏色
-    public static readonly rainbowColors: string[] = [
+    static readonly rainbowColors: string[] = [
         "#F32E37",
         "#EABE37",
         "#89E926",
@@ -38,7 +43,7 @@ export default class _Chart {
      * param color {string} 
      */
     /*
-    public static line(canvasId: string, rows: { Id: string, Num: number }[], color: string): void {
+    static line(canvasId: string, rows: { Id: string, Num: number }[], color: string): void {
         const ids: string[] = [];
         const values: number[] = [];
         for (let i = 0; i < rows.length; i++) {
@@ -152,12 +157,12 @@ export default class _Chart {
     }
 
     //線形圖
-    public static line(canvasObj: any, dto: ChartDataDto): any {
+    static line(canvasObj: any, dto: ChartDataDto): any {
         return _Chart._show('line', canvasObj, dto, false);
     }
 
     //水平條狀圖
-    public static hbar(canvasObj: any, dto: ChartDataDto): any {
+    static hbar(canvasObj: any, dto: ChartDataDto): any {
         dto.options = {
             indexAxis: 'y'
         };
@@ -166,18 +171,18 @@ export default class _Chart {
     }
 
     //圓餅圖
-    public static pie(canvasObj: any, dto: ChartDataDto): any {
+    static pie(canvasObj: any, dto: ChartDataDto): any {
         // null 傳入 _show 會使 legend 預設為 true (內建邏輯)
         return _Chart._show('pie', canvasObj, dto, null, true);
     }
 
     //甜甜圈
-    public static doughnut(canvasObj: any, dto: ChartDataDto): any {
+    static doughnut(canvasObj: any, dto: ChartDataDto): any {
         return _Chart._show('doughnut', canvasObj, dto, null, true);
     }
 
     //多個線形圖
-    public static groupLine(canvasObj: any, dto: ChartDataDto): any {
+    static groupLine(canvasObj: any, dto: ChartDataDto): any {
         /*
         //set curve line
         dto.datasets.map(a => {
@@ -188,19 +193,19 @@ export default class _Chart {
     }
 
     //多個線形圖
-    public static groupBar(canvasObj: any, dto: ChartDataDto): any {
+    static groupBar(canvasObj: any, dto: ChartDataDto): any {
         return _Chart._show('bar', canvasObj, dto);
     }
 
     /**
      * show one line chart, called Chart.js (舊版實作)
      */ 
-    public static drawLine(canvasId: string, ids: string[], values: number[], color: string): any {
+    static drawLine(canvasId: string, ids: string[], values: number[], color: string): any {
         // _Chart._clear(); // 註解掉
         // _Chart._nowChart = new Chart(...) // 註解掉
         
         // 假設 Chart 類別已經定義
-        return new Chart(document.getElementById(canvasId), {
+        return new Chart(document.getElementById(canvasId) as HTMLCanvasElement, {
             type: 'line',
             data: {
                 labels: ids,
@@ -235,7 +240,7 @@ export default class _Chart {
      * param config {any} custom config
      * return {any} Chart
      */
-    public static initPie(canvasObj: any, labels: string[], values: number[], colors: string[], config?: any): any {
+    static initPie(canvasObj: any, labels: string[], values: number[], colors: string[], config?: any): any {
 
         //default config
         let config0: any = {

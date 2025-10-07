@@ -9,7 +9,7 @@ export default class _Json {
      return {object}
      */
     /*
-    public static addJson(source: { [key: string]: any }, target?: { [key: string]: any }): { [key: string]: any } {
+    static addJson(source: { [key: string]: any }, target?: { [key: string]: any }): { [key: string]: any } {
         if (!target)
             target = {};
         Object.keys(source).map(function (key, index) {
@@ -25,7 +25,7 @@ export default class _Json {
      * param to {json}
      * return {json} new json data
      */
-    public static toChartRows(json: { [key: string]: any }, cols: string[]): { Id: string, Num: any }[] {
+    static toChartRows(json: { [key: string]: any }, cols: string[]): { Id: string, Num: any }[] {
         const rows: { Id: string, Num: any }[] = [];
         for (let i = 0; i < cols.length; i++) {
             const fid = cols[i];
@@ -40,7 +40,7 @@ export default class _Json {
      * param to {json}
      * return {json} new json data
      */
-    public static copy(from: { [key: string]: any }, to?: { [key: string]: any }): { [key: string]: any } {
+    static copy(from: { [key: string]: any }, to?: { [key: string]: any }): { [key: string]: any } {
         const target = to || {};
         for (const key in from) {
             if (from.hasOwnProperty(key)) {
@@ -62,7 +62,7 @@ export default class _Json {
      * param valueId {string} value field id, default to 'Value'
      * return {object} 回傳的json的欄位名稱前面會加上'f'
      */
-    public static keyValuesToJson(keyValues: { [key: string]: any }[] | null, keyId?: string, valueId?: string): { [key: string]: any } | null {
+    static keyValuesToJson(keyValues: { [key: string]: any }[] | null, keyId?: string, valueId?: string): { [key: string]: any } | null {
         if (keyValues === null || keyValues.length === 0)
             return null;
 
@@ -80,26 +80,26 @@ export default class _Json {
     }
 
     //json: object or object array
-    public static toStr(json: any): string {
+    static toStr(json: any): string {
         return (_Json.isEmpty(json)) ? '' : JSON.stringify(json);
     }
 
-    public static isEmpty(json: any): boolean {
+    static isEmpty(json: any): boolean {
         // 假設 $.isEmptyObject 是可用的，或是自行實現
         return (json == null || (window as any).jQuery.isEmptyObject(json));
     }
 
-    public static notEmpty(json: any): boolean {
+    static notEmpty(json: any): boolean {
         return !_Json.isEmpty(json);
     }
 
     //check is key-value pair
-    public static isKeyValue(value: any): boolean {
+    static isKeyValue(value: any): boolean {
         return (Object.prototype.toString.call(value) === '[object Object]');
     }
 
     //convert url to json 
-    public static urlToJson(url: string): { [key: string]: string } {
+    static urlToJson(url: string): { [key: string]: string } {
         if (url.indexOf('?') > -1) {
             url = url.split('?')[1];
         }
@@ -114,13 +114,13 @@ export default class _Json {
     }
 
     //convert string to json array
-    public static strToArray(str: string): any {
+    static strToArray(str: string): any {
         return JSON.parse(str);
     }
 
     //find jarray
     //return array index
-    public static findIndex(rows: any[] | null, fid: string, value: any): number {
+    static findIndex(rows: any[] | null, fid: string, value: any): number {
         if (rows == null)
             return -1;
 
@@ -134,7 +134,7 @@ export default class _Json {
     }
 
     //filter json array
-    public static filterRows(rows: any[] | null, fid: string, value: any): any[] | null {
+    static filterRows(rows: any[] | null, fid: string, value: any): any[] | null {
         if (rows == null || rows.length == 0)
             return null;
 
@@ -144,7 +144,7 @@ export default class _Json {
     }
 
     //appendRows
-    public static appendRows(froms: any[] | null, tos: any[]): void {
+    static appendRows(froms: any[] | null, tos: any[]): void {
         if (froms == null || froms.length == 0)
             return;
 
@@ -160,7 +160,7 @@ export default class _Json {
      * param level {int} (default 0) debug purpose, base 0
      * return void
      */
-    public static removeNull(obj: { [key: string]: any } | null | undefined, level?: number): void {
+    static removeNull(obj: { [key: string]: any } | null | undefined, level?: number): void {
         //debugger;
         level = level || 0;
         if (!obj || _Json.isEmpty(obj)) return;

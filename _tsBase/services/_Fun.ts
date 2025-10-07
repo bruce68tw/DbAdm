@@ -29,7 +29,7 @@ export default class _Fun {
     static isRwd: boolean = false;
     static pageRows: number = 10;   //must be 10,20(not 25),50,100    
     static userId: string = '';     //now userId
-    static nowDom: HTMLElement | null = null;     //now dom event element
+    static nowElm: HTMLElement | null = null;     //now dom event element
 
     //mid variables
     static data: Record<string, any> = {};
@@ -82,8 +82,12 @@ export default class _Fun {
 
     //get 目前event this
     //param {bool} isObj: true(jQuery object)
-    static getMe(isObj: boolean): HTMLElement | JQuery | null {
-        return isObj ? $(_Fun.nowDom) : _Fun.nowDom;
+    static getObj(): JQuery {
+        return $(_Fun.nowElm!);
+    }
+
+    static getElm(): Elm {
+        return _Fun.nowElm!;
     }
 
     /**
@@ -96,7 +100,7 @@ export default class _Fun {
         const event2 = 'on' + eventName;
         box.on(eventName, `[data-${event2}]`, function (this: HTMLElement) {
             //set global
-            _Fun.nowDom = this;
+            _Fun.nowElm = this;
 
             const me = $(this);
             const fnPath = me.data(event2);  // "_me.crudR.onAddRow"
@@ -145,12 +149,12 @@ export default class _Fun {
     }
 
     //for CSP, 不使用 jQuery.blockUI(), 會有inline style 衝突!!
-    static block(obj: JQuery | HTMLElement | null | undefined): void {
-        _Obj.show(_Tool.xgWork);
+    static block(): void {
+        _Obj.show(_Tool.work!);
     }
 
-    static unBlock(obj: JQuery | HTMLElement | null | undefined): void {
-        _Obj.hide(_Tool.xgWork);
+    static unBlock(): void {
+        _Obj.hide(_Tool.work!);
     }
 
     //#region remark code

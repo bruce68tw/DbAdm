@@ -10,6 +10,7 @@
     "sourceMap": true,
     "mapRoot": "./wwwroot/map",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "inlineSources": true,
     "types": [ "jquery" ]
   },

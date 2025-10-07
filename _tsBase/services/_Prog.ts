@@ -5,7 +5,7 @@ import _Str from "./_Str";
 // 假設這些是外部的列舉或常數類別/對象
 // 並且它們將被轉換為大 camel case 命名
 import EstrFun from "./EstrFun";
-import _Br from "./_Br";
+//import _Br from "./_Br";
 
 //program, 包含 crud功能
 export default class _Prog {
@@ -13,7 +13,7 @@ export default class _Prog {
     private static me: JQuery<HTMLElement> | null = null;
     private static oriPath: string = '';    //original path
 
-    public static init(): void {
+    static init(): void {
         _Prog.me = $('.x-prog-path');
         //_Prog.oriPath = _Prog.me.text();
         if (_Prog.me.text() === '') {
@@ -31,12 +31,12 @@ export default class _Prog {
         }
     }
     
-    public static storeProgPath(progPath: string): void {
+    static storeProgPath(progPath: string): void {
         _Fun.data.progPath = progPath;
     }
     
     //reset path to initial
-    public static resetPath(): void {
+    static resetPath(): void {
         if (_Prog.me) {
             _Prog.me.text(_Prog.oriPath);
         }
@@ -47,16 +47,16 @@ export default class _Prog {
      * param fun {string} fun mode (Assuming fun is a value from EstrFun)
      * param updName {string}
      */
-    public static setPath(fun: string, updName: string): void {
+    static setPath(fun: string, updName: string): void {
         let name: string;
         if (fun === EstrFun.Create) {
-            name = _Br.Create;
+            name = _BR.Create;
         } else if (fun === EstrFun.View) {
-            name = _Br.View;
+            name = _BR.View;
         } else if (fun !== EstrFun.Update) {
             name = '??';
         } else {
-            name = _Str.isEmpty(updName) ? _Br.Update : updName;
+            name = _Str.isEmpty(updName) ? _BR.Update : updName;
         }
 
         _Prog.setFunName(name);
@@ -66,7 +66,7 @@ export default class _Prog {
      * set fun name
      * param name {string} fun name
      */
-    public static setFunName(name: string): void {
+    static setFunName(name: string): void {
         if (_Prog.me) {
             _Prog.me.text(_Prog.oriPath + '-' + name);
         }

@@ -1,5 +1,6 @@
 ﻿import _Edit from "./_Edit";
 import _Form from "./_Form";
+import _Fun from "./_Fun";
 import _ICheck from "./_ICheck";
 import _IDate from "./_IDate";
 import _IFile from "./_IFile";
@@ -90,7 +91,7 @@ export default class EditMany {
     public fileFids?: string[]; // Array of fids that are files
     public fileLen: number = 0;
 
-    public hasEform: boolean;
+    public hasEform: boolean = false;
     public rowsBox?: JQuery<HTMLElement>;
     public eform?: JQuery<HTMLElement>;     //edit form object
     public validator?: Validator;
@@ -313,7 +314,7 @@ export default class EditMany {
         //set old value for each field
         for (let i = 0; i < this.fidTypeLen; i = i + 2) {
             const fid = this.fidTypes[i];
-            _Edit.setOld(_Obj.get(fid, box), row[fid]);
+            _Edit.setOld(_Obj.get(fid, box)!, row[fid]);
         }
 
         //set date input
@@ -475,7 +476,7 @@ export default class EditMany {
             //add modified fields
             const diffRow: any = {};
             let diff = false;
-            let fid: string, ftype: string, value: any, obj: JQuery<HTMLElement>;
+            let fid: string, ftype: string, value: any, obj: JQuery;
             for (let j = 0; j < me.fidTypeLen; j = j + 2) {
                 //skip read only input !!
                 ftype = me.fidTypes![j + 1];
@@ -483,7 +484,7 @@ export default class EditMany {
                     continue;
 
                 fid = me.fidTypes![j];
-                obj = _Obj.get(fid, box);
+                obj = _Obj.get(fid, box)!;
                 value = _Input.getO(obj, box, ftype);
                 //if totally compare, string is not equal to numeric !!
                 if (value != _Edit.getOld(obj)) {
@@ -548,10 +549,10 @@ export default class EditMany {
      * param btn {element}
      */
     public onDeleteRow(): void {
-        const box = this._elmToRowBox((_Fun as any).getMe()); // Assuming _Fun.getMe() returns the clicked element
+        const box = this._elmToRowBox(_Fun.getElm()); // Assuming _Fun.getMe() returns the clicked element
         if (!box) return;
 
-        this.deleteRow(_IText.get(this.kid, box), box);
+        this.deleteRow(_IText.get(this.kid, box)!, box);
     }
 
     /**

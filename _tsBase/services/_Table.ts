@@ -6,21 +6,21 @@ import _Input from "./_Input";
 export default class _Table {
 
     //btn: fun button in tr
-    public static rowMoveUp(): void {
+    static rowMoveUp(): void {
         // _fun.getMe(true) 傳回觸發事件的元件 (例如按鈕)，closest('tr') 找到包含該元件的列
-        const row = _Fun.getMe(true).closest('tr');
+        const row = _Fun.getObj().closest('tr');
         row.insertBefore(row.prev());
     }
 
-    public static rowMoveDown(): void {
+    static rowMoveDown(): void {
         // _fun.getMe(true) 傳回觸發事件的元件 (例如按鈕)，closest('tr') 找到包含該元件的列
-        const row = _Fun.getMe(true).closest('tr');
+        const row = _Fun.getObj().closest('tr');
         row.insertAfter(row.next());
     }
 
     /*
     //delete, up, down
-    public static rowFun(): string {
+    static rowFun(): string {
         return '' +
             _Str.format('<a href="javascript:_me.crudE.onUpdateA(\'{0}\');"><i class="ico-delete" title="{0}"></i></a>', key, _Br.TipUpdate) +
             _Str.format('<a href="javascript:_table.rowMoveUp(this);"><i class="ico-up" title="{0}"></i></a>', _Br.TipUpdate) +
@@ -34,7 +34,7 @@ export default class _Table {
      * param fid {string} field id(name attribute)
      * return {number} rows count
      */
-    public static getRowCount(table: JQuery<HTMLElement>, fid: string): number {
+    static getRowCount(table: JQuery<HTMLElement>, fid: string): number {
         // _input.fidFilter 應該在 _Input 類別中
         return table.find(_Input.fidFilter(fid)).length;
     }

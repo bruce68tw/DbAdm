@@ -55,7 +55,7 @@ export default class EditOne {
 
     // fileFids, fileLen, hasFile 屬性在外部設定(_me.crudE.js setFileVars())
     public kid: string;
-    public eform: JQuery<HTMLElement>;
+    public eform: JQuery;
     public dataJson: any = null;
     public systemError: string = '';
     public fidTypes?: string[];         // fidTypes array of [fid, ftype, fid, ftype, ...]

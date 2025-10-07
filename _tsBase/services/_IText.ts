@@ -7,9 +7,9 @@ export default class _IText extends _IBase {
 
     //new method
     //add input mask, use jquery maskedinput
-    public static mask(box: JQuery): void {
+    static mask(box: JQuery): void {
         const filter = "[data-mask!='']";
-        _Obj.getF(filter, box).each(function () {
+        _Obj.getF(filter, box)!.each(function () {
             const me = $(this);
             // 假設 JQuery 已經透過擴充支援 .mask 方法
             (me as any).mask(me.data('mask')); 

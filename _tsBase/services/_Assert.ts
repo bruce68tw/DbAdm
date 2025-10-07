@@ -10,7 +10,7 @@ export default class _Assert {
      * Log an assertion message using _error.log
      * param msg {string} The message to log.
      */
-    public static echo(msg: string): void {
+    static echo(msg: string): void {
         _Error.log('_assert.js ' + msg);
     }
 
@@ -22,7 +22,7 @@ export default class _Assert {
      * param ary {Array<any> | { [key: string]: any }} The array or object keys to search in.
      * return {void} (The function asserts/logs on failure)
      */
-    public static inArray(value: any, ary: Array<any> | { [key: string]: any }): void {
+    static inArray(value: any, ary: Array<any> | { [key: string]: any }): void {
         let find = false;
         
         // 原始程式碼使用了 for...in, 這會遍歷物件的可列舉屬性 (key),

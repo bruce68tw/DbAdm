@@ -7,27 +7,27 @@ import _Obj from "./_Obj";
 export default class _Tool {
 
     // Static properties for jQuery elements
-    private static xgMsg: JQuery<HTMLElement> | null = null; //使用id
-    private static xgAns: JQuery<HTMLElement> | null = null; //使用id
-    private static xgAlert: JQuery<HTMLElement> | null = null;
-    private static xgArea: JQuery<HTMLElement> | null = null;
-    private static xgImage: JQuery<HTMLElement> | null = null;
-    private static xgWork: JQuery<HTMLElement> | null = null;
+    private static _msg: JQueryN = null; //使用id
+    private static _ans: JQueryN = null; //使用id
+    private static _alert: JQueryN = null;
+    private static _area: JQueryN = null;
+    private static _image: JQueryN = null;
+    static work: JQueryN = null;
 
     // Static properties for callback functions
-    private static _fnOnMsgClose: Function | null = null;
-    private static _fnOnAnsYes: Function | null = null;
-    private static _fnOnAnsNo: Function | null = null;
-    private static _fnOnAreaYes: Function | null = null;
+    private static _fnOnMsgClose: FunN = null;
+    private static _fnOnAnsYes: FunN = null;
+    private static _fnOnAnsNo: FunN = null;
+    private static _fnOnAreaYes: FunN = null;
 
     static init(): void {
         //alert
-        _Tool.xgMsg = $('#xgMsg');  //使用id
-        _Tool.xgAns = $('#xgAns');  //使用id
-        _Tool.xgAlert = $('.x-alert');
-        _Tool.xgArea = $('.x-area');
-        _Tool.xgImage = $('.x-image');
-        _Tool.xgWork = $('.x-work');
+        _Tool._msg = $('#xgMsg');  //使用id
+        _Tool._ans = $('#xgAns');  //使用id
+        _Tool._alert = $('.x-alert');
+        _Tool._area = $('.x-area');
+        _Tool._image = $('.x-image');
+        _Tool.work = $('.x-work');
     }
 
     /**
@@ -36,7 +36,7 @@ export default class _Tool {
      * param fnClose {function} callback function
      */
     static msg(msg: string, fnClose?: Function): void {
-        const box = _Tool.xgMsg;
+        const box = _Tool._msg;
         if (!box) return;
 
         box.find('.xd-msg').html(msg);
@@ -53,7 +53,7 @@ export default class _Tool {
      * @param fnNo {function}
      */
     static ans(msg: string, fnYes: Function, fnNo?: Function): void {
-        const box = _Tool.xgAns;
+        const box = _Tool._ans;
         if (!box) return;
 
         box.find('.xd-msg').html(msg);
@@ -70,7 +70,7 @@ export default class _Tool {
      * param {string} color: default blue, R(red)
      */
     static alert(msg: string, color?: string): void {
-        const box = _Tool.xgAlert;
+        const box = _Tool._alert;
         if (!box) return;
 
         box.find('.xd-msg').text(msg)
@@ -102,7 +102,7 @@ export default class _Tool {
      */
     static showArea(title: string, value: string, isEdit: boolean, fnOk: Function): void {
         //set title
-        const box = _Tool.xgArea;
+        const box = _Tool._area;
         if (!box) return;
 
         box.find('.modal-title').text(title);
@@ -122,7 +122,7 @@ export default class _Tool {
     }
 
     static onAreaYes(): void {
-        const box = _Tool.xgArea;
+        const box = _Tool._area;
         if (!box) return;
 
         if (_Tool._fnOnAreaYes) {
@@ -139,7 +139,7 @@ export default class _Tool {
      * param imageSrc {string} image src
      */ 
     static showImage(fileName: string, imageSrc: string): void {
-        const box = _Tool.xgImage;
+        const box = _Tool._image;
         if (!box) return;
 
         box.find('img').attr('src', imageSrc);
@@ -151,7 +151,7 @@ export default class _Tool {
      * onclick alert close button
      */
     static onAlertClose(): void {
-        const box = _Tool.xgAlert;
+        const box = _Tool._alert;
         if (!box) return;
 
         box.fadeOut(500, function () {
@@ -164,8 +164,8 @@ export default class _Tool {
      * called by XgAnsHelper
      */
     static onAnsYes(): void {
-        if (_Tool._fnOnAnsYes && _Tool.xgAns) {
-            _Modal.hideO(_Tool.xgAns);
+        if (_Tool._fnOnAnsYes && _Tool._ans) {
+            _Modal.hideO(_Tool._ans);
             _Tool._fnOnAnsYes();
         }
     }
@@ -173,16 +173,16 @@ export default class _Tool {
     static onAnsNo(): void {
         if (_Tool._fnOnAnsNo)
             _Tool._fnOnAnsNo();
-        if (_Tool.xgAns) {
-            _Modal.hideO(_Tool.xgAns);
+        if (_Tool._ans) {
+            _Modal.hideO(_Tool._ans);
         }
     }
     
     static onMsgClose(): void {
         if (_Tool._fnOnMsgClose)
             _Tool._fnOnMsgClose();
-        if (_Tool.xgMsg) {
-            _Modal.hideO(_Tool.xgMsg);
+        if (_Tool._msg) {
+            _Modal.hideO(_Tool._msg);
         }
     }
 

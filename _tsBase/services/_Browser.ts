@@ -14,13 +14,13 @@ export default class _Browser {
      * Use history.pushState to change the browser URL without reloading the page.
      * param url {string} The new URL.
      */
-    public static pushState(url: string): void {
+    static pushState(url: string): void {
         history.pushState(null, '', url); // 將第二個參數 title 設為空字串或 null
     }
 
     /*
     //把語系code寫入 cookie (以後可改寫入 localeStorage)
-    public static setLang(lang: string): void {
+    static setLang(lang: string): void {
         // 假設 $.cookie 存在
         $.cookie(_Browser._langCode, lang);
     }
@@ -32,9 +32,9 @@ export default class _Browser {
      * param fm {any} (Optional) The form object or context.
      * param fnCallback {function} (Optional) Callback function after printing.
      */
-    public static zz_print(id: string, fm?: any, fnCallback?: () => void): void {
+    static zz_print(id: string, fm?: any, fnCallback?: () => void): void {
         // 假設 _Obj.getById 存在且返回一個物件或 jQuery 物件
-        _Browser.zz_printO(_Obj.getById(id, fm, fnCallback), fnCallback);
+        _Browser.zz_printO(_Obj.getById(id, fm), fnCallback);
     }
 
     /**
@@ -44,7 +44,7 @@ export default class _Browser {
      * param obj {any} The object (e.g., DOM element or jQuery object) whose content should be printed (though currently ignored).
      * param fnCallback {function} (Optional) Callback function after printing.
      */
-    public static zz_printO(obj: any, fnCallback?: () => void): void {
+    static zz_printO(obj: any, fnCallback?: () => void): void {
         window.print();
         /*
         debugger;

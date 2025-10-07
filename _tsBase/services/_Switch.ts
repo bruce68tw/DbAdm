@@ -15,7 +15,8 @@ export default class _Switch {
      * @param cls {string}
      * @returns {string}
      */
-    public static getText(yes: string, no: string, width: number, status: boolean, inline: boolean, fid?: string, cls?: string): string {
+    static getText(yes: string, no: string, width: number,
+        status: boolean, inline: boolean, fid?: string, cls?: string): string {
         const inline2 = (inline) ? ' x-inline' : '';
         let attr = (fid) ? (` id="${fid}"`) : '';
         if (status)

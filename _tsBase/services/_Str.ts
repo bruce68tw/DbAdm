@@ -3,19 +3,19 @@
 export default class _Str {
 
     //column seperator
-    public static readonly colSep: string = '@@';
+    static readonly colSep: string = '@@';
 
     //variables is empty or not
-    public static isEmpty(str: string | null | undefined): boolean {
+    static isEmpty(str: StrN): boolean {
         return (str === undefined || str === null || str === '');
     }
 
-    public static notEmpty(str: string | null | undefined): boolean {
+    static notEmpty(str: StrN): boolean {
         return !_Str.isEmpty(str);
     }
 
     //convert empty string to new string
-    public static emptyToStr(str: string | null | undefined, newStr: string): string {
+    static emptyToStr(str: StrN, newStr: string): string {
         return _Str.isEmpty(str) ? newStr : str as string;
     }
 
@@ -23,7 +23,7 @@ export default class _Str {
      * format string like c# String.Format()
      * The first argument is the format string, subsequent arguments are values to insert.
      */
-    public static format(...args: any[]): string {
+    static format(...args: any[]): string {
         let str = args[0] as string;
         for (let i = 0; i < args.length - 1; i++) {
             const reg = new RegExp("\\{" + i + "\\}", "gm");
@@ -33,7 +33,7 @@ export default class _Str {
     }
 
     //get mid part string
-    public static getMid(str: string, find1: string, find2: string): string {
+    static getMid(str: string, find1: string, find2: string): string {
         if (_Str.isEmpty(str))
             return '';
         const pos = str.indexOf(find1);
@@ -46,14 +46,14 @@ export default class _Str {
     }
 
     //get tail part string
-    public static getTail(value: string, find: string): string {
+    static getTail(value: string, find: string): string {
         const pos = value.lastIndexOf(find);
         return (pos > 0)
             ? value.substring(pos + 1)
             : value;
     }
 
-    public static toBool(val: any): boolean {
+    static toBool(val: any): boolean {
         //return (val === '1' || val === true || val === 'True');
         // Assuming _var.toBool is on a class named _Var
         return _Var.toBool(val);
@@ -63,18 +63,18 @@ export default class _Str {
      * 合併多個欄位成為字串??
      * The first argument is the initial string, subsequent arguments are appended with colSep.
      */
-    public static colsToStr(...args: string[]): string {
+    static colsToStr(...args: string[]): string {
         let str = args[0];
         for (let i = 1; i < args.length; i++)
             str += _Str.colSep + args[i];
         return str;
     }
 
-    public static trim(str: string): string {
+    static trim(str: string): string {
         return str.trim();
     }
 
-    public static toJson(str: string): any | null {
+    static toJson(str: string): any | null {
         try {
             return JSON.parse(str);
         } catch (error) {
@@ -83,7 +83,7 @@ export default class _Str {
         }
     }
 
-    public static replaceAll(str: string, oldStr: string, newStr: string): string {
+    static replaceAll(str: string, oldStr: string, newStr: string): string {
         // 轉義特殊字元，避免錯誤正則
         const oldStr2 = oldStr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const regex = new RegExp(oldStr2, 'g');

@@ -1,13 +1,13 @@
-﻿import $ from "jquery";
+﻿//import $ from "jquery";
 import _Ajax from "./_Ajax";
-import _BR from "./_BR";
+//import _BR from "./_BR";
 import _Form from "./_Form";
 import _ICheck from "./_ICheck";
 import _IDate from "./_IDate";
 import _Input from "./_Input";
 import _IRadio from "./_IRadio";
 import _Json from "./_Json";
-import _Me from "./_Me";
+//import _Me from "./_Me";
 import _Obj from "./_Obj";
 import _Prog from "./_Prog";
 import _Str from "./_Str";
@@ -94,7 +94,7 @@ export default class CrudR {
             //4.Create Datatable object
             //傳入 _me.fnAfterFind if any !!
             if (_Var.notEmpty(dtConfig)) {
-                this.dt = new Datatable('#tableRead', 'GetPage', dtConfig, this._getFindCond(), null, null, _Me.fnAfterFind || null);
+                this.dt = new Datatable('#tableRead', 'GetPage', dtConfig, this._getFindCond(), null, null, _me.fnAfterFind || null);
             }
         }
 
@@ -105,9 +105,9 @@ export default class CrudR {
         _Prog.init();   //prog path
 
         //set _me
-        _Me.crudR = this;
-        _Me.hasRead = hasRead;
-        _Me.divRead = this.divRead;
+        _me.crudR = this;
+        _me.hasRead = hasRead;
+        _me.divRead = this.divRead;
     }
 
     /**
@@ -230,7 +230,7 @@ export default class CrudR {
      * param fnCallback {function} (optional) callback function
      */
     public swap(toRead: boolean, nowDiv: JQuery | null = null, fnCallback?: () => void): void {
-        if (!_Me.hasRead || !_Me.hasEdit) {
+        if (!_me.hasRead || !_me.hasEdit) {
             if (fnCallback)
                 fnCallback();
             return;
@@ -238,7 +238,7 @@ export default class CrudR {
 
         const isDefault: boolean = _Var.isEmpty(nowDiv);
         if (isDefault)
-            nowDiv = _Me.divEdit;
+            nowDiv = _me.divEdit;
 
         let oldDiv: JQuery, newDiv: JQuery | null;
         if (toRead) {
@@ -269,9 +269,9 @@ export default class CrudR {
         setTimeout(() => {
             oldDiv.addClass('d-none').removeClass('x-off');
 
-            newDiv.removeClass('d-none').addClass('x-on');
+            newDiv!.removeClass('d-none').addClass('x-on');
             setTimeout(() => {
-                newDiv.removeClass('x-on');
+                newDiv!.removeClass('x-on');
                 if (fnCallback) fnCallback();
             }, 500);
         }, 200);
@@ -312,7 +312,7 @@ export default class CrudR {
     //toEditMode = function(fun, data) {
     public toEditMode(fun: string, fnCallback?: () => void): void {
         this.swap(false, null, fnCallback);  //call first
-        _Prog.setPath(fun, this._updName);
+        _Prog.setPath(fun, this._updName!);
     }
 
     /**
@@ -329,8 +329,8 @@ export default class CrudR {
      * param toRead {bool} to read mode or not
      */
     private _afterSwap(toRead: boolean): void {
-        if (_Me.fnAfterSwap)
-            _Me.fnAfterSwap(toRead);
+        if (_me.fnAfterSwap)
+            _me.fnAfterSwap(toRead);
     }
 
 
@@ -387,7 +387,7 @@ export default class CrudR {
         //var fun = EstrFun.Create;
         //this.swap(false);  //call first
         //_prog.setPath(fun);
-        _Me.crudE.onCreate();
+        _me.crudE.onCreate();
         this.toEditMode(EstrFun.Create);
     }
 
@@ -398,7 +398,7 @@ export default class CrudR {
     public async onUpdateA(key: string): Promise<void> {
         //_me.crudE._getJsonAndSetMode(key, EstrFun.Update);
         //this.toEditMode(EstrFun.Update);
-        await _Me.crudE.onUpdateA(key);
+        await _me.crudE.onUpdateA(key);
     }
 
     /**
@@ -407,7 +407,7 @@ export default class CrudR {
      */
     public async onViewA(key: string): Promise<void> {
         //_me.crudE._getJsonAndSetMode(key, EstrFun.View);
-        await _Me.crudE.onViewA(key);
+        await _me.crudE.onViewA(key);
         //this.toEditMode(EstrFun.View);
     }
 

@@ -1,22 +1,22 @@
 ﻿import _Ajax from "./_Ajax";
-import _BR from "./_BR";
+//import _BR from "./_BR";
 import _Date from "./_Date";
 import _Edit from "./_Edit";
 import _File from "./_File";
 import _Form from "./_Form";
 import _Fun from "./_Fun";
-import _Ihtml from "./_Ihtml";
-import _Idate from "./_Idate";
+import _IHtml from "./_IHtml";
+import _IDate from "./_IDate";
 import _Input from "./_Input";
-import _Itext from "./_Itext";
+import _IText from "./_IText";
 import _Json from "./_Json";
-import _Me from "./_Me";
+//import _Me from "./_Me";
 import _Prog from "./_Prog";
 import _Str from "./_Str";
 import _Tool from "./_Tool";
 import _Valid from "./_Valid";
 import EstrFun from "./EstrFun";
-import $ from "jquery";
+//import $ from "jquery";
 
 /**
  * crud edit function
@@ -38,7 +38,7 @@ export default class CrudE {
     private edits: any; // Assuming edits is passed to the constructor
 
     // public properties (matching the function comments)
-    public divEdit: JQuery;
+    public divEdit: JQueryN;
     public edit0: any; // EditOne object
     public eform0: JQuery | null = null; // Master edit form
     public hasChild: boolean = false;
@@ -96,11 +96,11 @@ export default class CrudE {
         //_prog.init();   //prog path
 
         //set _me
-        _Me.crudE = this;
-        _Me.edit0 = this.edit0;
-        _Me.eform0 = this.eform0;
-        _Me.hasEdit = hasEdit;
-        _Me.divEdit = this.divEdit;
+        _me.crudE = this;
+        _me.edit0 = this.edit0;
+        _me.eform0 = this.eform0;
+        _me.hasEdit = hasEdit;
+        _me.divEdit = this.divEdit;
     }
 
     /**
@@ -111,7 +111,7 @@ export default class CrudE {
         if (edit.eform == null)
             return;
 
-        _Idate.init(edit.eform);  //init all date inputs
+        _IDate.init(edit.eform);  //init all date inputs
         edit.validator = _Valid.init(edit.eform);   //set valid variables for _ihtml.js !!
         const childLen = this._getEditChildLen(edit);
         for (let i = 0; i < childLen; i++)
@@ -161,8 +161,8 @@ export default class CrudE {
     // _afterOpenEdit -> afterOpen
     public afterOpen(fun: string, json: any): void {
         //if (_fun.hasValue(_me.fnAfterOpenEdit))
-        if (_Me.fnAfterOpenEdit)
-            _Me.fnAfterOpenEdit(fun, json);
+        if (_me.fnAfterOpenEdit)
+            _me.fnAfterOpenEdit(fun, json);
     }
 
     /**
@@ -185,32 +185,32 @@ export default class CrudE {
         //if (!run)
         //    return;
 
-        const box = this.divEdit;
+        const box = this.divEdit!;
         const eform = this.edit0.eform;
         const items = box.find('input, textarea, select, button');
         if (fun == EstrFun.View) {
             _Edit.removeIsNew(eform);
             items.prop('disabled', true)
             box.find('#btnToRead').prop('disabled', false);
-            _Ihtml.setEdits(box, '', false);
+            _IHtml.setEdits(box, '', false);
         } else if (fun == EstrFun.Create) {
             _Edit.addIsNew(eform);    //增加_IsNew隱藏欄位
             const dataEdit = '[data-edit=U]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
-            _Ihtml.setEdits(box, '', true);
-            _Ihtml.setEdits(box, dataEdit, false);
+            _IHtml.setEdits(box, '', true);
+            _IHtml.setEdits(box, dataEdit, false);
         } else if (fun == EstrFun.Update) {
             _Edit.removeIsNew(eform);
             const dataEdit = '[data-edit=C]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
-            _Ihtml.setEdits(box, '', true);
-            _Ihtml.setEdits(box, dataEdit, false);
+            _IHtml.setEdits(box, '', true);
+            _IHtml.setEdits(box, dataEdit, false);
         }
 
         //remove span error
-        this.divEdit.find('span.error').remove();
+        this.divEdit!.find('span.error').remove();
 
         //enable btnToRead for view fun
         //if (isView)
@@ -354,9 +354,9 @@ export default class CrudE {
         //case of ok
         _Tool.alert(_BR.SaveOk + '(' + data.Value + ')');
 
-        if (_Me.crudR) {
-            _Me.crudR.dt.reload();
-            _Me.crudR.toReadMode();
+        if (_me.crudR) {
+            _me.crudR.dt.reload();
+            _me.crudR.toReadMode();
         }
     }
 
@@ -385,8 +385,8 @@ export default class CrudE {
 
     //return {bool}
     public async _updateOrViewA(fun: string, key: string): Promise<boolean | void> {
-        if (_Me.fnUpdateOrViewA)
-            return await _Me.fnUpdateOrViewA(fun, key);
+        if (_me.fnUpdateOrViewA)
+            return await _me.fnUpdateOrViewA(fun, key);
 
         const me = this;
         const act = (fun == EstrFun.Update)
@@ -395,7 +395,7 @@ export default class CrudE {
             me.loadJson(json);
             me.setEditStatus(fun);
             me.afterOpen(fun, json);
-            _Me.crudR.toEditMode(fun);
+            _me.crudR.toEditMode(fun);
         });
     }
 
@@ -619,9 +619,9 @@ export default class CrudE {
      * param maxLen {int}
      */
     public onOpenModal(title: string, fid: string, required: boolean, maxLen: number): void {
-        const tr = _Fun.getMe(true).closest('tr');
-        _Tool.showArea(title, _Itext.get(fid, tr), this.isEditMode(), function(result: string) {
-            _Itext.set(fid, result, tr);
+        const tr = _Fun.getObj().closest('tr');
+        _Tool.showArea(title, _IText.get(fid, tr)!, this.isEditMode(), function(result: string) {
+            _IText.set(fid, result, tr);
         });
     }
 

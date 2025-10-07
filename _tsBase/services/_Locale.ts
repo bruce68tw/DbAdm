@@ -19,7 +19,7 @@ export default class _Locale {
     }
 
     // 取得目前語系類別
-    static get BR() {
+    static getBR() {
         switch (this.current) {
             case 'zh-CN': return zhCN;
             case 'en-US': return enUS;
@@ -28,7 +28,7 @@ export default class _Locale {
     }
 
     // 取得目前語系代碼
-    static get locale() {
+    static getLocale() {
         return this.current;
     }
 } //class

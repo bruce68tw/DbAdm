@@ -1,7 +1,7 @@
-﻿import Moment from "moment";
+﻿import moment from "moment";
 import _Str from "./_Str";
 import _Fun from "./_Fun";
-import _BR from "./_BR";
+//import _BR from "./_BR";
 import _IDate from "./_IDate";
 import _ISelect from "./_ISelect";
 
@@ -23,70 +23,70 @@ export default class _Date {
       params {object} box box object
       return {json} 包含start, end欄位
      */
-    public static getStartEnd(start: string, end: string, box: any): any {
+    static getStartEnd(start: string, end: string, box: any): any {
         //const start2 = box.find
     }
 
     /**
      * get today date string in UI format
      */
-    public static uiToday(): string {
-        const mm = Moment();
+    static uiToday(): string {
+        const mm = moment();
         return _Date.mmToUiDate(mm);
     }
 
     /**
      * get this week monday in UI format
      */
-    public static uiWeekMonday(): string {
-        const mm = Moment().day(1)
+    static uiWeekMonday(): string {
+        const mm = moment().day(1)
         return _Date.mmToUiDate(mm);
     }
 
-    public static uiWeekFriday(): string {
-        const mm = Moment().day(5)
+    static uiWeekFriday(): string {
+        const mm = moment().day(5)
         return _Date.mmToUiDate(mm);
     }
 
     /**
      * get this month first day
      */
-    public static uiMonthDay1(): string {
-        const mm = Moment().startOf('month');
+    static uiMonthDay1(): string {
+        const mm = moment().startOf('month');
         return _Date.mmToUiDate(mm);
     }
 
     /**
      * get this month last day
      */
-    public static uiMonthDayLast(): string {
-        const mm = Moment().endOf('month');
+    static uiMonthDayLast(): string {
+        const mm = moment().endOf('month');
         return _Date.mmToUiDate(mm);
     }
 
     /**
      * get current year, ex: 2021
      */ 
-    public static nowYear(): number {
+    static nowYear(): number {
         return (new Date()).getFullYear();
     }
 
-    public static mmToUiDate(mm: Moment.Moment): string {
+    static mmToUiDate(mm: moment.Moment): string {
         return mm.format(_BR.MmUiDateFmt);
     }
 
-    public static mmToUiDt(mm: Moment.Moment): string {
+    static mmToUiDt(mm: moment.Moment): string {
         return mm.format(_BR.MmUiDtFmt);
     }
 
-    public static mmToUiDt2(mm: Moment.Moment): string {
+    static mmToUiDt2(mm: moment.Moment): string {
         return mm.format(_BR.MmUiDt2Fmt);
     }
 
-    public static dtsToUiDate(dts: string): string {
+    static dtsToUiDate(dts: string): string {
         return _Str.isEmpty(dts)
             ? ''
-            : _Date.mmToUiDate(Moment(dts, _Fun.MmDtFmt));
+            : _Date.mmToUiDate(moment(dts, _Fun.MmDtFmt));
     }
 
     /**
@@ -94,16 +94,16 @@ export default class _Date {
      * param ds {string} js date string
      * return {string} ui date string
      */ 
-    public static dtsToFormat(ds: string): string {
+    static dtsToDateFormat(ds: string): string {
         return _Str.isEmpty(ds)
             ? ''
-            : _Date.mmToUiDate(Moment(ds, _Fun.MmDateFmt));
+            : _Date.mmToUiDate(moment(ds, _Fun.MmDateFmt));
     }
 
-    public static dtsToUiDt(dts: string): string {
+    static dtsToUiDt(dts: string): string {
         return _Str.isEmpty(dts)
             ? ''
-            : _Date.mmToUiDt(Moment(dts, _Fun.MmDtFmt));
+            : _Date.mmToUiDt(moment(dts, _Fun.MmDtFmt));
     }
 
     /**
@@ -111,29 +111,29 @@ export default class _Date {
      * param dts {string} js datetime string
      * return {string} ui datetime2 string(no second)
      */
-    public static dtsToUiDt2(dts: string): string {
+    static dtsToUiDt2(dts: string): string {
         return _Str.isEmpty(dts)
             ? ''
-            : _Date.mmToUiDt2(Moment(dts, _Fun.MmDtFmt));
+            : _Date.mmToUiDt2(moment(dts, _Fun.MmDtFmt));
     }
 
-    public static dtsToFormat(dts: string, format: string): string {
+    static dtsToFormat(dts: string, format: string): string {
         return (_Str.isEmpty(dts))
             ? ''
-            : Moment(dts, _Fun.MmDtFmt).format(format);
+            : moment(dts, _Fun.MmDtFmt).format(format);
     }
 
     //get datetime value for compare
-    public static dtsToValue(dts: string): number {
+    static dtsToValue(dts: string): number {
         return (_Str.isEmpty(dts))
             ? 0
-            : Moment(dts, _Fun.MmDtFmt).valueOf();
+            : moment(dts, _Fun.MmDtFmt).valueOf();
     }
 
-    public static dtsToMoment(dts: string): Moment.Moment | null {
+    static dtsToMoment(dts: string): moment.Moment | null {
         return (_Str.isEmpty(dts))
             ? null
-            : Moment(dts, _Fun.MmDtFmt);
+            : moment(dts, _Fun.MmDtFmt);
     }
 
     /**
@@ -141,9 +141,9 @@ export default class _Date {
      * param ds {string} ui date string
      * return {string} js date string
      */
-    public static uiToMmDate(ds: string): string {
+    static uiToMmDate(ds: string): string {
         const date = _Str.isEmpty(ds)
-            ? '' : Moment(ds, _BR.MmUiDateFmt).format(_Fun.MmDateFmt);
+            ? '' : moment(ds, _BR.MmUiDateFmt).format(_Fun.MmDateFmt);
         return date;
     }
 
@@ -152,10 +152,10 @@ export default class _Date {
      * param ts {string} timeStamp value, unit is second, convert to mini second
      * return {string}
      */
-    public static tsToUiDt(ts: string): string {
+    static tsToUiDt(ts: string): string {
         return (ts == '')
             ? ''
-            : Moment(parseInt(ts) * 1000).format(_BR.MmUiDtFmt);
+            : moment(parseInt(ts) * 1000).format(_BR.MmUiDtFmt);
     }
 
     /**
@@ -163,20 +163,20 @@ export default class _Date {
      * param dts {string} datetime string
      * return {string}
      */
-    public static getHourStr(dts: string): string {
+    static getHourStr(dts: string): string {
         // implementation missing in original code
         return '';
     }
 
     //?? get datetime string
     //time為下拉欄位
-    public static getDt(fDate: string, fTime: string, box: any): string {
+    static getDt(fDate: string, fTime: string, box: any): string {
         const date = _IDate.get(fDate, box);
         const time = _ISelect.get(fTime, box);
-        if (date == '')
+        if (_Str.isEmpty(date))
             return '';
         else
-            return (time == '') ? date : date + ' ' + time;
+            return _Str.isEmpty(time) ? date! : date + ' ' + time;
     }
 
     /**
@@ -185,8 +185,8 @@ export default class _Date {
      * param ds2 {string} end js date string
      * return {bool}
      */
-    public static isBig(ds1: string, ds2: string): boolean {
-        return Moment(ds1, _Fun.MmDtFmt).isAfter(Moment(ds2, _Fun.MmDtFmt));
+    static isBig(ds1: string, ds2: string): boolean {
+        return moment(ds1, _Fun.MmDtFmt).isAfter(moment(ds2, _Fun.MmDtFmt));
     }
 
     /**
@@ -195,12 +195,12 @@ export default class _Date {
      * param ds2 {string} end date string
      * return {int} 
      */ 
-    public static getMonthDiff(ds1: string, ds2: string): number {
+    static getMonthDiff(ds1: string, ds2: string): number {
         // Original code has an error: it uses 'start' and 'end' which are not defined.
-        // Assuming it should use ds1 and ds2 as a check for empty, and then pass Moment objects.
+        // Assuming it should use ds1 and ds2 as a check for empty, and then pass moment objects.
         return (_Str.isEmpty(ds1) || _Str.isEmpty(ds2))
             ? 0
-            : _Date.getMonthDiffByDate(Moment(ds1, _Fun.MmDtFmt), Moment(ds2, _Fun.MmDtFmt));
+            : _Date.getMonthDiffByDate(moment(ds1, _Fun.MmDtFmt), moment(ds2, _Fun.MmDtFmt));
     }
 
     /**
@@ -209,7 +209,7 @@ export default class _Date {
      * param dt2 {moment obj} end date
      * return {int} 
      */ 
-    public static getMonthDiffByDate(dt1: Moment.Moment, dt2: Moment.Moment): number {
+    static getMonthDiffByDate(dt1: moment.Moment, dt2: moment.Moment): number {
         // Note: moment().getFullYear() and moment().getMonth() are not standard moment methods.
         // Assuming the intent was to use the underlying Date object or moment's API methods like year() and month().
         // Based on the original JS code structure, it likely relies on moment's underlying implementation allowing this or expects moment-like objects.
@@ -225,8 +225,8 @@ export default class _Date {
      * param year {int} year to add
      * return {string} new js date string
      */ 
-    public static dsAddYear(ds: string, year: number): string {
+    static dsAddYear(ds: string, year: number): string {
         //return (parseInt(date.substring(0, 4)) + year) + date.substring(4);
-        return Moment(ds, _Fun.MmDtFmt).add(year, 'y').format(_Fun.MmDtFmt);
+        return moment(ds, _Fun.MmDtFmt).add(year, 'y').format(_Fun.MmDtFmt);
     }
 }

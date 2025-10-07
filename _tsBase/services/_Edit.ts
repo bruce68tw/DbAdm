@@ -12,23 +12,23 @@
 export default class _Edit {
 
     //constant with underline
-    public static readonly Rows: string = '_rows';
-    public static readonly Childs: string = '_childs';
-    public static readonly Deletes: string = '_deletes';
+    static readonly Rows: string = '_rows';
+    static readonly Childs: string = '_childs';
+    static readonly Deletes: string = '_deletes';
 
     //server side fid for file input collection, must pre '_'
     //key-value of file serverFid vs row key
-    public static readonly FileJson: string = '_fileJson';
+    static readonly FileJson: string = '_fileJson';
 
     //data property name for keep old value
-    public static readonly DataOld: string = '_old';
+    static readonly DataOld: string = '_old';
 
     //前後端欄位: isNew, new row flag
-    public static readonly IsNew: string = '_IsNew';
+    static readonly IsNew: string = '_IsNew';
 
     //edit form mode
-    public static readonly ModeBase: string = 'Base';
-    public static readonly ModeUR: string = 'UR';   //user role mode
+    static readonly ModeBase: string = 'Base';
+    static readonly ModeUR: string = 'UR';   //user role mode
 
 
     /**
@@ -39,7 +39,7 @@ export default class _Edit {
      * param box {object} container (jQuery object)
      * return void
      */
-    public static initVars(me: any, box: JQuery): void {
+    static initVars(me: any, box: JQuery): void {
         //set fid-type variables: fidTypes, fidTypeLen
         const fidTypes: (string | undefined)[] = [];
         box.find(_Input.fidFilter()).each(function (i, item) {
@@ -65,7 +65,7 @@ export default class _Edit {
      * param obj {object} input jquery object
      * return {string | undefined}
      */ 
-    public static getOld(obj: JQuery): string | undefined {
+    static getOld(obj: JQuery): string | undefined {
         return obj.data(_Edit.DataOld);
     }
 
@@ -74,7 +74,7 @@ export default class _Edit {
      * param obj {object} input jquery object
      * param value {number | string}
      */ 
-    public static setOld(obj: JQuery, value: number | string): void {
+    static setOld(obj: JQuery, value: number | string): void {
         obj.data(_Edit.DataOld, value);
     }
 
@@ -84,7 +84,7 @@ export default class _Edit {
      * param row {object}
      * return {boolean}
      */
-    public static isNewRow(row: any): boolean {
+    static isNewRow(row: any): boolean {
         const fid = _Edit.IsNew;
         // Check if the value is not null AND is not '0' (assuming '0' or null means false/old, and '1' or presence means true/new)
         return (row[fid] != null && row[fid] != '0');
@@ -94,7 +94,7 @@ export default class _Edit {
      * 增加隱藏欄位 _IsNew, 同時設為1
      * param box {JQuery} jquery object
      */
-    public static addIsNew(box: JQuery): void {
+    static addIsNew(box: JQuery): void {
         const fid = _Edit.IsNew;
         let field = box.find(_Input.fidFilter(fid));
         
@@ -112,7 +112,7 @@ export default class _Edit {
      * 刪除隱藏欄位 _IsNew
      * param box {JQuery} jquery object
      */
-    public static removeIsNew(box: JQuery): void {
+    static removeIsNew(box: JQuery): void {
         const fid = _Edit.IsNew;
         const field = box.find(_Input.fidFilter(fid));
         if (field.length > 0)
@@ -125,7 +125,7 @@ export default class _Edit {
      * param levelStr {string} 
      * param fid {string} ui file id
      * return {string} format: t[levelStr]_[fid]
-    public static getFileSid(levelStr: string, fid: string): string {
+    static getFileSid(levelStr: string, fid: string): string {
         return 't' + levelStr + '_' + fid;
     }
      */

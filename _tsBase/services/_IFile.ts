@@ -2,7 +2,7 @@
 import _BR from "./_BR"; // Assuming _BR is a resource object
 import _File from "./_File";
 import _Fun from "./_Fun";
-import __IBase from "./__IBase";
+import _IBase from "./_IBase";
 import _Obj from "./_Obj";
 import _Str from "./_Str";
 import _Tool from "./_Tool";
@@ -10,7 +10,7 @@ import _Tool from "./_Tool";
 /**
  * //input file
  */
-export default class _IFile extends __IBase {
+export default class _IFile extends _IBase {
 
     //object: file input
 
@@ -118,20 +118,20 @@ export default class _IFile extends __IBase {
      * param elm {element}
      * return {object} file box object
      */
-    static _elmToBox(elm: HTMLElement): JQuery {
+    static _elmToBox(elm: Elm): JQuery {
         return $(elm).closest('.xi-box');
     }
     //get file object
-    static _elmToFile(elm: JQuery | HTMLElement): JQuery {
-        return _IFile._boxGetFile(_IFile._elmToBox(elm instanceof HTMLElement ? elm : elm.get(0)!));
+    static _elmToFile(elm: JQuery | Elm): JQuery {
+        return _IFile._boxGetFile(_IFile._elmToBox(elm instanceof Elm ? elm : elm.get(0)!));
     }
     //get input object
-    static _elmToObj(elm: JQuery | HTMLElement): JQuery {
-        return _IFile._boxGetObj(_IFile._elmToBox(elm instanceof HTMLElement ? elm : elm.get(0)!));
+    static _elmToObj(elm: JQuery | Elm): JQuery {
+        return _IFile._boxGetObj(_IFile._elmToBox(elm instanceof Elm ? elm : elm.get(0)!));
     }
     //get link object
-    static _elmToLink(elm: JQuery | HTMLElement): JQuery {
-        return _IFile._boxGetLink(_IFile._elmToBox(elm instanceof HTMLElement ? elm : elm.get(0)!));
+    static _elmToLink(elm: JQuery | Elm): JQuery {
+        return _IFile._boxGetLink(_IFile._elmToBox(elm instanceof Elm ? elm : elm.get(0)!));
     }
 
     /**

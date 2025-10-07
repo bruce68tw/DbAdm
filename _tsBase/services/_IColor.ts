@@ -14,17 +14,17 @@ export default class _IColor {
         });
     }
 
-    static get(fid: string, form?: JQuery): string | null {
+    static get(fid: string, form?: JQuery): StrN {
         // @ts-ignore: 'this' will be _IColor at runtime
         return this.getO(_Obj.get(fid, form));
     }
     //value by filter
-    static getF(filter: string, form?: JQuery): string | null {
+    static getF(filter: string, form?: JQuery): StrN {
         // @ts-ignore: 'this' will be _IColor at runtime
         return this.getO(_Obj.getF(filter, form));
     }
     //value by object
-    static getO(obj: JQuery | null): string | null {
+    static getO(obj: JQuery): StrN {
         if (obj == null) return null;
         // @ts-ignore: 'this' will be _IColor at runtime
         return this.rgbToHex(obj.find('i').css('background-color'));
