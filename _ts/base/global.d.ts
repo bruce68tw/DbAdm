@@ -10,6 +10,7 @@ declare global {
     type FnVoidN = ((result: any) => void) | null;
     type Json = { [key: string]: any };     //key為字串, value為任意值
     type JsonN = Json | null;
+    type AnyN = any | null;
 
     /** 全域多國語資源 */
     var _BR: typeof BR;

@@ -77,40 +77,40 @@ export default class EditMany {
     public isUrm: boolean = false;             //is urm or not
 
     public kid: string;
-    public rowFilter?: string;
-    public sortFid?: string;
+    public rowFilter: StrN;
+    public sortFid: StrN;
     public systemError: string = '';
     public hasRowTpl: boolean;
     public hasRowFilter: boolean;
     public dataJson: any = null;
 
-    public rowTpl?: string;
-    public fidTypes?: string[]; // Array of [fid, ftype, fid, ftype, ...]
+    public rowTpl: string = '';
+    public fidTypes: string[] = []; // Array of [fid, ftype, fid, ftype, ...]
     public fidTypeLen: number = 0;
     public hasFile: boolean = false;
-    public fileFids?: string[]; // Array of fids that are files
+    public fileFids: string[] = []; // Array of fids that are files
     public fileLen: number = 0;
 
     public hasEform: boolean = false;
-    public rowsBox?: JQuery<HTMLElement>;
-    public eform?: JQuery<HTMLElement>;     //edit form object
+    public rowsBox: JQueryN = null;
+    public eform: JQueryN = null;     //edit form object
     public validator?: Validator;
 
     public deletedRows: string[] = [];  //deleted key string array
     public newIndex: number = 0;      //new row serial no, 使用負數來表示新資料
 
     // Custom functions, users can assign these
-    public fnLoadRows?: (rows: any[]) => void;
+    public fnLoadRows?: (rows: any[]) => void | null;
     public fnGetUpdJson?: (upKey: string) => any;
     public fnValid?: () => boolean;
     public fnReset?: () => void;
 
     constructor(
         kid: string,
-        rowsBoxId?: string,
-        rowTplId?: string,
-        rowFilter?: string,
-        sortFid?: string
+        rowsBoxId: StrN = null,
+        rowTplId: StrN = null,
+        rowFilter: StrN = null,
+        sortFid: StrN = null
     ) {
         this.kid = kid;
         this.rowFilter = rowFilter;
@@ -119,14 +119,7 @@ export default class EditMany {
         this.hasRowFilter = _Str.notEmpty(rowFilter);
 
         //call last
-        this.init(rowTplId, rowsBoxId);
-    }
-
-    /**
-     * initial & set instance variables (this.validator by _valid.init())
-     * call by this
-     */
-    private init(rowTplId?: string, rowsBoxId?: string): void {
+        //this.init(rowTplId, rowsBoxId);
 
         if (this.hasRowTpl) {
             this.rowTpl = $('#' + rowTplId!).html();
@@ -155,6 +148,13 @@ export default class EditMany {
 
         this._resetVar();
     }
+
+    /**
+     * initial & set instance variables (this.validator by _valid.init())
+     * call by this
+    private init(rowTplId: string = '', rowsBoxId?: string): void {
+    }
+     */
 
     /**
      * initial urm, 參考 XpUser Read.cshmtl
@@ -433,7 +433,7 @@ export default class EditMany {
      * param rowsBox {object}
      * return {json} modified columns only
      */
-    public getUpdJsonByRsb(upKey: string, rowsBox?: JQuery<HTMLElement>): any {
+    public getUpdJsonByRsb(upKey: string, rowsBox: JQueryN): any {
         const json: any = {};
         json[_Edit.Rows] = this.getUpdRows(upKey, this._getRowsBox(rowsBox));
         json[_Edit.Deletes] = this.getDeletes();
@@ -447,7 +447,7 @@ export default class EditMany {
      * param rowsBox {object} (optional) rows box, default this.rowsBox
      * return {jsons} null if empty
      */
-    public getUpdRows(upKey: string, rowsBox?: JQuery<HTMLElement>): any[] | null {
+    public getUpdRows(upKey: string, rowsBox: JQueryN): any[] | null {
         if (!this._checkRowFilter() || !this.rowFilter || !this.fidTypes)
             return null;
 
@@ -560,7 +560,7 @@ export default class EditMany {
      * param key {string} row key
      * param rowBox {object} (optional) rows box, default this.rowsBox
      */
-    public deleteRow(key: string, rowBox?: JQuery<HTMLElement>): void {
+    public deleteRow(key: string, rowBox: JQueryN = null): void {
         const deletes = this.deletedRows;
         let found = false;
         const rowLen = deletes.length;
@@ -606,7 +606,7 @@ export default class EditMany {
      * param row {json}
      * return {object} row object
      */
-    private _renderRow(row: any, rowsBox?: JQuery<HTMLElement>): JQuery<HTMLElement> | null {
+    private _renderRow(row: any, rowsBox: JQueryN): JQueryN {
         if (!this._checkRowTpl() || !this.rowTpl)
             return null;
 
@@ -626,7 +626,7 @@ export default class EditMany {
      * param rowsBox {object} (optional) default this.rowsBox
      * return {json} file json
      */
-    public dataAddFiles(levelStr: string, data: FormData, rowsBox?: JQuery<HTMLElement>): any | null {
+    public dataAddFiles(levelStr: string, data: FormData, rowsBox: JQueryN = null): any | null {
         if (!this.hasFile || !this.fileFids) return null;
         if (!this._checkRowFilter() || !this.rowFilter) return null;
 
@@ -637,7 +637,7 @@ export default class EditMany {
         const fileJson: any = {};
         const fileIdx: { [key: string]: number } = {};   //fileFid map index
 
-        rowsBox.find(me.rowFilter).each(function (_index, item) {
+        rowsBox.find(me.rowFilter!).each(function (_index, item) {
             const tr = $(item);
             for (let i = 0; i < me.fileLen; i++) {
                 const fid = me.fileFids![i];
@@ -685,14 +685,14 @@ export default class EditMany {
      * param newId {int} 外部傳入newId if any, 如果有值則不會累加 this.newId
      * return {int} new key index
      */
-    public setNewIdByBox(box: JQuery<HTMLElement>, newId?: number): number {
+    public setNewIdByBox(box: JQuery, newId?: number): number {
         if (newId == null) {
             this.newIndex--;    //使用負數
             newId = this.newIndex;
         }
 
         //kid和IsNew必須放在同一層 !!
-        const box2 = _Obj.get(this.kid, box).parent();
+        const box2 = _Obj.get(this.kid, box)!.parent();
         _IText.set(this.kid, newId.toString(), box2);
         _Edit.addIsNew(box2);    //增加_IsNew隱藏欄位
         return newId;
@@ -702,7 +702,7 @@ export default class EditMany {
      * set sort field if need
      * param rowsBox {object} default this.rowsBox
      */
-    public setSort(rowsBox?: JQuery<HTMLElement>): void {
+    public setSort(rowsBox: JQueryN): void {
         const sortFid = this.sortFid;
         if (_Str.isEmpty(sortFid) || !this.rowFilter)
             return;
@@ -711,7 +711,7 @@ export default class EditMany {
         rowsBox = this._getRowsBox(rowsBox);
         if (!rowsBox) return;
 
-        rowsBox.find(_Input.fidFilter(sortFid)).each(function (i, item) {
+        rowsBox.find(_Input.fidFilter(sortFid!)).each(function (i, item) {
             //this did not work in this loop !!
             _IText.set(sortFid!, i.toString(), $(item).closest(me.rowFilter!));
         });
@@ -723,7 +723,7 @@ export default class EditMany {
      * param rowsBox {object} optional, return this.rowsBox if null
      * return {object}
      */
-    private _getRowsBox(rowsBox?: JQuery<HTMLElement>): JQuery<HTMLElement> | undefined {
+    private _getRowsBox(rowsBox: JQueryN = null): JQueryN {
         return rowsBox || this.rowsBox;
     }
 

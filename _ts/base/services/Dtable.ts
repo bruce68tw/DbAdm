@@ -1,15 +1,17 @@
-//import "datatables.net";
-import type DataTables from 'datatables.net'; // 型別導入
+//import DataTable, { AjaxData, Api, Config, InternalSettings } from 'datatables.net';
+import DataTable, { AjaxData, Api, Config, InternalSettings } from "datatables.net";
 import _Ajax from "./_Ajax";
 import _Fun from "./_Fun";
 import _Json from "./_Json";
 import _Tool from "./_Tool";
 import _Var from "./_Var";
-import DataTable from "datatables.net-bs5";
+//import DataTables from "datatables.net";
+//import DataTable from "datatables.net-dt";
+//import DataTable, { Config, InternalSettings } from 'datatables.net-dt';
 
 // Assume the following types/variables are globally available or defined elsewhere:
-declare const _BR: { FindNone: string, FindOk: string };
-declare const _me: { fnWhenFind?: () => boolean }; // Assuming _me might have fnWhenFind
+//declare const _BR: { FindNone: string, FindOk: string };
+//declare const _me: { fnWhenFind?: () => boolean }; // Assuming _me might have fnWhenFind
 
 /**
  * create jQuery dataTables object
@@ -22,10 +24,10 @@ declare const _me: { fnWhenFind?: () => boolean }; // Assuming _me might have fn
  * param tbarHtml {string} (optional) datatable toolbar html for extra button for 客製化 toolbar
  * param fnAfterFind {function} (optional) 查詢成功後執行, 傳入result, 如果有指定fnOk
  */
-export default class Datatable {
+export default class Dtable {
 
     //public property 
-    public dt: DataTables.Api | null = null;             //jquery datatables object
+    public dt: Api | null = null;             //jquery datatables object
     public findJson: any;   //find condition
     public recordsFiltered: number = -1;  //found count, -1 for recount, name map to DataTables
     public defaultShowOk: boolean = true;  //whethor show find ok msg, default value
@@ -54,7 +56,7 @@ export default class Datatable {
     constructor(
         selector: string,
         url: string,
-        dtConfig: { showWork?: boolean, columnDefs?: any[] } & DataTables.Settings,
+        dtConfig: { showWork?: boolean, columnDefs?: any[] } & Config,
         findJson: any,
         fnOk: FnN = null,
         tbarHtml: StrN = null,
@@ -75,6 +77,10 @@ export default class Datatable {
     public resetCount(): void {
         //var count = reset ? -1 : this.dt.recordsFiltered;
         this.recordsFiltered = -1;
+
+        let table = new DataTable('#myTable', {
+            // config options...
+        });
     }
 
     /**
@@ -109,24 +115,24 @@ export default class Datatable {
     private init(
         selector: string,
         url: string,
-        dtConfig: { showWork?: boolean, columnDefs?: any[] } & DataTables.Settings,
+        dtConfig: { showWork?: boolean, columnDefs?: any[] } & Config,
         fnOk?: (result: any) => any,
         tbarHtml?: string
     ): void {
 
         //default config for dataTables
-        let config: DataTables.Settings = {
+        let config: Config = {
             //deferLoading: 0,    //0表示一開始不自動執行
             pageLength: _Fun.pageRows || 10,
             lengthMenu: [10, 20, 50, 100], //25 -> 20 for more friendly
             processing: false,  //use custom processing msg
             serverSide: true,   //server pagination
-            jQueryUI: false,
-            filter: false,      //find string            
-            paginate: true,     //paging          
+            //jQueryUI: false,
+            //filter: false,      //find string            
+            //paginate: true,     //paging          
             lengthChange: true, //set page rows
             info: true,         //show page info, include now page, total pages
-            sorting: [],        //default not sorting, or datatable will sort by first column !!
+            //sorting: [],        //default not sorting, or datatable will sort by first column !!
             pagingType: "full_numbers",
             //stateSave: true,
             //ordering: false,
@@ -148,7 +154,7 @@ t
             //call after dataTables initialize
             //1.add toolbar button list if need
             //2.change find action: find after enter !!
-            initComplete: function (this: Datatable, settings: DataTables.SettingsLegacy, json: any): void {
+            initComplete: function (this: Dtable, settings: InternalSettings, json: any): void {
                 //1.toolbar
                 if (tbarHtml)
                     $(this).closest('.tableRead_wrapper').find('div.toolbar').html(tbarHtml);
@@ -160,13 +166,13 @@ t
                     filter.off();
 
                     //bind key enter for quick search
-                    const api = (this.dt as DataTables.Api);
+                    const api = this.dt;
                     filter.on('keyup', (e: JQuery.TriggeredEvent) => {
                         if (e.key === 'Enter') {
                             this.resetCount();
 
                             //run search
-                            api.search(filter.val() as string).draw();     //must draw() !!
+                            api!.search(filter.val() as string).draw();     //must draw() !!
                         }
                     });
                 } else {
@@ -190,7 +196,7 @@ t
                 },
                 */
                 //add input parameter for datatables
-                data: function (this: Datatable, arg: DataTables.AjaxData): void {
+                data: function (this: Dtable, arg: AjaxData): void {
                     //如果存在 _me.fnWhenFind(傳回bool), 則先檢查
                     if (_me && _me.fnWhenFind) {
                         if (!_me.fnWhenFind())
@@ -210,7 +216,7 @@ t
                 }.bind(this),
 
                 //on success (cannot use success event), see DataTables document !!
-                dataSrc: function (this: Datatable, result: any): any[] {
+                dataSrc: function (this: Dtable, result: any): any[] {
                     // Use non-null assertion '!' on this.dt as it is initialized in the constructor
                     this._start = this.dt!.page.info().start;
                     this._keepStart = false; //reset
@@ -246,12 +252,12 @@ t
                 }.bind(this),
 
                 //on error
-                error: function (xhr: JQuery.jqXHR, ajaxOptions: JQuery.AjaxOption, thrownError: string): void {
+                error: function (xhr: JQuery.jqXHR, textStatus: JQuery.Ajax.TextStatus, errorThrown: string): void {
                     _Tool.hideWait();
                     _Tool.msg('Datatable.js error.');
                     if (xhr != null) {
                         console.log('status' + xhr.status);
-                        console.log(thrownError);
+                        console.log(errorThrown);
                     }
                 },
             },
@@ -264,7 +270,7 @@ t
                 // Assuming _Fun.dtColDef is available and correct type
                 colDefs![colDefs!.length] = _Fun.dtColDef;   //add last array element
             }
-            config = _Json.copy(dtConfig, config) as DataTables.Settings; // Type assertion needed for merge
+            config = _Json.copy(dtConfig, config) as Config; // Type assertion needed for merge
         }
 
         //add data-rwd-th if need
@@ -292,13 +298,13 @@ t
         (this.dt.settings()[0] as any).showWork = this.showWork;
 
         //before/after ajax call, show/hide waiting msg
-        dt.on('preXhr.dt', (e: JQuery.TriggeredEvent, settings: DataTables.SettingsLegacy, data: any): void => {
+        dt.on('preXhr.dt', (e: JQuery.TriggeredEvent, settings: Config, data: any): void => {
             // settings has been augmented with showWork
             if ((settings as any).showWork)
                 _Fun.block();
         });
 
-        dt.on('xhr.dt', (e: JQuery.TriggeredEvent, settings: DataTables.SettingsLegacy, data: any): void => {
+        dt.on('xhr.dt', (e: JQuery.TriggeredEvent, settings: Config, data: any): void => {
             if ((settings as any).showWork)
                 _Fun.unBlock();
         });

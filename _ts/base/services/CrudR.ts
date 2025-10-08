@@ -14,7 +14,7 @@ import _Str from "./_Str";
 import _Tool from "./_Tool";
 import _Var from "./_Var";
 import CrudE from "./CrudE";
-import Datatable from "./Datatable";
+import Dtable from "./Dtable";
 import EstrFun from "./EstrFun";
 
 /**
@@ -94,7 +94,7 @@ export default class CrudR {
             //4.Create Datatable object
             //傳入 _me.fnAfterFind if any !!
             if (_Var.notEmpty(dtConfig)) {
-                this.dt = new Datatable('#tableRead', 'GetPage', dtConfig, this._getFindCond(), null, null, _me.fnAfterFind || null);
+                this.dt = new Dtable('#tableRead', 'GetPage', dtConfig, this._getFindCond(), null, null, _me.fnAfterFind || null);
             }
         }
 

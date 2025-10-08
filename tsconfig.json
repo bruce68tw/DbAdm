@@ -13,7 +13,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "inlineSources": true,
-    "types": [ "jquery", "jquery.validation" ],
+    "types": [ "jquery", "jquery.validation", "datatables.net" ],
     "skipLibCheck": true    //加快編譯，避免外部 d.ts 報錯
   },
   "include": [

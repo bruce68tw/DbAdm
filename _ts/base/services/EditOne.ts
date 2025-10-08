@@ -60,7 +60,7 @@ export default class EditOne {
     public eform: JQuery;
     public dataJson: any = null;
     public systemError: string = '';
-    public fidTypes?: string[];         // fidTypes array of [fid, ftype, fid, ftype, ...]
+    public fidTypes: string[] = [];         // fidTypes array of [fid, ftype, fid, ftype, ...]
     public fidTypeLen: number = 0;
     public hasFile: boolean = false;
     public fileFids: string[] = [];         // file fids array
@@ -78,10 +78,10 @@ export default class EditOne {
      * @param kid pkey field id (default 'Id')
      * @param eformId edit form id (default 'eform')
      */
-    constructor(kid?: string, eformId?: string) {
+    constructor(kid: StrN = null, eformId: StrN = null) {
         this.kid = kid || 'Id';
         eformId ||= 'eform';
-        this.eform = $('#' + eformId) as JQuery<HTMLElement>;     //multiple rows container object
+        this.eform = $('#' + eformId);     //multiple rows container object
         this.dataJson = null;
 
         //check input & alert error if wrong
@@ -179,7 +179,7 @@ export default class EditOne {
      * @param data {FormData}
      * return {json} file json
      */
-    public dataAddFiles(levelStr: string, data: FormData): any | null {
+    public dataAddFiles(levelStr: string, data: FormData): AnyN {
         if (!this.hasFile || !this.fileFids)
             return null;
 

@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
-    "@types/datatables.net": "^1.10.28",
+    "@types/datatables.net": "^1.12.3",
     "@types/jquery": "^3.5.33",
     "@types/jquery.validation": "^1.17.0",
     "gulp": "^5.0.1",
@@ -16,7 +16,6 @@
     "bootstrap": "^5.3.8",
     "chart.js": "^4.5.0",
     "datatables.net": "^2.3.4",
-    "datatables.net-bs5": "^2.3.4",
     "jquery": "^3.7.1",
     "jquery-validation": "^1.21.0",
     "moment": "^2.30.1"
