@@ -156,9 +156,9 @@ var _iselect = $.extend({}, _ibase, {
      * param action {stirng} 後端action讀取來源, 固定傳入parentId
      * param isEdit {bool} true(編輯畫面), false(查詢畫面)
      */
-    changeParent: function (parentFid, childFid, childId, action, isEdit) {
+    changeParent: function (upFid, childFid, childId, action, isEdit) {
         var box = isEdit ? _me.divEdit : _me.divRead; 
-        var thisId = _iselect.get(parentFid, box);
+        var thisId = _iselect.get(upFid, box);
         _ajax.getJsonA(action, { parentId: thisId }, (rows) => {
             _iselect.setItems(childFid, rows, box);
             if (_str.notEmpty(childId)) {

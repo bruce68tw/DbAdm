@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2017",
+    "lib": [ "ES2017", "DOM" ],
     "module": "esnext",
     "moduleResolution": "node",
-    "rootDir": "./_tsBase",
+    "rootDir": "./_ts",
     "outDir": "./wwwroot/js_new",
     "strict": true,
     "removeComments": false,
@@ -12,10 +13,11 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "inlineSources": true,
-    "types": [ "jquery" ]
+    "types": [ "jquery", "jquery.validation" ],
+    "skipLibCheck": true    //加快編譯，避免外部 d.ts 報錯
   },
   "include": [
-    "_tsBase/**/*.ts",
-    "_tsView/**/*.ts"
+    "_ts/base/**/*.ts",
+    "_ts/view/*.ts"
   ]
 }
