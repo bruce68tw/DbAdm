@@ -1,1 +1,0 @@
-{"version":3,"file":"main.js","sourceRoot":"","sources":["../../../view/main.ts"],"names":[],"mappings":"AAAA,OAAO,OAAO,MAAM,0BAA0B,CAAC;AAE/C,OAAO,CAAC,SAAS,CAAC,OAAO,CAAC,CAAC","sourcesContent":["import _Locale from '../base/services/_Locale';\r\n\r\n_Locale.setLocale('zh-TW');\r\n"]}
