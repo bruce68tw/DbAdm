@@ -108,11 +108,11 @@ var _me = {
     //auto called !!
     //reset when create
     fnAfterOpenEdit: function (fun, json) {
-        var isAdd = (fun === FunEstr.Create);
+        var isAdd = (fun === EstrFun.Create);
         if (isAdd) {
             _me.uiMany.reset();
         }
-        _me.uiMany.setEdit(isAdd || (fun === FunEstr.Update));
+        _me.uiMany.setEdit(isAdd || (fun === EstrFun.Update));
     },
 
     /**
@@ -124,7 +124,7 @@ var _me = {
      * returns {bool}
      */
     fnUpdateOrViewA: async function (fun, key) {
-        var act = (fun == FunEstr.Update)
+        var act = (fun == EstrFun.Update)
             ? 'GetUpdJson' : 'GetViewJson';
         return await _ajax.getJsonA(act, { key: key }, function (json) {
             //show container first

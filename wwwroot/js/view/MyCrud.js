@@ -108,7 +108,7 @@ var _me = {
     //set etable TableId(dropdown)
     //edit0_afterLoadJson: function (json) {
     fnAfterOpenEdit: async function (fun, json) {
-        if (fun == FunEstr.Create)
+        if (fun == EstrFun.Create)
             return;
 
         //set tables list, async call, send function parameter 

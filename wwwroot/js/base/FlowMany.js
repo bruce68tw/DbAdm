@@ -113,7 +113,7 @@ class FlowMany {
 
         //一般節點才需要設定屬性
         var canEdit = isNode
-            ? (this.isEdit && flowItem.getNodeType() == NodeTypeEstr.Node)
+            ? (this.isEdit && flowItem.getNodeType() == EstrNodeType.Node)
             : this.isEdit;
 
         //html 不會自動處理自製功能表狀態, 自行配合 css style
@@ -157,7 +157,7 @@ class FlowMany {
 
         //hide context menu
         var me = this;
-        $(document).on(MouseEstr.MouseDown, function (e) {
+        $(document).on(EstrMouse.MouseDown, function (e) {
             //if (_obj.isShow(me.popupMenu))
             //    me.popupMenu.hide(100);
             
@@ -206,9 +206,9 @@ class FlowMany {
     addNode(nodeType, name) {
 
         var name = '';
-        if (nodeType == NodeTypeEstr.Start) {
+        if (nodeType == EstrNodeType.Start) {
             name = 'S';
-        } else if (nodeType == NodeTypeEstr.End) {
+        } else if (nodeType == EstrNodeType.End) {
             name = 'E';
         } else {
             name = '節點-' + this.flowView.getNewNodeId();
@@ -522,7 +522,7 @@ class FlowMany {
     */
 
     onAddNode(nodeType) {
-        if (nodeType == NodeTypeEstr.Start && this.flowView.hasStartNode()) {
+        if (nodeType == EstrNodeType.Start && this.flowView.hasStartNode()) {
             _tool.msg('起始節點已經存在，不可再新增。');
             return;
         }
@@ -543,11 +543,11 @@ class FlowMany {
         }
 
         //add node
-        this.addNode(NodeTypeEstr.Start);
+        this.addNode(EstrNodeType.Start);
     }
     //on add end node
     onAddEndNode() {
-        this.addNode(NodeTypeEstr.End);
+        this.addNode(EstrNodeType.End);
     }
     //on add normal node
     onAddNormalNode() {

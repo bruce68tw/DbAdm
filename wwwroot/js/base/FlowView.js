@@ -134,7 +134,7 @@ class FlowView {
 	//check has startNode or not
 	hasStartNode() {
 		//some 用法類似 c# any()
-		return this.nodes.some(node => node.getNodeType() == NodeTypeEstr.Start);
+		return this.nodes.some(node => node.getNodeType() == EstrNodeType.Start);
 	}
 } //class FlowView
 
@@ -172,7 +172,7 @@ class FlowNode {
 		this.svg = flowView.svg;
 		this.json = Object.assign({
 			Name: 'Node',
-			NodeType: NodeTypeEstr.Node,
+			NodeType: EstrNodeType.Node,
 			PosX: json.PosX || 100,
 			PosY: json.PosY || 100,
 			//Width: 100,	//??
@@ -193,12 +193,12 @@ class FlowNode {
 
 		let startEnd = this._isStartEnd();
 		if (startEnd) {
-			if (nodeType == NodeTypeEstr.Start) {
+			if (nodeType == EstrNodeType.Start) {
 				cssClass = 'xf-start';
-				nodeText = NodeTypeEstr.Start;
+				nodeText = EstrNodeType.Start;
 			} else {
 				cssClass = 'xf-end';
-				nodeText = NodeTypeEstr.End;
+				nodeText = EstrNodeType.End;
 			}
 
 			//circle大小不填, 由css設定, 這時radius還沒確定, 不能move(因為會用到radius)
@@ -241,7 +241,7 @@ class FlowNode {
 		this.elm.move(this.json.PosX, this.json.PosY);
 
 		//add 連接點小方塊(pin) if need(在文字右側)
-		if (nodeType != NodeTypeEstr.End) {
+		if (nodeType != EstrNodeType.End) {
 			this.pinElm = this.elm
 				.rect(this.PinWidth, this.PinWidth)
 				.addClass('xf-pin');
@@ -257,7 +257,7 @@ class FlowNode {
 
 	//是否為起迄節點
 	_isStartEnd() {
-		return (this.json.NodeType == NodeTypeEstr.Start || this.json.NodeType == NodeTypeEstr.End);
+		return (this.json.NodeType == EstrNodeType.Start || this.json.NodeType == EstrNodeType.End);
 	}
 
 	getNodeType() {
@@ -303,11 +303,11 @@ class FlowNode {
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
 		//draggable 來自 svg.draggable.js
-		this.elm.draggable().on(MouseEstr.DragMove, function (e) {
+		this.elm.draggable().on(EstrMouse.DragMove, function (e) {
 			if (!flowView.isEdit) return;
 
 			me._drawLines();
-		}).on(MouseEstr.DragEnd, function (e) {
+		}).on(EstrMouse.DragEnd, function (e) {
 			if (!flowView.isEdit) return;
 
 			let { x, y } = e.detail.box;
@@ -339,7 +339,7 @@ class FlowNode {
 		let flowView = this.flowView;
 
 		// 啟用 pinElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pinElm !!
-		this.pinElm.draggable().on(MouseEstr.DragStart, (event) => {
+		this.pinElm.draggable().on(EstrMouse.DragStart, (event) => {
 			if (!flowView.isEdit) return;
 
 			// 初始化線條
@@ -353,7 +353,7 @@ class FlowNode {
 
 			flowView.drawLineStart(me.self);
 
-		}).on(MouseEstr.DragMove, (event) => {
+		}).on(EstrMouse.DragMove, (event) => {
 			if (!flowView.isEdit) return;
 
 			//阻止 connector 移動
@@ -391,7 +391,7 @@ class FlowNode {
 				}
 			}
 
-		}).on(MouseEstr.DragEnd, (event) => {
+		}).on(EstrMouse.DragEnd, (event) => {
 			if (!flowView.isEdit) return;
 
 			// 檢查座標值是否有效

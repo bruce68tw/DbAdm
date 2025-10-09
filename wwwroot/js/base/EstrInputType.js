@@ -1,5 +1,5 @@
-﻿//輸入欄位種類, 對應 Base InputTypeEstr 
-var InputTypeEstr = {
+﻿//輸入欄位種類, 對應 Base EstrInputType 
+var EstrInputType = {
     Check: "check",
     Date: "date",
     DateTime: "dt",

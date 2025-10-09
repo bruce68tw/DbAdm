@@ -1,5 +1,5 @@
 ﻿//flow node type enum
-var NodeTypeEstr = {
+var EstrNodeType = {
 
     Start: 'S',		//startNode
     End: 'E',		//endNode

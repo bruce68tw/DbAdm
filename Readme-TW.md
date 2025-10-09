@@ -28,7 +28,7 @@ DbAdm 是一套資料庫文件系統，主畫面如下：
   - _log：系統運行所產生 Log 檔案。
   - _template：各種功能所需的範本檔案。
   - Controllers：Controller類別檔案。
-  - Enums：列舉類別，如果檔案名稱結尾是Enum表示是數字型，如果是Estr，則表示為字串型，例如：InputTypeEstr.cs
+  - Enums：列舉類別，如果檔案名稱結尾是Enum表示是數字型，如果是Estr，則表示為字串型，例如：EstrInputType.cs
   - Models：系統所需要Model類別，檔案名稱後面為Dto表示Data Transfer Object，Vo表示 View Object
   - Resources：多國語資料檔案，這裡用於View頁面。
   - Services：服務類別。

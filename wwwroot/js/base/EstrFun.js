@@ -1,6 +1,6 @@
-﻿//ex: _fun.FunC -> FunEstr.Create
+﻿//ex: _fun.FunC -> EstrFun.Create
 //for mapping to backend
-var FunEstr = {
+var EstrFun = {
 
     Create: 'C',
     Read: 'R',

@@ -58,10 +58,10 @@
         //如果是主管交辦, 則標題、交辦主管設定唯讀
         fnAfterOpenEdit: function (fun, json) {
             const FromMgr = 'FromMgr';
-            var isFunU = (fun == FunEstr.Update);
+            var isFunU = (fun == EstrFun.Update);
             var eform = _me.eform0;
 
-            if (isFunU || fun == FunEstr.View) {
+            if (isFunU || fun == EstrFun.View) {
                 //設定專案功能欄位
                 _me.onChgProject(1, json.ProgId);
 

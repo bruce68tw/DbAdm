@@ -1,5 +1,5 @@
 ﻿//內容為mouse事件名稱
-var MouseEstr = {
+var EstrMouse = {
     RightMenu: 'contextmenu',
     MouseDown: 'mousedown',
     MouseUp: 'mouseup',

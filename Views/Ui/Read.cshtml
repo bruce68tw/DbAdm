@@ -87,10 +87,10 @@
         _me.init();
 
         //註刪button dragstart事件
-        _me.divEdit.on(MouseEstr.DragStart, '.xu-btn', function(e) {
+        _me.divEdit.on(EstrMouse.DragStart, '.xu-btn', function(e) {
             let itemType = $(e.target).data('type');
             _me.uiMany.startDragBtn(true, itemType);
-        }).on(MouseEstr.DragEnd, function (e) {
+        }).on(EstrMouse.DragEnd, function (e) {
             //不會觸發工作區的 dragEnd, 這裡必須寫
             _me.uiMany.onDragEnd(e);
         });
