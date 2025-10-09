@@ -19,6 +19,7 @@ class UiMany {
         this.ModalGroup = $('#modalGroup');
         this.ModalTable = $('#modalTable');
         this.ModalTabPage = $('#modalTabPage');
+        this.ModalMultiBox = $('#modalMultiBox');
         //this.EformInput = this.ModalInput.find('form');   //modalNodeProp form
         
         this.isEdit = false;    //是否可編輯
@@ -109,6 +110,8 @@ class UiMany {
                 return this._addTable();
             case EstrItemType.TabPage:
                 return this._addTabPage();
+            case EstrItemType.MultiBox:
+                return this._addMultiBox();
         }
     }
     //#endregion
@@ -195,6 +198,14 @@ class UiMany {
         //this.uiView.addTable(row.Id, infoJson);
     }
 
+    _addMultiBox() {
+        //add to mItem
+        let infoJson = {
+            IsHori: false,  //true=水平, false=垂直
+        };
+        return this._mItemAddRow(EstrItemType.MultiBox, infoJson);
+    }
+
     //todo
     _addTabPage() {
     }
@@ -231,6 +242,9 @@ class UiMany {
                 break;
             case EstrItemType.TabPage:
                 modal = this.ModalTabPage;
+                break;
+            case EstrItemType.MultiBox:
+                modal = this.ModalMultiBox;
                 break;
             default:
                 return;
@@ -283,6 +297,9 @@ class UiMany {
                 break;
             case EstrItemType.TabPage:
                 modal = this.ModalTabPage;
+                break;
+            case EstrItemType.MultiBox:
+                modal = this.ModalMultiBox;
                 break;
         }
 

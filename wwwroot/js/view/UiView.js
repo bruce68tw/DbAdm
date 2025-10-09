@@ -2,9 +2,10 @@
 let EstrItemType = {
 	Input: 'I',
 	Group: 'G',		
-	Row: 'R',		//只有2欄位, 只能放 group, col
-	Table: 'T',		//只能放 col
-	TabPage: 'TP',	//只能放 box, group, col
+	Row: 'R',		//只有2欄位, 只能放 group, input
+	Table: 'T',		//只能放 input
+	TabPage: 'TP',	//(暫不使用)只能放 box, group, input
+	MultiBox: 'M',	//多欄容器, 只能放 input
 };
 
 //結構用途, 記錄item drag/drop 狀態資訊
@@ -59,6 +60,7 @@ class UiView {
 		this.NameRow = '[欄位容器]';
 		this.NameTable = '[多筆表格]';
 		this.NameTabPage = '[多頁容器]';
+		this.NameMultiBox = '[多欄容器]';
 
 		this.isEdit = true;		//是否可編輯, temp to true	
 		this.newItemId = 0;		//新item Id, 自動累減, 使用負數!!		
@@ -148,6 +150,7 @@ class UiView {
 		//判斷 drag item 是否 drop into box 裡面
 		let dropInBox = false;
 		if (hasItem) {
+			//todo: MultiBox
 			dropInBox =
 				(drop.itemType == EstrItemType.Row && !dropObj.hasClass(this.ClsItem)) ||
 				(drop.itemType == EstrItemType.Table && _obj.tagName(dropObj) == 'td') ||
@@ -227,6 +230,9 @@ class UiView {
 						error = `${dragName}不能放在${this._typeToName(drop.boxType)}裡面。`;
 					}
 					break;
+				case EstrItemType.MultiBox:
+					//todo
+					break;
 			}
 		}
 
@@ -277,6 +283,7 @@ class UiView {
 				drag.item = item;
 			}
 
+			//todo: MultiBox
 			//drag/drop時才需要處理
 			//移入/移出 Row時調整大小(互斥判斷: a^b 或是 a !== b)
 			if (dragType == EstrItemType.Input) {
@@ -335,6 +342,9 @@ class UiView {
 				//todo
 				//page位置
 				break;
+			case EstrItemType.MultiBox:
+				//todo
+				break;
 			default:
 				return;
 		}
@@ -381,6 +391,8 @@ class UiView {
 				return this.NameTable;
 			case EstrItemType.TabPage:
 				return this.NameTabPage;
+			case EstrItemType.MultiBox:
+				return this.NameMultiBox;
 		}
 	}
 
@@ -396,6 +408,7 @@ class UiView {
 	_isBox(type) {
 		return (type == EstrItemType.Row ||
 			type == EstrItemType.Table ||
+			type == EstrItemType.MultiBox ||
 			type == EstrItemType.TabPage);
 	}
 	//#endregion
@@ -414,6 +427,8 @@ class UiView {
 				return this._newRow(itemId, info);
 			case EstrItemType.Table:
 				return this._newTable(itemId, info);
+			case EstrItemType.MultiBox:
+				return this._newMultiBox(itemId, info);
 			case EstrItemType.TabPage:
 				return this._newTabPage(itemId, info);
 		}
@@ -520,6 +535,35 @@ class UiView {
 	}
 
 	//todo
+	_newMultiBox(id, info) {
+		let html = `
+<div class='py-2'>
+	<div class="x-btns-box">
+		<span class="x-span-label">角色功能</span>
+		<button type="button" data-onclick="_me.mRoleProg.onAddRow" class="btn btn-success">新增一列
+			<i class="ico-plus"></i>
+		</button>
+	</div>
+	<table class="table x-table x-no-hline" cellspacing="0">
+		<thead>
+			<tr>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+			</tr>
+		</tbody>
+	</table>
+</div>
+`;
+		//render item
+		let item = $(html);
+		this._infoToTable(info, item);	//info to table
+		this._itemAddProp(id, item, EstrItemType.MultiBox, info);
+		return item;
+	}
+
+	//todo
 	_newTabPage(id, info) {
 		//return item;
 	}
@@ -612,6 +656,11 @@ class UiView {
 				//do nothing
 				return;
 			case EstrItemType.Table:
+				callback = false;	//必須先判斷
+				this._infoToTable(info, item, fnCallback);
+				break;
+			case EstrItemType.MultiBox:
+				//todo
 				callback = false;	//必須先判斷
 				this._infoToTable(info, item, fnCallback);
 				break;
@@ -809,6 +858,15 @@ class UiView {
 					});
 					break;
 				case EstrItemType.Table:
+					// table 的 xu-item 在 tbody > tr > td 裡
+					json.Childs = [];
+					item.find("tbody td").each(function () {
+						let item2 = $(this).children(me.FtItem).first();
+						json.Childs.push(item2.length > 0 ? buildJson(item2) : null);	//使用Childs
+					});
+					break;
+				case EstrItemType.MultiBox:
+					//todo
 					// table 的 xu-item 在 tbody > tr > td 裡
 					json.Childs = [];
 					item.find("tbody td").each(function () {
