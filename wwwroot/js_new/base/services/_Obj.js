@@ -97,7 +97,7 @@ export default class _Obj {
      */
     static hasAttr(obj, attr) {
         // Added 'attr' parameter as it was missing and assumed to be a string return type
-        return obj.attr(attr);
+        return obj.attr(attr) || '';
     }
     //如果使用show()/hide()會動態寫入 inline style, 造成CSRF !!
     static show(obj) {

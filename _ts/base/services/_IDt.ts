@@ -19,8 +19,8 @@ export default class _IDt extends _IDate {
         return _Str.isEmpty(date)
             ? ''
             : date + ' ' +
-                _ISelect.getO(_IDt._boxGetHour(obj)) + ':' +
-                _ISelect.getO(_IDt._boxGetMin(obj));
+              _ISelect.getO(_IDt._boxGetHour(obj)) + ':' +
+              _ISelect.getO(_IDt._boxGetMin(obj));
     }
 
     /**

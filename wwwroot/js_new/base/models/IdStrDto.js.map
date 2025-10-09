@@ -1,0 +1,1 @@
+{"version":3,"file":"IdStrDto.js","sourceRoot":"","sources":["../../../../base/models/IdStrDto.ts"],"names":[],"mappings":"","sourcesContent":["interface IdStrDto {\r\n    Id: string;\r\n    Str: string;\r\n}"]}

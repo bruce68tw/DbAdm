@@ -32,10 +32,10 @@ export default class _Fun {
     static nowElm: HTMLElement | null = null;     //now dom event element
 
     //mid variables
-    static data: Record<string, any> = {};
+    static data: Json = {};
 
     //datatables column define default values
-    static dtColDef: Record<string, any> = {
+    static dtColDef: Json = {
         className: 'x-center',
         orderable: false,
         targets: '_all',

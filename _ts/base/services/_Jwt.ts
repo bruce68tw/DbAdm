@@ -6,7 +6,7 @@ export default class _Jwt {
     /*
     //??
     //get header json object for jwt
-    static jsonAddJwtHeader(json: { [key: string]: any }): void {
+    static jsonAddJwtHeader(json: Json): void {
         if (_Fun.jwtToken)
             json.headers = _Jwt.getJwtAuth();
     }

@@ -122,16 +122,16 @@ export default class _IFile extends _IBase {
         return $(elm).closest('.xi-box');
     }
     //get file object
-    static _elmToFile(elm: JQuery | Elm): JQuery {
-        return _IFile._boxGetFile(_IFile._elmToBox(elm instanceof Elm ? elm : elm.get(0)!));
+    static _elmToFile(elm: Elm): JQuery {
+        return _IFile._boxGetFile(_IFile._elmToBox(elm));
     }
     //get input object
-    static _elmToObj(elm: JQuery | Elm): JQuery {
-        return _IFile._boxGetObj(_IFile._elmToBox(elm instanceof Elm ? elm : elm.get(0)!));
+    static _elmToObj(elm: Elm): JQuery {
+        return _IFile._boxGetObj(_IFile._elmToBox(elm));
     }
     //get link object
-    static _elmToLink(elm: JQuery | Elm): JQuery {
-        return _IFile._boxGetLink(_IFile._elmToBox(elm instanceof Elm ? elm : elm.get(0)!));
+    static _elmToLink(elm: Elm): JQuery {
+        return _IFile._boxGetLink(_IFile._elmToBox(elm));
     }
 
     /**

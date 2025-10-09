@@ -17,6 +17,7 @@
     "skipLibCheck": true    //加快編譯，避免外部 d.ts 報錯
   },
   "include": [
+    "_ts/base/types/*.d.ts",
     "_ts/base/**/*.ts",
     "_ts/view/*.ts"
   ]

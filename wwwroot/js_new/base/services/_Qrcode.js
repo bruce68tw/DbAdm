@@ -1,7 +1,7 @@
 import _Obj from "./_Obj";
 //https://github.com/davidshimjs/qrcodejs
 export default class _Qrcode {
-    static set(id, box, url, width) {
+    static set(id, box, url, width = null) {
         const obj = _Obj.getById(id, box);
         // 確保找到元素，否則 setO 會失敗
         if (obj === null) {
@@ -10,7 +10,7 @@ export default class _Qrcode {
         }
         return _Qrcode.setO(obj, url, width);
     }
-    static setO(obj, url, width) {
+    static setO(obj, url, width = null) {
         const qrWidth = width || 128;
         //return new QRCode(document.getElementById(id), {
         return new QRCode(obj[0], {

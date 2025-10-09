@@ -1,21 +1,18 @@
-//import $ from "jquery";
 import _Ajax from "./_Ajax";
-//import _BR from "./_BR";
 import _Form from "./_Form";
 import _ICheck from "./_ICheck";
 import _IDate from "./_IDate";
 import _Input from "./_Input";
 import _IRadio from "./_IRadio";
 import _Json from "./_Json";
-//import _Me from "./_Me";
 import _Obj from "./_Obj";
 import _Prog from "./_Prog";
 import _Str from "./_Str";
 import _Tool from "./_Tool";
 import _Var from "./_Var";
 import CrudE from "./CrudE";
-import Datatable from "./Datatable";
-import EstrFun from "./EstrFun";
+import Dtable from "./Dtable";
+import FunEstr from "../enums/FunEstr";
 /**
  * 改為非靜態類別
  * trigger _me.fnAfterFind(result) if any
@@ -84,7 +81,7 @@ export default class CrudR {
             //4.Create Datatable object
             //傳入 _me.fnAfterFind if any !!
             if (_Var.notEmpty(dtConfig)) {
-                this.dt = new Datatable('#tableRead', 'GetPage', dtConfig, this._getFindCond(), null, null, _me.fnAfterFind || null);
+                this.dt = new Dtable('#tableRead', 'GetPage', dtConfig, this._getFindCond(), null, null, _me.fnAfterFind || null);
             }
         }
         //2.init edit
@@ -342,19 +339,19 @@ export default class CrudR {
      * onclick Create button
      */
     onCreate() {
-        //var fun = EstrFun.Create;
+        //var fun = FunEstr.Create;
         //this.swap(false);  //call first
         //_prog.setPath(fun);
         _me.crudE.onCreate();
-        this.toEditMode(EstrFun.Create);
+        this.toEditMode(FunEstr.Create);
     }
     /**
      * onclick Update button
      * param key {string} row key
      */
     async onUpdateA(key) {
-        //_me.crudE._getJsonAndSetMode(key, EstrFun.Update);
-        //this.toEditMode(EstrFun.Update);
+        //_me.crudE._getJsonAndSetMode(key, FunEstr.Update);
+        //this.toEditMode(FunEstr.Update);
         await _me.crudE.onUpdateA(key);
     }
     /**
@@ -362,9 +359,9 @@ export default class CrudR {
      * param key {string} row key
      */
     async onViewA(key) {
-        //_me.crudE._getJsonAndSetMode(key, EstrFun.View);
+        //_me.crudE._getJsonAndSetMode(key, FunEstr.View);
         await _me.crudE.onViewA(key);
-        //this.toEditMode(EstrFun.View);
+        //this.toEditMode(FunEstr.View);
     }
     /**
      * click setStatus, 固定呼叫後端 SetStatus action

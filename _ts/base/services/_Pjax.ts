@@ -1,5 +1,5 @@
-﻿import _Ajax from "./_Ajax";
-// import _Fun from "./_Fun"; // JWT token 相關的註解中提到
+﻿import 'jquery-pjax';
+import _Ajax from "./_Ajax";
 import _Leftmenu from "./_Leftmenu";
 import _Prog from "./_Prog";
 import _Str from "./_Str";
@@ -15,10 +15,10 @@ export default class _Pjax {
         //if skip 'POST', it will trigger twice !!
         const docu = $(document);
         // Assuming $.fn.pjax is available via a definition file or installed typings
-        (docu as any).pjax('[data-pjax]', boxFt, { type: 'POST' });
+        docu.pjax('[data-pjax]', boxFt, { type: 'POST' });
 
         //點擊功能項目時記錄功能名稱
-        docu.on('click', '.x-leftmenu [data-pjax]', function (this: HTMLElement) {
+        docu.on('click', '.x-leftmenu [data-pjax]', function () {
             const menuPath = _Leftmenu.getMenuPath($(this));
             _Prog.storeProgPath(menuPath);
         });
@@ -33,7 +33,7 @@ export default class _Pjax {
 		*/
 		
         //'data' 是後端回傳字串, 可能為 HTML 或錯誤訊息
-        docu.on('pjax:success', function (event: any, data: string, status: JQuery.Ajax.SuccessTextStatus, xhr: JQueryXHR, opts: any) {
+        docu.on('pjax:success', function (event: any, data: string, status: string, xhr: JQueryXHR, opts: any) {
             const json = _Str.toJson(data);
             if (json != null) {
                 //只顯示錯誤訊息, 不處理欄位 validation error
@@ -45,7 +45,7 @@ export default class _Pjax {
         });
 
         //when backend exception
-        docu.on('pjax:error', function (event: any, xhr: JQueryXHR, textStatus: JQuery.Ajax.ErrorTextStatus, errorThrown: string, opts: any) {
+        docu.on('pjax:error', function (event: any, xhr: JQueryXHR, textStatus: string, errorThrown: string, opts: any) {
             opts.success(xhr.responseText, textStatus, xhr);
             return false;
         });

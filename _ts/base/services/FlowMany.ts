@@ -1,6 +1,4 @@
-﻿import EstrMouse from "./EstrMouse";
-import EstrNodeType from "./EstrNodeType";
-import FlowView from "./FlowView";
+﻿import FlowView, { FlowNode, FlowLine } from "./FlowView";
 import _Form from "./_Form";
 import _ISelect from "./_ISelect";
 import _IText from "./_IText";
@@ -9,25 +7,9 @@ import _Obj from "./_Obj";
 import _Str from "./_Str";
 import _Tool from "./_Tool";
 import EditMany from "./EditMany";
-
-// 假設 FlowNode 和 FlowLine 是 FlowView 使用的類型，我們需要定義它們的結構或使用 any/unknown
-// 由於原始 JS 中它們只在類型註解中使用，這裡定義為 interface 或 type 以保持清晰
-interface FlowNode {
-    getId(): string;
-    getLines(): FlowLine[];
-    getNodeType(): string;
-    getName(): string;
-    setName(name: string, updateUI: boolean): void;
-}
-
-interface FlowLine {
-    getId(): string;
-    fromNode: FlowNode;
-    toNode: FlowNode;
-    getFromType(): string;
-    setLabel(label: string): void;
-    setFromType(type: string): void;
-}
+import MouseEstr from "../enums/MouseEstr";
+import NodeTypeEstr from "../enums/NodeTypeEstr";
+import Mustache from "mustache";
 
 /**
  * FlowForm -> FlowMany
@@ -71,13 +53,13 @@ export default class FlowMany {
 
     //this.popupMenu = $('.xf-menu');
     //this.divFlowBox = $('#' + areaId);	//??
-    private divLinesBox: JQuery<HTMLElement>;       //??hidden
-    private eformNodes: JQuery<HTMLElement>;           //nodes edit form for editMany
-    private eformLines: JQuery<HTMLElement>;           //lines edit form for editMany
-    private modalNodeProp: JQuery<HTMLElement>;
-    private modalLineProp: JQuery<HTMLElement>;
-    private eformNodeProp: JQuery<HTMLElement>;   //modalNodeProp form
-    private tbodyLineCond: JQuery<HTMLElement>;  //modalLineProp tbody for line conds
+    private divLinesBox: JQuery;       //??hidden
+    private eformNodes: JQuery;           //nodes edit form for editMany
+    private eformLines: JQuery;           //lines edit form for editMany
+    private modalNodeProp: JQuery;
+    private modalLineProp: JQuery;
+    private eformNodeProp: JQuery;   //modalNodeProp form
+    private tbodyLineCond: JQuery;  //modalLineProp tbody for line conds
 
     //node/line template        
     private tplNode: string;
@@ -135,7 +117,7 @@ export default class FlowMany {
 
         //set instance first
         const flowView = new FlowView(areaId);
-        flowView.fnMoveNode = (node, x, y) => this.fnMoveNode(node as FlowNode, x, y);
+        flowView.fnMoveNode = (node, x, y) => this.fnMoveNode(node, x, y);
         flowView.fnAfterAddLine = (json) => this.fnAfterAddLine(json);
         flowView.fnShowMenu = (event, isNode, flowItem) => this.fnShowMenu(event, isNode, flowItem as FlowNode | FlowLine);
         this.flowView = flowView;
@@ -144,9 +126,9 @@ export default class FlowMany {
         this._setFlowEvent();
     }
 
-    fnMoveNode(node: FlowNode, x: number, y: number): void {
+    fnMoveNode(node: FlowNode, x: number, y: number): void | null {
         const rowBox = this.mNode.idToRowBox(node.getId());
-        _Form.loadRow(rowBox, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
+        _Form.loadRow(rowBox!, { PosX: Math.floor(x), PosY: Math.floor(y) });    //座標取整數
     }
 
     fnAfterAddLine(json: any): void {
@@ -159,14 +141,14 @@ export default class FlowMany {
      * param isNode {boolean} 
      * param flowItem {FlowNode/FlowLine} 
      */
-    fnShowMenu(event: JQuery.ContextMenuEvent, isNode: boolean, flowItem: FlowNode | FlowLine): void {
+    fnShowMenu(event: MouseEvent, isNode: boolean, flowItem: FlowNode | FlowLine): void {
         //set instance variables
         this.nowIsNode = isNode;
         this.nowFlowItem = flowItem;
 
         //一般節點才需要設定屬性
         const canEdit = isNode
-            ? (this.isEdit && (flowItem as FlowNode).getNodeType() == EstrNodeType.Node)
+            ? (this.isEdit && (flowItem as FlowNode).getNodeType() == NodeTypeEstr.Node)
             : this.isEdit;
 
         //html 不會自動處理自製功能表狀態, 自行配合 css style
@@ -211,13 +193,13 @@ export default class FlowMany {
         //hide context menu
         //變數宣告 var 改用 let, const (這裡針對區域變數)
         const me = this;
-        $(document).on(EstrMouse.MouseDown, function (e: JQuery.MouseDownEvent) {
+        $(document).on(MouseEstr.MouseDown, function (e: JQuery.MouseDownEvent) {
             //if (_obj.isShow(me.popupMenu))
             //    me.popupMenu.hide(100);
             
             //"this" is not work here !!
             const filter = me.FtMenu;
-            if (!$(e.target).parents(filter).length > 0)
+            if ($(e.target).parents(filter).length == 0)
                 _Obj.hide($(filter));            
         });
     }
@@ -260,9 +242,9 @@ export default class FlowMany {
     addNode(nodeType: string, name?: string): void {
         //變數宣告 var 改用 let, const (這裡針對區域變數)
         let nodeName: string = '';
-        if (nodeType == EstrNodeType.Start) {
+        if (nodeType == NodeTypeEstr.Start) {
             nodeName = 'S';
-        } else if (nodeType == EstrNodeType.End) {
+        } else if (nodeType == NodeTypeEstr.End) {
             nodeName = 'E';
         } else {
             nodeName = '節點-' + this.flowView.getNewNodeId();
@@ -301,7 +283,7 @@ export default class FlowMany {
         });
 
         //delete flowNode(自動刪除相關流程線) 
-        this.flowView.deleteNode();
+        this.flowView.deleteNode(node);
     }
     //#endregion (node function)
 
@@ -371,7 +353,7 @@ export default class FlowMany {
         let condStr = '';
         this.tbodyLineCond.find('tr').each(function (idx) {
             const tr = $(this);
-            const str = (idx == 0 ? '' : _ISelect.get('AndOr', tr)) +
+            const str = (idx == 0 ? '' : _ISelect.get('AndOr', tr)!) +
                 _IText.get('Fid', tr) + me.ColSep +
                 _ISelect.get('Op', tr) + me.ColSep +
                 _IText.get('Value', tr);
@@ -385,7 +367,7 @@ export default class FlowMany {
         //var row = this._boxGetValues(node, ['NodeType', 'Name', 'SignerType', 'SignerValue']);
         //var id = node.getId();
         const rowBox = this.mNode.idToRowBox(node.getId());
-        _Form.loadRow(this.modalNodeProp, _Form.toRow(rowBox));
+        _Form.loadRow(this.modalNodeProp, _Form.toRow(rowBox!));
 
         //show modal
         _Modal.showO(this.modalNodeProp);   //.modal('show');
@@ -409,7 +391,7 @@ export default class FlowMany {
         _IText.set('FromNodeName', line.fromNode.getName(), form);
         _IText.set('ToNodeName', line.toNode.getName(), form);
         _ISelect.set('FromType', line.getFromType(), form);
-        _IText.set('Sort', _IText.get('Sort', rowBox), form);
+        _IText.set('Sort', _IText.get('Sort', rowBox!), form);
 
         //show modal
         _Modal.showO(this.modalLineProp);
@@ -419,8 +401,8 @@ export default class FlowMany {
 
         //load line conditions rows
         this.tbodyLineCond.empty();
-        const condStr = _IText.get('CondStr', rowBox)
-        const condList = this._condStrToList(condStr);
+        const condStr = _IText.get('CondStr', rowBox!)
+        const condList = this._condStrToList(condStr!);
         if (condList != null) {
             for (let i = 0; i < condList.length; i++) {
                 //var newCond = $(this.tplLineCond); // 原始 js 少了 mustache render
@@ -435,7 +417,7 @@ export default class FlowMany {
     //... 註解掉的內部方法，不需轉換
 
     onAddNode(nodeType: string): void {
-        if (nodeType == EstrNodeType.Start && this.flowView.hasStartNode()) {
+        if (nodeType == NodeTypeEstr.Start && this.flowView.hasStartNode()) {
             _Tool.msg('起始節點已經存在，不可再新增。');
             return;
         }
@@ -510,7 +492,7 @@ export default class FlowMany {
 
         //update node display name
         const node = this.nowFlowItem as FlowNode; // 斷言為 FlowNode
-        const rowBox = this.mNode.idToRowBox(node.getId());
+        const rowBox = this.mNode.idToRowBox(node.getId())!;
         const oldName = _IText.get('Name', rowBox);   //get before loadRow()
         _Form.loadRow(rowBox, row);
 
@@ -536,12 +518,12 @@ export default class FlowMany {
             FromType: _ISelect.get('FromType', modal),
         };
         const line = this.nowFlowItem as FlowLine; // 斷言為 FlowLine
-        const rowBox = this.mLine.idToRowBox(line.getId());
+        const rowBox = this.mLine.idToRowBox(line.getId())!;
         _Form.loadRow(rowBox, row);
 		
 		//update flowLine
         line.setLabel(this._condStrToLabel(row.CondStr));
-        line.setFromType(row.FromType);
+        line.setFromType(row.FromType!);
 		
         //hide modal
         _Modal.hideO(modal);

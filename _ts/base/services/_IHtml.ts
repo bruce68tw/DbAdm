@@ -35,7 +35,8 @@ export default class _IHtml extends _IBase {
      * param prog {string} program code
      * param height {int} (optional)input height(px)
      */
-    static init(edit: { eform: JQuery, validator: { element: (obj: JQuery) => void } }, prog: string, height?: number): void {
+    static init(edit: { eform: JQuery, validator: { element: (obj: JQuery) => void } },
+        prog: string, height?: number): void {
         edit.eform.find(_IHtml.Filter).each(function () {
             const upMe = $(this);
             upMe.data('prog', prog);    //for onImageUpload()

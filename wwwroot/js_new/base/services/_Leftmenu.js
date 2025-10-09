@@ -1,3 +1,4 @@
+import "bootstrap";
 export default class _Leftmenu {
     //private static box: JQuery;
     //private static body: JQuery;

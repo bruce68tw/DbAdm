@@ -14,18 +14,18 @@ export default class _Btn {
      * param status {boolean} true=enabled (disabled=false), false=disabled (disabled=true).
      * param box {any} (Optional) The context/container object for finding the element.
      */
-    static setEdit(id: string, status: boolean, box?: any): void {
+    static setEdit(id: string, status: boolean, box: JQuery): void {
         //use _obj.getById() !!
         // 假設 _Obj.getById 返回一個 jQuery 物件
-        _Btn.setEditO(_Obj.getById(id, box), status);
+        _Btn.setEditO(_Obj.getById(id, box)!, status);
     }
     
     /**
      * Set the disabled status of a button or element using its object reference.
-     * param obj {JQuery<HTMLElement>|any} The button/element object (usually a jQuery object).
+     * param obj {JQuery|any} The button/element object (usually a jQuery object).
      * param status {boolean} true=enabled (disabled=false), false=disabled (disabled=true).
      */
-    static setEditO(obj: JQuery<HTMLElement> | any, status: boolean): void {
+    static setEditO(obj: JQuery, status: boolean): void {
         // .prop('disabled', true) 會禁用按鈕，所以當 status 為 false 時應禁用
         obj.prop('disabled', !status);
     }
@@ -37,9 +37,9 @@ export default class _Btn {
      * param status {boolean} true=enabled (disabled=false), false=disabled (disabled=true).
      * param box {any} (Optional) The context/container object for finding the element.
      */
-    static setEditF(ft: string, status: boolean, box?: any): void {
+    static setEditF(ft: string, status: boolean, box: JQuery): void {
         // 假設 _Obj.getF 返回一個 jQuery 物件
-        _Btn.setEditO(_Obj.getF(ft, box), status);
+        _Btn.setEditO(_Obj.getF(ft, box)!, status);
     }
 
 }

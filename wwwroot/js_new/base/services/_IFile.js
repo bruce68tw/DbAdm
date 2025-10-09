@@ -108,15 +108,15 @@ export default class _IFile extends _IBase {
     }
     //get file object
     static _elmToFile(elm) {
-        return _IFile._boxGetFile(_IFile._elmToBox(elm instanceof Elm ? elm : elm.get(0)));
+        return _IFile._boxGetFile(_IFile._elmToBox(elm));
     }
     //get input object
     static _elmToObj(elm) {
-        return _IFile._boxGetObj(_IFile._elmToBox(elm instanceof Elm ? elm : elm.get(0)));
+        return _IFile._boxGetObj(_IFile._elmToBox(elm));
     }
     //get link object
     static _elmToLink(elm) {
-        return _IFile._boxGetLink(_IFile._elmToBox(elm instanceof Elm ? elm : elm.get(0)));
+        return _IFile._boxGetLink(_IFile._elmToBox(elm));
     }
     /**
      * box get link object

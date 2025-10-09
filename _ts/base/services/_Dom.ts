@@ -7,7 +7,7 @@ export default class _Dom {
      * @param fid data field name
      * @returns data value string
      */
-    static getData(elm: Element, fid: string): string | null {
+    static getData(elm: Element, fid: string): StrN {
         return elm.getAttribute("data-" + fid);
     }
 

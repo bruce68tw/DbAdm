@@ -6,7 +6,7 @@ export default class _IBase {
      * get value by fid, get -> getF -> getO
      * param fid {string}
      * param box {object}
-     * return {string | null}
+     * return {StrN}
      */
     static get(fid, box) {
         // @ts-ignore: 'this' will be _IBase at runtime for static methods

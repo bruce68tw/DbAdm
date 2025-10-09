@@ -40,7 +40,7 @@ class _IDate extends _IBase {
      * param box {object}
      * param fid {string} optional
      */
-    static init(box, fid) {
+    static init(box, fid = null) {
         const obj = _Str.isEmpty(fid)
             ? box.find(_IDate.BoxFilter)
             : _Obj.get(fid, box).closest(_IDate.BoxFilter);

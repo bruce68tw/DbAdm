@@ -1,4 +1,5 @@
-﻿import _Edit from "./_Edit";
+﻿import Mustache from 'mustache';
+import _Edit from "./_Edit";
 import _Form from "./_Form";
 import _Fun from "./_Fun";
 import _ICheck from "./_ICheck";
@@ -10,26 +11,6 @@ import _Log from "./_Log";
 import _Obj from "./_Obj";
 import _Str from "./_Str";
 import _Var from "./_Var";
-
-// Assume the following are globally available or defined elsewhere:
-// And that DataTables and jQuery/Mustache are available.
-declare const Mustache: { render: (template: string, view: any) => string };
-
-// Define a minimal interface for the validator object, assuming it's part of jQuery validation or similar
-interface Validator {
-    // Methods and properties on the validator instance
-}
-
-// Global variables, assuming they are imported or globally defined elsewhere
-declare const _me: {
-    divRoles: JQuery;
-    mUserRoleFids: string[];
-    crudE: {
-        viewFile: (table: string, fid: string, elm: JQuery<HTMLElement> | HTMLElement, key: string) => void;
-        getFileSid: (levelStr: string, fid: string) => string;
-        // dataSetFileJson: (data: FormData, fileJson: any) => void;
-    };
-};
 
 /**
  * 多筆編輯畫面
@@ -94,16 +75,16 @@ export default class EditMany {
     public hasEform: boolean = false;
     public rowsBox: JQueryN = null;
     public eform: JQueryN = null;     //edit form object
-    public validator?: Validator;
+    public validator?: JQueryValidation.Validator;
 
     public deletedRows: string[] = [];  //deleted key string array
     public newIndex: number = 0;      //new row serial no, 使用負數來表示新資料
 
     // Custom functions, users can assign these
-    public fnLoadRows?: (rows: any[]) => void | null;
-    public fnGetUpdJson?: (upKey: string) => any;
-    public fnValid?: () => boolean;
-    public fnReset?: () => void;
+    public fnLoadRows: ((rows: any[]) => void) | null = null;
+    public fnGetUpdJson: ((upKey: string) => any) | null = null;
+    public fnValid: (() => boolean) | null = null;
+    public fnReset: (() => void) | null = null;
 
     constructor(
         kid: string,
@@ -172,7 +153,7 @@ export default class EditMany {
      * param box {object}
      * return {bool}
      */
-    private _isNewBox(box: JQuery<HTMLElement>): boolean {
+    private _isNewBox(box: JQuery): boolean {
         return (_IText.get(_Edit.IsNew, box) == '1');
     }
 
@@ -304,7 +285,7 @@ export default class EditMany {
      * param row {json}
      * param index {int} 資料序號 base 0
      */
-    public loadRowByBox(rowBox: JQuery<HTMLElement>, row: any, index: number): void {
+    public loadRowByBox(rowBox: JQuery, row: any, index: number): void {
         if (!this.rowTpl || !this.fidTypes)
             return;
 
@@ -334,7 +315,7 @@ export default class EditMany {
      * param reset {bool} (true) reset rowsBox first.
      * param rowsBox {object} (this.rowsBox) rows box object
      */
-    public loadRowsByRsb(rows: any[], reset: boolean, rowsBox?: JQuery<HTMLElement>): void {
+    public loadRowsByRsb(rows: any[], reset: boolean, rowsBox?: JQuery): void {
         if (!this._checkRowTpl())
             return;
 
@@ -369,8 +350,8 @@ export default class EditMany {
      * param rowBox {object} row box
      * return {string} key value
      */
-    public getKey(rowBox: JQuery<HTMLElement>): string {
-        return _Input.get(this.kid, rowBox);
+    public getKey(rowBox: JQuery): string {
+        return _Input.get(this.kid, rowBox)!;
     }
 
     private _checkRowFilter(): boolean {
@@ -395,7 +376,7 @@ export default class EditMany {
      * param elm {element/object}
      * return {object}
      */
-    private _elmToRowBox(elm: JQuery<HTMLElement> | HTMLElement): JQuery<HTMLElement> | null {
+    private _elmToRowBox(elm: Elm): JQueryN {
         return this._checkRowFilter() && this.rowFilter
             ? $(elm).closest(this.rowFilter)
             : null;
@@ -407,8 +388,8 @@ export default class EditMany {
      * param id {string} row id
      * return {object} row box
      */
-    public idToRowBox(id: string): JQuery<HTMLElement> | undefined {
-        if (!this.eform) return undefined;
+    public idToRowBox(id: string): JQueryN {
+        if (!this.eform) return null;
         const filter = _Input.fidFilter(this.kid) + `[value='${id}']`;
         return this.eform.find(filter).parent();
     }
@@ -515,7 +496,7 @@ export default class EditMany {
      * public for MyCrud.js
      * return {string} null for empty.
      */
-    public getDeletes(): string | null {
+    public getDeletes(): StrN {
         return (this.deletedRows.length === 0)
             ? null : this.deletedRows.join();
     }
@@ -534,7 +515,7 @@ export default class EditMany {
      * param {int} (optional) newId 新id
      * return {object} row
      */
-    public addRow(row?: any, rowsBox?: JQuery<HTMLElement>, newId?: number): any {
+    public addRow(row: JsonN = null, rowsBox: JQueryN = null, newId: NumN = null): any {
         row = row || {};
         const box = this._getRowsBox(rowsBox);
         const obj = this._renderRow(row, box);
@@ -592,7 +573,7 @@ export default class EditMany {
      * param fid {string}
      * param elm {element} link element
      */
-    public viewFile(table: string, fid: string, elm: JQuery<HTMLElement> | HTMLElement): void {
+    public viewFile(table: string, fid: string, elm: Elm): void {
         const rowBox = this._elmToRowBox(elm);
         if (!rowBox) return;
 
@@ -685,7 +666,7 @@ export default class EditMany {
      * param newId {int} 外部傳入newId if any, 如果有值則不會累加 this.newId
      * return {int} new key index
      */
-    public setNewIdByBox(box: JQuery, newId?: number): number {
+    public setNewIdByBox(box: JQuery, newId: NumN = null): number {
         if (newId == null) {
             this.newIndex--;    //使用負數
             newId = this.newIndex;

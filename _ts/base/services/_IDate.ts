@@ -48,7 +48,7 @@ export default class _IDate extends _IBase {
      * param box {object}
      * param fid {string} optional
      */
-    static init(box: JQuery, fid?: string): void {
+    static init(box: JQuery, fid: StrN = null): void {
         const obj = _Str.isEmpty(fid)
             ? box.find(_IDate.BoxFilter)
             : _Obj.get(fid!, box).closest(_IDate.BoxFilter);
@@ -114,7 +114,7 @@ export default class _IDate extends _IBase {
      * input element to date box
      * return {object}
      */
-    static _elmToBox(elm: HTMLElement): JQuery {
+    static _elmToBox(elm: Elm): JQuery {
         return _IDate._objToBox($(elm));
     }
 

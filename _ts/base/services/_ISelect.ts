@@ -129,7 +129,7 @@ export default class _ISelect extends _IBase {
 
     //把多欄位值寫入json
     //fids: 欄位名稱 array
-    static valuesToJson(json: { [key: string]: any }, fids: string[], box: JQuery): { [key: string]: any } {
+    static valuesToJson(json: Json, fids: string[], box: JQuery): Json {
         for (let i = 0; i < fids.length; i++)
             json[fids[i]] = _ISelect.get(fids[i], box);
         return json;
@@ -138,9 +138,9 @@ export default class _ISelect extends _IBase {
     //ie 不支援 option display:none !!
     //filter options by data-ext value
     //rows: 所有option 資料(Id,Text,Ext)
-    static filterByExt(fid: string, value: string, rows: IdStrExtDto[], box: JQuery, allItem?: boolean, addEmptyStr?: string): void {
-        if (allItem === undefined)
-            allItem = false;
+    static filterByExt(fid: string, value: string, rows: IdStrExtDto[], box: JQuery, allItem: BoolN = false, addEmptyStr: StrN = null): void {
+        //if (allItem === undefined)
+        //    allItem = false;
         const obj = _Obj.get(fid, box);
         obj!.empty();
 

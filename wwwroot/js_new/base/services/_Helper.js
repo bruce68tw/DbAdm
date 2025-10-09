@@ -3,7 +3,7 @@ export default class _Helper {
     /**
      * ??
      */
-    static getBaseProp(rowNo, fid, value, type, required, editable, extAttr) {
+    static getBaseProp(rowNo, fid, value, type, required, editable, extAttr = null) {
         let attr = _Str.format("type='{0}' data-id='{1}' name='{2}' value='{3}'", type, fid, fid + rowNo, value);
         if (required === true)
             attr += " required";
@@ -14,7 +14,7 @@ export default class _Helper {
         return _Str.trim(attr);
     }
     //參考 _Helper.cs GetEventAttr
-    static getEventAttr(fnName, fnValue, args) {
+    static getEventAttr(fnName, fnValue, args = null) {
         if (_Str.isEmpty(fnValue))
             return "";
         let attr = `data-${fnName}='${fnValue}'`;

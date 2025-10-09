@@ -2,7 +2,6 @@
 import BR from './locale/zh-TW/BR';
 
 declare global {
-    //type JObj = JQuery<HTMLElement>;
     type JQueryN = JQuery | null;
     type StrN = string | null;
     type Elm = HTMLElement;
@@ -11,6 +10,9 @@ declare global {
     type Json = { [key: string]: any };     //key為字串, value為任意值
     type JsonN = Json | null;
     type AnyN = any | null;
+    type NumN = number | null;
+    type BoolN = boolean | null;
+    type StrNum = string | number;
 
     /** 全域多國語資源 */
     var _BR: typeof BR;

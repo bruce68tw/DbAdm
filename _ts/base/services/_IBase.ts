@@ -8,24 +8,24 @@ export default class _IBase {
      * get value by fid, get -> getF -> getO
      * param fid {string}
      * param box {object}
-     * return {string | null}
+     * return {StrN}
      */
-    static get(fid: string, box?: JQuery): string | null {
+    static get(fid: string, box: JQuery): StrN {
         // @ts-ignore: 'this' will be _IBase at runtime for static methods
         return this.getO(_Obj.get(fid, box));
     }
     //get value by filter
-    static getF(ft: string, box?: JQuery): string | null {
+    static getF(ft: string, box: JQuery): StrN {
         // @ts-ignore: 'this' will be _IBase at runtime for static methods
         return this.getO(_Obj.getF(ft, box));
     }
     //get value by id
-    static getD(id: string, box?: JQuery): string | null {
+    static getD(id: string, box: JQuery): StrN {
         // @ts-ignore: 'this' will be _IBase at runtime for static methods
         return this.getO(_Obj.getD(id, box));
     }
     //get value by object
-    static getO(obj: JQuery | null): string | null {
+    static getO(obj: JQueryN): StrN {
         return obj == null ? null : obj.val() as string;
     }
 
@@ -36,11 +36,11 @@ export default class _IBase {
     }
 
     //set value, set -> setF -> setO
-    static set(fid: string, value: any, box?: JQuery): void {
+    static set(fid: string, value: any, box: JQuery): void {
         // @ts-ignore: 'this' will be _IBase at runtime for static methods
         this.setO(_Obj.get(fid, box), value)
     }
-    static setF(ft: string, value: any, box?: JQuery): void {
+    static setF(ft: string, value: any, box: JQuery): void {
         // @ts-ignore: 'this' will be _IBase at runtime for static methods
         this.setO(_Obj.getF(ft, box), value)
     }
@@ -50,11 +50,11 @@ export default class _IBase {
     }
 
     //set edit status
-    static setEdit(fid: string, status: boolean, box?: JQuery): void {
+    static setEdit(fid: string, status: boolean, box: JQuery): void {
         // @ts-ignore: 'this' will be _IBase at runtime for static methods
         this.setEditO(_Obj.get(fid, box), status);
     }
-    static setEditF(ft: string, status: boolean, box?: JQuery): void {
+    static setEditF(ft: string, status: boolean, box: JQuery): void {
         // @ts-ignore: 'this' will be _IBase at runtime for static methods
         this.setEditO(_Obj.getF(ft, box), status);
     }

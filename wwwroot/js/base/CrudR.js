@@ -354,11 +354,11 @@ function CrudR(dtConfig, edits, updName) {
      * onclick Create button
      */
     this.onCreate = function () {
-        //var fun = EstrFun.Create;
+        //var fun = FunEstr.Create;
         //this.swap(false);  //call first
         //_prog.setPath(fun);
         _me.crudE.onCreate();
-        this.toEditMode(EstrFun.Create);
+        this.toEditMode(FunEstr.Create);
     };
 
     /**
@@ -366,8 +366,8 @@ function CrudR(dtConfig, edits, updName) {
      * param key {string} row key
      */
     this.onUpdateA = async function (key) {
-        //_me.crudE._getJsonAndSetMode(key, EstrFun.Update);
-        //this.toEditMode(EstrFun.Update);
+        //_me.crudE._getJsonAndSetMode(key, FunEstr.Update);
+        //this.toEditMode(FunEstr.Update);
         await _me.crudE.onUpdateA(key);
     };
 
@@ -376,9 +376,9 @@ function CrudR(dtConfig, edits, updName) {
      * param key {string} row key
      */
     this.onViewA = async function (key) {
-        //_me.crudE._getJsonAndSetMode(key, EstrFun.View);
+        //_me.crudE._getJsonAndSetMode(key, FunEstr.View);
         await _me.crudE.onViewA(key);
-        //this.toEditMode(EstrFun.View);
+        //this.toEditMode(FunEstr.View);
     };
 
     /**

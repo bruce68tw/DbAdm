@@ -27,9 +27,9 @@ export default class _Form {
      * param form {object} input form
      * return {json}
      */
-    static toRow(form: JQuery<HTMLElement>): { [key: string]: any } {
+    static toRow(form: JQuery): Json {
         //skip link & read fields
-        let row: { [key: string]: any } = {};
+        let row: Json = {};
         form.find(_Input.fidFilter()).filter(':not(.xi-unsave)').each(function () {
             const obj = $(this);
             row[_Input.getFid(obj)] = _Input.getO(obj, form);
@@ -42,7 +42,7 @@ export default class _Form {
         const array = form.serializeArray();  //key-value
 
         //good: jquery foreach
-        let json: { [key: string]: any } = {};
+        let json: Json = {};
         $.each(array, function () {
             json[this.name] = this.value || '';
         });
@@ -67,7 +67,7 @@ export default class _Form {
         */
     }
 
-    static toRowStr(form: JQuery<HTMLElement>): string {
+    static toRowStr(form: JQuery): string {
         return JSON.stringify(_Form.toRow(form));
     }
 
@@ -76,7 +76,7 @@ export default class _Form {
      * param form {object} form or box object
      * param json {json}
      */
-    static loadRow(form: JQuery<HTMLElement>, row: { [key: string]: any }): void {
+    static loadRow(form: JQuery, row: Json): void {
         for (const key in row)
             _Input.set(key, row[key], form);
     }
@@ -85,7 +85,7 @@ export default class _Form {
      * reset all inputs with name attribute
      * param form {object}
      */
-    static reset(form: JQuery<HTMLElement>): void {
+    static reset(form: JQuery): void {
         form.find(_Input.fidFilter()).each(function () {
             _Input.setO($(this), '', form);
         });
@@ -94,7 +94,7 @@ export default class _Form {
     /**
      * check has file input or not
      */
-    static hasFile(form: JQuery<HTMLElement>): boolean {
+    static hasFile(form: JQuery): boolean {
         return (form.find(':file').length > 0);
     }
 
@@ -103,7 +103,7 @@ export default class _Form {
      * param form {object} jquery form/box
      * param status {bool} edit status
      */
-    static setEdit(form: JQuery<HTMLElement>, status: boolean): void {
+    static setEdit(form: JQuery, status: boolean): void {
         //text & textArea
         _IText.setEditO(form.find('input:text'), status);
         _ITextarea.setEditO(form.find('textarea'), status);
@@ -139,7 +139,7 @@ export default class _Form {
      * param hides {array} object array to hide
      * param shows {array} object array to show
      */
-    static hideShow(hides: JQuery<HTMLElement>[] | null, shows: JQuery<HTMLElement>[] | null): void {
+    static hideShow(hides: JQuery[] | null, shows: JQuery[] | null = null): void {
         //hide first
         if (hides) {
             for (let i = 0; i < hides.length; i++) {
@@ -182,7 +182,7 @@ export default class _Form {
     //??
     //單筆資料包含要上傳的多個檔案
     //files 單筆資料要上傳的多個檔案, 每個陣列的內容為 [欄位id, 後端變數名稱]
-    getSaveRow: function (isNew: boolean, box: JQuery<HTMLElement>, row: any, files: [string, string][] | null) {
+    getSaveRow: function (isNew: boolean, box: JQuery, row: any, files: [string, string][] | null) {
         files = files || [];
         //multis = multis || [];
 
@@ -209,7 +209,7 @@ export default class _Form {
      */
     /*
     //getSaveData: function (isNew, box, row, files, multis) {
-    getSaveDataWithFiles: function (isNew: boolean, box: JQuery<HTMLElement>, row: any, files: [string, string][] | null, multis: any[] | null) {
+    getSaveDataWithFiles: function (isNew: boolean, box: JQuery, row: any, files: [string, string][] | null, multis: any[] | null) {
         files = files || [];
         multis = multis || [];
 
@@ -286,7 +286,7 @@ export default class _Form {
      return {bool} true(field ok), false(has empty)
     */
     /*
-    checkEmpty: function (box: JQuery<HTMLElement>): boolean {
+    checkEmpty: function (box: JQuery): boolean {
         //clear error label first
         box.find('.' + _Fun.errCls).removeClass(_Fun.errCls);
         box.find('.' + _Fun.errLabCls).hide();
@@ -321,7 +321,7 @@ export default class _Form {
 
     /*
     //把json的資料比對checkbox,相同值勾選起來(相同欄位名稱)
-    jsonCheckBoxToForm: function (json: { [key: string]: any }, boxId: string): void {
+    jsonCheckBoxToForm: function (json: Json, boxId: string): void {
         const box = $('#' + boxId);
         Object.keys(json).map(function (key, index) {
             $('input[name=""]' + key).each(function () {
@@ -334,7 +334,7 @@ export default class _Form {
     */
 
     /*
-    zz_reset: function (box: JQuery<HTMLElement>): void {
+    zz_reset: function (box: JQuery): void {
         //var box = $('#' + box);
         //文字欄位
         box.find('input:text').val('');

@@ -1,6 +1,9 @@
+import { G, SVG, Svg, Circle, Rect, Text } from '@svgdotjs/svg.js';
+import '@svgdotjs/svg.draggable.js';
 import _Str from "./_Str";
-import EstrMouse from "./EstrMouse";
-import EstrNodeType from "./EstrNodeType";
+import MouseEstr from "../enums/MouseEstr";
+import NodeTypeEstr from "../enums/NodeTypeEstr";
+import { Path } from '@svgdotjs/svg.js';
 
 /**
  * FlowBase -> FlowView
@@ -32,19 +35,19 @@ export default class FlowView {
 	public isEdit: boolean = false;
 
 	// SVG.js instance
-	public svg: any; 
+	public svg: Svg; 
 	// The node where a line drag starts
-	public fromNode: FlowNode | null;
+	public fromNode: FlowNode | null = null;
 	// Array of all nodes
 	public nodes: FlowNode[] = [];
 	// Array of all lines
 	public lines: FlowLine[] = [];
 
 	// Custom functions (provided by external program)
-	public fnMoveNode: ((node: FlowNode, x: number, y: number) => void) | null;
-	public fnAfterAddLine: ((json: any) => void) | null;
-	public fnShowMenu: ((event: Event, isNode: boolean, flowItem: FlowNode | FlowLine) => void) | null;
-	public fnAfterMoveLineEnd: ((oldNode: FlowNode, newNode: FlowNode) => void) | null;
+	public fnMoveNode: ((node: FlowNode, x: number, y: number) => void) | null = null;
+	public fnAfterAddLine: ((json: Json) => void) | null = null;
+	public fnShowMenu: ((event: MouseEvent, isNode: boolean, flowItem: FlowNode | FlowLine) => void) | null = null;
+	public fnAfterMoveLineEnd: ((oldNode: FlowNode, newNode: FlowNode) => void) | null = null;
 
 	constructor(boxId: string) {
 		let boxDom = document.getElementById(boxId);
@@ -56,10 +59,10 @@ export default class FlowView {
 		this.svg = SVG().addTo(boxDom).size('100%', '100%');
 		//this.svg.node.style.zIndex = 100;	//在eform上面!! 無效 !!
 
-		this.fnMoveNode = null;
-		this.fnAfterAddLine = null;
-		this.fnShowMenu = null;
-		this.fromNode = null;
+		//this.fnMoveNode = null;
+		//this.fnAfterAddLine = null;
+		//this.fnShowMenu = null;
+		//this.fromNode = null;
 		//this._reset();
 	}
 
@@ -71,23 +74,23 @@ export default class FlowView {
 	*/
 
 	//get new node id
-	public getNewNodeId(): number {
+	getNewNodeId(): number {
 		this.newNodeId++;
 		return this.newNodeId;
 	}
 
 	//由元件內部發動, 所以必須提供此功能
-	public getNewLineId(): number {
+	getNewLineId(): number {
 		this.newLineId++;
 		return this.newLineId;
 	}
 
-	public setEdit(status: boolean): void {
+	setEdit(status: boolean): void {
 		this.isEdit = status;
 	}
 
 	//清除全部UI元件
-	public reset(): void {
+	reset(): void {
 		this.nodes = [];
 		this.lines = [];
 		this.fromNode = null;
@@ -99,20 +102,20 @@ export default class FlowView {
 	}
 
 	//載入nodes & lines
-	public loadNodes(rows: any[]): void {
+	loadNodes(rows: Json[]): void {
 		this.reset();
 		for (let i = 0; i < rows.length; i++)
 			this.addNode(rows[i]);
 	}
 
-	public loadLines(rows: any[] | null): void {
+	loadLines(rows: Json[] | null): void {
 		if (rows != null) {
 			for (let i = 0; i < rows.length; i++)
 				this.addLine(rows[i]);
 		}
 	}
 
-	public addNode(json: any): FlowNode {
+	addNode(json: Json): FlowNode {
 		//this.nodeCount++;
 		//if (json.id == null)
 		//	json.id = (this.nodes.length + 1) * (-1);
@@ -121,32 +124,32 @@ export default class FlowView {
 		return node;
 	}
 	
-	public addLine(json: any): FlowLine {
+	addLine(json: Json): FlowLine {
 		return new FlowLine(this, json);
 	}
 	
-	public deleteNode(node: FlowNode): void {
-		let id: string | number = node.getId();
+	deleteNode(node: FlowNode): void {
+		let id: StrNum = node.getId();
 		// Find the group element with the data-id attribute and remove it
-		this.svg.findOne(`g[data-id="${id}"]`).remove();
+		this.svg.findOne(`g[data-id="${id}"]`)!.remove();
 	}
 	
-	public deleteLine(line: FlowLine): void {
-		let id: string | number = line.getId();
+	deleteLine(line: FlowLine): void {
+		let id: StrNum = line.getId();
 		// Remove path and path2 (they share the same data-id)
-		this.svg.find(`path[data-id="${id}"]`).remove();	//含path2(data-id相同)
+		this.svg.findOne(`path[data-id="${id}"]`)!.remove();	//含path2(data-id相同)
 	}
 	
-	public drawLineStart(fromNode: FlowNode): void {
+	drawLineStart(fromNode: FlowNode): void {
 		this.fromNode = fromNode;
 	}
 
 	//return new line json
-	public drawLineEnd(toNode: FlowNode): any {
+	drawLineEnd(toNode: FlowNode): any {
 		if (!this.fromNode) {
 			throw new Error("drawLineStart must be called before drawLineEnd");
 		}
-		let json: any = {
+		let json: Json = {
 			Id: this.newLineId,
 			FromNodeId: this.fromNode.getId(),
 			ToNodeId: toNode.getId(),
@@ -156,15 +159,15 @@ export default class FlowView {
 		return json;
 	}
 	
-	public idToNode(id: string | number): FlowNode | undefined {
+	idToNode(id: StrNum): FlowNode | null {
 		//elm.node 指向dom
-		return this.nodes.find(node => node.getId() == id);
+		return this.nodes.find(node => node.getId() == id) || null;
 	}
 
 	//check has startNode or not
-	public hasStartNode(): boolean {
+	hasStartNode(): boolean {
 		//some 用法類似 c# any()
-		return this.nodes.some(node => node.getNodeType() == EstrNodeType.Start);
+		return this.nodes.some(node => node.getNodeType() == NodeTypeEstr.Start);
 	}
 } //class FlowView
 
@@ -201,25 +204,25 @@ export class FlowNode {
 
 	private self: FlowNode;
 	private flowView: FlowView;
-	private svg: any;
-	public json: any;
-	public elm: any; // svg group element
-	private boxElm: any; // border element (rect or circle)
-	private nameElm: any; // text element
-	private pinElm: any; // pin element (rect)
+	private svg: Svg;
+	public json: Json;
+	public elm: G;			// svg group element
+	private boxElm: Circle | Rect;	// border element (rect or circle)
+	private nameElm: Text;	// text element
+	private pinElm: Rect | null = null;	// pin element (rect)
 	public lines: FlowLine[]; // 進入/離開此節點的流程線
 
 	/**
 	 * @param flowView FlowView
 	 * @param json 流程節點資料
 	 */ 
-	constructor(flowView: FlowView, json: any) {
+	constructor(flowView: FlowView, json: Json) {
 		this.self = this;
 		this.flowView = flowView;
 		this.svg = flowView.svg;
 		this.json = Object.assign({
 			Name: 'Node',
-			NodeType: EstrNodeType.Node,
+			NodeType: NodeTypeEstr.Node,
 			PosX: json.PosX || 100,
 			PosY: json.PosY || 100,
 			//Width: 100,	//??
@@ -229,7 +232,7 @@ export class FlowNode {
 		//set instance variables
 		this.lines = [];
 
-		const nodeType: EstrNodeType = this.json.NodeType;
+		const nodeType: NodeTypeEstr = this.json.NodeType;
 		let cssClass: string = '';
 		let nodeText: string = '';
 
@@ -240,12 +243,12 @@ export class FlowNode {
 
 		const startEnd: boolean = this._isStartEnd();
 		if (startEnd) {
-			if (nodeType == EstrNodeType.Start) {
+			if (nodeType == NodeTypeEstr.Start) {
 				cssClass = 'xf-start';
-				nodeText = EstrNodeType.Start;
+				nodeText = NodeTypeEstr.Start;
 			} else {
 				cssClass = 'xf-end';
-				nodeText = EstrNodeType.End;
+				nodeText = NodeTypeEstr.End;
 			}
 
 			//circle大小不填, 由css設定, 這時radius還沒確定, 不能move(因為會用到radius)
@@ -288,7 +291,7 @@ export class FlowNode {
 		this.elm.move(this.json.PosX, this.json.PosY);
 
 		//add 連接點小方塊(pin) if need(在文字右側)
-		if (nodeType != EstrNodeType.End) {
+		if (nodeType != NodeTypeEstr.End) {
 			this.pinElm = this.elm
 				.rect(this.PinWidth, this.PinWidth)
 				.addClass('xf-pin');
@@ -298,30 +301,30 @@ export class FlowNode {
 		this._setEvent();
 	}
 
-	public getLines(): FlowLine[] {
+	getLines(): FlowLine[] {
 		return this.lines;
 	}
 
 	//是否為起迄節點
 	private _isStartEnd(): boolean {
-		return (this.json.NodeType == EstrNodeType.Start || this.json.NodeType == EstrNodeType.End);
+		return (this.json.NodeType == NodeTypeEstr.Start || this.json.NodeType == NodeTypeEstr.End);
 	}
 
-	public getNodeType(): EstrNodeType {
+	getNodeType(): NodeTypeEstr {
 		return this.json.NodeType;
 	}
 
-	public getPos(): Point {
+	getPos(): Point {
 		let elm: any = this.elm;
 		return { x: elm.x(), y: elm.y() };
 	}
 
-	public getSize(): { w: number, h: number } {
+	getSize(): { w: number, h: number } {
 		let elm: any = this.boxElm;
 		return { w: elm.width(), h: elm.height() };
 	}
 
-	public getCenter(): Point {
+	getCenter(): Point {
 		let elm: any = this.boxElm;
 		return { x: elm.cx(), y: elm.cy() };
 	}
@@ -343,7 +346,7 @@ export class FlowNode {
 		let me: FlowNode = this;	//FlowNode
 		let flowView: FlowView = this.flowView;
 
-		this.elm.node.addEventListener('contextmenu', function (e: Event) {
+		this.elm.node.addEventListener(MouseEstr.ContextMenu, function (e: MouseEvent) {
 			e.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			if (flowView.fnShowMenu)
 				flowView.fnShowMenu(e, true, me);
@@ -351,14 +354,14 @@ export class FlowNode {
 
 		//set node draggable, drag/drop 為 boxElm, 不是 elm(group) !!
 		//draggable 來自 svg.draggable.js
-		this.elm.draggable().on(EstrMouse.DragMove, function (e: CustomEvent) {
+		this.elm.draggable().on(MouseEstr.DragMove, function (e: Event) {
 			if (!flowView.isEdit) return;
 
 			me._drawLines();
-		}).on(EstrMouse.DragEnd, function (e: CustomEvent) {
+		}).on(MouseEstr.DragEnd, function (e: Event) {
 			if (!flowView.isEdit) return;
 
-			let { x, y } = e.detail.box;
+			const { x, y } = (e as CustomEvent).detail.box;
 			//console.log(`x=${x}, y=${y}`);
 
 			//trigger event
@@ -380,7 +383,7 @@ export class FlowNode {
 		if (!this.pinElm)
 			return;
 
-		let fromDom: HTMLElement;
+		let fromDom: SVGGElement;
 		let startX: number, startY: number;
 		let tempLine: any;
 		let toElm: any = null;
@@ -388,7 +391,7 @@ export class FlowNode {
 		let flowView: FlowView = this.flowView;
 
 		// 啟用 pinElm 的拖拽功能, 使用箭頭函數時 this 會指向類別實例 !!, 使用 function則會指向 pinElm !!
-		this.pinElm.draggable().on(EstrMouse.DragStart, (event: CustomEvent) => {
+		this.pinElm.draggable().on(MouseEstr.DragStart, (e: Event) => {
 			if (!flowView.isEdit) return;
 
 			// 初始化線條
@@ -403,14 +406,14 @@ export class FlowNode {
 
 			flowView.drawLineStart(me.self);
 
-		}).on(EstrMouse.DragMove, (event: CustomEvent) => {
+		}).on(MouseEstr.DragMove, (e: Event) => {
 			if (!flowView.isEdit) return;
 
 			//阻止 connector 移動
-			event.preventDefault();
+			e.preventDefault();
 
 			// 獲取拖拽的目標座標（相對於 SVG 畫布）
-			let { x, y } = event.detail.box;
+			let { x, y } = (e as CustomEvent).detail.box;
 			let endX: number = x;
 			let endY: number = y;
 
@@ -442,7 +445,7 @@ export class FlowNode {
 				}
 			}
 
-		}).on(EstrMouse.DragEnd, (event: CustomEvent) => {
+		}).on(MouseEstr.DragEnd, (e: Event) => {
 			if (!flowView.isEdit) return;
 
 			// 檢查座標值是否有效
@@ -471,22 +474,22 @@ export class FlowNode {
 	}
 
 	//id記錄在 group elm !!
-	public getId(): string | number {
-		return this.json.Id;
+	getId(): string {
+		return String(this.json.Id);
 	}
 
-	public addLine(line: FlowLine): void {
+	addLine(line: FlowLine): void {
 		this.lines.push(line);
 	}
 
-	public deleteLine(line: FlowLine): void {
+	deleteLine(line: FlowLine): void {
 		let index: number = this.lines.findIndex(item => item.json.Id == line.json.Id);
 		if (index > -1) {
 			this.lines.splice(index, 1);
 		}
 	}
 
-	public getName(): string {
+	getName(): string {
 		return this.nameElm.text();
 	}
 
@@ -496,14 +499,15 @@ export class FlowNode {
 	 * @param name {string} 
 	 * @param drawLine {boolean} re-draw line or not
 	 */ 
-	public setName(name: string, drawLine: boolean): void {
+	setName(name: string, drawLine: boolean): void {
 		// 更新文字內容, 後端傳回會加上跳脫字元, js 2021才有 replaceAll, 所以自製
 		// @ts-ignore
+		let me = this;
 		let lines: string[] = _Str.replaceAll(name, '\\n', '\n').split('\n');
 		this.nameElm.clear().text(function (add: any) {
 			lines.forEach((line, i) => {
 				if (i > 0)
-					add.tspan(line).newLine().dy(this.LineHeight);
+					add.tspan(line).newLine().dy(me.LineHeight);
 				else
 					add.tspan(line);
 			});
@@ -573,19 +577,20 @@ export class FlowLine {
 	private readonly FromTypeH: string = 'H';	// 水平(左右)
 	
 	private flowView: FlowView;
-	public json: any;
-	private svg: any;
-	private path: any; // line path
-	private path2: any; // for right menu click area
-	private arrow: any; // 末端箭頭
-	private labelElm: any; // 顯示label
-	private fromNode: FlowNode;
-	private toNode: FlowNode;
+	public json: Json;
+	private svg: Svg;
+	private path: Path; // line path
+	private path2: Path; // for right menu click area
+	private arrow: Path; // 末端箭頭
+	private labelElm: Text; // 顯示label
+
+	public fromNode: FlowNode;
+	public toNode: FlowNode;
 	public fromType: string;
 	public isFromTypeV: boolean;
 	public isFromTypeH: boolean;
 
-	constructor(flowView: FlowView, json: any, fromNode?: FlowNode, toNode?: FlowNode) {
+	constructor(flowView: FlowView, json: Json, fromNode?: FlowNode, toNode: FlowNode | null = null) {
 		
 		json = json || {};
 		json.FromType = json.FromType || this.FromTypeAuto;
@@ -596,8 +601,8 @@ export class FlowLine {
 		this.flowView = flowView;
 		this.json = json;
 		this.svg = flowView.svg;
-		this.fromNode = fromNode || this.flowView.idToNode(json.FromNodeId) as FlowNode;
-		this.toNode = toNode || this.flowView.idToNode(json.ToNodeId) as FlowNode;
+		this.fromNode = fromNode || this.flowView.idToNode(json.FromNodeId)!;
+		this.toNode = toNode || this.flowView.idToNode(json.ToNodeId)!;
 		//this.label = label || '';
 
 		//path
@@ -641,7 +646,7 @@ export class FlowLine {
 		this.isFromTypeV = (fromType == this.FromTypeV);
 		this.isFromTypeH = (fromType == this.FromTypeH);
 		//this.isFromTypeAuto = (!this.isFromTypeV && !this.isFromTypeH) || (fromType == this.FromTypeAuto);
-		let dom: HTMLElement = this.path.node;
+		let dom = this.path.node;
 		if (fromType == this.FromTypeAuto)
 			dom.classList.remove('xf-way');
 		else
@@ -650,7 +655,7 @@ export class FlowLine {
 
 	private _setEvent(): void {
 		let me: FlowLine = this;	//FlowLine
-		this.path2.node.addEventListener('contextmenu', function (event: Event) {
+		this.path2.node.addEventListener(MouseEstr.ContextMenu, function (event: MouseEvent) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			if (me.flowView.fnShowMenu)
 				me.flowView.fnShowMenu(event, false, me);
@@ -664,7 +669,7 @@ export class FlowLine {
 	}
 	*/
 
-	public setLabel(label: string): void {
+	setLabel(label: string): void {
 		this.labelElm.text(label);
 	}
 
@@ -672,7 +677,7 @@ export class FlowLine {
 	 * 依次考慮使用1線段、2線段、3線段
 	 * public for FlowView.js
 	 */
-	public render(): void {
+	render(): void {
 
 		//#region 計算流程線render位置
 		//=== from Node ===
@@ -962,15 +967,15 @@ export class FlowLine {
 	}
 
 	//id記錄在 path !!
-	public getId(): string | number {
-		return this.json.Id;
+	getId(): string {
+		return String(this.json.Id);
 	}
 
-	public getFromType(): string {
+	getFromType(): string {
 		return this.json.FromType;
 	}
 
-	public setFromType(fromType: string): void {
+	setFromType(fromType: string): void {
 		if (fromType == this.json.FromType)
 			return;
 

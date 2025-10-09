@@ -1,5 +1,4 @@
-﻿import _BR from "./_BR";
-import _Html from "./_Html";
+﻿import _Html from "./_Html";
 import _Obj from "./_Obj";
 import _Str from "./_Str";
 import _Tool from "./_Tool";
@@ -80,9 +79,9 @@ export default class Page {
 			const start = (arg.pageNo - 1) * arg.pageRows + 1;
 			const end = start + arg.pageRows - 1;
 			const info = cols[1]
-				.replace('_Start', start)
-				.replace('_End', end <= arg.filterRows ? end : arg.filterRows)
-				.replace('_Total', arg.filterRows);
+				.replace('_Start', String(start))
+				.replace('_End', String(end <= arg.filterRows ? end : arg.filterRows))
+				.replace('_Total', String(arg.filterRows));
 			menu = _Str.format(
 				"<div class='x-page-menu'>" +
 					"<label>{0}<span>{1}</span></label>" +
@@ -141,7 +140,7 @@ export default class Page {
 	 * param json {json} query json
 	 * param page {int} page no
 	 */
-	public find(json: any, page: number | undefined): void {
+	public find(json: any, page: number | null = null): void {
 		json = json || {};
 		const arg = this.pageArg;
 		if (_Var.isEmpty(page)) {
@@ -149,7 +148,7 @@ export default class Page {
 			arg.filterRows = -1;
 			arg.pageRows = this.pager.find('select').val();
 		} else {
-			arg.pageNo = page;
+			arg.pageNo = page!;
 		}
 
 		let url = this.action +

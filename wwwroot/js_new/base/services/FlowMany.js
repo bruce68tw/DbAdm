@@ -1,5 +1,3 @@
-import EstrMouse from "./EstrMouse";
-import EstrNodeType from "./EstrNodeType";
 import FlowView from "./FlowView";
 import _Form from "./_Form";
 import _ISelect from "./_ISelect";
@@ -8,6 +6,9 @@ import _Modal from "./_Modal";
 import _Obj from "./_Obj";
 import _Str from "./_Str";
 import _Tool from "./_Tool";
+import MouseEstr from "../enums/MouseEstr";
+import NodeTypeEstr from "../enums/NodeTypeEstr";
+import Mustache from "mustache";
 /**
  * FlowForm -> FlowMany
  * 處理 flow UI 元素和多筆資料(mNode, mLine)之間的轉換
@@ -104,7 +105,7 @@ export default class FlowMany {
         this.nowFlowItem = flowItem;
         //一般節點才需要設定屬性
         const canEdit = isNode
-            ? (this.isEdit && flowItem.getNodeType() == EstrNodeType.Node)
+            ? (this.isEdit && flowItem.getNodeType() == NodeTypeEstr.Node)
             : this.isEdit;
         //html 不會自動處理自製功能表狀態, 自行配合 css style
         const css = 'off';
@@ -144,12 +145,12 @@ export default class FlowMany {
         //hide context menu
         //變數宣告 var 改用 let, const (這裡針對區域變數)
         const me = this;
-        $(document).on(EstrMouse.MouseDown, function (e) {
+        $(document).on(MouseEstr.MouseDown, function (e) {
             //if (_obj.isShow(me.popupMenu))
             //    me.popupMenu.hide(100);
             //"this" is not work here !!
             const filter = me.FtMenu;
-            if (!$(e.target).parents(filter).length > 0)
+            if ($(e.target).parents(filter).length == 0)
                 _Obj.hide($(filter));
         });
     }
@@ -186,10 +187,10 @@ export default class FlowMany {
     addNode(nodeType, name) {
         //變數宣告 var 改用 let, const (這裡針對區域變數)
         let nodeName = '';
-        if (nodeType == EstrNodeType.Start) {
+        if (nodeType == NodeTypeEstr.Start) {
             nodeName = 'S';
         }
-        else if (nodeType == EstrNodeType.End) {
+        else if (nodeType == NodeTypeEstr.End) {
             nodeName = 'E';
         }
         else {
@@ -222,7 +223,7 @@ export default class FlowMany {
             this.mLine.deleteRow(line.getId());
         });
         //delete flowNode(自動刪除相關流程線) 
-        this.flowView.deleteNode();
+        this.flowView.deleteNode(node);
     }
     //#endregion (node function)
     //#region line function
@@ -336,7 +337,7 @@ export default class FlowMany {
     }
     //... 註解掉的內部方法，不需轉換
     onAddNode(nodeType) {
-        if (nodeType == EstrNodeType.Start && this.flowView.hasStartNode()) {
+        if (nodeType == NodeTypeEstr.Start && this.flowView.hasStartNode()) {
             _Tool.msg('起始節點已經存在，不可再新增。');
             return;
         }

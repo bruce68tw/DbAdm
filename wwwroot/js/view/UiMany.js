@@ -46,7 +46,7 @@ class UiMany {
 
         //mouse down時hide right menu
         var me = this;
-        $(document).on(EstrMouse.MouseDown, function (e) {
+        $(document).on(MouseEstr.MouseDown, function (e) {
             //右鍵是3，左鍵是1，中鍵是2, 不處理右鍵，避免提前 hide
             if (e.which != 3) {
                 let filter = me.FtMenu;
@@ -74,7 +74,7 @@ class UiMany {
         let canEdit = true;
         /*
         let canEdit = isNode
-            ? (this.isEdit && flowItem.getNodeType() == EstrNodeType.Node)
+            ? (this.isEdit && flowItem.getNodeType() == NodeTypeEstr.Node)
             : this.isEdit;
         */
 
@@ -144,7 +144,7 @@ class UiMany {
         this.newInputNo++;
         let infoJson = {
             //Id: row.Id,
-            InputType: EstrInputType.Text,
+            InputType: InputTypeEstr.Text,
             Fid: '_fid' + this.newInputNo,		//前面加底線for註記為需要調整
             Title: '欄位' + this.newInputNo,
             Required: true,

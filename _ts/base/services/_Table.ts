@@ -30,11 +30,11 @@ export default class _Table {
 
     /**
      * get rows count
-     * param table {JQuery<HTMLElement>} table object
+     * param table {JQuery} table object
      * param fid {string} field id(name attribute)
      * return {number} rows count
      */
-    static getRowCount(table: JQuery<HTMLElement>, fid: string): number {
+    static getRowCount(table: JQuery, fid: string): number {
         // _input.fidFilter 應該在 _Input 類別中
         return table.find(_Input.fidFilter(fid)).length;
     }

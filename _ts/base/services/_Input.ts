@@ -1,6 +1,4 @@
-﻿// @ts-nocheck
-import _BR from "./_BR";
-import _Date from "./_Date";
+﻿import _Date from "./_Date";
 import _ICheck from "./_ICheck";
 import _IDate from "./_IDate";
 import _IDt from "./_IDt";
@@ -15,7 +13,7 @@ import _ITextarea from "./_ITextarea";
 import _Obj from "./_Obj";
 import _Str from "./_Str";
 import _Var from "./_Var";
-import EstrInputType from "./EstrInputType"; // 假設 EstrInputType 是外部常數/列舉
+import InputTypeEstr from "../enums/InputTypeEstr";
 
 /**
  * 1.data-fid -> find object, get data-type, get/set old value
@@ -27,8 +25,8 @@ import EstrInputType from "./EstrInputType"; // 假設 EstrInputType 是外部�
 export default class _Input {
 
     //get input value
-    static get(fid: string, box: JQuery): string {
-        return _Input.getO(_Obj.get(fid, box), box);
+    static get(fid: string, box: JQuery): StrN {
+        return _Input.getO(_Obj.get(fid, box)!, box);
     }
 
     /**
@@ -37,30 +35,30 @@ export default class _Input {
      * param type {string} (optional) data-type
      * return input value
      */
-    static getO(obj: JQuery, box: JQuery, type?: string): string {
+    static getO(obj: JQuery, box: JQuery, type: StrN = null): StrN {
         type = type || _Input.getType(obj);
         switch (type) {
-            case EstrInputType.Text:
+            case InputTypeEstr.Text:
                 return _IText.getO(obj);
-            case EstrInputType.Textarea:
+            case InputTypeEstr.Textarea:
                 return _ITextarea.getO(obj);
-            case EstrInputType.Check:
+            case InputTypeEstr.Check:
                 return _ICheck.getO(obj);
-            case EstrInputType.Radio:
+            case InputTypeEstr.Radio:
                 return _IRadio.getO(obj, box);
-            case EstrInputType.Select:
+            case InputTypeEstr.Select:
                 return _ISelect.getO(obj);
-            case EstrInputType.Date:
+            case InputTypeEstr.Date:
                 return _IDate.getO(obj);
-            case EstrInputType.DateTime:
+            case InputTypeEstr.DateTime:
                 return _IDt.getO(obj);
-            case EstrInputType.File:
+            case InputTypeEstr.File:
                 return _IFile.getO(obj);
-            case EstrInputType.Html:
+            case InputTypeEstr.Html:
                 return _IHtml.getO(obj);
-            case EstrInputType.ReadOnly:
+            case InputTypeEstr.Read:
                 return _IRead.getO(obj);
-            case EstrInputType.Link:
+            case InputTypeEstr.Link:
                 return _ILink.getO(obj);
             default:
                 //text, textarea
@@ -69,7 +67,7 @@ export default class _Input {
     }
 
     static set(fid: string, value: any, box: JQuery): void {
-        _Input.setO(_Obj.get(fid, box), value, box);
+        _Input.setO(_Obj.get(fid, box)!, value, box);
     }
 
     /**
@@ -85,40 +83,40 @@ export default class _Input {
 
         type = type || _Input.getType(obj);
         switch (type) {
-            case EstrInputType.Text:
+            case InputTypeEstr.Text:
                 _IText.setO(obj, value);
                 break;
-            case EstrInputType.Check:
+            case InputTypeEstr.Check:
                 _ICheck.setO(obj, value);
                 break;
-            case EstrInputType.Radio:
+            case InputTypeEstr.Radio:
                 //此時 obj 為 array
                 value = value || '0';
                 _IRadio.setO(obj, value, box);
                 break;
-            case EstrInputType.Select:
+            case InputTypeEstr.Select:
                 _ISelect.setO(obj, value);
                 break;
-            case EstrInputType.Date:
+            case InputTypeEstr.Date:
                 return _IDate.setO(obj, value);
-            case EstrInputType.DateTime:
+            case InputTypeEstr.DateTime:
                 return _IDt.setO(obj, value);
-            case EstrInputType.File:
+            case InputTypeEstr.File:
                 _IFile.setO(obj, value);
                 break;
-            case EstrInputType.Textarea:
+            case InputTypeEstr.Textarea:
                 _ITextarea.setO(obj, value);
                 break;
-            case EstrInputType.Html:
+            case InputTypeEstr.Html:
                 _IHtml.setO(obj, value);
                 break;
-            case EstrInputType.Read:
+            case InputTypeEstr.Read:
                 const format = obj.data('format') as string;
-                if (_Str.notEmpty(format) && _Str.notEmpty(_BR[format]))
-                    value = _Date.dtsToFormat(value, _BR[format]);
+                if (_Str.notEmpty(format) && _Str.notEmpty((_BR as any)[format]))
+                    value = _Date.dtsToFormat(value, (_BR as any)[format]);
                 _IRead.setO(obj, value);
                 break;
-            case EstrInputType.Link:
+            case InputTypeEstr.Link:
                 return _ILink.setO(obj, value);
             default:
                 //text
@@ -142,8 +140,8 @@ export default class _Input {
      * return object
      */
     static getObj(fid: string, box: JQuery, ftype?: string): JQuery {
-        ftype = ftype || _Input.getType(_Obj.get(fid, box));
-        return (ftype === EstrInputType.Radio) ? _IRadio.getObj(fid, box) : _Obj.get(fid, box);
+        ftype = ftype || _Input.getType(_Obj.get(fid, box)!);
+        return (ftype === InputTypeEstr.Radio) ? _IRadio.getObj(fid, box) : _Obj.get(fid, box)!;
     }
 
     /**
@@ -160,7 +158,7 @@ export default class _Input {
      * param fid {stirng} optional, if empty means find all inputs with data-fid
      * return {string} filter
      */
-    static fidFilter(fid?: string): string {
+    static fidFilter(fid: StrN = null): string {
         return _Str.isEmpty(fid)
             ? '[data-fid]'
             : `[data-fid='${fid}']`;

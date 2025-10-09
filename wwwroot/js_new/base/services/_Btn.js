@@ -19,7 +19,7 @@ export default class _Btn {
     }
     /**
      * Set the disabled status of a button or element using its object reference.
-     * param obj {JQuery<HTMLElement>|any} The button/element object (usually a jQuery object).
+     * param obj {JQuery|any} The button/element object (usually a jQuery object).
      * param status {boolean} true=enabled (disabled=false), false=disabled (disabled=true).
      */
     static setEditO(obj, status) {

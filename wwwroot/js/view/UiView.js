@@ -82,7 +82,7 @@ class UiView {
 		//work area註冊全域事件
 		//右鍵選單事件
 		let me = this;
-		this.Area.on(EstrMouse.RightMenu, this.FtItem, function (e) {
+		this.Area.on(MouseEstr.RightMenu, this.FtItem, function (e) {
 			e.preventDefault();  // 取消瀏覽器預設右鍵選單
 			//e.stopPropagation(); // 阻止冒泡，避免先被 document 的 mousedown 處理
 
@@ -93,13 +93,13 @@ class UiView {
 		});
 
 		//drag/drop 事件
-		this.Area.on(EstrMouse.DragStart, function (e) {
+		this.Area.on(MouseEstr.DragStart, function (e) {
 			if (me.isEdit)
 				me._onDragStart(e);
-		}).on(EstrMouse.DragOver, function (e) {
+		}).on(MouseEstr.DragOver, function (e) {
 			if (me.dragging)
 				me._onDragOver(e);
-		}).on(EstrMouse.DragEnd, function (e) {
+		}).on(MouseEstr.DragEnd, function (e) {
 			//drop成功或失敗都會觸發, dragging在函數裡面判斷
 			me.onDragEnd(e);
 		});
@@ -909,7 +909,7 @@ class UiView {
 	//check has startNode or not
 	this.hasStartNode = function () {
 		//some 用法類似 c# any()
-		return this.items.some(node => node.getNodeType() == EstrNodeType.Start);
+		return this.items.some(node => node.getNodeType() == NodeTypeEstr.Start);
 	};
 	*/
 

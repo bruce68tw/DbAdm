@@ -7,7 +7,7 @@ export default class _Json {
      return {object}
      */
     /*
-    static addJson(source: { [key: string]: any }, target?: { [key: string]: any }): { [key: string]: any } {
+    static addJson(source: Json, target?: Json): Json {
         if (!target)
             target = {};
         Object.keys(source).map(function (key, index) {
@@ -57,7 +57,7 @@ export default class _Json {
      * param valueId {string} value field id, default to 'Value'
      * return {object} 回傳的json的欄位名稱前面會加上'f'
      */
-    static keyValuesToJson(keyValues, keyId, valueId) {
+    static keyValuesToJson(keyValues, keyId = null, valueId = null) {
         if (keyValues === null || keyValues.length === 0)
             return null;
         if (!keyId)
@@ -139,12 +139,12 @@ export default class _Json {
      * param level {int} (default 0) debug purpose, base 0
      * return void
      */
-    static removeNull(obj, level) {
+    static removeNull(obj, level = 0) {
         //debugger;
-        level = level || 0;
+        //level = level || 0;
         if (!obj || _Json.isEmpty(obj))
             return;
-        window.jQuery.each(obj, function (key, value) {
+        $.each(obj, function (key, value) {
             if (value === null) {
                 //delete only null, empty is not !!
                 delete obj[key];
@@ -173,7 +173,7 @@ export default class _Json {
                     return; //continue
                 }
                 //case of json array
-                window.jQuery.each(value, function (k2, v2) {
+                $.each(value, function (k2, v2) {
                     _Json.removeNull(v2, level + 1);
                     if (_Json.isEmpty(v2))
                         value[k2] = null; // Mark as null to be cleaned up later
@@ -197,9 +197,6 @@ export default class _Json {
                     delete obj[key];
             }
         });
-        // 原始程式碼的最後這行 `if (_json.isEmpty(obj)) obj = null;` 在 TS 靜態類別方法中難以直接模擬 'by ref' 的行為來改變傳入的 obj 變數本身，
-        // 且通常在 JS 中，`delete obj` 是正確的，但 `obj = null` 只是改變了區域變數的引用。
-        // 保持 obj 的屬性被刪除即可達到「移除 null」的目的。
     }
 } //class
 //# sourceMappingURL=../../../../_ts/wwwroot/map/base/services/_Json.js.map

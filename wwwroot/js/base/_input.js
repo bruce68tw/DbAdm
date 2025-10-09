@@ -21,27 +21,27 @@ var _input = {
     getO: function (obj, box, type) {
         type = type || _input.getType(obj);
         switch (type) {
-            case EstrInputType.Text:
+            case InputTypeEstr.Text:
                 return _itext.getO(obj);
-            case EstrInputType.Textarea:
+            case InputTypeEstr.Textarea:
                 return _itextarea.getO(obj);
-            case EstrInputType.Check:
+            case InputTypeEstr.Check:
                 return _icheck.getO(obj);
-            case EstrInputType.Radio:
+            case InputTypeEstr.Radio:
                 return _iradio.getO(obj, box);
-            case EstrInputType.Select:
+            case InputTypeEstr.Select:
                 return _iselect.getO(obj);
-            case EstrInputType.Date:
+            case InputTypeEstr.Date:
                 return _idate.getO(obj);
-            case EstrInputType.DateTime:
+            case InputTypeEstr.DateTime:
                 return _idt.getO(obj);
-            case EstrInputType.File:
+            case InputTypeEstr.File:
                 return _ifile.getO(obj);
-            case EstrInputType.Html:
+            case InputTypeEstr.Html:
                 return _ihtml.getO(obj);
-            case EstrInputType.ReadOnly:
+            case InputTypeEstr.ReadOnly:
                 return _iread.getO(obj);
-            case EstrInputType.Link:
+            case InputTypeEstr.Link:
                 return _ilink.getO(obj);
             default:
                 //text, textarea
@@ -66,40 +66,40 @@ var _input = {
 
         type = type || _input.getType(obj);
         switch (type) {
-            case EstrInputType.Text:
+            case InputTypeEstr.Text:
                 _itext.setO(obj, value);
                 break;
-            case EstrInputType.Check:
+            case InputTypeEstr.Check:
                 _icheck.setO(obj, value);
                 break;
-            case EstrInputType.Radio:
+            case InputTypeEstr.Radio:
                 //此時 obj 為 array
                 value = value || '0';
                 _iradio.setO(obj, value, box);
                 break;
-            case EstrInputType.Select:
+            case InputTypeEstr.Select:
                 _iselect.setO(obj, value);
                 break;
-            case EstrInputType.Date:
+            case InputTypeEstr.Date:
                 return _idate.setO(obj, value);
-            case EstrInputType.DateTime:
+            case InputTypeEstr.DateTime:
                 return _idt.setO(obj, value);
-            case EstrInputType.File:
+            case InputTypeEstr.File:
                 _ifile.setO(obj, value);
                 break;
-            case EstrInputType.Textarea:
+            case InputTypeEstr.Textarea:
                 _itextarea.setO(obj, value);
                 break;
-            case EstrInputType.Html:
+            case InputTypeEstr.Html:
                 _ihtml.setO(obj, value);
                 break;
-            case EstrInputType.Read:
+            case InputTypeEstr.Read:
                 var format = obj.data('format');
                 if (_str.notEmpty(format) && _str.notEmpty(_BR[format]))
                     value = _date.dtsToFormat(value, _BR[format]);
                 _iread.setO(obj, value);
                 break;
-            case EstrInputType.Link:
+            case InputTypeEstr.Link:
                 return _ilink.setO(obj, value);
             default:
                 //text
@@ -124,7 +124,7 @@ var _input = {
      */
     getObj: function (fid, box, ftype) {
         ftype = ftype || _input.getType(_obj.get(fid, box));
-        return (ftype === EstrInputType.Radio) ? _iradio.getObj(fid, box) : _obj.get(fid, box);
+        return (ftype === InputTypeEstr.Radio) ? _iradio.getObj(fid, box) : _obj.get(fid, box);
     },
 
     /**

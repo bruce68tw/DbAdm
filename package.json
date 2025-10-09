@@ -4,6 +4,7 @@
     "@types/datatables.net": "^1.12.3",
     "@types/jquery": "^3.5.33",
     "@types/jquery.validation": "^1.17.0",
+    "@types/mustache": "^4.2.6",
     "gulp": "^5.0.1",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
@@ -13,11 +14,15 @@
     "json5": "^2.2.3"
   },
   "dependencies": {
+    "@svgdotjs/svg.draggable.js": "^3.0.6",
+    "@svgdotjs/svg.js": "^3.2.5",
     "bootstrap": "^5.3.8",
     "chart.js": "^4.5.0",
     "datatables.net": "^2.3.4",
     "jquery": "^3.7.1",
+    "jquery-pjax": "^2.0.1",
     "jquery-validation": "^1.21.0",
-    "moment": "^2.30.1"
+    "moment": "^2.30.1",
+    "mustache": "^4.2.0"
   }
 }

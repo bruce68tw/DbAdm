@@ -1,5 +1,5 @@
+import 'jquery-pjax';
 import _Ajax from "./_Ajax";
-// import _Fun from "./_Fun"; // JWT token 相關的註解中提到
 import _Leftmenu from "./_Leftmenu";
 import _Prog from "./_Prog";
 import _Str from "./_Str";

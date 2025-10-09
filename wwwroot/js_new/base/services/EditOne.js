@@ -36,38 +36,32 @@ import _Obj from "./_Obj";
  * return {EditOne}
  */
 export default class EditOne {
-    // 自定函數 (Custom functions)
-    // public fnAfterLoadJson?: (json: any) => void;
-    // public fnAfterOpenEdit?: (fun: any, json: any) => void;
-    // public fnAfterSwap?: (readMode: boolean) => void;
-    // public fnWhenSave?: () => string | null; // return error message or null
-    // public fnAfterSave?: () => void;
     /**
      * @param kid pkey field id (default 'Id')
      * @param eformId edit form id (default 'eform')
      */
-    constructor(kid, eformId) {
+    constructor(kid = null, eformId = null) {
         this.dataJson = null;
         this.systemError = '';
+        this.fidTypes = []; // fidTypes array of [fid, ftype, fid, ftype, ...]
         this.fidTypeLen = 0;
         this.hasFile = false;
+        this.fileFids = []; // file fids array
         this.fileLen = 0;
-        // call last
-        this.init(kid, eformId);
-    }
-    /**
-     * initial & and instance variables (this.validator is by _valid.init())
-     * called by this(at last)
-     */
-    init(kid, eformId) {
+        // 自定函數 (Custom functions)
+        this.fnAfterLoadJson = null;
+        this.fnAfterOpenEdit = null;
+        this.fnAfterSwap = null;
+        this.fnWhenSave = null; // return error message or null
+        this.fnAfterSave = null;
         this.kid = kid || 'Id';
-        let _eformId = eformId || 'eform';
-        this.eform = $('#' + _eformId); //multiple rows container object
+        eformId || (eformId = 'eform');
+        this.eform = $('#' + eformId); //multiple rows container object
         this.dataJson = null;
         //check input & alert error if wrong
         this.systemError = '';
         let error = (this.eform.length !== 1)
-            ? 'EditOne.js input eformId is wrong. (' + _eformId + ')'
+            ? 'EditOne.js input eformId is wrong. (' + eformId + ')'
             : (_Obj.get(this.kid, this.eform) == null)
                 ? 'EditOne.js input kid is wrong. (' + this.kid + ')'
                 : '';

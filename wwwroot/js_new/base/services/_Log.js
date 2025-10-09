@@ -9,7 +9,7 @@ class _Log {
     /**
      * @description 初始化記錄程式時間功能
      */
-    static logTimeInit(name) {
+    static logTimeInit(name = '') {
         _Log._start = new Date();
         _Log._now = _Log._start;
         //_result = "\r\n" + name;

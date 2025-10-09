@@ -16,7 +16,7 @@ export default class _ICheck extends _IBase {
     /**
      * (override)get data-value, not checked status !!, return '0' if unchecked.
      */
-    static getO(obj: JQuery): string | null {
+    static getO(obj: JQuery): StrN {
         //return obj.val();
         // @ts-ignore: data('value') is expected to return a string or equivalent
         return obj.is(':checked') ? obj.data('value') : '0';
@@ -57,7 +57,7 @@ export default class _ICheck extends _IBase {
     /**
      * get checked status by object
      */
-    static checkedO(obj: JQuery | null): boolean {
+    static checkedO(obj: JQueryN): boolean {
         if (obj == null) return false;
         //檢查:after虛擬類別是否存在
         //return (_icheck.getO(obj) == 1);

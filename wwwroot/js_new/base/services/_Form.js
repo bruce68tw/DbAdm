@@ -38,7 +38,7 @@ export default class _Form {
         const array = form.serializeArray();  //key-value
 
         //good: jquery foreach
-        let json: { [key: string]: any } = {};
+        let json: Json = {};
         $.each(array, function () {
             json[this.name] = this.value || '';
         });
@@ -123,7 +123,7 @@ export default class _Form {
      * param hides {array} object array to hide
      * param shows {array} object array to show
      */
-    static hideShow(hides, shows) {
+    static hideShow(hides, shows = null) {
         //hide first
         if (hides) {
             for (let i = 0; i < hides.length; i++) {

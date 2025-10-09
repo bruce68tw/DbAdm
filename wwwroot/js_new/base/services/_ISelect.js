@@ -130,9 +130,9 @@ export default class _ISelect extends _IBase {
     //ie 不支援 option display:none !!
     //filter options by data-ext value
     //rows: 所有option 資料(Id,Text,Ext)
-    static filterByExt(fid, value, rows, box, allItem, addEmptyStr) {
-        if (allItem === undefined)
-            allItem = false;
+    static filterByExt(fid, value, rows, box, allItem = false, addEmptyStr = null) {
+        //if (allItem === undefined)
+        //    allItem = false;
         const obj = _Obj.get(fid, box);
         obj.empty();
         if (addEmptyStr !== undefined && addEmptyStr !== '')
@@ -159,12 +159,9 @@ export default class _ISelect extends _IBase {
      * param action {stirng} 後端action讀取來源, 固定傳入parentId
      * param isEdit {bool} true(編輯畫面), false(查詢畫面)
      */
-    static changeParent(parentFid, childFid, childId, action, isEdit) {
-        // 假設 _me, _ajax 在其他地方有定義或引入，這裡因為原始程式碼沒有提供，所以需要根據實際情況調整
-        // 為了編譯通過，暫時將 _me.divEdit 和 _me.divRead 假設為 JQuery 類型
-        const _me = { divEdit: $({}), divRead: $({}) }; // 模擬 _me 物件
+    static changeParent(upFid, childFid, childId, action, isEdit) {
         const box = isEdit ? _me.divEdit : _me.divRead;
-        const thisId = _ISelect.get(parentFid, box);
+        const thisId = _ISelect.get(upFid, box);
         _Ajax.getJsonA(action, { parentId: thisId }, (rows) => {
             _ISelect.setItems(childFid, rows, box);
             if (_Str.notEmpty(childId)) {

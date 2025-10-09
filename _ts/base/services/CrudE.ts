@@ -1,5 +1,4 @@
 ﻿import _Ajax from "./_Ajax";
-//import _BR from "./_BR";
 import _Date from "./_Date";
 import _Edit from "./_Edit";
 import _File from "./_File";
@@ -10,13 +9,12 @@ import _IDate from "./_IDate";
 import _Input from "./_Input";
 import _IText from "./_IText";
 import _Json from "./_Json";
-//import _Me from "./_Me";
 import _Prog from "./_Prog";
 import _Str from "./_Str";
 import _Tool from "./_Tool";
 import _Valid from "./_Valid";
-import EstrFun from "./EstrFun";
 import EditOne from "./EditOne";
+import FunEstr from "../enums/FunEstr";
 //import $ from "jquery";
 
 /**
@@ -69,7 +67,7 @@ export default class CrudE {
                 edit0 = (this.edits[0] === null) ? new EditOne() : this.edits[0];
                 //this.hasChild = edits.length > 1;
                 if (this.edits.length > 1) {
-                    edit0.[Childs] = [];
+                    (edit0 as any)[Childs] = [];
                     //var childs = this.edits._childs;
                     for (let i = 1; i < this.edits.length; i++)
                         (edit0 as any)[Childs][i - 1] = this.edits[i];
@@ -125,8 +123,8 @@ export default class CrudE {
     /*
     _getJsonAndSetMode = async function(key, fun) {
         //_me.crudR.toUpdateMode(key);
-        var act = (fun == EstrFun.Update) ? 'GetUpdJson' :
-            (fun == EstrFun.View) ? 'GetViewJson' : '';
+        var act = (fun == FunEstr.Update) ? 'GetUpdJson' :
+            (fun == FunEstr.View) ? 'GetViewJson' : '';
         await _ajax.getJsonA(act, { key: key }, function(data) {
             _me.crudR.toEditMode(fun, data);
         });
@@ -174,9 +172,9 @@ export default class CrudE {
         //    return;
 
         /*
-        var isView = (fun == EstrFun.View);
-        var run = (isView && this._nowFun != EstrFun.View) ? true :
-            (!isView && this._nowFun == EstrFun.View) ? true :
+        var isView = (fun == FunEstr.View);
+        var run = (isView && this._nowFun != FunEstr.View) ? true :
+            (!isView && this._nowFun == FunEstr.View) ? true :
             false;
         */
         //set variables
@@ -187,19 +185,19 @@ export default class CrudE {
         const box = this.divEdit!;
         const eform = this.eform0!;
         const items = box.find('input, textarea, select, button');
-        if (fun == EstrFun.View) {
+        if (fun == FunEstr.View) {
             _Edit.removeIsNew(eform);
             items.prop('disabled', true)
             box.find('#btnToRead').prop('disabled', false);
             _IHtml.setEdits(box, '', false);
-        } else if (fun == EstrFun.Create) {
+        } else if (fun == FunEstr.Create) {
             _Edit.addIsNew(eform);    //增加_IsNew隱藏欄位
             const dataEdit = '[data-edit=U]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
             _IHtml.setEdits(box, '', true);
             _IHtml.setEdits(box, dataEdit, false);
-        } else if (fun == EstrFun.Update) {
+        } else if (fun == FunEstr.Update) {
             _Edit.removeIsNew(eform);
             const dataEdit = '[data-edit=C]';
             items.prop('disabled', false)
@@ -380,7 +378,7 @@ export default class CrudE {
      * check current is create/update mode or not
      */
     public isEditMode(): boolean {
-        return (this._nowFun !== EstrFun.View);
+        return (this._nowFun !== FunEstr.View);
     }
 
     //return {bool}
@@ -389,7 +387,7 @@ export default class CrudE {
             return await _me.fnUpdateOrViewA(fun, key);
 
         const me = this;
-        const act = (fun == EstrFun.Update)
+        const act = (fun == FunEstr.Update)
             ? 'GetUpdJson' : 'GetViewJson';
         return await _Ajax.getJsonA(act, { key: key }, function (json: any) {
             me.loadJson(json);
@@ -470,7 +468,7 @@ export default class CrudE {
      * 將目前畫面資料轉變為新資料
      */
     public editToNew(): void {
-        const fun = EstrFun.Create;
+        const fun = FunEstr.Create;
         this.setEditStatus(fun);
         this.edit0!.resetKey();
         _Prog.setPath(fun);
@@ -589,7 +587,7 @@ export default class CrudE {
      * onclick Create button
      */
     public onCreate(): void {
-        const fun = EstrFun.Create;
+        const fun = FunEstr.Create;
         this._resetForm(this.edit0);   //reset first
         this.setEditStatus(fun);
         this.afterOpen(fun, null);
@@ -602,12 +600,12 @@ export default class CrudE {
      */
     public async onUpdateA(key: string): Promise<boolean | void> {
         _Edit.removeIsNew(this.eform0!);    //移除_IsNew隱藏欄位
-        return await this._updateOrViewA(EstrFun.Update, key);
+        return await this._updateOrViewA(FunEstr.Update, key);
     }
 
     //return { bool }
     public async onViewA(key: string): Promise<boolean | void> {
-        return await this._updateOrViewA(EstrFun.View, key);
+        return await this._updateOrViewA(FunEstr.View, key);
     }
 
     /**

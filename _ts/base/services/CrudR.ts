@@ -1,13 +1,10 @@
-﻿//import $ from "jquery";
-import _Ajax from "./_Ajax";
-//import _BR from "./_BR";
+﻿import _Ajax from "./_Ajax";
 import _Form from "./_Form";
 import _ICheck from "./_ICheck";
 import _IDate from "./_IDate";
 import _Input from "./_Input";
 import _IRadio from "./_IRadio";
 import _Json from "./_Json";
-//import _Me from "./_Me";
 import _Obj from "./_Obj";
 import _Prog from "./_Prog";
 import _Str from "./_Str";
@@ -15,7 +12,7 @@ import _Tool from "./_Tool";
 import _Var from "./_Var";
 import CrudE from "./CrudE";
 import Dtable from "./Dtable";
-import EstrFun from "./EstrFun";
+import FunEstr from "../enums/FunEstr";
 
 /**
  * 改為非靜態類別
@@ -39,9 +36,9 @@ export default class CrudR {
     private temp: any = {};
 
     // public properties (matching the function comments)
-    public divRead: JQuery | null = null;
-    public rform: JQuery | null = null;
-    public rform2: JQuery | null = null;
+    public divRead: JQueryN = null;
+    public rform: JQueryN = null;
+    public rform2: JQueryN = null;
     public dt: any = null; // Datatable instance
     private _updName: string | undefined;
 
@@ -198,7 +195,7 @@ export default class CrudR {
      * param hasView {bool} has view icon or not
      */
     public dtCrudFun(key: string, rowName: string, hasUpdate: boolean, hasDelete: boolean, hasView: boolean,
-        fnOnUpdate: string | null, fnOnDelete: string | null, fnOnView: string | null): string {
+        fnOnUpdate: StrN, fnOnDelete: StrN, fnOnView: StrN): string {
         let funs: string = '';
         if (hasUpdate)
             funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnUpdate == null ? '_me.crudR.onUpdateA' : fnOnUpdate)}" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
@@ -217,7 +214,7 @@ export default class CrudR {
             return null;
 
         const row: any = _Form.toRow(this.rform);
-        const find2: JQuery | null = this.rform2;
+        const find2: JQueryN = this.rform2;
         if (find2 !== null && _Obj.isShow(find2))
             _Json.copy(_Form.toRow(find2), row);
         return row;
@@ -229,7 +226,7 @@ export default class CrudR {
      * param nowDiv {object} (default _me.divEdit) now div to show
      * param fnCallback {function} (optional) callback function
      */
-    public swap(toRead: boolean, nowDiv: JQuery | null = null, fnCallback?: () => void): void {
+    public swap(toRead: boolean, nowDiv: JQueryN = null, fnCallback?: () => void): void {
         if (!_me.hasRead || !_me.hasEdit) {
             if (fnCallback)
                 fnCallback();
@@ -240,7 +237,7 @@ export default class CrudR {
         if (isDefault)
             nowDiv = _me.divEdit;
 
-        let oldDiv: JQuery, newDiv: JQuery | null;
+        let oldDiv: JQuery, newDiv: JQueryN;
         if (toRead) {
             oldDiv = nowDiv as JQuery;
             newDiv = this.divRead;
@@ -347,7 +344,7 @@ export default class CrudR {
      * onclick find2 button for show/hide find2 form
      */
     public onFind2(): void {
-        const find2: JQuery | null = this.rform2;
+        const find2: JQueryN = this.rform2;
         if (find2 == null)
             return;
         else if (_Obj.isShow(find2))
@@ -360,7 +357,7 @@ export default class CrudR {
      * onclick reset find form
      */
     public onResetFind(): void {
-        _Form.reset(this.rform);
+        _Form.reset(this.rform!);
         if (this.rform2 != null)
             _Form.reset(this.rform2);
     }
@@ -384,11 +381,11 @@ export default class CrudR {
      * onclick Create button
      */
     public onCreate(): void {
-        //var fun = EstrFun.Create;
+        //var fun = FunEstr.Create;
         //this.swap(false);  //call first
         //_prog.setPath(fun);
         _me.crudE.onCreate();
-        this.toEditMode(EstrFun.Create);
+        this.toEditMode(FunEstr.Create);
     }
 
     /**
@@ -396,8 +393,8 @@ export default class CrudR {
      * param key {string} row key
      */
     public async onUpdateA(key: string): Promise<void> {
-        //_me.crudE._getJsonAndSetMode(key, EstrFun.Update);
-        //this.toEditMode(EstrFun.Update);
+        //_me.crudE._getJsonAndSetMode(key, FunEstr.Update);
+        //this.toEditMode(FunEstr.Update);
         await _me.crudE.onUpdateA(key);
     }
 
@@ -406,9 +403,9 @@ export default class CrudR {
      * param key {string} row key
      */
     public async onViewA(key: string): Promise<void> {
-        //_me.crudE._getJsonAndSetMode(key, EstrFun.View);
+        //_me.crudE._getJsonAndSetMode(key, FunEstr.View);
         await _me.crudE.onViewA(key);
-        //this.toEditMode(EstrFun.View);
+        //this.toEditMode(FunEstr.View);
     }
 
     /**
@@ -416,7 +413,7 @@ export default class CrudR {
      * me {element} checkbox element
      * key {string} row key
      */
-    public async onSetStatusA(me: HTMLElement, key: string): Promise<void> {
+    public async onSetStatusA(me: Elm, key: string): Promise<void> {
         const status: boolean = _ICheck.checkedO($(me));
         await _Ajax.getStrA('SetStatus', { key: key, status: status }, function (msg: any) {
             _Tool.alert(_BR.UpdateOk);
@@ -430,7 +427,7 @@ export default class CrudR {
      * param box {string} row key
      * param fid {string} fid
      */
-    public onCheckAll(me: HTMLElement, box: JQuery, fid: string): void {
+    public onCheckAll(me: Elm, box: JQuery, fid: string): void {
         _ICheck.setF(_Input.fidFilter(fid) + ':not(:disabled)', _ICheck.checkedO($(me)), box);
     }
 

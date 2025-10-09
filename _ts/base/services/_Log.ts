@@ -18,7 +18,7 @@
     /**
      * @description 初始化記錄程式時間功能
      */
-    static logTimeInit(name?: string): void {
+    static logTimeInit(name: string = ''): void {
         _Log._start = new Date();
         _Log._now = _Log._start;
         //_result = "\r\n" + name;

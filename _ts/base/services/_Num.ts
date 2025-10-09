@@ -21,7 +21,7 @@ export default class _Num {
         return (value === 1);
     }
 
-    static rowToBool(row: { [key: string]: any }, fids: string[]): { [key: string]: any } {
+    static rowToBool(row: Json, fids: string[]): Json {
         for (let i = 0; i < fids.length; i++) {
             const fid = fids[i];
             row[fid] = _Num.toBool(row[fid]);

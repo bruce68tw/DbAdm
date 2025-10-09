@@ -9,7 +9,7 @@ export default class _Json {
      return {object}
      */
     /*
-    static addJson(source: { [key: string]: any }, target?: { [key: string]: any }): { [key: string]: any } {
+    static addJson(source: Json, target?: Json): Json {
         if (!target)
             target = {};
         Object.keys(source).map(function (key, index) {
@@ -62,7 +62,7 @@ export default class _Json {
      * param valueId {string} value field id, default to 'Value'
      * return {object} 回傳的json的欄位名稱前面會加上'f'
      */
-    static keyValuesToJson(keyValues: Json[] | null, keyId?: string, valueId?: string): JsonN {
+    static keyValuesToJson(keyValues: Json[] | null, keyId: StrN = null, valueId: StrN = null): JsonN {
         if (keyValues === null || keyValues.length === 0)
             return null;
 
@@ -71,7 +71,7 @@ export default class _Json {
         if (!valueId)
             valueId = 'Value';
 
-        const data: { [key: string]: any } = {};
+        const data: Json = {};
         for (let i = 0; i < keyValues.length; i++) {
             const row = keyValues[i];
             data['f' + row[keyId]] = row[valueId];
@@ -134,7 +134,7 @@ export default class _Json {
     }
 
     //filter json array
-    static filterRows(rows: any[] | null, fid: string, value: any): any[] | null {
+    static filterRows(rows: Json[] | null, fid: string, value: any): Json[] | null {
         if (rows == null || rows.length == 0)
             return null;
 
@@ -144,7 +144,7 @@ export default class _Json {
     }
 
     //appendRows
-    static appendRows(froms: any[] | null, tos: any[]): void {
+    static appendRows(froms: Json[] | null, tos: Json[]): void {
         if (froms == null || froms.length == 0)
             return;
 
@@ -160,12 +160,12 @@ export default class _Json {
      * param level {int} (default 0) debug purpose, base 0
      * return void
      */
-    static removeNull(obj: JsonN, level?: number): void {
+    static removeNull(obj: JsonN, level: number = 0): void {
         //debugger;
-        level = level || 0;
+        //level = level || 0;
         if (!obj || _Json.isEmpty(obj)) return;
 
-        (window as any).jQuery.each(obj, function (key: string, value: any) {
+        $.each(obj, function (key: string, value: any) {
             if (value === null) {
                 //delete only null, empty is not !!
                 delete obj[key];
@@ -194,7 +194,7 @@ export default class _Json {
                 }
 
                 //case of json array
-                (window as any).jQuery.each(value, function (k2: number, v2: { [key: string]: any }) {
+                $.each(value, function (k2: number, v2: Json) {
                     _Json.removeNull(v2, level! + 1);
 
                     if (_Json.isEmpty(v2))
@@ -218,10 +218,6 @@ export default class _Json {
                     delete obj[key];
             }
         });
-
-        // 原始程式碼的最後這行 `if (_json.isEmpty(obj)) obj = null;` 在 TS 靜態類別方法中難以直接模擬 'by ref' 的行為來改變傳入的 obj 變數本身，
-        // 且通常在 JS 中，`delete obj` 是正確的，但 `obj = null` 只是改變了區域變數的引用。
-        // 保持 obj 的屬性被刪除即可達到「移除 null」的目的。
     }
 
 } //class

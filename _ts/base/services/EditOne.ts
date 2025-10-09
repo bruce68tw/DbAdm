@@ -5,23 +5,6 @@ import _Input from "./_Input";
 import _IText from "./_IText";
 import _Obj from "./_Obj";
 
-/*
-// 假設這些全域變數或類型已在其他地方定義
-declare const _me: {
-    crudE: {
-        getUpdRow: (kid: string, fidTypes: string[], eform: JQuery) => any;
-        getFileSid: (levelStr: string, fid: string) => string;
-        viewFile: (table: string, fid: string, elm: JQuery<HTMLElement> | HTMLElement, key: string) => void;
-        // dataSetFileJson: (data: FormData, fileJson: any) => void;
-    };
-};
-
-// 假設 Validator 是來自 jQuery Validation 的類型
-interface Validator {
-    // ...
-}
-*/
-
 /**
  * 單筆編輯畫面
  * single edit form, called by _me.crudE.js
@@ -68,11 +51,11 @@ export default class EditOne {
     public validator?: JQueryValidation.Validator;
 
     // 自定函數 (Custom functions)
-    public fnAfterLoadJson?: (json: any) => void;
-    public fnAfterOpenEdit?: (fun: any, json: any) => void;
-    public fnAfterSwap?: (readMode: boolean) => void;
-    public fnWhenSave?: () => string | null; // return error message or null
-    public fnAfterSave?: () => void;
+    public fnAfterLoadJson: ((json: any) => void) | null = null;
+    public fnAfterOpenEdit: ((fun: any, json: any) => void) | null = null;
+    public fnAfterSwap: ((readMode: boolean) => void) | null = null;
+    public fnWhenSave: (() => StrN) | null = null; // return error message or null
+    public fnAfterSave: (() => void) | null = null;
 
     /**
      * @param kid pkey field id (default 'Id')
@@ -105,7 +88,7 @@ export default class EditOne {
      * return {string}
      */
     public getKey(): string {
-        return _Input.get(this.kid, this.eform);
+        return _Input.get(this.kid, this.eform)!;
     }
 
     /**
@@ -114,7 +97,7 @@ export default class EditOne {
      * return {string}
      */
     public getValue(fid: string): string {
-        return _Input.get(fid, this.eform);
+        return _Input.get(fid, this.eform)!;
     }
 
     /**
@@ -202,7 +185,7 @@ export default class EditOne {
      * @param fid {string}
      * @param elm {element} link element
      */
-    public viewFile(table: string, fid: string, elm: JQuery<HTMLElement> | HTMLElement): void {
+    public viewFile(table: string, fid: string, elm: Elm): void {
         const key = this.getKey();
         _me.crudE.viewFile(table, fid, elm, key);
     }

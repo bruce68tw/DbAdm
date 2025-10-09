@@ -1,3 +1,4 @@
+import Mustache from 'mustache';
 import _Edit from "./_Edit";
 import _Form from "./_Form";
 import _Fun from "./_Fun";
@@ -46,7 +47,7 @@ import _Var from "./_Var";
  * return {EditMany}
  */
 export default class EditMany {
-    constructor(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
+    constructor(kid, rowsBoxId = null, rowTplId = null, rowFilter = null, sortFid = null) {
         // constant
         this.DataFkeyFid = '_fkeyfid'; //data field for fkey fid, lowercase
         // variables
@@ -55,25 +56,29 @@ export default class EditMany {
         this.isUrm = false; //is urm or not
         this.systemError = '';
         this.dataJson = null;
+        this.rowTpl = '';
+        this.fidTypes = []; // Array of [fid, ftype, fid, ftype, ...]
         this.fidTypeLen = 0;
         this.hasFile = false;
+        this.fileFids = []; // Array of fids that are files
         this.fileLen = 0;
         this.hasEform = false;
+        this.rowsBox = null;
+        this.eform = null; //edit form object
         this.deletedRows = []; //deleted key string array
         this.newIndex = 0; //new row serial no, 使用負數來表示新資料
+        // Custom functions, users can assign these
+        this.fnLoadRows = null;
+        this.fnGetUpdJson = null;
+        this.fnValid = null;
+        this.fnReset = null;
         this.kid = kid;
         this.rowFilter = rowFilter;
         this.sortFid = sortFid;
         this.hasRowTpl = _Str.notEmpty(rowTplId);
         this.hasRowFilter = _Str.notEmpty(rowFilter);
         //call last
-        this.init(rowTplId, rowsBoxId);
-    }
-    /**
-     * initial & set instance variables (this.validator by _valid.init())
-     * call by this
-     */
-    init(rowTplId, rowsBoxId) {
+        //this.init(rowTplId, rowsBoxId);
         if (this.hasRowTpl) {
             this.rowTpl = $('#' + rowTplId).html();
             const rowObj = $(this.rowTpl);
@@ -97,6 +102,12 @@ export default class EditMany {
         }
         this._resetVar();
     }
+    /**
+     * initial & set instance variables (this.validator by _valid.init())
+     * call by this
+    private init(rowTplId: string = '', rowsBoxId?: string): void {
+    }
+     */
     /**
      * initial urm, 參考 XpUser Read.cshmtl
      * param fids: 要傳到後端的欄位id array
@@ -324,7 +335,7 @@ export default class EditMany {
      */
     idToRowBox(id) {
         if (!this.eform)
-            return undefined;
+            return null;
         const filter = _Input.fidFilter(this.kid) + `[value='${id}']`;
         return this.eform.find(filter).parent();
     }
@@ -438,7 +449,7 @@ export default class EditMany {
      * param {int} (optional) newId 新id
      * return {object} row
      */
-    addRow(row, rowsBox, newId) {
+    addRow(row = null, rowsBox = null, newId = null) {
         row = row || {};
         const box = this._getRowsBox(rowsBox);
         const obj = this._renderRow(row, box);
@@ -463,7 +474,7 @@ export default class EditMany {
      * param key {string} row key
      * param rowBox {object} (optional) rows box, default this.rowsBox
      */
-    deleteRow(key, rowBox) {
+    deleteRow(key, rowBox = null) {
         const deletes = this.deletedRows;
         let found = false;
         const rowLen = deletes.length;
@@ -522,7 +533,7 @@ export default class EditMany {
      * param rowsBox {object} (optional) default this.rowsBox
      * return {json} file json
      */
-    dataAddFiles(levelStr, data, rowsBox) {
+    dataAddFiles(levelStr, data, rowsBox = null) {
         if (!this.hasFile || !this.fileFids)
             return null;
         if (!this._checkRowFilter() || !this.rowFilter)
@@ -578,7 +589,7 @@ export default class EditMany {
      * param newId {int} 外部傳入newId if any, 如果有值則不會累加 this.newId
      * return {int} new key index
      */
-    setNewIdByBox(box, newId) {
+    setNewIdByBox(box, newId = null) {
         if (newId == null) {
             this.newIndex--; //使用負數
             newId = this.newIndex;
@@ -612,7 +623,7 @@ export default class EditMany {
      * param rowsBox {object} optional, return this.rowsBox if null
      * return {object}
      */
-    _getRowsBox(rowsBox) {
+    _getRowsBox(rowsBox = null) {
         return rowsBox || this.rowsBox;
     }
 } //class

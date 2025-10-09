@@ -1,16 +1,12 @@
 ﻿import _Fun from "./_Fun";
 import _Leftmenu from "./_Leftmenu";
 import _Str from "./_Str";
-
-// 假設這些是外部的列舉或常數類別/對象
-// 並且它們將被轉換為大 camel case 命名
-import EstrFun from "./EstrFun";
-//import _Br from "./_Br";
+import FunEstr from "../enums/FunEstr";
 
 //program, 包含 crud功能
 export default class _Prog {
     //filter: '.x-prog-path',
-    private static me: JQuery<HTMLElement> | null = null;
+    private static me: JQueryN = null;
     private static oriPath: string = '';    //original path
 
     static init(): void {
@@ -44,16 +40,16 @@ export default class _Prog {
 
     /**
      * set program path
-     * param fun {string} fun mode (Assuming fun is a value from EstrFun)
+     * param fun {string} fun mode (Assuming fun is a value from FunEstr)
      * param updName {string}
      */
-    static setPath(fun: string, updName: StrN = null): void {
+    static setPath(fun: string, updName:string=''): void {
         let name: string;
-        if (fun === EstrFun.Create) {
+        if (fun === FunEstr.Create) {
             name = _BR.Create;
-        } else if (fun === EstrFun.View) {
+        } else if (fun === FunEstr.View) {
             name = _BR.View;
-        } else if (fun !== EstrFun.Update) {
+        } else if (fun !== FunEstr.Update) {
             name = '??';
         } else {
             name = _Str.isEmpty(updName) ? _BR.Update : updName!;

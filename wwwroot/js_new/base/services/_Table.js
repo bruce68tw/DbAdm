@@ -25,7 +25,7 @@ export default class _Table {
     */
     /**
      * get rows count
-     * param table {JQuery<HTMLElement>} table object
+     * param table {JQuery} table object
      * param fid {string} field id(name attribute)
      * return {number} rows count
      */

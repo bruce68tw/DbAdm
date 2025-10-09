@@ -99,13 +99,9 @@ export default class _Valid {
      * param rowId{string} (optional for 多筆) row Id valud
      */
     // 注意: 原始JS代碼中，_me.eform0 是一個未定義的外部變數，這裡假設它可以在 TS 環境中被訪問或替換為一個 JQuery
-    static showError(fid: string, msg: string, eformId?: StrN, rowId?: string): void {
-        // 假設 _me 是一個可用的類別，並且它有一個 eform0 屬性
-        // 由於我們無法訪問 _me，這裡使用一個假設的類型 JQuery
+    static showError(fid: string, msg: string, eformId: StrN = null, rowId: StrN = null): void {
         let eform: any; // JQuery | undefined
-        // 假設有一個可用的全局變數 _ME.eform0
-        const _ME: any = {}; // 假設的 _ME 類別
-        eform = _Str.isEmpty(eformId!) ? _ME.eform0 : $('#' + eformId);
+        eform = _Str.isEmpty(eformId) ? _me.eform0 : $('#' + eformId);
 
         /*
         var input;

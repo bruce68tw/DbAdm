@@ -16,7 +16,7 @@ export default class _Assert {
      * NOTE: Original implementation uses 'for...in' which iterates over keys/indices (strings)
      * and performs loose comparison (==).
      * * param value {any} The value to find.
-     * param ary {Array<any> | { [key: string]: any }} The array or object keys to search in.
+     * param ary {Array<any> | Json} The array or object keys to search in.
      * return {void} (The function asserts/logs on failure)
      */
     static inArray(value, ary) {

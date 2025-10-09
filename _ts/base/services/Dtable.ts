@@ -1,17 +1,9 @@
-//import DataTable, { AjaxData, Api, Config, InternalSettings } from 'datatables.net';
 import DataTable, { AjaxData, Api, Config, InternalSettings } from "datatables.net";
 import _Ajax from "./_Ajax";
 import _Fun from "./_Fun";
 import _Json from "./_Json";
 import _Tool from "./_Tool";
 import _Var from "./_Var";
-//import DataTables from "datatables.net";
-//import DataTable from "datatables.net-dt";
-//import DataTable, { Config, InternalSettings } from 'datatables.net-dt';
-
-// Assume the following types/variables are globally available or defined elsewhere:
-//declare const _BR: { FindNone: string, FindOk: string };
-//declare const _me: { fnWhenFind?: () => boolean }; // Assuming _me might have fnWhenFind
 
 /**
  * create jQuery dataTables object
@@ -32,7 +24,7 @@ export default class Dtable {
     public recordsFiltered: number = -1;  //found count, -1 for recount, name map to DataTables
     public defaultShowOk: boolean = true;  //whethor show find ok msg, default value
     public showWork: boolean;
-    private _fnAfterFind?: (result: any) => void;
+    private _fnAfterFind: FnVoidN = null;
 
     //private
     //keep start row idx, false(find), true(save reload)
@@ -58,9 +50,9 @@ export default class Dtable {
         url: string,
         dtConfig: { showWork?: boolean, columnDefs?: any[] } & Config,
         findJson: any,
-        fnOk: FnN = null,
+        fnOk: ((result: any) => any) | null = null,
         tbarHtml: StrN = null,
-        fnAfterFind: FnN = null
+        fnAfterFind: FnVoidN = null
     ) {
         this.findJson = findJson;
         this.showWork = (dtConfig.showWork == null) ? false : dtConfig.showWork;
@@ -68,56 +60,18 @@ export default class Dtable {
         this._nowShowOk = this.defaultShowOk;
 
         //must put last
-        this.init(selector, url, dtConfig, fnOk, tbarHtml);
-    }
-
-    /**
-     * reset found count
-     */
-    public resetCount(): void {
-        //var count = reset ? -1 : this.dt.recordsFiltered;
-        this.recordsFiltered = -1;
-
-        let table = new DataTable('#myTable', {
-            // config options...
-        });
-    }
-
-    /**
-     * find rows
-     * param findJson {json} find condition
-     */
-    public find(findJson: any): void {
-
-        this.findJson = findJson;
-        //this.findStr = findStr || '';
-        this.resetCount();   //recount first
-
-        //trigger dataTables search event
-        //this.dt.search(this.findStr).draw();
-        // Use non-null assertion '!' on this.dt as it is initialized in the constructor
-        this.dt!.search('').draw(!this._keepStart);
-    }
-
-    /**
-     * refind with same condition for refresh form
-     * not show find ok msg
-     */
-    public reload(): void {
-        this._keepStart = true;
-        this._nowShowOk = false;  //not show find ok msg
-        this.find(this.findJson);
+        this._init(selector, url, dtConfig, fnOk, tbarHtml);
     }
 
     /**
      * initial jquery datatables, 參數參考前面的建構子
      */
-    private init(
+    private _init(
         selector: string,
         url: string,
         dtConfig: { showWork?: boolean, columnDefs?: any[] } & Config,
-        fnOk?: (result: any) => any,
-        tbarHtml?: string
+        fnOk: ((result: any) => any) | null,
+        tbarHtml: StrN
     ): void {
 
         //default config for dataTables
@@ -154,7 +108,7 @@ t
             //call after dataTables initialize
             //1.add toolbar button list if need
             //2.change find action: find after enter !!
-            initComplete: function (this: Dtable, settings: InternalSettings, json: any): void {
+            initComplete: (settings: InternalSettings, json: any): void => {
                 //1.toolbar
                 if (tbarHtml)
                     $(this).closest('.tableRead_wrapper').find('div.toolbar').html(tbarHtml);
@@ -179,7 +133,7 @@ t
                     //console.log('no dataTables filter !!');
                     //return;
                 }
-            }.bind(this),
+            },
 
             //ajax config(not standard jquery ajax !!)
             //me: this,
@@ -196,27 +150,28 @@ t
                 },
                 */
                 //add input parameter for datatables
-                data: function (this: Dtable, arg: AjaxData): void {
+                //使用箭頭函數以保留 this 上下文, 不必再 bind(this)
+                data: (arg: AjaxData): void => {
                     //如果存在 _me.fnWhenFind(傳回bool), 則先檢查
                     if (_me && _me.fnWhenFind) {
                         if (!_me.fnWhenFind())
                             return;
                     }
 
-                    //write order.fid if any
+                    //write order.fid(自定欄位) if any
                     const orders = arg.order;
                     if (orders.length > 0) {
                         const order = orders[0];
-                        order.fid = arg.columns[order.column].data;
+                        (order as any).fid = arg.columns[order.column].data;
                     }
-                    arg.findJson = _Json.toStr(this.findJson);    //string type
-                    arg.recordsFiltered = this.recordsFiltered;
+                    (arg as any).findJson = _Json.toStr((this as Dtable).findJson);    //string type
+                    (arg as any).recordsFiltered = this.recordsFiltered;
                     if (this._keepStart)
                         arg.start = this._start;
-                }.bind(this),
+                },
 
                 //on success (cannot use success event), see DataTables document !!
-                dataSrc: function (this: Dtable, result: any): any[] {
+                dataSrc: (result: any): any[] => {
                     // Use non-null assertion '!' on this.dt as it is initialized in the constructor
                     this._start = this.dt!.page.info().start;
                     this._keepStart = false; //reset
@@ -249,7 +204,7 @@ t
                             return result.data;
                         }
                     }
-                }.bind(this),
+                },
 
                 //on error
                 error: function (xhr: JQuery.jqXHR, textStatus: JQuery.Ajax.TextStatus, errorThrown: string): void {
@@ -309,4 +264,43 @@ t
                 _Fun.unBlock();
         });
     }
+
+    /**
+     * reset found count
+     */
+    resetCount(): void {
+        //var count = reset ? -1 : this.dt.recordsFiltered;
+        this.recordsFiltered = -1;
+
+        let table = new DataTable('#myTable', {
+            // config options...
+        });
+    }
+
+    /**
+     * find rows
+     * param findJson {json} find condition
+     */
+    find(findJson: any): void {
+
+        this.findJson = findJson;
+        //this.findStr = findStr || '';
+        this.resetCount();   //recount first
+
+        //trigger dataTables search event
+        //this.dt.search(this.findStr).draw();
+        // Use non-null assertion '!' on this.dt as it is initialized in the constructor
+        this.dt!.search('').draw(!this._keepStart);
+    }
+
+    /**
+     * refind with same condition for refresh form
+     * not show find ok msg
+     */
+    reload(): void {
+        this._keepStart = true;
+        this._nowShowOk = false;  //not show find ok msg
+        this.find(this.findJson);
+    }
+
 } //class
