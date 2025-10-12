@@ -2,10 +2,10 @@
 let EstrItemType = {
 	Input: 'I',
 	Group: 'G',		
-	Row: 'R',		//只有2欄位, 只能放 group, input
+	Checks: 'CS',	//check list, 不是容器
+	Row: 'R',		//只有2欄位, 只能放 group, input, checks
 	Table: 'T',		//只能放 input
-	TabPage: 'TP',	//(暫不使用)只能放 box, group, input
-	MultiBox: 'M',	//多欄容器, 只能放 input
+	TabPage: 'TP',	//(暫不使用)只能放 box, group, input, checks
 };
 
 //結構用途, 記錄item drag/drop 狀態資訊
@@ -60,7 +60,7 @@ class UiView {
 		this.NameRow = '[欄位容器]';
 		this.NameTable = '[多筆表格]';
 		this.NameTabPage = '[多頁容器]';
-		this.NameMultiBox = '[多欄容器]';
+		this.NameChecks = '[多選欄位]';
 
 		this.isEdit = true;		//是否可編輯, temp to true	
 		this.newItemId = 0;		//新item Id, 自動累減, 使用負數!!		
@@ -125,18 +125,14 @@ class UiView {
 	_onDragOver(e) {		
 		e.preventDefault();		//允許drop, 不會顯示禁止icon
 
-		//#region 不能drop的情形, 不顯示訊息
-		let dropElm = e.target;		//e.target 為目前經過的 element
-		if (this.dropElm == dropElm) return;	//相同 element 不處理
+		//相同 element 不處理
+		let dropElm = e.target;		//e.target 為目前經過的最內層的 element
+		if (this.dropElm == dropElm) return;	
 
-		//get drop item, 空值表示 area
+		//get drop item, 空值表示 box 為 work area
 		let dropObj = $(dropElm);
 		let dropItem = dropObj.closest(this.FtItem);
-		let hasItem = _obj.notEmpty(dropItem);
-		//if (_obj.isEmpty(dropItem)) return;
-		//#endregion
-
-		//console.log('_onDragOver-2');
+		let hasDropItem = _obj.notEmpty(dropItem);	//是否有參照的 drop item
 
 		//set instance variables
 		this.dropElm = dropElm;
@@ -147,19 +143,24 @@ class UiView {
 		drop.item = dropItem;
 		drop.itemType = this.itemGetType(dropItem);
 
-		//判斷 drag item 是否 drop into box 裡面
+		//設定 dropInBox & 檢查 drop 位置是否合理
+		//判斷是否 drop 到 box 裡面
 		let dropInBox = false;
-		if (hasItem) {
-			//todo: MultiBox
+		if (hasDropItem) {
 			dropInBox =
+				//Row: 沒有 ClsItem 表示在內部
 				(drop.itemType == EstrItemType.Row && !dropObj.hasClass(this.ClsItem)) ||
+				//Table: 在 td 裡面
 				(drop.itemType == EstrItemType.Table && _obj.tagName(dropObj) == 'td') ||
+				//TabPage: 在 ClsTabPane 裡面
 				(drop.itemType == EstrItemType.TabPage && dropObj.hasClass(this.ClsTabPane));
-			//drop boxType表示 "drag item" drop進去的box item, 沒有則為null
+
+			//drop.boxType表示 "drag item" drop進去的box item, 沒有則為null
 			if (dropInBox) {
 				drop.boxType = drop.itemType;
 				drop.boxId = this.itemGetId(dropItem);
 			} else {
+				//找外層 item
 				var box = this._getBox(dropItem);
 				drop.boxType = this.itemGetType(box);
 				drop.boxId = (box == null) ? '0' : this.itemGetId(box);
@@ -173,26 +174,26 @@ class UiView {
 
 		/*
 		 x軸: drop, y軸: drag 
-		 Input 和 Group drag/drop 的情形相同(!isBox), 但訊息有些不同
-		 drop.boxType == null 則全部item都可以 drop到任何位置
-		 I-R-T-TP: drop到Input外面-input在Row裡面-input在Table裡面-input在TabPage裡面
-					I-R-T-TP	R-In	T-In	TP-In
-		 ---------------------------------------------
-		 I/G		O-O-x-O		O-O		O-O		O-O
-		 Row		O-x-x-O		O-x		O-x		O-O
-		 Table		O-x-x-x		O-x		O-x		O-x
-		 TabPage	O-x-x-x		O-x		O-x		O-x
+		 如果 drop.boxType == null, 則 drop 位置無限制
+		   (inside)Row	Table TabPage
+		 ------------------------------
+		 Input		O	  ?		O
+		 Group		O	  x		O
+		 Checks		O	  x		O
+		 Row		x	  x		O
+		 Table		x	  x		x
+		 TabPage	x	  x		x
 		*/
 
 		//(只考慮)不能drop時, 記錄error message, 在後面顯示
 		//!dropInBox 則都可以 drop
 		let error = '';
 		let dragName = '';
-		if (hasItem && drop.boxType != null) {
+		if (hasDropItem && drop.boxType != null) {
 			switch (drag.itemType) {
 				case EstrItemType.Input:
 					if (drop.boxType == EstrItemType.Table) {
-						if (drop.itemType == EstrItemType.Input || dropObj.find(this.FtItem).length > 0)
+						if (dropObj.find(this.FtItem).length > 0)
 							error = `${this.NameTable}只能放一個${this.NameInput}。`;
 					}
 					break;
@@ -200,8 +201,21 @@ class UiView {
 					if (drop.boxType == EstrItemType.Table)
 						error = `${this.NameGroup}不能放在${this.NameTable}裡面。`;
 					break;
+				case EstrItemType.Checks:
+					if (drop.boxType == EstrItemType.Table)
+						error = `${this.NameChecks}不能放在${this.NameTable}裡面。`;
+					break;
 				case EstrItemType.Row:
 					dragName = this.NameRow;
+					switch (drop.boxType) {
+						case EstrItemType.Row:
+							error = `${dragName}不能放在${this.NameRow}裡面。`;
+							break;
+						case EstrItemType.Table:
+							error = `${dragName}不能放在${this.NameTable}裡面。`;
+							break;
+					}
+					/*
 					switch (drop.itemType) {
 						case EstrItemType.Row:
 							error = `${dragName}不能放在${this.NameRow}裡面。`;
@@ -218,6 +232,7 @@ class UiView {
 							}
 							break;
 					}
+					*/
 					break;
 				case EstrItemType.Table:
 				case EstrItemType.TabPage:
@@ -230,9 +245,6 @@ class UiView {
 						error = `${dragName}不能放在${this._typeToName(drop.boxType)}裡面。`;
 					}
 					break;
-				case EstrItemType.MultiBox:
-					//todo
-					break;
 			}
 		}
 
@@ -242,7 +254,7 @@ class UiView {
 		//always 顯示 target drop line
 		_obj.show(this.DropLine);
 
-		if (dropInBox || !hasItem) {
+		if (dropInBox || !hasDropItem) {
 			dropObj.append(this.DropLine);
 		} else {
 			//判斷drop位置在item的上或下方
@@ -283,10 +295,9 @@ class UiView {
 				drag.item = item;
 			}
 
-			//todo: MultiBox
-			//drag/drop時才需要處理
-			//移入/移出 Row時調整大小(互斥判斷: a^b 或是 a !== b)
-			if (dragType == EstrItemType.Input) {
+			//調整 item 大小或外觀
+			if (dragType == EstrItemType.Input || dragType == EstrItemType.Checks) {
+				//移入/移出 Row 時調整大小(互斥判斷: a^b 或是 a !== b)
 				let checkType = EstrItemType.Row;
 				if (this._isBoxTypeXor(checkType)) {
 					let inTable = (drop.boxType == checkType);
@@ -296,7 +307,7 @@ class UiView {
 					this._resizeItemByRow(drag.item, inTable, gridNum);
 				}
 
-				//移入/移出 Table時 show/hide label、note(互斥同上)
+				//移入/移出 Table時 show/hide label、note(互斥判斷同上) input only
 				checkType = EstrItemType.Table;
 				if (this._isBoxTypeXor(checkType))
 					this._resizeItemByTable(drag.item, (drop.boxType == checkType));
@@ -314,42 +325,39 @@ class UiView {
 		this._setDragging(false);
 	}
 
-	//box item add child item
-	//called by LoadJsons
-	//param {object) box
-	//param {string) boxType, null 表示工作區
-	//param {object) item
-	//param {int) childNo
+	/**
+	 * box item add child item 
+	 * param {object} box
+	 * param {string} boxType, null 表示工作區
+	 * param {int} childNo
+	 * param {object} item
+	 */
 	_boxAddItem(box, boxType, childNo, item) {
-		let cont;
-		//let no = info.ChildNo;
+		let upElm;	//container element
 		switch (boxType) {
 			case null:
-				cont = this.Area;
+				upElm = this.Area;
 				break;
 			case EstrItemType.Row:
 				//col位置
-				cont = box.children().eq(childNo);
+				upElm = box.children().eq(childNo);
 				break;
 			case EstrItemType.Table:
 				//hide label, inputNote
 				this._resizeItemByTable(item, true);
 
 				//td位置: tr第0列
-				cont = box.find("tbody tr").eq(0).find("td").eq(childNo);
+				upElm = box.find("tbody tr").eq(0).find("td").eq(childNo);
 				break;
 			case EstrItemType.TabPage:
 				//todo
 				//page位置
 				break;
-			case EstrItemType.MultiBox:
-				//todo
-				break;
 			default:
 				return;
 		}
 
-		cont.append(item);
+		upElm.append(item);
 	}
 
 	//drag by button
@@ -385,14 +393,14 @@ class UiView {
 				return this.NameInput;
 			case EstrItemType.Group:
 				return this.NameGroup;
+			case EstrItemType.Checks:
+				return this.NameChecks;
 			case EstrItemType.Row:
 				return this.NameRow;
 			case EstrItemType.Table:
 				return this.NameTable;
 			case EstrItemType.TabPage:
 				return this.NameTabPage;
-			case EstrItemType.MultiBox:
-				return this.NameMultiBox;
 		}
 	}
 
@@ -408,7 +416,6 @@ class UiView {
 	_isBox(type) {
 		return (type == EstrItemType.Row ||
 			type == EstrItemType.Table ||
-			type == EstrItemType.MultiBox ||
 			type == EstrItemType.TabPage);
 	}
 	//#endregion
@@ -423,12 +430,12 @@ class UiView {
 				return await this._newInputA(itemId, info);
 			case EstrItemType.Group:
 				return await this._newGroupA(itemId, info);
+			case EstrItemType.Checks:
+				return this._newChecks(itemId, info);
 			case EstrItemType.Row:
 				return this._newRow(itemId, info);
 			case EstrItemType.Table:
 				return this._newTable(itemId, info);
-			case EstrItemType.MultiBox:
-				return this._newMultiBox(itemId, info);
 			case EstrItemType.TabPage:
 				return this._newTabPage(itemId, info);
 		}
@@ -490,6 +497,35 @@ class UiView {
 		return item;
 	}
 
+	_newChecks(id, info) {
+		let clsCol = this.ClsRowCol;
+		let cols = info.Cols.split(',');
+		//here
+		let fids = info.LabelFids.split(',');
+		let html = '';
+		for (let i = 0; i < fids.length; i += 2) {
+			let fid = fids[i + 1];
+			html += `
+<label class="xi-check">
+    <input data-fid="${fid}" name="${fid}" data-edit="*" checked="" type="checkbox" data-type="check" data-value="1">${fids[i]}
+    <span class="xi-cspan"></span>
+</label>
+`;
+		}
+
+		html = `
+<div class="row py-2">
+	<div class="col-md-${cols[0]} x-label">${info.Title}</div>
+	<div class="col-md-${cols[1]} x-input">
+		${html}
+</div>
+`;
+		//render item
+		let item = $(html);
+		this._itemAddProp(id, item, EstrItemType.Checks, info);
+		return item;
+	}
+
 	_newRow(id, info) {
 		//加上py-2上下空間, 才能drop, dragOver時e.target為本身item !!
 		let clsCol = this.ClsRowCol;
@@ -510,7 +546,7 @@ class UiView {
 		let html = `
 <div class='py-2'>
 	<div class="x-btns-box">
-		<span class="x-span-label">角色功能</span>
+		<span class="x-span-label">多筆表格</span>
 		<button type="button" data-onclick="_me.mRoleProg.onAddRow" class="btn btn-success">新增一列
 			<i class="ico-plus"></i>
 		</button>
@@ -531,35 +567,6 @@ class UiView {
 		let item = $(html);
 		this._infoToTable(info, item);	//info to table
 		this._itemAddProp(id, item, EstrItemType.Table, info);
-		return item;
-	}
-
-	//todo
-	_newMultiBox(id, info) {
-		let html = `
-<div class='py-2'>
-	<div class="x-btns-box">
-		<span class="x-span-label">角色功能</span>
-		<button type="button" data-onclick="_me.mRoleProg.onAddRow" class="btn btn-success">新增一列
-			<i class="ico-plus"></i>
-		</button>
-	</div>
-	<table class="table x-table x-no-hline" cellspacing="0">
-		<thead>
-			<tr>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-			</tr>
-		</tbody>
-	</table>
-</div>
-`;
-		//render item
-		let item = $(html);
-		this._infoToTable(info, item);	//info to table
-		this._itemAddProp(id, item, EstrItemType.MultiBox, info);
 		return item;
 	}
 
@@ -638,11 +645,8 @@ class UiView {
 	}
 
 	//更新畫面上的可視部分
-	//called by UiMany(修改item內容) only !!
+	//called by UiMany onModalOk(修改item內容)
 	async InfoToItemA(info, item, fnCallback) {
-		//set data-info
-		this.itemSetInfo(item, info);
-
 		let callback = true;
 		switch (this.itemGetType(item)) {
 			case EstrItemType.Input:
@@ -652,21 +656,24 @@ class UiView {
 			case EstrItemType.Group:
 				item.find(this.FtGroupTitle).text(info.Title || '');
 				break;
-			case EstrItemType.Row:
-				//do nothing
-				return;
-			case EstrItemType.Table:
+			case EstrItemType.Checks:
+				//todo
 				callback = false;	//必須先判斷
 				this._infoToTable(info, item, fnCallback);
 				break;
-			case EstrItemType.MultiBox:
-				//todo
+			case EstrItemType.Row:
+				//do nothing
+				break;
+			case EstrItemType.Table:
 				callback = false;	//必須先判斷
 				this._infoToTable(info, item, fnCallback);
 				break;
 			case EstrItemType.TabPage:
 				break;
 		}
+
+		//set data-info
+		this.itemSetInfo(item, info);
 
 		if (callback)
 			fnCallback();
@@ -844,6 +851,15 @@ class UiView {
 
 			//get child field name
 			switch (itemType) {
+				case EstrItemType.Checks:
+					//todo
+					// table 的 xu-item 在 tbody > tr > td 裡
+					json.Childs = [];
+					item.find("tbody td").each(function () {
+						let item2 = $(this).children(me.FtItem).first();
+						json.Childs.push(item2.length > 0 ? buildJson(item2) : null);	//使用Childs
+					});
+					break;
 				case EstrItemType.Row:
 				case EstrItemType.TabPage:
 					let ftCont = (itemType == EstrItemType.Row)
@@ -858,15 +874,6 @@ class UiView {
 					});
 					break;
 				case EstrItemType.Table:
-					// table 的 xu-item 在 tbody > tr > td 裡
-					json.Childs = [];
-					item.find("tbody td").each(function () {
-						let item2 = $(this).children(me.FtItem).first();
-						json.Childs.push(item2.length > 0 ? buildJson(item2) : null);	//使用Childs
-					});
-					break;
-				case EstrItemType.MultiBox:
-					//todo
 					// table 的 xu-item 在 tbody > tr > td 裡
 					json.Childs = [];
 					item.find("tbody td").each(function () {

@@ -19,7 +19,7 @@ class UiMany {
         this.ModalGroup = $('#modalGroup');
         this.ModalTable = $('#modalTable');
         this.ModalTabPage = $('#modalTabPage');
-        this.ModalMultiBox = $('#modalMultiBox');
+        this.ModalChecks = $('#modalChecks');
         //this.EformInput = this.ModalInput.find('form');   //modalNodeProp form
         
         this.isEdit = false;    //是否可編輯
@@ -104,14 +104,14 @@ class UiMany {
                 return this._addInput();
             case EstrItemType.Group:
                 return this._addGroup();
+            case EstrItemType.Checks:
+                return this._addChecks();
             case EstrItemType.Row:
                 return this._addRow();
             case EstrItemType.Table:
                 return this._addTable();
             case EstrItemType.TabPage:
                 return this._addTabPage();
-            case EstrItemType.MultiBox:
-                return this._addMultiBox();
         }
     }
     //#endregion
@@ -122,8 +122,8 @@ class UiMany {
         this.uiView.startDragBtn(status, itemType);
     }
 
+    //called by view drop event
     async onDragEnd(e) {
-        //傳入參數2=true, 表示外部觸發
         await this.uiView.onDragEnd(e);
     }
 
@@ -131,12 +131,12 @@ class UiMany {
 
     //#region 功能按鈕相關
     //return row
-    _mItemAddRow(itemType, infoJson) {
+    _mItemAddRow(itemType, info) {
         //配合後端DB, 欄位使用大camel
         let itemJson = {
             BoxId: '0',
             ItemType: itemType,
-            Info: (infoJson == null) ? '' : _json.toStr(infoJson),
+            Info: (info == null) ? '' : _json.toStr(info),
         };
         return this.mItem.addRow(itemJson);  //會產生id
     }
@@ -145,7 +145,7 @@ class UiMany {
         //使用畫面上的設定ColsType
         //set info json first
         this.newInputNo++;
-        let infoJson = {
+        let info = {
             //Id: row.Id,
             InputType: EstrInputType.Text,
             Fid: '_fid' + this.newInputNo,		//前面加底線for註記為需要調整
@@ -157,53 +157,59 @@ class UiMany {
         };
 
         //add to mItem, 會產生id
-        return this._mItemAddRow(EstrItemType.Input, infoJson);
+        return this._mItemAddRow(EstrItemType.Input, info);
 
         //add to UI
-        //await this.uiView.addInputA(row.Id, infoJson);
+        //await this.uiView.addInputA(row.Id, info);
     }
+
     _addGroup() {
-        let infoJson = {
+        let info = {
             Title: '分群文字',
         };
 
         //add to mItem
-        return this._mItemAddRow(EstrItemType.Group, infoJson);
+        return this._mItemAddRow(EstrItemType.Group, info);
 
         //add to UI
-        //await this.uiView.addGroupA(row.Id, infoJson);
+        //await this.uiView.addGroupA(row.Id, info);
     }
+
+    _addChecks() {
+        //add to mItem
+        let info = {
+            Title: '多選欄位',
+            Cols: this.uiView.DefaultCols,
+            LabelFids: '欄位1,Check1,欄位2,Check2',
+            IsHori: false,  //true=水平, false=垂直
+        };
+        return this._mItemAddRow(EstrItemType.Checks, info);
+    }
+
     _addRow() {
         //使用畫面上的設定RowType
-        let infoJson = {
+        let info = {
             RowType: _iselect.get('RowType', _me.eform0),
         };
 
         //add to mItem
-        return this._mItemAddRow(EstrItemType.Row, infoJson);
+        return this._mItemAddRow(EstrItemType.Row, info);
 
         //add to UI
         //this.uiView.addRow(row.Id);
     }
+
     _addTable() {
         //add to mItem
-        let infoJson = {
+        let info = {
             Table: '_table',
             Title: '資料名稱',
             Heads: '欄位1,欄位2,欄位3,欄位4,欄位5',
         };
-        return this._mItemAddRow(EstrItemType.Table, infoJson);
+        return this._mItemAddRow(EstrItemType.Table, info);
 
         //add to UI
-        //this.uiView.addTable(row.Id, infoJson);
-    }
-
-    _addMultiBox() {
-        //add to mItem
-        let infoJson = {
-            IsHori: false,  //true=水平, false=垂直
-        };
-        return this._mItemAddRow(EstrItemType.MultiBox, infoJson);
+        //this.uiView.addTable(row.Id, info);
     }
 
     //todo
@@ -237,14 +243,14 @@ class UiMany {
             case EstrItemType.Group:
                 modal = this.ModalGroup;
                 break;
+            case EstrItemType.Checks:
+                modal = this.ModalChecks;
+                break;
             case EstrItemType.Table:
                 modal = this.ModalTable;
                 break;
             case EstrItemType.TabPage:
                 modal = this.ModalTabPage;
-                break;
-            case EstrItemType.MultiBox:
-                modal = this.ModalMultiBox;
                 break;
             default:
                 return;
@@ -292,33 +298,34 @@ class UiMany {
             case EstrItemType.Group:
                 modal = this.ModalGroup;
                 break;
+            case EstrItemType.Checks:
+                modal = this.ModalChecks;
+                break;
             case EstrItemType.Table:
                 modal = this.ModalTable;
                 break;
             case EstrItemType.TabPage:
                 modal = this.ModalTabPage;
                 break;
-            case EstrItemType.MultiBox:
-                modal = this.ModalMultiBox;
-                break;
         }
 
         //update ui first, Table必須先判斷, 所以傳入函數
-        var me = this;
         //ModalTable/ModalTabPage 時回傳ids(要刪除的id字串陣列, 不為null)
-        let infoJson = _form.toRow(modal);    //直接讀取modal內欄位, 內容為 Info 欄位
-        await this.uiView.InfoToItemA(infoJson, this.nowItem, function (ids) {
-            if (me.nowItemType == EstrItemType.Table && ids.length > 0) {
+        let me = this;
+        let info = _form.toRow(modal);    //直接讀取modal內欄位, 內容為 Info 欄位
+        await this.uiView.InfoToItemA(info, this.nowItem, function (ids) {
+            let idsLen = ids.length;
+            if (idsLen > 0) {
                 //刪除多筆
                 //alert(`ids=${ids}`);
-                for (let i = 0; i < ids.length; i++) {
+                for (let i = 0; i < idsLen; i++) {
                     me.mItem.deleteRow(ids[i], me.mItem.idToRowBox(ids[i]));
                 }
             }
 
-            //成功後 update mItem 裡面的 Info 欄位 only
+            //update mItem Info 欄位
             let rowBox = me.mItem.idToRowBox(me.nowItemId);
-            _form.loadRow(rowBox, { Info: _json.toStr(infoJson) });
+            _form.loadRow(rowBox, { Info: _json.toStr(info) });
 
             //hide modal
             _modal.hideO(modal);
