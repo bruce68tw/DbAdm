@@ -57,6 +57,13 @@
         margin: 4px 0; /* 與上下元素留一點距離 */
     }
 
+    /* drop 垂直線 */
+    .xu-drop-vline {
+        width: 0;
+        border-left: 2px solid #007bff;
+        margin: 0 4px;
+    }
+
     .xu-item {
         cursor: grab;
         border: 2px solid transparent;
@@ -68,8 +75,8 @@
             border-color: green;
         }
 
-    /* row 格式加框線、高度 */
-    .xu-row-col {
+    /* row/span 格式加框線、高度 */
+    .xu-row-col, .xu-span {
         min-height: 50px;
         border: 1px solid lightblue;
     }
@@ -164,6 +171,9 @@
                     <button type="button" class="btn xu-btn" data-type="I" Title='單一輸入欄位' draggable='true'>輸入欄位</button>
                     <button type="button" class="btn xu-btn" data-type="G" Title='分群文字標籤' draggable='true'>分群文字</button>
                     <button type="button" class="btn xu-btn" data-type="CS" Title='多個 CheckBox 輸入欄位' draggable='true'>多選欄位</button>
+                    <!--
+                    <button type="button" class="btn xu-btn" data-type="S" Title='並排容器' draggable='true'>並排容器</button>
+                    -->
                     <button type="button" class="btn xu-btn" data-type="R" Title='排版容器' draggable='true'>排版容器</button>
                     <button type="button" class="btn xu-btn" data-type="T" Title='維護多筆資料的表格' draggable='true'>多筆表格</button>
                 </div>
@@ -199,6 +209,7 @@
 -->
 <!-- drop位置的線狀註記 -->
 <div class="xu-drop-line d-none"></div>
+<div class="xu-drop-vline d-none"></div>
 
 <!-- uiItem template for eformItems, template不可使用 vc:格式!! -->
 <script id="tplItem" type="text/template">

@@ -106,6 +106,8 @@ class UiMany {
                 return this._addGroup();
             case EstrItemType.Checks:
                 return this._addChecks();
+            //case EstrItemType.Span:
+            //    return this._addSpan();
             case EstrItemType.Row:
                 return this._addRow();
             case EstrItemType.Table:
@@ -185,6 +187,17 @@ class UiMany {
         };
         return this._mItemAddRow(EstrItemType.Checks, info);
     }
+
+    /*
+    _addSpan() {
+        let info = {
+            //Title: '分群文字',
+        };
+
+        //add to mItem
+        return this._mItemAddRow(EstrItemType.Span, info);
+    }
+    */
 
     _addRow() {
         //使用畫面上的設定RowType
