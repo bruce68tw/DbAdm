@@ -151,6 +151,8 @@ class UiView {
 		//設定 dropInBox & 檢查 drop 位置是否合理
 		//判斷是否 drop 到 box 裡面
 		let dropInBox = false;
+		//let boxHasItem = false;
+		let boxAppendItem = false;
 		if (hasDropItem) {
 			//box 內容為空的情況
 			dropInBox =
@@ -165,25 +167,30 @@ class UiView {
 
 			//drop.boxType表示 "drag item" drop進去的box item, 沒有則為null
 			if (dropInBox) {
+				boxAppendItem = true;
 				drop.boxType = drop.itemType;
 				drop.boxId = this.itemGetId(dropItem);
 			} else {
-				//其他狀況但 dropInBox 可能為 true
+				//其他狀況(box不為空)但 dropInBox 可能為 true
 				//找外層 item
 				var box = this._getBox(dropItem);
 				drop.boxType = this.itemGetType(box);
 				drop.boxId = (box == null) ? '0' : this.itemGetId(box);
 				dropInBox = this._isBox(drop.boxType);
+				//boxHasItem = true;
 			}
 
 			//set instances
 			//this.isDropVline = (drop.boxType == EstrItemType.Span);
-		}
 
-		//for debug
-		console.log(`dragType=${drag.itemType}, dropType=${drop.itemType}, drop.boxType=${drop.boxType}, 
-			up css=${dropObj.attr('class')}, up item count=${dropObj.find(this.FtItem).length}, 
-			dropInBox=${dropInBox}`);
+			//for debug
+			console.log(`dragType=${drag.itemType}, dropType=${drop.itemType}, drop.boxType=${drop.boxType}, 
+				up css=${dropObj.attr('class')}, up item count=${dropObj.find(this.FtItem).length}, 
+				dropInBox=${dropInBox}`);
+		} else {
+			dropObj = this.Area;
+			boxAppendItem = true;
+		}
 
 		/*
 		 x軸: drop, y軸: drag 
@@ -299,16 +306,17 @@ class UiView {
 		let dropLine = this._getDropLine();
 		_obj.show(dropLine);
 
-		if (dropInBox || !hasDropItem) {
+		//if (dropInBox || !hasDropItem) {
+		if (boxAppendItem) {
 			dropObj.append(dropLine);
 		} else {
 			//判斷drop位置在item的上或下方
 			let dropRect = drop.item[0].getBoundingClientRect();
 			// 滑鼠在 drop.item 的相對位置
 			let mouseY = e.clientY;
-			let isUp = (mouseY < dropRect.top + (dropRect.height / 2));
+			let isUpPos = (mouseY < dropRect.top + (dropRect.height / 2));
 			//console.log(`dragRect.top=${dragRect.top}, drop pos=${dropRect.top + dropRect.height / 2}`);
-			if (isUp) {
+			if (isUpPos) {
 				dropLine.insertBefore(drop.item);
 			} else {
 				dropLine.insertAfter(drop.item);
@@ -551,11 +559,17 @@ class UiView {
 	}
 
 	async _newGroupA(id, info) {
-		if (_str.isEmpty(this.groupHtml))
-			this.groupHtml = await _ajax.getStrA('GetGroupHtml', { title: info.Title });
+		const Title = '_title_';
+		if (_str.isEmpty(this.groupHtml)) {
+			this.groupHtml = await _ajax.getStrA('GetGroupHtml', { title: Title });
+		}
+
+		//replace title
+		let html = this.groupHtml;
+		html = html.replace(Title, info.Title);
 
 		//render item
-		let item = $(this.groupHtml);
+		let item = $(html);
 		this._itemAddProp(id, item, EstrItemType.Group, info);
 		return item;
 	}
@@ -771,8 +785,11 @@ class UiView {
 		this._objSetGrid(input, cols[1]);
 
 		//fid -> placeholder
-		_input.getObj(info.Fid, input, info.InputType)
-			.attr('placeholder', info.Fid);
+		let inputType = info.InputType;
+		if (inputType != EstrInputType.Check && inputType != EstrInputType.Radio && inputType != EstrInputType.File) {
+			_input.getObj(info.Fid, input, info.InputType)
+				.attr('placeholder', info.Fid);
+		}
 
 		//show/hide required
 		_obj.showByStatus(item.find(this.FtReq), info.Required);

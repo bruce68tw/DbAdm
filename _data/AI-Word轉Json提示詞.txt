@@ -1,11 +1,11 @@
-把以下 word 輸入表單轉成 json, 並遵循以下*號規則：
+把以下 word 檔案的輸入表單轉成 json, 並遵循以下*號規則：
 *json 內容包括4種資料, 以 Item 稱呼, 每個 Item 有以下欄位：
-  1.Info：Item 的綜合資訊, 內容為包含多個欄位的 json 字串
-  2.ItemType：Item 種類, 有以下4種：
+  1.Info：Item 的綜合資訊, 格式為 json 
+  2.ItemType：Item 種類, 有以下 5 種(a-e)：
     a.輸入欄位：用 'I' 表示, Info欄位內容有：
 	  a1.Title：左邊的欄位名稱
 	  a2.Fid：對應存取的後端資料表欄位名稱, 命名參考後面的規則
-	  a3.Required：是否必填
+	  a3.Required：是否必填, 如果Title左側有*號, 則 Required 應為 true
 	  a4.Cols：grid排版, 例如 '2,3' 表示 Title 為 col-md-2, 輸入欄位為 col-md-3
 	  a5.ExtInfo：額外的欄位資訊
 	  a6.InputType：輸入欄位, 有以下幾種：
@@ -16,11 +16,17 @@
 	    b5.Radio：用 'radio' 表示, ExtInfo 欄位儲存選項清單, 以逗號分隔
 	    b6.下拉式：用 'select' 表示, ExtInfo 欄位儲存選項清單, 以逗號分隔
 	    b7.多行：用 'textarea' 表示
-    b.分群文字：用 'G' 表示, Info欄位內容有：
-	  a1.Title：顥示的文字
-    c.欄位容器：用 'R' 表示, 它是一個排版用途的 Row 容器, 包含2或3個欄位; 有ChildArray, Info欄位內容有：
+		b8.上傳檔案 : 用 'file' 表示
+    b.分群文字：用 'G' 表示, 用來表示某些欄位是同一群, Info欄位內容有：
+	  a1.Title：顯示的文字
+    c.多選欄位：用 'CS' 表示, 意思是 checkbox list, 這種欄位裡面全部都是 checkbox 欄位, 沒有例外, Info 欄位內容有：
+	  a1.Title：同 "輸入欄位"
+	  a2.Cols：同 "輸入欄位"
+	  a3.IsHori：true 表示多個 checkbox 以水平排列, false則表示垂直排列
+	  a4.LabelFids : 表示 checkbox 的後方 label 和資料庫欄位名稱, 以逗號分隔, 2個為一組 
+    d.欄位容器：用 'R' 表示, 它是一個排版用途的 Row 容器, 包含2或3個欄位; 有ChildArray, Info欄位內容有：
 	  a1.RowType：例如：'6,6' 表示有2個 Col, grid寬度都是6, 允許的值為 '6,6','4,4,4','8,4','4,8'
-    d.多筆表格：用 'T' 表示, 是一個table, 用來維護多筆資料, 有Childs, Info欄位內容有：
+    e.多筆表格：用 'T' 表示, 是一個table, 用來維護多筆資料, 有Childs, Info欄位內容有：
 	  a1.Table：要維護的資料表名稱
 	  a2.Title：功能名稱
 	  a3.Heads：表頭欄位清單, 以逗號分隔, 欄位數量和Childs Item數量相同
@@ -28,13 +34,15 @@
   4.ChildArray：是個2維陣列
 	  
 *排版規則為：
-1.Input 是其中一種 Item
-2.單行單一 Input 在左邊：不必使用 R Item 包起來，設定 Info.Cols="2,3"
-3.單行單一 Input 在右邊：使用 R Item，ChildArray[0]=null，ChildArray[1]=[Input]
-4.單行單一 textarea Input：若不在 R Item → Info.Cols="2,8"；若在 R Item → Info.Cols="4,8"
-5.單行 2 個 Item：使用 R Item，設定 RowType="6,6"，ChildArray[0]=[左Item]，ChildArray[1]=[右Item]
-6.單行 3 個 Item：使用 R Item，設定 RowType="4,4,4"
-7.R Item 的 Col 與 Info.Cols 對應規則：
+1.按照 word 檔內的欄位位置進行排版, 不要自做主張, 如果 word 檔內的欄位有提示 InputType 則使用, 否則請自行判斷 
+2.Input 是其中一種 Item
+3.如果是多個 checkbox 的多選欄位, 應該使用 InputType='CS', 並且根據畫面來判斷 IsHori
+4.單行單一 Input 在左邊：不必使用 R Item 包起來，設定 Info.Cols="2,3"
+5.單行單一 Input 在右邊：使用 R Item，ChildArray[0]=null，ChildArray[1]=[Input]
+6.單行單一 textarea Input：若不在 R Item → Info.Cols="2,8"；若在 R Item → Info.Cols="4,8"
+7.單行 2 個 Item：使用 R Item，設定 RowType="6,6"，ChildArray[0]=[左Item]，ChildArray[1]=[右Item]
+8.單行 3 個 Item：使用 R Item，設定 RowType="4,4,4"
+9.R Item 的 Col 與 Info.Cols 對應規則：
   a.若該欄位寬度=4或8：Info.Cols="6,6"
   b.若該欄位寬度=6：Info.Cols="4,6"
 

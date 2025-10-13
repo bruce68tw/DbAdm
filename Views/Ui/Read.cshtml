@@ -273,6 +273,31 @@
     </div>
 </div>
 
+<!-- modal: Checks -->
+<div id="modalChecks" class="modal fade x-modal" role="dialog">
+    <div class="modal-dialog modal-lg x-vh15">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">設定多欄容器</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal x-form pt-1 pe-5">
+                    <vc:xi-hide dto='new() { Fid = "Id" }' />
+                    <vc:xi-text dto='new() { Title = "標題", Fid = "Title", Required = true, Cols = "4,4" }' />
+                    <vc:xi-text dto='new() { Title = "排版格子數", Fid = "Cols", Required = true, Cols = "4,4" }' />
+                    <vc:xi-check dto='new() { Title = "欄位水平排列", Fid = "IsHori", Label = "是", Cols = "4,4" }' />
+                    <vc:xi-textarea dto='new() { Title = "名稱與Id清單", Fid = "LabelFids", Required = true, Cols = "4,4" }' />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- modal: 多筆table -->
 <div id="modalTable" class="modal fade x-modal" role="dialog">
     <div class="modal-dialog modal-lg x-vh15">
@@ -287,31 +312,6 @@
                     <vc:xi-text dto='new() { Title = "資料表", Fid = "Table", MaxLen = 30, Cols = "4,4", Required = true }' />
                     <vc:xi-text dto='new() { Title = "資料名稱", Fid = "Title", MaxLen = 30, Cols = "4,4", Required = true }' />
                     <vc:xi-text dto='new() { Title = "標題欄位", Fid = "Heads", MaxLen = 100, Cols = "4,8", Required = true, TitleTip = "逗號分隔" }' />
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
-                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- modal: Checks -->
-<div id="modalChecks" class="modal fade x-modal" role="dialog">
-    <div class="modal-dialog modal-lg x-vh15">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">設定多欄容器</div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal x-form pt-1 pe-5">
-                    <vc:xi-hide dto='new() { Fid = "Id" }' />
-                    <vc:xi-text dto='new() { Title = "排版格子數", Fid = "Cols", Required = true, Cols = "4,4" }' />
-                    <vc:xi-text dto='new() { Title = "標題", Fid = "Title", Required = true, Cols = "4,4" }' />
-                    <vc:xi-check dto='new() { Title = "欄位水平排列", Fid = "IsHori", Label = "是", Cols = "4,4" }' />
-                    <vc:xi-textarea dto='new() { Title = "名稱與Id清單", Fid = "LabelFids", Required = true, Cols = "4,4" }' />
                 </form>
             </div>
             <div class="modal-footer">

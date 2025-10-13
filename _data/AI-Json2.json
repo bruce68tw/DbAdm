@@ -1,0 +1,819 @@
+[
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "受理日期",
+            "Fid": "AcptDate",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "date"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "受理人",
+            "Fid": "Acptr",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "序號",
+            "Fid": "SeqNo",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "個案來源",
+            "Fid": "CaseSrc",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "select",
+            "ExtInfo": "select2"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "CS",
+    "Info": {
+      "Title": "檢附篩檢結果附件",
+      "Cols": "2,10",
+      "IsHori": false,
+      "LabelFids": "評估報告書,EvalRpt,診斷證明書,DiagCert,發展檢核表,DevChkList,其他&說明：,OtherDesc"
+    }
+  },
+  {
+    "ItemType": "CS",
+    "Info": {
+      "Title": "申請服務項目(可複選)",
+      "Cols": "2,10",
+      "IsHori": true,
+      "LabelFids": "1.日托,DayCare,2.時段療育,SectTherapy,3.其他&說明：,OtherSrvDesc"
+    }
+  },
+  {
+    "ItemType": "G",
+    "Info": {
+      "Title": "基本資料"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "姓名",
+            "Fid": "Name",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "性別",
+            "Fid": "Gender",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "radio",
+            "ExtInfo": "男,女"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "出生日期",
+            "Fid": "BirthDate",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "date"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "身分證字號",
+            "Fid": "IdNo",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "障礙類別",
+            "Fid": "DisabType",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "select"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "障礙類別特殊事項說明",
+            "Fid": "DisabSpecDesc",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "福利別",
+            "Fid": "WelfareType",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "select"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "經濟來源",
+            "Fid": "EconSrc",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "select"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "經濟補助",
+            "Fid": "EconSubsid",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "select"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "戶籍地址",
+            "Fid": "RegAddr",
+            "Required": true,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "現住地址[同上]",
+      "Fid": "CurrAddr",
+      "Required": true,
+      "Cols": "2,8",
+      "InputType": "text"
+    }
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "通訊地址[同上]",
+      "Fid": "CommAddr",
+      "Required": true,
+      "Cols": "2,8",
+      "InputType": "text"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "家庭型態",
+            "Fid": "FamType",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "select"
+          }
+        }
+      ],
+      []
+    ]
+  },
+  {
+    "ItemType": "CS",
+    "Info": {
+      "Title": "健康狀況",
+      "Cols": "2,10",
+      "IsHori": false,
+      "LabelFids": "無,None,癲癇,Epilepsy,氣喘(變天跟重感冒),Asthma,一般性貧血,Anemia,蠶豆症,Favism,過敏：,AllergyDesc,齲齒(蛀牙),Caries,聽損,HearLoss,弱視,Amblyopia,重大傷病：,MajIllnessDesc,罕見疾病：,RareDiseaseDesc,其他&說明：,OtherHlthDesc"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "重大傷病",
+            "Fid": "MajIllness",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "radio",
+            "ExtInfo": "否,是"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "家系圖(原始)",
+            "Fid": "FamGenogram",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "file"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "G",
+    "Info": {
+      "Title": "父親資料"
+    }
+  },
+  {
+    "ItemType": "CS",
+    "Info": {
+      "Title": "身份(可複選)",
+      "Cols": "2,10",
+      "IsHori": true,
+      "LabelFids": "監護人,Guardian,聯絡人,Contact,主要照顧人,MainCaregiver,其他&說明：,OtherRoleDesc"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "姓名",
+            "Fid": "FatName",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "出生日期",
+            "Fid": "FatBirthDate",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "date"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "連絡電話(公司)",
+            "Fid": "FatCompTel",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "家裡電話",
+            "Fid": "FatHomeTel",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "手機號碼",
+            "Fid": "FatMobile",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "電子信箱",
+            "Fid": "FatEmail",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "聯絡地址",
+      "Fid": "FatCommAddr",
+      "Required": false,
+      "Cols": "2,8",
+      "InputType": "text"
+    }
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "其他聯絡方式",
+      "Fid": "FatOtherComm",
+      "Required": false,
+      "Cols": "2,8",
+      "InputType": "textarea"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "方便聯絡的時間",
+            "Fid": "FatCommTime",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "對通報的態度",
+            "Fid": "FatNotifAttit",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "select"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "G",
+    "Info": {
+      "Title": "母親資料"
+    }
+  },
+  {
+    "ItemType": "CS",
+    "Info": {
+      "Title": "身份(可複選)",
+      "Cols": "2,10",
+      "IsHori": true,
+      "LabelFids": "監護人,Guardian,聯絡人,Contact,主要照顧人,MainCaregiver,其他&說明：,OtherRoleDesc"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "姓名",
+            "Fid": "MotName",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "出生日期",
+            "Fid": "MotBirthDate",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "date"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "連絡電話(公司)",
+            "Fid": "MotCompTel",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "家裡電話",
+            "Fid": "MotHomeTel",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "手機號碼",
+            "Fid": "MotMobile",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "電子信箱",
+            "Fid": "MotEmail",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "聯絡地址",
+      "Fid": "MotCommAddr",
+      "Required": false,
+      "Cols": "2,8",
+      "InputType": "text"
+    }
+  },
+  {
+    "ItemType": "I",
+    "Info": {
+      "Title": "其他聯絡方式",
+      "Fid": "MotOtherComm",
+      "Required": false,
+      "Cols": "2,8",
+      "InputType": "textarea"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "方便聯絡的時間",
+            "Fid": "MotCommTime",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "對通報的態度",
+            "Fid": "MotNotifAttit",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "select"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "G",
+    "Info": {
+      "Title": "其他"
+    }
+  },
+  {
+    "ItemType": "CS",
+    "Info": {
+      "Title": "療育資源使用狀況",
+      "Cols": "2,10",
+      "IsHori": false,
+      "LabelFids": "未使用任何療育資源,NoTherapyRes,教育資源：說明：,EduResDesc,醫療資源單位：說明：,MedResUnitDesc,社會福利資源：說明：,SocWelfResDesc,療育醫院：說明：,TherapyHospDesc"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "平均一週數次：",
+            "Fid": "AvgTimesPerWeek",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "select"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "就學狀況",
+            "Fid": "SchoolStatus",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "select"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "G",
+    "Info": {
+      "Title": "疑似發展遲緩兒童通報回覆(本欄由受理單位填寫)"
+    }
+  },
+  {
+    "ItemType": "CS",
+    "Info": {
+      "Title": "服務情形",
+      "Cols": "2,10",
+      "IsHori": true,
+      "LabelFids": "已收到通報單,RcvNotif,已提供服務,SrvProvided"
+    }
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "服務概況",
+            "Fid": "SrvStatus",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "select"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "受理單位",
+            "Fid": "AcptUnit",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "填表人",
+            "Fid": "Filler",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "督導",
+            "Fid": "Supervisor",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "ItemType": "R",
+    "Info": {
+      "RowType": "6,6"
+    },
+    "ChildArray": [
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "電話",
+            "Fid": "Phone",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ],
+      [
+        {
+          "ItemType": "I",
+          "Info": {
+            "Title": "電子信箱",
+            "Fid": "Email",
+            "Required": false,
+            "Cols": "4,6",
+            "InputType": "text"
+          }
+        }
+      ]
+    ]
+  }
+]
