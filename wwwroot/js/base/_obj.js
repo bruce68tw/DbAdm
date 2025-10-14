@@ -121,7 +121,8 @@ var _obj = {
     },
 
     getData: function (obj, fid) {
-        return obj.data(fid);
+        //return obj.data(fid); //傳回json
+        return obj.attr('data-' + fid); //傳回字串!!
     },
 
     /**

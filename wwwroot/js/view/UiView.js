@@ -560,9 +560,8 @@ class UiView {
 
 	async _newGroupA(id, info) {
 		const Title = '_title_';
-		if (_str.isEmpty(this.groupHtml)) {
+		if (_str.isEmpty(this.groupHtml))
 			this.groupHtml = await _ajax.getStrA('GetGroupHtml', { title: Title });
-		}
 
 		//replace title
 		let html = this.groupHtml;
@@ -575,32 +574,39 @@ class UiView {
 	}
 
 	_newChecks(id, info) {
-		let clsCol = this.ClsRowCol;
-		let cols = info.Cols.split(',');
-		//here
+		let html = `<div class="row py-2">${this._htmlChecks(id, info)}</div>`;
+		let item = $(html);
+		this._itemAddProp(id, item, EstrItemType.Checks, info);
+		return item;
+	}
+
+	//get checks 內部 html only
+	//called by _newChecks, onModalOk
+	_htmlChecks(id, info) {
+		//寫入 label, fid list
 		let fids = info.LabelFids.split(',');
 		let html = '';
 		for (let i = 0; i < fids.length; i += 2) {
 			let fid = fids[i + 1];
 			html += `
 <label class="xi-check">
-    <input data-fid="${fid}" name="${fid}" data-edit="*" checked="" type="checkbox" data-type="check" data-value="1">${fids[i]}
+    <input data-fid="${fid}" name="${fid}" data-edit="*" checked="" type="checkbox" data-type="check" data-value="">${fids[i]}
     <span class="xi-cspan"></span>
 </label>
 `;
 		}
 
+		let clsCol = this.ClsRowCol;
+		let cols = info.Cols.split(',');
+		let cls = info.IsHori ? 'x-hbox' : 'x-vbox';
 		html = `
-<div class="row py-2">
-	<div class="col-md-${cols[0]} x-label">${info.Title}</div>
-	<div class="col-md-${cols[1]} x-input">
-		${html}
+<div class="col-md-${cols[0]} x-label">${info.Title}</div>
+<div class="col-md-${cols[1]} x-input ${cls}">
+	${html}
 </div>
 `;
 		//render item
-		let item = $(html);
-		this._itemAddProp(id, item, EstrItemType.Checks, info);
-		return item;
+		return html;
 	}
 
 	/*
@@ -734,6 +740,7 @@ class UiView {
 	//更新畫面上的可視部分
 	//called by UiMany onModalOk(修改item內容)
 	async InfoToItemA(info, item, fnCallback) {
+		let id;
 		let callback = true;
 		switch (this.itemGetType(item)) {
 			case EstrItemType.Input:
@@ -746,7 +753,11 @@ class UiView {
 			case EstrItemType.Checks:
 				//todo
 				callback = false;	//必須先判斷
-				this._infoToTable(info, item, fnCallback);
+				id = '';	//todo
+				info.LabelFids = _str.replaceAll(info.LabelFids, '\n', ',');	//斷行改回逗號
+				item.html(this._htmlChecks(id, info));	//改變內部 html
+				//this._itemAddProp(id, item, EstrItemType.Checks, info);
+				//this._infoToTable(info, item, fnCallback);
 				break;
 			/*
 			case EstrItemType.Span:
@@ -799,6 +810,8 @@ class UiView {
 
 		//show/hide inputNote
 		this._noteSetStatus(item.find(this.FtInputNote));
+
+		//case of radio 欄位
 
 		/* todo: temp remark
 		//如果改變 inputType, 必須更新item 的x-input內容
@@ -853,7 +866,7 @@ class UiView {
 			//找右側n個td裡面的data-id, 包含子item
 			let tdList = bodyBox.find('td').slice(addLen);
 			ids = tdList.find('[data-id]').map(function () {
-				return $(this).data('id');
+				return $(this).data('id');	//todo
 			}).get();
 
 			//remove th & td
@@ -1008,16 +1021,18 @@ class UiView {
 	//get item type, also called outside
 	itemGetType(item) {
 		return _obj.isEmpty(item)
-			? null : item.data(this.DataItemType);
+			? null : _obj.getData(item, this.DataItemType);
 	}
 
 	//also called by UiMany
 	itemGetId(item) {
-		return item.data(this.DataId);
+		//return item.data(this.DataId);
+		return _obj.getData(item, this.DataId);
 	}
 
 	itemGetInfo(item) {
-		return item.data(this.DataInfo);
+		//return item.data(this.DataInfo);
+		return _str.toJson(_obj.getData(item, this.DataInfo));
 	}
 
 	itemSetInfo(item, info) {

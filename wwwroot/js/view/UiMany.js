@@ -248,6 +248,7 @@ class UiMany {
         if (!this._menuStatus())
             return;
 
+        let info = this.uiView.itemGetInfo(this.nowItem);
         let modal;
         switch (this.nowItemType) {
             case EstrItemType.Input:
@@ -258,6 +259,13 @@ class UiMany {
                 break;
             case EstrItemType.Checks:
                 modal = this.ModalChecks;
+                //LabelFids 分行, 移除尾端逗號
+                let result = '';
+                let fids = info.LabelFids.split(',');
+                for (let i=0; i<fids.length; i+=2) {
+                    result += `${fids[i]},${fids[i + 1]}\n`;
+                }
+                info.LabelFids = result.trimEnd();
                 break;
             case EstrItemType.Table:
                 modal = this.ModalTable;
@@ -269,15 +277,9 @@ class UiMany {
                 return;
         }
 
-        //load info to modal
-        //var rowBox = this.mItem.idToRowBox(this.nowItemId);
-        //var info = _str.toJson(_itext.get('Info', rowBox));
-        let info = this.uiView.itemGetInfo(this.nowItem);
+        //load info to modal & show
         _form.loadRow(modal, info);
-
-        //show modal
         _modal.showO(modal);
-
     }
 
     onMenuDelete() {

@@ -321,6 +321,20 @@ body {
     */
 }
 
+/* box 內容水平排列 */
+.x-hbox {
+    display: flex;
+    flex-wrap: wrap; /* 多餘元素自動換行 */
+    gap: 6px;      /* 元素之間間距 */
+}
+
+/* box 內容垂直排列 */
+.x-vbox {
+    display: flex;
+    flex-direction: column; /* 元素垂直排列 */
+    gap: 2px;
+}
+
 .x-on {
     opacity: 1;
     transition: opacity 0.5s ease;
