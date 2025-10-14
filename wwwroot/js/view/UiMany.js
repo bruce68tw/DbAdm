@@ -329,7 +329,7 @@ class UiMany {
         let me = this;
         let info = _form.toRow(modal);    //直接讀取modal內欄位, 內容為 Info 欄位
         await this.uiView.InfoToItemA(info, this.nowItem, function (ids) {
-            let idsLen = ids.length;
+            let idsLen = (ids == null) ? 0 : ids.length;
             if (idsLen > 0) {
                 //刪除多筆
                 //alert(`ids=${ids}`);

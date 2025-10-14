@@ -811,7 +811,21 @@ class UiView {
 		//show/hide inputNote
 		this._noteSetStatus(item.find(this.FtInputNote));
 
-		//case of radio 欄位
+		//case of radio 欄位: 設定label by info.ExtInfo
+		if (inputType == EstrInputType.Radio && _str.notEmpty(info.ExtInfo)) {
+			let html = '';
+			let fid = info.Fid;
+			let values = info.ExtInfo.split(',');
+			for (let i=0; i<values.length; i++) {
+				html += `
+<label class="xi-check">
+	<input type="radio" data-fid="${fid}" name="${fid}" data-edit="*" data-value="${i+1}" data-type="radio">${values[i]}
+	<span class="xi-rspan"></span>
+</label>
+`;
+			}
+			item.find('.xi-box').html(html);
+		}
 
 		/* todo: temp remark
 		//如果改變 inputType, 必須更新item 的x-input內容
