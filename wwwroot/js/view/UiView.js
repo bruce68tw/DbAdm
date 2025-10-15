@@ -598,7 +598,7 @@ class UiView {
 
 		let clsCol = this.ClsRowCol;
 		let cols = info.Cols.split(',');
-		let cls = info.IsHori ? 'x-hbox' : 'x-vbox';
+		let cls = _var.toBool(info.IsHori) ? 'x-hbox' : 'x-vbox';
 		html = `
 <div class="col-md-${cols[0]} x-label">${info.Title}</div>
 <div class="col-md-${cols[1]} x-input ${cls}">
@@ -752,7 +752,7 @@ class UiView {
 				break;
 			case EstrItemType.Checks:
 				//todo
-				callback = false;	//必須先判斷
+				//callback = false;	//必須先判斷
 				id = '';	//todo
 				info.LabelFids = _str.replaceAll(info.LabelFids, '\n', ',');	//斷行改回逗號
 				item.html(this._htmlChecks(id, info));	//改變內部 html
