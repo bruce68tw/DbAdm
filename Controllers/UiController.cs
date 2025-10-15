@@ -5,7 +5,6 @@ using BaseApi.Attributes;
 using BaseApi.Controllers;
 using BaseWeb.Models;
 using BaseWeb.Services;
-using DbAdm.Enums;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
 

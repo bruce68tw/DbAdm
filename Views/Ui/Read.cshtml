@@ -154,16 +154,15 @@
         <!-- eform 在 uiMany 下面, 使用 z-index無效, 改用 width -->
         <form id='eform' class='x-form x-w100 me-2 vh-100'>
             <vc:xi-hide dto='new() { Fid = "Id" }' />
-            <div class="xu-label">資料表</div>
-            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 20, Required = true, ClsBox = "xu-input w-150" }' />
-            <div class="xu-label">功能名稱</div>
+            <div class="xu-label">專案</div>
+            <vc:xi-select dto='new() { Fid = "ProjectId", Rows = ViewBag.Projects, AddEmpty = false, ClsBox = "xu-input w-150" }' />
+            <div class="xu-label">畫面代碼</div>
+            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 30, Required = true, ClsBox = "xu-input w-150" }' />
+            <div class="xu-label">畫面名稱</div>
             <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, ClsBox = "xu-input w-150" }' />
-            @*
-            <div class="xu-label">欄位格式</div>
-            <vc:xi-select dto='new() { Fid = "ColsType", Rows = colsTypes, AddEmpty = false, ClsBox = "xu-input w-150" }' />
-            *@
-            <div class="xu-label">欄位容器格式</div>
-            <vc:xi-select dto='new() { Fid = "RowType", Rows = rowTypes, AddEmpty = false, ClsBox = "xu-input w-150" }' />
+            @* 不存 DB *@
+            <div class="xu-label">欄位容器</div>
+            <vc:xi-select dto='new() { Fid = "_RowType", Rows = rowTypes, AddEmpty = false, ClsBox = "xu-input w-150" }' />
 
             <!-- add outer div for validate msg layout -->
             <div>
@@ -216,7 +215,7 @@
     <div class="xd-tr">
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Id" })
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "UiId" })
-        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "BoxId" })
+        @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "UpId" })
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "ItemType" })
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Info" })
         @await Component.InvokeAsync("XiHide", new XiHideDto() { Fid = "Sort" })

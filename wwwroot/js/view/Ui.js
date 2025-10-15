@@ -138,8 +138,8 @@ var _me = {
 
     //#region mItem/mLine custom function
     //load items
-    mItem_loadRows: function (rows) {
-        _me.uiMany.loadRows(rows);
+    mItem_loadRows: async function (rows) {
+        await _me.uiMany.loadRowsA(rows);
     },
 
     //getUpdJson

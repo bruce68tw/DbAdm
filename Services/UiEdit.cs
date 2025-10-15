@@ -13,25 +13,32 @@ namespace DbAdm.Services
             {                
                 Table = "dbo.[Ui]",
                 PkeyFid = "Id",
-                Col4 = null,
-
-                ReadSql = $@"
-select c.*,
-    CreatorName=u.Name,
-    p.Code as ProjectCode, t.Code as TableCode,    
-    {_Fun.FidUser}=u.Id, {_Fun.FidDept}=u.DeptId
-from dbo.[Ui] c
-join dbo.[Table] t on t.Id=c.TableId
-join dbo.Project p on p.Id=t.ProjectId
-left join dbo.XpUser u on p.Creator=u.Id
-where c.Id=@Id
-",
+                Col4 = ["Creator", "Created"],
                 Items = [
                     new() { Fid = "Id" },
+                    new() { Fid = "ProjectId" },
                     new() { Fid = "Code" },
                     new() { Fid = "Name" },
-                    new() { Fid = "Status" },
+                    new() { Fid = "Status", Value = 1 },
                     new() { Fid = "Note" },
+                ],
+                Childs = [
+                    new()
+                    {
+                        Table = "dbo.UiItem",
+                        PkeyFid = "Id",
+                        FkeyFid = "UiId",
+                        OrderBy = "Sort",
+                        Col4 = null,
+                        Items = [
+                            new() { Fid = "Id" },
+                            new() { Fid = "UiId" },
+                            new() { Fid = "UpId" },
+                            new() { Fid = "ItemType" },
+                            new() { Fid = "Info" },
+                            new() { Fid = "Sort" },
+                        ],
+                    },
                 ],
             };
         }

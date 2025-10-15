@@ -202,7 +202,7 @@ class UiMany {
     _addRow() {
         //使用畫面上的設定RowType
         let info = {
-            RowType: _iselect.get('RowType', _me.eform0),
+            RowType: _iselect.get('_RowType', _me.eform0),
         };
 
         //add to mItem
@@ -374,9 +374,11 @@ class UiMany {
 
     //(by AI) rows to jsons
     _rowsToJsons(rows) {
-        const map = new Map();
+        if (rows == null || rows.length == 0)
+            return null;
 
         // 初始化每個節點，加上 children 陣列
+        const map = new Map();
         rows.forEach(r => map.set(r.Id, { ...r, children: [] }));
 
         const jsons = [];
