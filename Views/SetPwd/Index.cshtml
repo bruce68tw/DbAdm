@@ -27,9 +27,9 @@
 <div class="x-prog">
     <div id="divEdit">
         <form class='x-form' id='eform'>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "舊密碼", Fid = "OldPwd", MaxLen = 30, IsPwd = true })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "新密碼", Fid = "NewPwd", MaxLen = 30, Required = true, IsPwd = true })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "確認新密碼", Fid = "NewPwd2", MaxLen = 30, Required = true, IsPwd = true })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "舊密碼", Fid = "OldPwd", MaxLen = 30, IsPwd = true })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "新密碼", Fid = "NewPwd", MaxLen = 30, Required = true, IsPwd = true })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "確認新密碼", Fid = "NewPwd2", MaxLen = 30, Required = true, IsPwd = true })
         </form>
     </div>
 </div>

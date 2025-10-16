@@ -136,6 +136,11 @@ var _me = {
         });
     },
 
+    //設定 uiItem._Id2=Id, 後端利用此欄位設定 uiItem.UpId
+    fnWhenSave: function (fun, json) {
+
+    },
+
     //#region mItem/mLine custom function
     //load items
     mItem_loadRows: async function (rows) {

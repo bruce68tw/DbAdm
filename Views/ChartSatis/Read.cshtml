@@ -72,19 +72,19 @@ new Chart(document.getElementById("chart"), {
     <div id="divRead">
         <form id='formRead' class='x-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, FnOnChange = "_me.onChgProject" })
+                @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, FnOnChange = "_me.onChgProject" })
                 <span class='col-md-3 x-find-tbar'>
                     <button type='button' class='btn btn-primary' data-onclick='_me.onFind'>查詢<i class='ico-find'></i></button>
                 </span>
             </div>
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Rows = ViewBag.Users })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Rows = ViewBag.Users })
             <div class="row">
                 <div class="col-md-2 x-label">填寫時間</div>
                 <div class="col-md-10 x-input">
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true })
+                    @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "Created", InRow = true })
                     <span>～</span>
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created2", InRow = true })
+                    @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "Created2", InRow = true })
                 </div>
             </div>
         </form>

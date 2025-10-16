@@ -37,10 +37,10 @@
     <div id="divRead">
 		<form id='formRead' class='x-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
+                @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "功能名稱", Fid = "Name", MaxLen = 30 })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "功能名稱", Fid = "Name", MaxLen = 30 })
         </form>
 
 		<div class='x-btns-box'>

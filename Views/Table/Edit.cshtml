@@ -1,14 +1,14 @@
 ﻿<form id='eform' class='x-form'>
-    @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-    @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true })
-    @await Component.InvokeAsync("XiText", new XiTextDto { Title = "資料表", Fid = "Code", MaxLen = 100, Required = true })
-    @await Component.InvokeAsync("XiText", new XiTextDto { Title = "資料表名稱", Fid = "Name", MaxLen = 30 })
-    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "異動記錄", Fid = "TranLog", Value = "1", Label = "是" })
-    @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "資料狀態", Fid = "Status", IsCheck = true, Value = "1", Label = "啟用" })
+    @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
+    @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true })
+    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "資料表", Fid = "Code", MaxLen = 100, Required = true })
+    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "資料表名稱", Fid = "Name", MaxLen = 30 })
+    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "異動記錄", Fid = "TranLog", Value = "1", Label = "是" })
+    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "資料狀態", Fid = "Status", IsCheck = true, Value = "1", Label = "啟用" })
 
     <div class="row">
-        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = "建檔人員", Fid = "CreatorName", InRow = true, Cols = "2,3" })
-        @await Component.InvokeAsync("XiRead", new XiReadDto { Title = "建檔時間", Fid = "Created", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
+        @await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Title = "建檔人員", Fid = "CreatorName", InRow = true, Cols = "2,3" })
+        @await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Title = "建檔時間", Fid = "Created", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
     </div>
 </form>
 
@@ -38,15 +38,15 @@
 
 <script id="tplCol" type="text/template">
     <tr>
-        @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Code", Value = "{{Code}}", MaxLen = 100, Required = true })</td>
-        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Name", Value = "{{Name}}", MaxLen = 30 })</td>
-        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DataType", Value = "{{DataType}}", MaxLen = 20, Required = true })</td>
-        <td class="text-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Nullable", Required = false, Value = "1" })</td>
-        <td width="120px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "DefaultValue", Value = "{{DefaultValue}}", MaxLen = 100 })</td>
-        <td width="80px">@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Sort", Value = "{{Sort}}", MaxLen = 3, Required = false, InputAttr = "width:50px", ClsBox = "x-center" })</td>
-        <td>@await Component.InvokeAsync("XiText", new XiTextDto { Fid = "Note", Value = "{{Note}}", MaxLen = 100 })</td>
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
+        <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Code", Value = "{{Code}}", MaxLen = 100, Required = true })</td>
+        <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Name", Value = "{{Name}}", MaxLen = 30 })</td>
+        <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "DataType", Value = "{{DataType}}", MaxLen = 20, Required = true })</td>
+        <td class="text-center">@await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "Nullable", Required = false, Value = "1" })</td>
+        <td width="120px">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "DefaultValue", Value = "{{DefaultValue}}", MaxLen = 100 })</td>
+        <td width="80px">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Sort", Value = "{{Sort}}", MaxLen = 3, Required = false, InputAttr = "width:50px", ClsBox = "x-center" })</td>
+        <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Note", Value = "{{Note}}", MaxLen = 100 })</td>
         <td class="text-center">@await Component.InvokeAsync("XgDeleteRow", "_me.mCol.onDeleteRow")</td>
-        <td class="text-center">@await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = "Status", IsCheck = true, Value = "1" })</td>
+        <td class="text-center">@await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "Status", IsCheck = true, Value = "1" })</td>
     </tr>
 </script>

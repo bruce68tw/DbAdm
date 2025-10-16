@@ -2,9 +2,11 @@
  * crud edit function
  *   合併 _edit.js
  * 寫入 _me properties:
- *   fnAfterSwap:
- *   fnAfterOpenEdit:
- *   fnUpdateOrViewA: see _updateOrViewA
+ *   //?? fnAfterSwap:
+ *   void fnAfterOpenEdit(fun, json):
+ *   bool fnUpdateOrViewA(fun, key): 自訂 GetUpdJson/GetViewJson 函數, see _updateOrViewA
+ *   string fnWhenSave(fun, json): return error msg
+ * 
  *   divEdit:
  *   //hasEdit:
  *   edit0:
@@ -713,6 +715,7 @@ function CrudE(edits) {
             return;
         }
 
+        /*
         //call fnWhenSave if existed
         var edit0 = this.edit0;
         if (_fun.hasValue(edit0.fnWhenSave)) {
@@ -722,13 +725,24 @@ function CrudE(edits) {
                 return;
             }
         }
+        */
 
-        //get saving row
+        //get saving json
         var formData = new FormData();  //for upload files if need
-        var row = this._getUpdJson(formData);
-        if (_json.isEmpty(row)) {
+        var json = this._getUpdJson(formData);
+        if (_json.isEmpty(json)) {
             _tool.msg(_BR.SaveNone);
             return;
+        }
+
+        //改成傳入json
+        //call fnWhenSave if existed
+        if (_fun.hasValue(_me.fnWhenSave)) {
+            var error = _me.fnWhenSave(this._nowFun, json);
+            if (_str.notEmpty(error)) {
+                _tool.msg(error);
+                return;
+            }
         }
 
         //save rows, call backend Save action
@@ -739,7 +753,7 @@ function CrudE(edits) {
         if (this._hasFile()) {
             //has files, use formData
             data = formData;
-            data.append('json', _json.toStr(row));
+            data.append('json', _json.toStr(json));
             if (!isNew)
                 data.append('key', edit0.getKey());
 
@@ -748,7 +762,7 @@ function CrudE(edits) {
             });
         } else {
             //no file, use json
-            data = { json: _json.toStr(row) };
+            data = { json: _json.toStr(json) };
             if (!isNew)
                 data.key = edit0.getKey();
 

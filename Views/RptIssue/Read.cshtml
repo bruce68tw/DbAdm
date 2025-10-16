@@ -45,16 +45,16 @@
     <div id="divRead">
 		<form id='formRead' class='x-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true, FnOnChange = "_me.onChgProject" })
+                @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true, FnOnChange = "_me.onChgProject" })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料種類", Fid = "IssueType", Rows = ViewBag.IssueTypes })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "資料種類", Fid = "IssueType", Rows = ViewBag.IssueTypes })
             <div class="row">
                 <div class="col-md-2 x-label">工作日期</div>
                 <div class="col-md-10 x-input">
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate", InRow = true })
+                    @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "WorkDate", InRow = true })
                     <span>～</span>
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate2", InRow = true })
+                    @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "WorkDate2", InRow = true })
                 </div>
             </div>
         </form>

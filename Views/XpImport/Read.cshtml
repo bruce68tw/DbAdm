@@ -71,7 +71,7 @@
     <div id="divRead">
         <form id='formRead' class='x-form'>
             <div class="row">
-                @*await Component.InvokeAsync("XiText", new XiTextDto { title = R["FileName"].Value, fid = "FileName", inRow = true })*@
+                @*await Component.InvokeAsync(XiEstr.Text, new XiTextDto { title = R["FileName"].Value, fid = "FileName", inRow = true })*@
                 <vc:xi-text dto="@(new XiTextDto { Title = "匯入檔名", Fid = "FileName", InRow = true })"></vc:xi-text>
                 @await Component.InvokeAsync("XgFindTbar")
             </div>

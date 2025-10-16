@@ -1,9 +1,11 @@
 ﻿/**
  * 改為非靜態類別
- * trigger _me.fnAfterFind(result) if any
  * crud read function
  * main for admin Web system
  * this properties:
+ *   fnAfterFind(result):
+ *   void fnAfterSwap(toRead):
+ * 
  *   //divEdit
  *   divRead
  *   //hasRead

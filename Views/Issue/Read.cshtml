@@ -253,34 +253,34 @@
     <div id="divRead">
 		<form id='formRead' class='x-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, FnOnChange = "_me.onChgProject", EventArgs = "0" })
+                @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, FnOnChange = "_me.onChgProject", EventArgs = "0" })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "工作標題", Fid = "Title" })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料種類", Fid = "IssueType", Rows = ViewBag.IssueTypes })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "已結案", Fid = "IsFinish", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "工作標題", Fid = "Title" })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "資料種類", Fid = "IssueType", Rows = ViewBag.IssueTypes })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "已結案", Fid = "IsFinish", Rows = ViewBag.YesNos })
             @* 底線欄位 _IsWatch 在後端用程式調整sql *@
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "已追踪", Fid = "_IsWatch", Rows = ViewBag.YesNos })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "有回報人", Fid = "_HasRptUser", Rows = ViewBag.YesNos })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "有收問卷", Fid = "_HasSurvey", Rows = ViewBag.YesNos })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "回報人員", Fid = "RptUser" })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Rows = ViewBag.Users })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "交辦主管", Fid = "FromMgr", Rows = ViewBag.Users })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "已追踪", Fid = "_IsWatch", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "有回報人", Fid = "_HasRptUser", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "有收問卷", Fid = "_HasSurvey", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "回報人員", Fid = "RptUser" })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Rows = ViewBag.Users })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "交辦主管", Fid = "FromMgr", Rows = ViewBag.Users })
             <div class="row">
                 <div class="col-md-2 x-label">工作日期</div>
                 <div class="col-md-10 x-input">
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate", InRow = true })
+                    @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "WorkDate", InRow = true })
                     <span>～</span>
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "WorkDate2", InRow = true })
+                    @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "WorkDate2", InRow = true })
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-2 x-label">建檔日期</div>
                 <div class="col-md-10 x-input">
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created", InRow = true })
+                    @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "Created", InRow = true })
                     <span>～</span>
-                    @await Component.InvokeAsync("XiDate", new XiDateDto { Fid = "Created2", InRow = true })
+                    @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "Created2", InRow = true })
                 </div>
             </div>
         </form>

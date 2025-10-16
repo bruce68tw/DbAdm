@@ -133,14 +133,19 @@ class UiMany {
 
     //#region 功能按鈕相關
     //return row
-    _mItemAddRow(itemType, info) {
+    _mItemAddRow(upId, itemType, info) {
         //配合後端DB, 欄位使用大camel
         let itemJson = {
-            BoxId: '0',
+            //UiId: ??,
+            UpId: upId,
             ItemType: itemType,
             Info: (info == null) ? '' : _json.toStr(info),
+            //Sort: 儲存前設定,
         };
-        return this.mItem.addRow(itemJson);  //會產生id
+        let mItem = this.mItem;
+        let row = mItem.addRow(itemJson);  //會產生id
+        _itext.set('_Id2', row.Id, mItem.idToRowBox(row.Id));   //Id -> _Id2
+        return row;
     }
 
     _addInput() {

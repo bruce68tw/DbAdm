@@ -1,10 +1,10 @@
 ﻿<form id='eform' class='x-form'>
-	@await Component.InvokeAsync("XiHide", new XiHideDto{ Fid = "Id" })	
-	@await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true })
-	@await Component.InvokeAsync("XiText", new XiTextDto { Title = "專案功能", Fid = "Name", MaxLen = 30, Required = true })
-	@await Component.InvokeAsync("XiInt", new XiIntDto { Title = "排序", Fid = "Sort", Required = true, Cols = "2,1" })
-	@await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "啟用", Fid = "Status" })
-	@await Component.InvokeAsync("XiRead", new XiReadDto { Title = "建檔人員", Fid = "CreatorName" })
+	@await Component.InvokeAsync(XiEstr.Hide, new XiHideDto{ Fid = "Id" })	
+	@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true })
+	@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "專案功能", Fid = "Name", MaxLen = 30, Required = true })
+	@await Component.InvokeAsync(XiEstr.Int, new XiIntDto { Title = "排序", Fid = "Sort", Required = true, Cols = "2,1" })
+	@await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "啟用", Fid = "Status" })
+	@await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Title = "建檔人員", Fid = "CreatorName" })
 </form>
 <vc:xg-save-back/>
 

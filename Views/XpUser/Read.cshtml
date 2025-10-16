@@ -38,11 +38,11 @@
     <div id="divRead">
         <form id='formRead' class='x-form'>
             <div class="row">
-                @await Component.InvokeAsync("XiText", new XiTextDto { Title = "帳號", Fid = "Account", MaxLen = 20, InRow = true })
+                @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "帳號", Fid = "Account", MaxLen = 20, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "用戶名稱", Fid = "Name", MaxLen = 20 })
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "部門", Fid = "DeptId", Rows = ViewBag.Depts })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "用戶名稱", Fid = "Name", MaxLen = 20 })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "部門", Fid = "DeptId", Rows = ViewBag.Depts })
         </form>
 
         <div class='x-btns-box'>
@@ -64,15 +64,15 @@
 
     <div id="divEdit" class="d-none">
         <form id='eform' class='x-form mb-0'>
-            @await Component.InvokeAsync("XiHide", new XiHideDto { Fid = "Id" })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "帳號", Fid = "Account", Required = true, MaxLen = 20 })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "用戶名稱", Fid = "Name", Required = true, MaxLen = 20 })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "員工編號", Fid = "EmpNo", Required = true, MaxLen = 10 })
+            @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "帳號", Fid = "Account", Required = true, MaxLen = 20 })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "用戶名稱", Fid = "Name", Required = true, MaxLen = 20 })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "員工編號", Fid = "EmpNo", Required = true, MaxLen = 10 })
             @*
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = R["Pwd"].Value, Fid = "Pwd", IsPwd = true, MaxLen = 32 })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = R["Pwd"].Value, Fid = "Pwd", IsPwd = true, MaxLen = 32 })
             *@
-            @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "部門名稱", Fid = "DeptId", Rows = ViewBag.Depts })
-            @await Component.InvokeAsync("XiCheck", new XiCheckDto { Title = "資料狀態", Fid = "Status", Label = "啟用" })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "部門名稱", Fid = "DeptId", Rows = ViewBag.Depts })
+            @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "資料狀態", Fid = "Status", Label = "啟用" })
         </form>
 
         <form class='x-form'>
@@ -86,7 +86,7 @@
                                 <td id="divRoles">
                                     @foreach (IdStrDto row in ViewBag.Roles)
                                     {
-                                        @await Component.InvokeAsync("XiCheck", new XiCheckDto { Fid = row.Id, Value = row.Id, Label = row.Str })
+                                        @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = row.Id, Value = row.Id, Label = row.Str })
                                     }
                                 </td>
                             </tr>

@@ -38,11 +38,11 @@
     <div id="divRead">
         <form id='formRead' class='x-form mb-0'>
             <div class="row">
-                @await Component.InvokeAsync("XiSelect", new XiSelectDto { Title = "資料表類別", Fid = "TableType", Rows = ViewBag.TableTypes, InRow = true })
+                @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "資料表類別", Fid = "TableType", Rows = ViewBag.TableTypes, InRow = true })
                 @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
             </div>
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位代碼", Fid = "Code", MaxLen = 30 })
-            @await Component.InvokeAsync("XiText", new XiTextDto { Title = "欄位中文名", Fid = "Name", MaxLen = 30, TitleTip = "使用模糊查詢" })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "欄位代碼", Fid = "Code", MaxLen = 30 })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "欄位中文名", Fid = "Name", MaxLen = 30, TitleTip = "使用模糊查詢" })
         </form>
 
         <div class="x-btns-box">
