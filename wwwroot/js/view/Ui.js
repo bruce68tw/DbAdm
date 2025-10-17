@@ -136,9 +136,25 @@ var _me = {
         });
     },
 
-    //設定 uiItem._Id2=Id, 後端利用此欄位設定 uiItem.UpId
-    fnWhenSave: function (fun, json) {
+    //設定 uiItem.Sort
+    fnWhenSave: function (fun) {
+        //get changed box ids
+        let uiView = this.uiMany.uiView;
+        let boxIds = uiView.getChgBoxIds();
+        boxLen = boxIds.length;
+        if (boxLen == 0) return '';
 
+        //reset Sort
+        let mItem = this.mItem;
+        for (let i = 0; i < boxLen; i++) {
+            let boxId = boxIds[i];
+            let itemIds = uiView.boxGetChildIds(boxIds[i]);
+            for (let j = 0; j < itemIds.length; j++) {                
+                let row = mItem.idToRowBox(itemIds[j]); //get row
+                _itext.set('Sort', j + 1, row); //set Sort
+            }
+        }
+        return '';
     },
 
     //#region mItem/mLine custom function

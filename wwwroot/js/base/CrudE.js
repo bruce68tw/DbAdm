@@ -5,7 +5,8 @@
  *   //?? fnAfterSwap:
  *   void fnAfterOpenEdit(fun, json):
  *   bool fnUpdateOrViewA(fun, key): 自訂 GetUpdJson/GetViewJson 函數, see _updateOrViewA
- *   string fnWhenSave(fun, json): return error msg
+ *   string fnWhenSave(fun): 此時還沒有產生 updated json, return error msg
+ *   void fnWhenSave2(fun, json): 此時已經產生 updated json
  * 
  *   divEdit:
  *   //hasEdit:
@@ -715,17 +716,14 @@ function CrudE(edits) {
             return;
         }
 
-        /*
-        //call fnWhenSave if existed
-        var edit0 = this.edit0;
-        if (_fun.hasValue(edit0.fnWhenSave)) {
-            var error = edit0.fnWhenSave();
+        //call fnWhenSave if existed, 此時還沒有產生 updated json, 可以修改欄位內容
+        if (_fun.hasValue(_me.fnWhenSave)) {
+            var error = _me.fnWhenSave(this._nowFun);
             if (_str.notEmpty(error)) {
                 _tool.msg(error);
                 return;
             }
         }
-        */
 
         //get saving json
         var formData = new FormData();  //for upload files if need
@@ -735,10 +733,9 @@ function CrudE(edits) {
             return;
         }
 
-        //改成傳入json
-        //call fnWhenSave if existed
-        if (_fun.hasValue(_me.fnWhenSave)) {
-            var error = _me.fnWhenSave(this._nowFun, json);
+        //call fnWhenSave2 if existed, 此時已經產生 updated json
+        if (_fun.hasValue(_me.fnWhenSave2)) {
+            var error = _me.fnWhenSave2(this._nowFun, json);
             if (_str.notEmpty(error)) {
                 _tool.msg(error);
                 return;
@@ -746,6 +743,7 @@ function CrudE(edits) {
         }
 
         //save rows, call backend Save action
+        var edit0 = this.edit0;
         var isNew = edit0.isNewRow();
         var action = isNew ? 'Create' : 'Update';
         var data = null;

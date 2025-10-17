@@ -7,6 +7,7 @@ using BaseWeb.Models;
 using BaseWeb.Services;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Controllers
 {
@@ -66,7 +67,7 @@ namespace DbAdm.Controllers
             return JsonToCnt(await EditSvc().GetViewJsonA(key));
         }
 
-        //傳回輸入欄位html, 必須傳回ViewComponentResult, 前端收到為字串
+        //傳回輸入欄位html for 模版用途, 必須傳回ViewComponentResult, 前端收到為字串
         [HttpPost]
         //[XgProgAuth(CrudEnum.View)]
         public string GetInputHtml(string inputType, string fid, string title, 
@@ -94,6 +95,7 @@ namespace DbAdm.Controllers
             };
         }
 
+        //傳回 group item 模版
         [HttpPost]
         public string GetGroupHtml(string title)
         {

@@ -1,5 +1,7 @@
 using Base.Models;
 using Base.Services;
+using BaseApi.Services;
+using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
 {
@@ -10,7 +12,8 @@ namespace DbAdm.Services
         override public EditDto GetDto()
         {
             return new EditDto()
-            {                
+            {
+                FnWhenSaveA = FnWhenSaveA,
                 Table = "dbo.[Ui]",
                 PkeyFid = "Id",
                 Col4 = ["Creator", "Created"],
@@ -33,7 +36,7 @@ namespace DbAdm.Services
                         Items = [
                             new() { Fid = "Id" },
                             new() { Fid = "UiId" },
-                            new() { Fid = "UpId" },
+                            new() { Fid = "BoxId" },
                             new() { Fid = "ItemType" },
                             new() { Fid = "Info" },
                             new() { Fid = "Sort" },
@@ -41,6 +44,29 @@ namespace DbAdm.Services
                     },
                 ],
             };
+        }
+
+        //delegate function of FnWhenSaveA, 預設為非同步 !!
+        //設定uiItem.BoxId
+        private async Task<string> FnWhenSaveA(bool isNew, CrudEditSvc crudEditSvc, JObject inputJson, JObject newKeyJson)
+        {
+            const string BoxId = "BoxId";
+            var rows = _Json.GetChildRows(inputJson, 0);
+            if (rows == null || rows.Count == 0) return "";
+
+            foreach (JObject row in rows)
+            {
+                if (row[BoxId] == null) continue;
+
+                var boxIdStr = row[BoxId]!.ToString();
+                if (int.TryParse(boxIdStr, out var boxId) && boxId < 0)
+                {
+                    var find = _Json.FindArray(rows, "_Id2", boxIdStr)!;
+                    row[BoxId] = rows[find]!["Id"];     //此時Id已經產生
+                }
+            }
+            await Task.CompletedTask;   //模擬 async 結束, 此函數實際為同步!!
+            return "";
         }
 
     } //class

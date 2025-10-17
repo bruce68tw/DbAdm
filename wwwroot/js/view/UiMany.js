@@ -42,7 +42,7 @@ class UiMany {
         let uiView = new UiView(ftWorkArea);
         uiView.fnMoveBox = (itemId, newBoxId) => this.fnMoveBox(itemId, newBoxId);
         uiView.fnShowMenu = (event, item) => this.fnShowMenu(event, item);
-        uiView.fnAddItem = (itemType) => this.fnAddItem(itemType);
+        uiView.fnAddItem = (boxId, itemType) => this.fnAddItem(boxId, itemType);
         this.uiView = uiView;
 
         //mouse down時hide right menu
@@ -98,22 +98,23 @@ class UiMany {
         }).show();
     }
 
-    fnAddItem(itemType) {
+    //return row
+    fnAddItem(boxId, itemType) {
         switch (itemType) {
             case EstrItemType.Input:
-                return this._addInput();
+                return this._addInput(boxId);
             case EstrItemType.Group:
-                return this._addGroup();
+                return this._addGroup(boxId);
             case EstrItemType.Checks:
-                return this._addChecks();
+                return this._addChecks(boxId);
             //case EstrItemType.Span:
-            //    return this._addSpan();
+            //    return this._addSpan(boxId);
             case EstrItemType.Row:
-                return this._addRow();
+                return this._addRow(boxId);
             case EstrItemType.Table:
-                return this._addTable();
+                return this._addTable(boxId);
             case EstrItemType.TabPage:
-                return this._addTabPage();
+                return this._addTabPage(boxId);
         }
     }
     //#endregion
@@ -133,11 +134,10 @@ class UiMany {
 
     //#region 功能按鈕相關
     //return row
-    _mItemAddRow(upId, itemType, info) {
+    _mItemAddRow(boxId, itemType, info) {
         //配合後端DB, 欄位使用大camel
         let itemJson = {
-            //UiId: ??,
-            UpId: upId,
+            BoxId: boxId,
             ItemType: itemType,
             Info: (info == null) ? '' : _json.toStr(info),
             //Sort: 儲存前設定,
@@ -148,7 +148,7 @@ class UiMany {
         return row;
     }
 
-    _addInput() {
+    _addInput(boxId) {
         //使用畫面上的設定ColsType
         //set info json first
         this.newInputNo++;
@@ -164,25 +164,25 @@ class UiMany {
         };
 
         //add to mItem, 會產生id
-        return this._mItemAddRow(EstrItemType.Input, info);
+        return this._mItemAddRow(boxId, EstrItemType.Input, info);
 
         //add to UI
         //await this.uiView.addInputA(row.Id, info);
     }
 
-    _addGroup() {
+    _addGroup(boxId) {
         let info = {
             Title: '分群文字',
         };
 
         //add to mItem
-        return this._mItemAddRow(EstrItemType.Group, info);
+        return this._mItemAddRow(boxId, EstrItemType.Group, info);
 
         //add to UI
         //await this.uiView.addGroupA(row.Id, info);
     }
 
-    _addChecks() {
+    _addChecks(boxId) {
         //add to mItem
         let info = {
             Title: '多選欄位',
@@ -190,7 +190,7 @@ class UiMany {
             LabelFids: '欄位1,Check1,欄位2,Check2',
             IsHori: false,  //true=水平, false=垂直
         };
-        return this._mItemAddRow(EstrItemType.Checks, info);
+        return this._mItemAddRow(boxId, EstrItemType.Checks, info);
     }
 
     /*
@@ -204,34 +204,34 @@ class UiMany {
     }
     */
 
-    _addRow() {
+    _addRow(boxId) {
         //使用畫面上的設定RowType
         let info = {
             RowType: _iselect.get('_RowType', _me.eform0),
         };
 
         //add to mItem
-        return this._mItemAddRow(EstrItemType.Row, info);
+        return this._mItemAddRow(boxId, EstrItemType.Row, info);
 
         //add to UI
         //this.uiView.addRow(row.Id);
     }
 
-    _addTable() {
+    _addTable(boxId) {
         //add to mItem
         let info = {
             Table: '_table',
             Title: '資料名稱',
             Heads: '欄位1,欄位2,欄位3,欄位4,欄位5',
         };
-        return this._mItemAddRow(EstrItemType.Table, info);
+        return this._mItemAddRow(boxId, EstrItemType.Table, info);
 
         //add to UI
         //this.uiView.addTable(row.Id, info);
     }
 
     //todo
-    _addTabPage() {
+    _addTabPage(boxId) {
     }
     //#endregion
 
@@ -388,9 +388,9 @@ class UiMany {
 
         const jsons = [];
         rows.forEach(r => {
-            if (r.UpId && map.has(r.UpId)) {
+            if (r.BoxId && map.has(r.BoxId)) {
                 // 有父層就掛到父層的 children
-                map.get(r.UpId).children.push(map.get(r.Id));
+                map.get(r.BoxId).children.push(map.get(r.Id));
             } else {
                 // 沒有父層的就是 root
                 jsons.push(map.get(r.Id));

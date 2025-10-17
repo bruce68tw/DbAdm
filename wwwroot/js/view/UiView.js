@@ -68,8 +68,10 @@ class UiView {
 
 		this.isEdit = true;			//是否可編輯, temp to true	
 		this.newItemId = 0;			//新item Id, 自動累減, 使用負數!!		
-		this.inputMap = {};			//儲存各種輸入欄位模版, 減少後端傳回		
-		this.groupHtml = '';		//儲存group html, 後端傳回
+		this.chgBoxIds = [];		//childs/childList 有"新增"的 boxId, '0'表示work area
+
+		this.inputMap = {};			//模版: 各種輸入欄位, 減少後端傳回		
+		this.groupHtml = '';		//模版: group item html, 後端傳回
 		//this.isDropVline = false;	//在EstrItemType.Span時顯示垂直線
 
 		//drag/drop相關, Box表示外層Item
@@ -84,7 +86,7 @@ class UiView {
 
 		this.fnMoveBox = null;	//item 移動到不同box時觸發, function(itemId, newBoxId)
 		this.fnShowMenu = null;	//顯示右鍵選單, function(e, item)
-		this.fnAddItem = null;	//add new item, function(itemType), return new row
+		this.fnAddItem = null;	//add new item, function(boxId, itemType), return new row
 
 		//work area註冊全域事件
 		//右鍵選單事件
@@ -344,7 +346,11 @@ class UiView {
 
 			//create new item if need
 			if (this.dragIsNew) {
-				let row = this.fnAddItem(dragType);
+				//set chgBoxIds, 會重設 childs Sort
+				let boxId = _var.isEmpty(drop.boxId) ? '0' : drop.boxId;
+				this._addBoxIds(boxId);
+
+				let row = this.fnAddItem(boxId, dragType);
 				let item = await this._newItemA(dragType, row.Id, _str.toJson(row.Info));
 				drag.item = item;
 			}
@@ -384,6 +390,30 @@ class UiView {
 
 		//reset variables
 		this._setDragging(false);
+	}
+
+	boxGetChildIds(boxId) {
+		let box = (boxId == '0') ? this.Area : this._findItem(boxId);
+		if (box == null || box.length == 0) return null;
+
+		return box.find(this.ClsItem).map(function () {
+			return $(this).data(this.DataId);
+		}).get();  // .get() 把 jQuery 物件轉成一般陣列
+	}
+
+	_findItem(itemId) {
+		return $(`[data-${this.DataId}="${itemId}"]`);
+	}
+
+	getChgBoxIds() {
+		return this.chgBoxIds;
+	}
+
+	//add chgBoxIds
+	_addBoxIds(boxId) {
+		let find = this.chgBoxIds.findIndex(a => a == boxId);
+		if (find < 0)
+			this.chgBoxIds.push(boxId);
 	}
 
 	_getDropLine() {
@@ -673,7 +703,7 @@ class UiView {
 		//加入item屬性: .xu-item, data-itemtype
 		item.addClass(this.ClsItem);
 		item.attr("draggable", true);
-		//_obj.setData(item, this.DataId, id);	//jquery data() 只寫入暫存, 使用 _obj(設定屬性) !!
+		_obj.setData(item, this.DataId, id);	//jquery data() 只寫入暫存, 使用 _obj(設定屬性) !!
 		_obj.setData(item, this.DataItemType, itemType);
 		this.itemSetInfo(item, info);
 	}
