@@ -30,43 +30,46 @@ var _json = {
         if (!rows || rows.length === 0) return [];
 
         // 依 BoxId 分組
-        const groupMap = new Map();
+        const boxMap = new Map();
         for (const row of rows) {
-            const boxId = row.BoxId ?? '0';
-            if (!groupMap.has(boxId)) groupMap.set(boxId, []);
-            groupMap.get(boxId).push(row);
+            const boxId = row.BoxId;
+            if (!boxMap.has(boxId)) boxMap.set(boxId, []);
+            boxMap.get(boxId).push(row);
         }
 
         // 遞迴建立 Childs2（二維陣列）
         function buildTree(boxId) {
-            const childs = groupMap.get(boxId);
+            const childs = boxMap.get(boxId);
             if (!childs) return null;
 
             // 以 ChildNo 分群
-            const grouped = [];
+            const items2 = [];
             for (const child of childs) {
                 const idx = parseInt(child.ChildNo);
-                if (!grouped[idx]) grouped[idx] = [];
-                grouped[idx].push(child);
+                if (!items2[idx])
+                    items2[idx] = [];
+                items2[idx].push(child);
             }
 
             // 遞迴建立每個 node 的 Childs2
-            for (const group of grouped) {
-                for (const node of group) {
-                    const sub = buildTree(node.Id);
-                    if (sub && sub.length > 0) node.Childs2 = sub;
+            for (const items of items2) {
+                for (const item of items) {
+                    const sub = buildTree(item.Id);
+                    if (sub && sub.length > 0)
+                        item.Childs2 = sub;
                 }
             }
 
             // 移除空群組
-            return grouped.filter(g => g && g.length > 0);
+            return items2.filter(g => g && g.length > 0);
         }
 
         // 根節點是 BoxId = '0'，理論上應該只有一個根節點
         const roots = buildTree('0') || [];
 
         // 根據需求：只取第一個群組的第一個節點作為根
-        if (roots.length === 0) return [];
+        if (roots.length === 0)
+            return [];
         return [roots[0][0]]; // roots[0] 是第一個 ChildNo 群組，roots[0][0] 是第一個 Item
     },
 
