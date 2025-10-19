@@ -1,6 +1,8 @@
 ﻿/**
  * 控制 EditMany, 參考 FlowMany.js, called by Read.cshtml only !!
  * 處理 UI 元素和多筆資料之間的轉換
+ * 注意:
+ *   1.whenSave 會重新設定異動Item的BoxId、ChildNo、Sort
  * param boxId {string} edit canvas id
  * param mItem {EditMany}
  * param ftWorkArea {string} filter of work area
@@ -40,9 +42,8 @@ class UiMany {
 
         //set instance first
         let uiView = new UiView(ftWorkArea);
-        uiView.fnMoveBox = (itemId, newBoxId) => this.fnMoveBox(itemId, newBoxId);
         uiView.fnShowMenu = (event, item) => this.fnShowMenu(event, item);
-        uiView.fnAddItem = (boxId, itemType) => this.fnAddItem(boxId, itemType);
+        uiView.fnAddItem = (itemType) => this.fnAddItem(itemType);
         this.uiView = uiView;
 
         //mouse down時hide right menu
@@ -57,12 +58,14 @@ class UiMany {
         });
     }
 
+    /*
     //#region callback 函數 called by uiView
     //item 改變 box 
     fnMoveBox(itemId, newBoxId) {
         let rowBox = this.mItem.idToRowBox(itemId);
         _form.loadRow(rowBox, { BoxId: newBoxId });
     }
+    */
 
     //on show right menu
     fnShowMenu(e, item) {
@@ -99,22 +102,22 @@ class UiMany {
     }
 
     //return row
-    fnAddItem(boxId, itemType) {
+    fnAddItem(itemType) {
         switch (itemType) {
             case EstrItemType.Input:
-                return this._addInput(boxId);
+                return this._addInput();
             case EstrItemType.Group:
-                return this._addGroup(boxId);
+                return this._addGroup();
             case EstrItemType.Checks:
-                return this._addChecks(boxId);
+                return this._addChecks();
             //case EstrItemType.Span:
-            //    return this._addSpan(boxId);
+            //    return this._addSpan();
             case EstrItemType.Row:
-                return this._addRow(boxId);
+                return this._addRow();
             case EstrItemType.Table:
-                return this._addTable(boxId);
+                return this._addTable();
             case EstrItemType.TabPage:
-                return this._addTabPage(boxId);
+                return this._addTabPage();
         }
     }
     //#endregion
@@ -134,10 +137,9 @@ class UiMany {
 
     //#region 功能按鈕相關
     //return row
-    _mItemAddRow(boxId, itemType, info) {
+    _mItemAddRow(itemType, info) {
         //配合後端DB, 欄位使用大camel
         let itemJson = {
-            BoxId: boxId,
             ItemType: itemType,
             Info: (info == null) ? '' : _json.toStr(info),
             //Sort: 儲存前設定,
@@ -148,7 +150,7 @@ class UiMany {
         return row;
     }
 
-    _addInput(boxId) {
+    _addInput() {
         //使用畫面上的設定ColsType
         //set info json first
         this.newInputNo++;
@@ -164,25 +166,25 @@ class UiMany {
         };
 
         //add to mItem, 會產生id
-        return this._mItemAddRow(boxId, EstrItemType.Input, info);
+        return this._mItemAddRow(EstrItemType.Input, info);
 
         //add to UI
         //await this.uiView.addInputA(row.Id, info);
     }
 
-    _addGroup(boxId) {
+    _addGroup() {
         let info = {
             Title: '分群文字',
         };
 
         //add to mItem
-        return this._mItemAddRow(boxId, EstrItemType.Group, info);
+        return this._mItemAddRow(EstrItemType.Group, info);
 
         //add to UI
         //await this.uiView.addGroupA(row.Id, info);
     }
 
-    _addChecks(boxId) {
+    _addChecks() {
         //add to mItem
         let info = {
             Title: '多選欄位',
@@ -190,7 +192,7 @@ class UiMany {
             LabelFids: '欄位1,Check1,欄位2,Check2',
             IsHori: false,  //true=水平, false=垂直
         };
-        return this._mItemAddRow(boxId, EstrItemType.Checks, info);
+        return this._mItemAddRow(EstrItemType.Checks, info);
     }
 
     /*
@@ -204,34 +206,34 @@ class UiMany {
     }
     */
 
-    _addRow(boxId) {
+    _addRow() {
         //使用畫面上的設定RowType
         let info = {
             RowType: _iselect.get('_RowType', _me.eform0),
         };
 
         //add to mItem
-        return this._mItemAddRow(boxId, EstrItemType.Row, info);
+        return this._mItemAddRow(EstrItemType.Row, info);
 
         //add to UI
         //this.uiView.addRow(row.Id);
     }
 
-    _addTable(boxId) {
+    _addTable() {
         //add to mItem
         let info = {
             Table: '_table',
             Title: '資料名稱',
             Heads: '欄位1,欄位2,欄位3,欄位4,欄位5',
         };
-        return this._mItemAddRow(boxId, EstrItemType.Table, info);
+        return this._mItemAddRow(EstrItemType.Table, info);
 
         //add to UI
         //this.uiView.addTable(row.Id, info);
     }
 
     //todo
-    _addTabPage(boxId) {
+    _addTabPage() {
     }
     //#endregion
 
@@ -371,58 +373,10 @@ class UiMany {
         this.mItem.loadRowsByRsb(rows, true);
 
         //rows to jsons
-        let jsons = this._rowsToJsons(rows);
+        let jsons = _json.rowsToJsons(rows);
 
-        //ui loadItems
+        //ui load json array
         await this.uiView.loadJsonsA(jsons);
-    }
-
-    //(by AI) rows to jsons
-    _rowsToJsons(rows) {
-        if (rows == null || rows.length == 0)
-            return null;
-
-        // 初始化每個節點，加上 children 陣列
-        const map = new Map();
-        rows.forEach(r => map.set(r.Id, { ...r, children: [] }));
-
-        const jsons = [];
-        rows.forEach(r => {
-            if (r.BoxId && map.has(r.BoxId)) {
-                // 有父層就掛到父層的 children
-                map.get(r.BoxId).children.push(map.get(r.Id));
-            } else {
-                // 沒有父層的就是 root
-                jsons.push(map.get(r.Id));
-            }
-        });
-
-        // 排序: 先根層、再每個 children 按 Sort 排序
-        function sortTree(nodes) {
-            nodes.sort((a, b) => a.Sort - b.Sort);
-            nodes.forEach(n => sortTree(n.children));
-        }
-        sortTree(jsons);
-
-        return jsons;
-    }
-
-    //(by AI) jsons to rows
-    _jsonsToRows(jsons) {
-        const rows = [];
-
-        function traverse(nodes, parentId = null) {
-            nodes.forEach(n => {
-                rows.push(n);
-
-                if (n.children && n.children.length > 0) {
-                    traverse(n.children, n.Id);
-                }
-            });
-        }
-
-        traverse(jsons);
-        return rows;
     }
 
     /**
@@ -431,7 +385,7 @@ class UiMany {
      */
     async loadJsonsA(jsons) {
         //jsons to rows
-        let rows = this._jsonsToRows(jsons);
+        let rows = _json.jsonsToRows(jsons);
 
         //EditMany load rows by rowsBox
         //json array to rows, 同時設定new Id(負數)

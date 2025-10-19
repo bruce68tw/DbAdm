@@ -31,13 +31,14 @@ namespace DbAdm.Services
                         Table = "dbo.UiItem",
                         PkeyFid = "Id",
                         FkeyFid = "UiId",
-                        OrderBy = "Sort",
+                        OrderBy = "BoxId, Sort",    //­«­n !!
                         Col4 = null,
                         Items = [
                             new() { Fid = "Id" },
                             new() { Fid = "UiId" },
                             new() { Fid = "BoxId" },
                             new() { Fid = "ItemType" },
+                            new() { Fid = "ChildNo" },
                             new() { Fid = "Info" },
                             new() { Fid = "Sort" },
                         ],

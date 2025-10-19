@@ -28,8 +28,6 @@ var _me = {
 
         //initial edit one/many, rowsBox(參數2) 使用 eform
         _me.mItem = new EditMany('Id', 'eformItems', 'tplItem', '.xd-tr', 'Sort');
-        //_me.mCol = new EditMany('Id', 'eformCols', 'tplCol', '.xd-tr', 'Sort');
-        //_me.mLine = new EditMany('Id', 'eformLines', 'tplLine', '.xd-tr', 'Sort');
         new CrudR(config, [null, _me.mItem]);
 
         //custom function
@@ -38,7 +36,7 @@ var _me = {
         _me.mItem.fnValid = _me.mItem_valid;
 
         //initial uiMany
-        _me.uiMany = new UiMany('.xu-ui-area', _me.mItem);
+        _me.uiMany = new UiMany('.xu-area', _me.mItem);
     },
 
     //on open import modal
@@ -108,10 +106,8 @@ var _me = {
     //auto called !!
     //reset when create
     fnAfterOpenEdit: function (fun, json) {
+        _me.uiMany.reset();
         var isAdd = (fun === EstrFun.Create);
-        if (isAdd) {
-            _me.uiMany.reset();
-        }
         _me.uiMany.setEdit(isAdd || (fun === EstrFun.Update));
     },
 
@@ -136,22 +132,31 @@ var _me = {
         });
     },
 
-    //設定 uiItem.Sort
-    fnWhenSave: function (fun) {
+    //重設 uiItem的 BoxId、ChildNo、Sort
+    fnWhenSave: function(fun) {
         //get changed box ids
         let uiView = this.uiMany.uiView;
-        let boxIds = uiView.getChgBoxIds();
-        boxLen = boxIds.length;
+        let boxJsons = uiView.getChgBoxJsons();
+        boxLen = boxJsons.length;
         if (boxLen == 0) return '';
 
-        //reset Sort
+        //reset BoxId, ChildNo, Sort
         let mItem = this.mItem;
+        //box list
         for (let i = 0; i < boxLen; i++) {
-            let boxId = boxIds[i];
-            let itemIds = uiView.boxGetChildIds(boxIds[i]);
-            for (let j = 0; j < itemIds.length; j++) {                
-                let row = mItem.idToRowBox(itemIds[j]); //get row
-                _itext.set('Sort', j + 1, row); //set Sort
+            let boxJson = boxJsons[i];
+            let boxId = boxJson.BoxId;
+            //child list
+            for (let j = 0; j < boxJson.ChildNos.length; k++) {
+                let childNo = boxJson.ChildNos[j];
+                let itemIds = uiView.boxGetChildIds(boxId, childNo);
+                //item list
+                for (let k = 0; k < itemIds.length; k++) {
+                    let rb = mItem.idToRowBox(itemIds[k]); //get row box
+                    _itext.set('BoxId', boxId, rb);
+                    _itext.set('ChildNo', childNo, rb);
+                    _itext.set('Sort', k + 1, rb);
+                }
             }
         }
         return '';

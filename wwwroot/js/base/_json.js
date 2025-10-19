@@ -19,6 +19,85 @@ var _json = {
     */
 
     /**
+     * (by AI) 
+     * 將扁平 rows 陣列 轉換成 樹狀結構 jsons, 規則:
+     *   1.rows 事先以 BoxId, ChildNo, Sort 排序
+     *   2.rows 元素包含欄位: Id(資料Id)、BoxId(上層Id)、ChildNo(在上層的子代序號)、Childs2(子代2維陣列)
+     * param {json array} rows
+     * return {json array} nested json array
+     */
+    rowsToJsons: function (rows) {
+        if (!rows || rows.length === 0) return [];
+
+        // 依 BoxId 分組
+        const groupMap = new Map();
+        for (const row of rows) {
+            const boxId = row.BoxId ?? '0';
+            if (!groupMap.has(boxId)) groupMap.set(boxId, []);
+            groupMap.get(boxId).push(row);
+        }
+
+        // 遞迴建立 Childs2（二維陣列）
+        function buildTree(boxId) {
+            const childs = groupMap.get(boxId);
+            if (!childs) return null;
+
+            // 以 ChildNo 分群
+            const grouped = [];
+            for (const child of childs) {
+                const idx = parseInt(child.ChildNo);
+                if (!grouped[idx]) grouped[idx] = [];
+                grouped[idx].push(child);
+            }
+
+            // 遞迴建立每個 node 的 Childs2
+            for (const group of grouped) {
+                for (const node of group) {
+                    const sub = buildTree(node.Id);
+                    if (sub && sub.length > 0) node.Childs2 = sub;
+                }
+            }
+
+            // 移除空群組
+            return grouped.filter(g => g && g.length > 0);
+        }
+
+        // 根節點是 BoxId = '0'，理論上應該只有一個根節點
+        const roots = buildTree('0') || [];
+
+        // 根據需求：只取第一個群組的第一個節點作為根
+        if (roots.length === 0) return [];
+        return [roots[0][0]]; // roots[0] 是第一個 ChildNo 群組，roots[0][0] 是第一個 Item
+    },
+
+
+    /**
+     * (by AI) jsons(tree) to rows(陣列)
+     * 固定的相關欄位: Id(資料Id)、BoxId(上層Id)、ChildNo, Childs2(子代2維陣列)
+     * param {json array} jsons nested json array
+     * return {json array} json array
+     */
+    jsonsToRows: function (jsons) {
+        const rows = [];
+
+        function flatten(items, parentId) {
+            for (const item of items) {
+                const { ChildNo, ...row } = item;
+                row.BoxId = parentId;
+                rows.push(row);
+
+                // 若存在子層群組欄位
+                if (ChildNo && Array.isArray(item[ChildNo]) && item[ChildNo].length > 0) {
+                    flatten(item[ChildNo], row.Id);
+                }
+            }
+        }
+
+        flatten(jsons, '0');
+        return rows;
+    },
+
+    /**
      * 轉換一筆json為多筆資料, 用於產生統計圖
      * param from {json}
      * param to {json}

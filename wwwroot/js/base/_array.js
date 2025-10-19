@@ -32,4 +32,8 @@ var _array = {
     isEmpty: function (ary) {
         return (ary == null || ary.length == 0);
     },
+
+    notEmpty: function (ary) {
+        return !_array.isEmpty(ary);
+    },
 };//class

@@ -1,7 +1,8 @@
 把以下 word 檔案的輸入表單轉成 json, 並遵循以下*號規則：
 *json 內容包括4種資料, 以 Item 稱呼, 每個 Item 有以下欄位：
   1.Info：Item 的綜合資訊, 格式為 json 
-  2.ItemType：Item 種類, 有以下 5 種(a-e)：
+  2.Childs2：是個2維陣列, Childs2[x] 內容為1維陣列, 儲存子 Item 清單
+  3.ItemType：Item 種類, 有以下 5 種(a-e)：
     a.輸入欄位：用 'I' 表示, Info欄位內容有：
 	  a1.Title：左邊的欄位名稱
 	  a2.Fid：對應存取的後端資料表欄位名稱, 命名參考後面的規則
@@ -24,23 +25,21 @@
 	  a2.Cols：同 "輸入欄位"
 	  a3.IsHori：true 表示多個 checkbox 以水平排列, false則表示垂直排列
 	  a4.LabelFids : 表示 checkbox 的後方 label 和資料庫欄位名稱, 以逗號分隔, 2個為一組 
-    d.欄位容器：用 'R' 表示, 它是一個排版用途的 Row 容器, 包含2或3個欄位; 有ChildArray, Info欄位內容有：
+    d.欄位容器：用 'R' 表示, 它是一個排版用途的 Row 容器, 包含2或3個欄位; 有Childs2, Info欄位內容有：
 	  a1.RowType：例如：'6,6' 表示有2個 Col, grid寬度都是6, 允許的值為 '6,6','4,4,4','8,4','4,8'
-    e.多筆表格：用 'T' 表示, 是一個table, 用來維護多筆資料, 有Childs, Info欄位內容有：
+    e.多筆表格：用 'T' 表示, 是一個table, 用來維護多筆資料, 有Childs2, Info欄位內容有：
 	  a1.Table：要維護的資料表名稱
 	  a2.Title：功能名稱
-	  a3.Heads：表頭欄位清單, 以逗號分隔, 欄位數量和Childs Item數量相同
-  3.Childs：是個1維陣列, 包含n個Item	
-  4.ChildArray：是個2維陣列
+	  a3.Heads：表頭欄位清單, 以逗號分隔, 欄位數量和Childs2 陣列長度數量相同
 	  
 *排版規則為：
 1.按照 word 檔內的欄位位置進行排版, 不要自做主張, 如果 word 檔內的欄位有提示 InputType 則使用, 否則請自行判斷 
 2.Input 是其中一種 Item
 3.如果是多個 checkbox 的多選欄位, 應該使用 InputType='CS', 並且根據畫面來判斷 IsHori
 4.單行單一 Input 在左邊：不必使用 R Item 包起來，設定 Info.Cols="2,3"
-5.單行單一 Input 在右邊：使用 R Item，ChildArray[0]=null，ChildArray[1]=[Input]
+5.單行單一 Input 在右邊：使用 R Item，Childs2[0]=null，Childs2[1]=[Input]
 6.單行單一 textarea Input：若不在 R Item → Info.Cols="2,8"；若在 R Item → Info.Cols="4,8"
-7.單行 2 個 Item：使用 R Item，設定 RowType="6,6"，ChildArray[0]=[左Item]，ChildArray[1]=[右Item]
+7.單行 2 個 Item：使用 R Item，設定 RowType="6,6"，Childs2[0]=[左Item]，Childs2[1]=[右Item]
 8.單行 3 個 Item：使用 R Item，設定 RowType="4,4,4"
 9.R Item 的 Col 與 Info.Cols 對應規則：
   a.若該欄位寬度=4或8：Info.Cols="6,6"
@@ -80,7 +79,7 @@
 	Info: {
 		RowType: '6,6'
 	},
-	ChildArray: [
+	Childs2: [
 		[
 			{
 				ItemType: 'I',
@@ -112,27 +111,27 @@
 		Table: 'table1',
 		Heads: '欄位1,欄位2,欄位3'
 	},
-	Childs: [
-		{
+	Childs2: [
+		[{
 			ItemType: 'I',
 			Info: {
 				Title: '欄位1',
 				InputType: 'text'
 			},
-		},  
-		{
+		}],  
+		[{
 			ItemType: 'I',
 			Info: {
 				Title: '欄位2',
 				InputType: 'text'
 			},
-		},  
-		{
+		}],  
+		[{
 			ItemType: 'I',
 			Info: {
 				Title: '欄位3',
 				InputType: 'text'
 			},
-		},  
+		}],  
 	],
 }, 

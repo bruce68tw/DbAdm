@@ -24,7 +24,7 @@
         flex-grow: 1;
     }
 
-    .xu-ui-area {
+    .xu-area {
         /*
         flex-grow: 1;
         min-height: 500px;
@@ -172,16 +172,13 @@
         </form>
 
         <!-- UI 區域 -->
-        <div class="xu-ui-area">
-        </div>
+        <div class="xu-area"></div>
 
         <!-- uiItems editMany -->
-        <form id='eformItems' class='d-none'>
-        </form>
+        <form id='eformItems' class='d-none'></form>
 
         <!-- uiCols editMany -->
-        <form id='eformCols' class='d-none'>
-        </form>
+        <form id='eformCols' class='d-none'></form>
     </div>
 </div>
 
@@ -211,6 +208,7 @@
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "UiId" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "BoxId" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "ItemType" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "ChildNo" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "Info" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "Sort" })
     </div>

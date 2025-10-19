@@ -9,7 +9,11 @@ var _var = {
     isEmpty: function (var1) {
         return (var1 === undefined || var1 === null)
     },
-    
+
+    isStr: function (var1) {
+        return (typeof var1 == 'string');
+    },
+
     notEmpty: function (var1) {
         return !_var.isEmpty(var1);
     },
