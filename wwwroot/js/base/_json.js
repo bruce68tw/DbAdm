@@ -61,16 +61,13 @@ var _json = {
             }
 
             // 移除空群組
-            return items2.filter(g => g && g.length > 0);
+            return (boxId == '0')
+                ? items2[0]
+                : items2.filter(g => g && g.length > 0);
         }
 
         // 根節點是 BoxId = '0'，理論上應該只有一個根節點
-        const roots = buildTree('0') || [];
-
-        // 根據需求：只取第一個群組的第一個節點作為根
-        if (roots.length === 0)
-            return [];
-        return [roots[0][0]]; // roots[0] 是第一個 ChildNo 群組，roots[0][0] 是第一個 Item
+        return buildTree('0') || [];
     },
 
 

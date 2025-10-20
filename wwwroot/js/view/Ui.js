@@ -147,11 +147,11 @@ var _me = {
             let boxJson = boxJsons[i];
             let boxId = boxJson.BoxId;
             //child list
-            for (let j = 0; j < boxJson.ChildNos.length; k++) {
+            for (let j = 0; j < boxJson.ChildNos.length; j++) {
                 let childNo = boxJson.ChildNos[j];
                 let itemIds = uiView.boxGetChildIds(boxId, childNo);
                 //item list
-                for (let k = 0; k < itemIds.length; k++) {
+                for (let k = 0; k < (itemIds || []).length; k++) {
                     let rb = mItem.idToRowBox(itemIds[k]); //get row box
                     _itext.set('BoxId', boxId, rb);
                     _itext.set('ChildNo', childNo, rb);

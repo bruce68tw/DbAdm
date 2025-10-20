@@ -34,6 +34,7 @@ class UiView {
 		//內容不會變, 使用大camel
 		//使用Fid, Title這2個欄位值傳到後端建立元件, 傳到前端後再取代成實際屬性
 		this.Area = $(ftWorkArea);
+		this.BoxId0 = '0';					//表示 box 為 Area
 		this.ClsItem = 'xu-item';			//item class
 		//this.ClsSpan = 'xu-span';			//span
 		this.ClsChild = 'xu-child';			//box container of child for contain item
@@ -81,14 +82,15 @@ class UiView {
 		this.dragItem = new StItem();
 		this.dropItem = new StItem();		
 		//
-		this.dragIsNew = false;	//true表示從button drag
+		this.dragIsNew = false;		//true表示從button drag
 		this.dragging = false;
-		this.dropElm = null;	//drop參照的element, 與 item 不是同一個
-		this.dropArea = null;	//實際drop的container object, 不一定是item類型, null表示workArea
-		this.dropError = '';	//drop error message
+		this.dropElm = null;		//drop參照的element, 與 item 不是同一個
+		this.dropArea = null;		//實際drop的container object, 不一定是item類型, null表示workArea
+		this.dropError = '';		//drop error message
 
-		this.fnShowMenu = null;	//顯示右鍵選單, function(e, item)
-		this.fnAddItem = null;	//add new item, function(boxId, itemType), return new row
+		this.fnShowMenu = null;		//顯示右鍵選單, function(e, item)
+		this.fnAddItem = null;		//add new item, function(boxId, itemType), return new row
+		this.fnSaveInfo = null;		//onDragEnd時會呼叫 mItem 這個函數
 
 		//work area註冊全域事件
 		//右鍵選單事件
@@ -127,7 +129,7 @@ class UiView {
 		drag.itemType = this.itemGetType(drag.item);
 		let box = this._getBox(drag.item);
 		drag.boxType = this.itemGetType(box);
-		drag.boxId = (box == null) ? '0' : this.itemGetId(box);
+		drag.boxId = (box == null) ? this.BoxId0 : this.itemGetId(box);
 		//drag.isBox = this._isBox(drag.itemType);
 	}
 
@@ -182,7 +184,7 @@ class UiView {
 				//找外層 item
 				var box = this._getBox(dropItem);
 				drop.boxType = this.itemGetType(box);
-				drop.boxId = (box == null) ? '0' : this.itemGetId(box);
+				drop.boxId = (box == null) ? this.BoxId0 : this.itemGetId(box);
 				dropInBox = this._isBox(drop.boxType);
 				//boxHasItem = true;
 			}
@@ -351,7 +353,7 @@ class UiView {
 			let dropLine = this._getDropLine();
 
 			//set chgBoxJsons, whenSave會重設 childs2的 BoxId、ChildNo、Sort
-			let boxId = _var.isEmpty(drop.boxId) ? '0' : drop.boxId;
+			let boxId = _var.isEmpty(drop.boxId) ? this.BoxId0 : drop.boxId;
 			let childNo = $(this.dropElm).closest(this.FtChild).index();
 			this._setChgBoxJsons(boxId, childNo);
 
@@ -372,6 +374,9 @@ class UiView {
 						? this._getUpGridNum(dropLine)	//利用dropLine讀取上層grid num
 						: 0;
 					this._resizeItemByRow(drag.item, inTable, gridNum);
+
+					//update mItem info
+					this.fnSaveInfo(this.itemGetInfo(drag.item));
 				}
 
 				/*
@@ -395,13 +400,37 @@ class UiView {
 		this._setDragging(false);
 	}
 
+	/*
+	//reset col when change box
+	//called by: onDragEnd、onModalOk
+	_reColByBox(boxId, childNo) {
+		//移入/移出 Row 時調整大小(互斥判斷: a^b 或是 a !== b)
+		let checkType = EstrItemType.Row;
+		if (this._isBoxTypeXor(checkType)) {
+			let inTable = (drop.boxType == checkType);
+			let gridNum = inTable
+				? this._getUpGridNum(dropLine)	//利用dropLine讀取上層grid num
+				: 0;
+			this._resizeItemByRow(drag.item, inTable, gridNum);
+		}
+
+		//移入/移出 Table時 show/hide label、note(互斥判斷同上) input only
+		checkType = EstrItemType.Table;
+		if (this._isBoxTypeXor(checkType))
+			this._setInputSub(drag.item, (drop.boxType == checkType));
+	}
+	*/
+
 	//todo
 	boxGetChildIds(boxId, childNo) {
-		let box = (boxId == '0') ? this.Area : this._findItem(boxId);
-		if (box == null || box.length == 0) return null;
+		let box = (boxId == this.BoxId0)
+			? this.Area
+			: this._findItem(boxId).find(this.FtChild).eq(childNo);
+		if (_obj.isEmpty(box)) return null;
 
-		return box.find(this.ClsItem).map(function () {
-			return $(this).data(this.DataId);
+		let me = this;
+		return box.find(this.FtItem).map(function () {
+			return _obj.getData($(this), me.DataId);
 		}).get();  // .get() 把 jQuery 物件轉成一般陣列
 	}
 
@@ -415,9 +444,17 @@ class UiView {
 
 	//add chgBoxJsons
 	_setChgBoxJsons(boxId, childNo) {
-		let find = this.chgBoxJsons.findIndex(a => a == boxId);
-		if (find < 0)
-			this.chgBoxJsons.push(boxId);
+		if (childNo < 0) childNo = 0;
+
+		let row = this.chgBoxJsons.find(a => a.BoxId === boxId);
+		if (!row) {
+			// 未找到：新增一筆
+			this.chgBoxJsons.push({ BoxId: boxId, ChildNos: [childNo] });
+		} else {
+			// 已存在：若 ChildNos 不包含此 childNo，則加入
+			if (!row.ChildNos.includes(childNo))
+				row.ChildNos.push(childNo);
+		}
 	}
 
 	_getDropLine() {
@@ -773,14 +810,13 @@ class UiView {
 		_obj.renameCss(obj, this._getGridCss(obj), 'col-md-' + colNum);
 	}
 
-	//更新畫面上的可視部分
+	//更新畫面上的Item(含外觀、Info欄位)
 	//called by UiMany onModalOk(修改item內容)
 	async InfoToItemA(info, item, fnCallback) {
 		let id;
 		let callback = true;
 		switch (this.itemGetType(item)) {
 			case EstrItemType.Input:
-				//此時欄位寬度不會改變, 傳入0
 				await this._infoToInputA(info, item);
 				break;
 			case EstrItemType.Group:
@@ -819,7 +855,7 @@ class UiView {
 	}
 
 	/**
-	 * info to input item
+	 * info to input item UI
 	 * called: _getNewInputA, InfoToItemA
 	 * //param {int} boxColNum Box 欄位格子數 0,4,6,8,12(0表示不會改變)
 	 */ 
@@ -831,7 +867,7 @@ class UiView {
 		this._objSetGrid(label, cols[0]);
 		this._objSetGrid(input, cols[1]);
 
-		//fid -> placeholder
+		//fid -> placeholder if need
 		let inputType = info.InputType;
 		if (inputType != EstrInputType.Check && inputType != EstrInputType.Radio && inputType != EstrInputType.File) {
 			_input.getObj(info.Fid, input, info.InputType)
@@ -981,7 +1017,7 @@ class UiView {
 
 			//childs2(2維陣列)
 			let childs2 = json.Childs2;
-			if (_array.isEmpty(childs2)) return;
+			if (_array.isEmpty(childs2)) continue;
 
 			let childLen = childs2.length;
 			item.find(this.FtChild).each(async function (idx) {
@@ -1083,6 +1119,11 @@ class UiView {
 		return _obj.getData(item, this.DataId);
 	}
 
+	/**
+	 * item get info 
+	 * param {object} item
+	 * returns {json}
+	 */
 	itemGetInfo(item) {
 		//return item.data(this.DataInfo);
 		return _str.toJson(_obj.getData(item, this.DataInfo));

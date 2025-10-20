@@ -25,9 +25,9 @@ class UiMany {
         //this.EformInput = this.ModalInput.find('form');   //modalNodeProp form
         
         this.isEdit = false;    //是否可編輯
-        this.nowItem = null;    //now item
-        this.nowItemId = '';
-        this.nowItemType = '';
+        this.modalItem = null;    //modal item
+        this.modalItemId = '';
+        this.modalItemType = '';
         this.mItem = mItem;     //editMany
         this.newInputNo = 0;    //for fid、title, 累加, 不會當做主key
         this.eformItems = $('#eformItems');     //nodes edit form for editMany        
@@ -44,6 +44,7 @@ class UiMany {
         let uiView = new UiView(ftWorkArea);
         uiView.fnShowMenu = (event, item) => this.fnShowMenu(event, item);
         uiView.fnAddItem = (itemType) => this.fnAddItem(itemType);
+        uiView.fnSaveInfo = (info) => this.fnSaveInfo(info);
         this.uiView = uiView;
 
         //mouse down時hide right menu
@@ -70,9 +71,9 @@ class UiMany {
     //on show right menu
     fnShowMenu(e, item) {
         //set instance variables
-        this.nowItem = item;
-        this.nowItemId = this.uiView.itemGetId(item);
-        this.nowItemType = this.uiView.itemGetType(item);
+        this.modalItem = item;
+        this.modalItemId = this.uiView.itemGetId(item);
+        this.modalItemType = this.uiView.itemGetType(item);
 
         //todo
         let canEdit = true;
@@ -120,6 +121,13 @@ class UiMany {
                 return this._addTabPage();
         }
     }
+
+    //update mItem Info 欄位
+    fnSaveInfo(info) {
+        let rowBox = this.mItem.idToRowBox(this.modalItemId);
+        _form.loadRow(rowBox, { Info: _json.toStr(info) });
+    }
+
     //#endregion
 
     //#region Read.cshtml -> uiView
@@ -240,8 +248,8 @@ class UiMany {
     //#region menu 事件相關
     _deleteItem() {
         //todo: 考慮有子item的情形
-        this.mLine.deleteRow(this.nowItemId);
-        this.uiView.deleteItem(this.nowItem);
+        this.mLine.deleteRow(this.modalItemId);
+        this.uiView.deleteItem(this.modalItem);
     }
 
     //check menu item status
@@ -255,9 +263,9 @@ class UiMany {
         if (!this._menuStatus())
             return;
 
-        let info = this.uiView.itemGetInfo(this.nowItem);
+        let info = this.uiView.itemGetInfo(this.modalItem);
         let modal;
-        switch (this.nowItemType) {
+        switch (this.modalItemType) {
             case EstrItemType.Input:
                 modal = this.ModalInput;
                 break;
@@ -294,7 +302,7 @@ class UiMany {
             return;
 
         //刪除box時顯示確認框
-        if (this.uiView.isBox(this.nowItemType)) {
+        if (this.uiView.isBox(this.modalItemType)) {
             _tool.ans('是否確定刪除這個容器?', function () {
                 this._deleteItem();
             });
@@ -313,7 +321,7 @@ class UiMany {
     async onModalOk() {
         //check input
         let modal;
-        switch (this.nowItemType) {
+        switch (this.modalItemType) {
             case EstrItemType.Input:
                 modal = this.ModalInput;
                 break;
@@ -335,19 +343,23 @@ class UiMany {
         //ModalTable/ModalTabPage 時回傳ids(要刪除的id字串陣列, 不為null)
         let me = this;
         let info = _form.toRow(modal);    //直接讀取modal內欄位, 內容為 Info 欄位
-        await this.uiView.InfoToItemA(info, this.nowItem, function (ids) {
+        await this.uiView.InfoToItemA(info, this.modalItem, function (ids) {
+            //update mItem
+            //刪除多筆
             let idsLen = (ids == null) ? 0 : ids.length;
             if (idsLen > 0) {
-                //刪除多筆
                 //alert(`ids=${ids}`);
                 for (let i = 0; i < idsLen; i++) {
                     me.mItem.deleteRow(ids[i], me.mItem.idToRowBox(ids[i]));
                 }
             }
 
+            me.fnSaveInfo(info);
+            /*
             //update mItem Info 欄位
-            let rowBox = me.mItem.idToRowBox(me.nowItemId);
+            let rowBox = me.mItem.idToRowBox(me.modalItemId);
             _form.loadRow(rowBox, { Info: _json.toStr(info) });
+            */
 
             //hide modal
             _modal.hideO(modal);
