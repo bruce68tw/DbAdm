@@ -42,28 +42,31 @@ var _json = {
             const childs = boxMap.get(boxId);
             if (!childs) return null;
 
-            // 以 ChildNo 分群
+            // 以 boxId 的 ChildNo 分群
             const items2 = [];
             for (const child of childs) {
-                const idx = parseInt(child.ChildNo);
-                if (!items2[idx])
-                    items2[idx] = [];
-                items2[idx].push(child);
+                const childNo = parseInt(child.ChildNo);
+                if (!items2[childNo])
+                    items2[childNo] = [];
+                items2[childNo].push(child);
             }
 
-            // 遞迴建立每個 node 的 Childs2
+            // 遞迴建立每個 item 的 Childs2
             for (const items of items2) {
+                if (!items) continue;
+
                 for (const item of items) {
-                    const sub = buildTree(item.Id);
-                    if (sub && sub.length > 0)
-                        item.Childs2 = sub;
+                    const subs2 = buildTree(item.Id);
+                    if (subs2 && subs2.length > 0)
+                        item.Childs2 = subs2;
                 }
             }
 
             // 移除空群組
             return (boxId == '0')
                 ? items2[0]
-                : items2.filter(g => g && g.length > 0);
+                : items2;
+                //: items2.filter(g => g && g.length > 0);
         }
 
         // 根節點是 BoxId = '0'，理論上應該只有一個根節點

@@ -373,10 +373,12 @@ class UiView {
 					let gridNum = inTable
 						? this._getUpGridNum(dropLine)	//利用dropLine讀取上層grid num
 						: 0;
-					this._resizeItemByRow(drag.item, inTable, gridNum);
+					let info = this.itemGetInfo(drag.item);
+					info.Cols = this._resizeItemByRow(drag.item, inTable, gridNum);
+					this.itemSetInfo(drag.item, info);
 
 					//update mItem info
-					this.fnSaveInfo(this.itemGetInfo(drag.item));
+					this.fnSaveInfo(this.itemGetId(drag.item), info);
 				}
 
 				/*
@@ -421,7 +423,7 @@ class UiView {
 	}
 	*/
 
-	//todo
+	//只找第一層item
 	boxGetChildIds(boxId, childNo) {
 		let box = (boxId == this.BoxId0)
 			? this.Area
@@ -429,7 +431,7 @@ class UiView {
 		if (_obj.isEmpty(box)) return null;
 
 		let me = this;
-		return box.find(this.FtItem).map(function () {
+		return box.children(this.FtItem).map(function () {
 			return _obj.getData($(this), me.DataId);
 		}).get();  // .get() 把 jQuery 物件轉成一般陣列
 	}
@@ -773,20 +775,24 @@ class UiView {
 		}
 	}
 
-	//重設item寬度, 不處理show/hide
-	//param {bool} inBox: in box or not
-	//param {int} contGridNum: inBox=true時必須傳入, drop container object(row col)
+	/**
+	 * 重設item寬度, 不處理show/hide
+	 * param {bool} inBox: in box or not
+	 * param {int} contGridNum: inBox=true時必須傳入, drop container object(row col)
+	 * return {string} cols
+	 */ 
 	_resizeItemByRow(item, inBox, contGridNum) {
 		//是否有inputNote
 		let label = item.find(this.FtLabel);
 		let input = item.find(this.FtInput);
 		let note = item.find(this.FtInputNote);
-		let list = !inBox ? this.DefaultCols :
+		let cols = !inBox ? this.DefaultCols :
 			(contGridNum == 6) ? '4,6' :
 			(note.text().trim() != '') ? '3,6' : '6,6';
-		let cols = list.split(',');
-		this._objSetGrid(label, cols[0]);
-		this._objSetGrid(input, cols[1]);
+		let values = cols.split(',');
+		this._objSetGrid(label, values[0]);
+		this._objSetGrid(input, values[1]);
+		return cols;
 	}
 
 	//啟動/停用 css RWD
@@ -870,8 +876,7 @@ class UiView {
 		//fid -> placeholder if need
 		let inputType = info.InputType;
 		if (inputType != EstrInputType.Check && inputType != EstrInputType.Radio && inputType != EstrInputType.File) {
-			_input.getObj(info.Fid, input, info.InputType)
-				.attr('placeholder', info.Fid);
+			input.find('input').attr('placeholder', info.Fid);
 		}
 
 		//show/hide required
@@ -977,6 +982,7 @@ class UiView {
 	//清空工作區
 	reset() {
 		this.Area.empty();
+		this.chgBoxJsons = [];
 	}
 
 	/*

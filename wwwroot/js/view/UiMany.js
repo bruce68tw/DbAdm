@@ -44,7 +44,7 @@ class UiMany {
         let uiView = new UiView(ftWorkArea);
         uiView.fnShowMenu = (event, item) => this.fnShowMenu(event, item);
         uiView.fnAddItem = (itemType) => this.fnAddItem(itemType);
-        uiView.fnSaveInfo = (info) => this.fnSaveInfo(info);
+        uiView.fnSaveInfo = (itemId, info) => this.fnSaveInfo(itemId, info);
         this.uiView = uiView;
 
         //mouse down時hide right menu
@@ -123,8 +123,8 @@ class UiMany {
     }
 
     //update mItem Info 欄位
-    fnSaveInfo(info) {
-        let rowBox = this.mItem.idToRowBox(this.modalItemId);
+    fnSaveInfo(itemId, info) {
+        let rowBox = this.mItem.idToRowBox(itemId);
         _form.loadRow(rowBox, { Info: _json.toStr(info) });
     }
 
@@ -354,7 +354,7 @@ class UiMany {
                 }
             }
 
-            me.fnSaveInfo(info);
+            me.fnSaveInfo(me.modalItemId, info);
             /*
             //update mItem Info 欄位
             let rowBox = me.mItem.idToRowBox(me.modalItemId);
