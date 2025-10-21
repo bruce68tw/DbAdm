@@ -4,7 +4,7 @@ let EstrItemType = {
 	Group: 'G',		//分群文字
 	Checks: 'CS',	//check list, 行為類似 input, 不是容器
 	Span: 'S',		//只能放 input
-	Row: 'R',		//2/3欄, 只能放 group, input, checks, span
+	RowBox: 'R',	//2/3欄, 只能放 group, input, checks, span
 	Table: 'T',		//只能放 input
 	TabPage: 'TP',	//(暫不使用)只能放 box, group, input, checks, span
 };
@@ -22,17 +22,19 @@ class StItem {
 
 /**
  * 處理畫面操作, 包含基本元件, 使用jQuery
- * ItemType Input欄位和Group由後端傳入, Row、Table、TabPage由前端產生
+ * ItemType Input欄位和Group由後端傳入, RowBox、Table、TabPage由前端產生
  * 注意:
  *   1.新增、修改內容、刪除要寫回 mItem:
  *   2.whenSave 重新設定新增或位置有改變的Item的 BoxId, ChildNo, Sort欄位
+ *   3.Info 儲存在 uiMany
  */
 class UiView {
 
 	//建構子不能執行非同步
-	constructor(ftWorkArea) {
+	constructor(uiMany, ftWorkArea) {
 		//內容不會變, 使用大camel
 		//使用Fid, Title這2個欄位值傳到後端建立元件, 傳到前端後再取代成實際屬性
+		this.uiMany = uiMany;
 		this.Area = $(ftWorkArea);
 		this.BoxId0 = '0';					//表示 box 為 Area
 		this.ClsItem = 'xu-item';			//item class
@@ -44,7 +46,7 @@ class UiView {
 		//this.ClsTabPageCont = 'tab-pane';	//tabPage panel for item container
 		this.DataId = 'id';					//for data-id
 		this.DataItemType = 'itemtype';		//for data-itemtype
-		this.DataInfo = 'info';				//for data-info
+		//this.DataInfo = 'info';				//for data-info
 		this.DefaultCols = '2,3';			//default input Cols
 		this.DropLine = $('.xu-drop-line');	//drop時顯示的位置線
 		//this.DropVline = $('.xu-drop-vline');	//drop時顯示的位置線
@@ -66,7 +68,7 @@ class UiView {
 		this.NameGroup = '[分群文字]';
 		this.NameChecks = '[多選欄位]';
 		this.NameSpan = '[並排容器]';
-		this.NameRow = '[欄位容器]';
+		this.NameRB = '[欄位容器]';
 		this.NameTable = '[多筆表格]';
 		this.NameTabPage = '[多頁容器]';
 
@@ -88,9 +90,9 @@ class UiView {
 		this.dropArea = null;		//實際drop的container object, 不一定是item類型, null表示workArea
 		this.dropError = '';		//drop error message
 
-		this.fnShowMenu = null;		//顯示右鍵選單, function(e, item)
-		this.fnAddItem = null;		//add new item, function(boxId, itemType), return new row
-		this.fnSaveInfo = null;		//onDragEnd時會呼叫 mItem 這個函數
+		//this.fnShowMenu = null;		//顯示右鍵選單, function(e, item)
+		//this.fnAddItem = null;		//add new item, function(boxId, itemType), return new row
+		//this.fnSaveInfo = null;		//onDragEnd時會呼叫 mItem 這個函數
 
 		//work area註冊全域事件
 		//右鍵選單事件
@@ -99,10 +101,8 @@ class UiView {
 			e.preventDefault();  // 取消瀏覽器預設右鍵選單
 			//e.stopPropagation(); // 阻止冒泡，避免先被 document 的 mousedown 處理
 
-			if (me.fnShowMenu) {
-				let item = me._elmToItem(e.target);
-				me.fnShowMenu(e, item);
-			}
+			let item = me._elmToItem(e.target);
+			me.uiMany.showMenu(e, item);
 		});
 
 		//drag/drop 事件
@@ -130,7 +130,7 @@ class UiView {
 		let box = this._getBox(drag.item);
 		drag.boxType = this.itemGetType(box);
 		drag.boxId = (box == null) ? this.BoxId0 : this.itemGetId(box);
-		//drag.isBox = this._isBox(drag.itemType);
+		//drag.isBox = this.isBox(drag.itemType);
 	}
 
 	_onDragOver(e) {		
@@ -164,8 +164,8 @@ class UiView {
 			dropInBox =
 				//Span: 在 span 裡面
 				//(drop.itemType == EstrItemType.Span && dropObj.hasClass(this.ClsSpan)) ||
-				//Row: 沒有 ClsItem 表示在內部
-				(drop.itemType == EstrItemType.Row && !dropObj.hasClass(this.ClsItem)) ||
+				//RowBox: 沒有 ClsItem 表示在內部
+				(drop.itemType == EstrItemType.RowBox && !dropObj.hasClass(this.ClsItem)) ||
 				//Table: 在 td 裡面
 				(drop.itemType == EstrItemType.Table && _obj.tagName(dropObj) == this.ClsTableCont) ||
 				//TabPage: 在 ClsTabPageCont 裡面
@@ -173,7 +173,7 @@ class UiView {
 			*/
 
 			//drop.boxType表示 "drag item" drop進去的box item, 沒有則為null
-			if (this._isBox(drop.itemType) && dropObj.hasClass(this.ClsChild)) {
+			if (this.isBox(drop.itemType) && dropObj.hasClass(this.ClsChild)) {
 				//box child 內容為空的情況
 				boxAppendItem = true;
 				drop.boxType = drop.itemType;
@@ -185,7 +185,7 @@ class UiView {
 				var box = this._getBox(dropItem);
 				drop.boxType = this.itemGetType(box);
 				drop.boxId = (box == null) ? this.BoxId0 : this.itemGetId(box);
-				dropInBox = this._isBox(drop.boxType);
+				dropInBox = this.isBox(drop.boxType);
 				//boxHasItem = true;
 			}
 
@@ -204,12 +204,12 @@ class UiView {
 		/*
 		 x軸: drop, y軸: drag 
 		 如果 drop.boxType == null, 則 drop 位置無限制
-		   (inside)Row	Table TabPage
+		   (inside)RB	Table TabPage
 		 ------------------------------
 		 Input		O	  ?		O
 		 Group		O	  x		O
 		 Checks		O	  x		O
-		 Row		x	  x		O
+		 RB	   		x	  x		O
 		 Table		x	  x		x
 		 TabPage	x	  x		x
 		*/
@@ -265,11 +265,11 @@ class UiView {
 					}
 					break;
 				*/
-				case EstrItemType.Row:
-					dragName = this.NameRow;
+				case EstrItemType.RowBox:
+					dragName = this.NameRB;
 					switch (drop.boxType) {
-						case EstrItemType.Row:
-							error = `${dragName}不能放在${this.NameRow}裡面。`;
+						case EstrItemType.RowBox:
+							error = `${dragName}不能放在${this.NameRB}裡面。`;
 							break;
 						case EstrItemType.Table:
 							error = `${dragName}不能放在${this.NameTable}裡面。`;
@@ -277,16 +277,16 @@ class UiView {
 					}
 					/*
 					switch (drop.itemType) {
-						case EstrItemType.Row:
-							error = `${dragName}不能放在${this.NameRow}裡面。`;
+						case EstrItemType.RowBox:
+							error = `${dragName}不能放在${this.NameRB}裡面。`;
 							break;
 						case EstrItemType.Table:
 							error = `${dragName}不能放在${this.NameTable}裡面。`;
 							break;
 						case EstrItemType.Input:
 						case EstrItemType.Group:
-							if (drop.boxType == EstrItemType.Row) {
-								error = `${dragName}不能放在${this.NameRow}裡面。`;
+							if (drop.boxType == EstrItemType.RowBox) {
+								error = `${dragName}不能放在${this.NameRB}裡面。`;
 							} else if (drop.boxType == EstrItemType.Table) {
 								error = `${dragName}不能放在${this.NameTable}裡面。`;
 							}
@@ -298,7 +298,7 @@ class UiView {
 				case EstrItemType.TabPage:
 					dragName = (drag.itemType == EstrItemType.Table)
 						? this.NameTable : this.NameTabPage;
-					let dropIsBox = this._isBox(drop.itemType);
+					let dropIsBox = this.isBox(drop.itemType);
 					if (dropIsBox) {
 						error = `${dragName}不能放在${this._typeToName(drop.itemType)}裡面。`;
 					} else {
@@ -358,40 +358,47 @@ class UiView {
 			this._setChgBoxJsons(boxId, childNo);
 
 			//create new item if need
+			//get info
+			let info, itemId;
 			if (this.dragIsNew) {
-				let row = this.fnAddItem(dragType);
-				let item = await this._newItemA(dragType, row.Id, _str.toJson(row.Info));
+				let row = this.uiMany.addItemRow(dragType);
+				itemId = row.Id;
+				info = _str.toJson(row.Info);
+				let item = await this._newItemA(dragType, itemId, info);
 				drag.item = item;
+			} else {
+				itemId = this.itemGetId(drag.item);
+				info = this.itemGetInfo(drag.item);
 			}
 
 			//調整 item 大小或外觀
 			if (dragType == EstrItemType.Input || dragType == EstrItemType.Checks) {
-				//移入/移出 Row 時調整大小(互斥判斷: a^b 或是 a !== b)
-				let checkType = EstrItemType.Row;
+				//移入/移出 RowBox 時調整大小(互斥判斷: a^b 或是 a !== b)
+				let checkType = EstrItemType.RowBox;
 				if (this._isBoxTypeXor(checkType)) {
 					let inTable = (drop.boxType == checkType);
 					let gridNum = inTable
 						? this._getUpGridNum(dropLine)	//利用dropLine讀取上層grid num
 						: 0;
-					let info = this.itemGetInfo(drag.item);
-					info.Cols = this._resizeItemByRow(drag.item, inTable, gridNum);
-					this.itemSetInfo(drag.item, info);
+					//let info = this.itemGetInfo(drag.item);
+					let prop = { Cols: this._resizeItemByRB(drag.item, inTable, gridNum) };
+					this._setInfoProp(itemId, prop);
 
 					//update mItem info
-					this.fnSaveInfo(this.itemGetId(drag.item), info);
+					//this.uiMany.setInfo(this.itemGetId(drag.item), info);
 				}
 
 				/*
 				//移入/移出 Span時 show/hide label、note(互斥判斷同上) input only
 				checkType = EstrItemType.Span;
 				if (this._isBoxTypeXor(checkType))
-					this._setInputSub(drag.item, (drop.boxType == checkType));
+					this._setInputForTable(drag.item, (drop.boxType == checkType));
 				*/
 
 				//移入/移出 Table時 show/hide label、note(互斥判斷同上) input only
 				checkType = EstrItemType.Table;
 				if (this._isBoxTypeXor(checkType))
-					this._setInputSub(drag.item, (drop.boxType == checkType));
+					this._setInputForTable(drag.item, (drop.boxType == checkType));
 			}
 
 			//item移到 drog line的位置
@@ -401,27 +408,6 @@ class UiView {
 		//reset variables
 		this._setDragging(false);
 	}
-
-	/*
-	//reset col when change box
-	//called by: onDragEnd、onModalOk
-	_reColByBox(boxId, childNo) {
-		//移入/移出 Row 時調整大小(互斥判斷: a^b 或是 a !== b)
-		let checkType = EstrItemType.Row;
-		if (this._isBoxTypeXor(checkType)) {
-			let inTable = (drop.boxType == checkType);
-			let gridNum = inTable
-				? this._getUpGridNum(dropLine)	//利用dropLine讀取上層grid num
-				: 0;
-			this._resizeItemByRow(drag.item, inTable, gridNum);
-		}
-
-		//移入/移出 Table時 show/hide label、note(互斥判斷同上) input only
-		checkType = EstrItemType.Table;
-		if (this._isBoxTypeXor(checkType))
-			this._setInputSub(drag.item, (drop.boxType == checkType));
-	}
-	*/
 
 	//只找第一層item
 	boxGetChildIds(boxId, childNo) {
@@ -478,13 +464,13 @@ class UiView {
 			case null:
 				upElm = this.Area;
 				break;
-			case EstrItemType.Row:
+			case EstrItemType.RowBox:
 				//找col位置
 				upElm = box.children().eq(childNo);
 				break;
 			case EstrItemType.Table:
 				//hide label, inputNote
-				this._setInputSub(item, true);
+				this._setInputForTable(item, true);
 
 				//找td位置: tr第0列
 				upElm = box.find('tbody tr').eq(0).find('td').eq(childNo);
@@ -538,8 +524,8 @@ class UiView {
 				return this.NameChecks;
 			//case EstrItemType.Span:
 			//	return this.NameSpan;
-			case EstrItemType.Row:
-				return this.NameRow;
+			case EstrItemType.RowBox:
+				return this.NameRB;
 			case EstrItemType.Table:
 				return this.NameTable;
 			case EstrItemType.TabPage:
@@ -556,9 +542,10 @@ class UiView {
 		return (dragBoxYes !== dropBoxYes);
 	}
 
-	_isBox(type) {
+	//called by: this, uiMany
+	isBox(type) {
 		return (/*type == EstrItemType.Span ||*/
-			type == EstrItemType.Row ||
+			type == EstrItemType.RowBox ||
 			type == EstrItemType.Table ||
 			type == EstrItemType.TabPage);
 	}
@@ -578,8 +565,8 @@ class UiView {
 				return this._newChecks(itemId, info);
 			//case EstrItemType.Span:
 			//	return this._newSpan(itemId, info);
-			case EstrItemType.Row:
-				return this._newRow(itemId, info);
+			case EstrItemType.RowBox:
+				return this._newRB(itemId, info);
 			case EstrItemType.Table:
 				return this._newTable(itemId, info);
 			case EstrItemType.TabPage:
@@ -629,7 +616,7 @@ class UiView {
 		await this._infoToInputA(info, item);
 
 		//render item
-		this._itemAddProp(id, item, EstrItemType.Input, info);
+		this._itemAddProp(id, item, EstrItemType.Input);
 		return item;
 	}
 
@@ -644,14 +631,14 @@ class UiView {
 
 		//render item
 		let item = $(html);
-		this._itemAddProp(id, item, EstrItemType.Group, info);
+		this._itemAddProp(id, item, EstrItemType.Group);
 		return item;
 	}
 
 	_newChecks(id, info) {
 		let html = `<div class='row py-2'>${this._htmlChecks(id, info)}</div>`;
 		let item = $(html);
-		this._itemAddProp(id, item, EstrItemType.Checks, info);
+		this._itemAddProp(id, item, EstrItemType.Checks);
 		return item;
 	}
 
@@ -689,12 +676,12 @@ class UiView {
 		//加上py-2上下空間, 才能drop, dragOver時e.target為本身item !!
 		let html = '<div class="d-flex w-100 xu-span"></div>';
 		let item = $(html);
-		this._itemAddProp(id, item, EstrItemType.Span, info);
+		this._itemAddProp(id, item, EstrItemType.Span);
 		return item;
 	}
 	*/
 
-	_newRow(id, info) {
+	_newRB(id, info) {
 		//加上py-2上下空間, 才能drop, dragOver時e.target為本身item !!
 		//let clsCol = this.ClsRowCol;
 		let cols = info.RowType.split(',');
@@ -706,7 +693,7 @@ class UiView {
 
 		//render item
 		let item = $(html);
-		this._itemAddProp(id, item, EstrItemType.Row, info);
+		this._itemAddProp(id, item, EstrItemType.RowBox);
 		return item;
 	}
 
@@ -734,7 +721,7 @@ class UiView {
 		//render item
 		let item = $(html);
 		this._infoToTable(info, item);	//info to table
-		this._itemAddProp(id, item, EstrItemType.Table, info);
+		this._itemAddProp(id, item, EstrItemType.Table);
 		return item;
 	}
 
@@ -743,14 +730,14 @@ class UiView {
 		//return item;
 	}
 
-	//item 加入共用屬性
-	_itemAddProp(id, item, itemType, info) {
+	//item 加入共用屬性, 不儲存 info
+	_itemAddProp(id, item, itemType) {
 		//加入item屬性: .xu-item, data-itemtype
 		item.addClass(this.ClsItem);
 		item.attr('draggable', true);
 		_obj.setData(item, this.DataId, id);	//jquery data() 只寫入暫存, 使用 _obj(設定屬性) !!
 		_obj.setData(item, this.DataItemType, itemType);
-		this.itemSetInfo(item, info);
+		//this.itemSetInfo(item, info);
 	}
 	//#endregion
 
@@ -762,7 +749,7 @@ class UiView {
 	//移除/增加 label & inputNote, 直接搬到table, 因為內容有變
 	//called by mouseUp
 	//param {bool} inBox: drop位置是否在Table裡面
-	_setInputSub(item, inBox) {
+	_setInputForTable(item, inBox) {
 		let label = item.find(this.FtLabel);
 		let note = item.find(this.FtInputNote);
 		this._objShowGrid(item.find(this.FtInput), !inBox);
@@ -781,7 +768,7 @@ class UiView {
 	 * param {int} contGridNum: inBox=true時必須傳入, drop container object(row col)
 	 * return {string} cols
 	 */ 
-	_resizeItemByRow(item, inBox, contGridNum) {
+	_resizeItemByRB(item, inBox, contGridNum) {
 		//是否有inputNote
 		let label = item.find(this.FtLabel);
 		let input = item.find(this.FtInput);
@@ -816,7 +803,7 @@ class UiView {
 		_obj.renameCss(obj, this._getGridCss(obj), 'col-md-' + colNum);
 	}
 
-	//更新畫面上的Item(含外觀、Info欄位)
+	//更新畫面上的Item(含外觀、不含Info欄位)
 	//called by UiMany onModalOk(修改item內容)
 	async InfoToItemA(info, item, fnCallback) {
 		let id;
@@ -834,7 +821,7 @@ class UiView {
 				id = '';	//todo
 				info.LabelFids = _str.replaceAll(info.LabelFids, '\n', ',');	//斷行改回逗號
 				item.html(this._htmlChecks(id, info));	//改變內部 html
-				//this._itemAddProp(id, item, EstrItemType.Checks, info);
+				//this._itemAddProp(id, item, EstrItemType.Checks);
 				//this._infoToTable(info, item, fnCallback);
 				break;
 			/*
@@ -842,7 +829,7 @@ class UiView {
 				//do nothing
 				break;
 			*/
-			case EstrItemType.Row:
+			case EstrItemType.RowBox:
 				//do nothing
 				break;
 			case EstrItemType.Table:
@@ -854,7 +841,7 @@ class UiView {
 		}
 
 		//set data-info
-		this.itemSetInfo(item, info);
+		//this.itemSetInfo(item, info);
 
 		if (callback)
 			fnCallback();
@@ -985,19 +972,8 @@ class UiView {
 		this.chgBoxJsons = [];
 	}
 
-	/*
-	//載入item list(非巢狀資料)
-	async loadRowsA(rows) {
-		//rows to jsons
-		let jsons = _json.rowsToJsons(rows);
-
-		//ui load json array
-		await this.loadJsonsA(jsons);
-	}
-	*/
-
 	/**
-	 * (recursive)載入items(巢狀格式), 此時Info欄位內容為Json, 不是Json字串 !!
+	 * (recursive)載入items(巢狀格式), 此時Info欄位可能為Json或字串 !!
 	 * called by uiMany loadRowsA、loadJsonsA
 	 * param {json array} jsons: 內含Id
 	 * param {object} (this.Area) cont child container
@@ -1017,7 +993,10 @@ class UiView {
 			if (_var.isStr(json.Info))
 				json.Info = _str.toJson(json.Info);
 
+			//如果 input 在 table 裡面, hide label、note
 			let item = await this._newItemA(json.ItemType, json.Id, json.Info);
+			if (json.ItemType == EstrItemType.Input && this.itemGetType(cont.closest(this.FtItem)) == EstrItemType.Table)
+				this._setInputForTable(item, true);
 			cont.append(item);
 			//this._boxAddItem(box, boxType, childNo, item);
 
@@ -1049,7 +1028,7 @@ class UiView {
 				Info: me.itemGetInfo(item),		//data-info取出來為json型態!!
 			};
 
-			if (this._isBox(itemType)) {
+			if (this.isBox(itemType)) {
 				json.Childs2 = [];
 				item.find(this.FtChild).each(function (idx) {
 					let childs = [];
@@ -1064,9 +1043,9 @@ class UiView {
 			/*
 			//get child field name
 			switch (itemType) {
-				case EstrItemType.Row:
+				case EstrItemType.RowBox:
 				case EstrItemType.TabPage:
-					let ftCont = (itemType == EstrItemType.Row)
+					let ftCont = (itemType == EstrItemType.RowBox)
 						? me.FtRowCol : me.FtTabPageCont;
 					json.Childs2 = [];
 					item.find(ftCont).each(function (idx) {
@@ -1113,16 +1092,20 @@ class UiView {
 		return _input.getType(item.find(this.FtInput));
 	}
 
+	//also called by UiMany
+	itemGetId(item) {
+		//return item.data(this.DataId);
+		return _obj.getData(item, this.DataId);
+	}
+
 	//get item type, also called outside
 	itemGetType(item) {
 		return _obj.isEmpty(item)
 			? null : _obj.getData(item, this.DataItemType);
 	}
 
-	//also called by UiMany
-	itemGetId(item) {
-		//return item.data(this.DataId);
-		return _obj.getData(item, this.DataId);
+	itemGetInfo(item) {
+		return this._getInfo(this.itemGetId(item));
 	}
 
 	/**
@@ -1130,14 +1113,22 @@ class UiView {
 	 * param {object} item
 	 * returns {json}
 	 */
-	itemGetInfo(item) {
-		//return item.data(this.DataInfo);
-		return _str.toJson(_obj.getData(item, this.DataInfo));
+	_getInfo(itemId) {
+		return this.uiMany.getInfo(itemId);
+	}
+	_setInfo(itemId, info) {
+		return this.uiMany.setInfo(itemId, info);
+	}
+	_setInfoProp(itemId, prop) {
+		return this.uiMany.setInfoProp(itemId, prop);
 	}
 
+	/*
 	itemSetInfo(item, info) {
-		_obj.setData(item, this.DataInfo, _json.toStr(info));
+		//_obj.setData(item, this.DataInfo, _json.toStr(info));
+		this._setInfo(this.itemGetId(item), info);
 	}
+	*/
 
 	//內部element to Item object
 	_elmToItem(elm) {
@@ -1164,7 +1155,7 @@ class UiView {
 		//	json.id = (this.items.length + 1) * (-1);
 		let itemType = json.ItemType;
 		let item = (itemType == EstrItemType.Input) ? new UiInput(this, json) :
-			(itemType == EstrItemType.Row) ? new UiBox(this, json) :
+			(itemType == EstrItemType.RowBox) ? new UiBox(this, json) :
 			(itemType == EstrItemType.Group) ? new UiGroup(this, json) :
 			(itemType == EstrItemType.Table) ? new UiTable(this, json) :
 			null;

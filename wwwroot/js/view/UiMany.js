@@ -41,10 +41,10 @@ class UiMany {
         //this.nowFlowItem = null;    //now selected FlowNode/FlowLine
 
         //set instance first
-        let uiView = new UiView(ftWorkArea);
-        uiView.fnShowMenu = (event, item) => this.fnShowMenu(event, item);
-        uiView.fnAddItem = (itemType) => this.fnAddItem(itemType);
-        uiView.fnSaveInfo = (itemId, info) => this.fnSaveInfo(itemId, info);
+        let uiView = new UiView(this, ftWorkArea);
+        //uiView.fnShowMenu = (event, item) => this.fnShowMenu(event, item);
+        //uiView.fnAddItemRow = (itemType) => this.fnAddItemRow(itemType);
+        //uiView.fnSaveInfo = (itemId, info) => this.fnSaveInfo(itemId, info);
         this.uiView = uiView;
 
         //mouse down時hide right menu
@@ -69,7 +69,7 @@ class UiMany {
     */
 
     //on show right menu
-    fnShowMenu(e, item) {
+    showMenu(e, item) {
         //set instance variables
         this.modalItem = item;
         this.modalItemId = this.uiView.itemGetId(item);
@@ -103,7 +103,7 @@ class UiMany {
     }
 
     //return row
-    fnAddItem(itemType) {
+    addItemRow(itemType) {
         switch (itemType) {
             case EstrItemType.Input:
                 return this._addInput();
@@ -113,8 +113,8 @@ class UiMany {
                 return this._addChecks();
             //case EstrItemType.Span:
             //    return this._addSpan();
-            case EstrItemType.Row:
-                return this._addRow();
+            case EstrItemType.RowBox:
+                return this._addRB();
             case EstrItemType.Table:
                 return this._addTable();
             case EstrItemType.TabPage:
@@ -123,7 +123,7 @@ class UiMany {
     }
 
     //update mItem Info 欄位
-    fnSaveInfo(itemId, info) {
+    setInfo(itemId, info) {
         let rowBox = this.mItem.idToRowBox(itemId);
         _form.loadRow(rowBox, { Info: _json.toStr(info) });
     }
@@ -142,6 +142,31 @@ class UiMany {
     }
 
     //#endregion
+
+    _idToRB(itemId) {
+        return this.mItem.idToRowBox(itemId);
+    }
+
+    getInfo(itemId) {
+        return this._getInfoByRB(this._idToRB(itemId));
+    }
+    setInfo(itemId, info) {
+        this._setInfoByRB(this._idToRB(itemId), info);
+    }
+
+    //set info property
+    setInfoProp(itemId, prop) {
+        let rb = this.mItem.idToRowBox(itemId);
+        let info = _json.copy(prop, this._getInfoByRB(rb));
+        this._setInfoByRB(rb, info);
+    }
+
+    _getInfoByRB(rb) {
+        return _str.toJson(_itext.get('Info', rb));
+    }
+    _setInfoByRB(rb, info) {
+        _itext.set('Info', _json.toStr(info), rb);
+    }
 
     //#region 功能按鈕相關
     //return row
@@ -214,14 +239,14 @@ class UiMany {
     }
     */
 
-    _addRow() {
+    _addRB() {
         //使用畫面上的設定RowType
         let info = {
             RowType: _iselect.get('_RowType', _me.eform0),
         };
 
         //add to mItem
-        return this._mItemAddRow(EstrItemType.Row, info);
+        return this._mItemAddRow(EstrItemType.RowBox, info);
 
         //add to UI
         //this.uiView.addRow(row.Id);
@@ -248,7 +273,7 @@ class UiMany {
     //#region menu 事件相關
     _deleteItem() {
         //todo: 考慮有子item的情形
-        this.mLine.deleteRow(this.modalItemId);
+        this.mItem.deleteRow(this.modalItemId);
         this.uiView.deleteItem(this.modalItem);
     }
 
@@ -263,7 +288,7 @@ class UiMany {
         if (!this._menuStatus())
             return;
 
-        let info = this.uiView.itemGetInfo(this.modalItem);
+        let info = this.getInfo(this.modalItemId);
         let modal;
         switch (this.modalItemType) {
             case EstrItemType.Input:
@@ -354,7 +379,7 @@ class UiMany {
                 }
             }
 
-            me.fnSaveInfo(me.modalItemId, info);
+            me.setInfo(me.modalItemId, info);
             /*
             //update mItem Info 欄位
             let rowBox = me.mItem.idToRowBox(me.modalItemId);

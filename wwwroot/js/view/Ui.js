@@ -27,7 +27,7 @@ var _me = {
         //_me.divEditTbar = $('#divEditTbar');
 
         //initial edit one/many, rowsBox(參數2) 使用 eform
-        _me.mItem = new EditMany('Id', 'eformItems', 'tplItem', '.xd-tr', 'Sort');
+        _me.mItem = new EditMany('Id', 'eformItems', 'tplItem', '.xd-tr');
         new CrudR(config, [null, _me.mItem]);
 
         //custom function
