@@ -68,6 +68,10 @@ class UiMany {
     }
     */
 
+    _hideMenu() {
+        _obj.hide($(this.FtMenu));
+    }
+
     //on show right menu
     showMenu(e, item) {
         //set instance variables
@@ -328,11 +332,13 @@ class UiMany {
 
         //刪除box時顯示確認框
         if (this.uiView.isBox(this.modalItemType)) {
-            _tool.ans('是否確定刪除這個容器?', function () {
+            _tool.ans('是否確定刪除這個容器?', ()=> {
                 this._deleteItem();
+                this._hideMenu();
             });
         } else {
             this._deleteItem();
+            this._hideMenu();
         }
     }
 
