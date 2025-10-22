@@ -377,17 +377,19 @@ class UiMany {
         //ModalTable/ModalTabPage 時回傳ids(要刪除的全部itemId字串陣列, 不為null)
         let me = this;
         let info = _form.toRow(modal);    //直接讀取modal內欄位, 內容為 Info 欄位
-        let itemIds = await this.uiView.infoToItemA(info, this.modalItem);
-        if (_array.notEmpty(itemIds)) {
-            //刪除多筆
-            for (let i = 0; i < itemIds.length; i++) {
-                me.mItem.deleteRow(itemIds[i], me.mItem.idToRowBox(itemIds[i]));
-            }
-
+        let result = await this.uiView.infoToItemA(info, this.modalItem);
+        if (result.status) {
             //update mItem Info欄位 & hide modal
             me.setInfo(me.modalItemId, info);
-            _modal.hideO(modal);
+
+            //刪除多筆
+            let itemIds = result.itemIds;
+            if (_array.notEmpty(itemIds)) {
+                for (let i = 0; i < itemIds.length; i++)
+                    me.mItem.deleteRow(itemIds[i], me.mItem.idToRowBox(itemIds[i]));
+            }
         }
+        _modal.hideO(modal);
     }
     //#endregion
 

@@ -808,12 +808,13 @@ class UiView {
 	 * 更新畫面上的Item(含外觀、不含Info欄位)
 	 * param {json} info
 	 * param {object} item
-	 * return {string[]}如果box有刪減欄位, 則傳回要刪除的itemId 字串陣列
+	 * return {status:bool, itemIds:string[]}如果box有刪減欄位, 則傳回要刪除的itemId 字串陣列
 	 */
 	async infoToItemA(info, item) {
 		let id;
-		let itemIds = [];
-		let callback = true;
+		//let itemIds = [];
+		let defResult = { status: true, itemIds: null };	//default result
+		//let callback = true;
 		switch (this.itemGetType(item)) {
 			case EstrItemType.Input:
 				//如果修改 inputType 必須重捉後端 input html(if need)
@@ -821,10 +822,12 @@ class UiView {
 				break;
 			case EstrItemType.Group:
 				item.find(this.FtGroupTitle).text(info.Title || '');
+				//return result;
 				break;
 			case EstrItemType.Checks:
 				info.LabelFids = _str.replaceAll(info.LabelFids, '\n', ',');	//斷行改回逗號
 				item.html(this._htmlChecks(id, info));	//改變內部 html(重新產生html)
+				//return result;
 				break;
 			/*
 			case EstrItemType.Span:
@@ -832,12 +835,12 @@ class UiView {
 				break;
 			*/
 			case EstrItemType.RowBox:
-				//do nothing
+				//todo
 				break;
 			case EstrItemType.Table:
-				callback = false;	//必須先判斷
-				await this._infoToTableA(info, item, fnCallback);
-				break;
+				//callback = false;	//必須先判斷
+				return await this._infoToTableA(info, item);
+				//break;
 			case EstrItemType.TabPage:
 				//todo
 				break;
@@ -845,7 +848,7 @@ class UiView {
 
 		//if (callback)
 		//	fnCallback();
-		return itemIds;
+		return defResult;
 	}
 
 	/**
@@ -860,6 +863,9 @@ class UiView {
 		let cols = (info.Cols || this.DefaultCols).split(',');
 		this._objSetGrid(label, cols[0]);
 		this._objSetGrid(input, cols[1]);
+
+		//set title
+		label.html(`<span class="x-required">*</span>${info.Title}`);
 
 		//fid -> placeholder if need
 		let inputType = info.InputType;
@@ -918,15 +924,15 @@ class UiView {
 	/**
 	 * info to table item ui
 	 * called by: 1.新增, 2.改變欄位數
-	 * param {function} fnCallback 可為空
+	 * //param {function} fnCallback 可為空
 	 * return {string[]} 要刪除的 itemId 字串陣列
 	 */ 
-	async _infoToTableA(info, item, fnCallback) {
+	async _infoToTableA(info, item) {
 		//update Header		
 		let oldLen = item.find('th').length;	//old th list
 		let heads = info.Heads.split(',');		//new list
-		if (oldLen > heads.length && !await _tool.ans('是否確定減少欄位數目，尾端欄位將會被移除?')) {
-			return;
+		if (oldLen > heads.length && !await _tool.ansA('是否確定減少欄位數目，尾端欄位將會被移除?'))
+			return { status: false };
 
 		let newLen = heads.length;
 		let headBox = item.find('thead tr');
@@ -959,9 +965,10 @@ class UiView {
 			$(this).text(heads[i] || '');
 		});
 
+		return { status: true, itemIds: ids };
 		//傳回deleted id list
-		if (fnCallback)
-			fnCallback(ids);
+		//if (fnCallback)
+		//	fnCallback(ids);
 	}
 
 	//清空工作區

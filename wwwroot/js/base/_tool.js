@@ -1,11 +1,15 @@
 ﻿
 //small public components
 var _tool = {
+    //for ansA
+    ansStatus: false,
+    fnResolve: null,
 
     init: function () {
         //alert
-        _tool.xgMsg = $('#xgMsg');  //使用id
-        _tool.xgAns = $('#xgAns');  //使用id
+        _tool.xgMsg = $('#xgMsg');      //使用id
+        _tool.xgAns = $('#xgAns');      //使用id
+        _tool.xgAnsA = $('#xgAnsA');    //使用id
         _tool.xgAlert = $('.x-alert');
         _tool.xgArea = $('.x-area');
         _tool.xgImage = $('.x-image');
@@ -27,12 +31,10 @@ var _tool = {
     },
 
     /**
-     * ans -> ansA
      * show confirmation 
      * param {string} msg
      * param {function} fnYes
      * param {function} fnNo
-     * return {bool} yes/no
      */
     ans: function (msg, fnYes, fnNo) {
         var box = _tool.xgAns;
@@ -42,6 +44,33 @@ var _tool = {
         //set callback
         _tool._fnOnAnsYes = fnYes;
         _tool._fnOnAnsNo = (fnNo === undefined) ? null : fnNo;
+    },
+
+    /**
+     * ans -> ansA
+     * show confirmation 
+     * param {string} msg
+     * return {bool} yes/no
+     */
+    ansA: async function (msg) {
+        var box = _tool.xgAnsA;
+        box.find('.xd-msg').html(msg);
+        _modal.showO(box);
+
+        return new Promise((resolve) => {
+            //reset flag, 防止重複 resolve
+            _tool.ansStatus = false;
+            _tool.fnResolve = resolve;
+        });
+    },
+
+    //called by ansA
+    onAnsA: function(value) {
+        if (_tool.ansStatus) return;
+
+        _tool.ansStatus = true;
+        _modal.hideO(_tool.xgAnsA);
+        _tool.fnResolve(value == 1);
     },
 
     /**
