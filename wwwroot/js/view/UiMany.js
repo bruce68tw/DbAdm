@@ -41,11 +41,12 @@ class UiMany {
         //this.nowFlowItem = null;    //now selected FlowNode/FlowLine
 
         //set instance first
-        let uiView = new UiView(this, ftWorkArea);
+        //let uiView = new UiView(this, ftWorkArea);
         //uiView.fnShowMenu = (event, item) => this.fnShowMenu(event, item);
         //uiView.fnAddItemRow = (itemType) => this.fnAddItemRow(itemType);
         //uiView.fnSaveInfo = (itemId, info) => this.fnSaveInfo(itemId, info);
-        this.uiView = uiView;
+        //this.uiView = uiView;
+        this.uiView = new UiView(this, ftWorkArea);
 
         //mouse down時hide right menu
         var me = this;
@@ -326,16 +327,16 @@ class UiMany {
         _modal.showO(modal);
     }
 
-    onMenuDelete() {
+    async onMenuDelete() {
         if (!this._menuStatus())
             return;
 
         //刪除box時顯示確認框
         if (this.uiView.isBox(this.modalItemType)) {
-            _tool.ans('是否確定刪除這個容器?', ()=> {
+            if (await _tool.ansA('是否確定刪除這個容器?')) {
                 this._deleteItem();
                 this._hideMenu();
-            });
+            }
         } else {
             this._deleteItem();
             this._hideMenu();
@@ -350,7 +351,7 @@ class UiMany {
     //#region modal 相關
     //onclick modal ok
     async onModalOk() {
-        //check input
+        //get modal
         let modal;
         switch (this.modalItemType) {
             case EstrItemType.Input:
@@ -370,31 +371,23 @@ class UiMany {
                 break;
         }
 
+        //check input
+
         //update ui first, Table必須先判斷, 所以傳入函數
-        //ModalTable/ModalTabPage 時回傳ids(要刪除的id字串陣列, 不為null)
+        //ModalTable/ModalTabPage 時回傳ids(要刪除的全部itemId字串陣列, 不為null)
         let me = this;
         let info = _form.toRow(modal);    //直接讀取modal內欄位, 內容為 Info 欄位
-        await this.uiView.InfoToItemA(info, this.modalItem, function (ids) {
-            //update mItem
+        let itemIds = await this.uiView.infoToItemA(info, this.modalItem);
+        if (_array.notEmpty(itemIds)) {
             //刪除多筆
-            let idsLen = (ids == null) ? 0 : ids.length;
-            if (idsLen > 0) {
-                //alert(`ids=${ids}`);
-                for (let i = 0; i < idsLen; i++) {
-                    me.mItem.deleteRow(ids[i], me.mItem.idToRowBox(ids[i]));
-                }
+            for (let i = 0; i < itemIds.length; i++) {
+                me.mItem.deleteRow(itemIds[i], me.mItem.idToRowBox(itemIds[i]));
             }
 
+            //update mItem Info欄位 & hide modal
             me.setInfo(me.modalItemId, info);
-            /*
-            //update mItem Info 欄位
-            let rowBox = me.mItem.idToRowBox(me.modalItemId);
-            _form.loadRow(rowBox, { Info: _json.toStr(info) });
-            */
-
-            //hide modal
             _modal.hideO(modal);
-        });
+        }
     }
     //#endregion
 

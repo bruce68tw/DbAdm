@@ -63,7 +63,7 @@ namespace DbAdm.Services
                 if (int.TryParse(boxIdStr, out var boxId) && boxId < 0)
                 {
                     var find = _Json.FindArray(rows, "_Id2", boxIdStr)!;
-                    row[BoxId] = rows[find]!["Id"];     //此時Id已經產生
+                    row[BoxId] = find!["Id"];     //此時Id已經產生
                 }
             }
             await Task.CompletedTask;   //模擬 async 結束, 此函數實際為同步!!

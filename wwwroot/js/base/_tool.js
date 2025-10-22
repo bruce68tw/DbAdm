@@ -27,7 +27,12 @@ var _tool = {
     },
 
     /**
+     * ans -> ansA
      * show confirmation 
+     * param {string} msg
+     * param {function} fnYes
+     * param {function} fnNo
+     * return {bool} yes/no
      */
     ans: function (msg, fnYes, fnNo) {
         var box = _tool.xgAns;

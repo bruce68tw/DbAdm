@@ -67,8 +67,8 @@ class UiView {
 		this.NameInput = '[輸入欄位]';
 		this.NameGroup = '[分群文字]';
 		this.NameChecks = '[多選欄位]';
-		this.NameSpan = '[並排容器]';
-		this.NameRB = '[欄位容器]';
+		//this.NameSpan = '[並排容器]';
+		this.NameRB = '[多欄容器]';
 		this.NameTable = '[多筆表格]';
 		this.NameTabPage = '[多頁容器]';
 
@@ -568,7 +568,7 @@ class UiView {
 			case EstrItemType.RowBox:
 				return this._newRB(itemId, info);
 			case EstrItemType.Table:
-				return this._newTable(itemId, info);
+				return await this._newTableA(itemId, info);
 			case EstrItemType.TabPage:
 				return this._newTabPage(itemId, info);
 		}
@@ -697,7 +697,7 @@ class UiView {
 		return item;
 	}
 
-	_newTable(id, info) {
+	async _newTableA(id, info) {
 		let html = `
 <div class='py-2'>
 	<div class='x-btns-box'>
@@ -720,7 +720,7 @@ class UiView {
 `;
 		//render item
 		let item = $(html);
-		this._infoToTable(info, item);	//info to table
+		await this._infoToTableA(info, item);	//info to table
 		this._itemAddProp(id, item, EstrItemType.Table);
 		return item;
 	}
@@ -803,26 +803,28 @@ class UiView {
 		_obj.renameCss(obj, this._getGridCss(obj), 'col-md-' + colNum);
 	}
 
-	//更新畫面上的Item(含外觀、不含Info欄位)
-	//called by UiMany onModalOk(修改item內容)
-	async InfoToItemA(info, item, fnCallback) {
+	/**
+	 * called by UiMany onModalOk(修改item內容)
+	 * 更新畫面上的Item(含外觀、不含Info欄位)
+	 * param {json} info
+	 * param {object} item
+	 * return {string[]}如果box有刪減欄位, 則傳回要刪除的itemId 字串陣列
+	 */
+	async infoToItemA(info, item) {
 		let id;
+		let itemIds = [];
 		let callback = true;
 		switch (this.itemGetType(item)) {
 			case EstrItemType.Input:
+				//如果修改 inputType 必須重捉後端 input html(if need)
 				await this._infoToInputA(info, item);
 				break;
 			case EstrItemType.Group:
 				item.find(this.FtGroupTitle).text(info.Title || '');
 				break;
 			case EstrItemType.Checks:
-				//todo
-				//callback = false;	//必須先判斷
-				id = '';	//todo
 				info.LabelFids = _str.replaceAll(info.LabelFids, '\n', ',');	//斷行改回逗號
-				item.html(this._htmlChecks(id, info));	//改變內部 html
-				//this._itemAddProp(id, item, EstrItemType.Checks);
-				//this._infoToTable(info, item, fnCallback);
+				item.html(this._htmlChecks(id, info));	//改變內部 html(重新產生html)
 				break;
 			/*
 			case EstrItemType.Span:
@@ -834,17 +836,16 @@ class UiView {
 				break;
 			case EstrItemType.Table:
 				callback = false;	//必須先判斷
-				this._infoToTable(info, item, fnCallback);
+				await this._infoToTableA(info, item, fnCallback);
 				break;
 			case EstrItemType.TabPage:
+				//todo
 				break;
 		}
 
-		//set data-info
-		//this.itemSetInfo(item, info);
-
-		if (callback)
-			fnCallback();
+		//if (callback)
+		//	fnCallback();
+		return itemIds;
 	}
 
 	/**
@@ -914,22 +915,19 @@ class UiView {
 			.find(a => a.startsWith('col-md-'));
 	}
 
-	//info to input item ui
-	//called by: 1.新增, 2.改變欄位數
-	//param fnCallback 可為空
-	_infoToTable(info, item, fnCallback) {
+	/**
+	 * info to table item ui
+	 * called by: 1.新增, 2.改變欄位數
+	 * param {function} fnCallback 可為空
+	 * return {string[]} 要刪除的 itemId 字串陣列
+	 */ 
+	async _infoToTableA(info, item, fnCallback) {
 		//update Header		
-		let oldLen = item.find('th').length;		//old th list
-		let heads = info.Heads.split(',');	//new list
-		if (oldLen > heads.length) {
-			_tool.ans('是否確定減少欄位數目，尾端欄位將會被移除?', () => this._infoToTable2(info, item, oldLen, heads, fnCallback));
-		} else {
-			this._infoToTable2(info, item, oldLen, heads, fnCallback);
-		}
-	}
+		let oldLen = item.find('th').length;	//old th list
+		let heads = info.Heads.split(',');		//new list
+		if (oldLen > heads.length && !await _tool.ans('是否確定減少欄位數目，尾端欄位將會被移除?')) {
+			return;
 
-	//called by _infoToTable
-	_infoToTable2(info, item, oldLen, heads, fnCallback) {
 		let newLen = heads.length;
 		let headBox = item.find('thead tr');
 		let bodyBox = item.find('tbody tr');
@@ -957,7 +955,7 @@ class UiView {
 		item.find(this.FtTableTitle).text(info.Title || '');
 
 		//update table heads, 如果使用箭頭函數則this會指向 UiView本身!!
-		headBox.find('th').each(function(i){
+		headBox.find('th').each(function (i) {
 			$(this).text(heads[i] || '');
 		});
 

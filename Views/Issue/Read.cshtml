@@ -96,7 +96,7 @@
 
         //寄問卷
         onSurvey: function (issueId) {
-            _tool.ans('是否確定寄送問卷?', async () => {
+            if (await _tool.ansA('是否確定寄送問卷?')) {
                 await _ajax.getStrA('SendSurvey', { issueId: issueId }, function (str) {
                     var ok = (str == '1');
                     _tool.msg(ok ? '成功寄送問卷。' : '無法寄送問卷 !!');
@@ -104,7 +104,7 @@
                         _me.crudR.dt.reload();
                     }
                 });
-            });
+            }
         },
 
         //設定延續工作按鈕的狀態
