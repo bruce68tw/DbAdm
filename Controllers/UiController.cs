@@ -102,5 +102,17 @@ namespace DbAdm.Controllers
             return _Input.XgGroup(title, false);
         }
 
+        /// <summary>
+        /// generate CRUD
+        /// </summary>
+        /// <param name="id">UI.Id</param>
+        /// <returns>error msg if any</returns>
+        [HttpPost]
+        public async Task<string> GenCrud(string id)
+        {
+            var result = await new GenCrudSvc().GenCrudsA(id);
+            return result;
+        }
+
     }//class
 }

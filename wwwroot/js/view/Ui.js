@@ -1,4 +1,5 @@
 /// <reference path="UiMany.js" />
+
 var _me = {
     init: function () {
         var config = {
@@ -11,7 +12,11 @@ var _me = {
             ],
             columnDefs: [
                 { targets: [3], render: function (data, type, full, meta) {
-                    return '';
+                    var html = '' +
+                        '<button type="button" class="btn btn-link" data-onclick="_me.onGenCrud" data-args="{0}">{1}</button> | ' +
+                        '<button type="button" class="btn btn-link" data-onclick="_me.onDownCrud" data-args="{0}">{2}</button> | ' +
+                        '<button type="button" class="btn btn-link" data-onclick="_me.onDownTableSql" data-args="{0}">{3}</button>';
+                    return _str.format(html, full.Id, '產生CRUD', '下載CRUD', '下載Table SQL');
                 }},
                 { targets: [4], render: function (data, type, full, meta) {
                     return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
@@ -37,9 +42,30 @@ var _me = {
 
         //initial uiMany
         _me.uiMany = new UiMany('.xu-area', _me.mItem);
+
+    }, //init
+
+    //#region read form function
+    //onclick generate crud(產生在主機)
+    onGenCrud: function (id) {
+        await _ajax.getStrA('GenCrud', { id: id }, function (error) {
+            _tool.msg(_str.isEmpty(error) ? '執行成功' : error);
+        });
     },
 
-    //on open import modal
+    //onclick download crud
+    onDownCrud: function () {
+
+    },
+
+    //onclick download table sql()
+    onDownTableSql: function () {
+
+    },
+    //#endregion
+
+    //#region edit form function
+    //on click open import modal
     onOpenImport: function () {
         //clear first
         _itext.set('Import', '', _me.modalImport);
@@ -48,7 +74,8 @@ var _me = {
         _modal.showO(_me.modalImport);
     },
 
-    //匯入json(巢狀格式)
+    //匯入json(巢狀格式) to edit form
+    //called by modalImprot
     onImport: async function () {
         var value = _itext.get('Import', _me.modalImport).trim();
         if (_str.isEmpty(value)) {
@@ -71,6 +98,7 @@ var _me = {
         _modal.hideO(_me.modalImport);
     },
 
+    //export edit form to json
     onExport: async function () {
         //get jsons
         let jsons = this.uiMany.getJsons();
@@ -88,7 +116,9 @@ var _me = {
         link.download = "data.json";
         link.click();
     },
+    //#endregion
 
+    /*
     //generate json
     onGenJson: function () {
         var values = _icheck.getCheckeds(_me.crudR.divRead);
@@ -97,8 +127,9 @@ var _me = {
         else
             _tool.msg('請先選取資料。');
     },
+    */
 
-    //auto called
+    //#region auto called function
     fnAfterSwap: function (toRead) {
         _obj.showByStatus($('.xu-tbar'), !toRead);
     },
@@ -112,7 +143,7 @@ var _me = {
     },
 
     /**
-     * auto called !!
+     * auto called
      * jsPlumb line container must visible when rendering
      * see _me.crudE.js _updateOrViewA()
      * param {string} fun
@@ -132,7 +163,11 @@ var _me = {
         });
     },
 
-    //重設 uiItem的 BoxId、ChildNo、Sort
+    /**
+     * auto called
+     * 重設 uiItem的 BoxId、ChildNo、Sort
+     * return {string} error msg if any
+     */ 
     fnWhenSave: function(fun) {
         //get changed box ids
         let uiView = this.uiMany.uiView;
@@ -161,8 +196,9 @@ var _me = {
         }
         return '';
     },
+    //#endregion 
 
-    //#region mItem/mLine custom function
+    //#region mItem custom function
     //load items
     mItem_loadRows: async function (rows) {
         await _me.uiMany.loadRowsA(rows);
@@ -179,52 +215,11 @@ var _me = {
     },
 
     /*
-    mLine_loadRows: function (rows) {
-        _me.uiMany.loadLines(rows);
-    },
-
-    //getUpdJson
-    mLine_getUpdJson: function (upKey) {
-        return _me.mLine.getUpdJsonByRsb(upKey);
-    },
-
     //return boolean
     mLine_valid: function () {
         return true;
     },
     */
     //#endregion
-
-    /*
-    //測試流程
-    onOpenTest: function (code) {
-        //read old row if need
-        _me.nowFlowCode = code;
-
-        //show div
-        _me.testToRead(false)
-    },
-
-    onSaveTestA: async function () {
-        //check & save
-        var data = {
-            code: _me.nowFlowCode,
-            data: _itextarea.get('Data', _me.divFlowTest),
-        };
-        await _ajax.getStrA('SaveTest', data, function (error) {
-            if (_str.isEmpty(error)) {
-                _tool.msg('作業完成。');
-                _me.testToRead(true);
-            } else {
-                _tool.msg(error);
-            }
-        });
-    },
-
-    //show Read form or not
-    testToRead: function (toRead) {
-        _me.crudR.swap(toRead, _me.divFlowTest);
-    },
-    */
 
 }; //class

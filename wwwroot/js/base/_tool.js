@@ -47,7 +47,7 @@ var _tool = {
     },
 
     /**
-     * ans -> ansA
+     * 非同步方式, 比callback function(promise)方便
      * show confirmation 
      * param {string} msg
      * return {bool} yes/no
@@ -64,7 +64,7 @@ var _tool = {
         });
     },
 
-    //called by ansA
+    //called by ansA yes/no onclick event
     onAnsA: function(value) {
         if (_tool.ansStatus) return;
 

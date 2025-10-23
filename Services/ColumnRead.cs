@@ -2,7 +2,6 @@ using Base.Enums;
 using Base.Models;
 using Base.Services;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
 
 //修改:DbAdm 改成你的專案 -> AdoptAdm
 //修改:Column 改成你的controller -> Maker

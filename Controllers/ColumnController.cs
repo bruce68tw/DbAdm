@@ -5,7 +5,6 @@ using BaseApi.Attributes;
 using BaseApi.Controllers;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 //修改:DbAdm 改成你的專案 -> AdoptAdm
 //修改:Column 改成你的controller -> Maker

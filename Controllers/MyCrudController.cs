@@ -74,7 +74,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<string> GenCrud(string keys)
         {
-            var result = await new GenCrudSvc().RunA(keys);
+            var result = await new GenCrudSvc().GenCrudsA(keys);
             return result;
         }
 

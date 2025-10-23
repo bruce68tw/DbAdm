@@ -7,9 +7,8 @@ using System.Web;
 
 namespace DbAdm.Services
 {
-    //generate CRUD, use Handlebars.net
-    //可分別產生 Read、Edit, 或全部產生, 使用 EF
-    public class GenCrudSvc
+    //generate CRUD(edit only) for UI, use Handlebars.net
+    public class GenCrudUiSvc
     {
         //constant
         const string CommaSep = ", ";       //comma seperator
@@ -26,21 +25,22 @@ namespace DbAdm.Services
         //template folder
         private readonly string _tplDir = _Fun.DirRoot + "_template/";
 
+        //使用 GenCrudSvc.cs 相同 template files
         //generated 6 files, 1(template),2(target folder),3(target file)
         private readonly string[] _crudFiles = [
-            "Controller.txt", "Controllers", "[prog]Controller.cs",
-            "ReadService.txt", "Services", "[prog]Read.cs",
+            //"Controller.txt", "Controllers", "[prog]Controller.cs",
+            //"ReadService.txt", "Services", "[prog]Read.cs",
             "EditService.txt", "Services", "[prog]Edit.cs",
-            "ReadView.txt", "Views/[prog]", "Read.cshtml",
+            //"ReadView.txt", "Views/[prog]", "Read.cshtml",
             "EditView.txt", "Views/[prog]", "Edit.cshtml",
-            "JS.txt", "wwwroot/js/view", "[prog].js",
+            //"JS.txt", "wwwroot/js/view", "[prog].js",
         ];
 
         //crud files count -> 6
         //private readonly int _crudFileLen;
 
         //constructor
-        public GenCrudSvc()
+        public GenCrudUiSvc()
         {
             //_crudFileLen = _crudFiles.Length;
         }
@@ -48,20 +48,20 @@ namespace DbAdm.Services
         /// <summary>
         /// async for file io
         /// </summary>
-        /// <param name="crudIdStrs">crudId字串清單, 逗號分隔</param>
+        /// <param name="crudIdList2"></param>
         /// <returns>error msg if any</returns>
-        public async Task<string> GenCrudsA(string crudIdStrs)
+        public async Task<string> RunA(string crudIdList2)
         {
             //only alpha, num and ','
             //if (!_Str.CheckKeyRule(crudIdList2, "GenCrudService Run()"))
-            if (!_Str.CheckKey(crudIdStrs))
-                return "GenCrudSvc.cs GenCrudsA() only accept alphabet and numeric: (" + crudIdStrs + ")";
+            if (!_Str.CheckKey(crudIdList2))
+                return "GenCrudService.cs RunA() only accept alphabet and numeric: (" + crudIdList2 + ")";
 
-            var crudIds = crudIdStrs.Split(',');
-            var crudIdList = _Str.ListAddQuote(crudIdStrs);
+            var crudIds = crudIdList2.Split(',');
+            var crudIdList = _Str.ListAddQuote(crudIdList2);
 
             #region get instance variables
-            //1.get _cruds(Crud rows) CrudDto from EF
+            //1.get _cruds(Crud rows)
             var db = _Xp.GetDb();
             _cruds = (from c in db.Crud
                       join p in db.Project on c.ProjectId equals p.Id
@@ -74,7 +74,7 @@ namespace DbAdm.Services
                           ProjectPath = p.ProjectPath,
                           ProgName = c.ProgName,
                           ProgCode = c.ProgCode,
-                          TableAs = c.TableAs!,
+                          TableAs = c.TableAs,
                           LabelHori = c.LabelHori,
                           ReadSql = c.ReadSql,
                           HasCreate = c.HasCreate,
@@ -89,7 +89,6 @@ namespace DbAdm.Services
                       })
                       .ToList();
 
-            //query item
             _qitems = (from q in db.CrudQitem
                        join c in db.Column on q.ColumnId equals c.Id
                        where crudIds.Contains(q.CrudId)
@@ -100,17 +99,17 @@ namespace DbAdm.Services
                            Fid = c.Code,
                            Name = c.Name,
                            DataType = c.DataType,
-                           PosGroup = q.PosGroup!,
-                           LayoutCols = q.LayoutCols!,
+                           PosGroup = q.PosGroup,
+                           LayoutCols = q.LayoutCols,
                            PlaceHolder = "",
                            IsFind2 = q.IsFind2,
                            Op = q.Op,
                            InputType = q.InputType,
-                           ItemData = q.ItemData!,
+                           ItemData = q.ItemData,
                        })
                        .ToList();
 
-            //2.get _crudRitems(CrudRitem rows) query result fields
+            //2.get _crudRitems(CrudRitem rows)
             _ritems = (from r in db.CrudRitem
                        where crudIds.Contains(r.CrudId)
                        orderby r.CrudId, r.Sort
@@ -137,7 +136,7 @@ namespace DbAdm.Services
                             TableCode = t.Code,
                             TableName = t.Name,
                             PkeyFid = e.PkeyFid,
-                            FkeyFid = e.FkeyFid!,
+                            FkeyFid = e.FkeyFid,
                             AutoIdLen = e.AutoIdLen ?? "",
                             HasCol4 = (e.Col4 == "1"),
                             HalfWidth = e.HalfWidth,
@@ -160,12 +159,12 @@ namespace DbAdm.Services
                            HasCreate = e.HasCreate,
                            HasUpdate = e.HasUpdate,
                            CheckType = e.CheckType,
-                           CheckData = e.CheckData!,
+                           CheckData = e.CheckData,
                            InputType = e.InputType,
-                           ItemData = e.ItemData!,
-                           PosGroup = e.PosGroup!,
-                           LayoutCols = e.LayoutCols!,
-                           PlaceHolder = e.PlaceHolder!,
+                           ItemData = e.ItemData,
+                           PosGroup = e.PosGroup,
+                           LayoutCols = e.LayoutCols,
+                           PlaceHolder = e.PlaceHolder,
                            Sort = e.Sort,
                            Width = e.Width,
                        })
@@ -197,7 +196,7 @@ namespace DbAdm.Services
         }
 
         /// <summary>
-        /// generate crud files by one crudId
+        /// generate crud files by crudId
         /// </summary>
         /// <param name="crudId"></param>
         /// <returns>error msg if any</returns>
@@ -341,7 +340,7 @@ namespace DbAdm.Services
                 qitems.Insert(pos + 1, new CrudQitemDto()
                 {
                     RvStr = CompStart("XgFindTbar") +
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewBool("IsHori", crud.LabelHori, false),
                             ViewBool("HasReset", crud.HasReset, true),
                             ViewBool("HasFind2", hasFind2, true)) +
@@ -373,7 +372,7 @@ namespace DbAdm.Services
                     var ritem = ritems[i];
                     ritem.ViewStr = RViewHeadStr(ritem);
 
-                    var jsStr = RitemUdColStr(crud, ritem, i);
+                    var jsStr = JsColDefStr(crud, ritem, i);
                     if (jsStr != "")
                         jsStrs.Add(jsStr);
                 }
@@ -573,10 +572,10 @@ namespace DbAdm.Services
 
         #region get item string
         /// <summary>
-        /// get js ritem column string for user defined(ritem)
+        /// get js column define string (ritem)
         /// </summary>
         /// <returns></returns>
-        private string RitemUdColStr(CrudDto crud, CrudRitemDto ritem, int i)
+        private string JsColDefStr(CrudDto crud, CrudRitemDto ritem, int i)
         {
             var str = "";
             switch (ritem.RitemType)
@@ -650,7 +649,7 @@ namespace DbAdm.Services
                 ServiceFid("Required", item.Required ? "true" : "") +
                 ServiceFid("Create", !item.HasCreate ? "false" : "") +
                 ServiceFid("Update", !item.HasUpdate ? "false" : "") +
-                ServiceFid("CheckType", CheckTypeName(item.CheckType)) +
+                ServiceFid("CheckType", GetCheckTypeName(item.CheckType)) +
                 ServiceFid("CheckData", item.CheckData, true) +
                 " },";
         }
@@ -717,7 +716,7 @@ namespace DbAdm.Services
                     var compType = (item.InputType == InputTypeEstr.Textarea) 
                         ? "XiTextarea" : "XiText";
                     str = CompStart(compType) + 
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             (item.InputType == InputTypeEstr.Password) ? KeyValue("IsPwd", "true") : "",
@@ -730,7 +729,7 @@ namespace DbAdm.Services
 
                 case InputTypeEstr.Html:
                     str = CompStart("XiHtml") +
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             //ViewMaxLen(item.DataType),
@@ -745,7 +744,7 @@ namespace DbAdm.Services
                     var type2 = (item.InputType == InputTypeEstr.Integer)
                         ? "XiInt" : "XiDec";
                     str = CompStart(type2) +
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
@@ -758,7 +757,7 @@ namespace DbAdm.Services
                 case InputTypeEstr.Check:
                     center = true;
                     str = CompStart("XiCheck") + 
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             //KeyValue("value", "1", true),
@@ -770,7 +769,7 @@ namespace DbAdm.Services
                 case InputTypeEstr.Radio:
                     center = true;
                     str = CompStart("XiRadio") +
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewSelectRows(item),
@@ -781,7 +780,7 @@ namespace DbAdm.Services
 
                 case InputTypeEstr.Date:
                     str = CompStart("XiDate") +
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
@@ -792,7 +791,7 @@ namespace DbAdm.Services
 
                 case InputTypeEstr.DateTime:
                     str = CompStart("XiDt") +
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
@@ -803,7 +802,7 @@ namespace DbAdm.Services
 
                 case InputTypeEstr.Select:
                     str = CompStart("XiSelect") + 
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewSelectRows(item),
@@ -815,7 +814,7 @@ namespace DbAdm.Services
 
                 case InputTypeEstr.File:
                     str = CompStart("XiFile") + 
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
@@ -829,7 +828,7 @@ namespace DbAdm.Services
                     center = true;
                     //item.Name for modal title
                     str = CompStart("XgOpenModal") +
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewTitle(item.Name),
                             ViewFid(item.Fid),
                             ViewMaxLen(item.DataType),
@@ -839,7 +838,7 @@ namespace DbAdm.Services
 
                 case InputTypeEstr.ReadOnly:
                     str = CompStart("XiRead") +
-                        ColsToStr(
+                        ConcatViewCols(
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewInRow(item.IsGroup),
@@ -897,7 +896,7 @@ namespace DbAdm.Services
             //@await Component.InvokeAsync("XgTh", new { title = "XXX", required = true })
             return (item.Required || _Str.NotEmpty(item.PlaceHolder))
                 ? CompStart("XgTh") +
-                    ColsToStr(
+                    ConcatViewCols(
                         ViewTitle(item.Name),
                         ViewPlaceHolder(item.PlaceHolder),
                         ViewRequired(item.Required)) +
@@ -1029,7 +1028,7 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="cols"></param>
         /// <returns></returns>
-        private string ColsToStr(params string[] cols)
+        private string ConcatViewCols(params string[] cols)
         {
             var result = "";
             foreach (var col in cols)
@@ -1098,7 +1097,7 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        private string CheckTypeName(string type)
+        private string GetCheckTypeName(string type)
         {
             return type switch
             {
