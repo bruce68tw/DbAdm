@@ -37,7 +37,7 @@ namespace DbAdm.Models
         public List<CrudEtableDto>? ChildTables { get; set; }
 
         //extend
-        public bool HasFitemCols { get; set; }    //whether fitmem has default cols
+        public bool HasFitemCols { get; set; }    //whether fitem has default cols
 
         /// <summary>
         /// read service item string

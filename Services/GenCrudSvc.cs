@@ -182,7 +182,7 @@ namespace DbAdm.Services
                 string error;
                 try
                 {
-                    error = await GenByCrudIdA(crudId);
+                    error = await GenCrudA(crudId);
                 }
                 catch (Exception ex)
                 {
@@ -201,7 +201,7 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="crudId"></param>
         /// <returns>error msg if any</returns>
-        private async Task<string> GenByCrudIdA(string crudId)
+        public async Task<string> GenCrudA(string crudId)
         {
             #region 1.check & get crud related rows
             var error = "";
@@ -545,7 +545,7 @@ namespace DbAdm.Services
                 }
                 #endregion
 
-                //7.template string replace
+                //7.template string replace by mustache
                 var mustache = Handlebars.Compile(tplStr);
                 var result = HttpUtility.HtmlDecode(mustache(crud));
 
@@ -558,7 +558,7 @@ namespace DbAdm.Services
                     File.Copy(toFile, _File.GetNextFileName(toFile, true));
                 #endregion 
                 
-                //9.save file
+                //9.save result string to file
                 _File.MakeDir(toDir);   //create folder when need
                 await _File.StrToFileA(result, toFile);
             }//for
