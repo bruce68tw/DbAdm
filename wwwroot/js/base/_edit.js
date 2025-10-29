@@ -77,19 +77,40 @@ var _edit = {
     },
 
     /**
-     * isNewKey(key) -> isNewRow(row)
-     * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
+     * check a new row or not, parseInt(ABC123) will get int, cannot use it!!
+     * param row {json}
      * param key {string}
+     * return {bool}
      */
-    isNewRow: function (row) {
-        var fid = _edit.IsNew;
-        return (row[fid] != null || row[fid] == '1');
+    isNewRow: function (row, kid) {
+        return _edit.isNewKey(row[kid]);
+    },
+
+    /**
+     * check a new jquery object or not
+     * param box {object} jquery object
+     * param key {string}
+     * return {bool}
+     */
+    isNewBox: function (box, kid) {
+        return _edit.isNewKey(_itext.get(kid, box));
+    },
+
+    /**
+     * check is new key or not
+     * param key {string}
+     * return {bool}
+     */
+    isNewKey: function (key) {
+        const num = Number(key);
+        return !isNaN(num) && num < 0;
     },
 
     /**
      * 增加隱藏欄位 _IsNew, 同時設為1
      * param obj {box} jquery object
      */
+    /*
     addIsNew: function (box) {
         var fid = _edit.IsNew;
         var field = box.find(_input.fidFilter(fid));
@@ -98,17 +119,20 @@ var _edit = {
         else
             field.val('1');
     },
+    */
 
     /**
      * 刪除隱藏欄位 _IsNew
      * param obj {box} jquery object
      */
+    /*
     removeIsNew: function (box) {
         var fid = _edit.IsNew;
         var field = box.find(_input.fidFilter(fid));
         if (field.length > 0)
             field.remove();
     },
+    */
 
     /**
      * getServerFid -> getFileSid

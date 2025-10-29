@@ -6,7 +6,9 @@
         //base
         public string CrudId { get; set; } = "";
         //public string Column { get; set; }
-        public string ColumnCode { get; set; } = "";
+
+        //ColumnCode -> Fid
+        public string Fid { get; set; } = "";
         public string RitemType { get; set; } = "";
         //public string ExtInfo { get; set; }
         public string Name { get; set; } = "";

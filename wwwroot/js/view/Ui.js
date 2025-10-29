@@ -5,8 +5,8 @@ var _me = {
         var config = {
             columns: [
                 { data: 'ProjectName', orderable: true },
-                { data: 'Code', orderable: true },
-                { data: 'Name', orderable: true },
+                { data: 'ProgCode', orderable: true },
+                { data: 'ProgName', orderable: true },
                 { data: '_Fun' },
                 { data: '_Crud' },
             ],
@@ -25,6 +25,7 @@ var _me = {
         };
 
         //instance variables
+        _me.modalMain = $('#modalMain');
         _me.modalImport = $('#modalImport');
         _me.modalExport = $('#modalExport');
 
@@ -43,15 +44,42 @@ var _me = {
         //initial uiMany
         _me.uiMany = new UiMany('.xu-area', _me.mItem);
 
+
+        //註刪button dragstart事件
+        _me.divEdit.on(EstrMouse.DragStart, '.xu-btn', function (e) {
+            let itemType = $(e.target).data('type');
+            _me.uiMany.startDragBtn(true, itemType);
+        }).on(EstrMouse.DragEnd, function (e) {
+            //不會觸發工作區的 dragEnd, 這裡必須寫
+            _me.uiMany.onDragEnd(e);
+        });
+
     }, //init
+
+    //open main form
+    onMainOpen: function () {
+        var modal = _me.modalMain;
+        var row = _form.toRow(_me.eform0);
+        _form.loadRow(modal, row);
+        _modal.showO(modal);
+    },
+
+    onMainOk: function () {
+        var modal = _me.modalMain;
+        var row = _form.toRow(modal);
+        _form.loadRow(_me.eform0, row);
+        _modal.hideO(modal);
+    },
 
     //#region read form function
     //onclick generate crud(產生在主機)
+    /*
     onGenCrud: function (id) {
         await _ajax.getStrA('GenCrud', { id: id }, function (error) {
             _tool.msg(_str.isEmpty(error) ? '執行成功' : error);
         });
     },
+    */
 
     //onclick download crud
     onDownCrud: function () {

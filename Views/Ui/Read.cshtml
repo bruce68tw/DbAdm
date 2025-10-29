@@ -1,5 +1,6 @@
 ﻿@{
     var cols = "4,6";
+
     List<IdStrDto> rowTypes =
     [
         new(){ Id = "6,6", Str = "2欄" },
@@ -82,15 +83,6 @@
 <script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
-
-        //註刪button dragstart事件
-        _me.divEdit.on(EstrMouse.DragStart, '.xu-btn', function(e) {
-            let itemType = $(e.target).data('type');
-            _me.uiMany.startDragBtn(true, itemType);
-        }).on(EstrMouse.DragEnd, function (e) {
-            //不會觸發工作區的 dragEnd, 這裡必須寫
-            _me.uiMany.onDragEnd(e);
-        });
     });
 </script>
 
@@ -146,13 +138,29 @@
         <!-- eform 在 uiMany 下面, 使用 z-index無效, 改用 width -->
         <form id='eform' class='x-form x-w100 me-2 vh-100'>
             <vc:xi-hide dto='new() { Fid = "Id" }' />
+            <vc:xi-hide dto='new() { Fid = "ProjectId" }' />
+            <vc:xi-hide dto='new() { Fid = "ProgCode" }' />
+            <vc:xi-hide dto='new() { Fid = "ProgName" }' />
+            <vc:xi-hide dto='new() { Fid = "HasExport" }' />
+            <vc:xi-hide dto='new() { Fid = "HasReset" }' />
+            <vc:xi-hide dto='new() { Fid = "HasCreate" }' />
+            <vc:xi-hide dto='new() { Fid = "HasUpdate" }' />
+            <vc:xi-hide dto='new() { Fid = "HasDelete" }' />
+            <vc:xi-hide dto='new() { Fid = "HasView" }' />
+            <vc:xi-hide dto='new() { Fid = "Status" }' />
+            <vc:xi-hide dto='new() { Fid = "AuthType" }' />
+            <vc:xi-hide dto='new() { Fid = "LabelHori" }' />
+            <vc:xi-hide dto='new() { Fid = "TableAs" }' />
+            <vc:xi-hide dto='new() { Fid = "ReadSql" }' />
+
             <div class="xu-label">專案</div>
-            <vc:xi-select dto='new() { Fid = "ProjectId", Rows = ViewBag.Projects, AddEmpty = false, ClsBox = "xu-input w-150" }' />
+            <vc:xi-read dto='new() { Fid = "_ProjectId", ClsBox = "xu-input w-150" }' />
             <div class="xu-label">畫面代碼</div>
-            <vc:xi-text dto='new() { Fid = "Code" , MaxLen = 30, Required = true, ClsBox = "xu-input w-150" }' />
+            <vc:xi-read dto='new() { Fid = "_ProgCode" , ClsBox = "xu-input w-150" }' />
             <div class="xu-label">畫面名稱</div>
-            <vc:xi-text dto='new() { Fid = "Name", MaxLen = 30, Required = true, ClsBox = "xu-input w-150" }' />
-            @* 不存 DB *@
+            <vc:xi-read dto='new() { Fid = "_ProgName", ClsBox = "xu-input w-150" }' />
+            <button type="button" class="btn btn-secondary" Title="設定畫面屬性" data-onclick="_me.onMainOpen">設定屬性</button>
+            @* 不存入 DB *@
             <div class="xu-label">欄位容器</div>
             <vc:xi-select dto='new() { Fid = "_RowType", Rows = rowTypes, AddEmpty = false, ClsBox = "xu-input w-150" }' />
 
@@ -215,6 +223,61 @@
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "Sort" })
     </div>
 </script>
+
+<!-- modal: 主要畫面 -->
+<div id="modalMain" class="modal fade x-modal" role="dialog">
+    <div class="modal-dialog modal-lg x-vh15">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">設定畫面屬性</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal x-form pt-1 pe-5">
+                    <!-- copy from MyCrud Edit.cshtml, 不放Id欄位 -->
+                    <div class="row">
+                        <!-- left columns -->
+                        <div class="col-md-5">
+                            <vc:xi-select dto='new() { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols, FnOnChange = "_me.onChangeProject" }' />
+                            <vc:xi-text dto='new() { Title = "功能代碼", Fid = "ProgCode", MaxLen = 30, Required = true, Cols = cols }' />
+                            <vc:xi-text dto='new() { Title = "功能名稱", Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols }' />
+
+                            <div class="row">
+                                <div class="col-md-4 x-label">查詢功能</div>
+                                <div class="col-md-8 pt-1">
+                                    <vc:xi-check dto='new() { Fid = "HasExport", IsCheck = true, Label = "匯出" }' />
+                                    <vc:xi-check dto='new() { Fid = "HasReset", IsCheck = true, Label = "重設" }' />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 x-label">維護功能</div>
+                                <div class="col-md-8 pt-1">
+                                    <vc:xi-check dto='new() { Fid = "HasCreate", IsCheck = true, Label = "新增" }' />
+                                    <vc:xi-check dto='new() { Fid = "HasUpdate", IsCheck = true, Label = "修改" }' />
+                                    <vc:xi-check dto='new() { Fid = "HasDelete", IsCheck = true, Label = "刪除" }' />
+                                    <vc:xi-check dto='new() { Fid = "HasView", IsCheck = true, Label = "檢視" }' />
+                                </div>
+                            </div>
+                            <vc:xi-check dto='new() { Title = "資料狀態", Fid = "Status", IsCheck = true, Label = "啟用", Cols = cols }' />
+                        </div>
+
+                        <!-- right columns -->
+                        <div class="col-md-6">
+                            <vc:xi-select dto='new() { Title = "權限種類", Fid = "AuthType", Rows = ViewBag.AuthTypes, Required = true, Cols = cols }' />
+                            <vc:xi-radio dto='new() { Title = "查詢Label位置", Fid = "LabelHori", Rows = _Str.ToIdStrs("1,水平,0,垂直"), Cols = cols }' />
+                            <vc:xi-text dto='new() { Title = "Table別名", Fid = "TableAs", MaxLen = 10, Cols = cols, TitleTip = "資料表別名" }' />
+                            <vc:xi-textarea dto='new() { Title = "讀取資料 Sql", Fid = "ReadSql", Required = true, TitleTip = "讀取資料 Sql", Cols = "4,8", RowsCount = 5 }' />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.onMainOk">確定<i class='ico-checked'></i></button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- modal: 輸入欄位 -->
 <div id="modalInput" class="modal fade x-modal" role="dialog">

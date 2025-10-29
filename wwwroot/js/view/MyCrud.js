@@ -7,18 +7,22 @@ var _me = {
                 { data: 'ProjectCode' },
 				{ data: 'ProgCode' },
                 { data: 'ProgName' },
-                { data: '_CrudFun' },
-				{ data: 'Status' },
+                { data: 'IsUi' },
                 { data: 'Created' },
+                { data: '_CrudFun' },
+                { data: 'Status' },
 			],
 			columnDefs: [
 				{ targets: [0], render: function (data, type, full, meta) {
                     return _me.crudR.dtCheck0(full.Id);
 				}},
-                { targets: [4], render: function (data, type, full, meta) {
+				{ targets: [4], render: function (data, type, full, meta) {
+                    return _me.crudR.dtYesEmpty(data);
+				}},
+                { targets: [6], render: function (data, type, full, meta) {
                     return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, false);
                 }},
-				{ targets: [5], render: function (data, type, full, meta) {
+				{ targets: [7], render: function (data, type, full, meta) {
                     return _me.crudR.dtStatusName(data);
 				}},
 			],
@@ -432,8 +436,8 @@ var _me = {
                 //CrudId: crudId, //mapId
                 //!!
                 ColumnId: tr.data('id'),
-                ColumnCode: tr.data('code'),    //for Ritem
-                Code: tr.data('code'),
+                Fid: tr.data('fid'),    //for Ritem
+                //Code: tr.data('code'),
                 Name: tr.data('name'),
                 DataType: tr.data('datatype'),
                 //inputType ??

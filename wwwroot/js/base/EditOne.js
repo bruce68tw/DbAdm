@@ -78,7 +78,7 @@ function EditOne(kid, eformId) {
      * return {bool}
      */
     this.isNewRow = function () {
-        return (_itext.get(_edit.IsNew, this.eform) == '1');
+        return _edit.isNewBox(this.eform, this.kid);
     };
 
     /**

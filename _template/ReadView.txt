@@ -1,4 +1,4 @@
-<script src="~/js/view/{{ProgCode}}.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/{{ProgCode}}.js"></script>
 <script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();

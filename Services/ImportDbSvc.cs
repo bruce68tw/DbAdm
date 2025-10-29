@@ -67,7 +67,7 @@ CREATE TABLE #tmpTable(
     Note nvarchar(255) NULL
 );
 CREATE TABLE #tmpColumn(
-	Code varchar(100) NOT NULL,
+	Fid varchar(100) NOT NULL,
 	TableCode varchar(100) NULL,
 	DataType varchar(20) NOT NULL,
 	Nullable bit NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE #tmpColumn(
 	Sort smallint NOT NULL,
 	Note nvarchar(100) NULL
 );
-CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Code);");
+CREATE NONCLUSTERED	INDEX ix_tmpColumn ON #tmpColumn (Fid);");
             #endregion
 
             #region 3.write #tmpTable(from Information_Schema.Tables)
@@ -164,12 +164,12 @@ where a.ProjectId='{projectId}'
             //get rows for insert new 
             var cols = await db.GetRowsA(string.Format(@"
 select
-    c.Code, t.Id as TableId, c.Note,
+    c.Fid, t.Id as TableId, c.Note,
     c.Nullable
 from #tmpColumn c
 inner join dbo.[Table] t on t.Code=c.TableCode and t.ProjectId='{0}' 
-where t.Id+c.Code not in (
-    select t.Id+c.Code 
+where t.Id+c.Fid not in (
+    select t.Id+c.Fid 
     from dbo.[Column] c
     inner join dbo.[Table] t on t.Id=c.TableId
     where t.ProjectId='{0}'
@@ -184,7 +184,7 @@ where t.Id+c.Code not in (
                     //在這裡只寫入部分欄位, 後面會再update一次
                     await db.ExecSqlA(string.Format(@"
 insert into dbo.[Column](
-    Id, TableId, Code, 
+    Id, TableId, Fid, 
     Name, DataType, Nullable,
     DefaultValue, Sort, Note, 
     Status)
@@ -194,7 +194,7 @@ values(
     '', 0, '{4}',
     1)
 ",
-_Str.NewId(), col["TableId"]!.ToString(), col["Code"]!.ToString(), 
+_Str.NewId(), col["TableId"]!.ToString(), col["Fid"]!.ToString(), 
 Convert.ToByte(col["Nullable"]),
 col["Note"]!.ToString()
 ));
@@ -208,8 +208,8 @@ update c
 from dbo.[Column] c
 inner join dbo.[Table] t on t.Id=c.TableId
 where t.projectId='{0}'
-and t.Code+c.Code not in (
-    select TableCode+Code from #tmpColumn
+and t.Code+c.Fid not in (
+    select TableCode+Fid from #tmpColumn
 )
 ", projectId));
 
@@ -223,7 +223,7 @@ update c set
     Note=case when (c.Note is null or c.Note = '') then tc.Note else c.Note end
 from dbo.[Column] c
 inner join dbo.[Table] t on t.Id=c.TableId
-inner join #tmpColumn tc on t.Code=tc.TableCode and c.Code=tc.Code
+inner join #tmpColumn tc on t.Fid=tc.TableCode and c.Fid=tc.Fid
 where t.projectId='{0}'
 ", projectId));
             #endregion
@@ -265,7 +265,7 @@ ORDER BY t.table_name
 
                 _sqlGetCols = @"
 SELECT 
-    Code=column_name, 
+    Fid=column_name, 
 	TableCode=table_name, 
 	DataType=data_type + (case when character_maximum_length is null then '' else '('+CONVERT(VARCHAR, character_maximum_length)+')' end),
     Nullable=case when is_nullable = 'YES' then 1 else 0 end,
@@ -304,7 +304,7 @@ ORDER BY t.table_name
 
                 _sqlGetCols = @"
 SELECT 
-    Code = i.column_name, 
+    Fid = i.column_name, 
     TableCode = i.table_name, 
     DataType = i.data_type + 
         CASE WHEN i.character_maximum_length IS NULL 
@@ -340,7 +340,7 @@ ORDER BY t.table_name
                     _sqlGetCols = @"
 select 
 	table_name as TableCode, 
-    column_name as Code, 
+    column_name as Fid, 
 	Column_Type as DataType,
     case when is_nullable = 'YES' then 1 else 0 end as Nullable,
 	case when COLUMN_DEFAULT is null then '' else replace(replace(COLUMN_DEFAULT,'(',''),')','') end as DefaultValue,

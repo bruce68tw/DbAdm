@@ -30,7 +30,7 @@ Order by p.Id, t.Id, c.Sort
             Items = [
                 new() { Fid = "ProjectId", Col = "t.ProjectId" },
                 new() { Fid = "TableCode", Col = "t.Code", Op = ItemOpEstr.Like },
-                new() { Fid = "Code", Op = ItemOpEstr.Like2 },
+                new() { Fid = "Fid", Op = ItemOpEstr.Like2 },
                 new() { Fid = "Name", Op = ItemOpEstr.Like2 },
                 //以下for排序用途
                 new() { Fid = "DataType" },

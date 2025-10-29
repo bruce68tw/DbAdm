@@ -177,19 +177,19 @@ function CrudE(edits) {
         var eform = this.edit0.eform;
         var items = box.find('input, textarea, select, button');
         if (fun == EstrFun.View) {
-            _edit.removeIsNew(eform);
+            //_edit.removeIsNew(eform);
             items.prop('disabled', true)
             box.find('#btnToRead').prop('disabled', false);
             _ihtml.setEdits(box, '', false);
         } else if (fun == EstrFun.Create) {
-            _edit.addIsNew(eform);    //增加_IsNew隱藏欄位
+            //_edit.addIsNew(eform);    //增加_IsNew隱藏欄位
             var dataEdit = '[data-edit=U]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         } else if (fun == EstrFun.Update) {
-            _edit.removeIsNew(eform);
+            //_edit.removeIsNew(eform);
             var dataEdit = '[data-edit=C]';
             items.prop('disabled', false)
             items.filter(dataEdit).prop('disabled', true)
@@ -509,7 +509,7 @@ function CrudE(edits) {
     this.getUpdRow = function (kid, fidTypes, box) {
         //case new return row
         var row = _form.toRow(box);
-        if (_edit.isNewRow(row))
+        if (_edit.isNewRow(row, kid))
             return row;
         /*
         var key = _input.get(kid, box);
@@ -680,7 +680,7 @@ function CrudE(edits) {
      * return {bool}
      */
     this.onUpdateA = async function(key) {
-        _edit.removeIsNew(this.edit0.eform);    //移除_IsNew隱藏欄位
+        //_edit.removeIsNew(this.edit0.eform);    //移除_IsNew隱藏欄位
         return await this._updateOrViewA(EstrFun.Update, key);
     };
 

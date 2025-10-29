@@ -9,9 +9,9 @@ public partial class tmpColumnImport
 
     public string? TableCode { get; set; }
 
-    public string? ColumnCode { get; set; }
+    public string? Fid { get; set; }
 
-    public string? ColumnName { get; set; }
+    public string? Name { get; set; }
 
     public string? DefaultValue { get; set; }
 

@@ -11,6 +11,11 @@ public partial class XpUser
 
     public string Account { get; set; } = null!;
 
+    /// <summary>
+    /// 員工編號
+    /// </summary>
+    public string? EmpNo { get; set; }
+
     public string Pwd { get; set; } = null!;
 
     public string DeptId { get; set; } = null!;

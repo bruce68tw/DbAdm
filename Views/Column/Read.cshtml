@@ -10,7 +10,7 @@
                 columns: [
                     { data: 'ProjectCode', orderable: true },
                     { data: 'TableCode', orderable: true },
-                    { data: 'Code', orderable: true },
+                    { data: 'Fid', orderable: true },
                     { data: 'Name' },
                     { data: 'DataType', orderable: true },
                     { data: 'CreatorName' },
@@ -48,7 +48,7 @@
         </form>
 
         <form id='formRead2' class='x-form mb-0'>
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "欄位", Fid = "Code", TitleTip = "使用模糊查詢",  MaxLen = 30 })
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "欄位", Fid = "Fid", TitleTip = "使用模糊查詢", MaxLen = 30 })
             @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "欄位名稱", Fid = "Name", TitleTip = "使用模糊查詢", MaxLen = 30 })
         </form>
         <div class="x-h10"></div>

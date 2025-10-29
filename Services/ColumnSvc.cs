@@ -12,7 +12,7 @@ namespace DbAdm.Services
 
             var sql = $@"
 select 
-    c.Id, c.Code, c.Name, c.DataType
+    c.Id, c.Fid, c.Name, c.DataType
 from dbo.[Column] c
 where c.TableId='{tableId}'
 and c.Status=1

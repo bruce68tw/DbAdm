@@ -103,7 +103,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * return {bool}
      */
     this._isNewBox = function (box) {
-        return (_itext.get(_edit.IsNew, box) == '1');
+        return _edit.isNewBox(box, this.kid);
     };
 
     /**
@@ -182,7 +182,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
                 if (_icheck.checkedO(obj)) {
                     //new row
                     var row = {};
-                    row[_edit.IsNew] = '1';     //new row flag
+                    //row[_edit.IsNew] = '1';     //new row flag
                     row[fids[0]] = ++newIdx;            //Id, base 1 !!
                     row[fids[1]] = _icheck.getO(obj);   //RoleId
                     me.rowSetFkey(row, upKey);  //set foreign key value
@@ -622,7 +622,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param fkeyFid {string}
      */
     this.rowSetFkey = function (row, fkey) {
-        if (row != null && _edit.isNewRow(row))
+        if (row != null && _edit.isNewRow(row, fkey))
             row[this.DataFkeyFid] = fkey;
     };
 
@@ -635,7 +635,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         if (rows != null) {
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
-                if (row != null && _edit.isNewRow(row))
+                if (row != null && _edit.isNewRow(row, this.kid))
                     row[this.DataFkeyFid] = fkey;
             }
         }
@@ -658,7 +658,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         //kid和IsNew必須放在同一層 !!
         var box2 = _obj.get(this.kid, box).parent();
         _itext.set(this.kid, newId, box2);
-        _edit.addIsNew(box2);    //增加_IsNew隱藏欄位
+        //_edit.addIsNew(box2);    //增加_IsNew隱藏欄位
         return newId;
     };
 

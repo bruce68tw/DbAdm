@@ -39,5 +39,10 @@ public partial class CrudEitem
 
     public int Sort { get; set; }
 
+    /// <summary>
+    /// 改用 InputType
+    /// </summary>
+    public string? zz_EitemType { get; set; }
+
     public virtual CrudEtable Etable { get; set; } = null!;
 }

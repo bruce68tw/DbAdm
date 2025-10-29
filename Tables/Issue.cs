@@ -27,6 +27,11 @@ public partial class Issue
 
     public bool IsFinish { get; set; }
 
+    /// <summary>
+    /// 交辦主管
+    /// </summary>
+    public string? FromMgr { get; set; }
+
     public string? RptDeptCode { get; set; }
 
     public string? RptDeptId { get; set; }

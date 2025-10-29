@@ -5,7 +5,7 @@ namespace DbAdm.Tables;
 
 public partial class tmpColumn
 {
-    public string Code { get; set; } = null!;
+    public string Fid { get; set; } = null!;
 
     public string? TableCode { get; set; }
 

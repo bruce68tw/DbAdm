@@ -5,7 +5,7 @@ var _me = {
         var config = {
             columns: [
 			{{#Ritems}}
-                { data: '{{ColumnCode}}' },
+                { data: '{{Fid}}' },
 			{{/Ritems}}
             ],
             columnDefs: [

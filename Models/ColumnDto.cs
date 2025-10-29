@@ -3,7 +3,9 @@
     public class ColumnDto
     {
         public string Id { get; set; } = "";
-        public string Code { get; set; } = "";
+
+        //Code -> Fid
+        public string Fid { get; set; } = "";
         public string Name { get; set; } = "";
         public string DataType { get; set; } = "";
         public bool Nullable { get; set; }

@@ -13,9 +13,10 @@ namespace DbAdm.Services
             {
                 Table = "dbo.Crud",
                 PkeyFid = "Id",
-                Col4 = ["", "Created", "", "Revised"],
+                //Col4 = ["", "Created", "", "Revised"],
                 Items = [
                     new() { Fid = "Id" },
+                    new() { Fid = "IsUi", Value = 0 },
                     new() { Fid = "ProjectId", Required = true },
                     new() { Fid = "ProgCode", Required = true },
                     new() { Fid = "ProgName", Required = true },
@@ -38,7 +39,7 @@ namespace DbAdm.Services
                         //all child readSql use 'in'
                         ReadSql = @"
 select a.*,
-	c.Code, c.Name, c.DataType
+	c.Fid, c.Name, c.DataType
 from dbo.CrudQitem a
 join dbo.[Column] c on a.ColumnId=c.Id
 where a.CrudId=@Id
@@ -81,7 +82,7 @@ order by a.Sort
                         Items = [
                             new() { Fid = "Id" },
                             new() { Fid = "CrudId" },
-                            new() { Fid = "ColumnCode", Required = true },
+                            new() { Fid = "Fid", Required = true },
                             new() { Fid = "Name", Required = true },
                             new() { Fid = "Width", /*Type = ItemTypeEnum.Num*/ },
                             new() { Fid = "RitemType", Required = true },
@@ -115,7 +116,7 @@ order by a.Sort
                             {
                                 ReadSql = @"
 select a.*,
-	c.Code, c.Name, c.DataType
+	c.Fid, c.Name, c.DataType
 from dbo.CrudEitem a
 join dbo.[Column] c on a.ColumnId=c.Id
 where a.EtableId in ({0})

@@ -42,7 +42,7 @@ namespace DbAdm.Services
                          join t in db.Table on c.TableId equals t.Id
                          join p in db.Project on t.ProjectId equals p.Id
                          where t.ProjectId == projectId
-                         where !SkipCols.Contains(c.Code) 
+                         where !SkipCols.Contains(c.Fid) 
                          where t.TranLog
                          where c.Status
                          select new { c, t, p }
@@ -55,7 +55,7 @@ namespace DbAdm.Services
                 {
                     a.p.DbName,
                     TableCode = a.t.Code,
-                    ColCode = a.c.Code,
+                    Fid = a.c.Fid,
                     a.c.Sort,
                 })
                 .ToList()
@@ -66,7 +66,7 @@ namespace DbAdm.Services
                     a.Key.DbName, 
                     a.Key.TableCode, 
                     Cols = a.OrderBy(b => b.Sort)
-                        .Select(b => b.ColCode)
+                        .Select(b => b.Fid)
                         .ToList(),
                 })
                 .ToList();

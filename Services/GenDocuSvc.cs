@@ -57,7 +57,7 @@ namespace DbAdm.Services
                     ProjectCode = a.p.Code,
                     TableCode = a.t.Code,
                     TableName = a.t.Name,
-                    a.c.Code,
+                    a.c.Fid,
                     a.c.Name,
                     a.c.DataType,
                     Nullable = a.c.Nullable ? "Y" : "",

@@ -33,7 +33,7 @@ where c.Id=@Id
                 //修改:要寫入的欄位清單
                 Items = [
                     new() { Fid = "Id" },
-                    new() { Fid = "Code" },
+                    new() { Fid = "Fid" },
                     new() { Fid = "Name" },
                     new() { Fid = "Status" },
                     new() { Fid = "Note" },

@@ -13,9 +13,10 @@ namespace DbAdm.Services
 Select a.*,
     CreatorName=u.Name,
     ProjectName=p.Name
-From dbo.Ui a
+From dbo.Crud a
 join dbo.Project p on p.Id=a.ProjectId
-join dbo.XpUser u on a.Creator=u.Id
+left join dbo.XpUser u on a.Creator=u.Id
+where a.IsUi=1
 Order by p.Id, a.Id
 ",
             TableAs = "a",

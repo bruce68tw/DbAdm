@@ -96,7 +96,7 @@ namespace DbAdm.Services
                        select new CrudQitemDto()
                        {
                            CrudId = q.CrudId,
-                           Fid = c.Code,
+                           Fid = c.Fid,
                            Name = c.Name,
                            DataType = c.DataType,
                            PosGroup = q.PosGroup,
@@ -120,7 +120,7 @@ namespace DbAdm.Services
                            //ExtInfo = r.ExtInfo,
                            Name = r.Name,
                            Width = r.Width,
-                           ColumnCode = r.ColumnCode,
+                           Fid = r.Fid,
                            //Column = c.Name,
                        })
                        .ToList();
@@ -152,7 +152,7 @@ namespace DbAdm.Services
                        select new CrudEitemDto()
                        {
                            EtableId = t.Id,
-                           Fid = c.Code,
+                           Fid = c.Fid,
                            Name = c.Name,
                            DataType = c.DataType,
                            Required = e.Required,
@@ -672,7 +672,7 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="table"></param>
         /// <param name="item"></param>
-        private void AddHideStr(CrudEtableDto table, CrudEitem0Dto item)
+        private void AddHideStr(CrudEtableDto table, CrudQEitemDto item)
         {
             table.HideViewStrs ??= [];
             table.HideViewStrs.Add(ViewHide(item.Fid));
@@ -697,7 +697,7 @@ namespace DbAdm.Services
         /// <param name="item"></param>
         /// <param name="isMany"></param>
         /// <returns></returns>
-        private string ViewItemStr(CrudEtableDto table, CrudEitem0Dto item, bool isMany = false)
+        private string ViewItemStr(CrudEtableDto table, CrudQEitemDto item, bool isMany = false)
         {
             var center = false;
             var name = isMany ? "" : item.Name;
@@ -962,7 +962,7 @@ namespace DbAdm.Services
                 : "";
         }
 
-        private string ViewSelectRows(CrudEitem0Dto item)
+        private string ViewSelectRows(CrudQEitemDto item)
         {
             //不取字尾A字元(表示async)
             var value = _Str.IsEmpty(item.ItemData) ? "??" : 

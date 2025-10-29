@@ -1,7 +1,7 @@
 ﻿namespace DbAdm.Models
 {
     //base class for CrudEitemDto & CrudQitemDto
-    public class CrudEitem0Dto
+    public class CrudQEitemDto
     {
         //base
         public string Fid { get; set; } = "";

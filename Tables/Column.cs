@@ -11,7 +11,7 @@ public partial class Column
 
     public string TableId { get; set; } = null!;
 
-    public string Code { get; set; } = null!;
+    public string Fid { get; set; } = null!;
 
     public string Name { get; set; } = null!;
 

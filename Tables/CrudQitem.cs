@@ -30,4 +30,9 @@ public partial class CrudQitem
     public string? LayoutCols { get; set; }
 
     public int Sort { get; set; }
+
+    /// <summary>
+    /// 改用 InputType
+    /// </summary>
+    public string? zz_QitemType { get; set; }
 }

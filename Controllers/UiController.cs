@@ -102,6 +102,14 @@ namespace DbAdm.Controllers
             return _Input.XgGroup(title, false);
         }
 
+        /*
+        [HttpPost]
+        public async Task<JObject?> GetMainRow(string id)
+        {
+            return await _Db.GetRowA("select * from dbo.Crud where Id=@Id", ["Id", id]);
+        }
+        */
+        
         /// <summary>
         /// generate CRUD
         /// </summary>
@@ -110,7 +118,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<string> GenCrud(string id)
         {
-            var result = await new GenCrudSvc().GenCrudsA(id);
+            var result = await new UiSvc().GenCrudA(id);
             return result;
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Base.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace DbAdm.Tables;
@@ -48,6 +47,10 @@ public partial class MyContext : DbContext
 
     public virtual DbSet<Table> Table { get; set; }
 
+    public virtual DbSet<Ui> Ui { get; set; }
+
+    public virtual DbSet<UiItem> UiItem { get; set; }
+
     public virtual DbSet<XpCode> XpCode { get; set; }
 
     public virtual DbSet<XpDept> XpDept { get; set; }
@@ -69,7 +72,7 @@ public partial class MyContext : DbContext
     public virtual DbSet<tmpTable> tmpTable { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(_Fun.Config.Db);
+        => optionsBuilder.UseSqlServer("Name=FunConfig:Db");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -77,7 +80,7 @@ public partial class MyContext : DbContext
         {
             entity.HasKey(e => e.Sn);
 
-            entity.Property(e => e.Code)
+            entity.Property(e => e.Fid)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.DataType)
@@ -137,15 +140,16 @@ public partial class MyContext : DbContext
             entity.Property(e => e.DefaultValue)
                 .HasMaxLength(10)
                 .IsUnicode(false);
-            entity.Property(e => e.InputType)
-                .HasMaxLength(10)
-                .IsUnicode(false);
             entity.Property(e => e.EtableId)
                 .HasMaxLength(10)
                 .IsUnicode(false);
             entity.Property(e => e.Id)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+            entity.Property(e => e.InputType)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasComment("");
             entity.Property(e => e.ItemData).HasMaxLength(50);
             entity.Property(e => e.LayoutCols)
                 .HasMaxLength(10)
@@ -156,6 +160,10 @@ public partial class MyContext : DbContext
             entity.Property(e => e.PosGroup)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+            entity.Property(e => e.zz_EitemType)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasComment("改用 InputType");
 
             entity.HasOne(d => d.Etable).WithMany(p => p.CrudEitem)
                 .HasForeignKey(d => d.EtableId)
@@ -203,6 +211,10 @@ public partial class MyContext : DbContext
             entity.Property(e => e.Id)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+            entity.Property(e => e.InputType)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasComment("");
             entity.Property(e => e.ItemData)
                 .HasMaxLength(20)
                 .IsUnicode(false);
@@ -215,19 +227,20 @@ public partial class MyContext : DbContext
             entity.Property(e => e.PosGroup)
                 .HasMaxLength(10)
                 .IsUnicode(false);
-            entity.Property(e => e.InputType)
-                .HasMaxLength(20)
-                .IsUnicode(false);
             entity.Property(e => e.TableAs)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+            entity.Property(e => e.zz_QitemType)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasComment("改用 InputType");
         });
 
         modelBuilder.Entity<CrudRitem>(entity =>
         {
             entity.HasKey(e => e.Sn);
 
-            entity.Property(e => e.ColumnCode)
+            entity.Property(e => e.Fid)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.CrudId)
@@ -246,9 +259,6 @@ public partial class MyContext : DbContext
         {
             entity.HasKey(e => e.Sn);
 
-            entity.HasIndex(e => e.Code, "DataDict_Code").IsUnique();
-
-            entity.Property(e => e.Sn).ValueGeneratedNever();
             entity.Property(e => e.Code)
                 .HasMaxLength(30)
                 .IsUnicode(false);
@@ -277,6 +287,10 @@ public partial class MyContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasComment("建檔人員");
+            entity.Property(e => e.FromMgr)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasComment("交辦主管");
             entity.Property(e => e.Id)
                 .HasMaxLength(10)
                 .IsUnicode(false);
@@ -454,6 +468,51 @@ public partial class MyContext : DbContext
                 .IsUnicode(false);
         });
 
+        modelBuilder.Entity<Ui>(entity =>
+        {
+            entity.HasKey(e => e.Sn);
+
+            entity.Property(e => e.Code)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Created).HasColumnType("datetime");
+            entity.Property(e => e.Creator)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.Id)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(30);
+            entity.Property(e => e.Note).HasMaxLength(255);
+            entity.Property(e => e.ProjectId)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<UiItem>(entity =>
+        {
+            entity.HasKey(e => e.Sn);
+
+            entity.Property(e => e.BoxId)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasComment("上層容器Id, 0表示最外層");
+            entity.Property(e => e.Id)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.Info)
+                .HasMaxLength(255)
+                .HasComment("Item json 字串");
+            entity.Property(e => e.ItemType)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasComment("see XpCode.Type=UiItemType");
+            entity.Property(e => e.UiId)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasComment("Ui.Id");
+        });
+
         modelBuilder.Entity<XpCode>(entity =>
         {
             entity.HasKey(e => new { e.Type, e.Value });
@@ -536,6 +595,10 @@ public partial class MyContext : DbContext
             entity.Property(e => e.DeptId)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+            entity.Property(e => e.EmpNo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasComment("員工編號");
             entity.Property(e => e.Name).HasMaxLength(20);
             entity.Property(e => e.PhotoFile).HasMaxLength(100);
             entity.Property(e => e.Pwd)
@@ -560,7 +623,7 @@ public partial class MyContext : DbContext
         {
             entity.HasNoKey();
 
-            entity.Property(e => e.Code)
+            entity.Property(e => e.Fid)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.DataType)
@@ -579,10 +642,10 @@ public partial class MyContext : DbContext
         {
             entity.HasNoKey();
 
-            entity.Property(e => e.ColumnCode)
+            entity.Property(e => e.Fid)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.ColumnName).HasMaxLength(500);
+            entity.Property(e => e.Name).HasMaxLength(500);
             entity.Property(e => e.DbName)
                 .HasMaxLength(50)
                 .IsUnicode(false);

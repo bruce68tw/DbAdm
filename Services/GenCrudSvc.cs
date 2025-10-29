@@ -16,12 +16,14 @@ namespace DbAdm.Services
         const string CrudProg = "[prog]";   //key word inside file name
         const string PosGroup0 = "-abc99";  //impossible value for initial
 
-        //rows for curdId list
+        //rows for one curdId
         private CrudDto? _crud = null!;
+        /*
         private List<CrudQitemDto>? _qitems = null;
         private List<CrudRitemDto>? _ritems = null;
         private List<CrudEtableDto>? _etables = null;
         private List<CrudEitemDto>? _eitems = null;
+        */
 
         //template folder
         private readonly string _tplDir = _Fun.DirRoot + "_template/";
@@ -39,23 +41,26 @@ namespace DbAdm.Services
         //crud files count -> 6
         //private readonly int _crudFileLen;
 
+        /*
         //constructor
         public GenCrudSvc()
         {
             //_crudFileLen = _crudFiles.Length;
         }
+        */
 
+        /*
         /// <summary>
-        /// async for file io
+        /// read db and get instance varaibles, async for file io
         /// </summary>
         /// <param name="crudIdStrs">crudId字串清單, 逗號分隔</param>
         /// <returns>error msg if any</returns>
-        private string InitVar(string crudId)
+        private string DbToVar(string crudId)
         {
             //only alpha, num and ','
             //if (!_Str.CheckKeyRule(crudIdList2, "GenCrudService Run()"))
             if (!_Str.CheckKey(crudId))
-                return "GenCrudSvc.cs InitVarA() only accept alphabet and numeric: (" + crudId + ")";
+                return "GenCrudSvc.cs DbToVar() only accept alphabet and numeric: (" + crudId + ")";
 
             //var crudIds = crudIdStrs.Split(',');
             //var crudIdList = _Str.ListAddQuote(crudIdStrs);
@@ -98,7 +103,7 @@ namespace DbAdm.Services
                        select new CrudQitemDto()
                        {
                            CrudId = q.CrudId,
-                           Fid = c.Code,
+                           c.Fid,
                            Name = c.Name,
                            DataType = c.DataType,
                            PosGroup = q.PosGroup!,
@@ -177,7 +182,6 @@ namespace DbAdm.Services
             db.Dispose();
             #endregion
 
-            /*
             //loop generate files
             foreach (var crudId in crudIds)
             {
@@ -193,23 +197,26 @@ namespace DbAdm.Services
                 if (_Str.NotEmpty(error))
                     return error;
             }
-            */
 
             //case of ok
             return "";
         }
+        */
 
         /// <summary>
         /// generate crud files by one crudId
         /// </summary>
         /// <param name="crudId"></param>
         /// <returns>error msg if any</returns>
-        public async Task<string> GenCrudA(string crudId)
+        public async Task<string> GenCrudByDtosA(CrudDto crud, List<CrudQitemDto> qitems, List<CrudRitemDto>? ritems,
+            List<CrudEtableDto>? etables, List<CrudEitemDto>? eitems)
         {
             #region 1.check & get crud related rows
-            var error = InitVar(crudId);
+            /*
+            var error = DbToVar(crudId);
             if (error != "")
                 goto lab_error;
+            */
 
             /*
             //rows for one crudId
@@ -218,21 +225,23 @@ namespace DbAdm.Services
             var etables = _etables!.Where(a => a.CrudId == crudId).ToList();
             */
             #endregion
+            var _crud = crud;
 
             #region 2.set fields: crud.RsItemStrs && IsGroup, IsGroupStart, IsGroupEnd
             //dropdown list types
+            var error = "";
             var ddlpTypes = new List<string>() { InputTypeEstr.Select, InputTypeEstr.Radio };
-            var qitemLen = (_qitems == null) ? 0 : _qitems.Count;
+            var qitemLen = (qitems == null) ? 0 : qitems.Count;
             int i;
             if (qitemLen > 0)
             {
-                var rSitemStrs = new List<String>();
+                var rsItemStrs = new List<String>();
                 var posGroup = PosGroup0;   //initial value, get one impossible value for avoid repeat
                 for (i=0; i<qitemLen; i++)
                 {
                     //set rSitemStrs
-                    var qitem = _qitems![i];
-                    rSitemStrs.Add(RServiceItemStr(qitem));
+                    var qitem = qitems![i];
+                    rsItemStrs.Add(RSvcQitemStr(qitem));
 
                     //set IsGroup, IsGroupStart, IsGroupEnd
                     if (_Str.NotEmpty(qitem.PosGroup))
@@ -241,7 +250,7 @@ namespace DbAdm.Services
                         qitem.IsGroup = qitem.IsGroupStart || (qitem.PosGroup == posGroup);
                         qitem.IsGroupEnd = !qitem.IsGroup ? false :
                             (i + 1 == qitemLen) ? true :
-                            (_qitems[i + 1].PosGroup != posGroup);
+                            (qitems[i + 1].PosGroup != posGroup);
 
                         //for next loop
                         posGroup = qitem.PosGroup;
@@ -249,12 +258,12 @@ namespace DbAdm.Services
 
                     //fitem.RvStr = GetViewItemStr(fitem);  //set after XgFindTbar
                 }
-                _crud!.RsItemStrs = rSitemStrs;
-                _crud!.HasFitemCols = _qitems!.Any(a => _Str.IsEmpty(a.LayoutCols));
+                _crud!.RsItemStrs = rsItemStrs;
+                _crud!.HasFitemCols = qitems!.Any(a => _Str.IsEmpty(a.LayoutCols));
 
                 //set ReadSelectCols, be [] when null !!
                 //字尾A表示非同步
-                _crud.ReadSelectCols = _qitems!
+                _crud.ReadSelectCols = qitems!
                     .Where(a => ddlpTypes.Contains(a.InputType))
                     .Select(a => (a.ItemData.Length > 0 && a.ItemData[^1] == 'A')
                         ? $"ViewBag.{a.ItemData[..^1]} = await _XpCode.{a.ItemData}();"
@@ -264,9 +273,9 @@ namespace DbAdm.Services
 
                 #region 4.set fields: EditSelectCols(ReadSelectCols already done)
                 //排除qitems
-                var qitemDatas = _qitems!.Select(a => a.ItemData)
+                var qitemDatas = qitems!.Select(a => a.ItemData)
                     .ToList() ?? [];
-                var editSelectCols = _eitems!
+                var editSelectCols = eitems!
                     .Where(a => ddlpTypes.Contains(a.InputType) &&
                         !qitemDatas.Contains(a.ItemData))
                     .Select(a => (a.ItemData.Length > 0 && a.ItemData[^1] == 'A')
@@ -296,7 +305,7 @@ namespace DbAdm.Services
                 #endregion
 
                 //set Fitems, F2items
-                var find2Pos = _qitems!.FindIndex(a => a.IsFind2);
+                var find2Pos = qitems!.FindIndex(a => a.IsFind2);
                 var hasFind2 = (find2Pos > 0);    //must > 0
                 _crud.HasFindForm = true;
                 _crud.HasFind2Form = hasFind2;
@@ -306,40 +315,40 @@ namespace DbAdm.Services
                 {
                     var qitems2 = new List<CrudQitemDto>();
                     var q2Len = qitemLen - find2Pos;
-                    qitems2.AddRange(_qitems.GetRange(find2Pos, q2Len));
-                    _qitems.RemoveRange(find2Pos, q2Len);
+                    qitems2.AddRange(qitems.GetRange(find2Pos, q2Len));
+                    qitems.RemoveRange(find2Pos, q2Len);
                     _crud.Qitems2 = qitems2;
                     qitemLen -= find2Pos;    //adjust
 
                     //set RvStr
                     foreach (var qitem2 in qitems2)
-                        qitem2.RvStr = ViewItemStr(_etables![0], qitem2);
+                        qitem2.RvStr = ViewItemStr(etables![0], qitem2);
                 }
 
                 //adjust: fitems row 1 add toolbar buttons
-                posGroup = _qitems[0].PosGroup;
+                posGroup = qitems[0].PosGroup;
                 //find group 1 last row for write toolbar
                 int pos;
                 if (_Str.IsEmpty(posGroup))
                 {
                     pos = 0;
-                    _qitems[pos].IsGroup = true;
-                    _qitems[pos].IsGroupStart = true;
-                    _qitems[pos].IsGroupEnd = false;
+                    qitems[pos].IsGroup = true;
+                    qitems[pos].IsGroupStart = true;
+                    qitems[pos].IsGroupEnd = false;
                 }
                 else
                 {
-                    pos = _qitems.FindIndex(a => a.PosGroup != posGroup);
+                    pos = qitems.FindIndex(a => a.PosGroup != posGroup);
                     pos = (pos < 0) ? qitemLen - 1 : pos - 1;
-                    _qitems[pos].IsGroup = true;
-                    _qitems[pos].IsGroupStart = false;
-                    _qitems[pos].IsGroupEnd = false;
+                    qitems[pos].IsGroup = true;
+                    qitems[pos].IsGroupStart = false;
+                    qitems[pos].IsGroupEnd = false;
                 }
                 //set RvStr first
-                foreach (var fitem in _qitems)
-                    fitem.RvStr = ViewItemStr(_etables![0], fitem);
+                foreach (var fitem in qitems)
+                    fitem.RvStr = ViewItemStr(etables![0], fitem);
 
-                _qitems.Insert(pos + 1, new CrudQitemDto()
+                qitems.Insert(pos + 1, new CrudQitemDto()
                 {
                     RvStr = CompStart("XgFindTbar") +
                         ColsToStr(
@@ -352,7 +361,7 @@ namespace DbAdm.Services
                     IsGroupEnd = true,
                     IsGroup = true,
                 });
-                _crud.Qitems = _qitems;
+                _crud.Qitems = qitems;
             }
             else
             {
@@ -363,18 +372,18 @@ namespace DbAdm.Services
 
             #region 3.set fields: crud.Ritems, crud.JsColDefStrs
             //set ritems(result items)
-            var hasRitem = (_ritems != null && _ritems.Count > 0);
+            var hasRitem = (ritems != null && ritems.Count > 0);
             if (hasRitem)
             {
                 //array len are different, seperate to 2 arrays
                 var jsStrs = new List<string>();  //part fields for js
-                var ritemLen = _ritems!.Count;
+                var ritemLen = ritems!.Count;
                 for (i = 0; i < ritemLen; i++)
                 {
-                    var ritem = _ritems[i];
+                    var ritem = ritems[i];
                     ritem.ViewStr = RViewHeadStr(ritem);
 
-                    var jsStr = RitemUdColStr(_crud, ritem, i);
+                    var jsStr = JsRitemUdColStr(_crud, ritem, i);
                     if (jsStr != "")
                         jsStrs.Add(jsStr);
                 }
@@ -398,27 +407,27 @@ namespace DbAdm.Services
                 }
                 */
 
-                _crud.Ritems = _ritems;
+                _crud.Ritems = ritems;
                 _crud.JsColDefStrs = jsStrs;
             }
             #endregion
 
-            #region 5.set fields crud.MainTable, crud.ChildTables
+            #region 4.set fields crud.MainTable, crud.ChildTables
             //set etable.Eitems
-            var etableLen = _etables!.Count;
+            var etableLen = etables!.Count;
             for (i = 0; i < etableLen; i++)
             {
-                var etable = _etables[i];
-                var eitems = _eitems!.Where(a => a.EtableId == etable.Id).ToList();
-                etable.Eitems = eitems;
+                var etable = etables[i];
+                var eitems2 = eitems!.Where(a => a.EtableId == etable.Id).ToList();
+                etable.Eitems = eitems2;
 
                 var posGroup = PosGroup0;   //set impossible init value
-                var eitemLen = eitems.Count;
+                var eitemLen = eitems2.Count;
                 var isTable = (i > 0);
                 for (var j=0; j< eitemLen; j++)
                 {
-                    var eitem = eitems[j];
-                    eitem.ServiceStr = EServiceItemStr(eitem);
+                    var eitem = eitems2[j];
+                    eitem.ServiceStr = ESvcEitemStr(eitem);
                     eitem.ViewStr = ViewItemStr(etable, eitem, isTable);
 
                     //add hide field string for modal input(textArea)
@@ -437,11 +446,11 @@ namespace DbAdm.Services
                     eitem.IsGroup = eitem.IsGroupStart || (eitem.PosGroup == posGroup);
                     eitem.IsGroupEnd = !eitem.IsGroup ? false :
                         (j + 1 == eitemLen) ? true :
-                        (eitems[j + 1].PosGroup != eitem.PosGroup);
+                        (eitems2[j + 1].PosGroup != eitem.PosGroup);
                     posGroup = eitem.PosGroup;
                 }
             }
-            _crud.MainTable = _etables[0];
+            _crud.MainTable = etables[0];
 
             //set ChildTables & ManyTables
             if (etableLen > 1)
@@ -452,7 +461,7 @@ namespace DbAdm.Services
                 for (i = 1; i < etableLen; i++)
                 {
                     //at end, add row function component(delete/deleteUpDown)
-                    var table = _etables[i];
+                    var table = etables[i];
                     table.Sort = i - 1;     //base 0
                     table.SortFid = table.Eitems
                         .Where(a => a.InputType == InputTypeEstr.Sort)
@@ -476,9 +485,9 @@ namespace DbAdm.Services
             }
             #endregion
 
-            #region File
+            #region 5.File field
             //set crud.HasFile
-            var files = _etables.SelectMany(a => a.Eitems)
+            var files = etables.SelectMany(a => a.Eitems)
                 .Where(a => a.InputType == InputTypeEstr.File)
                 .ToList();
             //crud.HasFile = etables.SelectMany(a => a.Eitems).Any(b => b.ItemType == InputTypeEstr.File);
@@ -532,7 +541,7 @@ namespace DbAdm.Services
             #endregion
 
             //generate crud files
-            var isManyEdit = (_etables.Count > 1);
+            var isManyEdit = (etables.Count > 1);
             var projectPath = _Str.AddDirSep(_crud.ProjectPath);
             for (i = 0; i < _crudFiles.Length; i += 3)
             {
@@ -577,7 +586,7 @@ namespace DbAdm.Services
         /// get js ritem column string for user defined(ritem)
         /// </summary>
         /// <returns></returns>
-        private string RitemUdColStr(CrudDto crud, CrudRitemDto ritem, int i)
+        private string JsRitemUdColStr(CrudDto crud, CrudRitemDto ritem, int i)
         {
             var str = "";
             switch (ritem.RitemType)
@@ -641,18 +650,18 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private string EServiceItemStr(CrudEitemDto item)
+        private string ESvcEitemStr(CrudEitemDto item)
         {
             if (_Str.IsEmpty(item.Fid))
                 return "";
 
             return "new() { " +
                 KeyValue("Fid", item.Fid, true) +
-                ServiceFid("Required", item.Required ? "true" : "") +
-                ServiceFid("Create", !item.HasCreate ? "false" : "") +
-                ServiceFid("Update", !item.HasUpdate ? "false" : "") +
-                ServiceFid("CheckType", CheckTypeName(item.CheckType)) +
-                ServiceFid("CheckData", item.CheckData, true) +
+                SvcFid("Required", item.Required ? "true" : "") +
+                SvcFid("Create", !item.HasCreate ? "false" : "") +
+                SvcFid("Update", !item.HasUpdate ? "false" : "") +
+                SvcFid("CheckType", CheckTypeName(item.CheckType)) +
+                SvcFid("CheckData", item.CheckData, true) +
                 " },";
         }
 
@@ -661,11 +670,11 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private string RServiceItemStr(CrudQitemDto item)
+        private string RSvcQitemStr(CrudQitemDto item)
         {
             return "new() { " +
                 KeyValue("Fid", item.Fid, true) +
-                ServiceFid("Op", QitemOpName(item.Op)) +
+                SvcFid("Op", QitemOpName(item.Op)) +
                 " },";
         }
 
@@ -674,7 +683,7 @@ namespace DbAdm.Services
         /// </summary>
         /// <param name="table"></param>
         /// <param name="item"></param>
-        private void AddHideStr(CrudEtableDto table, CrudEitem0Dto item)
+        private void AddHideStr(CrudEtableDto table, CrudQEitemDto item)
         {
             table.HideViewStrs ??= [];
             table.HideViewStrs.Add(ViewHide(item.Fid));
@@ -699,7 +708,7 @@ namespace DbAdm.Services
         /// <param name="item"></param>
         /// <param name="isMany"></param>
         /// <returns></returns>
-        private string ViewItemStr(CrudEtableDto table, CrudEitem0Dto item, bool isMany = false)
+        private string ViewItemStr(CrudEtableDto table, CrudQEitemDto item, bool isMany = false)
         {
             var center = false;
             var name = isMany ? "" : item.Name;
@@ -848,6 +857,8 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
+                //todo: 加上GroupText
+
                 default:
                     str = "??";
                     break;
@@ -885,7 +896,7 @@ namespace DbAdm.Services
         }
 
         /// <summary>
-        /// get edit view header(th) string
+        /// get edit view header(th) string for Multiple table
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
@@ -964,9 +975,9 @@ namespace DbAdm.Services
                 : "";
         }
 
-        private string ViewSelectRows(CrudEitem0Dto item)
+        private string ViewSelectRows(CrudQEitemDto item)
         {
-            //不取字尾A字元(表示async)
+            //viewBag欄位不取字尾A字元(表示async)
             var value = _Str.IsEmpty(item.ItemData) ? "??" : 
                 (item.ItemData[^1] == 'A') ? item.ItemData[..^1] : item.ItemData;
             return KeyValue("Rows", "ViewBag." + value);
@@ -1059,7 +1070,7 @@ namespace DbAdm.Services
         /// <param name="value"></param>
         /// <param name="quote"></param>
         /// <returns></returns>
-        private string ServiceFid(string fid, string value, bool quote = false)
+        private string SvcFid(string fid, string value, bool quote = false)
         {
             if (_Str.IsEmpty(value))
                 return "";

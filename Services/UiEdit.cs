@@ -1,6 +1,5 @@
 using Base.Models;
 using Base.Services;
-using BaseApi.Services;
 using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
@@ -14,28 +13,39 @@ namespace DbAdm.Services
             return new EditDto()
             {
                 FnWhenSaveA = FnWhenSaveA,
-                Table = "dbo.[Ui]",
+                Table = "dbo.Crud",
                 PkeyFid = "Id",
-                Col4 = ["Creator", "Created"],
+                //Col4 = ["", "Created", "", "Revised"],
+                //Col4 = ["Creator", "Created"],
                 Items = [
                     new() { Fid = "Id" },
-                    new() { Fid = "ProjectId" },
-                    new() { Fid = "Code" },
-                    new() { Fid = "Name" },
-                    new() { Fid = "Status", Value = 1 },
-                    new() { Fid = "Note" },
+                    new() { Fid = "IsUi", Value = 1 },
+                    new() { Fid = "ProjectId", Required = true },
+                    new() { Fid = "ProgCode", Required = true },
+                    new() { Fid = "ProgName", Required = true },
+                    new() { Fid = "LabelHori", Value = 1 },
+                    new() { Fid = "ReadSql" },
+                    new() { Fid = "TableAs" },
+                    new() { Fid = "HasCreate" },
+                    new() { Fid = "HasUpdate" },
+                    new() { Fid = "HasDelete" },
+                    new() { Fid = "HasView" },
+                    new() { Fid = "HasExport" },
+                    new() { Fid = "HasReset" },
+                    new() { Fid = "AuthType", Required = true },
+                    new() { Fid = "Status", Required = true },
                 ],
                 Childs = [
                     new()
                     {
-                        Table = "dbo.UiItem",
+                        Table = "dbo.CrudUiItem",
                         PkeyFid = "Id",
-                        FkeyFid = "UiId",
+                        FkeyFid = "CrudId",
                         OrderBy = "BoxId, Sort",    //­«­n !!
                         Col4 = null,
                         Items = [
                             new() { Fid = "Id" },
-                            new() { Fid = "UiId" },
+                            new() { Fid = "CrudId" },
                             new() { Fid = "BoxId" },
                             new() { Fid = "ItemType" },
                             new() { Fid = "ChildNo" },

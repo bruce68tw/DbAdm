@@ -72,9 +72,9 @@ namespace DbAdm.Controllers
         /// <param name="keys">crudId list</param>
         /// <returns>error msg if any</returns>
         [HttpPost]
-        public async Task<string> GenCrud(string keys)
+        public async Task<string> GenCrud(string id)
         {
-            var result = await new GenCrudSvc().GenCrudsA(keys);
+            var result = await new MyCrudSvc().GenCrudA(id);
             return result;
         }
 

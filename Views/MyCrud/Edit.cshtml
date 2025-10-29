@@ -1,5 +1,5 @@
 @{
-    var cols2 = "4,6";     //2 columns per row
+    var cols = "4,6";     //2 columns per row
 }
 
 <style nonce="@_Fun.Nonce">
@@ -33,35 +33,36 @@
     <div class="row">
         <!-- left columns -->
         <div class="col-md-5">
-            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols2, FnOnChange = "_me.onChangeProject" })
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "功能代碼", Fid = "ProgCode", MaxLen = 30, Required = true, Cols = cols2 })
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "功能名稱", Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols2 })
+            <vc:xi-select dto='new() { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols, FnOnChange = "_me.onChangeProject" }' />
+            <vc:xi-text dto='new() { Title = "功能代碼", Fid = "ProgCode", MaxLen = 30, Required = true, Cols = cols }' />
+            <vc:xi-text dto='new() { Title = "功能名稱", Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols }' />
+            <vc:xi-check dto='new() { Title = "拖拉編輯畫面", Fid = "IsUi", Label = "是", Cols = cols }' />
 
             <div class="row">
                 <div class="col-md-4 x-label">查詢功能</div>
                 <div class="col-md-8 pt-1">
-                    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "HasExport", IsCheck = true, Label = "匯出" })
-                    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "HasReset", IsCheck = true, Label = "重設" })
+                    <vc:xi-check dto='new() { Fid = "HasExport", IsCheck = true, Label = "匯出" }' />
+                    <vc:xi-check dto='new() { Fid = "HasReset", IsCheck = true, Label = "重設" }' />
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4 x-label">維護功能</div>
                 <div class="col-md-8 pt-1">
-                    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "HasCreate", IsCheck = true, Label = "新增" })
-                    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "HasUpdate", IsCheck = true, Label = "修改" })
-                    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "HasDelete", IsCheck = true, Label = "刪除" })
-                    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "HasView", IsCheck = true, Label = "檢視" })
+                    <vc:xi-check dto='new() { Fid = "HasCreate", IsCheck = true, Label = "新增" }' />
+                    <vc:xi-check dto='new() { Fid = "HasUpdate", IsCheck = true, Label = "修改" }' />
+                    <vc:xi-check dto='new() { Fid = "HasDelete", IsCheck = true, Label = "刪除" }' />
+                    <vc:xi-check dto='new() { Fid = "HasView", IsCheck = true, Label = "檢視" }' />
                 </div>
             </div>
-            @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "資料狀態", Fid = "Status", IsCheck = true, Label = "啟用", Cols = cols2 })
+            <vc:xi-check dto='new() { Title = "資料狀態", Fid = "Status", IsCheck = true, Label = "啟用", Cols = cols }' />
         </div>
 
         <!-- right columns -->
         <div class="col-md-6">
-            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "權限種類", Fid = "AuthType", Rows = ViewBag.AuthTypes, Required = true, Cols = cols2 })
-            @await Component.InvokeAsync(XiEstr.Radio, new XiRadioDto { Title = "查詢Label位置", Fid = "LabelHori", Rows = _Str.ToIdStrs("1,水平,0,垂直"), Cols = cols2 })
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "Table別名", Fid = "TableAs", MaxLen = 10, Cols = cols2, TitleTip = "資料表別名" })
-            @await Component.InvokeAsync(XiEstr.Textarea, new XiTextareaDto { Title = "讀取資料 Sql", Fid = "ReadSql", Required = true, TitleTip = "讀取資料 Sql", Cols = "4,8", RowsCount = 5 })
+            <vc:xi-select dto='new() { Title = "權限種類", Fid = "AuthType", Rows = ViewBag.AuthTypes, Required = true, Cols = cols }' />
+            <vc:xi-radio dto='new() { Title = "查詢Label位置", Fid = "LabelHori", Rows = _Str.ToIdStrs("1,水平,0,垂直"), Cols = cols }' />
+            <vc:xi-text dto='new() { Title = "Table別名", Fid = "TableAs", MaxLen = 10, Cols = cols, TitleTip = "資料表別名" }' />
+            <vc:xi-textarea dto='new() { Title = "讀取資料 Sql", Fid = "ReadSql", Required = true, TitleTip = "讀取資料 Sql", Cols = "4,8", RowsCount = 5 }' />
         </div>
     </div>
 </form>
@@ -129,7 +130,7 @@
     @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "ColumnId" })
     @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Sort" })
 
-        <td>{{Code}}</td>
+        <td>{{Fid}}</td>
         <td>{{Name}}</td>
         <td class="x-w120">{{DataType}}</td>
         <td class="x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "TableAs" })</td>
@@ -164,7 +165,7 @@
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "CrudId" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Sort" })
 
-        <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "ColumnCode" })</td>
+        <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Fid" })</td>
         <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Name" })</td>
         <td class="x-w100">@await Component.InvokeAsync(XiEstr.Int, new XiIntDto { Fid = "Width" })</td>
         <td>@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "RitemType", Rows = ViewBag.RitemTypes, AddEmpty = false, Value = "0" })</td>
@@ -202,15 +203,15 @@
 
             <div class="row">
                 <div class="col-md-5">
-                    @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "資料表", Fid = "TableId", Required = true, Cols = cols2, FnOnChange = "_me.onChangeNowTable", EventArgs = "{{Index}}" })
-                    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "主鍵Id", Fid = "PkeyFid", MaxLen = 10, Required = true, Cols = cols2 })
-                    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "外鍵Id", Fid = "FkeyFid", MaxLen = 10, Cols = cols2, TitleTip = "2nd Table則為必填" })
-                    @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "自動Id長度", Fid = "AutoIdLen", Rows = ViewBag.AutoIdLens, Cols = cols2 })
+                    @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "資料表", Fid = "TableId", Required = true, Cols = cols, FnOnChange = "_me.onChangeNowTable", EventArgs = "{{Index}}" })
+                    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "主鍵Id", Fid = "PkeyFid", MaxLen = 10, Required = true, Cols = cols })
+                    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "外鍵Id", Fid = "FkeyFid", MaxLen = 10, Cols = cols, TitleTip = "2nd Table則為必填" })
+                    @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "自動Id長度", Fid = "AutoIdLen", Rows = ViewBag.AutoIdLens, Cols = cols })
                 </div>
                 <div class="col-md-6">
-                    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "Order By", Fid = "OrderBy", MaxLen = 10, Cols = cols2, TitleTip = "不含 order by 關鍵字" })
-                    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "Col4", Fid = "Col4", Label = "是", Cols = cols2, TitleTip = "是否有 Creator,Created,Reviser,Revised" })
-                    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "一半寬度", Fid = "HalfWidth", Label = "是", Cols = cols2, TitleTip = "多筆編輯畫面使用一半寬度" })
+                    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "Order By", Fid = "OrderBy", MaxLen = 10, Cols = cols, TitleTip = "不含 order by 關鍵字" })
+                    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "Col4", Fid = "Col4", Label = "是", Cols = cols, TitleTip = "是否有 Creator,Created,Reviser,Revised" })
+                    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "一半寬度", Fid = "HalfWidth", Label = "是", Cols = cols, TitleTip = "多筆編輯畫面使用一半寬度" })
                 </div>
             </div>
         </form>
@@ -254,7 +255,7 @@
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "ColumnId", Value = "{{ColumnId}}" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Sort", Value = "{{Sort}}" })
 
-        <td>{{Code}}/{{Name}}<br>{{DataType}}</td>
+        <td>{{Fid}}/{{Name}}<br>{{DataType}}</td>
         <td class="x-w120">@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, AddEmpty = false, Value = "T" })</td>
         <td class="x-w100">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "ItemData" })</td>
         <td class="x-center x-w50">@await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "Required" })</td>
@@ -314,13 +315,13 @@
 <!-- template: modal Items list row, data property is case insense !! -->
 <script id="tplItemTr" type="text/template">
     <tr data-id='{{Id}}'
-        data-code='{{Code}}'
+        data-code='{{Fid}}'
         data-name='{{Name}}'
         data-datatype='{{DataType}}'>
         <td>
             @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "_check0" })
         </td>
-        <td>{{Code}}</td>
+        <td>{{Fid}}</td>
         <td>{{Name}}</td>
     </tr>
 </script>
