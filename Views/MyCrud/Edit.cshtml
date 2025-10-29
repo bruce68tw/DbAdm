@@ -122,34 +122,74 @@
     </table>
 </form>
 
+<!-- Table edit form nav/tab/buttons -->
+<div class="x-btns-box">
+    <span class="x-span-label">編輯畫面</span>
+    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableAdd'>新增</button>
+    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableDelete'>刪除</button>
+    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableLeft'>左移</button>
+    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableRight'>右移</button>
+</div>
+<ul class="nav nav-tabs" id="navEtable"></ul>
+<div class="tab-content" id="tabEtable"></div>
+<vc:xg-save-back />
+
+<!-- multiple row template, must set width, Nullable set false first then front side will set it -->
+<!-- modal: Read item, shared -->
+<div id="modalItems" class="modal fade x-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content xu-items">
+            <div class="modal-header">
+                <div class="modal-title">選取查詢欄位</div>
+                <button type='button' class='btn-close px-2 py-2' data-bs-dismiss='modal'></button>
+            </div>
+            <div class="modal-body">
+                <div class="row x-row mx-1 my-1">
+                    <div class="col-md-2 x-right pt-1">
+                        Table
+                    </div>
+                    <div class="col-md-6">
+                        @* 動態讀取下拉欄位資料來源 *@
+                        @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "TableId", FnOnChange = "_me.onChangeItemTable" })
+                    </div>
+                    <div class="col-md-4 x-right">
+                        <button type="button" class="btn btn-primary" data-onclick="_me.onItemModalOk">確定</button>
+                    </div>
+                </div>
+
+                <!-- query result list -->
+                <table id="tableItem" class="table x-table x-table-vscroll w-100" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>選取</th>
+                            <th>欄位</th>
+                            <th>欄位名稱</th>
+                        </tr>
+                    </thead>
+                    <!-- match tplModalItem -->
+                    <tbody class="xu-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ** normal type template start -->
 <!--template: edit form Qitem -->
 <script id="tplQitem" type="text/template">
     <tr class="xu-tr">
-    @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
-    @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "CrudId" })
-    @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "ColumnId" })
-    @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Sort" })
-
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "CrudId" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "ColumnId" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Sort" })
         <td>{{Fid}}</td>
         <td>{{Name}}</td>
         <td class="x-w120">{{DataType}}</td>
         <td class="x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "TableAs" })</td>
-        <td>@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto
-       {
-           Fid = "InputType",
-           Rows = ViewBag.InputTypesQ,
-           AddEmpty = false,
-           Value = "T"
-       })</td>
+        <td>@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "InputType", Rows = ViewBag.InputTypesQ, AddEmpty = false, Value = "T"})</td>
         <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "ItemData" })</td>
-        <td>@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto
-       {
-           Fid = "Op",
-           Rows = ViewBag.QitemOps,
-           AddEmpty = false,
-           Value = "Equal"
-       })</td>
-    @*<td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "ExtInfo" })</td>*@
+        <td>@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "Op", Rows = ViewBag.QitemOps, AddEmpty = false, Value = "Equal" })</td>
         <td class="x-center x-w60">@await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "IsRange" })</td>
         <td class="x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "PosGroup" })</td>
         <td class="x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "LayoutCols" })</td>
@@ -164,7 +204,6 @@
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "CrudId" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Sort" })
-
         <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Fid" })</td>
         <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Name" })</td>
         <td class="x-w100">@await Component.InvokeAsync(XiEstr.Int, new XiIntDto { Fid = "Width" })</td>
@@ -172,18 +211,6 @@
         <td class="text-center x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mRitem" })</td>
     </tr>
 </script>
-
-<!-- Table edit form nav/tab/buttons -->
-<div class="x-btns-box">
-    <span class="x-span-label">編輯畫面</span>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableAdd'>新增</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableDelete'>刪除</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableLeft'>左移</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableRight'>右移</button>
-</div>
-<ul class="nav nav-tabs" id="navEtable"></ul>
-<div class="tab-content" id="tabEtable"></div>
-<vc:xg-save-back/>
 
 <!-- template: edit form nav, use index to connect nav tab -->
 <script id="tplNavEtable" type="text/template">
@@ -241,7 +268,7 @@
                         <th>維護</th>
                     </tr>
                 </thead>
-                <!-- tbody tr 內容為 tplEitemTr -->
+                <!-- tbody tr 內容為 tplEitem -->
                 <tbody></tbody>
             </table>
         </form>
@@ -249,12 +276,11 @@
 </script>
 
 <!-- template: edit form Eitem, xu-tr for myCrud.js, show fields use mustache render to fill -->
-<script id="tplEitemTr" type="text/template">
+<script id="tplEitem" type="text/template">
     <tr class="xu-tr">
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id", Value = "{{Id}}" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "ColumnId", Value = "{{ColumnId}}" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Sort", Value = "{{Sort}}" })
-
         <td>{{Fid}}/{{Name}}<br>{{DataType}}</td>
         <td class="x-w120">@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, AddEmpty = false, Value = "T" })</td>
         <td class="x-w100">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "ItemData" })</td>
@@ -272,48 +298,8 @@
     </tr>
 </script>
 
-<!-- multiple row template, must set width, Nullable set false first then front side will set it -->
-<!-- modal: Read item, shared -->
-<div id="modalItems" class="modal fade x-modal" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content xu-items">
-            <div class="modal-header">
-                <div class="modal-title">選取查詢欄位</div>
-                <button type='button' class='btn-close px-2 py-2' data-bs-dismiss='modal'></button>
-            </div>
-            <div class="modal-body">
-                <div class="row x-row mx-1 my-1">
-                    <div class="col-md-2 x-right pt-1">
-                        Table
-                    </div>
-                    <div class="col-md-6">
-                        @* 動態讀取下拉欄位資料來源 *@
-                        @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "TableId", FnOnChange = "_me.onChangeItemTable" })
-                    </div>
-                    <div class="col-md-4 x-right">
-                        <button type="button" class="btn btn-primary" data-onclick="_me.onItemModalOk">確定</button>
-                    </div>
-                </div>
-
-                <!-- query result list -->
-                <table id="tableItem" class="table x-table x-table-vscroll w-100" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>選取</th>
-                            <th>欄位</th>
-                            <th>欄位名稱</th>
-                        </tr>
-                    </thead>
-                    <!-- match tplItemTr -->
-                    <tbody class="xu-tbody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- template: modal Items list row, data property is case insense !! -->
-<script id="tplItemTr" type="text/template">
+<script id="tplModalItem" type="text/template">
     <tr data-id='{{Id}}'
         data-code='{{Fid}}'
         data-name='{{Name}}'
@@ -325,3 +311,6 @@
         <td>{{Name}}</td>
     </tr>
 </script>
+
+
+<!-- ** dragdrop type template start -->

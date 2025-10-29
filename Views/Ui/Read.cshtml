@@ -25,7 +25,7 @@
         flex-grow: 1;
     }
 
-    .xu-area {
+    .xu-ui-area {
         /*
         flex-grow: 1;
         min-height: 500px;
@@ -182,7 +182,7 @@
         </form>
 
         <!-- UI 區域 -->
-        <div class="xu-area"></div>
+        <div class="xu-ui-area"></div>
 
         <!-- uiItems editMany -->
         <form id='eformItems' class='d-none'></form>
@@ -211,7 +211,7 @@
     uiItem template for eformItems, template不可使用 vc:格式!! 
     _Id2(=Id, 後端會改變Id的值) 用來在後端設定 UiItem.BoxId
 -->
-<script id="tplItem" type="text/template">
+<script id="tplUiItem" type="text/template">
     <div class="xd-tr">
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "Id" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "_Id2" })
@@ -280,7 +280,7 @@
 </div>
 
 <!-- modal: 輸入欄位 -->
-<div id="modalInput" class="modal fade x-modal" role="dialog">
+<div id="modalUiInput" class="modal fade x-modal" role="dialog">
     <div class="modal-dialog modal-lg x-vh15">
         <div class="modal-content">
             <div class="modal-header">
@@ -308,7 +308,7 @@
 </div>
 
 <!-- modal: 分群文字 -->
-<div id="modalGroup" class="modal fade x-modal" role="dialog">
+<div id="modalUiGroup" class="modal fade x-modal" role="dialog">
     <div class="modal-dialog x-vh20">
         <div class="modal-content">
             <div class="modal-header">
@@ -329,7 +329,7 @@
 </div>
 
 <!-- modal: Checks -->
-<div id="modalChecks" class="modal fade x-modal" role="dialog">
+<div id="modalUiChecks" class="modal fade x-modal" role="dialog">
     <div class="modal-dialog modal-lg x-vh15">
         <div class="modal-content">
             <div class="modal-header">
@@ -353,7 +353,7 @@
 </div>
 
 <!-- modal: 多筆table -->
-<div id="modalTable" class="modal fade x-modal" role="dialog">
+<div id="modalUiTable" class="modal fade x-modal" role="dialog">
     <div class="modal-dialog modal-lg x-vh15">
         <div class="modal-content">
             <div class="modal-header">
@@ -376,7 +376,7 @@
 </div>
 
 <!-- modal: 匯入, 點擊外部不關閉 -->
-<div id="modalImport" class="modal fade x-modal" data-bs-backdrop="static" role="dialog">
+<div id="modalUiImport" class="modal fade x-modal" data-bs-backdrop="static" role="dialog">
     <div class="modal-dialog modal-lg x-vh5">
         <div class="modal-content">
             <div class="modal-header">

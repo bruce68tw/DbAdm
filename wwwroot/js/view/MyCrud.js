@@ -37,7 +37,7 @@ var _me = {
         _me.mQitem = new EditMany('Id', 'tbodyQitem', 'tplQitem', '.xu-tr');
         _me.mRitem = new EditMany('Id', 'tbodyRitem', 'tplRitem', '.xu-tr');
         _me.mEtable = new EditMany('Id', null, 'tplTabEtable', '.x-form');
-        _me.mEitem = new EditMany('Id', null, 'tplEitemTr', '.xu-tr');
+        _me.mEitem = new EditMany('Id', null, 'tplEitem', '.xu-tr');
         _me.mEtable._childs = [_me.mEitem];
 
         new CrudR(config, [_me.edit0, _me.mQitem, _me.mRitem, _me.mEtable]);
@@ -70,13 +70,13 @@ var _me = {
         _me.tplTabEtable = $('#tplTabEtable').html();
 
         //Eitem(E)
-        _me.tplEitemTr = $('#tplEitemTr').html();
+        _me.tplEitem = $('#tplEitem').html();
         //_me.divEitemBody = $('#divEitemBody');
 
         //Item modal(for Q,R,E)
         _me.modalItems = $('#modalItems');    //modal for select items
         _me.divItemsBody = _me.modalItems.find('tbody');
-        _me.tplItemTr = $('#tplItemTr').html();   //tpl of modal item row
+        _me.tplModalItem = $('#tplModalItem').html();   //tpl of modal item row
 
         //variables
         _me.ritemTableId = '';  //now ritem table Id
@@ -411,7 +411,7 @@ var _me = {
         await _ajax.getJsonA('GetColumns', { tableId: tableId }, function (rows) {
             _me.divItemsBody.empty();
             for (var i = 0; i < rows.length; i++) {
-                _me.divItemsBody.append($(Mustache.render(_me.tplItemTr, rows[i])));
+                _me.divItemsBody.append($(Mustache.render(_me.tplModalItem, rows[i])));
             }
         });
     },
@@ -466,7 +466,7 @@ var _me = {
         } else {
             //eitem
             body = _me.getEtableTab().find('tbody');
-            tplItem = _me.tplEitemTr;
+            tplItem = _me.tplEitem;
             mItem = _me.mEitem;
         }
 

@@ -25,15 +25,15 @@ var _me = {
         };
 
         //instance variables
-        _me.modalMain = $('#modalMain');
-        _me.modalImport = $('#modalImport');
-        _me.modalExport = $('#modalExport');
+        //_me.modalMain = $('#modalMain');
+        _me.modalImport = $('#modalUiImport');
+        //_me.modalExport = $('#modalExport');
 
         //save, back button
         //_me.divEditTbar = $('#divEditTbar');
 
         //initial edit one/many, rowsBox(參數2) 使用 eform
-        _me.mItem = new EditMany('Id', 'eformItems', 'tplItem', '.xd-tr');
+        _me.mItem = new EditMany('Id', 'eformItems', 'tplUiItem', '.xd-tr');
         new CrudR(config, [null, _me.mItem]);
 
         //custom function
@@ -42,7 +42,7 @@ var _me = {
         _me.mItem.fnValid = _me.mItem_valid;
 
         //initial uiMany
-        _me.uiMany = new UiMany('.xu-area', _me.mItem);
+        _me.uiMany = new UiMany('.xu-ui-area', _me.mItem);
 
 
         //註刪button dragstart事件

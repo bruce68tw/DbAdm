@@ -17,11 +17,11 @@ class UiMany {
     constructor(ftWorkArea, mItem) {
         //const
         this.FtMenu = '.xf-menu';   //right menu filter
-        this.ModalInput = $('#modalInput');
-        this.ModalGroup = $('#modalGroup');
-        this.ModalTable = $('#modalTable');
-        this.ModalTabPage = $('#modalTabPage');
-        this.ModalChecks = $('#modalChecks');
+        this.ModalInput = $('#modalUiInput');
+        this.ModalGroup = $('#modalUiGroup');
+        this.ModalTable = $('#modalUiTable');
+        this.ModalTabPage = $('#modalUiTabPage');
+        this.ModalChecks = $('#modalUiChecks');
         //this.EformInput = this.ModalInput.find('form');   //modalNodeProp form
         
         this.isEdit = false;    //是否可編輯
@@ -31,7 +31,7 @@ class UiMany {
         this.mItem = mItem;     //editMany
         this.newInputNo = 0;    //for fid、title, 累加, 不會當做主key
         this.eformItems = $('#eformItems');     //nodes edit form for editMany        
-        this.tplItem = $('#tplItem').html();    //item template
+        //this.tplItem = $('#tplUiItem').html();    //item template
 
         //now container for add item
         //this.divEdit = $(ftBox);
