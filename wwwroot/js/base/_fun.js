@@ -14,6 +14,7 @@ var _fun = {
     PreBrError: 'B:',
 
     //class name of hide RWD phone
+    CssFlag: 'x-flag',
     HideRwd: 'x-hide-rwd',
     //#endregion
 

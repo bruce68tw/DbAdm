@@ -10,64 +10,30 @@
  * param tbarHtml {string} (optional) datatable toolbar html for extra button for 客製化 toolbar
  * param fnAfterFind {function} (optional) 查詢成功後執行, 傳入result, 如果有指定fnOk
  */
-function Datatable(selector, url, dtConfig, findJson, fnOk, tbarHtml, fnAfterFind) {
-
-    //public property 
-    this.dt = null;             //jquery datatables object
-    this.findJson = findJson;   //find condition
-    this.recordsFiltered = -1;  //found count, -1 for recount, name map to DataTables
-    this.defaultShowOk = true;  //whethor show find ok msg, default value
-    this.showWork = (dtConfig.showWork == null) ? false : dtConfig.showWork;
-    this._fnAfterFind = fnAfterFind;
-
-    //private
-    //keep start row idx, false(find), true(save reload)
-    this._keepStart = false;
-
-    //now start row idx, coz ajax.dataSrc() always get 0 !!
-    this._start = 0;
-
-    //(now)show find ok msg or not
-    this._nowShowOk = this.defaultShowOk;      
-        
-    /**
-     * reset found count
-     */ 
-    this.resetCount = function () {
-        //var count = reset ? -1 : this.dt.recordsFiltered;
-        this.recordsFiltered = -1;
-    };
-
-    /**
-     * find rows
-     * param findJson {json} find condition
-     */
-    this.find = function (findJson) {
-
-        this.findJson = findJson;
-        //this.findStr = findStr || '';
-        this.resetCount();   //recount first
-
-        //trigger dataTables search event
-        //this.dt.search(this.findStr).draw();
-        this.dt.search('').draw(!this._keepStart);
-    };
-
-    /**
-     * refind with same condition for refresh form
-     * not show find ok msg
-     */ 
-    this.reload = function () {
-        this._keepStart = true;
-        this._nowShowOk = false;  //not show find ok msg
-        this.find(this.findJson);
-    };
+class Datatable {
 
     /**
      * initial jquery datatables, 參數參考前面的建構子
      */
-    this.init = function (selector, url, dtConfig, fnOk, tbarHtml) {
-        
+    constructor(selector, url, dtConfig, findJson, fnOk, tbarHtml, fnAfterFind) {
+        //public property 
+        this.dt = null;             //jquery datatables object
+        this.findJson = findJson;   //find condition
+        this.recordsFiltered = -1;  //found count, -1 for recount, name map to DataTables
+        this.defaultShowOk = true;  //whethor show find ok msg, default value
+        this.showWork = (dtConfig.showWork == null) ? false : dtConfig.showWork;
+        this._fnAfterFind = fnAfterFind;
+
+        //private
+        //keep start row idx, false(find), true(save reload)
+        this._keepStart = false;
+
+        //now start row idx, coz ajax.dataSrc() always get 0 !!
+        this._start = 0;
+
+        //(now)show find ok msg or not
+        this._nowShowOk = this.defaultShowOk;
+
         //default config for dataTables
         var config = {
             //deferLoading: 0,    //0表示一開始不自動執行
@@ -251,9 +217,39 @@ t
             if (settings.showWork)
                 _fun.unBlock();
         });
-    };
+    }
 
-    //must put last
-    this.init(selector, url, dtConfig, fnOk, tbarHtml);
+    /**
+     * reset found count
+     */
+    resetCount() {
+        //var count = reset ? -1 : this.dt.recordsFiltered;
+        this.recordsFiltered = -1;
+    }
+
+    /**
+     * find rows
+     * param findJson {json} find condition
+     */
+    find(findJson) {
+
+        this.findJson = findJson;
+        //this.findStr = findStr || '';
+        this.resetCount();   //recount first
+
+        //trigger dataTables search event
+        //this.dt.search(this.findStr).draw();
+        this.dt.search('').draw(!this._keepStart);
+    }
+
+    /**
+     * refind with same condition for refresh form
+     * not show find ok msg
+     */
+    reload() {
+        this._keepStart = true;
+        this._nowShowOk = false;  //not show find ok msg
+        this.find(this.findJson);
+    }
 
 } //class

@@ -34,13 +34,13 @@
  * return {EditMany}
  */
 //function EditMany(kid, eformId, rowTplId, rowFilter, sortFid) {
-function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
+class EditMany {
 
     /**
      * initial & set instance variables (this.validator by _valid.init())
      * call by this
      */ 
-    this.init = function () {
+    constructor(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
 
         //constant
         this.DataFkeyFid = '_fkeyfid';  //data field for fkey fid, lowercase
@@ -84,17 +84,17 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
 
         this.deletedRows = [];  //deleted key string array
         this.newIndex = 0;      //new row serial no, 使用負數來表示新資料
-    };
+    }
 
     /**
      * initial urm, 參考 XpUser Read.cshmtl
      * param fids: 要傳到後端的欄位id array
      */ 
-    this.initUrm = function (fids) {
+    initUrm(fids) {
         this.mode = _edit.ModeUR;
         this.modeData = fids;
         this.isUrm = true;
-    };
+    }
 
     /**
      * isNewTr -> _isNewBox
@@ -102,15 +102,15 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param tr {object} 
      * return {bool}
      */
-    this._isNewBox = function (box) {
+    _isNewBox(box) {
         return _edit.isNewBox(box, this.kid);
-    };
+    }
 
     /**
      * reset edit form
      * param rowsBox {object} optional
      */
-    this.reset = function () {
+    reset() {
         if (this.fnReset) {
             this.fnReset();
         } else if (this.isUrm) {
@@ -119,21 +119,21 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             this.rowsBox.empty();   //empty rows ui first
             this._resetVar();
         }
-    };
+    }
 
     //reset variables
-    this._resetVar = function () {
+    _resetVar() {
         this.newIndex = 0;
         this._resetDeletes();
-    };
+    }
 
     /**
      * resetDeleted -> _resetDeletes
      * reset deleted rows
      */
-    this._resetDeletes = function () {
+    _resetDeletes() {
         this.deletedRows = [];
-    };
+    }
 
     /**
      * urmLoadJson -> urmLoadRows
@@ -142,7 +142,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param rowsBox {object} 
      * param fids {string[]} 
      */
-    this._urmLoadRows = function (rows) {
+    _urmLoadRows(rows) {
         this._urmReset();
 
         //check
@@ -157,7 +157,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             _icheck.setO(obj, 1);
             obj.data('key', row[fids[0]]);
         }
-    };
+    }
 
     /**
      * get upd json by UserRole mode(urm), Role欄位使用checkbox
@@ -168,7 +168,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param dataFid {string} data fid, ex: RoleId
      * return {json} modified columns only
      */
-    this._urmGetUpdJson = function (upKey) {
+    _urmGetUpdJson(upKey) {
         var json = {};
         var rows = [];
         var me = this;
@@ -200,15 +200,15 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             json[_edit.Rows] = rows;
         json[_edit.Deletes] = this.getDeletes();
         return json;
-    };
+    }
 
-    this._urmReset = function () {
+    _urmReset() {
         this._resetVar();
 
         var objs = this.rowsBox.find(':checkbox');
         _icheck.setO(objs, 0);
         objs.data('key', '');
-    };
+    }
 
     /**
      * loadJson(json) -> loadRows(rows)
@@ -216,7 +216,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * load this json rows into UI, also set old values !!
      * param json {json} 
      */
-    this.loadRows = function (rows) {
+    loadRows(rows) {
         if (this.fnLoadRows) {
             this.fnLoadRows(rows);
         } else if (this.isUrm) {
@@ -226,7 +226,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             //    ? null : json[_edit.Rows];
             this.loadRowsByRsb(rows, true);
         }
-    };
+    }
 
     /**
      * singleFormLoadRow -> loadRowByBox
@@ -237,7 +237,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param row {json}
      * param index {int} 資料序號 base 0
      */
-    this.loadRowByBox = function (rowBox, row, index) {
+    loadRowByBox(rowBox, row, index) {
         //if (!this._checkRowTpl())
         //    return;
 
@@ -245,6 +245,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         var box = $(Mustache.render(this.rowTpl, row)); //for 顯示欄位
 
         //set old value for each field
+        var fid;
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
             _edit.setOld(_obj.get(fid, box), row[fid]);
@@ -258,7 +259,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
 
         //rowBox.append(box);
         box.appendTo(rowBox);
-    };
+    }
 
     /**
      * loadRowsByBox(rowsBox, rows, reset) -> loadRowsByRsb(rows, reset, rowsBox)
@@ -267,7 +268,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param reset {bool} (true) reset rowsBox first.
      * param rowsBox {object} (this.rowsBox) rows box object 
      */ 
-    this.loadRowsByRsb = function (rows, reset, rowsBox) {
+    loadRowsByRsb(rows, reset, rowsBox) {
         if (!this._checkRowTpl())
             return;
 
@@ -306,25 +307,25 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             box.appendTo(rowsBox);
             */
         }        
-    };
+    }
 
     /**
      * validate form
      */
-    this.valid = function () {
+    valid() {
         return this.fnValid ? this.fnValid() :
             this.hasEform ? this.eform.validTable(this.validator) :
             true;
-    };
+    }
 
     /**
      * get row key
      * param rowBox {object} row box
      * return {string} key value
      */
-    this.getKey = function (rowBox) {
+    getKey(rowBox) {
         return _input.get(this.kid, rowBox);
-    };
+    }
 
     /**
       * get row(json) by tr object, 不包含 xi-unsave 欄位
@@ -342,36 +343,36 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             row[fid] = _input.getO(obj, trObj, this.fidTypes[i + 1]);
         }
         return row;
-    };
+    }
     */
     
-    this._checkRowFilter = function () {
+    _checkRowFilter() {
         if (this.hasRowFilter)
             return true;
 
         _log.error('EditMany.js this.rowFilter is empty.');
         return false;
-    };
+    }
 
     //checkTplRow -> _checkRowTpl
-    this._checkRowTpl = function () {
+    _checkRowTpl() {
         if (this.hasRowTpl)
             return true;
 
         _log.error('EditMany.js this.rowTpl is empty.');
         return false;
-    };
+    }
 
     /**
      * get row box by inside element/object
      * param elm {element/object}
      * return {object}
      */
-    this._elmToRowBox = function (elm) {
+    _elmToRowBox(elm) {
         return this._checkRowFilter()
             ? $(elm).closest(this.rowFilter)
             : null;
-    };
+    }
 
     /**
      * get row box by id
@@ -379,10 +380,10 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param id {string} row id
      * return {object} row box
      */
-    this.idToRowBox = function (id) {
+    idToRowBox(id) {
         var filter = _input.fidFilter(this.kid) + `[value='${id}']`;
         return this.eform.find(filter).parent();
-    };
+    }
 
     /**
      * getUpdJsonByCrud -> getUpdJson
@@ -391,11 +392,11 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param upKey {string}
      * return {json} modified columns only
      */
-    this.getUpdJson = function (upKey) {
+    getUpdJson(upKey) {
         return this.fnGetUpdJson ? this.fnGetUpdJson(upKey) :
             this.isUrm ? this._urmGetUpdJson(upKey) :
             this.getUpdJsonByRsb(upKey, this.rowsBox);
-    };
+    }
 
     /**
      * getUpdJson -> getUpdJsonByRsb
@@ -404,19 +405,19 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param rowsBox {object}
      * return {json} modified columns only
      */
-    this.getUpdJsonByRsb = function (upKey, rowsBox) {
+    getUpdJsonByRsb(upKey, rowsBox) {
         var json = {};
         json[_edit.Rows] = this.getUpdRows(upKey, this._getRowsBox(rowsBox));
         json[_edit.Deletes] = this.getDeletes();
         return json;
-    };
+    }
 
     /**
      * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
      * param key {string}
     this.isNewKey = function (key) {
         return (key.length <= 3);
-    };
+    }
      */
 
     /**
@@ -426,7 +427,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param rowsBox {object} (optional) rows box, default this.rowsBox
      * return {jsons} null if empty
      */ 
-    this.getUpdRows = function (upKey, rowsBox) {
+    getUpdRows(upKey, rowsBox) {
         if (!this._checkRowFilter())
             return;
 
@@ -484,7 +485,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             }
         });
         return (rows.length === 0) ? null : rows;
-    };
+    }
 
     /** 
      * getDeletedStr -> getDeletes
@@ -492,17 +493,17 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * public for MyCrud.js
      * return {string} null for empty.
      */ 
-    this.getDeletes = function () {
+    getDeletes() {
         return (this.deletedRows.length === 0)
             ? null : this.deletedRows.join();
-    };    
+    }    
 
     /**
      * onclick addRow button
      */
-    this.onAddRow = function () {
+    onAddRow() {
         this.addRow();
-    };
+    }
 
     /**
      * add one row(or empty) into UI, 同時設定新id
@@ -511,30 +512,30 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param {int} (optional) newId 新id
      * return {object} row
      */
-    this.addRow = function (row, rowsBox, newId) {
+    addRow(row, rowsBox, newId) {
         row = row || {};
         rowsBox = this._getRowsBox(rowsBox);
         var obj = this._renderRow(row, rowsBox);
         newId = this.setNewIdByBox(obj, newId);
         row[this.kid] = newId;  //寫入新Id for 外面程式 if need
         return row;
-    };
+    }
 
     /**
      * onclick deleteRow
      * param btn {element}
      */
-    this.onDeleteRow = function () {        
+    onDeleteRow() {        
         var box = this._elmToRowBox(_fun.getMe());
         this.deleteRow(_itext.get(this.kid, box), box);
-    };
+    }
 
     /**
      * add deleted row & remove UI row
      * param key {string} row key
      * param rowBox {object} (optional) rows box, default this.rowsBox
      */ 
-    this.deleteRow = function (key, rowBox) {
+    deleteRow(key, rowBox) {
         var deletes = this.deletedRows;
         var found = false;
         var rowLen = deletes.length;
@@ -554,7 +555,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         //rowBox = rowBox || this.rowsBox;
         if (_obj.notEmpty(rowBox))
             rowBox.remove();
-    };
+    }
 
     /**
      * onViewFile -> viewFile
@@ -563,10 +564,10 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param fid {string}
      * param elm {element} link element
      */
-    this.viewFile = function (table, fid, elm) {
+    viewFile(table, fid, elm) {
         var key = this.getKey(this._elmToRowBox(elm));
         _me.crudE.viewFile(table, fid, elm, key);   //非初始階段可以讀取_me.crudE
-    };
+    }
 
     /**
      * render row by UI template, called by addRow()
@@ -574,7 +575,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param row {json}
      * return {object} row object
      */ 
-    this._renderRow = function (row, rowsBox) {
+    _renderRow(row, rowsBox) {
         if (!this._checkRowTpl())
             return null;
 
@@ -583,7 +584,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         _form.loadRow(obj, row);
         obj.appendTo(rowsBox);
         return obj;
-    };
+    }
 
     /**
      * (need this.rowFilter !!) formData add upload files
@@ -592,7 +593,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param rowsBox {object} (optional) default this.rowsBox
      * return {json} file json
      */ 
-    this.dataAddFiles = function (levelStr, data, rowsBox) {
+    dataAddFiles(levelStr, data, rowsBox) {
         if (!this.hasFile) return null;
         if (!this._checkRowFilter()) return null;
 
@@ -614,24 +615,24 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         });
         //_me.crudE.dataSetFileJson(data, fileJson);
         return fileJson;
-    };
+    }
 
     /**
      * row set fkey value
      * param row {json}
      * param fkeyFid {string}
      */
-    this.rowSetFkey = function (row, fkey) {
+    rowSetFkey(row, fkey) {
         if (row != null && _edit.isNewRow(row, fkey))
             row[this.DataFkeyFid] = fkey;
-    };
+    }
 
     /**
      * rows set fkey value
      * param rows {jsons}
      * param fkeyFid {string} fkey value
      */
-    this.rowsSetFkey = function (rows, fkey) {
+    rowsSetFkey(rows, fkey) {
         if (rows != null) {
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
@@ -639,7 +640,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
                     row[this.DataFkeyFid] = fkey;
             }
         }
-    };
+    }
 
     /**
      * set this.newId、PKey、_IsNew by row box
@@ -649,7 +650,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param newId {int} 外部傳入newId if any, 如果有值則不會累加 this.newId
      * return {int} new key index
      */
-    this.setNewIdByBox = function (box, newId) {
+    setNewIdByBox(box, newId) {
         if (newId == null) {
             this.newIndex--;    //使用負數
             newId = this.newIndex;
@@ -660,13 +661,13 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         _itext.set(this.kid, newId, box2);
         //_edit.addIsNew(box2);    //增加_IsNew隱藏欄位
         return newId;
-    };
+    }
 
     /**
      * set sort field if need
      * param rowsBox {object} default this.rowsBox
      */
-    this.setSort = function (rowsBox) {
+    setSort(rowsBox) {
         var sortFid = this.sortFid;
         if (_str.isEmpty(sortFid))
             return;
@@ -677,7 +678,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
             //this did not work in this loop !!
             _itext.set(sortFid, i, $(item).closest(me.rowFilter));
         });
-    };
+    }
 
     /**
      * getRowsBox -> getTrs
@@ -685,18 +686,15 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
      * param rowsBox {object} optional, return this.rowsBox if null
      * return {object}
      */
-    this._getRowsBox = function (rowsBox) {
+    _getRowsBox(rowsBox) {
         return rowsBox || this.rowsBox;
-    };
-
-    //call last
-    this.init();
+    }
 
     /*
     //??
     //src: 來源資料
     //return: true/false
-    this.onClickDeleteRows = function (src) {
+    onClickDeleteRows(src) {
         var find = false;
         if (src.deletedRows == null)
             src.deletedRows = [];
@@ -712,21 +710,21 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
         });
         return find;
         //_tool.msg('請先選取資料。')
-    };
+    }
 
     //選取所有checkbox
     //onClickCheckAll: function (tableId, dataFid, status) {
-    onClickCheckAll: function (me, dataFid) {
+    : onClickCheckAll(me, dataFid) {
         dataFid = dataFid || '_check0';
         var status = me.checked;
         $(me).closest('table').find('[data-id=' + dataFid + ']:not(:disabled)').prop('checked', status);
-    };
+    }
 
     //??
     //get field by rowNo and dataId ??
     this.getField = function (tbody, rowNo, dataId) {
         return tbody.find('tr').eq(rowNo).find('[data-id=' + dataId + ']');
-    };
+    }
 
     //keys is two dimension
     this.keysToStr = function (keys) {
@@ -737,7 +735,7 @@ function EditMany(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
                 : keys[i].join(_fun.RowSep);
         }
         return strs.join(_fun.TableSep);
-    };
+    }
     */
 
 } //class

@@ -1,11 +1,29 @@
 <script nonce="@_Fun.Nonce" src="~/js/view/MyCrud.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/UiView.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/UiMany.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/Ui.js"></script>
 <script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
 </script>
 
-<vc:xg-prog-path />
+<div class="row">
+    <div class="col-md-4">
+        <vc:xg-prog-path />
+    </div>
+    <div class="col-md-4 d-none pt-2 xd-prog-tbar">
+        <div class="x-btns-box x-center">
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenImport">Json匯入畫面...</button>
+            <!-- edit2 才顯示 -->
+            <button type="button" class="btn btn-secondary xd-export" data-onclick="_me.onExport">匯出畫面</button>
+        </div>
+    </div>
+    <div class="col-md-4 d-none pt-2 xd-prog-tbar">
+        <vc:xg-save-back align="right me-3" />
+    </div>
+</div>
+
 <div class="x-prog">
     <!-- read form-->
     <div id="divRead">
@@ -45,5 +63,10 @@
     <!-- edit form-->
     <div id="divEdit" class="d-none">
         <partial name="Edit" />
+    </div>
+
+    <!-- 拖拉編輯 form-->
+    <div id="divEdit2" class="d-none">
+        <partial name="UiEdit" />
     </div>
 </div>

@@ -29,7 +29,7 @@
  * 
  * return {EditOne}
  */ 
-function EditOne(kid, eformId) {
+class EditOne {
 
     //fileFids, fileLen, hasFile 屬性在外部設定(_me.crudE.js setFileVars())
 
@@ -37,7 +37,7 @@ function EditOne(kid, eformId) {
      * initial & and instance variables (this.validator is by _valid.init())
      * called by this(at last)
      */
-    this.init = function () {
+    constructor(kid, eformId) {
         this.kid = kid || 'Id';
         eformId = eformId || 'eform';
         this.eform = $('#' + eformId);     //multiple rows container object
@@ -55,76 +55,76 @@ function EditOne(kid, eformId) {
         }
 
         _edit.initVars(this, this.eform);
-    };
+    }
 
     /**
      * is a new row or not
      * return {bool}
      */
-    this.getKey = function () {
+    getKey() {
         return _input.get(this.kid, this.eform);
-    };
+    }
 
     /**
      * get field value
      * return {string}
      */
-    this.getValue = function (fid) {
+    getValue(fid) {
         return _input.get(fid, this.eform);
-    };
+    }
 
     /**
      * is a new row or not
      * return {bool}
      */
-    this.isNewRow = function () {
+    isNewRow() {
         return _edit.isNewBox(this.eform, this.kid);
-    };
+    }
 
     /**
      * load row into UI, also save into old variables
      * param row {json}
      */
-    this.loadRow = function (row) {
+    loadRow(row) {
         _form.loadRow(this.eform, row);
 
         //set old value for each field
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
-            fid = this.fidTypes[i];
+            var fid = this.fidTypes[i];
             var obj = _obj.get(fid, this.eform);
             obj.data(_edit.DataOld, row[fid]);
         }
-    };
+    }
 
     /**
      * get updated row, 包含 _childs
      * return {json} different column only
      */
-    this.getUpdRow = function () {
+    getUpdRow() {
         return _me.crudE.getUpdRow(this.kid, this.fidTypes, this.eform);
-    };
+    }
 
     /**
      * reset UI and edited variables
      */
-    this.reset = function () {
+    reset() {
         _form.reset(this.eform);
-    };
+    }
 
     /**
      * reset key, for update/view -> create
      */
-    this.resetKey = function () {
+    resetKey() {
         _itext.set(this.kid, '', this.eform);
-    };
+    }
 
     /**
      * set form edit status
      * param status {bool} edit status
      */
-    this.setEdit = function (status) {
+    setEdit(status) {
         _form.setEdit(this.eform, status);
-    };
+    }
 
     /**
      * formData add files
@@ -132,7 +132,7 @@ function EditOne(kid, eformId) {
      * param data {FormData}
      * return {json} file json
      */
-    this.dataAddFiles = function (levelStr, data) {
+    dataAddFiles(levelStr, data) {
         if (!this.hasFile)
             return null;
 
@@ -146,7 +146,7 @@ function EditOne(kid, eformId) {
         }
         //_me.crudE.dataSetFileJson(data, fileJson);
         return fileJson;
-    };
+    }
 
     /**
      * onViewFile -> viewFile
@@ -155,12 +155,9 @@ function EditOne(kid, eformId) {
      * param fid {string}
      * param elm {element} link element
      */
-    this.viewFile = function (table, fid, elm) {
+    viewFile(table, fid, elm) {
         var key = this.getKey();
         _me.crudE.viewFile(table, fid, elm, key);
-    };
-
-    //call last
-    this.init();
+    }
 
 }//class

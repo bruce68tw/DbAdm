@@ -24,7 +24,7 @@ var _tool = {
     msg: function (msg, fnClose) {
         var box = _tool.xgMsg;
         box.find('.xd-msg').html(msg);
-        _modal.showO(box);
+        _modal.show(box);
 
         //set callback
         _tool._fnOnMsgClose = fnClose;
@@ -39,7 +39,7 @@ var _tool = {
     ans: function (msg, fnYes, fnNo) {
         var box = _tool.xgAns;
         box.find('.xd-msg').html(msg);
-        _modal.showO(box);
+        _modal.show(box);
 
         //set callback
         _tool._fnOnAnsYes = fnYes;
@@ -55,7 +55,7 @@ var _tool = {
     ansA: async function (msg) {
         var box = _tool.xgAnsA;
         box.find('.xd-msg').html(msg);
-        _modal.showO(box);
+        _modal.show(box);
 
         return new Promise((resolve) => {
             //reset flag, 防止重複 resolve
@@ -123,7 +123,7 @@ var _tool = {
             _tool._fnOnAreaYes = fnOk;
 
         //show modal
-        _modal.showO(box);
+        _modal.show(box);
     },
 
     onAreaYes: function () {
@@ -144,7 +144,7 @@ var _tool = {
         var box = _tool.xgImage;
         box.find('img').attr('src', imageSrc);
         box.find('label').text(fileName);
-        _modal.showO(box);
+        _modal.show(box);
     },
 
     /**

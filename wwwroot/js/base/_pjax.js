@@ -13,7 +13,7 @@ var _pjax = {
         //點擊功能項目時記錄功能名稱
         docu.on('click', '.x-leftmenu [data-pjax]', function () {
             var menuPath = _leftmenu.getMenuPath($(this));
-            _prog.storeProgPath(menuPath);
+            _prog.storePath(menuPath);
         });
 
 		/*

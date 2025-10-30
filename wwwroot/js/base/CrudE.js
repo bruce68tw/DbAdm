@@ -1,4 +1,6 @@
 ﻿/**
+ * 編輯畫面
+ * 前端使用固定 filter: #divEdit
  * crud edit function
  *   合併 _edit.js
  * 寫入 _me properties:
@@ -16,7 +18,7 @@
  *   _nowFun:
  *   modal:
  */
-function CrudE(edits) {
+class CrudE {
 
     /*
     //constant with underline
@@ -46,7 +48,7 @@ function CrudE(edits) {
      *   2.many edit object, if ary0 is null, then call new EditOne()
      * param2 updName {string} update name, default to _BR.Update
      */
-    this._init = function() {
+    constructor(edits) {
         this.divEdit = $('#divEdit');
         var hasEdit = (this.divEdit.length > 0);
         if (hasEdit) {
@@ -89,13 +91,13 @@ function CrudE(edits) {
         _me.eform0 = this.eform0;
         _me.hasEdit = hasEdit;
         _me.divEdit = this.divEdit;
-    };
+    }
 
     /**
      * initial edit forms(recursive)
      * param edit {object} EditOne/EditMany object
      */
-    this._initForm = function(edit) {
+    _initForm(edit) {
         if (edit.eform == null)
             return;
 
@@ -104,29 +106,20 @@ function CrudE(edits) {
         var childLen = this._getEditChildLen(edit);
         for (var i = 0; i < childLen; i++)
             this._initForm(this._getEditChild(edit, i));
-    };
-
-    //get master edit form
-    this.getEform0 = function() {
-        return this.edit0.eform;
-    };
+    }
 
     /*
-    _getJsonAndSetMode = async function(key, fun) {
-        //_me.crudR.toUpdateMode(key);
-        var act = (fun == EstrFun.Update) ? 'GetUpdJson' :
-            (fun == EstrFun.View) ? 'GetViewJson' : '';
-        await _ajax.getJsonA(act, { key: key }, function(data) {
-            _me.crudR.toEditMode(fun, data);
-        });
-    };
-     */
+    //get master edit form
+    getEform0() {
+        return this.edit0.eform;
+    }
+    */
 
     /**
      * _loadJson -> loadJson
      * load row(include childs) into UI
      */
-    this.loadJson = function(json) {
+    loadJson(json) {
         //load master(single) row
         var edit = this.edit0;
         edit.loadRow(json);
@@ -143,22 +136,22 @@ function CrudE(edits) {
         //call fnAfterLoadJson() if existed
         //if (_fun.hasValue(edit.fnAfterLoadJson))
         //    edit.fnAfterLoadJson(json);
-    };
+    }
 
     //call fnAfterOpenEdit() if existed
     // _afterOpenEdit -> afterOpen
-    this.afterOpen = function(fun, json) {
+    afterOpen(fun, json) {
         //if (_fun.hasValue(_me.fnAfterOpenEdit))
         if (_me.fnAfterOpenEdit)
             _me.fnAfterOpenEdit(fun, json);
-    };
+    }
 
     /**
      * _setEditStatus -> setEditStatus
      * set all forms fields edit status
      * param fun {string} C,U,V
      */ 
-    this.setEditStatus = function(fun) {
+    setEditStatus(fun) {
         //if (fun === this._nowFun)
         //    return;
 
@@ -203,12 +196,12 @@ function CrudE(edits) {
         //enable btnToRead for view fun
         //if (isView)
         //    box.find('#btnToRead').prop('disabled', false);
-    };
+    }
 
     /**
      * check has upload file or not
      */
-    this._hasFile = function() {
+    _hasFile() {
         var edit = this.edit0;
         if (edit.hasFile)
             return true;
@@ -222,14 +215,14 @@ function CrudE(edits) {
 
         //case of not found
         return false;
-    };
+    }
 
     /**
      * get updated data for save create/update(has _rows, _childs, _deletes, _fileJson)
      * param formData {FormData} for write uploaded files
      * return {json} include fileJson if existed
      */
-    this._getUpdJson = function(formData) {
+    _getUpdJson(formData) {
         //load master(single) row
         var edit0 = this.edit0;
         var row = edit0.getUpdRow();
@@ -286,13 +279,13 @@ function CrudE(edits) {
         //    data.key = key;
         _json.removeNull(data);
         return data;
-    };
+    }
 
     /**
      * forms validate check, also check systemError
      * return {bool}
      */
-    this.validAll = function() {
+    validAll() {
         //check system error
         var edit = this.edit0;
         if (_str.notEmpty(edit.systemError)) {
@@ -321,13 +314,13 @@ function CrudE(edits) {
 
         //case of ok
         return true;
-    };
+    }
 
     /**
      * (public) after save
      * data: ResultDto
      */
-    this.afterSave = function(data) {
+    afterSave(data) {
         //debugger;
         //call fnAfterSave if need
         if (_fun.hasValue(this.edit0.fnAfterSave))
@@ -346,13 +339,13 @@ function CrudE(edits) {
             _me.crudR.dt.reload();
             _me.crudR.toReadMode();
         }
-    };
+    }
 
     /**
      * reset form (recursive)
      * param edit {EditOne}
      */
-    this._resetForm = function(edit) {
+    _resetForm(edit) {
         //reset this
         edit.reset();
 
@@ -362,17 +355,17 @@ function CrudE(edits) {
             var edit2 = this._getEditChild(edit, i);
             edit2.reset();
         }
-    };
+    }
 
     /**
      * check current is create/update mode or not
      */
-    this.isEditMode = function() {
+    isEditMode() {
         return (this._nowFun !== EstrFun.View);
-    };
+    }
 
     //return {bool}
-    this._updateOrViewA = async function (fun, key) {
+    async _updateOrViewA(fun, key) {
         if (_me.fnUpdateOrViewA)
             return await _me.fnUpdateOrViewA(fun, key);
 
@@ -385,7 +378,7 @@ function CrudE(edits) {
             me.afterOpen(fun, json);
             _me.crudR.toEditMode(fun);
         });
-    };
+    }
 
 
     /**
@@ -393,18 +386,18 @@ function CrudE(edits) {
      * param edit {object} edit object
      * param childIdx {int} child index, base 0
      */
-    this._getEditChild = function (edit, childIdx) {
+    _getEditChild(edit, childIdx) {
         return edit[_edit.Childs][childIdx];
-    };
+    }
 
     /**
      * get edit child len
      * param edit {object} edit object
      */
-    this._getEditChildLen = function (edit) {
+    _getEditChildLen(edit) {
         var fid = _edit.Childs;
         return (edit[fid] == null) ? 0 : edit[fid].length;
-    };
+    }
 
     /**
      * getRowsByJson -> jsonGetRows
@@ -412,26 +405,26 @@ function CrudE(edits) {
      * @param {any} json
      * @returns
      */
-    this.jsonGetRows = function (json) {
+    jsonGetRows(json) {
         return (json == null || json[_edit.Rows] == null)
             ? null
             : json[_edit.Rows];
-    };
+    }
 
     //get child json
     //_getChildJson -> getChildJson
-    this.getChildJson = function (upJson, childIdx) {
+    getChildJson(upJson, childIdx) {
         var childs = _edit.Childs;
         return (upJson[childs] == null || upJson[childs].length <= childIdx)
             ? null
             : upJson[childs][childIdx];
-    };
+    }
 
     //get child rows
-    this.getChildRows = function (upJson, childIdx) {
+    getChildRows(upJson, childIdx) {
         var child = this.getChildJson(upJson, childIdx);
         return this.jsonGetRows(child);
-    };
+    }
 
     /**
      * set child rows
@@ -440,7 +433,7 @@ function CrudE(edits) {
      * param rows {jsons}
      * return {json} child object
      */
-    this.setChildRows = function (upJson, childIdx, rows) {
+    setChildRows(upJson, childIdx, rows) {
         var fid = _edit.Childs;
         if (upJson == null)
             upJson = {};
@@ -452,39 +445,39 @@ function CrudE(edits) {
         var child = upJson[fid][childIdx];
         child[_edit.Rows] = rows;
         return child;
-    };
+    }
 
     /**
      * 將目前畫面資料轉變為新資料
      */
-    this.editToNew = function () {
+    editToNew() {
         var fun = EstrFun.Create;
         this.setEditStatus(fun);
         this.edit0.resetKey();
         _prog.setPath(fun);
-    };
+    }
 
     //=== move from _edit.js start
     /**
      * get old value 
      * param obj {object} input jquery object
      * return {string}
-    this.getOld = function (obj) {
+    getOld(obj) {
         return obj.data(_edit.DataOld);
-    };
+    }
     */
 
     /**
      * set old value
      * param obj {object} input jquery object
      * param value {int/string}
-    this.setOld = function (obj, value) {
+    setOld(obj, value) {
         obj.data(_edit.DataOld, value);
-    };
+    }
      */
 
     /*
-    zz_loadRowByArg = function (box, row, fidTypes) {
+    zz_loadRowByArg(box, row, fidTypes) {
         _form.loadRow(box, row);
 
         //set old value for each field
@@ -494,7 +487,7 @@ function CrudE(edits) {
             var obj = _obj.get(fid, box);
             obj.data(_edit.DataOld, row[fid]);
         }
-    };
+    }
     */
 
     /**
@@ -506,7 +499,7 @@ function CrudE(edits) {
      * param box {object} form object
      * return json row
      */
-    this.getUpdRow = function (kid, fidTypes, box) {
+    getUpdRow(kid, fidTypes, box) {
         //case new return row
         var row = _form.toRow(box);
         if (_edit.isNewRow(row, kid))
@@ -549,7 +542,7 @@ function CrudE(edits) {
 
         result[kid] = _input.get(kid, box);
         return result;
-    };
+    }
 
     /**
      * getServerFid -> getFileSid
@@ -558,9 +551,9 @@ function CrudE(edits) {
      * param fid {string} ui file id
      * return {string} format: Table_Fid
      */
-    this.getFileSid = function (levelStr, fid) {
+    getFileSid(levelStr, fid) {
         return 't' + levelStr + '_' + fid;
-    };
+    }
 
     /**
      * formData set fileJson field
@@ -568,7 +561,7 @@ function CrudE(edits) {
      * param fileJson {json}
      * return void
      */
-    this.dataSetFileJson = function (data, fileJson) {
+    dataSetFileJson(data, fileJson) {
         if (_json.isEmpty(fileJson))
             return;
 
@@ -578,20 +571,20 @@ function CrudE(edits) {
             fileJson = _json.copy(fileJson, json);
         }
         data.set(fid, fileJson);
-    };
+    }
 
     /**
      * isNewKey(key) -> isNewRow(row)
      * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
      * param key {string}
-    this.isNewRow = function (row) {
+    isNewRow(row) {
         var fid = _edit.IsNew;
         return (row[fid] != null || row[fid] == '1');
-    };
+    }
      */
 
     /*
-    this.isNewKey = function (key) {
+    isNewKey(key) {
         key = key.toString();   //convert to string for checking
         var len = key.length;
         if (len >= 6)
@@ -599,7 +592,7 @@ function CrudE(edits) {
 
         var val = parseInt(key);
         return (!Number.isNaN(val) && (val.toString().length == len));
-    };
+    }
     */
 
     /**
@@ -609,7 +602,7 @@ function CrudE(edits) {
      * param elm {element} link element
      * param key {string} row key
      */
-    this.viewFile = function (table, fid, elm, key) {
+    viewFile(table, fid, elm, key) {
         /*
         if (this.isNewKey(key)) {
             _tool.msg(_BR.NewFileNotView);
@@ -619,7 +612,7 @@ function CrudE(edits) {
             if (_file.isImageExt(ext))
                 _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
         //}
-    };
+    }
 
     //#region remark code
     /**
@@ -629,7 +622,7 @@ function CrudE(edits) {
      * return json array
      */
     /*
-    getFidTypesByDid = function (box, trFilter) {
+    getFidTypesByDid(box, trFilter) {
         //trFilter = trFilter || 'tr';
         //var trObj = box.find(trFilter + ':first');
 
@@ -641,12 +634,12 @@ function CrudE(edits) {
             fidTypes[j + 1] = _input.getType(obj);
         });
         return fidTypes;
-    };
+    }
     */
 
     /*
     //for EditMany.js
-    getFidTypesById = function (box) {
+    getFidTypesById(box) {
         //return this._getFidTypes(box, '[id]');
         var fidTypes = [];
         box.find('[id]').each(function (i, item) {
@@ -656,7 +649,7 @@ function CrudE(edits) {
             fidTypes[j + 1] = _input.getType(obj);
         });
         return fidTypes;
-    };
+    }
     */
 
     //=== move from _edit.js end
@@ -667,27 +660,27 @@ function CrudE(edits) {
     /**
      * onclick Create button
      */
-    this.onCreate = function() {
+    onCreate() {
         var fun = EstrFun.Create;
         this._resetForm(this.edit0);   //reset first
         this.setEditStatus(fun);
         this.afterOpen(fun, null);
-    };
+    }
 
     /**
      * onclick Update button
      * param key {string} row key
      * return {bool}
      */
-    this.onUpdateA = async function(key) {
+    async onUpdateA(key) {
         //_edit.removeIsNew(this.edit0.eform);    //移除_IsNew隱藏欄位
         return await this._updateOrViewA(EstrFun.Update, key);
-    };
+    }
 
     //return { bool }
-    this.onViewA = async function(key) {
+    async onViewA(key) {
         return await this._updateOrViewA(EstrFun.View, key);
-    };
+    }
 
     /**
      * table onclick openModal button(link)
@@ -697,19 +690,19 @@ function CrudE(edits) {
      * param required {bool}
      * param maxLen {int} 
      */
-    this.onOpenModal = function(title, fid, required, maxLen) {
+    onOpenModal(title, fid, required, maxLen) {
         var tr = _fun.getMe(true).closest('tr');
         _tool.showArea(title, _itext.get(fid, tr), this.isEditMode(), function(result) {
             _itext.set(fid, result, tr);
         });
-    };
+    }
 
     /**
      * on click save, when upload file, server side file variable is t(n)_FieldName
      * below variables are sent to backend
      *   key, row(包含_childs, _deletes, _fileNo), files
      */
-    this.onSaveA = async function() {
+    async onSaveA() {
         //validate all input & system error(will show error msg)
         if (!this.validAll()) {
             _tool.alert(_BR.InputWrong);
@@ -768,10 +761,7 @@ function CrudE(edits) {
                 me.afterSave(result);
             });
         }
-    };
+    }
     //=== event end ===
-
-    //call last
-    this._init();
 
 }//class

@@ -465,7 +465,7 @@ class FlowMany {
         _form.loadRow(this.modalNodeProp, _form.toRow(rowBox));
 
         //show modal
-        _modal.showO(this.modalNodeProp);   //.modal('show');
+        _modal.show(this.modalNodeProp);   //.modal('show');
     }
 
     //param line {FlowLine} flow line 
@@ -487,7 +487,7 @@ class FlowMany {
         _itext.set('Sort', _itext.get('Sort', rowBox), form);
 
         //show modal
-        _modal.showO(this.modalLineProp);
+        _modal.show(this.modalLineProp);
 
         //if (!this.isLineCondMode(lineType))
         //    line.CondStr = '';

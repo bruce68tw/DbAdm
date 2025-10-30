@@ -1,4 +1,5 @@
 ﻿/**
+ * 使用舊語法 function 宣告非靜態類別
  * pagin component, config has properties:
  * pageStr {string} json string from backend(pageNo,pageRows,filterRows)
  * pager {object} jquery page object

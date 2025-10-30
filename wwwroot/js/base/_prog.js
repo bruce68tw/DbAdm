@@ -2,34 +2,43 @@
 //program, 包含 crud功能
 var _prog = {
     //filter: '.x-prog-path',
-    me: null,
-    oriPath: '',    //original path
+    me: null,       //prog path object
+    initPath: '',   //original path
 
     init: function () {
         _prog.me = $('.x-prog-path');
-        //_prog.oriPath = _prog.me.text();
+        //_prog.initPath = _prog.me.text();
         if (_prog.me.text() == '') {
             //F5 重整時 _fun.data.progPath 為空
             if (_str.isEmpty(_fun.data.progPath)) {
-                //從url找menu
+                //url menu -> prog path
                 let nowUrl = window.location.pathname;
                 let activeLink = $(`.x-leftmenu [href="${nowUrl}"]`);
                 var menuPath = _leftmenu.getMenuPath(activeLink);
-                _prog.storeProgPath(menuPath);
+                _prog.storePath(menuPath);
             }
 
-            _prog.oriPath = _fun.data.progPath;
-            _prog.me.text(_prog.oriPath);
+            _prog.initPath = _fun.data.progPath;
+            _prog.me.text(_prog.initPath);
         }
     },
-    
-    storeProgPath: function (progPath) {
+
+    setBorder: function (status) {
+        var prog = $('.x-prog');
+        if (status)
+            prog.removeClass(_fun.CssFlag);
+        else
+            prog.addClass(_fun.CssFlag);
+    },
+
+    //storeProgPath -> storePath
+    storePath: function (progPath) {
         _fun.data.progPath = progPath;
     },
     
     //reset path to initial
     resetPath: function () {
-        _prog.me.text(_prog.oriPath);
+        _prog.me.text(_prog.initPath);
     },
 
     /**
@@ -50,6 +59,6 @@ var _prog = {
      * param name {string} fun name
      */
     setFunName: function (name) {
-        _prog.me.text(_prog.oriPath + '-' + name);
+        _prog.me.text(_prog.initPath + '-' + name);
     },
 };

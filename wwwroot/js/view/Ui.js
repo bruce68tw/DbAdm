@@ -1,67 +1,32 @@
 /// <reference path="UiMany.js" />
 
-var _me = {
-    init: function () {
-        var config = {
-            columns: [
-                { data: 'ProjectName', orderable: true },
-                { data: 'ProgCode', orderable: true },
-                { data: 'ProgName', orderable: true },
-                { data: '_Fun' },
-                { data: '_Crud' },
-            ],
-            columnDefs: [
-                { targets: [3], render: function (data, type, full, meta) {
-                    var html = '' +
-                        '<button type="button" class="btn btn-link" data-onclick="_me.onGenCrud" data-args="{0}">{1}</button> | ' +
-                        '<button type="button" class="btn btn-link" data-onclick="_me.onDownCrud" data-args="{0}">{2}</button> | ' +
-                        '<button type="button" class="btn btn-link" data-onclick="_me.onDownTableSql" data-args="{0}">{3}</button>';
-                    return _str.format(html, full.Id, '產生CRUD', '下載CRUD', '下載Table SQL');
-                }},
-                { targets: [4], render: function (data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
-                }},
-            ],
-        };
+//擴充 _me
+Object.assign(_me, {
+    //是否拖拉編輯模式
+    isEdit2: false,
 
-        //instance variables
-        //_me.modalMain = $('#modalMain');
-        _me.modalImport = $('#modalUiImport');
-        //_me.modalExport = $('#modalExport');
+    onOpenEdit2: async function (id) {
 
-        //save, back button
-        //_me.divEditTbar = $('#divEditTbar');
+        _prog.setBorder(false);
+        _me.isEdit2 = true;
+        _me.crudR.setNowDivEdit(_me.divEdit2);
+        await _me.crudE.onUpdateA(id);
+        //_me.crudR.swap(false);
 
-        //initial edit one/many, rowsBox(參數2) 使用 eform
-        _me.mItem = new EditMany('Id', 'eformItems', 'tplUiItem', '.xd-tr');
-        new CrudR(config, [null, _me.mItem]);
+        /*
+        _me.uiMany.reset();
+        var isAdd = (fun === EstrFun.Create);
+        _me.uiMany.setEdit(isAdd || (fun === EstrFun.Update));
+        */
+    },
 
-        //custom function
-        _me.mItem.fnLoadRows = _me.mItem_loadRows;
-        _me.mItem.fnGetUpdJson = _me.mItem_getUpdJson;
-        _me.mItem.fnValid = _me.mItem_valid;
-
-        //initial uiMany
-        _me.uiMany = new UiMany('.xu-ui-area', _me.mItem);
-
-
-        //註刪button dragstart事件
-        _me.divEdit.on(EstrMouse.DragStart, '.xu-btn', function (e) {
-            let itemType = $(e.target).data('type');
-            _me.uiMany.startDragBtn(true, itemType);
-        }).on(EstrMouse.DragEnd, function (e) {
-            //不會觸發工作區的 dragEnd, 這裡必須寫
-            _me.uiMany.onDragEnd(e);
-        });
-
-    }, //init
-
+    /*
     //open main form
     onMainOpen: function () {
         var modal = _me.modalMain;
         var row = _form.toRow(_me.eform0);
         _form.loadRow(modal, row);
-        _modal.showO(modal);
+        _modal.show(modal);
     },
 
     onMainOk: function () {
@@ -70,6 +35,7 @@ var _me = {
         _form.loadRow(_me.eform0, row);
         _modal.hideO(modal);
     },
+    */
 
     //#region read form function
     //onclick generate crud(產生在主機)
@@ -99,10 +65,10 @@ var _me = {
         _itext.set('Import', '', _me.modalImport);
 
         //open modal
-        _modal.showO(_me.modalImport);
+        _modal.show(_me.modalImport);
     },
 
-    //匯入json(巢狀格式) to edit form
+    //匯入json(巢狀格式) to edit(查詢條件、結果only)/edit2 form
     //called by modalImprot
     onImport: async function () {
         var value = _itext.get('Import', _me.modalImport).trim();
@@ -159,26 +125,32 @@ var _me = {
 
     //#region auto called function
     fnAfterSwap: function (toRead) {
-        _obj.showByStatus($('.xu-tbar'), !toRead);
+        var tbar = $('.xd-prog-tbar');
+        if (toRead) {
+            _obj.hide(tbar);
+            _me.isEdit2 = false;    //還原
+        } else {
+            _obj.show(tbar);
+            _obj.showByStatus($('.xd-export'), _me.isEdit2);
+        }
     },
 
-    //auto called !!
     //reset when create
-    fnAfterOpenEdit: function (fun, json) {
+    afterOpenEdit2: function (fun, json) {
         _me.uiMany.reset();
         var isAdd = (fun === EstrFun.Create);
         _me.uiMany.setEdit(isAdd || (fun === EstrFun.Update));
     },
 
     /**
-     * auto called
+     * ?? auto called
      * jsPlumb line container must visible when rendering
      * see _me.crudE.js _updateOrViewA()
      * param {string} fun
      * param {string} key
      * returns {bool}
      */
-    fnUpdateOrViewA: async function (fun, key) {
+    zz_fnUpdateOrViewA: async function (fun, key) {
         var act = (fun == EstrFun.Update)
             ? 'GetUpdJson' : 'GetViewJson';
         return await _ajax.getJsonA(act, { key: key }, function (json) {
@@ -204,7 +176,7 @@ var _me = {
         if (boxLen == 0) return '';
 
         //reset BoxId, ChildNo, Sort
-        let mItem = this.mItem;
+        let mUiItem = this.mUiItem;
         //box list
         for (let i = 0; i < boxLen; i++) {
             let boxJson = boxJsons[i];
@@ -215,7 +187,7 @@ var _me = {
                 let itemIds = uiView.boxGetChildIds(boxId, childNo);
                 //item list
                 for (let k = 0; k < (itemIds || []).length; k++) {
-                    let rb = mItem.idToRowBox(itemIds[k]); //get row box
+                    let rb = mUiItem.idToRowBox(itemIds[k]); //get row box
                     _itext.set('BoxId', boxId, rb);
                     _itext.set('ChildNo', childNo, rb);
                     _itext.set('Sort', k + 1, rb);
@@ -226,19 +198,19 @@ var _me = {
     },
     //#endregion 
 
-    //#region mItem custom function
+    //#region mUiItem custom function
     //load items
-    mItem_loadRows: async function (rows) {
+    mUiItem_loadRows: async function (rows) {
         await _me.uiMany.loadRowsA(rows);
     },
 
     //getUpdJson
-    mItem_getUpdJson: function (upKey) {
-        return _me.mItem.getUpdJsonByRsb(upKey);
+    mUiItem_getUpdJson: function (upKey) {
+        return _me.mUiItem.getUpdJsonByRsb(upKey);
     },
 
     //return boolean
-    mItem_valid: function () {
+    mUiItem_valid: function () {
         return true;
     },
 
@@ -250,4 +222,4 @@ var _me = {
     */
     //#endregion
 
-}; //class
+}); //class

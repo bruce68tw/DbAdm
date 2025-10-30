@@ -27,6 +27,10 @@
     border: 1px solid #ddd !important;
     border-radius: 4px;
 }
+/* 控制不顯示 border */
+.x-prog.x-flag {
+    border: none !important;
+}
 
 @media (max-width:768px) {
     .x-prog {

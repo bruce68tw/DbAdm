@@ -1,0 +1,270 @@
+﻿@{
+    var cols = "4,6";
+
+    List<IdStrDto> rowTypes =
+    [
+        new(){ Id = "6,6", Str = "2欄" },
+        new(){ Id = "4,4,4", Str = "3欄" },
+        new(){ Id = "4,8", Str = "2欄(小,大)" },
+        new(){ Id = "8,4", Str = "2欄(大,小)" },
+    ];
+}
+
+<style nonce="@_Fun.Nonce">
+    /* placeholder 顯示 Fid */
+    input::placeholder {
+        color: darkgrey;
+    }
+
+    /* UiMany */
+    #divEdit2 {
+        display: flex;
+        flex-direction: row;
+    }
+    .xu-eform-tail {
+        flex-grow: 1;
+    }
+
+    .xu-ui-area {
+        /*
+        flex-grow: 1;
+        min-height: 500px;
+        height: auto;
+        */
+        min-height: 500px;
+        width: calc(100vw - 100px); /* 工具列寬度 100px */
+        align-self: flex-start;
+        border: 1px solid #ddd !important;
+    }
+
+    .xu-input {
+        margin-bottom: 5px;
+    }
+
+    /* UiView */
+    .xu-drop-line {
+        height: 0; /* 不佔高度 */
+        border-top: 2px solid #007bff; /* 改成實線/虛線都可以 */
+        margin: 4px 0; /* 與上下元素留一點距離 */
+    }
+
+    /* drop 垂直線 */
+    .xu-drop-vline {
+        width: 0;
+        border-left: 2px solid #007bff;
+        margin: 0 4px;
+    }
+
+    .xu-item {
+        cursor: grab;
+        border: 2px solid transparent;
+        border-radius: 4px;
+        transition: border-color 0.2s;
+    }
+        /* hover 顯示外框, 只顯示一層 */
+        .xu-item:hover:not(:has(.xu-item:hover)) {
+            border-color: green;
+        }
+
+    /* row/span 格式加框線、高度 */
+    .xu-row-col, .xu-span {
+        min-height: 50px;
+        border: 1px solid lightblue;
+    }
+
+    .xu-item-modal {
+        margin-top: 25vh !important; /* 視窗高度的 1/4 */
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-4 d-none pt-2 xu-tbar">
+        <div class="x-btns-box x-center">
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenImport">Json匯入畫面...</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onExport">匯出畫面</button>
+        </div>
+    </div>
+</div>
+
+<!-- eform 在 uiMany 下面, 使用 z-index無效, 改用 width -->
+<form id='eform' class='x-form x-w100 me-2 vh-100'>
+    <vc:xi-hide dto='new() { Fid = "Id" }' />
+
+    <div class="xu-label">專案</div>
+    <vc:xi-read dto='new() { Fid = "_ProjectId", ClsBox = "xu-input w-150" }' />
+    <div class="xu-label">畫面代碼</div>
+    <vc:xi-read dto='new() { Fid = "_ProgCode" , ClsBox = "xu-input w-150" }' />
+    <div class="xu-label">畫面名稱</div>
+    <vc:xi-read dto='new() { Fid = "_ProgName", ClsBox = "xu-input w-150" }' />
+    @* 不存入 DB *@
+    <div class="xu-label">欄位容器</div>
+    <vc:xi-select dto='new() { Fid = "_RowType", Rows = rowTypes, AddEmpty = false, ClsBox = "xu-input w-150" }' />
+
+    <!-- add outer div for validate msg layout -->
+    <div>
+        <div class="btn-group-vertical ms-1 d-flex flex-column gap-1" role="group" aria-label="button group vertical">
+            <button type="button" class="btn btn-secondary xu-btn" data-type="I" Title='單一輸入欄位' draggable='true'>輸入欄位</button>
+            <button type="button" class="btn btn-secondary xu-btn" data-type="G" Title='分群文字標籤' draggable='true'>分群文字</button>
+            <button type="button" class="btn btn-secondary xu-btn" data-type="CS" Title='多個 CheckBox 輸入欄位' draggable='true'>多選欄位</button>
+            <!--
+            <button type="button" class="btn xu-btn" data-type="S" Title='並排容器' draggable='true'>並排容器</button>
+            -->
+            <button type="button" class="btn btn-success xu-btn" data-type="R" Title='多欄容器' draggable='true'>多欄容器</button>
+            <button type="button" class="btn btn-success xu-btn" data-type="T" Title='維護多筆資料的表格' draggable='true'>多筆表格</button>
+        </div>
+    </div>
+    <div class="xu-eform-tail">
+    </div>
+</form>
+
+<!-- UI 區域 -->
+<div class="xu-ui-area"></div>
+
+<!-- uiItems editMany -->
+<form id='eformUiItems' class='d-none'></form>
+
+<!-- context menu for node & line, xf means flow -->
+<ul class='xf-menu'>
+    <li data-onclick="_me.uiMany.onMenuEdit" class="xd-edit">Edit</li>
+    <li data-onclick="_me.uiMany.onMenuDelete" class="xd-delete">Delete</li>
+    <li data-onclick="_me.uiMany.onMenuView" class="xd-view">View</li>
+</ul>
+
+<!-- drop位置的線狀註記 -->
+<div class="xu-drop-line d-none"></div>
+<div class="xu-drop-vline d-none"></div>
+
+<!-- 
+    uiItem template for eformItems, template不可使用 vc:格式!! 
+    _Id2(=Id, 後端會改變Id的值) 用來在後端設定 UiItem.BoxId
+-->
+<script id="tplUiItem" type="text/template">
+    <div class="xd-tr">
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "Id" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "_Id2" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "UiId" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "BoxId" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "ItemType" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "ChildNo" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "Info" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "Sort" })
+    </div>
+</script>
+
+<!-- modal: 輸入欄位 -->
+<div id="modalUiInput" class="modal fade x-modal" role="dialog">
+    <div class="modal-dialog modal-lg x-vh15">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">設定欄位內容</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal x-form pt-1 pe-5">
+                    <vc:xi-text dto='new() { Title = "標題", Fid = "Title", MaxLen = 30, Cols = cols }' />
+                    <vc:xi-text dto='new() { Title="欄位Id", Fid="Fid" , MaxLen=30, Required = true, Cols=cols }' />
+                    <vc:xi-select dto='new() { Title = "欄位種類", Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, Cols = cols }' />
+                    <vc:xi-text dto='new() { Title = "排版格數", Fid = "Cols", Required = true, Cols = cols }' />
+                    <vc:xi-check dto='new() { Title = "必填", Fid = "Required", Label = "是", Cols = cols }' />
+                    <vc:xi-text dto='new() { Title="標題提示文字", Fid="TitleTip" , MaxLen=30, Cols=cols }' />
+                    <vc:xi-text dto='new() { Title="欄位後面文字", Fid="InputNote" , MaxLen=100, Cols=cols }' />
+                    <vc:xi-text dto='new() { Title = "欄位其他資訊", Fid = "ExtInfo", MaxLen = 100, Cols = cols, TitleTip = "select/radio:選項清單" }' />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal: 分群文字 -->
+<div id="modalUiGroup" class="modal fade x-modal" role="dialog">
+    <div class="modal-dialog x-vh20">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">設定分群文字</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal x-form pt-1 pe-5">
+                    <vc:xi-text dto='new() { Title = "標題", Fid = "Title", MaxLen = 30, Cols = cols }' />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal: Checks -->
+<div id="modalUiChecks" class="modal fade x-modal" role="dialog">
+    <div class="modal-dialog modal-lg x-vh15">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">設定多欄容器</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal x-form pt-1 pe-5">
+                    <vc:xi-text dto='new() { Title = "標題", Fid = "Title", Required = true, Cols = "4,4" }' />
+                    <vc:xi-text dto='new() { Title = "排版格數", Fid = "Cols", Required = true, Cols = "4,4" }' />
+                    <vc:xi-check dto='new() { Title = "欄位水平排列", Fid = "IsHori", Label = "是", Cols = "4,4" }' />
+                    <vc:xi-textarea dto='new() { Title = "名稱與Id清單", Fid = "LabelFids", Required = true, RowsCount = 8, Cols = "4,6" }' />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal: 多筆table -->
+<div id="modalUiTable" class="modal fade x-modal" role="dialog">
+    <div class="modal-dialog modal-lg x-vh15">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">設定多筆表格</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal x-form pt-1 pe-5">
+                    <vc:xi-text dto='new() { Title = "資料表", Fid = "Table", MaxLen = 30, Cols = "4,4", Required = true }' />
+                    <vc:xi-text dto='new() { Title = "資料名稱", Fid = "Title", MaxLen = 30, Cols = "4,4", Required = true }' />
+                    <vc:xi-text dto='new() { Title = "標題欄位", Fid = "Heads", MaxLen = 100, Cols = "4,8", Required = true, TitleTip = "逗號分隔" }' />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal: 匯入, 點擊外部不關閉 -->
+<div id="modalUiImport" class="modal fade x-modal" data-bs-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-lg x-vh5">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Json匯入畫面</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal x-form pt-1 pe-5">
+                    <vc:xi-hide dto='new() { Fid = "Id" }' />
+                    <vc:xi-textarea dto='new() { Title = "Json資料", Fid = "Import", RowsCount = 25, Cols = "2,10", Required = true }' />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
+                <button type="button" class="btn btn-primary" data-onclick="_me.onImport">確定<i class='ico-checked'></i></button>
+            </div>
+        </div>
+    </div>
+</div>

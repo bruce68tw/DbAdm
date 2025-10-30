@@ -1,5 +1,7 @@
 ﻿/**
- * 改為非靜態類別
+ * 改為非靜態類別, 查詢(含編輯)畫面
+ * 前端使用固定 filter: #divRead、#formRead、#formRead2、#tableRead
+ * 後端固定呼叫 GetPage action
  * crud read function
  * main for admin Web system
  * this properties:
@@ -13,14 +15,11 @@
  *   rform2
  *   dt
  *   _updName
+ * param dtConfig {Object} datatables config
+ * param edits {EditOne/EditMany Array} for edit form
+ * param updName {string} update name, default to _BR.Update
 */
-function CrudR(dtConfig, edits, updName) {
-
-    /**
-     * save middle variables
-     */
-    this.temp = {};
-
+class CrudR {
 
     /**
      * default datatable layout
@@ -46,8 +45,14 @@ function CrudR(dtConfig, edits, updName) {
      *   2.many edit object, if ary0 is null, then call new EditOne()
      * param3 updName {string} update name, default to _BR.Update
      */
-    //this._init = function (dtConfig, edits, updName) {
-    this._init = function () {
+    //this._init = function(dtConfig, edits, updName) {
+    constructor(dtConfig, edits, updName) {
+
+        //save middle variables
+        this.temp = {};
+
+        //多個編輯畫面時利用這個變數來切換, 顯示Read時會重設為null
+        this._nowDivEdit = null;
 
         //1.set instance variables
         this.divRead = $('#divRead');
@@ -83,7 +88,7 @@ function CrudR(dtConfig, edits, updName) {
         _me.crudR = this;
         _me.hasRead = hasRead;
         _me.divRead = this.divRead;
-    };
+    }
 
     /**
      * checkbox for multiple select
@@ -91,7 +96,7 @@ function CrudR(dtConfig, edits, updName) {
      * param editable {bool} [true]
      * //param fid {string} [_icheck.Check0Id] data-fid value
      */
-    this.dtCheck0 = function(value, editable) {
+    dtCheck0(value, editable) {
         if (_str.isEmpty(value))
             value = 1;
 
@@ -109,29 +114,21 @@ function CrudR(dtConfig, edits, updName) {
             "   <input " + attr + " type='checkbox'>" +
             "   <span class='xi-cspan'></span>" +
             "</label>";
-    };
-    /*
-    this.dtCheck0 = function (value, editable, fid) {
-        if (editable === undefined)
-            editable = true;
-        fid = fid || _icheck.Check0Id;
-        return _icheck.render2(0, fid, value, false, '', editable);
-    };
-    */
+    }
 
     //??
-    this.dtRadio1 = function (value, editable) {
+    dtRadio1(value, editable) {
         if (editable === undefined)
             editable = true;
         return _iradio.render(_icheck.Check0Id, '', false, value, editable);
-    };
+    }
 
     /**
      * set status column(checkbox)
      * param value {string} checkbox value, will translate to bool
      * param fnOnClick {string} onclick function, default to this.onSetStatusA
      */
-    this.dtSetStatus = function (key, value, fnOnClick) {
+    dtSetStatus(key, value, fnOnClick) {
         //TODO: pending
         return '';
 
@@ -144,24 +141,24 @@ function CrudR(dtConfig, edits, updName) {
         //??
         return _icheck.render2(0, '', 1, checked, '', true, '', "onclick=" + fnOnClick);
         */
-    };
+    }
 
-    this.dtStatusName = function (value) {
+    dtStatusName(value) {
         return (value == '1')
             ? '<span>' + _BR.StatusYes + '</span>'
             : '<span class="text-danger">' + _BR.StatusNo + '</span>';
-    };
+    }
 
-    this.dtYesEmpty = function (value) {
+    dtYesEmpty(value) {
         return (value == '1') ? _BR.Yes : '';
-    };
+    }
 
     //顯示紅色
-    this.dtRed = function (text, status) {
+    dtRed(text, status) {
         return status
             ? '<span class="text-danger">' + text + '</span>'
             : '<span>' + text + '</span>';
-    };
+    }
 
     /**
      * !! change link to button
@@ -172,22 +169,29 @@ function CrudR(dtConfig, edits, updName) {
      * param hasDelete {bool} has delete icon or not
      * param hasView {bool} has view icon or not
      */
-    this.dtCrudFun = function (key, rowName, hasUpdate, hasDelete, hasView,
+    dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView,
         fnOnUpdate, fnOnDelete, fnOnView) {
         var funs = '';
         if (hasUpdate)
-            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnUpdate == null ? '_me.crudR.onUpdateA' : fnOnUpdate)}" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
+            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnUpdate == null ? '_me.crudE.onUpdateA' : fnOnUpdate)}" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
         if (hasDelete)
             funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnDelete == null ? '_me.crudR.onDeleteA' : fnOnDelete)}" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
         if (hasView)
-            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnView == null ? '_me.crudR.onViewA' : fnOnView)}" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
+            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnView == null ? '_me.crudE.onViewA' : fnOnView)}" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
         return funs;
-    };
+    }
 
     /**
      * get Find condition
      */
-    this._getFindCond = function () {
+    setNowDivEdit(divEdit) {
+        this._nowDivEdit = divEdit;
+    }
+
+    /**
+     * get Find condition
+     */
+    _getFindCond() {
         if (this.rform == null)
             return null;
 
@@ -196,55 +200,46 @@ function CrudR(dtConfig, edits, updName) {
         if (find2 !== null && _obj.isShow(find2))
             _json.copy(_form.toRow(find2), row);
         return row;
-    };
+    }
 
     /**
+     * 移除參數 nowDiv, fnCallback
      * change newDiv to active
      * param toRead {bool} show divRead or not
-     * param nowDiv {object} (default _me.divEdit) now div to show
-     * param fnCallback {function} (optional) callback function
+     * //param nowDiv {object} (default _me.divEdit) now div to show
+     * //param fnCallback {function} (optional) callback function
      */
-    this.swap = function (toRead, nowDiv, fnCallback) {
+    swap(toRead) {
         if (!_me.hasRead || !_me.hasEdit) {
-            if (fnCallback)
-                fnCallback();
+            //if (fnCallback)
+            //    fnCallback();
             return;
         }
 
+        /*
         var isDefault = _var.isEmpty(nowDiv);
         if (isDefault)
             nowDiv = _me.divEdit;
+        */
 
         var oldDiv, newDiv;
+        var divEdit = this._nowDivEdit || _me.divEdit;
         if (toRead) {
-            oldDiv = nowDiv;
+            oldDiv = divEdit;
             newDiv = this.divRead;
         } else {
             oldDiv = this.divRead;
-            newDiv = nowDiv;
+            newDiv = divEdit;
         }
 
-        /*
-        if (_obj.isShow(oldDiv)) {
-            oldDiv.fadeToggle(200);
-            newDiv.fadeToggle(500);
-        }
-        */
-        /*
-        oldDiv.fadeOut(200, function () {
-            newDiv.fadeIn(500);
-            if (fnCallback)
-                fnCallback();
-        });
-        */
         oldDiv.addClass('x-off');
         setTimeout(() => {
             oldDiv.addClass('d-none').removeClass('x-off');
-
             newDiv.removeClass('d-none').addClass('x-on');
+
             setTimeout(() => {
                 newDiv.removeClass('x-on');
-                if (fnCallback) fnCallback();
+                //if (fnCallback) fnCallback();
             }, 500);
         }, 200);
 
@@ -275,50 +270,55 @@ function CrudR(dtConfig, edits, updName) {
             //nowDiv.fadeIn(500);
         }
         */
-        if (isDefault)
+        //if (isDefault)
             this._afterSwap(toRead);
-    };
+    }
 
-    //XpFlowSign Read.cshtml 待處理!!
-    //to edit(U/V) mode
+    /**
+     * 移除參數 fnCallback
+     * to edit(U/V) mode
+     * XpFlowSign Read.cshtml 待處理!! 
+     * param {any} fun
+     * //param {any} fnCallback
+     */
     //toEditMode = function(fun, data) {
-    this.toEditMode = function (fun, fnCallback) {
-        this.swap(false, null, fnCallback);  //call first
+    toEditMode(fun) {
+        this.swap(false);  //call first
         _prog.setPath(fun, this._updName);
-    };
+    }
 
     /**
      * back to list form
      */
-    this.toReadMode = function () {
+    toReadMode() {
         //_obj.show(this.divReadTool);
         _prog.resetPath();
         this.swap(true);
-    };
+    }
 
     /**
      * call fnAfterSwap if existed
      * param toRead {bool} to read mode or not
      */
-    this._afterSwap = function (toRead) {
+    _afterSwap(toRead) {
         if (_me.fnAfterSwap)
             _me.fnAfterSwap(toRead);
-    };
+    }
 
 
     //=== event start ===
     /**
      * onclick find rows
      */
-    this.onFind = function () {
+    onFind() {
         var cond = this._getFindCond();
         this.dt.find(cond);
-    };
+    }
 
     /**
      * onclick find2 button for show/hide find2 form
      */
-    this.onFind2 = function () {
+    onFind2() {
         var find2 = this.rform2;
         if (find2 == null)
             return;
@@ -326,74 +326,80 @@ function CrudR(dtConfig, edits, updName) {
             _form.hideShow([find2]);
         else
             _form.hideShow(null, [find2]);
-    };
+    }
 
     /**
      * onclick reset find form
      */
-    this.onResetFind = function () {
+    onResetFind() {
         _form.reset(this.rform);
         if (this.rform2 != null)
             _form.reset(this.rform2);
-    };
+    }
 
     /**
      * onClick export excel button
      */
-    this.onExport = function () {
+    onExport() {
         var find = this._getFindCond();
         window.location = 'Export?find=' + _json.toStr(find);
-    };
+    }
 
     /**
      * onclick toRead button
      */
-    this.onToRead = function () {
+    onToRead() {
         this.toReadMode();
-    };
+    }
 
     /**
      * onclick Create button
      */
-    this.onCreate = function () {
+    onCreate() {
         //var fun = EstrFun.Create;
         //this.swap(false);  //call first
         //_prog.setPath(fun);
         _me.crudE.onCreate();
         this.toEditMode(EstrFun.Create);
-    };
+    }
 
     /**
+     * call _me.crudE
      * onclick Update button
      * param key {string} row key
      */
-    this.onUpdateA = async function (key) {
+    /*
+    async onUpdateA(key) {
         //_me.crudE._getJsonAndSetMode(key, EstrFun.Update);
         //this.toEditMode(EstrFun.Update);
         await _me.crudE.onUpdateA(key);
-    };
+    }
+    */
 
     /**
+     * call _me.crudE
      * onclick View button
      * param key {string} row key
      */
-    this.onViewA = async function (key) {
+    /*
+    async onViewA(key) {
         //_me.crudE._getJsonAndSetMode(key, EstrFun.View);
         await _me.crudE.onViewA(key);
         //this.toEditMode(EstrFun.View);
-    };
+    }
+    */
 
     /**
      * click setStatus, 固定呼叫後端 SetStatus action
      * me {element} checkbox element
      * key {string} row key
      */
-    this.onSetStatusA = async function (me, key) {
+    async onSetStatusA(me, key) {
         var status = _icheck.checkedO($(me));
-        await _ajax.getStrA('SetStatus', { key: key, status: status }, function (msg) {
+        await _ajax.getStrA('SetStatus', { key: key, status: status }, function(msg) {
             _tool.alert(_BR.UpdateOk);
         });
-    };
+    }
 
     /**
      * TODO: need test
@@ -402,25 +408,25 @@ function CrudR(dtConfig, edits, updName) {
      * param box {string} row key
      * param fid {string} fid
      */
-    this.onCheckAll = function (me, box, fid) {
+    onCheckAll(me, box, fid) {
         _icheck.setF(_input.fidFilter(fid) + ':not(:disabled)', _icheck.checkedO($(me)), box);
-    };
+    }
 
     /**
      * onclick Delete, call backend Delete()
      * key {string} row key
      * rowName {string} for confirm
      */
-    this.onDeleteA  = async function (key, rowName) {
-        //_temp.data = { key: key };
+    async onDeleteA(key, rowName) {
+        //_temp.data = { key: key }
         var me = this;
         _tool.ans(_BR.SureDeleteRow + ' (' + rowName + ')', async function () {
-            await _ajax.getJsonA('Delete', { key: key }, function (msg) {
+            await _ajax.getJsonA('Delete', { key: key }, function(msg) {
                 _tool.alert(_BR.DeleteOk);
                 me.dt.reload();
             });
         });
-    };
+    }
 
     /**
      * TODO: need test
@@ -429,7 +435,7 @@ function CrudR(dtConfig, edits, updName) {
      * box {string} row key
      * fid {string} 
      */
-    this.onDeleteRowsA = async function (box, fid) {
+    async onDeleteRowsA(box, fid) {
         //get selected keys
         var keys = _icheck.getCheckeds(box, fid);
         if (keys.length === 0) {
@@ -438,18 +444,18 @@ function CrudR(dtConfig, edits, updName) {
         }
 
         //刪除多筆資料, 後端固定呼叫 DeleteByKeys()
-        //_temp.data = { keys: keys };
+        //_temp.data = { keys: keys }
         var me = this;
-        _tool.ans(_BR.SureDeleteSelected, async function () {
-            await _ajax.getStrA('DeleteByKeys', { keys: keys }, function (msg) {
+        _tool.ans(_BR.SureDeleteSelected, async function() {
+            await _ajax.getStrA('DeleteByKeys', { keys: keys }, function(msg) {
                 _tool.alert(_BR.DeleteOk);
                 me.dt.reload();
             });
         });
-    };
+    }
     //=== event end ===
 
     //call last
-    this._init();
+    //this._init();
 
 }//class

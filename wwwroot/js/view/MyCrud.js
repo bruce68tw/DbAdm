@@ -17,7 +17,9 @@ var _me = {
                     return _me.crudR.dtCheck0(full.Id);
 				}},
 				{ targets: [4], render: function (data, type, full, meta) {
-                    return _me.crudR.dtYesEmpty(data);
+                    return (data == 1)
+                        ? `<button type="button" class="btn btn-link" data-onclick="_me.onOpenEdit2" data-args="${full.Id}">拖拉編輯</button>`
+                        : '';
 				}},
                 { targets: [6], render: function (data, type, full, meta) {
                     return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, false);
@@ -40,7 +42,11 @@ var _me = {
         _me.mEitem = new EditMany('Id', null, 'tplEitem', '.xu-tr');
         _me.mEtable._childs = [_me.mEitem];
 
-        new CrudR(config, [_me.edit0, _me.mQitem, _me.mRitem, _me.mEtable]);
+        //edit2: initial edit one/many, rowsBox(參數2) 使用 eform
+        _me.mUiItem = new EditMany('Id', 'eformUiItems', 'tplUiItem', '.xd-tr');
+
+        new CrudR(config, [_me.edit0, _me.mQitem, _me.mRitem, _me.mEtable, _me.mUiItem]);
+        //new CrudR(config, [_me.edit0, _me.mQitem, _me.mRitem, _me.mEtable]);
 
         //_me.ritemChdIdx = 0;    //child index of Ritem
         _me.etableChdIdx = 2;   //child index of Etable nav(CrudEdit)
@@ -86,6 +92,28 @@ var _me = {
         _me.nowItemType = '';   //modal item type: R,E,S
 
         //_me.swapEitemCols();
+
+        //#region *** for edit2 ***
+        _me.divEdit2 = $('#divEdit2');
+        _me.modalImport = $('#modalUiImport');
+
+        //custom function
+        _me.mUiItem.fnLoadRows = _me.mUiItem_loadRows;
+        _me.mUiItem.fnGetUpdJson = _me.mUiItem_getUpdJson;
+        _me.mUiItem.fnValid = _me.mUiItem_valid;
+
+        //initial uiMany
+        _me.uiMany = new UiMany('.xu-ui-area', _me.mUiItem);
+
+        //註刪button dragstart事件
+        _me.divEdit2.on(EstrMouse.DragStart, '.xu-btn', function (e) {
+            let itemType = $(e.target).data('type');
+            _me.uiMany.startDragBtn(true, itemType);
+        }).on(EstrMouse.DragEnd, function (e) {
+            //不會觸發工作區的 dragEnd, 這裡必須寫
+            _me.uiMany.onDragEnd(e);
+        });
+        //#endregion
 	},
 
     /*
@@ -105,13 +133,23 @@ var _me = {
     */
 
     getProjectId: function () {
-        return _iselect.get('ProjectId', _me.crudE.getEform0());
+        return _iselect.get('ProjectId', _me.eform0);
+    },
+
+    fnAfterOpenEdit: async function (fun, json) {
+        if (_me.isEdit2)
+            _me.afterOpenEdit2(fun, json);
+        else
+            _me.afterOpenEdit(fun, json);
     },
 
     //auto called !!
     //set etable TableId(dropdown)
     //edit0_afterLoadJson: function (json) {
-    fnAfterOpenEdit: async function (fun, json) {
+    afterOpenEdit: async function (fun, json) {
+        //edit2會隱藏 prog border, 這裡打開
+        _prog.setBorder(true);
+
         if (fun == EstrFun.Create)
             return;
 
@@ -370,7 +408,7 @@ var _me = {
 
         /*
         //get tableId
-        var form = _me.crudE.getEform0();
+        var form = _me.eform0;
         var tableId = _iselect.get(_me.TableId, form);
 
         //get編輯畫面tableId
@@ -398,7 +436,7 @@ var _me = {
         */
 
         //show modal
-        _modal.showO(_me.modalItems);
+        _modal.show(_me.modalItems);
     },   
 
     //on change tableId at ritem modal

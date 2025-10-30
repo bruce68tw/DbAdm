@@ -324,7 +324,7 @@ class UiMany {
 
         //load info to modal & show
         _form.loadRow(modal, info);
-        _modal.showO(modal);
+        _modal.show(modal);
     }
 
     async onMenuDelete() {
