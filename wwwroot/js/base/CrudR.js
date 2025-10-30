@@ -1,4 +1,7 @@
 ﻿/**
+ * 允許不同編輯畫面共用查詢畫面, 參考MyCrud
+ * 
+ * 
  * 改為非靜態類別, 查詢(含編輯)畫面
  * 前端使用固定 filter: #divRead、#formRead、#formRead2、#tableRead
  * 後端固定呼叫 GetPage action
@@ -52,7 +55,8 @@ class CrudR {
         this.temp = {};
 
         //多個編輯畫面時利用這個變數來切換, 顯示Read時會重設為null
-        this._nowDivEdit = null;
+        this._multiEdit = false;
+        this._nowEditNo = 0;
 
         //1.set instance variables
         this.divRead = $('#divRead');
@@ -76,6 +80,7 @@ class CrudR {
             }
         }
 
+        this._edits = edits;
         this._updName = updName;
 
         //2.init edit
@@ -184,8 +189,12 @@ class CrudR {
     /**
      * get Find condition
      */
-    setNowDivEdit(divEdit) {
-        this._nowDivEdit = divEdit;
+    setEditNo(editNo) {
+        this._nowEditNo = editNo;
+    }
+
+    getEditNo() {
+        return this._nowEditNo;
     }
 
     /**
@@ -223,7 +232,9 @@ class CrudR {
         */
 
         var oldDiv, newDiv;
-        var divEdit = this._nowDivEdit || _me.divEdit;
+        var divEdit = this._multiEdit
+            ? this._edits[this._nowEditNo].divEdit || _me.divEdit
+            : _me.divEdit;
         if (toRead) {
             oldDiv = divEdit;
             newDiv = this.divRead;
@@ -242,6 +253,12 @@ class CrudR {
                 //if (fnCallback) fnCallback();
             }, 500);
         }, 200);
+
+        if (_me.fnAfterSwap)
+            _me.fnAfterSwap(toRead);
+
+        //還原
+        this.setEditNo(0);
 
         /*
         // fadeOut 用 d-none 隱藏
@@ -271,7 +288,7 @@ class CrudR {
         }
         */
         //if (isDefault)
-            this._afterSwap(toRead);
+            //this._afterSwap(toRead);
     }
 
     /**
@@ -300,11 +317,12 @@ class CrudR {
      * call fnAfterSwap if existed
      * param toRead {bool} to read mode or not
      */
+    /*
     _afterSwap(toRead) {
         if (_me.fnAfterSwap)
             _me.fnAfterSwap(toRead);
     }
-
+    */
 
     //=== event start ===
     /**

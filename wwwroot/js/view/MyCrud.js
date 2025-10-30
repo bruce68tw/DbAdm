@@ -45,7 +45,11 @@ var _me = {
         //edit2: initial edit one/many, rowsBox(參數2) 使用 eform
         _me.mUiItem = new EditMany('Id', 'eformUiItems', 'tplUiItem', '.xd-tr');
 
-        new CrudR(config, [_me.edit0, _me.mQitem, _me.mRitem, _me.mEtable, _me.mUiItem]);
+        //不同編輯畫面共用查詢畫面
+        _me.divEdit2 = $('#divEdit2');
+        var ary0 = new DtoEdit([_me.edit0, _me.mQitem, _me.mRitem, _me.mEtable]);
+        var ary1 = new DtoEdit([_me.edit0, _me.mUiItem], _me.divEdit2, '拖拉編輯');
+        new CrudR(config, [ary0, ary1]);
         //new CrudR(config, [_me.edit0, _me.mQitem, _me.mRitem, _me.mEtable]);
 
         //_me.ritemChdIdx = 0;    //child index of Ritem
@@ -94,7 +98,6 @@ var _me = {
         //_me.swapEitemCols();
 
         //#region *** for edit2 ***
-        _me.divEdit2 = $('#divEdit2');
         _me.modalImport = $('#modalUiImport');
 
         //custom function

@@ -3,13 +3,13 @@
 //擴充 _me
 Object.assign(_me, {
     //是否拖拉編輯模式
-    isEdit2: false,
+    //isEdit2: false,
 
     onOpenEdit2: async function (id) {
 
         _prog.setBorder(false);
-        _me.isEdit2 = true;
-        _me.crudR.setNowDivEdit(_me.divEdit2);
+        //_me.isEdit2 = true;
+        _me.crudR.setEditNo(1);
         await _me.crudE.onUpdateA(id);
         //_me.crudR.swap(false);
 
@@ -128,7 +128,7 @@ Object.assign(_me, {
         var tbar = $('.xd-prog-tbar');
         if (toRead) {
             _obj.hide(tbar);
-            _me.isEdit2 = false;    //還原
+            //_me.isEdit2 = false;    //還原
         } else {
             _obj.show(tbar);
             _obj.showByStatus($('.xd-export'), _me.isEdit2);
