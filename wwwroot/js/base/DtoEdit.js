@@ -10,4 +10,6 @@ class DtoEdit {
         this.edits = edits;
         this.divEdit = divEdit; //default _me.divEdit
         this.updName = updName; //default by system
+    }
+
 } //class

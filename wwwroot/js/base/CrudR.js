@@ -1,62 +1,36 @@
 ﻿/**
- * 允許不同編輯畫面共用查詢畫面, 參考MyCrud
- * 
- * 
- * 改為非靜態類別, 查詢(含編輯)畫面
- * 前端使用固定 filter: #divRead、#formRead、#formRead2、#tableRead
- * 後端固定呼叫 GetPage action
- * crud read function
- * main for admin Web system
- * this properties:
+ * 改為非靜態類別, 控制 CRUD 查詢(含編輯)畫面
+ * 說明:
+ *   允許不同編輯畫面共用查詢畫面, 參考 MyCrud
+ *   前端使用固定 filter: #divRead、#formRead、#formRead2、#tableRead
+ *   後端固定呼叫 GetPage action
+ * 寫入 _me 屬性:
+ *   crudR
+ *   divRead
+ *   hasRead
+ * 自動呼叫 _me 函數:
  *   fnAfterFind(result):
  *   void fnAfterSwap(toRead):
- * 
- *   //divEdit
- *   divRead
- *   //hasRead
+ * 公用屬性:
  *   rform
  *   rform2
  *   dt
- *   _updName
- * param dtConfig {Object} datatables config
- * param edits {EditOne/EditMany Array} for edit form
- * param updName {string} update name, default to _BR.Update
-*/
+ */
 class CrudR {
-
-    /**
-     * default datatable layout
-     * toolbar layout:l(length),f(filter),r(processing),t(table),i(info),p(page)
-     */
-    //dtDom: '<"toolbar">t<li>p',
-
-    /**
-     * default datatable column define
-     
-    dtColDef: {
-        className: 'x-center',
-        orderable: false,
-        targets: '_all',
-    },
-    */
 
     /**
      * initial crud read & edit
      * param1 dtConfig {Object} datatables config
-     * param2 edits {object Array} for edit form
+     * param edits {EditOne/EditMany Array} for edit form
      *   1.null: means one table, get eform
      *   2.many edit object, if ary0 is null, then call new EditOne()
-     * param3 updName {string} update name, default to _BR.Update
+     * param updName {string} update name, default to _BR.Update
      */
     //this._init = function(dtConfig, edits, updName) {
     constructor(dtConfig, edits, updName) {
 
         //save middle variables
         this.temp = {};
-
-        //多個編輯畫面時利用這個變數來切換, 顯示Read時會重設為null
-        this._multiEdit = false;
-        this._nowEditNo = 0;
 
         //1.set instance variables
         this.divRead = $('#divRead');
@@ -189,17 +163,6 @@ class CrudR {
     /**
      * get Find condition
      */
-    setEditNo(editNo) {
-        this._nowEditNo = editNo;
-    }
-
-    getEditNo() {
-        return this._nowEditNo;
-    }
-
-    /**
-     * get Find condition
-     */
     _getFindCond() {
         if (this.rform == null)
             return null;
@@ -231,10 +194,9 @@ class CrudR {
             nowDiv = _me.divEdit;
         */
 
+        //考慮多個編輯畫面
+        var divEdit = _me.crudE.getDivEdit();
         var oldDiv, newDiv;
-        var divEdit = this._multiEdit
-            ? this._edits[this._nowEditNo].divEdit || _me.divEdit
-            : _me.divEdit;
         if (toRead) {
             oldDiv = divEdit;
             newDiv = this.divRead;
@@ -257,8 +219,9 @@ class CrudR {
         if (_me.fnAfterSwap)
             _me.fnAfterSwap(toRead);
 
-        //還原
-        this.setEditNo(0);
+        //還原 nowEditNo
+        if (toRead)
+            _me.crudE.setEditNo(0);
 
         /*
         // fadeOut 用 d-none 隱藏

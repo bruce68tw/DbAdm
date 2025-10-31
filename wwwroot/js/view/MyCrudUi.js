@@ -9,7 +9,7 @@ Object.assign(_me, {
 
         _prog.setBorder(false);
         //_me.isEdit2 = true;
-        _me.crudR.setEditNo(1);
+        _me.crudE.setEditNo(1);
         await _me.crudE.onUpdateA(id);
         //_me.crudR.swap(false);
 
@@ -131,15 +131,15 @@ Object.assign(_me, {
             //_me.isEdit2 = false;    //還原
         } else {
             _obj.show(tbar);
-            _obj.showByStatus($('.xd-export'), _me.isEdit2);
+            //_obj.showByStatus($('.xd-export'), _me.isEdit2);
         }
     },
 
     //reset when create
     afterOpenEdit2: function (fun, json) {
         _me.uiMany.reset();
-        var isAdd = (fun === EstrFun.Create);
-        _me.uiMany.setEdit(isAdd || (fun === EstrFun.Update));
+        var isAdd = (fun == EstrFun.Create);
+        _me.uiMany.setEdit(isAdd || (fun == EstrFun.Update));
     },
 
     /**

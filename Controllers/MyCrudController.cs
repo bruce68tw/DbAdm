@@ -32,36 +32,40 @@ namespace DbAdm.Controllers
         }
         #endregion
 
-        private MyCrudEdit EditSvc()
+        private BaseEditSvc EditSvc(int editNo)
         {
-            return new MyCrudEdit(Ctrl);
+            return (editNo == 0)
+                ? new MyCrudEdit(Ctrl)
+                : new MyCrudUiEdit(Ctrl);
         }
 
-        #region Edit View        
+        #region Edit View   
+        //考慮多個編輯畫面
         [HttpPost]
-        public async Task<ContentResult> GetUpdJson(string key)
+        public async Task<ContentResult> GetUpdJson(string key, int editNo = 0)
         {
-            return JsonToCnt(await EditSvc().GetUpdJsonA(key));
+            return JsonToCnt(await EditSvc(editNo).GetUpdJsonA(key));
         }
 
         [HttpPost]
-        public async Task<ContentResult> GetViewJson(string key)
+        public async Task<ContentResult> GetViewJson(string key, int editNo = 0)
         {
-            return JsonToCnt(await EditSvc().GetViewJsonA(key));
+            return JsonToCnt(await EditSvc(editNo).GetViewJsonA(key));
         }
 
         public async Task<JsonResult> Delete(string key)
         {
-            return Json(await EditSvc().DeleteA(key));
+            return Json(await EditSvc(0).DeleteA(key));
         }
 
-        public async Task<JsonResult> Create(string json)
+        //myCrud才有新增
+        public async Task<JsonResult> Create(string json, int editNo = 0)
         {
-            return Json(await EditSvc().CreateA(_Str.ToJson(json)!));
+            return Json(await EditSvc(0).CreateA(_Str.ToJson(json)!));
         }
-        public async Task<JsonResult> Update(string key, string json)
+        public async Task<JsonResult> Update(string key, string json, int editNo = 0)
         {
-            return Json(await EditSvc().UpdateA(key, _Str.ToJson(json)!));
+            return Json(await EditSvc(editNo).UpdateA(key, _Str.ToJson(json)!));
         }
         #endregion
 

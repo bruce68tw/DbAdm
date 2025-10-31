@@ -30,9 +30,9 @@ namespace DbAdm.Controllers
             return JsonToCnt(await new UiRead().GetPageA(dt));
         }
 
-        private UiEdit EditSvc()
+        private MyCrudUiEdit EditSvc()
         {
-            return new UiEdit(Ctrl);
+            return new MyCrudUiEdit(Ctrl);
         }
 
         [XgProgAuth(CrudEnum.Create)]

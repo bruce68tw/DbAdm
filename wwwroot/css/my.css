@@ -307,10 +307,12 @@ textarea.form-control {
 .note-editable[contenteditable=false] {
     background: #eee !important;
 }
-/* 
-    額外控制輸入欄位寬度(不使用inline style, 避開 CSRF): sm, md, lg
-    padding, margin 使用bootstrap 5
-    自定寬度pixel (bootstrap 5只有相對寬度)
+/** 
+  額外控制輸入欄位寬度(不使用inline style, 避開 CSRF): sm, md, lg
+  padding, margin 使用bootstrap 5
+  自定寬度pixel (bootstrap 5只有相對寬度)
+  x-flag 
+  自訂 css 狀態切換可用 x-flag, 例如show/hide prog border
 */
 
 @charset "utf-8";
@@ -335,6 +337,7 @@ body {
     gap: 2px;
 }
 
+/* show/hide 有動畫效果, 不是單純flag !! */
 .x-on {
     opacity: 1;
     transition: opacity 0.5s ease;
@@ -375,7 +378,7 @@ body {
     display: inline-block;
 }
 
-/* 使用 flex 系統, 可以控制 gap */
+/* 左右對齊, 外層使用 flex, 可以控制 gap */
 .x-left {
     /*text-align: left;*/
     justify-content: flex-start !important;
@@ -389,14 +392,24 @@ body {
     justify-content: flex-end !important;
 }
 
+/* 高度 pixel */
 .x-h10 {
     height: 10px !important;
+}
+.x-h20 {
+    height: 20px !important;
+}
+.x-h30 {
+    height: 30px !important;
+}
+.x-h40 {
+    height: 40px !important;
 }
 .x-h50 {
     height: 50px !important;
 }
 
-/*=== width start ===*/
+/* 寬度 pixel */
 .x-w50 {
     width: 50px !important;
 }
@@ -446,6 +459,7 @@ body {
     width: 500px !important;
 }
 
+/* 最小高度 */
 .x-wi80 {
     min-width: 80px !important;
 }
@@ -459,44 +473,22 @@ body {
     min-width: 250px !important;
 }
 
-/*=== width end ===*/
-
+/* 視窗高度百分比 */
 .x-vh5 {
-    margin-top: 5vh !important; /* 視窗高度的 1/4 */
+    margin-top: 5vh !important;
 }
 .x-vh10 {
-    margin-top: 10vh !important; /* 視窗高度的 1/4 */
+    margin-top: 10vh !important;
 }
 .x-vh15 {
-    margin-top: 15vh !important; /* 視窗高度的 1/4 */
+    margin-top: 15vh !important;
 }
 .x-vh20 {
-    margin-top: 20vh !important; /* 視窗高度的 1/4 */
+    margin-top: 20vh !important;
 }
 .x-vh25 {
-    margin-top: 25vh !important; /* 視窗高度的 1/4 */
+    margin-top: 25vh !important; /* 視窗高度的 25% */
 }
-
-/* 改用 bootstrap 5 的 padding, margin
-.x-mt0 {
-    margin-top: 0 !important;
-}
-.x-mt5 {
-    margin-top: 5px !important;
-}
-.x-mt10 {
-    margin-top: 10px !important;
-}
-.x-mb0 {
-    margin-bottom: 0 !important;
-}
-.x-mb5 {
-    margin-bottom: 5px !important;
-}
-.x-mb10 {
-    margin-bottom: 10px !important;
-}
-*/
 
 
 /* 用在 form裡面的 button */
@@ -1265,6 +1257,10 @@ input[type=number] {
     padding: 15px;
     border: 1px solid #ddd !important;
     border-radius: 4px;
+}
+/* 控制不顯示 border */
+.x-prog.x-flag {
+    border: none !important;
 }
 
 @media (max-width:768px) {
