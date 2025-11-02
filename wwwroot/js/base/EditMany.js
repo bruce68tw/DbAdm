@@ -45,6 +45,9 @@ class EditMany {
         //constant
         this.DataFkeyFid = '_fkeyfid';  //data field for fkey fid, lowercase
 
+        //private
+        this[_edit.Childs] = null;
+
         //variables
         this.mode = _edit.ModeBase;    //default value
         this.modeData = '';             //for different mode
@@ -56,7 +59,7 @@ class EditMany {
         this.systemError = '';
         this.hasRowTpl = _str.notEmpty(rowTplId);
         this.hasRowFilter = _str.notEmpty(rowFilter);
-        this.dataJson = null;
+        this.dataJson = null;   //參考EditOne
 
         if (this.hasRowTpl) {
             this.rowTpl = $('#' + rowTplId).html();
@@ -84,6 +87,14 @@ class EditMany {
 
         this.deletedRows = [];  //deleted key string array
         this.newIndex = 0;      //new row serial no, 使用負數來表示新資料
+    }
+
+    /**
+     * set child array
+     * param childs {EditOne/EditMany array}
+     */
+    setChilds(childs) {
+        this[_edit.Childs] = childs;
     }
 
     /**
@@ -179,7 +190,7 @@ class EditMany {
             var obj = $(this);
             var key = obj.data('key');
             if (_str.isEmpty(key)) {
-                if (_icheck.checkedO(obj)) {
+                if (_icheck.isCheckedO(obj)) {
                     //new row
                     var row = {};
                     //row[_edit.IsNew] = '1';     //new row flag
@@ -189,7 +200,7 @@ class EditMany {
                     rows[rows.length] = row;
                 }
             } else {
-                if (!_icheck.checkedO(obj)) {
+                if (!_icheck.isCheckedO(obj)) {
                     //delete row
                     me.deleteRow(key);
                 }
@@ -479,7 +490,7 @@ class EditMany {
                     diffRow[me.extFids[j]] = oldRow[me.extFids[j]];
                 }
                 */
-                diffRow[kid] = key;    //set key value
+                diffRow[me.kid] = key;    //set key value
                 //diffRow[me.DataFkeyFid] = upKey;   //無條件寫入這個欄位!!
                 rows.push(diffRow);
             }

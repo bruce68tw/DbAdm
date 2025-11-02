@@ -389,7 +389,7 @@ class UiMany {
                     me.mItem.deleteRow(itemIds[i], me.mItem.idToRowBox(itemIds[i]));
             }
         }
-        _modal.hideO(modal);
+        _modal.hide(modal);
     }
     //#endregion
 

@@ -376,7 +376,7 @@ class CrudR {
      * key {string} row key
      */
     async onSetStatusA(me, key) {
-        var status = _icheck.checkedO($(me));
+        var status = _icheck.isCheckedO($(me));
         await _ajax.getStrA('SetStatus', { key: key, status: status }, function(msg) {
             _tool.alert(_BR.UpdateOk);
         });
@@ -389,8 +389,9 @@ class CrudR {
      * param box {string} row key
      * param fid {string} fid
      */
-    onCheckAll(me, box, fid) {
-        _icheck.setF(_input.fidFilter(fid) + ':not(:disabled)', _icheck.checkedO($(me)), box);
+    //onCheckAll(me, box, fid) {
+    onCheckAll(me, box) {
+        _icheck.setF(_input.fidFilter(_icheck.Check0Id) + ':not(:disabled)', _icheck.isCheckedO($(me)), box);
     }
 
     /**
@@ -411,14 +412,16 @@ class CrudR {
 
     /**
      * TODO: need test
+     * 移除參數 fid
      * no called
      * 刪除選取的多筆資料, 後端固定呼叫 DeleteByKeys()
      * box {string} row key
      * fid {string} 
      */
-    async onDeleteRowsA(box, fid) {
+    //async onDeleteRowsA(box, fid) {
+    async onDeleteRowsA(box) {
         //get selected keys
-        var keys = _icheck.getCheckeds(box, fid);
+        var keys = _icheck.getCheckeds(box);
         if (keys.length === 0) {
             _tool.msg(_BR.PlsSelectDeleted);
             return;

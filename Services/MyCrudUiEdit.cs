@@ -19,21 +19,6 @@ namespace DbAdm.Services
                 //Col4 = ["Creator", "Created"],
                 Items = [
                     new() { Fid = "Id" },
-                    new() { Fid = "IsUi", Value = 1 },
-                    new() { Fid = "ProjectId", Required = true },
-                    new() { Fid = "ProgCode", Required = true },
-                    new() { Fid = "ProgName", Required = true },
-                    new() { Fid = "LabelHori", Value = 1 },
-                    new() { Fid = "ReadSql" },
-                    new() { Fid = "TableAs" },
-                    new() { Fid = "HasCreate" },
-                    new() { Fid = "HasUpdate" },
-                    new() { Fid = "HasDelete" },
-                    new() { Fid = "HasView" },
-                    new() { Fid = "HasExport" },
-                    new() { Fid = "HasReset" },
-                    new() { Fid = "AuthType", Required = true },
-                    new() { Fid = "Status", Required = true },
                 ],
                 Childs = [
                     new()

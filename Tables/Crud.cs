@@ -7,6 +7,7 @@ public partial class Crud
 {
     public string Id { get; set; } = null!;
 
+    public bool IsUi { get; set; }
     public string ProjectId { get; set; } = null!;
 
     public string ProgCode { get; set; } = null!;

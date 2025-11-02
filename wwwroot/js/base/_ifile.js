@@ -94,7 +94,7 @@ var _ifile = $.extend({}, _ibase, {
 
         /*
         //file element 要 reset
-        var file = _obj.getF(_ifile.fileF(id), form);
+        var file = _obj.getByFt(_ifile.fileF(id), form);
         //var $el = $('#example-file');
         file.wrap('<form>').closest('form').get(0).reset();
         file.unwrap();

@@ -17,7 +17,7 @@ var _icolor = {
     },
     //value by filter
     getF: function (filter, form) {
-        return _icolor.getO(_obj.getF(filter, form));
+        return _icolor.getO(_obj.getByFt(filter, form));
     },
     //value by object
     getO: function (obj) {
@@ -48,7 +48,7 @@ var _icolor = {
         _itext.setO(_obj.get(fid, form), value)
     },
     setF: function (filter, value, form) {
-        _itext.setO(_obj.getF(filter, form), value)
+        _itext.setO(_obj.getByFt(filter, form), value)
     },
     setO: function (obj, value) {
         obj.val(value);

@@ -163,7 +163,7 @@ var _input = {
         //label欄位設定文字內容
         var filter = '[data-id2=' + fid + _fun.errTail + ']';
         //先找parent下
-        //var label = _obj.getF(filter, box);
+        //var label = _obj.getByFt(filter, box);
         var parent = obj.parent();
         var label = parent.find(filter);
         if (label.length == 0)

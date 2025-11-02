@@ -2,7 +2,9 @@
 using Base.Services;
 using DbAdm.Enums;
 using DbAdm.Models;
+using DbAdm.Tables;
 using HandlebarsDotNet;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Web;
 
 namespace DbAdm.Services
@@ -17,7 +19,9 @@ namespace DbAdm.Services
         const string PosGroup0 = "-abc99";  //impossible value for initial
 
         //rows for one curdId
-        private CrudDto? _crud = null!;
+        private CrudDto _crud = null!;
+        //private bool _isUi = false;
+
         /*
         private List<CrudQitemDto>? _qitems = null;
         private List<CrudRitemDto>? _ritems = null;
@@ -26,10 +30,10 @@ namespace DbAdm.Services
         */
 
         //template folder
-        private readonly string _tplDir = _Fun.DirRoot + "_template/";
+        private readonly string TplDir = _Fun.DirRoot + "_template/";
 
-        //generated 6 files, 1(template),2(target folder),3(target file)
-        private readonly string[] _crudFiles = [
+        //generated 6 files, 1(template), 2(target folder), 3(target file name)
+        private readonly string[] CrudFiles = [
             "Controller.txt", "Controllers", "[prog]Controller.cs",
             "ReadService.txt", "Services", "[prog]Read.cs",
             "EditService.txt", "Services", "[prog]Edit.cs",
@@ -38,198 +42,204 @@ namespace DbAdm.Services
             "JS.txt", "wwwroot/js/view", "[prog].js",
         ];
 
-        //crud files count -> 6
-        //private readonly int _crudFileLen;
+        //edit view 陣列位置, IsUi=true時使用巢狀結構
+        private readonly int EditViewIdx = 4;
 
-        /*
-        //constructor
-        public GenCrudSvc()
-        {
-            //_crudFileLen = _crudFiles.Length;
-        }
-        */
 
-        /*
         /// <summary>
-        /// read db and get instance varaibles, async for file io
+        /// 產生Crud程式碼
         /// </summary>
-        /// <param name="crudIdStrs">crudId字串清單, 逗號分隔</param>
-        /// <returns>error msg if any</returns>
-        private string DbToVar(string crudId)
+        /// <param name="issueId"></param>
+        /// <returns>1(成功), or 錯誤訊息</returns>
+        public async Task<string> GenCrudA(string crudId)
         {
-            //only alpha, num and ','
-            //if (!_Str.CheckKeyRule(crudIdList2, "GenCrudService Run()"))
+            //check input
             if (!_Str.CheckKey(crudId))
-                return "GenCrudSvc.cs DbToVar() only accept alphabet and numeric: (" + crudId + ")";
+                return $"MyCrudSvc.cs GenCrudA() only accept alphabet and numeric: ({crudId})";
 
-            //var crudIds = crudIdStrs.Split(',');
-            //var crudIdList = _Str.ListAddQuote(crudIdStrs);
+            var error = SetCrudDto(crudId);
+            if (error == "") 
+                error = await GenFilesA();
 
-            #region get instance variables
-            //1.get _cruds(Crud rows) CrudDto from EF
-            var db = _Xp.GetDb();
-            _crud = (from c in db.Crud
-                    join p in db.Project on c.ProjectId equals p.Id
-                    //join t in db.Table on a.TableId equals t.Id
-                    //where crudIds.Contains(c.Id)
-                    where c.Id == crudId
-                    select new CrudDto()
-                    {
-                          Id = c.Id,
-                          Project = p.Code,
-                          ProjectPath = p.ProjectPath,
-                          ProgName = c.ProgName,
-                          ProgCode = c.ProgCode,
-                          TableAs = c.TableAs!,
-                          LabelHori = c.LabelHori,
-                          ReadSql = c.ReadSql,
-                          HasCreate = c.HasCreate,
-                          HasUpdate = c.HasUpdate,
-                          HasDelete = c.HasDelete,
-                          HasView = c.HasView,
-                          HasExport = c.HasExport,
-                          HasReset = c.HasReset,
-                          AuthType0 = (c.AuthType == 0),
-                          AuthType1 = (c.AuthType == 1),
-                          AuthType2 = (c.AuthType == 2),
-                      })
-                      .FirstOrDefault();
-
-            //query item
-            _qitems = (from q in db.CrudQitem
-                       join c in db.Column on q.ColumnId equals c.Id
-                       where q.CrudId == crudId
-                       orderby q.CrudId, q.Sort
-                       select new CrudQitemDto()
-                       {
-                           CrudId = q.CrudId,
-                           c.Fid,
-                           Name = c.Name,
-                           DataType = c.DataType,
-                           PosGroup = q.PosGroup!,
-                           LayoutCols = q.LayoutCols!,
-                           PlaceHolder = "",
-                           IsFind2 = q.IsFind2,
-                           Op = q.Op,
-                           InputType = q.InputType,
-                           ItemData = q.ItemData!,
-                       })
-                       .ToList();
-
-            //2.get _crudRitems(CrudRitem rows) query result fields
-            _ritems = (from r in db.CrudRitem
-                       where r.CrudId == crudId
-                       orderby r.CrudId, r.Sort
-                       select new CrudRitemDto()
-                       {
-                           CrudId = r.CrudId,
-                           RitemType = r.RitemType,
-                           //ExtInfo = r.ExtInfo,
-                           Name = r.Name,
-                           Width = r.Width,
-                           ColumnCode = r.ColumnCode,
-                           //Column = c.Name,
-                       })
-                       .ToList();
-
-            //3.get _crudEtable(CrudEtable rows)
-            _etables = (from e in db.CrudEtable
-                        join t in db.Table on e.TableId equals t.Id
-                        where e.CrudId == crudId
-                        select new CrudEtableDto()
-                        {
-                            Id = e.Id,
-                            CrudId = e.CrudId,
-                            TableCode = t.Code,
-                            TableName = t.Name,
-                            PkeyFid = e.PkeyFid,
-                            FkeyFid = e.FkeyFid!,
-                            AutoIdLen = e.AutoIdLen ?? "",
-                            HasCol4 = (e.Col4 == "1"),
-                            HalfWidth = e.HalfWidth,
-                            OrderBy = e.OrderBy,
-                        })
-                        .ToList();
-
-            //4.get _crudEitem(CrudEitem rows)
-            _eitems = (from e in db.CrudEitem
-                       join t in db.CrudEtable on e.EtableId equals t.Id
-                       join c in db.Column on e.ColumnId equals c.Id
-                       where t.CrudId == crudId
-                       select new CrudEitemDto()
-                       {
-                           EtableId = t.Id,
-                           Fid = c.Code,
-                           Name = c.Name,
-                           DataType = c.DataType,
-                           Required = e.Required,
-                           HasCreate = e.HasCreate,
-                           HasUpdate = e.HasUpdate,
-                           CheckType = e.CheckType,
-                           CheckData = e.CheckData!,
-                           InputType = e.InputType,
-                           ItemData = e.ItemData!,
-                           PosGroup = e.PosGroup!,
-                           LayoutCols = e.LayoutCols!,
-                           PlaceHolder = e.PlaceHolder!,
-                           Sort = e.Sort,
-                           Width = e.Width,
-                       })
-                       //.OrderBy(a => new { a.EtableId, a.Sort })  //.net core not support !!
-                       .OrderBy(a => a.EtableId).ThenBy(a => a.Sort)
-                       .ToList();
-
-            db.Dispose();
-            #endregion
-
-            //loop generate files
-            foreach (var crudId in crudIds)
-            {
-                string error;
-                try
-                {
-                    error = await GenCrudA(crudId);
-                }
-                catch (Exception ex)
-                {
-                    error = ex.Message;
-                }
-                if (_Str.NotEmpty(error))
-                    return error;
-            }
-
-            //case of ok
-            return "";
+            return error;
         }
-        */
 
         /// <summary>
         /// generate crud files by one crudId
         /// </summary>
         /// <param name="crudId"></param>
         /// <returns>error msg if any</returns>
-        public async Task<string> GenCrudByDtosA(CrudDto crud, List<CrudQitemDto> qitems, List<CrudRitemDto>? ritems,
-            List<CrudEtableDto>? etables, List<CrudEitemDto>? eitems)
+        private string SetCrudDto(string crudId)
         {
-            #region 1.check & get crud related rows
-            /*
-            var error = DbToVar(crudId);
-            if (error != "")
-                goto lab_error;
-            */
+            //讀取DB
+            #region 1.get model variables from EF
+            //1.get _cruds(Crud rows) CrudDto from EF
+            List<CrudEtableDto>? etables = null;
+            List<CrudEitemDto>? eitems = null;
+            List<CrudUiItemDto>? uiItems = null;
+            var error = "";
+            var db = _Xp.GetDb();
+            var crud = (from c in db.Crud
+                     join p in db.Project on c.ProjectId equals p.Id
+                     //join t in db.Table on a.TableId equals t.Id
+                     //where crudIds.Contains(c.Id)
+                     where c.Id == crudId
+                     select new CrudDto()
+                     {
+                         Id = c.Id,
+                         IsUi = c.IsUi,
+                         Project = p.Code,
+                         ProjectPath = p.ProjectPath,
+                         ProgName = c.ProgName,
+                         ProgCode = c.ProgCode,
+                         TableAs = c.TableAs!,
+                         LabelHori = c.LabelHori,
+                         ReadSql = c.ReadSql,
+                         HasCreate = c.HasCreate,
+                         HasUpdate = c.HasUpdate,
+                         HasDelete = c.HasDelete,
+                         HasView = c.HasView,
+                         HasExport = c.HasExport,
+                         HasReset = c.HasReset,
+                         AuthType0 = (c.AuthType == 0),
+                         AuthType1 = (c.AuthType == 1),
+                         AuthType2 = (c.AuthType == 2),
+                     })
+                      .FirstOrDefault();
 
-            /*
-            //rows for one crudId
-            var qitems = _qitems!.Where(a => a.CrudId == crudId).ToList();   //find fields
-            var ritems = _ritems!.Where(a => a.CrudId == crudId).ToList();   //result fields
-            var etables = _etables!.Where(a => a.CrudId == crudId).ToList();
-            */
+            if (crud == null)
+            {
+                error = $"找不到 dbo.Crud for Id={crudId}";
+                goto lab_error;
+            }
+
+            //query item
+            var qitems = (from q in db.CrudQitem
+                          join c in db.Column on q.ColumnId equals c.Id
+                          where q.CrudId == crudId
+                          orderby q.CrudId, q.Sort
+                          select new CrudQitemDto()
+                          {
+                              CrudId = q.CrudId,
+                              Fid = c.Fid,
+                              Name = c.Name,
+                              DataType = c.DataType,   //for 計算輸入欄位maxLen
+                              PosGroup = q.PosGroup!,
+                              LayoutCols = q.LayoutCols!,
+                              PlaceHolder = "",
+                              IsFind2 = q.IsFind2,
+                              Op = q.Op,
+                              InputType = q.InputType,
+                              ItemData = q.ItemData!,
+                          })
+                       .ToList();
+
+            //2.get _crudRitems(CrudRitem rows) query result fields
+            var ritems = (from r in db.CrudRitem
+                          where r.CrudId == crudId
+                          orderby r.CrudId, r.Sort
+                          select new CrudRitemDto()
+                          {
+                              CrudId = r.CrudId,
+                              RitemType = r.RitemType,
+                              //ExtInfo = r.ExtInfo,
+                              Name = r.Name,
+                              Width = r.Width,
+                              Fid = r.Fid,
+                              //Column = c.Name,
+                          })
+                       .ToList();
+
+            if (crud.IsUi)
+            {
+                uiItems = (from e in db.CrudUiItem
+                           where e.CrudId == crudId
+                           select new CrudUiItemDto()
+                           {
+                               EtableId = t.Id,
+                               Fid = c.Fid,
+                               Name = c.Name,
+                               DataType = c.DataType,
+                               Required = e.Required,
+                               HasCreate = e.HasCreate,
+                               HasUpdate = e.HasUpdate,
+                               CheckType = e.CheckType,
+                               CheckData = e.CheckData!,
+                               InputType = e.InputType,
+                               ItemData = e.ItemData!,
+                               PosGroup = e.PosGroup!,
+                               LayoutCols = e.LayoutCols!,
+                               PlaceHolder = e.PlaceHolder!,
+                               Sort = e.Sort,
+                               Width = e.Width,
+                           })
+                           //.OrderBy(a => new { a.EtableId, a.Sort })  //.net core not support !!
+                           .OrderBy(a => a.EtableId).ThenBy(a => a.Sort)
+                           .ToList();
+
+                //uiItems -> etables、eitems
+
+                //uiItems 在 Edit View 多了 GroupText、Checks、Row Col容器(放多個child)
+            }
+            else
+            {
+                //3.get _crudEtable(CrudEtable rows)
+                etables = (from e in db.CrudEtable
+                           join t in db.Table on e.TableId equals t.Id
+                           where e.CrudId == crudId
+                           select new CrudEtableDto()
+                           {
+                               Id = e.Id,
+                               CrudId = e.CrudId,
+                               TableCode = t.Code,
+                               TableName = t.Name,
+                               PkeyFid = e.PkeyFid,
+                               FkeyFid = e.FkeyFid!,
+                               AutoIdLen = e.AutoIdLen ?? "",
+                               HasCol4 = (e.Col4 == "1"),
+                               HalfWidth = e.HalfWidth,
+                               OrderBy = e.OrderBy,
+                           })
+                            .ToList();
+
+                //4.get _crudEitem(CrudEitem rows)
+                eitems = (from e in db.CrudEitem
+                          join t in db.CrudEtable on e.EtableId equals t.Id
+                          join c in db.Column on e.ColumnId equals c.Id
+                          where t.CrudId == crudId
+                          select new CrudEitemDto()
+                          {
+                              EtableId = t.Id,
+                              Fid = c.Fid,
+                              Name = c.Name,
+                              DataType = c.DataType,
+                              Required = e.Required,
+                              HasCreate = e.HasCreate,
+                              HasUpdate = e.HasUpdate,
+                              CheckType = e.CheckType,
+                              CheckData = e.CheckData!,
+                              InputType = e.InputType,
+                              ItemData = e.ItemData!,
+                              PosGroup = e.PosGroup!,
+                              LayoutCols = e.LayoutCols!,
+                              PlaceHolder = e.PlaceHolder!,
+                              Sort = e.Sort,
+                              Width = e.Width,
+                          })
+                           //.OrderBy(a => new { a.EtableId, a.Sort })  //.net core not support !!
+                           .OrderBy(a => a.EtableId).ThenBy(a => a.Sort)
+                           .ToList();
+            }
+
+            db.Dispose();
             #endregion
-            var _crud = crud;
+
+            //set _crud
+            _crud = crud;
 
             #region 2.set fields: crud.RsItemStrs && IsGroup, IsGroupStart, IsGroupEnd
             //dropdown list types
-            var error = "";
+            //var error = "";
             var ddlpTypes = new List<string>() { InputTypeEstr.Select, InputTypeEstr.Radio };
             var qitemLen = (qitems == null) ? 0 : qitems.Count;
             int i;
@@ -237,7 +247,7 @@ namespace DbAdm.Services
             {
                 var rsItemStrs = new List<String>();
                 var posGroup = PosGroup0;   //initial value, get one impossible value for avoid repeat
-                for (i=0; i<qitemLen; i++)
+                for (i = 0; i < qitemLen; i++)
                 {
                     //set rSitemStrs
                     var qitem = qitems![i];
@@ -258,8 +268,8 @@ namespace DbAdm.Services
 
                     //fitem.RvStr = GetViewItemStr(fitem);  //set after XgFindTbar
                 }
-                _crud!.RsItemStrs = rsItemStrs;
-                _crud!.HasFitemCols = qitems!.Any(a => _Str.IsEmpty(a.LayoutCols));
+                _crud.RsItemStrs = rsItemStrs;
+                _crud.HasFitemCols = qitems!.Any(a => _Str.IsEmpty(a.LayoutCols));
 
                 //set ReadSelectCols, be [] when null !!
                 //字尾A表示非同步
@@ -275,6 +285,7 @@ namespace DbAdm.Services
                 //排除qitems
                 var qitemDatas = qitems!.Select(a => a.ItemData)
                     .ToList() ?? [];
+                //eitem select 欄位設定 ViewBag 資料來源
                 var editSelectCols = eitems!
                     .Where(a => ddlpTypes.Contains(a.InputType) &&
                         !qitemDatas.Contains(a.ItemData))
@@ -366,7 +377,7 @@ namespace DbAdm.Services
             else
             {
                 //be [] when null for easy coding !!
-                _crud!.ReadSelectCols = new List<string>();
+                _crud.ReadSelectCols = new List<string>();
             }
             #endregion
 
@@ -412,7 +423,7 @@ namespace DbAdm.Services
             }
             #endregion
 
-            #region 4.set fields crud.MainTable, crud.ChildTables
+            #region 4.set fields: crud.MainTable, crud.ChildTables
             //set etable.Eitems
             var etableLen = etables!.Count;
             for (i = 0; i < etableLen; i++)
@@ -424,7 +435,7 @@ namespace DbAdm.Services
                 var posGroup = PosGroup0;   //set impossible init value
                 var eitemLen = eitems2.Count;
                 var isTable = (i > 0);
-                for (var j=0; j< eitemLen; j++)
+                for (var j = 0; j < eitemLen; j++)
                 {
                     var eitem = eitems2[j];
                     eitem.ServiceStr = ESvcEitemStr(eitem);
@@ -456,7 +467,7 @@ namespace DbAdm.Services
             if (etableLen > 1)
             {
                 //set ChildTables
-                _crud.ChildTables = new List<CrudEtableDto>();
+                _crud.ChildTables = [];
                 var childTables = _crud.ChildTables;
                 for (i = 1; i < etableLen; i++)
                 {
@@ -506,16 +517,16 @@ namespace DbAdm.Services
                     var fid2 = $"t0_{file.Fid}";
                     _crud.FileEditArg = fid2;
                     _crud.FileEditTypeArg = $"IFormFile {_crud.FileEditArg}";
-                    _crud.FileEditStrs = new List<string>()
-                    {
+                    _crud.FileEditStrs =
+                    [
                         $"await _HttpFile.SaveCrudFileA(json, service.GetNewKeyJson(), _Xp.Dir{_crud.ProgCode}, {fid2}, nameof({fid2}));"
-                    };
+                    ];
                 }
                 else
                 {
                     _crud.FileEditArg = "";
                     _crud.FileEditTypeArg = "";
-                    _crud.FileEditStrs = new List<string>();
+                    _crud.FileEditStrs = [];
                     var sep = "";
                     foreach (var file in files!)
                     {
@@ -540,13 +551,20 @@ namespace DbAdm.Services
             }
             #endregion
 
+        lab_error:
+            return "GenCrudSvc.cs SetCrudDtoA() error: " + error;
+        }
+
+        public async Task<string> GenFilesA()
+        {
             //generate crud files
-            var isManyEdit = (etables.Count > 1);
+            var error = "";
+            var isManyEdit = (_crud.ChildTables != null && _crud.ChildTables.Count > 1);
             var projectPath = _Str.AddDirSep(_crud.ProjectPath);
-            for (i = 0; i < _crudFiles.Length; i += 3)
+            for (var i = 0; i < CrudFiles.Length; i += 3)
             {
                 #region 6.read template file to string
-                var tplFile = _tplDir + _crudFiles[i];
+                var tplFile = TplDir + CrudFiles[i];
                 var tplStr = await _File.ToStrA(tplFile);
                 if (tplStr == null)
                 {
@@ -555,14 +573,14 @@ namespace DbAdm.Services
                 }
                 #endregion
 
-                //7.template string replace by mustache
-                var mustache = Handlebars.Compile(tplStr);
-                var result = HttpUtility.HtmlDecode(mustache(_crud));
+                //7.template string replace by Handlebars
+                var handleTpl = Handlebars.Compile(tplStr);
+                var result = HttpUtility.HtmlDecode(handleTpl(_crud));
 
-                #region 8.rename existed file if need
+                #region 8.rename existed target file if need
                 var tableCode = _crud.ProgCode;
-                var toDir = projectPath + _Str.AddDirSep(_crudFiles[i + 1]).Replace(CrudProg, tableCode);
-                var toFile = toDir + _crudFiles[i + 2].Replace(CrudProg, tableCode);
+                var toDir = projectPath + _Str.AddDirSep(CrudFiles[i + 1]).Replace(CrudProg, tableCode);
+                var toFile = toDir + CrudFiles[i + 2].Replace(CrudProg, tableCode);
                 //var toFile = _File.GetNextFileName(toDir + _crudFiles[i + 2].Replace(CrudTable, tableName), true);
                 if (File.Exists(toFile))
                     File.Copy(toFile, _File.GetNextFileName(toFile, true));
@@ -577,7 +595,7 @@ namespace DbAdm.Services
             return "";
 
         lab_error:
-            return "GenCrudService.cs GenByCrudIdAsync() error: " + error;
+            return "GenCrudSvc.cs GenCrudByDtoA() error: " + error;
             //return false;
         }
 

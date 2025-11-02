@@ -31,23 +31,20 @@ var _icheck = $.extend({}, _ibase, {
     },
     
     /**
+     * checked -> isChecked
      * get checked status by fid
+     * return {bool}
      */
-    checked: function (fid, form) {
-        return _icheck.checkedO(_obj.get(fid, form));
+    isChecked: function (fid, form) {
+        return _icheck.isCheckedO(_obj.get(fid, form));
     },
 
     /**
-     * get checked status by filter
-     */
-    checkedF: function (filter, form) {
-        return _icheck.checkedO(_obj.getF(filter, form));
-    },
-
-    /**
+     * checkedO -> isCheckedO
      * get checked status by object
+     * return {bool}
      */
-    checkedO: function (obj) {
+    isCheckedO: function (obj) {
         //檢查:after虛擬類別是否存在
         //return (_icheck.getO(obj) == 1);
         return obj.is(':checked');
@@ -55,29 +52,42 @@ var _icheck = $.extend({}, _ibase, {
     },
 
     /**
+     * get checked status by filter
+     * return {bool}
+     */
+    /*
+    checkedF: function (filter, form) {
+        return _icheck.isCheckedO(_obj.getByFt(filter, form));
+    },
+    */
+
+    /**
      * get checked checkebox data-value string array
      * form {object} container
      * fid {string} (optional '_check0') data-fid value
-     * return {string array}
+     * return {string array} checked value list
      */ 
-    getCheckeds: function (form, fid) {
-        fid = fid || _icheck.Check0Id;
+    //getCheckeds: function (form, fid) {
+    getCheckeds: function (form) {
+        //fid = fid || _icheck.Check0Id;
         var ary = [];
-        _obj.getF(_input.fidFilter(fid) + ':checked', form).each(function (i) {
+        _obj.getByFt(_input.fidFilter(_icheck.Check0Id) + ':checked', form).each(function (i) {
             ary[i] = $(this).data('value');
         });
         return ary;
     },
 
     /**
+     * no used??
      * get checked checkebox data-value string array
      * form {object} container
      * fid {string} (optional '_check0') data-fid value
      * return {string array}
      */ 
-    checkAll: function (form, status, fid) {
-        fid = fid || _icheck.Check0Id;
-        var filter = _input.fidFilter(fid);
+    //checkAll: function (form, status, fid) {
+    checkAll: function (form, status) {
+        //fid = fid || _icheck.Check0Id;
+        var filter = _input.fidFilter(_icheck.Check0Id);
         _icheck.setO(form.find(filter), status);
     },
 

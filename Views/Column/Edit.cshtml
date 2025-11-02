@@ -1,11 +1,11 @@
 ﻿<form id='eform' class='x-form mb-2'>
-    @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
-    @await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Title = "專案代碼", Fid = "ProjectCode" })
-    @await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Title = "資料表", Fid = "TableCode" })
-    @await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Title = "欄位", Fid = "Fid" })
-    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "欄位名稱", Fid = "Name", MaxLen = 30 })
-    @await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Title = "資料型態", Fid = "DataType" })
-    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "資料狀態", Fid = "Status", IsCheck = true, Value = "1", Label = "啟用" })
-    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "說明", Fid = "Note", MaxLen = 30, Cols = "2,5" })
+    <vc:xi-hide dto='new() { Fid = "Id" }' />
+    <vc:xi-read dto='new() { Title = "專案代碼", Fid = "ProjectCode" }' />
+    <vc:xi-read dto='new() { Title = "資料表", Fid = "TableCode" }' />
+    <vc:xi-read dto='new() { Title = "欄位", Fid = "Fid" }' />
+    <vc:xi-text dto='new() { Title = "欄位名稱", Fid = "Name", MaxLen = 30 }' />
+    <vc:xi-read dto='new() { Title = "資料型態", Fid = "DataType" }' />
+    <vc:xi-check dto='new() { Title = "資料狀態", Fid = "Status", IsCheck = true, Value = "1", Label = "啟用" }' />
+    <vc:xi-text dto='new() { Title = "說明", Fid = "Note", MaxLen = 30, Cols = "2,5" }' />
 </form>
 <vc:xg-save-back />

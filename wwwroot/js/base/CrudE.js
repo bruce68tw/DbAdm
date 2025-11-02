@@ -33,40 +33,48 @@ class CrudE {
 
         this._divEdit = $('#divEdit');
         var hasEdit = (this._divEdit.length > 0);
+
+        //set _me, 以下與 editNo 無關
+        _me.crudE = this;
+        _me.hasEdit = hasEdit;
+
         if (hasEdit) {
-            var Childs = _edit.Childs;  //constant
+            //var Childs = _edit.Childs;  //constant
             //var edit0 = null;  //master edit object
             if (edits == null) {
                 edits = [new EditOne()];
             } else {
                 if (edits[0] instanceof DtoEdit) {
-                    //如果傳入 DtoEdit[]
+                    //如果傳入 DtoEdit[], 表示有2個以上的編輯畫面
                     this._multiEdit = true;
                     this._edits = edits;
                     //this.setEditNo(0);
                     for (var i = 0; i < edits.length; i++) {
-                        var edits2 = edits[i];
-                        if (edits2.edits[0] == null)
-                            edits2.edits[0] = new EditOne();
-                        if (edits2.divEdit == null)
-                            edits2.divEdit = this._divEdit;
-                        this._initForm(edits2.edits[0]);
+                        var dto = edits[i];
+                        if (dto.divEdit == null)
+                            dto.divEdit = this._divEdit;
+                        this._initEdit0(dto.edits);
+                        /*
+                        if (dto.edits[0] == null)
+                            dto.edits[0] = new EditOne();
+                        this._initForm(dto.edits[0]);
+                        */
                     }
                 } else {
+                    this._initEdit0(edits);
+                    /*
                     if (edits[0] == null) {
                         edits[0] = new EditOne();
                     }
+                    */
                 }
 
                 /*
-                //??
-                //this.hasChild = edits.length > 1;
-                if (edits.length > 1) {
-                    edit0[Childs] = [];
-                    //var childs = this.edits._childs;
-                    for (var i = 1; i < edits.length; i++)
-                        edit0[Childs][i - 1] = edits[i];
-                }
+                //ary0 是master, 把2nd以的edit寫入Childs欄位
+                var edit0 = edits[0];
+                edit0[Childs] = [];
+                for (var i = 1; i < edits.length; i++)
+                    edit0[Childs][i - 1] = edits[i];
                 */
             }
 
@@ -77,11 +85,16 @@ class CrudE {
             */
             //this._hasChild = (_fun.hasValue(this._edit0[Childs]) && this._edit0[Childs].length > 0);
             //this.editLen = this.edits.length;
+            /*
             if (!this._multiEdit) {
                 this._edit0 = edits[0];
                 this._initForm(this._edit0);
             }
+            */
         }
+
+        //set now edit no & _me & related variables
+        this.setEditNo(0);
 
         //for xgOpenModal
         //this.modal = null;
@@ -89,16 +102,31 @@ class CrudE {
         //3.initial forms(recursive)
         //_prog.init();   //prog path
 
-        //set _me
-        _me.crudE = this;
-        _me.hasEdit = hasEdit;
+        /*
+        //與 editNo 有關
         if (this._multiEdit) {
             this.setEditNo(0);
         } else {
             _me.divEdit = this._divEdit;
             _me.edit0 = this._edit0;
-            _me.eform0 = this._edit0.eform;
+            _me.eform0 = _me.edit0.eform;
         }
+        */
+    }
+
+    //set _edit0、Childs and initForm
+    _initEdit0(edits) {
+        const childs = _edit.Childs;
+        var edit0 = edits[0];
+        if (edit0 == null) {
+            edit0 = new EditOne();
+            edits[0] = edit0;   //寫回
+        }
+        edit0[childs] = [];
+        for (var i = 1; i < edits.length; i++)
+            edit0[childs][i - 1] = edits[i];
+
+        this._initForm(edit0);
     }
 
     /**
@@ -121,16 +149,20 @@ class CrudE {
             : _me.divEdit;
     }
 
-    //set now editNo, base 0
+    /**
+     * set now editNo, base 0
+     */ 
     setEditNo(editNo) {
-        if (!this._multiEdit) return;
+        if (this._multiEdit) {
+            this._nowEditNo = editNo;
 
-        this._nowEditNo = editNo;
-
-        //設定 instance variables
-        var dto = this._edits[editNo];
-        this._divEdit = dto.divEdit;;
-        this._edit0 = dto.edits[0];
+            //設定 instance variables
+            var dto = this._edits[editNo];
+            this._divEdit = dto.divEdit;;
+            this._edit0 = dto.edits[0];
+        } else {
+            this._edit0 = this._edits[0];
+        }
 
         //設定 _me 屬性
         _me.divEdit = this._divEdit;

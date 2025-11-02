@@ -125,10 +125,10 @@
 <!-- Table edit form nav/tab/buttons -->
 <div class="x-btns-box">
     <span class="x-span-label">編輯畫面</span>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableAdd'>新增</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableDelete'>刪除</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableLeft'>左移</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtableRight'>右移</button>
+    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtAdd'>新增</button>
+    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtDelete'>刪除</button>
+    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtLeft'>左移</button>
+    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtRight'>右移</button>
 </div>
 <ul class="nav nav-tabs" id="navEtable"></ul>
 <div class="tab-content" id="tabEtable"></div>
@@ -217,7 +217,7 @@
 <!-- template: edit form nav, use index to connect nav tab -->
 <script id="tplNavEtable" type="text/template">
     <li class='nav-item' data-index='{{Index}}'>
-        <a class='nav-link' data-bs-toggle='tab' href='#divEtable{{Index}}' data-onclick='_me.onEtableNav' data-args='{{Index}}'>
+        <a class='nav-link' data-bs-toggle='tab' href='#divEtable{{Index}}' data-onclick='_me.onEtNav' data-args='{{Index}}'>
         </a>
     </li>
 </script>

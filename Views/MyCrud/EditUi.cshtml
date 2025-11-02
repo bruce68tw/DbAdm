@@ -17,7 +17,7 @@
     }
 
     /* UiMany */
-    #divEdit2 {
+    #divEdit1 {
         display: flex;
         flex-direction: row;
     }
@@ -87,7 +87,7 @@
 </div>
 
 <!-- eform 在 uiMany 下面, 使用 z-index無效, 改用 width -->
-<form id='eform' class='x-form x-w100 me-2 vh-100'>
+<form id='eform1' class='x-form x-w100 me-2 vh-100'>
     <vc:xi-hide dto='new() { Fid = "Id" }' />
 
     <div class="xu-label">專案</div>
@@ -142,7 +142,7 @@
     <div class="xd-tr">
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "Id" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "_Id2" })
-        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "UiId" })
+        @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "CrudId" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "BoxId" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "ItemType" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "ChildNo" })

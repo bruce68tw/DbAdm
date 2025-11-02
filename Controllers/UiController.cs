@@ -118,7 +118,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<string> GenCrud(string id)
         {
-            var result = await new UiSvc().GenCrudA(id);
+            var result = await new MyCrudUiSvc().GenCrudA(id);
             return result;
         }
 

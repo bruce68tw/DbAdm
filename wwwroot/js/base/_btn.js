@@ -2,15 +2,18 @@
 //button
 var _btn = {
 
-    setEdit: function (id, status, box) {
-        //use _obj.getById() !!
-        _btn.setEditO(_obj.getById(id, box), status);
-    },
-    setEditO: function (obj, status) {
+    //setEditO -> setEdit
+    setEdit: function (obj, status) {
         obj.prop('disabled', !status);
     },
-    setEditF: function (ft, status, box) {
-        _btn.setEditO(_obj.getF(ft, box), status);
+    /*
+    setEdit: function (id, status, box) {
+        //use _obj.getById() !!
+        _btn.setEdit(_obj.getById(id, box), status);
     },
+    setEditF: function (ft, status, box) {
+        _btn.setEdit(_obj.getByFt(ft, box), status);
+    },
+    */
 
 }; //class

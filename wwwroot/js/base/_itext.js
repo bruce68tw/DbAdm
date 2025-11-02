@@ -7,7 +7,7 @@ var _itext = $.extend({}, _ibase, {
     //add input mask, use jquery maskedinput
     mask: function (box) {
         var filter = "[data-mask!='']";
-        _obj.getF(filter, box).each(function () {
+        _obj.getByFt(filter, box).each(function () {
             var me = $(this);
             me.mask(me.data('mask'));
         });

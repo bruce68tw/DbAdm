@@ -9,7 +9,7 @@ var _tool = {
         //alert
         _tool.xgMsg = $('#xgMsg');      //使用id
         _tool.xgAns = $('#xgAns');      //使用id
-        _tool.xgAnsA = $('#xgAnsA');    //使用id
+        _tool.xgAnsA = $('#xgAnsA');    //使用id, 非同步
         _tool.xgAlert = $('.x-alert');
         _tool.xgArea = $('.x-area');
         _tool.xgImage = $('.x-image');
@@ -69,7 +69,7 @@ var _tool = {
         if (_tool.ansStatus) return;
 
         _tool.ansStatus = true;
-        _modal.hideO(_tool.xgAnsA);
+        _modal.hide(_tool.xgAnsA);
         _tool.fnResolve(value == 1);
     },
 
@@ -116,7 +116,7 @@ var _tool = {
         var obj = box.find('textarea');
         obj.val(value);
         _itextarea.setEditO(obj, isEdit);
-        _btn.setEditO(box.find('.xd-yes'), isEdit);
+        _btn.setEdit(box.find('.xd-yes'), isEdit);
 
         //set callback function
         if (isEdit)
@@ -129,7 +129,7 @@ var _tool = {
     onAreaYes: function () {
         var box = _tool.xgArea;
         if (_tool._fnOnAreaYes) {
-            _modal.hideO(box);
+            _modal.hide(box);
             var value = box.find('textarea').val();
             _tool._fnOnAreaYes(value);
         }
@@ -163,19 +163,19 @@ var _tool = {
      */
     onAnsYes: function () {
         if (_tool._fnOnAnsYes) {
-            _modal.hideO(_tool.xgAns);
+            _modal.hide(_tool.xgAns);
             _tool._fnOnAnsYes();
         }
     },
     onAnsNo: function () {
         if (_tool._fnOnAnsNo)
             _tool._fnOnAnsNo();
-        _modal.hideO(_tool.xgAns);
+        _modal.hide(_tool.xgAns);
     },
     onMsgClose: function () {
         if (_tool._fnOnMsgClose)
             _tool._fnOnMsgClose();
-        _modal.hideO(_tool.xgMsg);
+        _modal.hide(_tool.xgMsg);
     },
 
 }; //class

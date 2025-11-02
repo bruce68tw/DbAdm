@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
 {
-    public class UiSvc
+    public class MyCrudUiSvc
     {
         /// <summary>
         /// 產生Crud程式碼
@@ -144,7 +144,7 @@ namespace DbAdm.Services
             #endregion
 
             //call GenCrudSvc
-            return await new GenCrudSvc().GenCrudByDtosA(crud!, qitems, ritems, etables, eitems);
+            return await new GenCrudSvc().GenCrudByDtoA(crud!, qitems, ritems, etables, eitems);
 
             //呼叫 GenCrudSvc
             //var result = await new GenCrudSvc().GenCrudA(keys);

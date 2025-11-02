@@ -57,7 +57,7 @@
             var formData = new FormData();
             formData.append('file', file);
             await _ajax.getJsonByFdA('Import', formData, function (data) {
-                _modal.hideO(modal);
+                _modal.hide(modal);
                 _tool.msg(_str.format('匯入完成。', data.OkCount, data.FailCount));
                 _me.dt.reload();
             });

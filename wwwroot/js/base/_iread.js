@@ -8,7 +8,7 @@ var _iread = {
     },
     //value by filter
     getF: function (filter, form) {
-        return _iread.getO(_obj.getF(filter, form));
+        return _iread.getO(_obj.getByFt(filter, form));
     },
     //value by object
     getO: function (obj) {
@@ -18,7 +18,7 @@ var _iread = {
         _iread.setO(_obj.get(fid, form), value);
     },
     setF: function (filter, value, form) {
-        _iread.setO(_obj.getF(filter, form), value)
+        _iread.setO(_obj.getByFt(filter, form), value)
     },
     setO: function (obj, value) {
         obj.text(value);

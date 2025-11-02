@@ -5,22 +5,20 @@
  *   _rows {json array}: updated rows include upload files
  *   _deletes {strings}: deleted key strings, seperate with ','
  *   _childs {json array}: child json array
- * 
- * 屬性
+ * 公用屬性
  *   kid:
  *   eform:
  *   fidTypes:
  *   systemError:
- *   dataJson: 載入資料後(update/view)自動設定
+ *   dataJson: 載入資料後(update/view)在CrudE自動設定
  *   hasFile、fileLen、fileFids: 在 _me.crudE.js setFileVars() 設定
  *   validator: jquery vallidation object (EditMany同), 在 _me.crudE.js _initForm() 設定
- * 
  * 自定函數 called by _me.crudE.js
  *   //void fnAfterLoadJson(json)
  *   //void fnAfterOpenEdit(fun, json): called after open edit form
  *   //void fnAfterSwap(readMode): called after _me.crudR.swap()
- *   error fnWhenSave() ??
- *   void fnAfterSave()
+ *   //error fnWhenSave() ??
+ *   //void fnAfterSave()
  *   
  * param kid {string} (default 'Id') pkey field id for getKey value & getUpdRow,
  *   must existed or will set systemError variables !!
@@ -35,9 +33,13 @@ class EditOne {
 
     /**
      * initial & and instance variables (this.validator is by _valid.init())
-     * called by this(at last)
+     * param kid {string} default 'Id'
+     * param eformId {string} default 'eform'
      */
     constructor(kid, eformId) {
+        //private
+        this[_edit.Childs] = null;
+
         this.kid = kid || 'Id';
         eformId = eformId || 'eform';
         this.eform = $('#' + eformId);     //multiple rows container object

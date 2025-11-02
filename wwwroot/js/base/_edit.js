@@ -11,7 +11,7 @@ var _edit = {
 
     //constant with underline
     Rows: '_rows',
-    Childs: '_childs',
+    Childs: '_childs',      //同時用在資料、EditOne/EditMany(表達下層物件)
     Deletes: '_deletes',
 
     //server side fid for file input collection, must pre '_'

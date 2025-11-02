@@ -1,23 +1,9 @@
-/// <reference path="UiMany.js" />
 
-//擴充 _me
 Object.assign(_me, {
-    //是否拖拉編輯模式
-    //isEdit2: false,
-
     onOpenEdit2: async function (id) {
-
         _prog.setBorder(false);
-        //_me.isEdit2 = true;
         _me.crudE.setEditNo(1);
         await _me.crudE.onUpdateA(id);
-        //_me.crudR.swap(false);
-
-        /*
-        _me.uiMany.reset();
-        var isAdd = (fun === EstrFun.Create);
-        _me.uiMany.setEdit(isAdd || (fun === EstrFun.Update));
-        */
     },
 
     /*
@@ -33,7 +19,7 @@ Object.assign(_me, {
         var modal = _me.modalMain;
         var row = _form.toRow(modal);
         _form.loadRow(_me.eform0, row);
-        _modal.hideO(modal);
+        _modal.hide(modal);
     },
     */
 
@@ -89,7 +75,7 @@ Object.assign(_me, {
         }
 
         await this.uiMany.loadJsonsA(jsons);
-        _modal.hideO(_me.modalImport);
+        _modal.hide(_me.modalImport);
     },
 
     //export edit form to json

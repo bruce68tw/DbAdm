@@ -623,7 +623,7 @@ class FlowMany {
             node.setName(row.Name, true);
 
         //hide modal
-        _modal.hideO(this.modalNodeProp);
+        _modal.hide(this.modalNodeProp);
 
         /*
         //update node form fields
@@ -666,7 +666,7 @@ class FlowMany {
         line.setFromType(row.FromType);
 		
         //hide modal
-        _modal.hideO(modal);
+        _modal.hide(modal);
     }
     //#endregion (events)
 

@@ -7,6 +7,7 @@ namespace DbAdm.Models
     {
         //base crud
         public string Id { get; set; } = "";
+        public bool IsUi { get; set; }
         public string Project { get; set; } = "";     //project code
         public string ProjectPath { get; set; } = "";
         public string ProgCode { get; set; } = "";    //program code

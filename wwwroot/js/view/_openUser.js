@@ -101,14 +101,14 @@ var _openUser = {
         //var fn = ou.boxId + 'OnClickOk';  //要callback的函數名稱 !!
         if (ou.isRows) {
             //多選
-            var keys = _iCheck.getCheckeds(box, _icheck.Check0Id);
+            var keys = _icheck.getCheckeds(box, _icheck.Check0Id);
             if (keys.length == 0) {
                 _tool.msg('請先選取資料。');
             } else {
                 //範本: 呼叫動態 function !!
                 //_me[fn](keys);
                 ou.fn(keys);
-                _modal.hideO(box);
+                _modal.hide(box);
             }
         } else {
             //單選, radio欄位名稱固定為 _dtRadio1 !!
@@ -120,7 +120,7 @@ var _openUser = {
             } else {
                 //_me[fn](ou.row);
                 ou.fn(value);
-                _modal.hideO(box);
+                _modal.hide(box);
             }
         }
     },

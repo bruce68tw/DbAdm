@@ -103,7 +103,7 @@ var _form = {
         //TODO: html
 
         //button
-        _btn.setEditO(form.find('button'), status);
+        _btn.setEdit(form.find('button'), status);
 
         /*
         form.find(':checkbox').each(function () {
