@@ -2,9 +2,7 @@
 using Base.Services;
 using DbAdm.Enums;
 using DbAdm.Models;
-using DbAdm.Tables;
 using HandlebarsDotNet;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System.Web;
 
 namespace DbAdm.Services
@@ -176,7 +174,7 @@ namespace DbAdm.Services
                            select new CrudEtableDto()
                            {
                                Id = e.Id,
-                               CrudId = e.CrudId,
+                               //CrudId = e.CrudId,
                                TableCode = t.Code,
                                TableName = t.Name,
                                PkeyFid = e.PkeyFid,
@@ -247,6 +245,39 @@ namespace DbAdm.Services
                 });
 
                 //add main table eitems
+                var boxId = "0";
+                var types = new List<string>() { UiItemTypeEstr.Input, UiItemTypeEstr.Group, UiItemTypeEstr.Checks };
+                foreach (var uiItem in uiItems!
+                    .Where(a => a.BoxId == boxId)
+                    .Where(a => types.Contains(a.ItemType))
+                    .OrderBy(a => a.Sort)
+                    .ToList())
+                {
+                    //add child table
+                    var table = _Str.ToJson(uiItem.Info)!;
+                    var tableId = _Str.NewId();
+                    eitems.Append(new CrudEitemDto()
+                    {
+                        EtableId = t.Id,
+                        Fid = c.Fid,
+                        Name = c.Name,
+                        DataType = c.DataType,
+                        Required = e.Required,
+                        HasCreate = e.HasCreate,
+                        HasUpdate = e.HasUpdate,
+                        CheckType = e.CheckType,
+                        CheckData = e.CheckData!,
+                        InputType = e.InputType,
+                        ItemData = e.ItemData!,
+                        PosGroup = e.PosGroup!,
+                        LayoutCols = e.LayoutCols!,
+                        PlaceHolder = e.PlaceHolder!,
+                        Sort = e.Sort,
+                        Width = e.Width,
+                    });
+
+                    //add child eitems
+                }
 
                 //add child tables & eitems
 
