@@ -11,9 +11,9 @@ public partial class Ui
 
     public string ProjectId { get; set; } = null!;
 
-    public string Code { get; set; } = null!;
+    public string ProgCode { get; set; } = null!;
 
-    public string Name { get; set; } = null!;
+    public string ProgName { get; set; } = null!;
 
     public string? Note { get; set; }
 

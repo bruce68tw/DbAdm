@@ -1,9 +1,9 @@
-//ui item type
+//ui item type, 與後端 UiItemTypeEstr相同
 let EstrItemType = {
 	Input: 'I',		//輸入欄位(含唯讀欄位)
 	Group: 'G',		//分群文字
 	Checks: 'CS',	//check list, 行為類似 input, 不是容器
-	Span: 'S',		//只能放 input
+	//Span: 'S',	//只能放 input
 	RowBox: 'R',	//2/3欄, 只能放 group, input, checks, span
 	Table: 'T',		//只能放 input
 	TabPage: 'TP',	//(暫不使用)只能放 box, group, input, checks, span

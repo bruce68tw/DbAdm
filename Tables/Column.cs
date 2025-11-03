@@ -11,6 +11,9 @@ public partial class Column
 
     public string TableId { get; set; } = null!;
 
+    /// <summary>
+    /// old: Code
+    /// </summary>
     public string Fid { get; set; } = null!;
 
     public string Name { get; set; } = null!;

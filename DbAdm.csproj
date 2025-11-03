@@ -86,6 +86,7 @@
 	<Content Include="_template\**" CopyToPublishDirectory="PreserveNewest" />
 	<Compile Remove="Controllers\Table2Controller.cs" />
 	<Compile Remove="Controllers\TestController.cs" />
+	<Compile Remove="Controllers\UiController.cs" />
 	<Content Include="key.Development.txt" />
 	<Content Include="key.Production.txt" />
     <Content Include="Views\Shared\Error.cshtml_old" />

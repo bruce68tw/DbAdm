@@ -156,30 +156,16 @@ namespace DbAdm.Services
                            where e.CrudId == crudId
                            select new CrudUiItemDto()
                            {
-                               EtableId = t.Id,
-                               Fid = c.Fid,
-                               Name = c.Name,
-                               DataType = c.DataType,
-                               Required = e.Required,
-                               HasCreate = e.HasCreate,
-                               HasUpdate = e.HasUpdate,
-                               CheckType = e.CheckType,
-                               CheckData = e.CheckData!,
-                               InputType = e.InputType,
-                               ItemData = e.ItemData!,
-                               PosGroup = e.PosGroup!,
-                               LayoutCols = e.LayoutCols!,
-                               PlaceHolder = e.PlaceHolder!,
+                               Id = e.Id,
+                               CrudId = e.CrudId,
+                               BoxId = e.BoxId,
+                               ChildNo = e.ChildNo,
+                               ItemType = e.ItemType,
+                               Info = e.Info,
                                Sort = e.Sort,
-                               Width = e.Width,
                            })
-                           //.OrderBy(a => new { a.EtableId, a.Sort })  //.net core not support !!
-                           .OrderBy(a => a.EtableId).ThenBy(a => a.Sort)
+                           .OrderBy(a => a.BoxId).ThenBy(a => a.Sort)
                            .ToList();
-
-                //uiItems -> etables、eitems
-
-                //uiItems 在 Edit View 多了 GroupText、Checks、Row Col容器(放多個child)
             }
             else
             {
@@ -236,6 +222,84 @@ namespace DbAdm.Services
 
             //set _crud
             _crud = crud;
+
+            //處理資料 for isUi=true
+            if (_crud.IsUi)
+            {
+                #region uiItems -> etables
+                etables = [];
+                eitems = [];
+
+                //add main table
+                var mainId = _Str.NewId();
+                etables.Append(new CrudEtableDto()
+                {
+                    Id = mainId,
+                    //CrudId = _crud.Id,
+                    TableCode = _crud.ProgCode,
+                    TableName = _crud.ProgName,
+                    PkeyFid = "Id",
+                    //FkeyFid = e.FkeyFid!,
+                    //AutoIdLen = e.AutoIdLen ?? "",
+                    //HasCol4 = (e.Col4 == "1"),
+                    //HalfWidth = e.HalfWidth,
+                    //OrderBy = e.OrderBy,
+                });
+
+                //add main table eitems
+
+                //add child tables & eitems
+
+                foreach (var uiItem in uiItems!
+                    .Where(a => a.ItemType == UiItemTypeEstr.Table)
+                    .OrderBy(a => a.Sort)
+                    .ToList())
+                {
+                    //add child table
+                    var table = _Str.ToJson(uiItem.Info)!;
+                    var tableId = _Str.NewId();
+                    etables.Append(new CrudEtableDto()
+                    {
+                        Id = tableId,
+                        //CrudId = e.CrudId,
+                        TableCode = table["Code"]!.ToString(),
+                        TableName = table["Name"]!.ToString(),
+                        PkeyFid = "Id",
+                        FkeyFid = "CrudId",
+                        //AutoIdLen = e.AutoIdLen ?? "",
+                        //HasCol4 = (e.Col4 == "1"),
+                        //HalfWidth = e.HalfWidth,
+                        //OrderBy = e.OrderBy,
+                    });
+
+                    //add child eitems
+                }
+                (from e in db.CrudEtable
+                           join t in db.Table on e.TableId equals t.Id
+                           where e.CrudId == crudId
+                           select new CrudEtableDto()
+                           {
+                               Id = e.Id,
+                               CrudId = e.CrudId,
+                               TableCode = t.Code,
+                               TableName = t.Name,
+                               PkeyFid = e.PkeyFid,
+                               FkeyFid = e.FkeyFid!,
+                               AutoIdLen = e.AutoIdLen ?? "",
+                               HasCol4 = (e.Col4 == "1"),
+                               HalfWidth = e.HalfWidth,
+                               OrderBy = e.OrderBy,
+                           })
+                            .ToList();
+
+                #endregion
+
+                #region uiItems -> eitems
+                #endregion
+
+                #region uiItems 在 Edit View 多了 GroupText、Checks、Row Col容器(放多個child)
+                #endregion
+            }
 
             #region 2.set fields: crud.RsItemStrs && IsGroup, IsGroupStart, IsGroupEnd
             //dropdown list types

@@ -7,8 +7,12 @@ public partial class Crud
 {
     public string Id { get; set; } = null!;
 
-    public bool IsUi { get; set; }
     public string ProjectId { get; set; } = null!;
+
+    /// <summary>
+    /// 是否dragdrop UI
+    /// </summary>
+    public bool IsUi { get; set; }
 
     public string ProgCode { get; set; } = null!;
 
@@ -39,7 +43,11 @@ public partial class Crud
 
     public bool Status { get; set; }
 
+    public string? Creator { get; set; }
+
     public DateTime Created { get; set; }
+
+    public string? Reviser { get; set; }
 
     public DateTime? Revised { get; set; }
 }

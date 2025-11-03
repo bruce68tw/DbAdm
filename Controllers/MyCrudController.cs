@@ -80,7 +80,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<string> GenCrud(string id)
         {
-            var result = await new MyCrudSvc().GenCrudA(id);
+            var result = await new GenCrudSvc().GenCrudA(id);
             return result;
         }
 

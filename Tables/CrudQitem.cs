@@ -11,7 +11,11 @@ public partial class CrudQitem
 
     public string CrudId { get; set; } = null!;
 
-    public string ColumnId { get; set; } = null!;
+    public string? Fid { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? DataType { get; set; }
 
     public string TableAs { get; set; } = null!;
 
@@ -35,4 +39,6 @@ public partial class CrudQitem
     /// 改用 InputType
     /// </summary>
     public string? zz_QitemType { get; set; }
+
+    public string? ColumnId { get; set; }
 }

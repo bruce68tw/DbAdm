@@ -7,7 +7,7 @@ namespace DbAdm.Models
     {
         //base
         public string Id { get; set; } = "";
-        public string CrudId { get; set; } = "";
+        //public string CrudId { get; set; } = "";
         public string TableCode { get; set; } = "";       //table code
         public string TableName { get; set; } = "";       //table name
         public string PkeyFid { get; set; } = "";

@@ -11,6 +11,9 @@ public partial class CrudRitem
 
     public string CrudId { get; set; } = null!;
 
+    /// <summary>
+    /// old: ColumnCode
+    /// </summary>
     public string Fid { get; set; } = null!;
 
     public string Name { get; set; } = null!;
