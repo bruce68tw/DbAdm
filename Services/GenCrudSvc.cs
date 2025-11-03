@@ -229,10 +229,10 @@ namespace DbAdm.Services
                 eitems = [];
 
                 //add main table
-                var mainId = _Str.NewId();
+                var tableId = _Str.NewId();
                 etables.Append(new CrudEtableDto()
                 {
-                    Id = mainId,
+                    Id = tableId,
                     //CrudId = _crud.Id,
                     TableCode = _crud.ProgCode,
                     TableName = _crud.ProgName,
@@ -254,24 +254,24 @@ namespace DbAdm.Services
                     .ToList())
                 {
                     //add child table
-                    var table = _Str.ToJson(uiItem.Info)!;
-                    var tableId = _Str.NewId();
+                    var info = _Str.ToJson(uiItem.Info)!;
+                    //var tableId = _Str.NewId();
                     eitems.Append(new CrudEitemDto()
                     {
-                        EtableId = t.Id,
-                        Fid = c.Fid,
-                        Name = c.Name,
+                        EtableId = tableId,
+                        Fid = info["Fid"]!.ToString(),
+                        Name = info["Name"]!.ToString(),
                         DataType = c.DataType,
-                        Required = e.Required,
-                        HasCreate = e.HasCreate,
-                        HasUpdate = e.HasUpdate,
+                        Required = (info["Required"]!.ToString() == "1"),
+                        HasCreate = true,
+                        HasUpdate = true,
                         CheckType = e.CheckType,
                         CheckData = e.CheckData!,
-                        InputType = e.InputType,
+                        InputType = info["InputType"]!.ToString(),
                         ItemData = e.ItemData!,
                         PosGroup = e.PosGroup!,
                         LayoutCols = e.LayoutCols!,
-                        PlaceHolder = e.PlaceHolder!,
+                        //PlaceHolder = e.PlaceHolder!,
                         Sort = e.Sort,
                         Width = e.Width,
                     });
