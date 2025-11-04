@@ -6,6 +6,8 @@
         //base
         public string Fid { get; set; } = "";
         public string Name { get; set; } = "";
+
+        //輸入欄位長度限制會用此欄位
         public string DataType { get; set; } = "";
 
         public bool Required { get; set; }

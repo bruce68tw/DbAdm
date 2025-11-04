@@ -3,19 +3,24 @@
 	{{this}}
 {{/each}}
 {{#MainTable}}
-{{#Eitems}}
-{{#if IsGroupStart}}
+  {{#if ../IsUi}}
+    {{!-- EditViewUiBox.txt --}}
+    {{> UiBox this}}
+  {{else}}
+    {{#Eitems}}
+      {{#if IsGroupStart}}
 	<div class="row">
-{{/if}}
-{{#if IsGroup}}
+      {{/if}}
+      {{#if IsGroup}}
 		{{ViewStr}}
-{{else}}
+      {{else}}
 	{{ViewStr}}
-{{/if}}
-{{#if IsGroupEnd}}
+      {{/if}}
+      {{#if IsGroupEnd}}
 	</div>
-{{/if}}
-{{/Eitems}}
+      {{/if}}
+    {{/Eitems}}
+  {{/if}}
 {{/MainTable}}
 </form>
 

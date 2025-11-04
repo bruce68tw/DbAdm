@@ -1,0 +1,12 @@
+{{!-- »¼°j, ¥u³B²z main table --}}
+{{#UiItems}}
+  {{#ifEq ItemType="B"}}
+    {{!-- EditViewUiBox.txt --}}
+    {{> UiBox this}}
+  {{else}}
+    {{#ifEq ItemType="CS"}}
+    {{else}}
+	{{ViewStr}}
+    {{/if}}
+  {{/if}}
+{{/UiItems}}

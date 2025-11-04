@@ -37,6 +37,9 @@ namespace DbAdm.Models
         public CrudEtableDto MainTable { get; set; } = null!;
         public List<CrudEtableDto>? ChildTables { get; set; }
 
+        //for IsUi=true
+        public List<CrudUiItemDto>? UiItems { get; set; }
+
         //extend
         public bool HasFitemCols { get; set; }    //whether fitem has default cols
 

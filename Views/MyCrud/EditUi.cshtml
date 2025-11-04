@@ -166,6 +166,7 @@
                     <vc:xi-select dto='new() { Title = "欄位種類", Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, Cols = cols }' />
                     <vc:xi-text dto='new() { Title = "排版格數", Fid = "Cols", Required = true, Cols = cols }' />
                     <vc:xi-check dto='new() { Title = "必填", Fid = "Required", Label = "是", Cols = cols }' />
+                    <vc:xi-int dto='new() { Title = "欄位長度限制", Fid = "MaxLen", Value = "0", Cols = cols }' />
                     <vc:xi-text dto='new() { Title="標題提示文字", Fid="TitleTip" , MaxLen=30, Cols=cols }' />
                     <vc:xi-text dto='new() { Title="欄位後面文字", Fid="InputNote" , MaxLen=100, Cols=cols }' />
                     <vc:xi-text dto='new() { Title = "欄位其他資訊", Fid = "ExtInfo", MaxLen = 100, Cols = cols, TitleTip = "select/radio:選項清單" }' />
@@ -234,8 +235,10 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal x-form pt-1 pe-5">
-                    <vc:xi-text dto='new() { Title = "資料表", Fid = "Table", MaxLen = 30, Cols = "4,4", Required = true }' />
-                    <vc:xi-text dto='new() { Title = "資料名稱", Fid = "Title", MaxLen = 30, Cols = "4,4", Required = true }' />
+                    <vc:xi-text dto='new() { Title = "資料表", Fid = "Code", MaxLen = 30, Cols = "4,4", Required = true }' />
+                    <vc:xi-text dto='new() { Title = "資料名稱", Fid = "Name", MaxLen = 30, Cols = "4,4", Required = true }' />
+                    <vc:xi-text dto='new() { Title = "PkeyFid", Fid = "PkeyFid", MaxLen = 30, Cols = "4,4", Required = true }' />
+                    <vc:xi-text dto='new() { Title = "FkeyFid", Fid = "FkeyFid", MaxLen = 30, Cols = "4,4", Required = true }' />
                     <vc:xi-text dto='new() { Title = "標題欄位", Fid = "Heads", MaxLen = 100, Cols = "4,8", Required = true, TitleTip = "逗號分隔" }' />
                 </form>
             </div>

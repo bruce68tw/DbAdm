@@ -3,6 +3,8 @@ using Base.Services;
 using DbAdm.Enums;
 using DbAdm.Models;
 using HandlebarsDotNet;
+using Microsoft.AspNetCore.Routing.Template;
+using System.Runtime.CompilerServices;
 using System.Web;
 
 namespace DbAdm.Services
@@ -164,6 +166,7 @@ namespace DbAdm.Services
                            })
                            .OrderBy(a => a.BoxId).ThenBy(a => a.Sort)
                            .ToList();
+                _crud.UiItems = uiItems;
             }
             else
             {
@@ -228,104 +231,20 @@ namespace DbAdm.Services
                 etables = [];
                 eitems = [];
 
-                //add main table
-                var tableId = _Str.NewId();
-                etables.Append(new CrudEtableDto()
-                {
-                    Id = tableId,
-                    //CrudId = _crud.Id,
-                    TableCode = _crud.ProgCode,
-                    TableName = _crud.ProgName,
-                    PkeyFid = "Id",
-                    //FkeyFid = e.FkeyFid!,
-                    //AutoIdLen = e.AutoIdLen ?? "",
-                    //HasCol4 = (e.Col4 == "1"),
-                    //HalfWidth = e.HalfWidth,
-                    //OrderBy = e.OrderBy,
-                });
-
-                //add main table eitems
-                var boxId = "0";
-                var types = new List<string>() { UiItemTypeEstr.Input, UiItemTypeEstr.Group, UiItemTypeEstr.Checks };
-                foreach (var uiItem in uiItems!
-                    .Where(a => a.BoxId == boxId)
-                    .Where(a => types.Contains(a.ItemType))
-                    .OrderBy(a => a.Sort)
-                    .ToList())
-                {
-                    //add child table
-                    var info = _Str.ToJson(uiItem.Info)!;
-                    //var tableId = _Str.NewId();
-                    eitems.Append(new CrudEitemDto()
-                    {
-                        EtableId = tableId,
-                        Fid = info["Fid"]!.ToString(),
-                        Name = info["Name"]!.ToString(),
-                        DataType = c.DataType,
-                        Required = (info["Required"]!.ToString() == "1"),
-                        HasCreate = true,
-                        HasUpdate = true,
-                        CheckType = e.CheckType,
-                        CheckData = e.CheckData!,
-                        InputType = info["InputType"]!.ToString(),
-                        ItemData = e.ItemData!,
-                        PosGroup = e.PosGroup!,
-                        LayoutCols = e.LayoutCols!,
-                        //PlaceHolder = e.PlaceHolder!,
-                        Sort = e.Sort,
-                        Width = e.Width,
-                    });
-
-                    //add child eitems
-                }
+                //add main table & eitems
+                UiItemToEtable(etables, eitems, uiItems!, _crud.ProgCode, _crud.ProgName, "0", "");
 
                 //add child tables & eitems
-
                 foreach (var uiItem in uiItems!
                     .Where(a => a.ItemType == UiItemTypeEstr.Table)
                     .OrderBy(a => a.Sort)
                     .ToList())
                 {
                     //add child table
-                    var table = _Str.ToJson(uiItem.Info)!;
-                    var tableId = _Str.NewId();
-                    etables.Append(new CrudEtableDto()
-                    {
-                        Id = tableId,
-                        //CrudId = e.CrudId,
-                        TableCode = table["Code"]!.ToString(),
-                        TableName = table["Name"]!.ToString(),
-                        PkeyFid = "Id",
-                        FkeyFid = "CrudId",
-                        //AutoIdLen = e.AutoIdLen ?? "",
-                        //HasCol4 = (e.Col4 == "1"),
-                        //HalfWidth = e.HalfWidth,
-                        //OrderBy = e.OrderBy,
-                    });
-
-                    //add child eitems
+                    var info = _Str.ToJson(uiItem.Info)!;
+                    UiItemToEtable(etables, eitems, uiItems!, info["Code"]!.ToString(), 
+                        info["Name"]!.ToString(), uiItem.BoxId, info["FkeyFid"]!.ToString());
                 }
-                (from e in db.CrudEtable
-                           join t in db.Table on e.TableId equals t.Id
-                           where e.CrudId == crudId
-                           select new CrudEtableDto()
-                           {
-                               Id = e.Id,
-                               CrudId = e.CrudId,
-                               TableCode = t.Code,
-                               TableName = t.Name,
-                               PkeyFid = e.PkeyFid,
-                               FkeyFid = e.FkeyFid!,
-                               AutoIdLen = e.AutoIdLen ?? "",
-                               HasCol4 = (e.Col4 == "1"),
-                               HalfWidth = e.HalfWidth,
-                               OrderBy = e.OrderBy,
-                           })
-                            .ToList();
-
-                #endregion
-
-                #region uiItems -> eitems
                 #endregion
 
                 #region uiItems 在 Edit View 多了 GroupText、Checks、Row Col容器(放多個child)
@@ -647,10 +566,97 @@ namespace DbAdm.Services
             #endregion
 
         lab_error:
-            return "GenCrudSvc.cs SetCrudDtoA() error: " + error;
+            return "GenCrudSvc.cs SetCrudDto() error: " + error;
         }
 
-        public async Task<string> GenFilesA()
+        //uiItem to etable & eitem
+        private void UiItemToEtable(List<CrudEtableDto> etables, List<CrudEitemDto> eitems, List<CrudUiItemDto> uiItems, 
+            string tableCode, string tableName, string boxId, string fkeyFid)
+        {
+            var tableId = _Str.NewId();
+            etables.Append(new CrudEtableDto()
+            {
+                Id = tableId,
+                //CrudId = _crud.Id,
+                TableCode = tableCode,
+                TableName = tableName,
+                PkeyFid = "Id",
+                FkeyFid = fkeyFid,
+                //AutoIdLen = e.AutoIdLen ?? "",
+                //HasCol4 = (e.Col4 == "1"),
+                //HalfWidth = e.HalfWidth,
+                //OrderBy = e.OrderBy,
+            });
+
+            //add main table eitems, 這裡不處理 Group type
+            //var boxId = "0";
+            var types = new List<string>() { UiItemTypeEstr.Input, UiItemTypeEstr.Checks };
+            foreach (var uiItem in uiItems!
+                .Where(a => a.BoxId == boxId)
+                .Where(a => types.Contains(a.ItemType))
+                .OrderBy(a => a.Sort)
+                .ToList())
+            {
+                //add child table
+                var info = _Str.ToJson(uiItem.Info)!;
+
+                //考慮不同的 inputType
+                if (uiItem.ItemType == UiItemTypeEstr.Checks)
+                {
+                    //Checks 的情形
+                    //LabelFids to input list
+                    var fids = info["LabelFids"]!.ToString().Replace(" ", "").Split(',');
+                    for (var i = 0; i < fids.Length; i += 2)
+                    {
+                        eitems.Append(new CrudEitemDto()
+                        {
+                            EtableId = tableId,
+                            Fid = fids[i + 1]!.ToString(),
+                            Name = fids[i]!.ToString(),
+                            //DataType = info["MaxLen"]!.ToString(),
+                            //Required = (info["Required"]!.ToString() == "1"),
+                            HasCreate = true,
+                            HasUpdate = true,
+                            //CheckType = e.CheckType,
+                            //CheckData = e.CheckData!,
+                            InputType = InputTypeEstr.Check,
+                            //ItemData = e.ItemData!,
+                            //PosGroup = e.PosGroup!,
+                            LayoutCols = info["Cols"]!.ToString(),
+                            //PlaceHolder = e.PlaceHolder!,
+                            Sort = uiItem.Sort,
+                            //Width = e.Width,
+                        });
+                    }
+                }
+                else
+                { 
+                    //一般 Input
+                    //var tableId = _Str.NewId();
+                    eitems.Append(new CrudEitemDto()
+                    {
+                        EtableId = tableId,
+                        Fid = info["Fid"]!.ToString(),
+                        Name = info["Name"]!.ToString(),
+                        DataType = info["MaxLen"]!.ToString(),
+                        Required = (info["Required"]!.ToString() == "1"),
+                        HasCreate = true,
+                        HasUpdate = true,
+                        //CheckType = e.CheckType,
+                        //CheckData = e.CheckData!,
+                        InputType = info["InputType"]!.ToString(),
+                        //ItemData = e.ItemData!,
+                        //PosGroup = e.PosGroup!,
+                        LayoutCols = info["Cols"]!.ToString(),
+                        //PlaceHolder = e.PlaceHolder!,
+                        Sort = uiItem.Sort,
+                        //Width = e.Width,
+                    });
+                }
+            }
+        }
+
+        private async Task<string> GenFilesA()
         {
             //generate crud files
             var error = "";
@@ -669,8 +675,31 @@ namespace DbAdm.Services
                 #endregion
 
                 //7.template string replace by Handlebars
-                var handleTpl = Handlebars.Compile(tplStr);
-                var result = HttpUtility.HtmlDecode(handleTpl(_crud));
+                //如果 _crud.IsUi, 則EditView 則使用巢狀結構來建立
+                var result = "";
+                if (_crud.IsUi && (i == EditViewIdx * 3))
+                {
+                    //在模板中使用 ifEq
+                    Handlebars.RegisterHelper("ifEq", (writer, context, args) =>
+                    {
+                        var left = args[0]?.ToString();
+                        var right = args[1]?.ToString();
+                        if (left == right)
+                            writer.WriteSafeString(args[2]);
+                        else if (args.Length > 3)
+                            writer.WriteSafeString(args[3]);
+                    });
+
+                    //
+                    Handlebars.RegisterTemplate("UiBox", noteTemplate); //註冊UiBox(recursive node)
+
+                    result = GetUiEditView();
+                }
+                else
+                {
+                    var handleTpl = Handlebars.Compile(tplStr);
+                    result = HttpUtility.HtmlDecode(handleTpl(_crud));
+                }
 
                 #region 8.rename existed target file if need
                 var tableCode = _crud.ProgCode;
@@ -692,6 +721,15 @@ namespace DbAdm.Services
         lab_error:
             return "GenCrudSvc.cs GenCrudByDtoA() error: " + error;
             //return false;
+        }
+
+        //產生 edit view for Ui
+        private string GetUiEditView()
+        {
+            //讀取 uiItems
+            var result = "";
+            var uiItems = _crud.UiItems!;
+
         }
 
         #region get item string
