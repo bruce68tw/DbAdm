@@ -2,7 +2,9 @@
 {{#UiItems}}
   {{#ifEq ItemType="B"}}
     {{!-- EditViewUiBox.txt --}}
-    {{> UiBox this}}
+    {{#each Childs}}
+        {{> UiBox this}}
+    {{/each}
   {{else}}
     {{#ifEq ItemType="CS"}}
     {{else}}

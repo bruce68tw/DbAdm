@@ -3,8 +3,6 @@ using Base.Services;
 using DbAdm.Enums;
 using DbAdm.Models;
 using HandlebarsDotNet;
-using Microsoft.AspNetCore.Routing.Template;
-using System.Runtime.CompilerServices;
 using System.Web;
 
 namespace DbAdm.Services
@@ -691,7 +689,7 @@ namespace DbAdm.Services
                     });
 
                     //
-                    Handlebars.RegisterTemplate("UiBox", noteTemplate); //註冊UiBox(recursive node)
+                    //Handlebars.RegisterTemplate("UiBox", noteTemplate); //註冊UiBox(recursive node)
 
                     result = GetUiEditView();
                 }
@@ -723,12 +721,39 @@ namespace DbAdm.Services
             //return false;
         }
 
-        //產生 edit view for Ui
-        private string GetUiEditView()
+        //(recursive)產生 edit view(only main table) for Ui
+        private string GetUiEditView(string boxId, int childNo)
         {
             //讀取 uiItems
             var result = "";
             var uiItems = _crud.UiItems!;
+
+            //skip Table
+            foreach (var uiItem in uiItems!
+                .Where(a => a.BoxId == boxId && a.ChildNo == childNo)
+                .Where(a => a.ItemType != UiItemTypeEstr.Table)
+                .OrderBy(a => a.Sort)
+                .ToList())
+            {
+                var itemStr = "";
+                switch (uiItem.ItemType)
+                {
+                    case UiItemTypeEstr.RowBox:
+                        itemStr = GetUiEditView(uiItem.id);
+                        break;
+                    case UiItemTypeEstr.Checks:
+                        break;
+                    case UiItemTypeEstr.Group:
+                        break;
+                    default:
+                        break;
+                }
+
+                //add child table
+                var info = _Str.ToJson(uiItem.Info)!;
+                UiItemToEtable(etables, eitems, uiItems!, info["Code"]!.ToString(),
+                    info["Name"]!.ToString(), uiItem.BoxId, info["FkeyFid"]!.ToString());
+            }
 
         }
 
