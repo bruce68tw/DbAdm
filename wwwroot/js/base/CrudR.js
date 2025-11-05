@@ -1,7 +1,7 @@
 ﻿/**
  * 改為非靜態類別, 控制 CRUD 查詢(含編輯)畫面
  * 說明:
- *   允許不同編輯畫面共用查詢畫面, 參考 MyCrud
+ *   允許不同編輯畫面共用查詢畫面, 參考 Crud/Read.cshtml
  *   前端使用固定 filter: #divRead、#formRead、#formRead2、#tableRead
  *   後端固定呼叫 GetPage action
  * 寫入 _me 屬性:

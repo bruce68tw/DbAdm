@@ -122,8 +122,8 @@
   <ItemGroup>
     <None Include="Views\Column\Edit.cshtml" />
     <None Include="Views\Column\Read.cshtml" />
-    <None Include="Views\MyCrud\Edit.cshtml" />
-    <None Include="Views\MyCrud\Read.cshtml" />
+    <None Include="Views\Crud\Edit.cshtml" />
+    <None Include="Views\Crud\Read.cshtml" />
     <None Include="Views\Project\Edit.cshtml" />
     <None Include="Views\Project\Read.cshtml" />
     <None Include="wwwroot\css\icomoon.css" />

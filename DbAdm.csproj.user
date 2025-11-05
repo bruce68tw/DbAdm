@@ -5,10 +5,10 @@
     <NameOfLastUsedPublishProfile>D:\_project\DbAdm\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Resources\Views\MyCrud\Edit.resx">
+    <EmbeddedResource Update="Resources\Views\Crud\Edit.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Views\MyCrud\Edit.zh-TW.resx">
+    <EmbeddedResource Update="Resources\Views\Crud\Edit.zh-TW.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\XpUser\Read.resx">

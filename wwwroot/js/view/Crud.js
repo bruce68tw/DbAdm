@@ -15,7 +15,7 @@
 
 /** @type {Me} */
 var _me = {
-    //#region for MyCrud
+    //#region for Crud
     init: function () {
 		//datatable config
 		var config = {

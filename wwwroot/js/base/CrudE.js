@@ -565,7 +565,7 @@ class CrudE {
     /**
      * get one updated row for New/Updated
      * 只讀取有異動的欄位
-     * called by: EditOne.js, DbAdm MyCrud.js(使用變形的 form !!)
+     * called by: EditOne.js, DbAdm Crud.js(使用變形的 form !!)
      * param kid {string} key fid
      * param fidTypes {id-value array}
      * param box {object} form object

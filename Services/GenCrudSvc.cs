@@ -56,7 +56,7 @@ namespace DbAdm.Services
         {
             //check input
             if (!_Str.CheckKey(crudId))
-                return $"MyCrudSvc.cs GenCrudA() only accept alphabet and numeric: ({crudId})";
+                return $"GenCrudSvc.cs GenCrudA() only accept alphabet and numeric: ({crudId})";
 
             var error = SetCrudDto(crudId);
             if (error == "") 

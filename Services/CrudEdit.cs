@@ -3,9 +3,9 @@ using Base.Services;
 
 namespace DbAdm.Services
 {
-    public class MyCrudEdit : BaseEditSvc
+    public class CrudEdit : BaseEditSvc
     {
-        public MyCrudEdit(string ctrl) : base(ctrl) { }
+        public CrudEdit(string ctrl) : base(ctrl) { }
 
         override public EditDto GetDto() {
             //4 tables

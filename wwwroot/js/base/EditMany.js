@@ -243,7 +243,7 @@ class EditMany {
      * singleFormLoadRow -> loadRowByBox
      * box 與 rsb(rowsBox) 有些不同, 所以用不同名 !!
      * load one row, also set field old value,
-     * ex: DbAdm/MyCrud.js Etable is a single form but has multiple rows property !!
+     * ex: DbAdm/Crud.js Etable is a single form but has multiple rows property !!
      * param rowBox {object}
      * param row {json}
      * param index {int} 資料序號 base 0
@@ -432,7 +432,7 @@ class EditMany {
      */
 
     /**
-     * public for myCrud.js
+     * public for Crud.js
      * (need this.rowFilter !!) get updated rows(not include _childs, _deletes)
      * will also set fkeyFid
      * param rowsBox {object} (optional) rows box, default this.rowsBox
@@ -501,7 +501,7 @@ class EditMany {
     /** 
      * getDeletedStr -> getDeletes
      * get deleted rows key list字串 for 傳回後端
-     * public for MyCrud.js
+     * public for Crud.js
      * return {string} null for empty.
      */ 
     getDeletes() {
@@ -656,7 +656,7 @@ class EditMany {
     /**
      * set this.newId、PKey、_IsNew by row box
      * boxSetNewId -> setNewIdByBox
-     * public for MyCrud.js, Flow.js
+     * public for Crud.js, Flow.js
      * param box {object} row box
      * param newId {int} 外部傳入newId if any, 如果有值則不會累加 this.newId
      * return {int} new key index

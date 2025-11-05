@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DbAdm.Controllers
 {
     //[Permission(Prog = _Prog.Course)]
-    public class MyCrudController : BaseCtrl
+    public class CrudController : BaseCtrl
     {
         #region Read View
         public async Task<ActionResult> Read()
@@ -30,15 +30,15 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new  MyCrudRead().GetPageA(Ctrl, dt));
+            return JsonToCnt(await new  CrudRead().GetPageA(Ctrl, dt));
         }
         #endregion
 
         private BaseEditSvc EditSvc(int editNo)
         {
             return (editNo == 0)
-                ? new MyCrudEdit(Ctrl)
-                : new MyCrudUiEdit(Ctrl);
+                ? new CrudEdit(Ctrl)
+                : new CrudUiEdit(Ctrl);
         }
 
         #region Edit View   
