@@ -20,23 +20,29 @@ var _me = {
 		//datatable config
 		var config = {
 			columns: [
-                { data: '_F1' },
+                //{ data: '_F1' },
                 { data: 'ProjectCode' },
 				{ data: 'ProgCode' },
                 { data: 'ProgName' },
                 { data: 'IsUi' },
+                { data: '_Fun' },
                 { data: 'Created' },
                 { data: '_CrudFun' },
                 { data: 'Status' },
 			],
-			columnDefs: [
+            columnDefs: [
+                /*
 				{ targets: [0], render: function (data, type, full, meta) {
                     return _me.crudR.dtCheck0(full.Id);
 				}},
-				{ targets: [4], render: function (data, type, full, meta) {
+                */
+				{ targets: [3], render: function (data, type, full, meta) {
                     return (data == 1)
-                        ? `<button type="button" class="btn btn-link" data-onclick="_me.onOpenEdit1" data-args="${full.Id}">拖拉編輯</button>`
+                        ? _me.crudR.dtBtn(full.Id, '拖拉編輯', '_me.onOpenEdit1')
                         : '';
+				}},
+				{ targets: [4], render: function (data, type, full, meta) {
+                    return _me.crudR.dtBtn(full.Id, '產生CRUD', '_me.onGenCrud');
 				}},
                 { targets: [6], render: function (data, type, full, meta) {
                     return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, false);
@@ -358,14 +364,17 @@ var _me = {
      * onclick generate crud
      * (如果在VS下產生DbAdm的CRUD會reload !!)
      */ 
-    onGenCrud: async function () {
+    onGenCrud: async function (id) {
+        /*
         var keys = _me.getCheckedTables();
         if (keys.length === 0)
             return;
-
-        await _ajax.getStrA('GenCrud', { keys: keys.join(',') }, function (error) {
-            _tool.msg(_str.isEmpty(error) ? '執行成功' : error);
-        });
+        */
+        if (await _tool.ansA('是否確定產生這個功能的CRUD程式?')) {
+            await _ajax.getStrA('GenCrud', { id: id }, function (error) {
+                _tool.msg(_str.isEmpty(error) ? '執行成功' : error);
+            });
+        }
     },
 
     //get checked table id array
@@ -495,7 +504,6 @@ var _me = {
             //data 屬性不區分大小寫 !!
             rows[idx] = {
                 //CrudId: crudId, //mapId
-                //!!
                 ColumnId: tr.data('id'),
                 Fid: tr.data('fid'),    //for Ritem
                 //Code: tr.data('code'),

@@ -15,7 +15,7 @@ DbAdm 是一套资料库文件系统，主画面如下：
 - [专案维护](_md/zh-CN/project.md)
 - [资料表维护](_md/zh-CN/table.md)
 - [栏位维护](_md/zh-CN/column.md)
-- [CRUD维护](_md/zh-CN/myCrud.md)
+- [CRUD维护](_md/zh-CN/Crud.md)
 
 ### 3.下载 & 安装
 执行 DbAdm 需要从 GitHub 下载以下两个 Repo 档案，解压缩到本机目录，并且确保 DbAdm 可以正确参照 BaseWeb 专案：

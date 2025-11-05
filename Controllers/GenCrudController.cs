@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DbAdm.Controllers
 {
     //[Permission(Prog = _Prog.Course)]
-    public class CrudController : BaseCtrl
+    public class GenCrudController : BaseCtrl
     {
         #region Read View
         public async Task<ActionResult> Read()
@@ -30,14 +30,14 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<ContentResult> GetPage(DtDto dt)
         {
-            return JsonToCnt(await new  CrudRead().GetPageA(Ctrl, dt));
+            return JsonToCnt(await new  GenCrudRead().GetPageA(Ctrl, dt));
         }
         #endregion
 
         private BaseEditSvc EditSvc(int editNo)
         {
             return (editNo == 0)
-                ? new CrudEdit(Ctrl)
+                ? new GenCrudEdit(Ctrl)
                 : new CrudUiEdit(Ctrl);
         }
 
@@ -60,7 +60,7 @@ namespace DbAdm.Controllers
             return Json(await EditSvc(0).DeleteA(key));
         }
 
-        //myCrud才有新增
+        //Crud才有新增
         public async Task<JsonResult> Create(string json, int editNo = 0)
         {
             return Json(await EditSvc(0).CreateA(_Str.ToJson(json)!));
@@ -71,7 +71,7 @@ namespace DbAdm.Controllers
         }
         #endregion
 
-        #region others for MyCrud
+        #region others for Crud
         /// <summary>
         /// generate CRUD
         /// </summary>

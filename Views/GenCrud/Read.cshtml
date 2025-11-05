@@ -1,4 +1,4 @@
-<script nonce="@_Fun.Nonce" src="~/js/view/Crud.js"></script>
+<script nonce="@_Fun.Nonce" src="~/js/view/GenCrud.js"></script>
 <script nonce="@_Fun.Nonce" src="~/js/view/UiView.js"></script>
 <script nonce="@_Fun.Nonce" src="~/js/view/UiMany.js"></script>
 <script nonce="@_Fun.Nonce">
@@ -38,18 +38,19 @@
         <!-- other functions -->
         <div class="x-btns-box mt-1">
             <vc:xg-create/>
-            <button type="button" class="btn btn-secondary" data-onclick="_me.onGenCrud">產生CRUD</button>
+            @*<button type="button" class="btn btn-secondary" data-onclick="_me.onGenCrud">產生CRUD</button>*@
         </div>
 
         <!-- result list -->
         <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
                 <tr>
-                    <th class="x-center x-w60">選取</th>
+                    @*<th class="x-center x-w60">選取</th>*@
                     <th>專案</th>
                     <th>功能代碼</th>
                     <th>功能名稱</th>
                     <th class="x-center x-w100">拖拉編輯</th>
+                    <th class="x-center x-w120">功能</th>
                     <th>建檔時間</th>
                     <th class="x-w100">維護</th>
                     <th class="x-center x-w100">資料狀態</th>

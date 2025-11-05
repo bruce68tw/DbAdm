@@ -15,7 +15,7 @@ After entering the main screen, there are 4 function items on the left menu:
 - [Project Maintenance](_md/en-US/project.md)
 - [Data table maintenance](_md/en-US/table.md)
 - [Field Maintenance](_md/en-US/column.md)
-- [CRUD Maintenance](_md/en-US/myCrud.md)
+- [CRUD Maintenance](_md/en-US/Crud.md)
 
 ### 3. Download & Installation
 To execute DbAdm, you need to download the following two Repo files from GitHub, extract them to the local directory, and ensure that DbAdm can correctly reference the BaseWeb project:

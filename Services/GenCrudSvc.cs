@@ -1,10 +1,7 @@
 ﻿using Base.Enums;
 using Base.Services;
-using BaseApi.Services;
-using BaseWeb.Services;
 using DbAdm.Enums;
 using DbAdm.Models;
-using DocumentFormat.OpenXml.Wordprocessing;
 using HandlebarsDotNet;
 using System.Web;
 
@@ -114,6 +111,9 @@ namespace DbAdm.Services
                 goto lab_error;
             }
 
+            //set _crud
+            _crud = crud;
+
             //query item
             var qitems = (from q in db.CrudQitem
                           join c in db.Column on q.ColumnId equals c.Id
@@ -221,9 +221,6 @@ namespace DbAdm.Services
 
             db.Dispose();
             #endregion
-
-            //set _crud
-            _crud = crud;
 
             //處理資料 for isUi=true
             if (_crud.IsUi)
@@ -638,9 +635,9 @@ namespace DbAdm.Services
                     {
                         EtableId = tableId,
                         Fid = info["Fid"]!.ToString(),
-                        Name = info["Name"]!.ToString(),
+                        Name = info["Title"]!.ToString(),
                         DataType = info["MaxLen"]!.ToString(),
-                        Required = (info["Required"]!.ToString() == "1"),
+                        Required = _Var.ToBool(info["Required"]),
                         HasCreate = true,
                         HasUpdate = true,
                         //CheckType = e.CheckType,

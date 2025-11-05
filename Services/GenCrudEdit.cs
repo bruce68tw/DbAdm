@@ -3,9 +3,9 @@ using Base.Services;
 
 namespace DbAdm.Services
 {
-    public class CrudEdit : BaseEditSvc
+    public class GenCrudEdit : BaseEditSvc
     {
-        public CrudEdit(string ctrl) : base(ctrl) { }
+        public GenCrudEdit(string ctrl) : base(ctrl) { }
 
         override public EditDto GetDto() {
             //4 tables
@@ -38,12 +38,10 @@ namespace DbAdm.Services
                     {
                         //all child readSql use 'in'
                         ReadSql = @"
-select a.*,
-	c.Fid, c.Name, c.DataType
-from dbo.CrudQitem a
-join dbo.[Column] c on a.ColumnId=c.Id
-where a.CrudId=@Id
-order by a.Sort
+select *
+from dbo.CrudQitem
+where CrudId=@Id
+order by Sort
 ",
                         Table = "dbo.CrudQitem",                        
                         PkeyFid = "Id",
@@ -53,7 +51,10 @@ order by a.Sort
                         Items = [
                             new() { Fid = "Id" },
                             new() { Fid = "CrudId" },
-                            new() { Fid = "ColumnId", Required = true },
+                            new() { Fid = "ColumnId" },
+                            new() { Fid = "FId" },
+                            new() { Fid = "Name" },
+                            new() { Fid = "DataType" },
                             new() { Fid = "TableAs" },
                             new() { Fid = "InputType", Required = true },
                             new() { Fid = "ItemData" },
@@ -115,12 +116,10 @@ order by a.Sort
                             new EditDto
                             {
                                 ReadSql = @"
-select a.*,
-	c.Fid, c.Name, c.DataType
-from dbo.CrudEitem a
-join dbo.[Column] c on a.ColumnId=c.Id
-where a.EtableId in ({0})
-order by a.Sort
+select *
+from dbo.CrudEitem
+where EtableId in ({0})
+order by Sort
 ",
                                 Table = "dbo.CrudEitem",
                                 PkeyFid = "Id",
@@ -130,7 +129,10 @@ order by a.Sort
                                 Items = [
                                     new() { Fid = "Id" },
                                     new() { Fid = "EtableId" },
-                                    new() { Fid = "ColumnId", Required = true },
+                                    new() { Fid = "ColumnId" },
+                                    new() { Fid = "FId" },
+                                    new() { Fid = "Name" },
+                                    new() { Fid = "DataType" },
                                     new() { Fid = "InputType", Required = true },
                                     new() { Fid = "ItemData" },
                                     new() { Fid = "Required" },

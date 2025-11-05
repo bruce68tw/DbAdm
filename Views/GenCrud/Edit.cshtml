@@ -185,9 +185,9 @@
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "CrudId" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "ColumnId" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Sort" })
-        <td>{{Fid}}</td>
-        <td>{{Name}}</td>
-        <td class="x-w120">{{DataType}}</td>
+        <td class="x-w120">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Fid" })</td>
+        <td class="x-w120">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Name" })</td>
+        <td class="x-w140">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "DataType" })</td>
         <td class="x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "TableAs" })</td>
         <td>@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "InputType", Rows = ViewBag.InputTypesQ, AddEmpty = false, Value = "T"})</td>
         <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "ItemData" })</td>
@@ -253,7 +253,9 @@
             <table class="table x-table x-no-hline" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>欄位/欄位名稱<br>資料型態</th>
+                        <th>欄位Id</th>
+                        <th>欄位名稱</th>
+                        <th>資料型態</th>
                         <th>欄位種類</th>
                         @await Component.InvokeAsync("XgTh", new XgThDto { Title = "欄位資料", Tip = "下拉欄位/Radio:資料來源, checkbox:label, 唯讀:fid" })
                         <th>必填</th>
@@ -283,7 +285,9 @@
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id", Value = "{{Id}}" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "ColumnId", Value = "{{ColumnId}}" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Sort", Value = "{{Sort}}" })
-        <td>{{Fid}}/{{Name}}<br>{{DataType}}</td>
+        <td class="x-w120">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Fid" })</td>
+        <td class="x-w120">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Name" })</td>
+        <td class="x-w140">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "DataType" })</td>
         <td class="x-w120">@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, AddEmpty = false, Value = "T" })</td>
         <td class="x-w100">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "ItemData" })</td>
         <td class="x-center x-w50">@await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "Required" })</td>

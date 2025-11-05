@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
 {
-    public class CrudRead
+    public class GenCrudRead
     {
         private readonly ReadDto _readDto = new()
         {

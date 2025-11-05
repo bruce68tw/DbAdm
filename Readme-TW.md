@@ -15,7 +15,7 @@ DbAdm 是一套資料庫文件系統，主畫面如下：
 - [專案維護](_md/zh-TW/project.md)
 - [資料表維護](_md/zh-TW/table.md)
 - [欄位維護](_md/zh-TW/column.md)
-- [CRUD維護](_md/zh-TW/myCrud.md)
+- [CRUD維護](_md/zh-TW/Crud.md)
 
 ### 3.下載 & 安裝
 執行 DbAdm 需要從 GitHub 下載以下兩個 Repo 檔案，解壓縮到本機目錄，並且確保 DbAdm 可以正確參照 BaseWeb 專案：

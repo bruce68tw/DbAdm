@@ -70,6 +70,18 @@ class CrudR {
     }
 
     /**
+     * button html string
+     * param id {string}
+     * param label {string}
+     * param fnOnclick {string}
+     * param fnArgs {string} 多個時逗號分隔
+     * return button html string
+     */ 
+    dtBtn(id, label, fnOnclick) {
+        return `<button type="button" class="btn btn-outline-secondary btn-sm" data-onclick="${fnOnclick}" data-args="${id}">${label}</button>`;
+    }
+
+    /**
      * checkbox for multiple select
      * param value {string} [1] checkbox value
      * param editable {bool} [true]
