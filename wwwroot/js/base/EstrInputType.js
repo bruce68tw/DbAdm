@@ -1,4 +1,4 @@
-﻿//輸入欄位種類, 對應 Base EstrInputType 
+﻿//輸入欄位種類, 對應 Base EstrInputType.js
 var EstrInputType = {
     Check: "check",
     Date: "date",

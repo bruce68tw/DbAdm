@@ -122,7 +122,7 @@ namespace DbAdm.Controllers
                 InputTypeEstr.Html => _Input.XiHtml(_Model.Copy<XiBaseDto, XiHtmlDto>(data)),
                 InputTypeEstr.Integer => _Input.XiInt(_Model.Copy<XiBaseDto, XiIntDto>(data)),
                 InputTypeEstr.Radio => _Input.XiRadio(_Model.Copy<XiBaseDto, XiRadioDto>(data)),
-                InputTypeEstr.ReadOnly => _Input.XiRead(_Model.Copy<XiBaseDto, XiReadDto>(data)),
+                InputTypeEstr.Read => _Input.XiRead(_Model.Copy<XiBaseDto, XiReadDto>(data)),
                 InputTypeEstr.Select => _Input.XiSelect(_Model.Copy<XiBaseDto, XiSelectDto>(data)),
                 InputTypeEstr.Textarea => _Input.XiTextarea(_Model.Copy<XiBaseDto, XiTextareaDto>(data)),
                 _ => _Input.XiText(_Model.Copy<XiBaseDto, XiTextDto>(data)),

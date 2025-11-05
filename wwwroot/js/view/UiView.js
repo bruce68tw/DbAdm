@@ -681,6 +681,7 @@ class UiView {
 	}
 	*/
 
+	//add new RowBox
 	_newRB(id, info) {
 		//加上py-2上下空間, 才能drop, dragOver時e.target為本身item !!
 		//let clsCol = this.ClsRowCol;

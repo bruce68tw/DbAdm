@@ -1,7 +1,10 @@
 ﻿using Base.Enums;
 using Base.Services;
+using BaseApi.Services;
+using BaseWeb.Services;
 using DbAdm.Enums;
 using DbAdm.Models;
+using DocumentFormat.OpenXml.Wordprocessing;
 using HandlebarsDotNet;
 using System.Web;
 
@@ -691,7 +694,7 @@ namespace DbAdm.Services
                     //
                     //Handlebars.RegisterTemplate("UiBox", noteTemplate); //註冊UiBox(recursive node)
 
-                    result = GetUiEditView();
+                    result = GetUiEditView("0", 0);
                 }
                 else
                 {
@@ -717,18 +720,16 @@ namespace DbAdm.Services
             return "";
 
         lab_error:
-            return "GenCrudSvc.cs GenCrudByDtoA() error: " + error;
+            return "GenCrudSvc.cs GenFilesA() error: " + error;
             //return false;
         }
 
         //(recursive)產生 edit view(only main table) for Ui
         private string GetUiEditView(string boxId, int childNo)
         {
-            //讀取 uiItems
+            //skip Table
             var result = "";
             var uiItems = _crud.UiItems!;
-
-            //skip Table
             foreach (var uiItem in uiItems!
                 .Where(a => a.BoxId == boxId && a.ChildNo == childNo)
                 .Where(a => a.ItemType != UiItemTypeEstr.Table)
@@ -736,25 +737,53 @@ namespace DbAdm.Services
                 .ToList())
             {
                 var itemStr = "";
+                var info = _Str.ToJson(uiItem.Info)!;
+                var colStr = "";
+                string[]? cols = null;
                 switch (uiItem.ItemType)
                 {
                     case UiItemTypeEstr.RowBox:
-                        itemStr = GetUiEditView(uiItem.id);
+                        //var colLen = int.Parse(info["ColLen"]!.ToString());
+                        colStr = "";
+                        cols = info["RowType"]!.ToString().Split(',');  //欄位格數list string
+                        for (var i=0; i<cols.Length; i++)
+                        {
+                            //recursive
+                            var itemStr2 = GetUiEditView(uiItem.Id, i);
+                            colStr += $"<div class='col-md-{cols[i]}'>{itemStr2}</div>";
+                        }
+                        itemStr += $"<div class='row'>{colStr}</div>";
                         break;
+
                     case UiItemTypeEstr.Checks:
+                        var fids = info["LabelFids"]!.ToString().Split(',');
+                        colStr = "";
+                        cols = info["Cols"]!.ToString().Split(',');
+                        for (var i = 0; i < fids.Length; i += 2)
+                        {
+                            //escape: {{ 和 \"
+                            colStr += $"<vc:xi-check dto='new() {{ Fid = \"{fids[i + 1]}\", Label = \"{fids[i]}\" }}'/>";
+                        }
+
+                        var cls = (info["IsHori"]!.ToString() == "1") ? "x-hbox" : "x-vbox";
+                        itemStr += $@"
+< div class= 'col-md-{cols[0]} x-label'>{info["Title"]!.ToString()}</ div >
+< div class= 'col-md-{cols[1]} x-input {cls}' >
+	{colStr}
+</ div >
+";
                         break;
                     case UiItemTypeEstr.Group:
                         break;
                     default:
+                        //input
+                        var itemDto = new CrudQEitemDto();
+                        _Json.CopyToModel(info, itemDto);
+                        itemStr += ViewItemStr(null, itemDto);
                         break;
                 }
-
-                //add child table
-                var info = _Str.ToJson(uiItem.Info)!;
-                UiItemToEtable(etables, eitems, uiItems!, info["Code"]!.ToString(),
-                    info["Name"]!.ToString(), uiItem.BoxId, info["FkeyFid"]!.ToString());
             }
-
+            return result;
         }
 
         #region get item string
@@ -880,11 +909,11 @@ namespace DbAdm.Services
         /// <summary>
         /// get view item(eitem/qitem) string
         /// </summary>
-        /// <param name="table"></param>
+        /// <param name="table">for Sort欄位 only</param>
         /// <param name="item"></param>
         /// <param name="isMany"></param>
         /// <returns></returns>
-        private string ViewItemStr(CrudEtableDto table, CrudQEitemDto item, bool isMany = false)
+        private string ViewItemStr(CrudEtableDto? table, CrudQEitemDto item, bool isMany = false)
         {
             var center = false;
             var name = isMany ? "" : item.Name;
@@ -894,7 +923,7 @@ namespace DbAdm.Services
                 case InputTypeEstr.Hide:
                 case InputTypeEstr.Sort:
                     //no need consider in table or not
-                    AddHideStr(table, item);
+                    AddHideStr(table!, item);
                     return "";
 
                 case InputTypeEstr.Text:
@@ -1023,7 +1052,7 @@ namespace DbAdm.Services
                         CompEnd();
                     break;
 
-                case InputTypeEstr.ReadOnly:
+                case InputTypeEstr.Read:
                     str = CompStart("XiRead") +
                         ColsToStr(
                             ViewTitle(name),

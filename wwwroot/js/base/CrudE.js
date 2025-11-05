@@ -47,7 +47,7 @@ class CrudE {
                 if (edits[0] instanceof DtoEdit) {
                     //如果傳入 DtoEdit[], 表示有2個以上的編輯畫面
                     this._multiEdit = true;
-                    this._edits = edits;
+                    //this._edits = edits;
                     //this.setEditNo(0);
                     for (var i = 0; i < edits.length; i++) {
                         var dto = edits[i];
@@ -78,6 +78,7 @@ class CrudE {
                 */
             }
 
+            this._edits = edits;
             /*
             this._edit0 = edit0;
             if (edit0.eform != null)
@@ -116,12 +117,13 @@ class CrudE {
 
     //set _edit0、Childs and initForm
     _initEdit0(edits) {
-        const childs = _edit.Childs;
         var edit0 = edits[0];
         if (edit0 == null) {
             edit0 = new EditOne();
             edits[0] = edit0;   //寫回
         }
+
+        const childs = _edit.Childs;
         edit0[childs] = [];
         for (var i = 1; i < edits.length; i++)
             edit0[childs][i - 1] = edits[i];

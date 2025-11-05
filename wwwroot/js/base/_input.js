@@ -39,7 +39,7 @@ var _input = {
                 return _ifile.getO(obj);
             case EstrInputType.Html:
                 return _ihtml.getO(obj);
-            case EstrInputType.ReadOnly:
+            case EstrInputType.Read:
                 return _iread.getO(obj);
             case EstrInputType.Link:
                 return _ilink.getO(obj);
