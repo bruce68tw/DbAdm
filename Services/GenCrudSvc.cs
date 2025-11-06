@@ -562,6 +562,7 @@ namespace DbAdm.Services
                 }
             }
             #endregion
+            return "";
 
         lab_error:
             return "GenCrudSvc.cs SetCrudDto() error: " + error;
@@ -572,7 +573,7 @@ namespace DbAdm.Services
             string tableCode, string tableName, string boxId, string fkeyFid)
         {
             var tableId = _Str.NewId();
-            etables.Append(new CrudEtableDto()
+            etables.Add(new CrudEtableDto()
             {
                 Id = tableId,
                 //CrudId = _crud.Id,
@@ -606,7 +607,7 @@ namespace DbAdm.Services
                     var fids = info["LabelFids"]!.ToString().Replace(" ", "").Split(',');
                     for (var i = 0; i < fids.Length; i += 2)
                     {
-                        eitems.Append(new CrudEitemDto()
+                        eitems.Add(new CrudEitemDto()
                         {
                             EtableId = tableId,
                             Fid = fids[i + 1]!.ToString(),
@@ -631,7 +632,7 @@ namespace DbAdm.Services
                 { 
                     //一般 Input
                     //var tableId = _Str.NewId();
-                    eitems.Append(new CrudEitemDto()
+                    eitems.Add(new CrudEitemDto()
                     {
                         EtableId = tableId,
                         Fid = info["Fid"]!.ToString(),
@@ -660,6 +661,7 @@ namespace DbAdm.Services
             var error = "";
             var isManyEdit = (_crud.ChildTables != null && _crud.ChildTables.Count > 1);
             var projectPath = _Str.AddDirSep(_crud.ProjectPath);
+            var eviewPos = (EditViewIdx - 1) * 3;
             for (var i = 0; i < CrudFiles.Length; i += 3)
             {
                 #region 6.read template file to string
@@ -675,8 +677,9 @@ namespace DbAdm.Services
                 //7.template string replace by Handlebars
                 //如果 _crud.IsUi, 則EditView 則使用巢狀結構來建立
                 var result = "";
-                if (_crud.IsUi && (i == EditViewIdx * 3))
+                if (_crud.IsUi && i == eviewPos)
                 {
+                    /*
                     //在模板中使用 ifEq
                     Handlebars.RegisterHelper("ifEq", (writer, context, args) =>
                     {
@@ -687,11 +690,12 @@ namespace DbAdm.Services
                         else if (args.Length > 3)
                             writer.WriteSafeString(args[3]);
                     });
-
+                    */
                     //
                     //Handlebars.RegisterTemplate("UiBox", noteTemplate); //註冊UiBox(recursive node)
 
                     result = GetUiEditView("0", 0);
+                    _crud.MainTable.CustEview = result;
                 }
                 else
                 {
@@ -721,7 +725,9 @@ namespace DbAdm.Services
             //return false;
         }
 
-        //(recursive)產生 edit view(only main table) for Ui
+        /**
+         * (recursive)產生 edit view(only main table) for Ui
+         */ 
         private string GetUiEditView(string boxId, int childNo)
         {
             //skip Table
@@ -747,9 +753,9 @@ namespace DbAdm.Services
                         {
                             //recursive
                             var itemStr2 = GetUiEditView(uiItem.Id, i);
-                            colStr += $"<div class='col-md-{cols[i]}'>{itemStr2}</div>";
+                            colStr += $"<div class='col-md-{cols[i]}'>{itemStr2}</div>" + _Fun.TextCarrier;
                         }
-                        itemStr += $"<div class='row'>{colStr}</div>";
+                        itemStr += $"<div class='row'>{colStr}</div>" + _Fun.TextCarrier;
                         break;
 
                     case UiItemTypeEstr.Checks:
@@ -764,11 +770,11 @@ namespace DbAdm.Services
 
                         var cls = (info["IsHori"]!.ToString() == "1") ? "x-hbox" : "x-vbox";
                         itemStr += $@"
-< div class= 'col-md-{cols[0]} x-label'>{info["Title"]!.ToString()}</ div >
-< div class= 'col-md-{cols[1]} x-input {cls}' >
+<div class= 'col-md-{cols[0]} x-label'>{info["Title"]!.ToString()}</div>
+<div class= 'col-md-{cols[1]} x-input {cls}' >
 	{colStr}
-</ div >
-";
+</div>
+" + _Fun.TextCarrier;
                         break;
                     case UiItemTypeEstr.Group:
                         break;
@@ -776,9 +782,11 @@ namespace DbAdm.Services
                         //input
                         var itemDto = new CrudQEitemDto();
                         _Json.CopyToModel(info, itemDto);
-                        itemStr += ViewItemStr(null, itemDto);
+                        itemStr += ViewItemStr(null, itemDto) + _Fun.TextCarrier;
                         break;
                 }
+
+                result += itemStr;
             }
             return result;
         }

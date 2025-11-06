@@ -4,8 +4,7 @@
 {{/each}}
 {{#MainTable}}
   {{#if ../IsUi}}
-    {{!-- EditViewUiBox.txt --}}
-    {{> UiBox this}}
+    {{CustEview}}
   {{else}}
     {{#Eitems}}
       {{#if IsGroupStart}}
