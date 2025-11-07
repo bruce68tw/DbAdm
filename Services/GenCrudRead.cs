@@ -13,6 +13,7 @@ namespace DbAdm.Services
 select 
     c.Id, c.Status, c.ProgCode, c.ProgName, c.IsUi,
     p.Code as ProjectCode,
+    p.Name as ProjectName,
     c.Created
 from dbo.Crud c
 join dbo.Project p on p.Id=c.ProjectId

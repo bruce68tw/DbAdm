@@ -22,6 +22,7 @@ var _me = {
 			columns: [
                 //{ data: '_F1' },
                 { data: 'ProjectCode' },
+                { data: 'ProjectName' },
 				{ data: 'ProgCode' },
                 { data: 'ProgName' },
                 { data: 'IsUi' },
@@ -36,18 +37,18 @@ var _me = {
                     return _me.crudR.dtCheck0(full.Id);
 				}},
                 */
-				{ targets: [3], render: function (data, type, full, meta) {
+				{ targets: [4], render: function (data, type, full, meta) {
                     return (data == 1)
                         ? _me.crudR.dtBtn(full.Id, '拖拉編輯', '_me.onOpenEdit1')
                         : '';
 				}},
-				{ targets: [4], render: function (data, type, full, meta) {
+				{ targets: [5], render: function (data, type, full, meta) {
                     return _me.crudR.dtBtn(full.Id, '產生CRUD', '_me.onGenCrud');
 				}},
-                { targets: [6], render: function (data, type, full, meta) {
+                { targets: [7], render: function (data, type, full, meta) {
                     return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, false);
                 }},
-				{ targets: [7], render: function (data, type, full, meta) {
+				{ targets: [8], render: function (data, type, full, meta) {
                     return _me.crudR.dtStatusName(data);
 				}},
 			],
@@ -398,6 +399,13 @@ var _me = {
         //init master edit
         _me.resetEdits();
         //_me.addEdit();
+    },
+
+    onQitemAdd: function () {
+        var box = $(Mustache.render(_me.tplQitem, {}));
+        _form.loadRow(box, {});
+        _me.mQitem.setNewIdByBox(box);
+        _me.tbodyQitem.append(box);
     },
 
     onRitemAdd: function () {

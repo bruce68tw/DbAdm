@@ -375,18 +375,18 @@ class UiMany {
 
         //update ui first, Table必須先判斷, 所以傳入函數
         //ModalTable/ModalTabPage 時回傳ids(要刪除的全部itemId字串陣列, 不為null)
-        let me = this;
+        //let me = this;
         let info = _form.toRow(modal);    //直接讀取modal內欄位, 內容為 Info 欄位
         let result = await this.uiView.infoToItemA(info, this.modalItem);
         if (result.status) {
             //update mItem Info欄位 & hide modal
-            me.setInfo(me.modalItemId, info);
+            this.setInfo(this.modalItemId, info);
 
             //刪除多筆
             let itemIds = result.itemIds;
             if (_array.notEmpty(itemIds)) {
                 for (let i = 0; i < itemIds.length; i++)
-                    me.mItem.deleteRow(itemIds[i], me.mItem.idToRowBox(itemIds[i]));
+                    this.mItem.deleteRow(itemIds[i], this.mItem.idToRowBox(itemIds[i]));
             }
         }
         _modal.hide(modal);
@@ -419,10 +419,14 @@ class UiMany {
 
     /**
      * json array to new items
+     * called by onImport()
      * param {json array} jsons: 巢狀資料
      */
     async loadJsonsA(jsons) {
-        //jsons to rows
+        //設定全部Id為小於0數值表示新增
+        //todo
+
+        //jsons(巢狀) to rows(扁平)
         let rows = _json.jsonsToRows(jsons);
 
         //EditMany load rows by rowsBox

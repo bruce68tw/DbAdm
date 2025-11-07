@@ -161,6 +161,7 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal x-form pt-1 pe-5">
+                    <vc:xi-hide dto='new() { Fid = "Id" }' />
                     <vc:xi-text dto='new() { Title = "標題", Fid = "Title", MaxLen = 30, Cols = cols }' />
                     <vc:xi-text dto='new() { Title="欄位Id", Fid="Fid" , MaxLen=30, Required = true, Cols=cols }' />
                     <vc:xi-select dto='new() { Title = "欄位種類", Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, Cols = cols }' />
@@ -190,6 +191,7 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal x-form pt-1 pe-5">
+                    <vc:xi-hide dto='new() { Fid = "Id" }' />
                     <vc:xi-text dto='new() { Title = "標題", Fid = "Title", MaxLen = 30, Cols = cols }' />
                 </form>
             </div>
@@ -211,6 +213,7 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal x-form pt-1 pe-5">
+                    <vc:xi-hide dto='new() { Fid = "Id" }' />
                     <vc:xi-text dto='new() { Title = "標題", Fid = "Title", Required = true, Cols = "4,4" }' />
                     <vc:xi-text dto='new() { Title = "排版格數", Fid = "Cols", Required = true, Cols = "4,4" }' />
                     <vc:xi-check dto='new() { Title = "欄位水平排列", Fid = "IsHori", Label = "是", Cols = "4,4" }' />
@@ -235,6 +238,7 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal x-form pt-1 pe-5">
+                    <vc:xi-hide dto='new() { Fid = "Id" }' />
                     <vc:xi-text dto='new() { Title = "資料表", Fid = "Code", MaxLen = 30, Cols = "4,4", Required = true }' />
                     <vc:xi-text dto='new() { Title = "資料名稱", Fid = "Name", MaxLen = 30, Cols = "4,4", Required = true }' />
                     <vc:xi-text dto='new() { Title = "PkeyFid", Fid = "PkeyFid", MaxLen = 30, Cols = "4,4", Required = true }' />

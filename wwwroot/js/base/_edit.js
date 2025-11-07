@@ -103,7 +103,7 @@ var _edit = {
      */
     isNewKey: function (key) {
         const num = Number(key);
-        return !isNaN(num) && num < 0;
+        return (!isNaN(num) && num <= 0);   //0也是new key
     },
 
     /**

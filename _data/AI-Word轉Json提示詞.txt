@@ -1,5 +1,5 @@
-把以下 word 檔案的輸入表單轉成 json, 並遵循以下*號規則：
-*json 內容包括4種資料, 以 Item 稱呼, 每個 Item 有以下欄位：
+把以下 word 檔案的輸入表單轉成 json, 並遵循以下規則：
+一.json 內容包括4種資料, 以 Item 稱呼, 每個 Item 有以下欄位：
   1.Info：Item 的綜合資訊, 格式為 json 
   2.Childs2：是個2維陣列, Childs2[x] 內容為1維陣列, 儲存子 Item 清單
   3.ItemType：Item 種類, 有以下 5 種(a-e)：
@@ -18,13 +18,13 @@
 	    b6.下拉式：用 'select' 表示, ExtInfo 欄位儲存選項清單, 以逗號分隔
 	    b7.多行：用 'textarea' 表示
 		b8.上傳檔案 : 用 'file' 表示
-    b.分群文字：用 'G' 表示, 用來表示某些欄位是同一群, Info欄位內容有：
+    b.分群文字：用 'G' 表示, 用來表示某些欄位是同一群, Info 欄位內容有：
 	  a1.Title：顯示的文字
-    c.多選欄位：用 'CS' 表示, 意思是 checkbox list, 這種欄位裡面全部都是 checkbox 欄位, 沒有例外, Info 欄位內容有：
+    c.多選欄位：用 'CS' 表示, 表示多個 CheckBox 欄位, Info 欄位內容有：
 	  a1.Title：同 "輸入欄位"
 	  a2.Cols：同 "輸入欄位"
-	  a3.IsHori：true 表示多個 checkbox 以水平排列, false則表示垂直排列
-	  a4.LabelFids : 表示 checkbox 的後方 label 和資料庫欄位名稱, 以逗號分隔, 2個為一組 
+	  a3.IsHori：如果左側 label 後面有(V) 則此屬性為 true, 否則為 false
+	  a4.LabelFids : 表示 CheckBox 的後方 label 和資料庫欄位名稱, 以逗號分隔, 2個為一組 
     d.欄位容器：用 'R' 表示, 它是一個排版用途的 Row 容器, 包含2或3個欄位; 有Childs2, Info欄位內容有：
 	  a1.RowType：例如：'6,6' 表示有2個 Col, grid寬度都是6, 允許的值為 '6,6','4,4,4','8,4','4,8'
     e.多筆表格：用 'T' 表示, 是一個table, 用來維護多筆資料, 有Childs2, Info欄位內容有：
@@ -32,20 +32,19 @@
 	  a2.Title：功能名稱
 	  a3.Heads：表頭欄位清單, 以逗號分隔, 欄位數量和Childs2 陣列長度數量相同
 	  
-*排版規則為：
-1.按照 word 檔內的欄位位置進行排版, 不要自做主張, 如果 word 檔內的欄位有提示 InputType 則使用, 否則請自行判斷 
-2.Input 是其中一種 Item
-3.如果是多個 checkbox 的多選欄位, 應該使用 InputType='CS', 並且根據畫面來判斷 IsHori
-4.單行單一 Input 在左邊：不必使用 R Item 包起來，設定 Info.Cols="2,3"
-5.單行單一 Input 在右邊：使用 R Item，Childs2[0]=null，Childs2[1]=[Input]
-6.單行單一 textarea Input：若不在 R Item → Info.Cols="2,8"；若在 R Item → Info.Cols="4,8"
-7.單行 2 個 Item：使用 R Item，設定 RowType="6,6"，Childs2[0]=[左Item]，Childs2[1]=[右Item]
-8.單行 3 個 Item：使用 R Item，設定 RowType="4,4,4"
-9.R Item 的 Col 與 Info.Cols 對應規則：
+二.排版規則為：
+.按照 word 檔內的輸入欄位的每行欄位數進行排版, 千萬不要自己決定, 如果 word 檔內的欄位有提示 InputType 則使用, 否則請自行判斷 
+.輸入欄位後面如果有括號和輸入欄位, 表示連動欄位, 只要處理前面的欄位即可
+.單行單一 Input 在左邊：不必使用 R Item 包起來，設定 Info.Cols="2,3"
+.單行單一 Input 在右邊：使用 R Item，Childs2[0]=null，Childs2[1]=[Input]
+.單行單一 textarea Input：若不在 R Item → Info.Cols="2,8"；若在 R Item → Info.Cols="4,8"
+.單行 2 個 Item：使用 R Item，設定 RowType="6,6"，Childs2[0]=[左Item]，Childs2[1]=[右Item]
+.單行 3 個 Item：使用 R Item，設定 RowType="4,4,4"
+.R Item 的 Col 與 Info.Cols 對應規則：
   a.若該欄位寬度=4或8：Info.Cols="6,6"
   b.若該欄位寬度=6：Info.Cols="4,6"
 
-*Input Item 的 Info.Fid 命名規則：
+三.Input Item 的 Info.Fid 命名規則：
 1.Id表示欄位唯一值
 2.UserId表示對應 User 資料表的 Id 欄位, 以此類推
 3.名稱後面有 No 表示編號
@@ -53,7 +52,7 @@
 5.欄位名稱使用單詞或是複合字, 單字超過6個字母使用縮寫
 6.依照 Input Item 中文名稱推論合理的 Fid
 
-*以下 json 範例由上到下包含：
+四.以下 json 範例由上到下包含：
 1.分群文字
 2.文字輸入欄位
 3.欄位容器有2個欄位, 左右各為：1個下拉式輸入欄位、1個Radio欄位

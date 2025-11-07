@@ -70,6 +70,7 @@
 <!-- find buttons -->
 <div class="x-btns-box">
     <span class="x-span-label">查詢條件欄位</span>
+    @await Component.InvokeAsync("XgAddRow", "_me.onQitemAdd")
     <button type='button' class='btn btn-secondary' data-onclick='_me.onOpenItem' data-args='Q'>選取欄位</button>
 </div>
 

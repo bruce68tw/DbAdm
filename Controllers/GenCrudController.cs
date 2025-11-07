@@ -38,7 +38,7 @@ namespace DbAdm.Controllers
         {
             return (editNo == 0)
                 ? new GenCrudEdit(Ctrl)
-                : new CrudUiEdit(Ctrl);
+                : new GenCrudUiEdit(Ctrl);
         }
 
         #region Edit View   
