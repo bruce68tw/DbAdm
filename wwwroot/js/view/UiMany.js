@@ -1,4 +1,11 @@
 ﻿/**
+ * 提供語法提示
+ * @typedef {Object} Me
+ * @property {mItem} EditMany
+ * @property {UiView} uiView
+ */
+
+/**
  * 控制 EditMany, 參考 FlowMany.js, called by Read.cshtml only !!
  * 處理 UI 元素和多筆資料之間的轉換
  * 注意:
@@ -8,6 +15,7 @@
  * param ftWorkArea {string} filter of work area
  * return {UiMany}
  */ 
+/** @type {Me} */
 class UiMany {
 
     /**
@@ -23,6 +31,7 @@ class UiMany {
         this.ModalTabPage = $('#modalUiTabPage');
         this.ModalChecks = $('#modalUiChecks');
         //this.EformInput = this.ModalInput.find('form');   //modalNodeProp form
+        this.Id2 = '_Id2';   //UiItem欄位 for 儲存 kid 用於後端設定
         
         this.isEdit = false;    //是否可編輯
         this.modalItem = null;    //modal item
@@ -68,6 +77,149 @@ class UiMany {
         _form.loadRow(rowBox, { BoxId: newBoxId });
     }
     */
+
+
+    /**
+     * (by AI)
+     * 將樹狀結構 jsons 轉換回 扁平 rows 陣列。
+     * 規則：
+     *   1. 每個元素都有 Id、BoxId、ChildNo、Sort 欄位。
+     *   2. jsons 的層級結構為 Childs2 (子代二維陣列)。
+     *   3. 轉換後結果以 BoxId, ChildNo, Sort 排序。
+     * param {json array} jsons
+     * return {json array} flat rows array
+     */
+    _newJsonsToRows(jsons) {
+        if (!jsons || jsons.length === 0) return [];
+
+        var rows = [];
+        var idx = 0;    //row Id, 遞減
+        var me = this;
+
+        /**
+         * 遞迴展開巢狀 Childs2 結構
+         * @param {Array} items 當前層的一維或二維陣列
+         * @param {string} boxId 上層節點 Id
+         */
+        function flatten(items, boxId = '0') {
+            if (!items) return;
+
+            // 若傳入的是一維陣列（根節點），視為 ChildNo=0
+            if (boxId == '0') {
+                for (let sort = 0; sort < items.length; sort++) {
+                    idx--;
+                    var item = items[sort];
+                    item.Id = idx;
+                    item[me.Id2] = idx;     //同時設定
+                    const row = { ...item };
+                    row.BoxId = boxId;
+                    row.ChildNo = 0;
+                    row.Info = _json.toStr(item.Info),  //轉成字串
+                    row.Sort = sort;
+                    delete row.Childs2;
+                    rows.push(row);
+
+                    // 遞迴處理子節點
+                    if (item.Childs2 && item.Childs2.length > 0)
+                        flatten(item.Childs2, item.Id);
+                }
+                return;
+            }
+
+            // 若為二維陣列（Childs2）
+            for (let childNo = 0; childNo < items.length; childNo++) {
+                const groups = items[childNo];
+                if (!groups) continue;
+
+                for (let sort = 0; sort < groups.length; sort++) {
+                    idx--;
+                    var group = groups[sort];
+                    if (group == null) continue;
+
+                    group.Id = idx;
+                    group[me.Id2] = idx;     //同時設定
+                    const row = { ...group };
+                    row.BoxId = boxId;
+                    row.ChildNo = childNo;
+                    row.Info = _json.toStr(group.Info),  //轉成字串
+                    row.Sort = sort;
+                    delete row.Childs2;
+                    rows.push(row);
+
+                    if (group.Childs2 && group.Childs2.length > 0)
+                        flatten(group.Childs2, group.Id);
+                }
+            }
+        }
+
+        flatten(jsons, '0');
+
+        /*
+        // 依 BoxId, ChildNo, Sort 排序（確保一致性）
+        rows.sort((a, b) =>
+            a.BoxId.localeCompare(b.BoxId) ||
+            a.ChildNo - b.ChildNo ||
+            a.Sort - b.Sort
+        );
+        */
+        return rows;
+    }
+
+    /**
+     * (by AI) 
+     * 將扁平 rows 陣列 轉換成 樹狀結構 jsons, 例如: 讀取DB並顯示UI到畫面, 規則:
+     *   1.rows 元素包含欄位: Id(資料Id)、BoxId(上層Id)、ChildNo(在上層的子代序號)、Sort, 
+     *     並且事先以 BoxId, ChildNo, Sort 排序
+     *   2.jsons 包含 Childs2(子代2維陣列) 欄位
+     * param {json array} rows
+     * return {json array} nested json array
+     */
+    _dbRowsToJsons(rows) {
+        if (!rows || rows.length === 0) return [];
+
+        // 依 BoxId 分組
+        const boxMap = new Map();
+        for (const row of rows) {
+            const boxId = row.BoxId;
+            if (!boxMap.has(boxId)) boxMap.set(boxId, []);
+            boxMap.get(boxId).push(row);
+        }
+
+        // 遞迴建立 Childs2（二維陣列）
+        function buildTree(boxId) {
+            const childs = boxMap.get(boxId);
+            if (!childs) return null;
+
+            // 以 boxId 的 ChildNo 分群
+            const items2 = [];
+            for (const child of childs) {
+                const childNo = parseInt(child.ChildNo);
+                if (!items2[childNo])
+                    items2[childNo] = [];
+                items2[childNo].push(child);
+            }
+
+            // 遞迴建立每個 item 的 Childs2
+            for (const items of items2) {
+                if (!items) continue;
+
+                for (const item of items) {
+                    const subs2 = buildTree(item.Id);
+                    if (subs2 && subs2.length > 0)
+                        item.Childs2 = subs2;
+                }
+            }
+
+            //根節點為一維, 子節點為二維
+            return (boxId == '0')
+                ? items2[0]
+                : items2;
+            //: items2.filter(g => g && g.length > 0);
+        }
+
+        // 根節點是 BoxId = '0'，理論上應該只有一個根節點
+        return buildTree('0') || [];
+    }
 
     _hideMenu() {
         _obj.hide($(this.FtMenu));
@@ -184,7 +336,7 @@ class UiMany {
         };
         let mItem = this.mItem;
         let row = mItem.addRow(itemJson);  //會產生id
-        _itext.set('_Id2', row.Id, mItem.idToRowBox(row.Id));   //Id -> _Id2
+        _itext.set(this.Id2, row.Id, mItem.idToRowBox(row.Id));   //Id -> _Id2
         return row;
     }
 
@@ -406,12 +558,16 @@ class UiMany {
         this.uiView.setEdit(status);
     }
 
+    getJsons() {
+        return this.uiView.getJsons();
+    }
+
     async loadRowsA(rows) {
         //EditMany load rows by rowsBox
         this.mItem.loadRowsByRsb(rows, true);
 
         //rows to jsons
-        let jsons = _json.rowsToJsons(rows);
+        let jsons = this._dbRowsToJsons(rows);
 
         //ui load json array
         await this.uiView.loadJsonsA(jsons);
@@ -423,22 +579,42 @@ class UiMany {
      * param {json array} jsons: 巢狀資料
      */
     async loadJsonsA(jsons) {
-        //設定全部Id為小於0數值表示新增
-        //todo
-
-        //jsons(巢狀) to rows(扁平)
-        let rows = _json.jsonsToRows(jsons);
+        //jsons(巢狀) to rows(扁平), 同時設定全部Id為小於0數值表示新增
+        let rows = this._newJsonsToRows(jsons);
 
         //EditMany load rows by rowsBox
         //json array to rows, 同時設定new Id(負數)
         this.mItem.loadRowsByRsb(rows, true);
+        this.mItem.setNewIndex(rows.length);
 
         //ui loadItems
         await this.uiView.loadJsonsA(jsons);
     }
 
-    getJsons() {
-        return this.uiView.getJsons();
+    /**
+     * (by AI) jsons(tree) to rows(陣列), 同時設定2邊的Id欄位
+     * 固定的相關欄位: //Id(資料Id)、BoxId(上層Id)、//ChildNo, Childs2(子代2維陣列)
+     * param {json array} jsons nested json array
+     * return {json array} json array
+     */
+    _jsonsToRows(jsons) {
+        const rows = [];    //result
+
+        function flatten(jsons2, upId) {
+            for (const json of jsons2) {
+                const { ChildNo, ...row } = json;   //取出ChildNo 和其餘屬性
+                row.BoxId = upId;
+                rows.push(row);
+
+                // 若存在子層群組欄位
+                if (ChildNo && Array.isArray(json[ChildNo]) && json[ChildNo].length > 0) {
+                    flatten(json[ChildNo], row.Id);
+                }
+            }
+        }
+
+        flatten(jsons, '0');
+        return rows;
     }
 
     /*

@@ -86,7 +86,7 @@ class EditMany {
         }
 
         this.deletedRows = [];  //deleted key string array
-        this.newIndex = 0;      //new row serial no, 使用負數來表示新資料
+        this._newIndex = 0;      //new row serial no, 使用負數來表示新資料
     }
 
     /**
@@ -134,7 +134,7 @@ class EditMany {
 
     //reset variables
     _resetVar() {
-        this.newIndex = 0;
+        this._newIndex = 0;
         this._resetDeletes();
     }
 
@@ -654,6 +654,14 @@ class EditMany {
     }
 
     /**
+     * set this._newIndex, 負值
+     * param index {int} 可為正負值
+     */
+    setNewIndex(index) {
+        this._newIndex = Math.abs(index) * -1;
+    }
+
+    /**
      * set this.newId、PKey、_IsNew by row box
      * boxSetNewId -> setNewIdByBox
      * public for Crud.js, Flow.js
@@ -663,8 +671,8 @@ class EditMany {
      */
     setNewIdByBox(box, newId) {
         if (newId == null) {
-            this.newIndex--;    //使用負數
-            newId = this.newIndex;
+            this._newIndex--;    //使用負數
+            newId = this._newIndex;
         }
 
         //kid和IsNew必須放在同一層 !!
