@@ -3,6 +3,9 @@
     padding-top: 7px;
     min-height: 43px;
 }
+/* 輸入欄位後面文字 */
+.x-input-note{    
+}
 
 @media (max-width:768px) {
     .x-input {

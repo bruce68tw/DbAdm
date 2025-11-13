@@ -40,7 +40,7 @@ namespace DbAdm.Services
             "JS.txt", "wwwroot/js/view", "[prog].js",
         ];
 
-        //edit view 陣列位置, IsUi=true時使用巢狀結構
+        //edit view 陣列位置, IsUi=true時使用巢狀結構, base 0
         private readonly int EditViewIdx = 4;
 
 
@@ -64,6 +64,7 @@ namespace DbAdm.Services
 
         /// <summary>
         /// generate crud files by one crudId
+        /// called by GenCrud()
         /// </summary>
         /// <param name="crudId"></param>
         /// <returns>error msg if any</returns>
@@ -116,17 +117,16 @@ namespace DbAdm.Services
 
             //query item
             var qitems = (from q in db.CrudQitem
-                          join c in db.Column on q.ColumnId equals c.Id
                           where q.CrudId == crudId
                           orderby q.CrudId, q.Sort
                           select new CrudQitemDto()
                           {
                               CrudId = q.CrudId,
-                              Fid = c.Fid,
-                              Name = c.Name,
-                              DataType = c.DataType,   //for 計算輸入欄位maxLen
+                              Fid = q.Fid!,
+                              Name = q.Name!,
+                              DataType = q.DataType!,   //for 計算輸入欄位maxLen
                               PosGroup = q.PosGroup!,
-                              LayoutCols = q.LayoutCols!,
+                              Cols = q.Cols!,
                               PlaceHolder = "",
                               IsFind2 = q.IsFind2,
                               Op = q.Op,
@@ -209,7 +209,7 @@ namespace DbAdm.Services
                               InputType = e.InputType,
                               ItemData = e.ItemData!,
                               PosGroup = e.PosGroup!,
-                              LayoutCols = e.LayoutCols!,
+                              Cols = e.Cols!,
                               PlaceHolder = e.PlaceHolder!,
                               Sort = e.Sort,
                               Width = e.Width,
@@ -241,7 +241,7 @@ namespace DbAdm.Services
                     //add child table
                     var info = _Str.ToJson(uiItem.Info)!;
                     UiItemToEtable(etables, eitems, uiItems!, info["Code"]!.ToString(), 
-                        info["Name"]!.ToString(), uiItem.BoxId, info["FkeyFid"]!.ToString());
+                        info["Name"]!.ToString(), uiItem.Id, info["FkeyFid"]!.ToString());
                 }
                 #endregion
 
@@ -281,7 +281,7 @@ namespace DbAdm.Services
                     //fitem.RvStr = GetViewItemStr(fitem);  //set after XgFindTbar
                 }
                 _crud.RsItemStrs = rsItemStrs;
-                _crud.HasFitemCols = qitems!.Any(a => _Str.IsEmpty(a.LayoutCols));
+                _crud.HasFitemCols = qitems!.Any(a => _Str.IsEmpty(a.Cols));
 
                 //set ReadSelectCols, be [] when null !!
                 //字尾A表示非同步
@@ -568,11 +568,15 @@ namespace DbAdm.Services
             return "GenCrudSvc.cs SetCrudDto() error: " + error;
         }
 
-        //uiItem to etable & eitem
+        /**
+         * uiItem to etable & eitem
+         * called by SetCrudDto -> GenCrud
+         * param boxId {string} Table ItemType 的Id, 用來找到 child ItemType(input)
+         */ 
         private void UiItemToEtable(List<CrudEtableDto> etables, List<CrudEitemDto> eitems, List<CrudUiItemDto> uiItems, 
             string tableCode, string tableName, string boxId, string fkeyFid)
         {
-            var tableId = _Str.NewId();
+            var tableId = _Str.NewId(); //for 對應新的 Eitem
             etables.Add(new CrudEtableDto()
             {
                 Id = tableId,
@@ -621,7 +625,7 @@ namespace DbAdm.Services
                             InputType = InputTypeEstr.Check,
                             //ItemData = e.ItemData!,
                             //PosGroup = e.PosGroup!,
-                            LayoutCols = info["Cols"]!.ToString(),
+                            Cols = info["Cols"]!.ToString(),
                             //PlaceHolder = e.PlaceHolder!,
                             Sort = uiItem.Sort,
                             //Width = e.Width,
@@ -637,7 +641,7 @@ namespace DbAdm.Services
                         EtableId = tableId,
                         Fid = info["Fid"]!.ToString(),
                         Name = info["Title"]!.ToString(),
-                        DataType = info["MaxLen"]!.ToString(),
+                        DataType = (info["MaxLen"] == null) ? "" : info["MaxLen"]!.ToString(),
                         Required = _Var.ToBool(info["Required"]),
                         HasCreate = true,
                         HasUpdate = true,
@@ -646,7 +650,7 @@ namespace DbAdm.Services
                         InputType = info["InputType"]!.ToString(),
                         //ItemData = e.ItemData!,
                         //PosGroup = e.PosGroup!,
-                        LayoutCols = info["Cols"]!.ToString(),
+                        Cols = (info["Cols"] == null) ? "" : info["Cols"]!.ToString(),
                         //PlaceHolder = e.PlaceHolder!,
                         Sort = uiItem.Sort,
                         //Width = e.Width,
@@ -661,7 +665,7 @@ namespace DbAdm.Services
             var error = "";
             var isManyEdit = (_crud.ChildTables != null && _crud.ChildTables.Count > 1);
             var projectPath = _Str.AddDirSep(_crud.ProjectPath);
-            var eviewPos = (EditViewIdx - 1) * 3;
+            var eviewPos = EditViewIdx * 3;
             for (var i = 0; i < CrudFiles.Length; i += 3)
             {
                 #region 6.read template file to string
@@ -697,11 +701,8 @@ namespace DbAdm.Services
                     result = GetUiEditView("0", 0);
                     _crud.MainTable.CustEview = result;
                 }
-                else
-                {
-                    var handleTpl = Handlebars.Compile(tplStr);
-                    result = HttpUtility.HtmlDecode(handleTpl(_crud));
-                }
+                var handleTpl = Handlebars.Compile(tplStr);
+                result = HttpUtility.HtmlDecode(handleTpl(_crud));
 
                 #region 8.rename existed target file if need
                 var tableCode = _crud.ProgCode;
@@ -765,23 +766,28 @@ namespace DbAdm.Services
                         for (var i = 0; i < fids.Length; i += 2)
                         {
                             //escape: {{ 和 \"
-                            colStr += $"<vc:xi-check dto='new() {{ Fid = \"{fids[i + 1]}\", Label = \"{fids[i]}\" }}'/>";
+                            colStr += $"<vc:xi-check dto='new() {{ Fid = \"{fids[i + 1]}\", Label = \"{fids[i]}\" }}'/>" + _Fun.TextCarrier;
                         }
 
                         var cls = (info["IsHori"]!.ToString() == "1") ? "x-hbox" : "x-vbox";
                         itemStr += $@"
-<div class= 'col-md-{cols[0]} x-label'>{info["Title"]!.ToString()}</div>
-<div class= 'col-md-{cols[1]} x-input {cls}' >
-	{colStr}
+<div class='row'>
+    <div class='col-md-{cols[0]} x-label'>{info["Title"]!.ToString()}</div>
+    <div class='col-md-{cols[1]} x-input {cls}' >
+	    {colStr}
+    </div>
 </div>
-" + _Fun.TextCarrier;
+";
                         break;
                     case UiItemTypeEstr.Group:
+                        var title = info["Title"]!.ToString();
+                        itemStr = $"<vc:xg-group label=\"{title}\" icon=\"false\" />" + _Fun.TextCarrier;
                         break;
                     default:
                         //input
                         var itemDto = new CrudQEitemDto();
-                        _Json.CopyToModel(info, itemDto);
+                        _Json.CopyToModel(info, itemDto);                        
+                        itemDto.Name = info["Title"]!.ToString();   //name -> title 
                         itemStr += ViewItemStr(null, itemDto) + _Fun.TextCarrier;
                         break;
                 }
@@ -944,7 +950,7 @@ namespace DbAdm.Services
                             ViewMaxLen(item.DataType),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
-                            ViewLayout(isMany, item.LayoutCols)) +
+                            ViewLayout(isMany, item.Cols)) +
                         CompEnd();
                     break;
 
@@ -956,7 +962,7 @@ namespace DbAdm.Services
                             //ViewMaxLen(item.DataType),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
-                            ViewLayout(isMany, item.LayoutCols)) +
+                            ViewLayout(isMany, item.Cols)) +
                         CompEnd();
                     break;
 
@@ -970,7 +976,7 @@ namespace DbAdm.Services
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
-                            ViewLayout(isMany, item.LayoutCols)) +
+                            ViewLayout(isMany, item.Cols)) +
                             //TODO: add min/max if need
                         CompEnd();
                     break;
@@ -983,6 +989,7 @@ namespace DbAdm.Services
                             ViewFid(item.Fid),
                             //KeyValue("value", "1", true),
                             ViewInRow(item.IsGroup),
+                            ViewLayout(isMany, item.Cols),
                             ViewLabel(item.ItemData)) +
                         CompEnd();
                     break;
@@ -995,6 +1002,7 @@ namespace DbAdm.Services
                             ViewFid(item.Fid),
                             ViewSelectRows(item),
                             //KeyValue("value", "1", true),
+                            ViewLayout(isMany, item.Cols),
                             ViewInRow(item.IsGroup)) +
                         CompEnd();
                     break;
@@ -1006,7 +1014,7 @@ namespace DbAdm.Services
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
-                            ViewLayout(isMany, item.LayoutCols)) +
+                            ViewLayout(isMany, item.Cols)) +
                         CompEnd();
                     break;
 
@@ -1017,7 +1025,7 @@ namespace DbAdm.Services
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
-                            ViewLayout(isMany, item.LayoutCols)) +
+                            ViewLayout(isMany, item.Cols)) +
                         CompEnd();
                     break;
 
@@ -1029,7 +1037,7 @@ namespace DbAdm.Services
                             ViewSelectRows(item),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
-                            ViewLayout(isMany, item.LayoutCols)) +
+                            ViewLayout(isMany, item.Cols)) +
                         CompEnd();
                     break;
 
@@ -1040,7 +1048,7 @@ namespace DbAdm.Services
                             ViewFid(item.Fid),
                             ViewRequired(item.Required),
                             ViewInRow(item.IsGroup),
-                            ViewLayout(isMany, item.LayoutCols)) +
+                            ViewLayout(isMany, item.Cols)) +
                         CompEnd();
                     break;
 
@@ -1063,7 +1071,7 @@ namespace DbAdm.Services
                             ViewTitle(name),
                             ViewFid(item.Fid),
                             ViewInRow(item.IsGroup),
-                            ViewLayout(isMany, item.LayoutCols)) +
+                            ViewLayout(isMany, item.Cols)) +
                         CompEnd();
                     break;
 
@@ -1125,7 +1133,7 @@ namespace DbAdm.Services
                         ViewRequired(item.Required)) +
                     CompEnd()
                 : string.Format("<th{0}>{1}</th>", 
-                    (_Str.IsEmpty(item.LayoutCols) || item.LayoutCols=="0" ? "" : " width='" + item.LayoutCols + "'"), 
+                    (_Str.IsEmpty(item.Cols) || item.Cols=="0" ? "" : " width='" + item.Cols + "'"), 
                     item.Name);
         }
         #endregion
@@ -1187,9 +1195,10 @@ namespace DbAdm.Services
 
         private string ViewSelectRows(CrudQEitemDto item)
         {
+            if (_Str.IsEmpty(item.ItemData)) return "";
+
             //viewBag欄位不取字尾A字元(表示async)
-            var value = _Str.IsEmpty(item.ItemData) ? "??" : 
-                (item.ItemData[^1] == 'A') ? item.ItemData[..^1] : item.ItemData;
+            var value = (item.ItemData[^1] == 'A') ? item.ItemData[..^1] : item.ItemData;
             return KeyValue("Rows", "ViewBag." + value);
         }
 
@@ -1324,6 +1333,7 @@ namespace DbAdm.Services
         {
             return type switch
             {
+                "" => "",
                 CheckTypeEstr.None => "",
                 CheckTypeEstr.Email => "CheckTypeEstr.Email",
                 CheckTypeEstr.Url => "CheckTypeEstr.Url",

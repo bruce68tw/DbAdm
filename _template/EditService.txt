@@ -38,8 +38,8 @@ namespace {{Project}}.Services
                 ],
 				{{/MainTable}}
 			{{#if ChildTables}}
-                Childs = new EditDto[]
-                {
+                Childs = 
+                [
 				{{#ChildTables}}
                     new EditDto
                     {
@@ -55,17 +55,17 @@ namespace {{Project}}.Services
 					{{#unless HasCol4}}
                         Col4 = null,
 					{{/unless}}
-                        Items = new EitemDto[] 
-						{
+                        Items = 
+						[
 						{{#Eitems}}
 						{{#if ServiceStr}}
 							{{ServiceStr}}
 						{{/if}}
 						{{/Eitems}}
-                        },
+                        ],
                     },
 				{{/ChildTables}}
-                },
+                ],
 			{{/if}}
             };
         }
@@ -74,7 +74,7 @@ namespace {{Project}}.Services
         //t03_FileName: t + table serial _ + fid
         public async Task<ResultDto> CreateA(JObject json, {{FileEditTypeArg}})
         {
-            var service = EditService();
+            var service = EditSvc();
             var result = await service.CreateA(json);
         {{#if FileType0}}
             if (_Valid.ResultStatus(result))
@@ -96,7 +96,7 @@ namespace {{Project}}.Services
 
         public async Task<ResultDto> UpdateA(string key, JObject json, {{FileEditTypeArg}})
         {
-            var service = EditService();
+            var service = EditSvc();
             var result = await service.UpdateA(key, json);
         {{#if FileType0}}
             if (_Valid.ResultStatus(result))

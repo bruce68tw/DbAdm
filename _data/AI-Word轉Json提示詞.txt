@@ -1,15 +1,15 @@
-把以下 word 檔案的輸入表單轉成 json, 並遵循以下規則：
+把上面的 word 檔案的輸入表單轉成 json, 並遵循以下規則：
 一.json 內容包括4種資料, 以 Item 稱呼, 每個 Item 有以下欄位：
   1.Info：Item 的綜合資訊, 格式為 json 
   2.Childs2：是個2維陣列, Childs2[x] 內容為1維陣列, 儲存子 Item 清單
   3.ItemType：Item 種類, 有以下 5 種(a-e)：
-    a.輸入欄位：用 'I' 表示, Info欄位內容有：
+    a.輸入欄位：用 'I' 表示, Info欄位內容有以下欄位：
 	  a1.Title：左邊的欄位名稱
 	  a2.Fid：對應存取的後端資料表欄位名稱, 命名參考後面的規則
 	  a3.Required：是否必填, 如果Title左側有*號, 則 Required 應為 true
 	  a4.Cols：grid排版, 例如 '2,3' 表示 Title 為 col-md-2, 輸入欄位為 col-md-3
 	  a5.ExtInfo：額外的欄位資訊
-	  a6.InputType：輸入欄位, 有以下幾種：
+	  a6.InputType：輸入欄位, 有以下幾個種類：
         b1.文字：用 'text' 表示
 	    b2.數字：用 'int' 表示
 	    b3.日期：用 'date' 表示
@@ -33,8 +33,9 @@
 	  a3.Heads：表頭欄位清單, 以逗號分隔, 欄位數量和Childs2 陣列長度數量相同
 	  
 二.排版規則為：
-.按照 word 檔內的輸入欄位的每行欄位數進行排版, 千萬不要自己決定, 如果 word 檔內的欄位有提示 InputType 則使用, 否則請自行判斷 
-.輸入欄位後面如果有括號和輸入欄位, 表示連動欄位, 只要處理前面的欄位即可
+.按照 word 檔表格內每行的欄位數目來進行排版, 如果某行只有一個欄位, 不要使手 'R' ItemType
+.如果 word 檔內的欄位有提示 InputType 則使用, 否則請自行判斷 
+.輸入欄位後面如果有括號和輸入欄位, 表示連動欄位, 只要顯示前面的欄位即可
 .單行單一 Input 在左邊：不必使用 R Item 包起來，設定 Info.Cols="2,3"
 .單行單一 Input 在右邊：使用 R Item，Childs2[0]=null，Childs2[1]=[Input]
 .單行單一 textarea Input：若不在 R Item → Info.Cols="2,8"；若在 R Item → Info.Cols="4,8"

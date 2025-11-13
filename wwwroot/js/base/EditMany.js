@@ -654,6 +654,22 @@ class EditMany {
     }
 
     /**
+     * 設定全部資料為新增(使用copy功能)
+     * 如果有多個 parent row, 必須手動設定!!
+     */
+    rowsToNew() {
+        //this.rowsBox 可能為 null
+        if (this.rowsBox == null || this.rowsBox.length == 0) return;
+
+        var me = this;  //this is not work inside each() !!
+        me._newIndex = 0;
+        me.rowsBox.find(me.rowFilter).each(function () {
+            me._newIndex--;
+            _itext.set(me.kid, me._newIndex, $(this));
+        });
+    }
+
+    /**
      * set this._newIndex, 負值
      * param index {int} 可為正負值
      */

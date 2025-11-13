@@ -959,7 +959,7 @@ class UiView {
 		}
 
 		//update table title
-		item.find(this.FtTableTitle).text(info.Title || '');
+		item.find(this.FtTableTitle).text(info.Name || '');
 
 		//update table heads, 如果使用箭頭函數則this會指向 UiView本身!!
 		headBox.find('th').each(function (i) {
@@ -1034,9 +1034,9 @@ class UiView {
 				Info: me.itemGetInfo(item),		//data-info取出來為json型態!!
 			};
 
-			if (this.isBox(itemType)) {
+			if (me.isBox(itemType)) {
 				json.Childs2 = [];
-				item.find(this.FtChild).each(function (idx) {
+				item.find(me.FtChild).each(function (idx) {
 					let childs = [];
 					$(this).children(me.FtItem).each(function (idx2) {
 						childs[idx2] = _item2Json($(this));

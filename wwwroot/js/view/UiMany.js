@@ -412,8 +412,8 @@ class UiMany {
     _addTable() {
         //add to mItem
         let info = {
-            Table: '_table',
-            Title: '資料名稱',
+            Code: '_table',
+            Name: '資料名稱',
             Heads: '欄位1,欄位2,欄位3,欄位4,欄位5',
         };
         return this._mItemAddRow(EstrItemType.Table, info);

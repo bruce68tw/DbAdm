@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?43j0xt');
-  src:  url('fonts/icomoon.eot?43j0xt#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?43j0xt') format('truetype'),
-    url('fonts/icomoon.woff?43j0xt') format('woff'),
-    url('fonts/icomoon.svg?43j0xt#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?7xcd8');
+  src:  url('fonts/icomoon.eot?7xcd8#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?7xcd8') format('truetype'),
+    url('fonts/icomoon.woff?7xcd8') format('woff'),
+    url('fonts/icomoon.svg?7xcd8#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -129,6 +129,9 @@
 }
 .ico-close:before {
   content: "\f114";
+}
+.ico-copy:before {
+  content: "\f0c5";
 }
 
 
@@ -936,6 +939,9 @@ span.error {
 .x-input {
     padding-top: 7px;
     min-height: 43px;
+}
+/* 輸入欄位後面文字 */
+.x-input-note{    
 }
 
 @media (max-width:768px) {

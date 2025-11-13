@@ -31,7 +31,7 @@ public partial class CrudQitem
 
     public string? PosGroup { get; set; }
 
-    public string? LayoutCols { get; set; }
+    public string? Cols { get; set; }
 
     public int Sort { get; set; }
 

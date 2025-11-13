@@ -160,7 +160,7 @@ public partial class MyContext : DbContext
                 .IsUnicode(false)
                 .HasComment("");
             entity.Property(e => e.ItemData).HasMaxLength(50);
-            entity.Property(e => e.LayoutCols)
+            entity.Property(e => e.Cols)
                 .HasMaxLength(10)
                 .IsUnicode(false);
             entity.Property(e => e.PlaceHolder)
@@ -233,7 +233,7 @@ public partial class MyContext : DbContext
             entity.Property(e => e.ItemData)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.LayoutCols)
+            entity.Property(e => e.Cols)
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.Name).HasMaxLength(30);

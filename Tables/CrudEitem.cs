@@ -29,7 +29,7 @@ public partial class CrudEitem
 
     public string? PosGroup { get; set; }
 
-    public string? LayoutCols { get; set; }
+    public string? Cols { get; set; }
 
     public int Width { get; set; }
 

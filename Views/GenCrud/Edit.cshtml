@@ -195,7 +195,7 @@
         <td>@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "Op", Rows = ViewBag.QitemOps, AddEmpty = false, Value = "Equal" })</td>
         <td class="x-center x-w60">@await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "IsRange" })</td>
         <td class="x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "PosGroup" })</td>
-        <td class="x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "LayoutCols" })</td>
+        <td class="x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Cols" })</td>
         <td class="x-center x-w60">@await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "IsFind2" })</td>
         <td class="x-center x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mQitem" })</td>
     </tr>
@@ -299,7 +299,7 @@
         <td class="x-w100">@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "CheckType", Value = "0", Rows = ViewBag.CheckTypes, Required = true, AddEmpty = false })</td>
         <td class="x-w100">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "CheckData" })</td>
         <td class="x-w60">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "PosGroup" })</td>
-        <td class="xu-layout x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "LayoutCols" })</td>
+        <td class="xu-layout x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Cols" })</td>
         <td class="xu-width x-w80">@await Component.InvokeAsync(XiEstr.Int, new XiIntDto { Fid = "Width" })</td>
         <td class="text-center  x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mEitem" })</td>
     </tr>

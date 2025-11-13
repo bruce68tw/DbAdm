@@ -153,6 +153,7 @@ class CrudR {
 
     /**
      * !! change link to button
+     * 取消參數 fnOnUpdate, fnOnDelete, fnOnView
      * crud functions: update,delete,view
      * param key {string} row key
      * param rowName {string} for show row name before delete
@@ -160,15 +161,17 @@ class CrudR {
      * param hasDelete {bool} has delete icon or not
      * param hasView {bool} has view icon or not
      */
-    dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView,
-        fnOnUpdate, fnOnDelete, fnOnView) {
+    //dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, fnOnUpdate, fnOnDelete, fnOnView) {
+    dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, hasCopy) {
         var funs = '';
         if (hasUpdate)
-            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnUpdate == null ? '_me.crudE.onUpdateA' : fnOnUpdate)}" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
+            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onUpdateA" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
         if (hasDelete)
-            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnDelete == null ? '_me.crudR.onDeleteA' : fnOnDelete)}" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
+            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudR.onDeleteA" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
         if (hasView)
-            funs += `<button type="button" class="btn btn-link" data-onclick="${(fnOnView == null ? '_me.crudE.onViewA' : fnOnView)}" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
+            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onViewA" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
+        if (hasCopy)
+            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onCopyA" data-args="${key}"><i class="ico-copy" title="${_BR.TipCopy}"></i></button>`;
         return funs;
     }
 

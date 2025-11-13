@@ -46,7 +46,7 @@ var _me = {
                     return _me.crudR.dtBtn(full.Id, '產生CRUD', '_me.onGenCrud');
 				}},
                 { targets: [7], render: function (data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, false);
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, false, true);
                 }},
 				{ targets: [8], render: function (data, type, full, meta) {
                     return _me.crudR.dtStatusName(data);

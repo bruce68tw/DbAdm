@@ -50,7 +50,8 @@ var _BR = {
     TipUpdate: 'Update this Row.',
     TipDelete: 'Delete this Row.',
     TipView: 'View this Row.',
-
+    TipCopy: 'Copy this data and enter new mode',
+    
     //message-upload file
     UploadFileNotBig: 'Upload File Size Should Less Than {0}M !',
     UploadFileNotMatch: 'Upload File Type Not Match !',

@@ -524,9 +524,19 @@ class CrudE {
      */
     editToNew() {
         var fun = EstrFun.Create;
-        this.setEditStatus(fun);
-        this._edit0.resetKey();
         _prog.setPath(fun);
+        this.setEditStatus(fun);
+
+        //reset master key
+        var edit = this._edit0;
+        edit.resetKey();
+
+        //reset childs key
+        var childLen = this._getEditChildLen(edit);
+        for (var i = 0; i < childLen; i++) {
+            var edit2 = this._getEditChild(edit, i);
+            edit2.rowsToNew();
+        }
     }
 
     //=== move from _edit.js start
@@ -752,6 +762,12 @@ class CrudE {
     //return { bool }
     async onViewA(key) {
         return await this._updateOrViewA(EstrFun.View, key);
+    }
+
+    //return { bool }
+    async onCopyA(key) {
+        if (await this._updateOrViewA(EstrFun.View, key))
+            this.editToNew();
     }
 
     /**

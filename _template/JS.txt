@@ -19,9 +19,9 @@ var _me = {
 	{{#if ChildTables}}
 		{{#ChildTables}}
             {{#if SortFid}}
-        _me.m{{TableCode}} = new EditMany('{{PkeyFid}}', 'eform{{TableCode}}', 'tpl{{TableCode}}', 'tr', '{{SortFid}}');
+        _me.m{{TableCode}} = new EditMany('{{PkeyFid}}', 'tbody{{TableCode}}', 'tpl{{TableCode}}', 'tr', '{{SortFid}}');
             {{else}}
-        _me.m{{TableCode}} = new EditMany('{{PkeyFid}}', 'eform{{TableCode}}', 'tpl{{TableCode}}', 'tr');
+        _me.m{{TableCode}} = new EditMany('{{PkeyFid}}', 'tbody{{TableCode}}', 'tpl{{TableCode}}', 'tr');
             {{/if}}
 		{{/ChildTables}}
 		new CrudR(config, [null, {{ManyTables}}]);

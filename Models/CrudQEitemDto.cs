@@ -17,7 +17,7 @@
         public string InputType { get; set; } = "";
         public string ItemData { get; set; } = "";
         public string PosGroup { get; set; } = "";
-        public string LayoutCols { get; set; } = "";
+        public string Cols { get; set; } = "";
         public string PlaceHolder { get; set; } = "";
         public int Sort { get; set; }
         public int Width { get; set; }
