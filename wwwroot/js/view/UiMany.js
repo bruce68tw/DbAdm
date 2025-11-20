@@ -380,7 +380,7 @@ class UiMany {
             Title: '多選欄位',
             Cols: this.uiView.DefaultCols,
             LabelFids: '欄位1,Check1,欄位2,Check2',
-            IsHori: false,  //true=水平, false=垂直
+            IsHori: 0,  //1=水平, 0=垂直
         };
         return this._mItemAddRow(EstrItemType.Checks, info);
     }
@@ -548,9 +548,19 @@ class UiMany {
     //#region 其他
     //清除UI & flow元件
     reset() {
-        //todo: reset mItem
+        //reset ui
         this.uiView.reset();
     }
+
+    /*
+    deleteAll() {
+        //reset ui
+        this.uiView.reset();
+
+        //reset mItem
+        this.mItem.deleteAll();
+    }
+    */
 
     //set editable or not
     setEdit(status) {
@@ -562,6 +572,7 @@ class UiMany {
         return this.uiView.getJsons();
     }
 
+    //called by mUiItem_loadRows
     async loadRowsA(rows) {
         //EditMany load rows by rowsBox
         this.mItem.loadRowsByRsb(rows, true);
@@ -582,12 +593,17 @@ class UiMany {
         //jsons(巢狀) to rows(扁平), 同時設定全部Id為小於0數值表示新增
         let rows = this._newJsonsToRows(jsons);
 
+        //delete all first
+        var mItem = this.mItem;
+        mItem.deleteAll();
+
         //EditMany load rows by rowsBox
         //json array to rows, 同時設定new Id(負數)
-        this.mItem.loadRowsByRsb(rows, true);
-        this.mItem.setNewIndex(rows.length);
+        mItem.loadRowsByRsb(rows, false);   //2nd param: 不reset變數
+        mItem.setNewIndex(rows.length);
 
         //ui loadItems
+        this.uiView.reset();    //reset first
         await this.uiView.loadJsonsA(jsons);
     }
 

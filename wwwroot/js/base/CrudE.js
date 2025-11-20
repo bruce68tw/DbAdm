@@ -61,7 +61,7 @@ class CrudE {
                         */
                     }
                 } else {
-                    this._initEdit0(edits);
+                    //this._initEdit0(edits);
                     /*
                     if (edits[0] == null) {
                         edits[0] = new EditOne();
@@ -77,6 +77,8 @@ class CrudE {
                     edit0[Childs][i - 1] = edits[i];
                 */
             }
+            if (!this._multiEdit)
+                this._initEdit0(edits);
 
             this._edits = edits;
             /*

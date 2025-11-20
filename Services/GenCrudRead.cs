@@ -17,7 +17,7 @@ select
     c.Created
 from dbo.Crud c
 join dbo.Project p on p.Id=c.ProjectId
-order by p.Id, c.Id desc
+order by p.Id, c.ProgName
 ",
             TableAs = "c",
             Items = [

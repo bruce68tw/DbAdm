@@ -4,6 +4,21 @@ var _str = {
     //column seperator
     colSep: '@@',
 
+    /**
+     * 前端儲存檔案
+     * param str {string} 檔案內容
+     * param fileName {string} 下載的檔名
+     */
+    saveFile: function (str, fileName) {
+        const blob = new Blob([str], { type: "application/json" });
+
+        //create link & trigger click
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+    },
+
     //variables is empty or not
     isEmpty: function (str) {
         return (str === undefined || str === null || str === '');

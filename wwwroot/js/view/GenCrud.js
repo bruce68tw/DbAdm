@@ -39,11 +39,13 @@ var _me = {
                 */
 				{ targets: [4], render: function (data, type, full, meta) {
                     return (data == 1)
-                        ? _me.crudR.dtBtn(full.Id, '拖拉編輯', '_me.onOpenEdit1')
+                        ? `<button type="button" class="btn btn-link" data-onclick="_me.onOpenEdit1" data-args="${full.Id}">拖拉編輯</button> | ` +
+                          `<button type="button" class="btn btn-link" data-onclick="_me.onDownTableSql" data-args="${full.Id}">下載Table SQL</button>`
                         : '';
 				}},
 				{ targets: [5], render: function (data, type, full, meta) {
-                    return _me.crudR.dtBtn(full.Id, '產生CRUD', '_me.onGenCrud');
+                    var dis = (full.Status == 1) ? '' : 'disabled';
+                    return `<button type="button" ${dis} class="btn btn-outline-secondary btn-sm" data-onclick="_me.onGenCrud" data-args="${full.Id}">產生CRUD</button>`;
 				}},
                 { targets: [7], render: function (data, type, full, meta) {
                     return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, false, true);
@@ -67,7 +69,7 @@ var _me = {
         _me.mEtable.setChilds([_me.mEitem]);
 
         //edit2: initial edit one/many, rowsBox(參數2) 使用 eform
-        _me.mUiItem = new EditMany('Id', 'eformUiItems', 'tplUiItem', '.xd-tr');
+        _me.mUiItem = new EditMany('Id', 'eformUiItem', 'tplUiItem', '.xu-tr');
 
         //不同編輯畫面共用查詢畫面
         _me.divEdit1 = $('#divEdit1');
@@ -731,6 +733,15 @@ var _me = {
         await _me.crudE.onUpdateA(id);
     },
 
+    //下載 table sql
+    onDownTableSql: async function (id) {
+        if (await _tool.ansA('是否確定下載這個功能的 Table SQL ?')) {
+            await _ajax.getStrA('DownTableSql', { id: id }, function (result) {
+                _str.saveFile(result, 'table.txt');
+            });
+        }
+    },
+
     //#region read form function
     //onclick generate crud(產生在主機)
     /*
@@ -746,10 +757,6 @@ var _me = {
 
     },
 
-    //onclick download table sql()
-    onDownTableSql: function () {
-
-    },
     //#endregion
 
     //#region edit form function
@@ -786,7 +793,7 @@ var _me = {
         _modal.hide(_me.modalImport);
     },
 
-    //export edit form to json
+    //export 前端 edit form to json
     onExport: async function () {
         //get jsons
         let jsons = _me.uiMany.getJsons();
@@ -801,7 +808,7 @@ var _me = {
         //create link & trigger click
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = "data.json";
+        link.download = "data.json";    //下載的檔名
         link.click();
     },
     //#endregion

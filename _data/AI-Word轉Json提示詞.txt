@@ -23,7 +23,7 @@
     c.多選欄位：用 'CS' 表示, 表示多個 CheckBox 欄位, Info 欄位內容有：
 	  a1.Title：同 "輸入欄位"
 	  a2.Cols：同 "輸入欄位"
-	  a3.IsHori：如果左側 label 後面有(V) 則此屬性為 true, 否則為 false
+	  a3.IsHori：如果左側 label 後面有(H) 則此屬性為 1, 否則為 0
 	  a4.LabelFids : 表示 CheckBox 的後方 label 和資料庫欄位名稱, 以逗號分隔, 2個為一組 
     d.欄位容器：用 'R' 表示, 它是一個排版用途的 Row 容器, 包含2或3個欄位; 有Childs2, Info欄位內容有：
 	  a1.RowType：例如：'6,6' 表示有2個 Col, grid寬度都是6, 允許的值為 '6,6','4,4,4','8,4','4,8'

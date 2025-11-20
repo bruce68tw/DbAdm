@@ -2,7 +2,9 @@
 using Base.Services;
 using DbAdm.Enums;
 using DbAdm.Models;
+using DbAdm.Tables;
 using HandlebarsDotNet;
+using Newtonsoft.Json.Linq;
 using System.Web;
 
 namespace DbAdm.Services
@@ -613,50 +615,52 @@ namespace DbAdm.Services
                     {
                         eitems.Add(new CrudEitemDto()
                         {
+                            //DataType 後面自動指定為 bit default 0
                             EtableId = tableId,
                             Fid = fids[i + 1]!.ToString(),
                             Name = fids[i]!.ToString(),
-                            //DataType = info["MaxLen"]!.ToString(),
-                            //Required = (info["Required"]!.ToString() == "1"),
                             HasCreate = true,
                             HasUpdate = true,
-                            //CheckType = e.CheckType,
-                            //CheckData = e.CheckData!,
                             InputType = InputTypeEstr.Check,
-                            //ItemData = e.ItemData!,
-                            //PosGroup = e.PosGroup!,
                             Cols = info["Cols"]!.ToString(),
-                            //PlaceHolder = e.PlaceHolder!,
                             Sort = uiItem.Sort,
-                            //Width = e.Width,
                         });
                     }
                 }
-                else
-                { 
-                    //一般 Input
-                    //var tableId = _Str.NewId();
-                    eitems.Add(new CrudEitemDto()
+                else if (uiItem.ItemType == UiItemTypeEstr.RowBox)
+                {
+                    foreach (var uiItem2 in uiItems!
+                        .Where(a => a.BoxId == uiItem.Id && a.ItemType == UiItemTypeEstr.Input)
+                        .OrderBy(a => a.ChildNo).ThenBy(a => a.Sort)
+                        .ToList())
                     {
-                        EtableId = tableId,
-                        Fid = info["Fid"]!.ToString(),
-                        Name = info["Title"]!.ToString(),
-                        DataType = (info["MaxLen"] == null) ? "" : info["MaxLen"]!.ToString(),
-                        Required = _Var.ToBool(info["Required"]),
-                        HasCreate = true,
-                        HasUpdate = true,
-                        //CheckType = e.CheckType,
-                        //CheckData = e.CheckData!,
-                        InputType = info["InputType"]!.ToString(),
-                        //ItemData = e.ItemData!,
-                        //PosGroup = e.PosGroup!,
-                        Cols = (info["Cols"] == null) ? "" : info["Cols"]!.ToString(),
-                        //PlaceHolder = e.PlaceHolder!,
-                        Sort = uiItem.Sort,
-                        //Width = e.Width,
-                    });
+                        var info2 = _Str.ToJson(uiItem2.Info)!;
+                        InfoToEitems(info2, eitems, tableId, uiItem2.Sort);
+                    }
+                }
+                else
+                {
+                    //一般 Input
+                    InfoToEitems(info, eitems, tableId, uiItem.Sort);
                 }
             }
+        }
+
+        private void InfoToEitems(JObject info, List<CrudEitemDto> eitems, string tableId, int sort)
+        {
+            eitems.Add(new CrudEitemDto()
+            {
+                EtableId = tableId,
+                Fid = info["Fid"]!.ToString(),
+                Name = info["Title"]!.ToString(),
+                DataType = (info["MaxLen"] == null) ? "" : info["MaxLen"]!.ToString(),
+                Required = _Var.ToBool(info["Required"]),
+                HasCreate = true,
+                HasUpdate = true,
+                InputType = info["InputType"]!.ToString(),
+                Cols = (info["Cols"] == null) ? "" : info["Cols"]!.ToString(),
+                Sort = sort,
+            });
         }
 
         private async Task<string> GenFilesA()
@@ -769,7 +773,7 @@ namespace DbAdm.Services
                             colStr += $"<vc:xi-check dto='new() {{ Fid = \"{fids[i + 1]}\", Label = \"{fids[i]}\" }}'/>" + _Fun.TextCarrier;
                         }
 
-                        var cls = (info["IsHori"]!.ToString() == "1") ? "x-hbox" : "x-vbox";
+                        var cls = _Var.ToBool(info["IsHori"]) ? "x-hbox" : "x-vbox";
                         itemStr += $@"
 <div class='row'>
     <div class='col-md-{cols[0]} x-label'>{info["Title"]!.ToString()}</div>
@@ -1000,6 +1004,7 @@ namespace DbAdm.Services
                         ColsToStr(
                             ViewTitle(name),
                             ViewFid(item.Fid),
+                            ViewRequired(item.Required),
                             ViewSelectRows(item),
                             //KeyValue("value", "1", true),
                             ViewLayout(isMany, item.Cols),

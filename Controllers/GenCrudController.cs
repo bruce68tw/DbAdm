@@ -135,6 +135,15 @@ namespace DbAdm.Controllers
         {
             return _Input.XgGroup(title, false);
         }
+
+        //¶Ç¦^ group item ¼Òª©
+        [HttpPost]
+        public string DownTableSql(string id)
+        {
+            return new GenCrudUiSvc().DownTableSql(id);
+        }
+
         #endregion
+
     }//class
 }

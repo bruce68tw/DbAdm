@@ -5,7 +5,7 @@
     });
 </script>
 
-@await Component.InvokeAsync("XgProgPath", new { names = new string[] { "{{ProgName}}" } })
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
 	{{#if HasFindForm}}

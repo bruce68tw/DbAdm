@@ -121,13 +121,15 @@ class EditMany {
      * reset edit form
      * param rowsBox {object} optional
      */
-    reset() {
+    reset(rowsBox) {
+        rowsBox = this._getRowsBox(rowsBox);
+
         if (this.fnReset) {
             this.fnReset();
         } else if (this.isUrm) {
             this._urmReset();
         } else if (this.hasEform) {
-            this.rowsBox.empty();   //empty rows ui first
+            rowsBox.empty();   //empty rows ui first
             this._resetVar();
         }
     }
@@ -566,6 +568,16 @@ class EditMany {
         //rowBox = rowBox || this.rowsBox;
         if (_obj.notEmpty(rowBox))
             rowBox.remove();
+    }
+
+    deleteAll() {
+        var me = this;
+        this.rowsBox.find(this.rowFilter).each(function () {
+            //add new row if empty key
+            var box = $(this);
+            var key = _input.get(me.kid, box);
+            me.deleteRow(key, box);
+        });
     }
 
     /**

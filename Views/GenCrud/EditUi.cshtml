@@ -134,7 +134,7 @@
 <div class="xu-ui-area"></div>
 
 <!-- uiItems editMany -->
-<form id='eformUiItems' class='d-none'></form>
+<form id='eformUiItem' class='d-none'></form>
 
 <!-- context menu for node & line, xf means flow -->
 <ul class='xf-menu'>
@@ -152,7 +152,7 @@
     _Id2(=Id, 後端會改變Id的值) 用來在後端設定 UiItem.BoxId
 -->
 <script id="tplUiItem" type="text/template">
-    <div class="xd-tr">
+    <div class="xu-tr">
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "Id" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "_Id2" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto() { Fid = "CrudId" })
@@ -180,10 +180,9 @@
                     <vc:xi-select dto='new() { Title = "欄位種類", Fid = "InputType", Rows = ViewBag.InputTypes, Required = true, Cols = cols }' />
                     <vc:xi-text dto='new() { Title = "排版格數", Fid = "Cols", Required = true, Cols = cols }' />
                     <vc:xi-check dto='new() { Title = "必填", Fid = "Required", Label = "是", Cols = cols }' />
-                    <vc:xi-int dto='new() { Title = "欄位長度限制", Fid = "MaxLen", Value = "0", Cols = cols }' />
+                    <vc:xi-text dto='new() { Title = "資料型態", Fid = "DataType", Required = true, Cols = cols }' />
                     <vc:xi-text dto='new() { Title="標題提示文字", Fid="TitleTip" , MaxLen=30, Cols=cols }' />
                     <vc:xi-text dto='new() { Title="欄位後面文字", Fid="InputNote" , MaxLen=100, Cols=cols }' />
-                    <vc:xi-text dto='new() { Title="連動欄位", Fid="InputNote" , MaxLen=100, Cols=cols, TitleTip="逗號分隔依序為 InputType,Title,Fid,Label(for CheckBox only)" }' />
                     <vc:xi-text dto='new() { Title = "欄位其他資訊", Fid = "ExtInfo", MaxLen = 100, Cols = cols, TitleTip = "select/radio:選項清單" }' />
                 </form>
             </div>
