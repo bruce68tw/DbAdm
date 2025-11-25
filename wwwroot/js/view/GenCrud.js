@@ -313,7 +313,7 @@ var _me = {
         _me.etGetForms().each(function (i, item) {
             //etable
             var form = $(item);
-            rows[i] = _me.crudE.getUpdRow(_me.mEtable.kid, _me.mEtable.fidTypes, form); //edit table
+            rows[i] = _me.mEtable.getUpdRow(form); //edit table
             _me.mEtable.rowSetFkey(rows[i], upKey);
 
             //eitems

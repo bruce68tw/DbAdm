@@ -1,5 +1,5 @@
 ﻿/**
- * 單筆編輯畫面
+ * 單筆編輯畫面, 全部屬性皆為 private !!
  * single edit form, called by _me.crudE.js
  * json row for both EditOne/EditMany has fields:
  *   _rows {json array}: updated rows include upload files
@@ -8,10 +8,9 @@
  * 公用屬性
  *   kid:
  *   eform:
- *   fidTypes:
  *   systemError:
- *   dataJson: 載入資料後(update/view)在CrudE自動設定
- *   hasFile、fileLen、fileFids: 在 _me.crudE.js setFileVars() 設定
+ *   dataJson: 載入資料後(update/view)在CrudE.js自動設定
+ *   hasFile
  *   validator: jquery vallidation object (EditMany同), 在 _me.crudE.js _initForm() 設定
  * 自定函數 called by _me.crudE.js
  *   //void fnAfterLoadJson(json)
@@ -19,22 +18,18 @@
  *   //void fnAfterSwap(readMode): called after _me.crudR.swap()
  *   //error fnWhenSave() ??
  *   //void fnAfterSave()
- *   
- * param kid {string} (default 'Id') pkey field id for getKey value & getUpdRow,
- *   must existed or will set systemError variables !!
- * param eformId {string} (default 'eform') must existed or will set systemError variables !!
- * note!! if these two parameters not Id/eform, must new EditOne() and set them !!
- * 
- * return {EditOne}
  */ 
 class EditOne {
 
     //fileFids, fileLen, hasFile 屬性在外部設定(_me.crudE.js setFileVars())
 
     /**
+     * @constructor
      * initial & and instance variables (this.validator is by _valid.init())
-     * param kid {string} default 'Id'
-     * param eformId {string} default 'eform'
+     * @param kid {string} (default 'Id') pkey field id for getKey value & getUpdRow,
+     *   must existed or will set systemError variables !!
+     * @param eformId {string} (default 'eform') must existed or will set systemError variables !!
+     * note!! if these two parameters not Id/eform, must new EditOne() and set them !!
      */
     constructor(kid, eformId) {
         //private
@@ -61,7 +56,7 @@ class EditOne {
 
     /**
      * is a new row or not
-     * return {bool}
+     * @returns {bool}
      */
     getKey() {
         return _input.get(this.kid, this.eform);
@@ -69,7 +64,7 @@ class EditOne {
 
     /**
      * get field value
-     * return {string}
+     * @returns {string}
      */
     getValue(fid) {
         return _input.get(fid, this.eform);
@@ -77,7 +72,7 @@ class EditOne {
 
     /**
      * is a new row or not
-     * return {bool}
+     * @returns {bool}
      */
     isNewRow() {
         return _edit.isNewBox(this.eform, this.kid);
@@ -85,25 +80,18 @@ class EditOne {
 
     /**
      * load row into UI, also save into old variables
-     * param row {json}
+     * @param row {json}
      */
     loadRow(row) {
-        _form.loadRow(this.eform, row);
-
-        //set old value for each field
-        for (var i = 0; i < this.fidTypeLen; i = i + 2) {
-            var fid = this.fidTypes[i];
-            var obj = _obj.get(fid, this.eform);
-            obj.data(_edit.DataOld, row[fid]);
-        }
+        _edit.loadRow(this, row);
     }
 
     /**
      * get updated row, 包含 _childs
-     * return {json} different column only
+     * @returns {json} different column only
      */
     getUpdRow() {
-        return _me.crudE.getUpdRow(this.kid, this.fidTypes, this.eform);
+        return _edit.getUpdRow(this, this.eform);
     }
 
     /**
@@ -122,7 +110,7 @@ class EditOne {
 
     /**
      * set form edit status
-     * param status {bool} edit status
+     * @param status {bool} edit status
      */
     setEdit(status) {
         _form.setEdit(this.eform, status);
@@ -130,18 +118,17 @@ class EditOne {
 
     /**
      * formData add files
-     * param levelStr {string}
-     * param data {FormData}
-     * return {json} file json
+     * @param levelStr {string}
+     * @param data {FormData}
+     * @returns {json} file json
      */
     dataAddFiles(levelStr, data) {
-        if (!this.hasFile)
-            return null;
+        if (!this.hasFile) return null;
 
         var fileJson = {};
         for (var i = 0; i < this.fileLen; i++) {
             var fid = this.fileFids[i];
-            var serverFid = _me.crudE.getFileSid(levelStr, fid);
+            var serverFid = _edit.getFileSid(levelStr, fid);
             if (_ifile.dataAddFile(data, fid, serverFid, this.eform)) {
                 fileJson[serverFid] = this.getKey();
             }
@@ -153,13 +140,13 @@ class EditOne {
     /**
      * onViewFile -> viewFile
      * onclick viewFile
-     * param table {string} table name
-     * param fid {string}
-     * param elm {element} link element
+     * @param table {string} table name
+     * @param fid {string}
+     * @param elm {element} link element
      */
     viewFile(table, fid, elm) {
         var key = this.getKey();
-        _me.crudE.viewFile(table, fid, elm, key);
+        _edit.viewFile(table, fid, elm, key);
     }
 
 }//class

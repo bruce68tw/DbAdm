@@ -20,11 +20,11 @@ class CrudR {
 
     /**
      * initial crud read & edit
-     * param1 dtConfig {Object} datatables config
-     * param edits {EditOne/EditMany Array} for edit form
+     * @param dtConfig {Object} datatables config
+     * @param edits {EditOne/EditMany Array} for edit form
      *   1.null: means one table, get eform
      *   2.many edit object, if ary0 is null, then call new EditOne()
-     * param updName {string} update name, default to _BR.Update
+     * @param updName {string} update name, default to _BR.Update
      */
     //this._init = function(dtConfig, edits, updName) {
     constructor(dtConfig, edits, updName) {
@@ -71,11 +71,11 @@ class CrudR {
 
     /**
      * button html string
-     * param id {string}
-     * param label {string}
-     * param fnOnclick {string}
-     * param fnArgs {string} 多個時逗號分隔
-     * return button html string
+     * @param id {string}
+     * @param label {string}
+     * @param fnOnclick {string}
+     * @param fnArgs {string} 多個時逗號分隔
+     * @returns button html string
      */ 
     dtBtn(id, label, fnOnclick) {
         return `<button type="button" class="btn btn-outline-secondary btn-sm" data-onclick="${fnOnclick}" data-args="${id}">${label}</button>`;
@@ -83,8 +83,8 @@ class CrudR {
 
     /**
      * checkbox for multiple select
-     * param value {string} [1] checkbox value
-     * param editable {bool} [true]
+     * @param value {string} [1] checkbox value
+     * @param editable {bool} [true]
      * //param fid {string} [_icheck.Check0Id] data-fid value
      */
     dtCheck0(value, editable) {
@@ -116,8 +116,8 @@ class CrudR {
 
     /**
      * set status column(checkbox)
-     * param value {string} checkbox value, will translate to bool
-     * param fnOnClick {string} onclick function, default to this.onSetStatusA
+     * @param value {string} checkbox value, will translate to bool
+     * @param fnOnClick {string} onclick function, default to this.onSetStatusA
      */
     dtSetStatus(key, value, fnOnClick) {
         //TODO: pending
@@ -155,11 +155,11 @@ class CrudR {
      * !! change link to button
      * 取消參數 fnOnUpdate, fnOnDelete, fnOnView
      * crud functions: update,delete,view
-     * param key {string} row key
-     * param rowName {string} for show row name before delete
-     * param hasUpdate {bool} has update icon or not
-     * param hasDelete {bool} has delete icon or not
-     * param hasView {bool} has view icon or not
+     * @param key {string} row key
+     * @param rowName {string} for show row name before delete
+     * @param hasUpdate {bool} has update icon or not
+     * @param hasDelete {bool} has delete icon or not
+     * @param hasView {bool} has view icon or not
      */
     //dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, fnOnUpdate, fnOnDelete, fnOnView) {
     dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, hasCopy) {
@@ -192,7 +192,7 @@ class CrudR {
     /**
      * 移除參數 nowDiv, fnCallback
      * change newDiv to active
-     * param toRead {bool} show divRead or not
+     * @param toRead {bool} show divRead or not
      * //param nowDiv {object} (default _me.divEdit) now div to show
      * //param fnCallback {function} (optional) callback function
      */
@@ -273,7 +273,7 @@ class CrudR {
      * 移除參數 fnCallback
      * to edit(U/V) mode
      * XpFlowSign Read.cshtml 待處理!! 
-     * param {any} fun
+     * @param {any} fun
      * //param {any} fnCallback
      */
     //toEditMode = function(fun, data) {
@@ -293,7 +293,7 @@ class CrudR {
 
     /**
      * call fnAfterSwap if existed
-     * param toRead {bool} to read mode or not
+     * @param toRead {bool} to read mode or not
      */
     /*
     _afterSwap(toRead) {
@@ -362,7 +362,7 @@ class CrudR {
     /**
      * call _me.crudE
      * onclick Update button
-     * param key {string} row key
+     * @param key {string} row key
      */
     /*
     async onUpdateA(key) {
@@ -375,7 +375,7 @@ class CrudR {
     /**
      * call _me.crudE
      * onclick View button
-     * param key {string} row key
+     * @param key {string} row key
      */
     /*
     async onViewA(key) {
@@ -400,9 +400,9 @@ class CrudR {
     /**
      * TODO: need test
      * onclick check all, check/uncheck box all checkbox of fid field
-     * param me {string} row key
-     * param box {string} row key
-     * param fid {string} fid
+     * @param me {string} row key
+     * @param box {string} row key
+     * @param fid {string} fid
      */
     //onCheckAll(me, box, fid) {
     onCheckAll(me, box) {

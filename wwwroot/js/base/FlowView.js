@@ -439,8 +439,8 @@ class FlowNode {
 	/**
 	 * set node name only for TypeNode, 考慮多行
 	 * called by initial, 前端改變node name
-	 * param name {string} 
-	 * param drawLine {bool} re-draw line or not
+	 * @param name {string} 
+	 * @param drawLine {bool} re-draw line or not
 	 */ 
 	setName(name, drawLine) {
 		// 更新文字內容, 後端傳回會加上跳脫字元, js 2021才有 replaceAll, 所以自製

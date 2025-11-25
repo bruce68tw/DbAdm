@@ -18,7 +18,7 @@
 class CrudE {
 
     /**
-     * param1 edits {object Array} for edit form
+     * @param edits {object Array} for edit form
      *   1.null: means one table, get eform
      *   2.many edit object, if ary0 is null, then call new EditOne()
      *   3.如果是 DtoEdit list, 表示多個編輯畫面
@@ -81,11 +81,6 @@ class CrudE {
                 this._initEdit0(edits);
 
             this._edits = edits;
-            /*
-            this._edit0 = edit0;
-            if (edit0.eform != null)
-                this.eform0 = edit0.eform;
-            */
             //this._hasChild = (_fun.hasValue(this._edit0[Childs]) && this._edit0[Childs].length > 0);
             //this.editLen = this.edits.length;
             /*
@@ -125,7 +120,8 @@ class CrudE {
             edits[0] = edit0;   //寫回
         }
 
-        const childs = _edit.Childs;
+        //set edit0.Childs
+        const childs = _edit.Childs;    //fid
         edit0[childs] = [];
         for (var i = 1; i < edits.length; i++)
             edit0[childs][i - 1] = edits[i];
@@ -135,7 +131,7 @@ class CrudE {
 
     /**
      * (recursive)initial edit forms
-     * param edit {object} EditOne/EditMany object
+     * @param edit {object} EditOne/EditMany object
      */
     _initForm(edit) {
         if (edit.eform == null) return;
@@ -200,7 +196,7 @@ class CrudE {
         for (var i = 0; i < childLen; i++) {
             var edit2 = this._getEditChild(edit, i);
             edit2.dataJson = this.getChildJson(json, i);
-            edit2.loadRows(this.jsonGetRows(edit2.dataJson));
+            edit2.loadRowsBySys(this.jsonGetRows(edit2.dataJson));
         }
 
         //call fnAfterLoadJson() if existed
@@ -219,7 +215,7 @@ class CrudE {
     /**
      * _setEditStatus -> setEditStatus
      * set all forms fields edit status
-     * param fun {string} C,U,V
+     * @param fun {string} C,U,V
      */ 
     setEditStatus(fun) {
         //if (fun === this._nowFun)
@@ -289,7 +285,7 @@ class CrudE {
 
     /**
      * get updated data for save create/update(has _rows, _childs, _deletes, _fileJson)
-     * param formData {FormData} for write uploaded files
+     * @param formData {FormData} for write uploaded files
      * return {json} include fileJson if existed
      */
     _getUpdJson(formData) {
@@ -314,11 +310,11 @@ class CrudE {
 
             //file
             if (edit2.hasFile) {
-                var fileJson2 = edit2.dataAddFiles(levelStr + i, formData, edit2.rowsBox); //upload files
+                var fileJson2 = edit2.dataAddFiles(levelStr + i, formData); //upload files
                 _json.copy(fileJson2, fileJson);
             }
 
-            var childJson = edit2.getUpdJson(key);
+            var childJson = edit2.getUpdJsonBySys(key);
             if (childJson == null)
                 continue;
 
@@ -353,7 +349,7 @@ class CrudE {
 
     /**
      * forms validate check, also check systemError
-     * return {bool}
+     * @returns {bool}
      */
     validAll() {
         //check system error
@@ -412,8 +408,8 @@ class CrudE {
     }
 
     /**
-     * reset form (recursive)
-     * param edit {EditOne}
+     * (recursive)reset main form and childs
+     * @param edit {EditOne}
      */
     _resetForm(edit) {
         //reset this
@@ -424,6 +420,8 @@ class CrudE {
         for (var i = 0; i < childLen; i++) {
             var edit2 = this._getEditChild(edit, i);
             edit2.reset();
+
+            //如果為1對1, 把row設為新增
         }
     }
 
@@ -457,8 +455,9 @@ class CrudE {
 
     /**
      * get edit child
-     * param edit {object} edit object
-     * param childIdx {int} child index, base 0
+     * @param {EditOne} edit - edit object
+     * @param {int} childIdx - child index, base 0
+     * @returns {EditMany}
      */
     _getEditChild(edit, childIdx) {
         return edit[_edit.Childs][childIdx];
@@ -466,7 +465,7 @@ class CrudE {
 
     /**
      * get edit child len
-     * param edit {object} edit object
+     * @param edit {object} edit object
      */
     _getEditChildLen(edit) {
         var fid = _edit.Childs;
@@ -502,10 +501,10 @@ class CrudE {
 
     /**
      * set child rows
-     * param upJson {json}
-     * param childIdx {int}
-     * param rows {jsons}
-     * return {json} child object
+     * @param upJson {json}
+     * @param childIdx {int}
+     * @param rows {jsons}
+     * @returns {json} child object
      */
     setChildRows(upJson, childIdx, rows) {
         var fid = _edit.Childs;
@@ -544,8 +543,8 @@ class CrudE {
     //=== move from _edit.js start
     /**
      * get old value 
-     * param obj {object} input jquery object
-     * return {string}
+     * @param obj {object} input jquery object
+     * @returns {string}
     getOld(obj) {
         return obj.data(_edit.DataOld);
     }
@@ -553,8 +552,8 @@ class CrudE {
 
     /**
      * set old value
-     * param obj {object} input jquery object
-     * param value {int/string}
+     * @param obj {object} input jquery object
+     * @param value {int/string}
     setOld(obj, value) {
         obj.data(_edit.DataOld, value);
     }
@@ -574,76 +573,17 @@ class CrudE {
     }
     */
 
-    /**
-     * get one updated row for New/Updated
-     * 只讀取有異動的欄位
-     * called by: EditOne.js, DbAdm Crud.js(使用變形的 form !!)
-     * param kid {string} key fid
-     * param fidTypes {id-value array}
-     * param box {object} form object
-     * return json row
-     */
-    getUpdRow(kid, fidTypes, box) {
-        //case new return row
-        var row = _form.toRow(box);
-        if (_edit.isNewRow(row, kid))
-            return row;
-        /*
-        var key = _input.get(kid, box);
-        if (_str.isEmpty(key))
-            return row;
-        */
+    //move to _edit.js
+    //getUpdRow(kid, fidTypes, box) { }
 
-        //case update: 讀取有異動的欄位
-        var diff = false;
-        var result = {};
-        var fid, ftype, value, obj, old;
-        for (var j = 0; j < fidTypes.length; j = j + 2) {
-            //skip read only type
-            ftype = fidTypes[j + 1];
-            //if (ftype === 'link' || ftype === 'read')
-            //    continue;
-
-            fid = fidTypes[j];
-            //obj = (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
-            obj = _input.getObj(fid, box, ftype);
-            //value = _input.getO(obj, box, ftype);
-            value = row[fid];
-            old = obj.data(_edit.DataOld);
-            //if fully compare, string will not equal numeric !!
-            if (value != old) {
-                //date/dt old value has more length
-                if ((ftype === 'date' || ftype === 'dt') &&
-                    _date.dtsToValue(value) === _date.dtsToValue(old))
-                    continue;
-
-                result[fid] = value;
-                diff = true;
-            }
-        }
-        if (!diff)
-            return null;
-
-        result[kid] = _input.get(kid, box);
-        return result;
-    }
-
-    /**
-     * getServerFid -> getFileSid
-     * get server side variables name for file field
-     * param tableId {string} 
-     * param fid {string} ui file id
-     * return {string} format: Table_Fid
-     */
-    getFileSid(levelStr, fid) {
-        return 't' + levelStr + '_' + fid;
-    }
+    //move to _edit.js
+    //getFileSid(levelStr, fid) {}
 
     /**
      * formData set fileJson field
-     * param data {formData}
-     * param fileJson {json}
-     * return void
+     * @param data {formData}
+     * @param fileJson {json}
+     * @returns void
      */
     dataSetFileJson(data, fileJson) {
         if (_json.isEmpty(fileJson))
@@ -657,53 +597,15 @@ class CrudE {
         data.set(fid, fileJson);
     }
 
-    /**
-     * isNewKey(key) -> isNewRow(row)
-     * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
-     * param key {string}
-    isNewRow(row) {
-        var fid = _edit.IsNew;
-        return (row[fid] != null || row[fid] == '1');
-    }
-     */
-
-    /*
-    isNewKey(key) {
-        key = key.toString();   //convert to string for checking
-        var len = key.length;
-        if (len >= 6)
-            return false;
-
-        var val = parseInt(key);
-        return (!Number.isNaN(val) && (val.toString().length == len));
-    }
-    */
-
-    /**
-     * onclick viewFile
-     * param table {string} table name
-     * param fid {string}
-     * param elm {element} link element
-     * param key {string} row key
-     */
-    viewFile(table, fid, elm, key) {
-        /*
-        if (this.isNewKey(key)) {
-            _tool.msg(_BR.NewFileNotView);
-        } else {
-        */
-            var ext = _file.getFileExt(elm.innerText);
-            if (_file.isImageExt(ext))
-                _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
-        //}
-    }
+    //move to _edit.js
+    //viewFile(table, fid, elm, key) {}
 
     //#region remark code
     /**
      * get field info array by box object & row filter
      * box {object} form/div container
      * trFilter {string} (optional 'tr')
-     * return json array
+     * @returns json array
      */
     /*
     getFidTypesByDid(box, trFilter) {
@@ -746,15 +648,15 @@ class CrudE {
      */
     onCreate() {
         var fun = EstrFun.Create;
-        this._resetForm(this._edit0);   //reset first
+        this._resetForm(this._edit0);   //reset main/child
         this.setEditStatus(fun);
         this.afterOpen(fun, null);
     }
 
     /**
      * onclick Update button
-     * param key {string} row key
-     * return {bool}
+     * @param key {string} row key
+     * @returns {bool}
      */
     async onUpdateA(key) {
         //_edit.removeIsNew(this._edit0.eform);    //移除_IsNew隱藏欄位
@@ -774,11 +676,11 @@ class CrudE {
 
     /**
      * table onclick openModal button(link)
-     * param btn {button} 
-     * param title {string} modal title
-     * param fid {string} input field name
-     * param required {bool}
-     * param maxLen {int} 
+     * @param btn {button} 
+     * @param title {string} modal title
+     * @param fid {string} input field name
+     * @param required {bool}
+     * @param maxLen {int} 
      */
     onOpenModal(title, fid, required, maxLen) {
         var tr = _fun.getMe(true).closest('tr');

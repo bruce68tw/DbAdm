@@ -449,8 +449,14 @@ body {
 .x-w200 {
     width: 200px !important;
 }
+.x-w225 {
+    width: 225px !important;
+}
 .x-w250 {
     width: 250px !important;
+}
+.x-w275 {
+    width: 275px !important;
 }
 .x-w300 {
     width: 300px !important;
@@ -547,7 +553,7 @@ body {
 }
 
 /* jquery validate error label */
-span.error {
+span.error, label.error {
     color: red;
     margin-bottom: 0 !important;
 }
@@ -1088,7 +1094,7 @@ input[type=number] {
 .x-leftmenu {
     margin-left: 0;
     padding: 0;
-    width: 250px;
+    min-width: 250px;
     height: 100%;
     transition: 0.5s;
     z-index: 1000;

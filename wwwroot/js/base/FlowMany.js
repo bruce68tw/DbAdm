@@ -2,9 +2,9 @@
  * FlowForm -> FlowMany
  * 處理 flow UI 元素和多筆資料(mNode, mLine)之間的轉換
  * workflow component
- * param areaId {string} editor work area id
- * param mNode {EditMany}
- * param mLine {EditMany}
+ * @param areaId {string} editor work area id
+ * @param mNode {EditMany}
+ * @param mLine {EditMany}
  */ 
 class FlowMany {
 
@@ -101,10 +101,10 @@ class FlowMany {
 
     /**
      * on show right menu
-     * param isNode {bool} 
-     * param elm {FlowNode/FlowLine} 
-     * param mouseX {int} 
-     * param mouseY {int} 
+     * @param isNode {bool} 
+     * @param elm {FlowNode/FlowLine} 
+     * @param mouseX {int} 
+     * @param mouseY {int} 
      */
     fnShowMenu(event, isNode, flowItem) {
         //set instance variables
@@ -170,7 +170,7 @@ class FlowMany {
 
     /**
      * load nodes into UI
-     * param rows {json} 後端傳回的完整json
+     * @param rows {json} 後端傳回的完整json
      */
     loadNodes(rows) {
         //EditMany load rows by rowsBox
@@ -182,7 +182,7 @@ class FlowMany {
 
     /**
      * load nodes into UI(hide)
-     * param rows {rows} line rows
+     * @param rows {rows} line rows
      */
     loadLines(rows) {
         this.mLine.loadRowsByRsb(rows, true);
@@ -200,8 +200,8 @@ class FlowMany {
 
     /**
      * add new node
-     * param nodeType {string}
-     * param name {string} only for normalType node
+     * @param nodeType {string}
+     * @param name {string} only for normalType node
      */ 
     addNode(nodeType, name) {
 
@@ -248,9 +248,9 @@ class FlowMany {
 
     /**
      * node get field value
-     * param node {object} node object
-     * param fid {string} field id
-     * return {string}
+     * @param node {object} node object
+     * @param fid {string} field id
+     * @returns {string}
     _boxGetValue(node, fid) {
         return _itext.get(fid, node);
     }
@@ -258,9 +258,9 @@ class FlowMany {
 
     /**
      * node get field values
-     * param node {object} node object
-     * param fids {strings} field id array
-     * return {json}
+     * @param node {object} node object
+     * @param fids {strings} field id array
+     * @returns {json}
     _boxGetValues(node, fids) {
         var json = {};
         for (var i = 0; i < fids.length; i++) {
@@ -288,8 +288,8 @@ class FlowMany {
     //#region line function
     /**
      * ?? add one line(connector)
-     * param row {json} line row
-     * return void
+     * @param row {json} line row
+     * @returns void
     _renderLine(row) {
 
         //param 2(reference object) not work here !!
@@ -314,8 +314,8 @@ class FlowMany {
 
     /**
      * add flow line into hide UI for crud
-     * param row {json}
-     * return {string} line key
+     * @param row {json}
+     * @returns {string} line key
     addLine(row) {
         var newLine = $(this.tplLine);      //create row object, no need mustache()
         _form.loadRow(newLine, row);        //row objec to UI
@@ -342,7 +342,7 @@ class FlowMany {
 
     /** ??
      * get line property: style, label
-     * return {json} 
+     * @returns {json} 
     getLineProp(condStr) {
         return {
             //type: type,
@@ -360,8 +360,8 @@ class FlowMany {
 
     /**
      * get object(node/line) key
-     * param obj {object}
-     * return {string} key value
+     * @param obj {object}
+     * @returns {string} key value
     _getObjKey(obj) {
         return _itext.get('Id', obj);
     }

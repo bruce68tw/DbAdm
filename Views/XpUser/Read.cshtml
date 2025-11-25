@@ -1,9 +1,16 @@
 ﻿<script nonce="@_Fun.Nonce">
+    /// <reference path="../../wwwroot/js/base/CrudR.js" />
+    /// <reference path="../../wwwroot/js/base/EditMany.js" />
     $(function () {
         _me.init();
     });
 
     var _me = {
+        /** @@type {CrudR} */
+        crudR: null,
+        /** @@type {EditMany} */
+        mUserRole: null,
+
         init: function () {        
             //datatable config
             var config = {
@@ -15,19 +22,19 @@
                     { data: '_Fun' },
                 ],
                 columnDefs: [
-				    { targets: [3], render: function (data, type, full, meta) {
+				    { targets: [3], render: function(data) {
                         return _me.crudR.dtStatusName(data);
                     }},
-				    { targets: [4], render: function (data, type, full, meta) {
+				    { targets: [4], render: (data, type, full) => {
                         return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                     }},
                 ],
             };
 
             //initial
-            _me.mUserRole = new EditMany('Id', 'divRoles');
-            _me.mUserRole.initUrm(['Id', 'RoleId']);    //for urm
-            new CrudR(config, [null, _me.mUserRole]);
+            this.mUserRole = new EditMany('Id', 'divRoles');
+            this.mUserRole.initUrm(['Id', 'RoleId']);    //for urm
+            new CrudR(config, [null, this.mUserRole]);
         },
 
     }; //class

@@ -1,44 +1,34 @@
 ﻿/**
- * 多筆編輯畫面
- * multiple edit forms
- *   資料儲存在 html input
- * 
+ * 多筆編輯畫面(包含1對1), 全部屬性皆為 private !!
  * notice:
  *   set data-fkeyFid when save
  *   函數名稱後面ByRsb(表示by RowsBox)為擴充原本函數, 參數rowsBox空白則為this.RowsBox
- * 
- * 屬性: 參考 init()
- * 
+ * 公用屬性:(同EditOne)
  * 自定函數:
  *   void fnLoadRows(rows)(old: fnLoadJson(json))：show json to form, use loadJson instead of loadRows for more situation !!
  *   json fnGetUpdJson(upKey)：get updated json by form
  *   bool fnValid()：validate check
  *   void fnReset()：reset
- *   
- * param-1 kid {string} pkey field id(single key)
- * //param-2 eformId {string} (optional) edit form id
- * param-2 rowsBoxId {string} (optional) rows box id
- *   if empty, you must write functions: fnLoadRows、fnGetUpdJson、fnValid、fnReset，
- *     新增一筆時設定newId
- * param-3 tplRowId {string} (optional) row template id
- *   //tplRowId -> rowTplId
- *   1.if empty, it will log error when call related function.
- *   2.system get fid-type from this variables
- *   3.called by singleFormLoadRow、loadRowsByRsb、_renderRow
- * param-4 rowFilter {string} (optional) jQuery filter for find row object
- *   1.if empty, it will log error when call related function.
- *   2.inside element -> row(onDeleteRow),
- *   3.rowsBox -> row(getUpdRows)
- * param-5 sortFid {string} (optional) sort fid for front-side sorting function
- * 
- * return {EditMany}
+ * @class EditMany
  */
-//function EditMany(kid, eformId, rowTplId, rowFilter, sortFid) {
 class EditMany {
 
     /**
+     * @constructor
      * initial & set instance variables (this.validator by _valid.init())
-     * call by this
+     * @param kid {string} pkey field id(single key)
+     * @param rowsBoxId {string} (optional) rows box id,
+     *   if empty, you must write functions: fnLoadRows、fnGetUpdJson、fnValid、fnReset，
+     *     新增一筆時設定newId
+     * @param rowTplId {string} (need for base mode) row template id, one mode 不可空白, 
+     *   1.if empty, it will log error when call related function.
+     *   2.system get fid-type from this variables
+     *   3.called by singleFormLoadRow、loadRowsByRsb、_renderRow
+     * @param rowFilter {string} (need for base mode) jQuery filter for find row object
+     *   1.if empty, it will log error when call related function.
+     *   2.inside element -> row(onDeleteRow),
+     *   3.rowsBox -> row(getUpdRows)
+     * @param sortFid {string} (optional) sort fid for front-side sorting function
      */ 
     constructor(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
 
@@ -49,17 +39,19 @@ class EditMany {
         this[_edit.Childs] = null;
 
         //variables
-        this.mode = _edit.ModeBase;    //default value
+        this.mode = EstrEditMode.Base;  //default value
         this.modeData = '';             //for different mode
-        this.isUrm = false;             //is urm or not
+        //this.isUrm = false;           //is urm or not
+
+        //public
+        this.dataJson = null;   //參考EditOne
+        this.systemError = '';
 
         this.kid = kid;
         this.rowFilter = rowFilter;
         this.sortFid = sortFid;
-        this.systemError = '';
         this.hasRowTpl = _str.notEmpty(rowTplId);
         this.hasRowFilter = _str.notEmpty(rowFilter);
-        this.dataJson = null;   //參考EditOne
 
         if (this.hasRowTpl) {
             this.rowTpl = $('#' + rowTplId).html();
@@ -86,12 +78,12 @@ class EditMany {
         }
 
         this.deletedRows = [];  //deleted key string array
-        this._newIndex = 0;      //new row serial no, 使用負數來表示新資料
+        this.newIndex = 0;      //new row serial no, 使用負數來表示新資料
     }
 
     /**
      * set child array
-     * param childs {EditOne/EditMany array}
+     * @param childs {EditOne/EditMany array}
      */
     setChilds(childs) {
         this[_edit.Childs] = childs;
@@ -99,19 +91,27 @@ class EditMany {
 
     /**
      * initial urm, 參考 XpUser Read.cshmtl
-     * param fids: 要傳到後端的欄位id array
+     * @param fids: 要傳到後端的欄位id array
      */ 
     initUrm(fids) {
-        this.mode = _edit.ModeUR;
+        this.mode = EstrEditMode.UR;
         this.modeData = fids;
-        this.isUrm = true;
+        //this.isUrm = true;
+    }
+
+    /**
+     * initial one mode
+     */
+    initOneMode() {
+        this.mode = EstrEditMode.One;
+        _edit.initVars(this, this.eform);
     }
 
     /**
      * isNewTr -> _isNewBox
      * check is a new tr or not
-     * param tr {object} 
-     * return {bool}
+     * @param tr {object} 
+     * @returns {bool}
      */
     _isNewBox(box) {
         return _edit.isNewBox(box, this.kid);
@@ -119,15 +119,20 @@ class EditMany {
 
     /**
      * reset edit form
-     * param rowsBox {object} optional
+     * @param rowsBox {object} optional
+     * @param forNew {bool} 是否為新增
      */
-    reset(rowsBox) {
+    reset(rowsBox, forNew) {
+        if (forNew == null) forNew = false;
+
         rowsBox = this._getRowsBox(rowsBox);
 
         if (this.fnReset) {
             this.fnReset();
-        } else if (this.isUrm) {
+        } else if (this.mode == EstrEditMode.UR) {
             this._urmReset();
+        } else if (this.mode == EstrEditMode.One) {
+            this._resetAndNew();
         } else if (this.hasEform) {
             rowsBox.empty();   //empty rows ui first
             this._resetVar();
@@ -136,7 +141,7 @@ class EditMany {
 
     //reset variables
     _resetVar() {
-        this._newIndex = 0;
+        this.newIndex = 0;
         this._resetDeletes();
     }
 
@@ -151,9 +156,9 @@ class EditMany {
     /**
      * urmLoadJson -> urmLoadRows
      * (urm: UserRole Mode), load json rows into UI by urm
-     * param json {json} 
-     * param rowsBox {object} 
-     * param fids {string[]} 
+     * @param json {json} 
+     * @param rowsBox {object} 
+     * @param fids {string[]} 
      */
     _urmLoadRows(rows) {
         this._urmReset();
@@ -175,11 +180,11 @@ class EditMany {
     /**
      * get upd json by UserRole mode(urm), Role欄位使用checkbox
      * called by User.js、XpRole.js
-     * param upKey {string} up key
-     * param rowsBox {object} rows box
-     * param keyFid {string} key fid, ex: UserId
-     * param dataFid {string} data fid, ex: RoleId
-     * return {json} modified columns only
+     * @param upKey {string} up key
+     * @param rowsBox {object} rows box
+     * @param keyFid {string} key fid, ex: UserId
+     * @param dataFid {string} data fid, ex: RoleId
+     * @returns {json} modified columns only
      */
     _urmGetUpdJson(upKey) {
         var json = {};
@@ -223,17 +228,30 @@ class EditMany {
         objs.data('key', '');
     }
 
+    //reset and set new row for 1to1 only
+    //清空UI, 設為new row(key=-1)
+    _resetAndNew() {
+        _form.reset(this.eform);
+        _itext.set(this.kid, -1, this.eform);
+    }
+
     /**
-     * loadJson(json) -> loadRows(rows)
+     * loadJson(json) -> loadRows(rows) -> loadRowsBySys
      * 系統自動呼叫, 不可在 fnXXX 呼叫, 否則會產生無窮迴圈 !!
      * load this json rows into UI, also set old values !!
-     * param json {json} 
+     * @param rows {array} 
      */
-    loadRows(rows) {
+    loadRowsBySys(rows) {
         if (this.fnLoadRows) {
             this.fnLoadRows(rows);
-        } else if (this.isUrm) {
+        } else if (this.mode == EstrEditMode.UR) {
             this._urmLoadRows(rows, _me.divRoles, _me.mUserRoleFids);
+        } else if (this.mode == EstrEditMode.One) {
+            if (_array.isEmpty(rows))
+                this._resetAndNew();
+            else
+                _edit.loadRow(this, rows[0]);
+
         } else {
             //var rows = (json == null || json[_edit.Rows] == null)
             //    ? null : json[_edit.Rows];
@@ -246,9 +264,9 @@ class EditMany {
      * box 與 rsb(rowsBox) 有些不同, 所以用不同名 !!
      * load one row, also set field old value,
      * ex: DbAdm/Crud.js Etable is a single form but has multiple rows property !!
-     * param rowBox {object}
-     * param row {json}
-     * param index {int} 資料序號 base 0
+     * @param rowBox {object}
+     * @param row {json}
+     * @param index {int} 資料序號 base 0
      */
     loadRowByBox(rowBox, row, index) {
         //if (!this._checkRowTpl())
@@ -277,9 +295,9 @@ class EditMany {
     /**
      * loadRowsByBox(rowsBox, rows, reset) -> loadRowsByRsb(rows, reset, rowsBox)
      * load rows by rowsBox also set old value
-     * param rows {jsons}
-     * param reset {bool} (true) reset rowsBox first.
-     * param rowsBox {object} (this.rowsBox) rows box object 
+     * @param rows {jsons}
+     * @param reset {bool} (true) reset rowsBox first.
+     * @param rowsBox {object} (this.rowsBox) rows box object 
      */ 
     loadRowsByRsb(rows, reset, rowsBox) {
         if (!this._checkRowTpl())
@@ -333,8 +351,8 @@ class EditMany {
 
     /**
      * get row key
-     * param rowBox {object} row box
-     * return {string} key value
+     * @param rowBox {object} row box
+     * @returns {string} key value
      */
     getKey(rowBox) {
         return _input.get(this.kid, rowBox);
@@ -344,7 +362,7 @@ class EditMany {
       * get row(json) by tr object, 不包含 xi-unsave 欄位
       * trObj {object} tr object
       * fidTypes {string array} field info array
-      * return {json} one row
+      * @returns {json} one row
       */
     /*
     this.getRow = function (trObj) {
@@ -378,8 +396,8 @@ class EditMany {
 
     /**
      * get row box by inside element/object
-     * param elm {element/object}
-     * return {object}
+     * @param elm {element/object}
+     * @returns {object}
      */
     _elmToRowBox(elm) {
         return this._checkRowFilter()
@@ -390,8 +408,8 @@ class EditMany {
     /**
      * get row box by id
      * called Flow.js
-     * param id {string} row id
-     * return {object} row box
+     * @param id {string} row id
+     * @returns {object} row box
      */
     idToRowBox(id) {
         var filter = _input.fidFilter(this.kid) + `[value='${id}']`;
@@ -399,24 +417,31 @@ class EditMany {
     }
 
     /**
-     * getUpdJsonByCrud -> getUpdJson
+     * getUpdJsonByCrud -> getUpdJsonBySys
      * 系統自動呼叫, 不可在 fnXXX 呼叫, 否則會產生無窮迴圈 !!
      * get updated json, called by crudE.js only !!
-     * param upKey {string}
-     * return {json} modified columns only
+     * @param upKey {string}
+     * @returns {json} modified columns only
      */
-    getUpdJson(upKey) {
-        return this.fnGetUpdJson ? this.fnGetUpdJson(upKey) :
-            this.isUrm ? this._urmGetUpdJson(upKey) :
-            this.getUpdJsonByRsb(upKey, this.rowsBox);
+    getUpdJsonBySys(upKey) {
+        if (this.fnGetUpdJson)
+            return this.fnGetUpdJson(upKey);
+        else if (this.mode == EstrEditMode.UR)
+            return this._urmGetUpdJson(upKey);
+        else if (this.mode == EstrEditMode.One) {
+            var json = {};
+            json[_edit.Rows] = [this.getUpdRow(this.eform)];
+            return json;
+        } else
+            return this.getUpdJsonByRsb(upKey, this.rowsBox);
     }
 
     /**
      * getUpdJson -> getUpdJsonByRsb
      * get updated json by rowsBox, called by crud.js only
-     * param upKey {string}
-     * param rowsBox {object}
-     * return {json} modified columns only
+     * @param upKey {string}
+     * @param rowsBox {object}
+     * @returns {json} modified columns only
      */
     getUpdJsonByRsb(upKey, rowsBox) {
         var json = {};
@@ -427,28 +452,34 @@ class EditMany {
 
     /**
      * check a new key or not, parseInt(ABC123) will get int, cannot use it!!
-     * param key {string}
+     * @param key {string}
     this.isNewKey = function (key) {
         return (key.length <= 3);
     }
      */
 
     /**
+     * get one updated row
+     * @returns {json}
+     */
+    getUpdRow(box) {
+        return _edit.getUpdRow(this, box);
+    }
+
+    /**
      * public for Crud.js
      * (need this.rowFilter !!) get updated rows(not include _childs, _deletes)
      * will also set fkeyFid
-     * param rowsBox {object} (optional) rows box, default this.rowsBox
-     * return {jsons} null if empty
+     * @param rowsBox {object} (optional) rows box, default this.rowsBox
+     * @returns {jsons} null if empty
      */ 
     getUpdRows(upKey, rowsBox) {
-        if (!this._checkRowFilter())
-            return;
+        if (!this._checkRowFilter()) return;
 
         //set sort field
         rowsBox = this._getRowsBox(rowsBox);
         this.setSort(rowsBox);
 
-        //debugger;
         var rows = [];  //return rows        
         var me = this;  //this is not work inside each() !!
         rowsBox.find(me.rowFilter).each(function (idx, item) {
@@ -504,7 +535,7 @@ class EditMany {
      * getDeletedStr -> getDeletes
      * get deleted rows key list字串 for 傳回後端
      * public for Crud.js
-     * return {string} null for empty.
+     * @returns {string} null for empty.
      */ 
     getDeletes() {
         return (this.deletedRows.length === 0)
@@ -520,10 +551,10 @@ class EditMany {
 
     /**
      * add one row(or empty) into UI, 同時設定新id
-     * param {object} (optional) row
-     * param {object} (optional) rowsBox, default this.rowsBox
-     * param {int} (optional) newId 新id
-     * return {object} row
+     * @param {object} (optional) row
+     * @param {object} (optional) rowsBox, default this.rowsBox
+     * @param {int} (optional) newId 新id
+     * @returns {object} row
      */
     addRow(row, rowsBox, newId) {
         row = row || {};
@@ -536,7 +567,7 @@ class EditMany {
 
     /**
      * onclick deleteRow
-     * param btn {element}
+     * @param btn {element}
      */
     onDeleteRow() {        
         var box = this._elmToRowBox(_fun.getMe());
@@ -545,8 +576,8 @@ class EditMany {
 
     /**
      * add deleted row & remove UI row
-     * param key {string} row key
-     * param rowBox {object} (optional) rows box, default this.rowsBox
+     * @param key {string} row key
+     * @param rowBox {object} (optional) rows box, default this.rowsBox
      */ 
     deleteRow(key, rowBox) {
         var deletes = this.deletedRows;
@@ -583,20 +614,20 @@ class EditMany {
     /**
      * onViewFile -> viewFile
      * onclick viewFile
-     * param table {string} table name
-     * param fid {string}
-     * param elm {element} link element
+     * @param table {string} table name
+     * @param fid {string}
+     * @param elm {element} link element
      */
     viewFile(table, fid, elm) {
         var key = this.getKey(this._elmToRowBox(elm));
-        _me.crudE.viewFile(table, fid, elm, key);   //非初始階段可以讀取_me.crudE
+        _edit.viewFile(table, fid, elm, key);   //非初始階段可以讀取_me.crudE
     }
 
     /**
      * render row by UI template, called by addRow()
-     * param rowsBox {object}
-     * param row {json}
-     * return {object} row object
+     * @param rowsBox {object}
+     * @param row {json}
+     * @returns {object} row object
      */ 
     _renderRow(row, rowsBox) {
         if (!this._checkRowTpl())
@@ -611,10 +642,10 @@ class EditMany {
 
     /**
      * (need this.rowFilter !!) formData add upload files
-     * param levelStr {string}
-     * param data {FormData}
-     * param rowsBox {object} (optional) default this.rowsBox
-     * return {json} file json
+     * @param levelStr {string} level string
+     * @param data {FormData} form data
+     * @param rowsBox {jobject} (optional) default this.rowsBox
+     * @returns {json} file json
      */ 
     dataAddFiles(levelStr, data, rowsBox) {
         if (!this.hasFile) return null;
@@ -628,7 +659,7 @@ class EditMany {
             var tr = $(item);
             for (var i = 0; i < me.fileLen; i++) {
                 var fid = me.fileFids[i];
-                var serverFid = _me.crudE.getFileSid(levelStr, fid);
+                var serverFid = _edit.getFileSid(levelStr, fid);
                 if (_ifile.dataAddFile(data, fid, serverFid, tr)) {
                     fileIdx[fid] = (fileIdx[fid] == null) ? 0 : fileIdx[fid] + 1;
                     //set fileJson
@@ -642,8 +673,8 @@ class EditMany {
 
     /**
      * row set fkey value
-     * param row {json}
-     * param fkeyFid {string}
+     * @param row {json}
+     * @param fkeyFid {string}
      */
     rowSetFkey(row, fkey) {
         if (row != null && _edit.isNewRow(row, fkey))
@@ -652,8 +683,8 @@ class EditMany {
 
     /**
      * rows set fkey value
-     * param rows {jsons}
-     * param fkeyFid {string} fkey value
+     * @param rows {jsons}
+     * @param fkeyFid {string} fkey value
      */
     rowsSetFkey(rows, fkey) {
         if (rows != null) {
@@ -674,33 +705,33 @@ class EditMany {
         if (this.rowsBox == null || this.rowsBox.length == 0) return;
 
         var me = this;  //this is not work inside each() !!
-        me._newIndex = 0;
+        me.newIndex = 0;
         me.rowsBox.find(me.rowFilter).each(function () {
-            me._newIndex--;
-            _itext.set(me.kid, me._newIndex, $(this));
+            me.newIndex--;
+            _itext.set(me.kid, me.newIndex, $(this));
         });
     }
 
     /**
-     * set this._newIndex, 負值
-     * param index {int} 可為正負值
+     * set this.newIndex, 負值
+     * @param index {int} 可為正負值
      */
     setNewIndex(index) {
-        this._newIndex = Math.abs(index) * -1;
+        this.newIndex = Math.abs(index) * -1;
     }
 
     /**
-     * set this.newId、PKey、_IsNew by row box
+     * set this.newId、PKey by row box
      * boxSetNewId -> setNewIdByBox
      * public for Crud.js, Flow.js
-     * param box {object} row box
-     * param newId {int} 外部傳入newId if any, 如果有值則不會累加 this.newId
-     * return {int} new key index
+     * @param box {object} row box
+     * @param newId {int} 外部傳入newId if any, 如果有值則不會累加 this.newId
+     * @returns {int} new key index
      */
     setNewIdByBox(box, newId) {
         if (newId == null) {
-            this._newIndex--;    //使用負數
-            newId = this._newIndex;
+            this.newIndex--;    //使用負數
+            newId = this.newIndex;
         }
 
         //kid和IsNew必須放在同一層 !!
@@ -712,7 +743,7 @@ class EditMany {
 
     /**
      * set sort field if need
-     * param rowsBox {object} default this.rowsBox
+     * @param rowsBox {object} default this.rowsBox
      */
     setSort(rowsBox) {
         var sortFid = this.sortFid;
@@ -730,8 +761,8 @@ class EditMany {
     /**
      * getRowsBox -> getTrs
      * get rows box
-     * param rowsBox {object} optional, return this.rowsBox if null
-     * return {object}
+     * @param rowsBox {object} optional, return this.rowsBox if null
+     * @returns {object}
      */
     _getRowsBox(rowsBox) {
         return rowsBox || this.rowsBox;

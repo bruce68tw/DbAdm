@@ -1,7 +1,7 @@
 ﻿/**
  * 提供語法提示
  * @typedef {Object} Me
- * @property {mItem} EditMany
+ * @property {EditMany} mItem
  * @property {UiView} uiView
  */
 

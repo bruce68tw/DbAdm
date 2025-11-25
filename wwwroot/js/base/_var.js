@@ -7,7 +7,7 @@ var _var = {
 
     //variables is empty or not
     isEmpty: function (var1) {
-        return (var1 === undefined || var1 === null)
+        return (var1 === undefined || var1 === null || var1 === '');
     },
 
     isStr: function (var1) {

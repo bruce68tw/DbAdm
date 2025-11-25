@@ -1,4 +1,5 @@
 ﻿/**
+ * 做為 EditOne/EditMany 的延伸函數庫, 可以在這裡存取private變數!!
  * 許多函數在初始化執行, 所以無法放在CrudE.js
  * only for CrudE.js, EditOne.js, EditMany.js !!
  * 內容為: 
@@ -22,23 +23,21 @@ var _edit = {
     DataOld: '_old',
 
     //前後端欄位: isNew, new row flag
-    IsNew: '_IsNew',
+    //IsNew: '_IsNew',
 
     //edit form mode
-    ModeBase: 'Base',
-    ModeUR: 'UR',   //user role mode
+    //ModeBase: 'Base',
+    //ModeUR: 'UR',   //user role mode
 
 
     /**
-     * 初始化變數
      * setFidTypeVars + setFileVars -> initVars
-     * set fid-type variables: fidTypes, fidTypeLen
+     * 設定: fidTypes, fidTypeLen, fileFids, fileLen, hasFile
      * param me {object} EditOne/EditMany object
      * param box {object} container
      * return void
      */
     initVars: function (me, box) {
-        //set fid-type variables: fidTypes, fidTypeLen
         var fidTypes = [];
         box.find(_input.fidFilter()).each(function (i, item) {
             var obj = $(item);
@@ -49,7 +48,6 @@ var _edit = {
         me.fidTypes = fidTypes;
         me.fidTypeLen = me.fidTypes.length;
 
-        //set file related variables: fileFids, fileLen, hasFile
         me.fileFids = [];      //upload file fid array
         box.find('[data-type=file]').each(function (index, item) {
             me.fileFids[index] = _input.getFid($(item));
@@ -107,6 +105,120 @@ var _edit = {
     },
 
     /**
+     * load row into 單筆UI
+     * called by EditOne, EditMany(mode=one)
+     * @param row {json}
+     */
+    loadRow: function(me, row) {
+        _form.loadRow(me.eform, row);
+
+        //set old value for each field
+        for (var i = 0; i < me.fidTypeLen; i = i + 2) {
+            var fid = me.fidTypes[i];
+            var obj = _obj.get(fid, me.eform);
+            obj.data(_edit.DataOld, row[fid]);
+        }
+    },
+
+    /**
+     * get one updated row for New/Updated
+     * 只讀取有異動的欄位
+     * @param me {EditOne/EditMany}
+     * @param box {object} form object
+     * @returns json row
+     */
+    getUpdRow: function(me, box) {
+        //case new return row
+        var result = {};
+        var fid, ftype, value, obj;
+        var row = _form.toRow(box);
+        if (_edit.isNewRow(row, me.kid)) {
+            for (var j = 0; j < me.fidTypes.length; j = j + 2) {
+                fid = me.fidTypes[j];
+                ftype = me.fidTypes[j + 1];
+                obj = _input.getObj(fid, box, ftype);
+                value = row[fid];
+                if (_var.notEmpty(value)) {
+                    if ((ftype === 'date' || ftype === 'dt') &&
+                        _date.dtsToValue(value) === _date.dtsToValue(old))
+                        continue;
+
+                    result[fid] = value;
+                }
+            }
+            return result;
+        }
+
+        /*
+        var key = _input.get(me.kid, box);
+        if (_str.isEmpty(key))
+            return row;
+        */
+
+        //case update: 讀取有異動的欄位
+        var diff = false;
+        var old;
+        for (var j = 0; j < me.fidTypes.length; j = j + 2) {
+            //skip read only type
+            fid = me.fidTypes[j];
+            ftype = me.fidTypes[j + 1];
+            //if (ftype === 'link' || ftype === 'read')
+            //    continue;
+
+            //obj = (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
+            obj = _input.getObj(fid, box, ftype);
+            //value = _input.getO(obj, box, ftype);
+            value = row[fid];
+            old = obj.data(_edit.DataOld);
+            //if fully compare, string will not equal numeric !!
+            if (value != old) {
+                //date/dt old value has more length
+                if ((ftype === 'date' || ftype === 'dt') &&
+                    _date.dtsToValue(value) === _date.dtsToValue(old))
+                    continue;
+
+                result[fid] = value;
+                diff = true;
+            }
+        }
+        if (!diff)
+            return null;
+
+        result[me.kid] = _input.get(me.kid, box);
+        return result;
+    },
+
+    /**
+     * onclick viewFile
+     * @param table {string} table name
+     * @param fid {string}
+     * @param elm {element} link element
+     * @param key {string} row key
+     */
+    viewFile: function(table, fid, elm, key) {
+        /*
+        if (this.isNewKey(key)) {
+            _tool.msg(_BR.NewFileNotView);
+        } else {
+        */
+        var ext = _file.getFileExt(elm.innerText);
+        if (_file.isImageExt(ext))
+            _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
+    },
+
+    /**
+     * getServerFid -> getFileSid
+     * get server side variables name for file field
+     * @param levelStr {string} 
+     * @param fid {string} ui file id
+     * @returns {string} format: Table_Fid
+     */
+    getFileSid: function(levelStr, fid) {
+        return 't' + levelStr + '_' + fid;
+    }
+
+
+    /**
      * 增加隱藏欄位 _IsNew, 同時設為1
      * param obj {box} jquery object
      */
@@ -133,16 +245,5 @@ var _edit = {
             field.remove();
     },
     */
-
-    /**
-     * getServerFid -> getFileSid
-     * get server side variables name for file field
-     * param tableId {string} 
-     * param fid {string} ui file id
-     * return {string} format: Table_Fid
-    getFileSid: function (levelStr, fid) {
-        return 't' + levelStr + '_' + fid;
-    },
-     */
 
 };

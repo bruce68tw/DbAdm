@@ -24,7 +24,8 @@ var _iradio = $.extend({}, _ibase, {
 
     //get data-value by checked name
     _getByName: function (name, box) {
-        return _iradio.getObj(name, box).data('value');
+        var obj = _iradio.getObj(name, box);
+        return _obj.isEmpty(obj) ? '' : obj.data('value');
     },
 
     //=== set ===
