@@ -20,6 +20,7 @@ namespace DbAdm.Controllers
 				//ViewBag.Reporters = await _XpCode.ReportersA(db);
 				ViewBag.Users = await _XpCode.UsersA(db);
                 ViewBag.YesNos = _XpCode.YesNos();
+                ViewBag.RptTypes = await _XpCode.RptTypesA(db);
             }
             return View();
         }

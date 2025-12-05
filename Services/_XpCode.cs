@@ -9,6 +9,8 @@ namespace DbAdm.Services
     {
         public const string TableType = "TableType";
         public const string UiItemType = "UiItemType";
+        public const string RptType = "IssueRptType";
+        
 
         #region 1.master table to codes
         public static async Task<List<IdStrDto>?> DeptsA(Db? db = null)
@@ -94,6 +96,11 @@ order by Sort
             return await BySqlA(sql, db);
         }
 
+        
+        public static async Task<List<IdStrDto>> RptTypesA(Db? db = null)
+        {
+            return await ByTypeA(RptType, db);
+        }
         public static async Task<List<IdStrDto>> UiItemTypesA(Db? db = null)
         {
             return await ByTypeA(UiItemType, db);

@@ -1,4 +1,7 @@
 ﻿<form id='eform' class='x-form'>
+	<!-- IssueType為主要4類, RptUser不可空白 -->
+	<vc:xi-hide dto='new() { Fid = "_IssueType" }' />
+	<vc:xi-hide dto='new() { Fid = "_RptUser" }' />
 	<div class="row">
 		<div class="col-md-2 x-label">資料Id</div>
 		<div class="col-md-5 x-input">
@@ -18,7 +21,7 @@
 	</div>
 	<div class="row">
 		@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "資料種類", Required = true, Fid = "IssueType", Rows = ViewBag.IssueTypes, InRow = true })
-		@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "回報方式", Fid = "RptType", MaxLen = 30, Cols = "2,2", InRow = true })
+		@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "回報方式", Required = true, Fid = "RptType", Rows = ViewBag.RptTypes, Cols = "2,2", InRow = true })
 	</div>
 	<div class="row">
 		@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Required = true, Rows = ViewBag.Users, InRow = true })

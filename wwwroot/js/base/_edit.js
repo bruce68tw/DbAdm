@@ -91,7 +91,7 @@ var _edit = {
      * return {bool}
      */
     isNewBox: function (box, kid) {
-        return _edit.isNewKey(_itext.get(kid, box));
+        return _edit.isNewKey(_input.get(kid, box));
     },
 
     /**
@@ -100,6 +100,8 @@ var _edit = {
      * return {bool}
      */
     isNewKey: function (key) {
+        if (key == null) return true;
+
         const num = Number(key);
         return (!isNaN(num) && num <= 0);   //0也是new key
     },
@@ -131,7 +133,12 @@ var _edit = {
         //case new return row
         var result = {};
         var fid, ftype, value, obj;
-        var row = _form.toRow(box);
+        var row = _form.toRow(box);     //內容只包含需要儲存的欄位, PKey如何為唯讀可能不會寫入!!
+
+        //無條件加入PKey欄位, 才能判斷是否新增
+        row[me.kid] = _input.get(me.kid, box);
+
+        //case of New row
         if (_edit.isNewRow(row, me.kid)) {
             for (var j = 0; j < me.fidTypes.length; j = j + 2) {
                 fid = me.fidTypes[j];
@@ -184,6 +191,7 @@ var _edit = {
         if (!diff)
             return null;
 
+        //無條件加入PKey, 後端才能判是否新增
         result[me.kid] = _input.get(me.kid, box);
         return result;
     },

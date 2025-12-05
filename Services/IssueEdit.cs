@@ -1,6 +1,7 @@
 ﻿using Base.Models;
 using Base.Services;
 using BaseApi.Services;
+using DbAdm.Enums;
 using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
@@ -108,7 +109,35 @@ where r.IssueId=@Id
 					Fid = "WorkDate",
 					Msg = "工作日期不可大於今天 !!",
 				});
+				return result;
 			}
+
+			//如果issueType為主要4類, 則RptUser不可為空
+			var rptUser = _Json.GetFidStr(row, "_RptUser");
+			if (_Str.IsEmpty(rptUser))
+			{
+                var mainTypes = new List<string>() { IssueTypeEstr.RptBug, IssueTypeEstr.RptOp, IssueTypeEstr.RptPerson, IssueTypeEstr.RptAuth };
+                var issueType = _Json.GetFidStr(row, "_IssueType");
+				if (mainTypes.Contains(issueType))
+				{
+                    result.Add(new ErrorRowDto()
+                    {
+                        Fid = "RptUser",
+                        Msg = "[資料種類]為[單位回報]時，不可空白 !!",
+                    });
+					return result;
+				}
+			}
+
+			/*
+			//如果有傳入員編, 則檢查正確性並且寫入RptDeptCode
+			rptUser = _Json.GetFidStr(row, "RptUser");
+			if (_Str.NotEmpty(rptUser))
+			{
+				_Db.GetStrA("select DeptCode from dbo.Xp")
+			}
+			*/
+
 			return result;
         }
 

@@ -94,8 +94,15 @@
             }
         },
 
+        fnWhenSave: function (fun) {
+            //set _IssueType, _RptUser
+            var form = _me.eform0;
+            _itext.set('_IssueType', _iselect.get('IssueType', form), form);
+            _itext.set('_RptUser', _itext.get('RptUser', form), form);
+        },
+
         //寄問卷
-        onSurvey: function (issueId) {
+        onSurvey: async function (issueId) {
             if (await _tool.ansA('是否確定寄送問卷?')) {
                 await _ajax.getStrA('SendSurvey', { issueId: issueId }, function (str) {
                     var ok = (str == '1');
@@ -153,7 +160,7 @@
 
         onMyToday: function () {
             var today = _date.uiToday();
-            var box = _me.crudR.rform;
+            var box = _me.rform;
             _me.crudR.onResetFind();   //reset
             _iselect.set('OwnerId', _fun.userId, box);
             _idate.set('WorkDate', today, box);
@@ -162,7 +169,7 @@
         },
 
         onMyWeek: function () {
-            var box = _me.crudR.rform;
+            var box = _me.rform;
             _me.crudR.onResetFind();   //reset
             _iselect.set('OwnerId', _fun.userId, box);
             _idate.set('WorkDate', _date.uiWeekMonday(), box);
@@ -172,7 +179,7 @@
 
         //我的未結案
         onMyNotFinish: function () {
-            var box = _me.crudR.rform;
+            var box = _me.rform;
             _me.crudR.onResetFind();   //reset
             _iselect.set('OwnerId', _fun.userId, box);
             _iselect.set('IsFinish', '0', box);
@@ -181,17 +188,26 @@
         
         //我的追踪
         onMyWatch: function () {
-            var box = _me.crudR.rform;
+            var box = _me.rform;
             _me.crudR.onResetFind();   //reset
             _iselect.set('_IsWatch', '1', box);
             _me.crudR.onFind();
         },
 
-        //我的交辦
-        onMyAsk: function () {
-            var box = _me.crudR.rform;
+        //我的交辦(全部)
+        onMyAskAll: function () {
+            var box = _me.rform;
             _me.crudR.onResetFind();   //reset
             _iselect.set('FromMgr', _fun.userId, box);
+            _me.crudR.onFind();
+        },
+
+        //我的交辦(未完成)
+        onMyAskPend: function () {
+            var box = _me.rform;
+            _me.crudR.onResetFind();   //reset
+            _iselect.set('FromMgr', _fun.userId, box);
+            _iselect.set('IsFinish', '0', box);
             _me.crudR.onFind();
         },
 
@@ -291,7 +307,8 @@
             <button type="button" class="btn btn-secondary" data-onclick="_me.onMyWeek">我的本週資料</button>
             <button type="button" class="btn btn-secondary" data-onclick="_me.onMyNotFinish">我的未結案</button>
             <button type="button" class="btn btn-secondary" data-onclick="_me.onMyWatch">我的追踪</button>
-            <button type="button" class="btn btn-secondary" data-onclick="_me.onMyAsk">我的交辦</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onMyAskAll">我的交辦(全部)</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_me.onMyAskPend">我的交辦(未完成)</button>
             <span class="p-1">工作時數合計：<span id="SumHours"></span></span>
         </div>
         <table id="tableRead" class="table table-bordered x-table" cellspacing="0">

@@ -37,7 +37,7 @@ var _ibase = {
     },
     setO: function (obj, value) {
         obj.val(value);
-        obj.text(value);    //for XiRead
+        //obj.text(value);    //for XiRead
     },
 
     //get input border for show red border

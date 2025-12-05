@@ -89,10 +89,10 @@ class CrudE {
                 this._initForm(this._edit0);
             }
             */
-        }
 
-        //set now edit no & _me & related variables
-        this.setEditNo(0);
+            //set now edit no & _me & related variables
+            this.setEditNo(0);
+        }
 
         //for xgOpenModal
         //this.modal = null;

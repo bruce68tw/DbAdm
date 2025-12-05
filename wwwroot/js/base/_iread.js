@@ -22,6 +22,7 @@ var _iread = {
     },
     setO: function (obj, value) {
         obj.text(value);
+        obj.text(value);    //for XiRead
     },
 
 }; //class

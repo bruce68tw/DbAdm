@@ -34,6 +34,7 @@ class CrudR {
 
         //1.set instance variables
         this.divRead = $('#divRead');
+        this.rform = null;
         var hasRead = (this.divRead.length > 0);
         if (hasRead) {
             this.rform = $('#formRead');
@@ -65,8 +66,22 @@ class CrudR {
 
         //set _me
         _me.crudR = this;
+        _me.rform = this.rform;
         _me.hasRead = hasRead;
         _me.divRead = this.divRead;
+    }
+
+    /**
+     * onclick viewFile
+     * @param table {string} table name
+     * @param fid {string}
+     * @param elm {element} link element
+     * @param key {string} row key
+     */
+    viewFile(table, fid, key, fileName) {
+        var ext = _file.getFileExt(fileName);
+        if (_file.isImageExt(ext))
+            _tool.showImage(fileName, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
     }
 
     /**

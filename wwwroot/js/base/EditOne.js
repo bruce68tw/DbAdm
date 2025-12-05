@@ -105,7 +105,7 @@ class EditOne {
      * reset key, for update/view -> create
      */
     resetKey() {
-        _itext.set(this.kid, '', this.eform);
+        _input.set(this.kid, '', this.eform);
     }
 
     /**
