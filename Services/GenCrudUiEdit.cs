@@ -17,6 +17,14 @@ namespace DbAdm.Services
                 PkeyFid = "Id",
                 //Col4 = ["", "Created", "", "Revised"],
                 //Col4 = ["Creator", "Created"],
+                ReadSql = @"
+select
+    c.Id, c.ProgCode, c.ProgName,
+    ProjectName=p.Name
+from dbo.Crud c
+join dbo.Project p on c.ProjectId=p.Id
+where c.Id=@Id
+",
                 Items = [
                     new() { Fid = "Id" },
                 ],

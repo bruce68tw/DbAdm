@@ -3,6 +3,10 @@
 //同時用在輸入欄位和非輸入欄位(ex: button)
 var _obj = {
 
+    setEdit: function (obj, status) {
+        obj.prop('disabled', !status);
+    },
+
     /**
      * get object by name for input field
      */

@@ -167,7 +167,7 @@ var _me = {
 
     //auto called !!
     fnAfterOpenEdit: async function (fun, json) {
-        var isEdit1 = _me.isEdit1();
+        var isEdit1 = _me.isEdit1();    //拖拉編輯
         _prog.setBorder(!isEdit1);
         if (isEdit1)
             _me.fnAfterOpenEdit1(fun, json);
@@ -204,6 +204,15 @@ var _me = {
         }
     },
 
+    //reset when create
+    fnAfterOpenEdit1: function (fun, json) {
+        _me.uiMany.reset();
+        var isAdd = (fun == EstrFun.Create);
+        _me.uiMany.setEdit(isAdd || (fun == EstrFun.Update));
+        //_btn.setEdit($('.xd-btns').find('button'), true);
+    },
+
+    //拖拉編輯
     isEdit1: function () {
         return (_me.crudE.getEditNo() == 1);
     },
@@ -834,13 +843,6 @@ var _me = {
             _obj.show(tbar);
             //_obj.showByStatus($('.xd-export'), _me.isEdit2);
         }
-    },
-
-    //reset when create
-    fnAfterOpenEdit1: function (fun, json) {
-        _me.uiMany.reset();
-        var isAdd = (fun == EstrFun.Create);
-        _me.uiMany.setEdit(isAdd || (fun == EstrFun.Update));
     },
 
     /**

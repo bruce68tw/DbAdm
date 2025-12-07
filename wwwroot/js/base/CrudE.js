@@ -233,25 +233,32 @@ class CrudE {
         //    return;
 
         var box = this.getDivEdit();
-        var eform = this._edit0.eform;
-        var items = box.find('input, textarea, select, button');
+        //var eform = this._edit0.eform;
+        //var items = box.find('input, textarea, select, button');
+        var items = box.find('[data-edit]');    //元素有這個屬性
+        _obj.setEdit(items, false);
         if (fun == EstrFun.View) {
             //_edit.removeIsNew(eform);
-            items.prop('disabled', true)
-            box.find('#btnToRead').prop('disabled', false);
+            //items.prop('disabled', true)
+            _obj.setEdit(box.find('#btnToRead'), true);
+            //box.find('#btnToRead').prop('disabled', false);
             _ihtml.setEdits(box, '', false);
         } else if (fun == EstrFun.Create) {
             //_edit.addIsNew(eform);    //增加_IsNew隱藏欄位
-            var dataEdit = '[data-edit=U]';
-            items.prop('disabled', false)
-            items.filter(dataEdit).prop('disabled', true)
+            _obj.setEdit(items.filter('button'), true);     //C/U不控制button
+            var dataEdit = '[data-edit=""],[data-edit*=C]';
+            //items.prop('disabled', true)
+            _obj.setEdit(items.filter(dataEdit), true);     //正向表列
+            //items.filter(dataEdit).prop('disabled', false)  //正向表列
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         } else if (fun == EstrFun.Update) {
             //_edit.removeIsNew(eform);
-            var dataEdit = '[data-edit=C]';
-            items.prop('disabled', false)
-            items.filter(dataEdit).prop('disabled', true)
+            _obj.setEdit(items.filter('button'), true);     //C/U不控制button
+            var dataEdit = '[data-edit=""],[data-edit*=U]';    //包含U
+            //items.prop('disabled', true)
+            _obj.setEdit(items.filter(dataEdit), true);     //正向表列
+            //items.filter(dataEdit).prop('disabled', false)  //正向表列
             _ihtml.setEdits(box, '', true);
             _ihtml.setEdits(box, dataEdit, false);
         }

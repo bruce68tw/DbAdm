@@ -613,7 +613,7 @@ class UiView {
 			.replace(InputNote, info.InputNote || '');
 
 		let item = $(html);
-		await this._infoToInputA(info, item);
+		await this._infoToInputA(info, item, true);
 
 		//render item
 		this._itemAddProp(id, item, EstrItemType.Input);
@@ -819,7 +819,7 @@ class UiView {
 		switch (this.itemGetType(item)) {
 			case EstrItemType.Input:
 				//如果修改 inputType 必須重捉後端 input html(if need)
-				await this._infoToInputA(info, item);
+				await this._infoToInputA(info, item, false);
 				break;
 			case EstrItemType.Group:
 				item.find(this.FtGroupTitle).text(info.Title || '');
@@ -855,9 +855,11 @@ class UiView {
 	/**
 	 * info to input item UI
 	 * called: _getNewInputA, InfoToItemA
-	 * //param {int} boxColNum Box 欄位格子數 0,4,6,8,12(0表示不會改變)
+	 * param {json} info 
+	 * param {jquery object} item 
+	 * param {bool} isNew
 	 */ 
-	async _infoToInputA(info, item) {
+	async _infoToInputA(info, item, isNew) {
 		//resize input item
 		let label = item.find(this.FtLabel);
 		let input = item.find(this.FtInput);
@@ -899,14 +901,13 @@ class UiView {
 			item.find('.xi-box').html(html);
 		}
 
-		/* todo: temp remark
+		// todo: temp remark
 		//如果改變 inputType, 必須更新item 的x-input內容
-		if (this._getInputType(item) != info.InputType) {
+		if (!isNew && this._getInputType(item) != info.InputType) {
 			let newItem = await this._getInputA(info);
 			let inputHtml = newItem.find(this.FtInput).html();
 			item.find(this.FtInput).html(inputHtml);
 		}
-		*/
 	}
 
 	//讀取上層 col-md- 後面的"文數字"
