@@ -112,7 +112,7 @@ var _input = {
      * get input field type
      */ 
     getType: function (obj) {
-        return obj.data('type');
+        return obj.find('[data-type]').attr('data-type');
     },
 
     /**

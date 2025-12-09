@@ -736,7 +736,8 @@ class CrudE {
 
         //save rows, call backend Save action
         var edit0 = this._edit0;
-        var isNew = edit0.isNewRow();
+        //var isNew = edit0.isNewRow();
+        var isNew = (this._nowFun == EstrFun.Create);
         var action = isNew ? 'Create' : 'Update';
         var data = null;
         var me = this;

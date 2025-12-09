@@ -576,13 +576,13 @@ class UiView {
 
 	/**
 	 * add input
-	 * called _newItemA
+	 * called _newItemA, onModalOk
 	 * param {string} id
 	 * param {json} info 包含欄位: Fid, Title, Required
 	 * returns item
 	 */
 	async _newInputA(id, info) {
-		//constant
+		//constant for 後端產生input html
 		const Fid = '_fid_';
 		const Title = '_title_';
 		const TitleTip = '_titleTip_';
@@ -607,16 +607,17 @@ class UiView {
 
 		//replace fid, title, titleTip, inputNote
 		let html = map[inputType];
-		html = _str.replaceAll(html, Fid, info.Fid)
+		html = _str
+			.replaceAll(html, Fid, info.Fid)
 			.replace(Title, info.Title)
 			.replace(TitleTip, info.TitleTip || '')
 			.replace(InputNote, info.InputNote || '');
 
+		//create item & add property
 		let item = $(html);
-		await this._infoToInputA(info, item, true);
-
-		//render item
 		this._itemAddProp(id, item, EstrItemType.Input);
+
+		await this._infoToInputA(info, item);		
 		return item;
 	}
 
@@ -652,7 +653,7 @@ class UiView {
 			let fid = fids[i + 1];
 			html += `
 <label class='xi-check'>
-    <input data-fid='${fid}' name='${fid}' data-edit='*' checked='' type='checkbox' data-type='check' data-value=''>${fids[i]}
+    <input data-fid='${fid}' name='${fid}' data-edit checked='' type='checkbox' data-type='check' data-value=''>${fids[i]}
     <span class='xi-cspan'></span>
 </label>
 `;
@@ -818,8 +819,21 @@ class UiView {
 		//let callback = true;
 		switch (this.itemGetType(item)) {
 			case EstrItemType.Input:
-				//如果修改 inputType 必須重捉後端 input html(if need)
-				await this._infoToInputA(info, item, false);
+				//get old inputType first
+				let oldType = this._getInputType(item);
+
+				//info to input UI
+				await this._infoToInputA(info, item);
+
+				// todo: temp remark
+				//如果改變 inputType, 必須更新item 的x-input內容
+				if (oldType != info.InputType) {
+					let newItem = await this._newInputA(info.Id, info);
+					//let newItem = await this._getInputA(info);
+					let inputHtml = newItem.find(this.FtInput).html();
+					item.find(this.FtInput).html(inputHtml);
+				}
+
 				break;
 			case EstrItemType.Group:
 				item.find(this.FtGroupTitle).text(info.Title || '');
@@ -853,13 +867,12 @@ class UiView {
 	}
 
 	/**
-	 * info to input item UI
-	 * called: _getNewInputA, InfoToItemA
+	 * info json write to input item UI
+	 * called: _newInputA, InfoToItemA
 	 * param {json} info 
 	 * param {jquery object} item 
-	 * param {bool} isNew
 	 */ 
-	async _infoToInputA(info, item, isNew) {
+	async _infoToInputA(info, item) {
 		//resize input item
 		let label = item.find(this.FtLabel);
 		let input = item.find(this.FtInput);
@@ -893,20 +906,12 @@ class UiView {
 			for (let i=0; i<values.length; i++) {
 				html += `
 <label class='xi-check'>
-	<input type='radio' data-fid='${fid}' name='${fid}' data-edit='*' data-value='${i+1}' data-type='radio'>${values[i]}
+	<input type='radio' data-fid='${fid}' name='${fid}' data-edit data-value='${i+1}' data-type='radio'>${values[i]}
 	<span class='xi-rspan'></span>
 </label>
 `;
 			}
 			item.find('.xi-box').html(html);
-		}
-
-		// todo: temp remark
-		//如果改變 inputType, 必須更新item 的x-input內容
-		if (!isNew && this._getInputType(item) != info.InputType) {
-			let newItem = await this._getInputA(info);
-			let inputHtml = newItem.find(this.FtInput).html();
-			item.find(this.FtInput).html(inputHtml);
 		}
 	}
 
