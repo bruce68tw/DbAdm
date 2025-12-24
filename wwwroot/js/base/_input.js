@@ -110,9 +110,10 @@ var _input = {
 
     /**
      * get input field type
+     * 如果obj沒有data-type, 可能存在child
      */ 
     getType: function (obj) {
-        return obj.find('[data-type]').attr('data-type');
+        return obj.attr('data-type') || obj.find('[data-type]').attr('data-type');
     },
 
     /**
