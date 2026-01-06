@@ -501,12 +501,14 @@ class EditMany {
             var fid, ftype, value, obj;
             for (var j = 0; j < me.fidTypes.length; j = j + 2) {
                 //skip read only input !!
-                ftype = me.fidTypes[j + 1];
-                if (ftype === 'read')
-                    continue;
-
                 fid = me.fidTypes[j];
                 obj = _obj.get(fid, box);
+                if (obj.hasClass('xi-unsave'))
+                    continue;
+                //if (ftype === 'read')
+                //    continue;
+
+                ftype = me.fidTypes[j + 1];
                 value = _input.getO(obj, box, ftype);
                 //if totally compare, string is not equal to numeric !!
                 if (value != _edit.getOld(obj)) {

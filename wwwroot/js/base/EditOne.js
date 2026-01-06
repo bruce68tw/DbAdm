@@ -55,6 +55,22 @@ class EditOne {
     }
 
     /**
+     * validate form
+     */
+    valid() {
+        var edit = this._edit0;
+        if (_str.notEmpty(edit.systemError)) {
+            _tool.msg(edit.systemError);
+            return false;
+        }
+
+        //use jquery validator
+        if (!edit.eform.valid()) return false;
+
+        return (this.fnValid) ? this.fnValid() : true;
+    }
+
+    /**
      * is a new row or not
      * @returns {bool}
      */

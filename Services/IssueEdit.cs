@@ -14,7 +14,7 @@ namespace DbAdm.Services
         {
             return new()
 			{
-				FnValidate = FnValidate,
+                FnValidateA = FnValidateA,
 				Table = "dbo.Issue",
                 PkeyFid = "Id",
                 ReadSql = $@"
@@ -93,7 +93,7 @@ where r.IssueId=@Id
         }
 
         //檢查傳入資料 for Create, Update
-        private List<ErrorRowDto>? FnValidate(bool isNew, JObject json)
+        private async Task<List<ErrorRowDto>?> FnValidateA(bool isNew, JObject json)
         {
 			var row = _Json.GetRows0(json);
 			var workDate = _Json.GetFidStr(row, "WorkDate");
@@ -129,7 +129,7 @@ where r.IssueId=@Id
 				}
 			}
 
-			/*
+            /*
 			//如果有傳入員編, 則檢查正確性並且寫入RptDeptCode
 			rptUser = _Json.GetFidStr(row, "RptUser");
 			if (_Str.NotEmpty(rptUser))
@@ -138,7 +138,8 @@ where r.IssueId=@Id
 			}
 			*/
 
-			return result;
+            await Task.CompletedTask;   //模擬 async 結束, 此函數實際為同步!!
+            return result;
         }
 
         public async Task<ResultDto> CreateA(JObject json, List<IFormFile> t00_FileName)

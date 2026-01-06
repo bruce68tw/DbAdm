@@ -23,7 +23,7 @@ var _valid = {
             //onclick: false, //checkbox, radio, and select
             //ignore: ':hidden:not(.xd-valid[data-type=file]),:hidden:not([data-type=html]),.note-editable.card-block',   //or summernote got error
             //ignore: ':hidden:not(.xd-valid)',     //html/file has .xd-valid need validate !!
-            ignore: ':hidden:not(.xd-valid), .note-editable.panel-body',
+            ignore: ':hidden:not(.xd-valid), .note-editable.panel-body, .xi-read',
             errorElement: 'span',
             errorPlacement: function (error, elm) {
                 error.insertAfter(_valid._getBox($(elm)));

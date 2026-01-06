@@ -225,7 +225,7 @@ class CrudR {
         */
 
         //考慮多個編輯畫面
-        var divEdit = _me.crudE.getDivEdit();
+        var divEdit = _me.crudE.mEditGetDivEdit();
         var oldDiv, newDiv;
         if (toRead) {
             oldDiv = divEdit;
@@ -251,7 +251,7 @@ class CrudR {
 
         //還原 nowEditNo
         if (toRead)
-            _me.crudE.setEditNo(0);
+            _me.crudE.mEditSetEditNo(0);
 
         /*
         // fadeOut 用 d-none 隱藏

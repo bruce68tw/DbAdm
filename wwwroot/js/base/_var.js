@@ -1,5 +1,8 @@
 ﻿
 var _var = {
+    preZero: function (len, value) {
+        return String(value).padStart(len, '0');
+    },
 
     emptyToValue: function (var1, value) {
         return _str.isEmpty(var1) ? value : var1;

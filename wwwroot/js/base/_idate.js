@@ -36,6 +36,8 @@ var _idate = $.extend({}, _ibase, {
 
     /**
      * initial, called by _me.crudE.js
+     * 注意:
+     *   欄位必須放在 form裡面, 因為使用 validator !!
      * param box {object}
      * param fid {string} optional
      */ 

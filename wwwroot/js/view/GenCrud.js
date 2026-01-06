@@ -73,7 +73,7 @@ var _me = {
 
         //不同編輯畫面共用查詢畫面
         _me.divEdit1 = $('#divEdit1');
-        var ary0 = new DtoEdit([null, _me.mQitem, _me.mRitem, _me.mEtable]);
+        var ary0 = new DtoEdit([null, _me.mQitem, _me.mRitem, _me.mEtable], $('#divEdit'));
         var ary1 = new DtoEdit([new EditOne(null, 'eform1'), _me.mUiItem], _me.divEdit1, '拖拉編輯');
         new CrudR(config, [ary0, ary1]);
         //new CrudR(config, [_me.edit0, _me.mQitem, _me.mRitem, _me.mEtable]);
@@ -214,7 +214,7 @@ var _me = {
 
     //拖拉編輯
     isEdit1: function () {
-        return (_me.crudE.getEditNo() == 1);
+        return (_me.crudE.mEditGetEditNo() == 1);
     },
 
     fnWhenSave: function (fun) {
@@ -345,7 +345,10 @@ var _me = {
         };
     },
 
-    //return boolean
+    /**
+     * error時顯示對應的table page
+     * return boolean
+     */ 
     mEtable_valid: function () {
         var status = true;
         _me.etGetForms().each(function (i, item) {
@@ -738,7 +741,7 @@ var _me = {
 
     //#region for 拖拉編輯(分離檔案無法使用 IntelliSense)
     onOpenEdit1: async function (id) {
-        _me.crudE.setEditNo(1);
+        _me.crudE.mEditSetEditNo(1);
         await _me.crudE.onUpdateA(id);
     },
 
