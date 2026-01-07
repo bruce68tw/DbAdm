@@ -8,6 +8,8 @@
  *   crudR
  *   divRead
  *   hasRead
+ *   rform
+ *   rform2
  * 自動呼叫 _me 函數:
  *   fnAfterFind(result):
  *   void fnAfterSwap(toRead):
@@ -34,19 +36,20 @@ class CrudR {
 
         //1.set instance variables
         this.divRead = $('#divRead');
-        this.rform = null;
+        var rform = null;
+        var rform2 = null;
         var hasRead = (this.divRead.length > 0);
         if (hasRead) {
-            this.rform = $('#formRead');
-            if (this.rform.length === 0)
-                this.rform = null;
-            this.rform2 = $('#formRead2');
-            if (this.rform2.length === 0)
-                this.rform2 = null;
-            if (this.rform != null)
-                _idate.init(this.rform);
-            if (this.rform2 != null)
-                _idate.init(this.rform2);
+            rform = $('#formRead');
+            if (rform.length === 0)
+                rform = null;
+            rform2 = $('#formRead2');
+            if (rform2.length === 0)
+                rform2 = null;
+            if (rform != null)
+                _idate.init(rform);
+            if (rform2 != null)
+                _idate.init(rform2);
 
             //4.Create Datatable object
             //傳入 _me.fnAfterFind if any !!
@@ -66,7 +69,8 @@ class CrudR {
 
         //set _me
         _me.crudR = this;
-        _me.rform = this.rform;
+        _me.rform = rform;
+        _me.rform2 = rform2;
         _me.hasRead = hasRead;
         _me.divRead = this.divRead;
     }
@@ -194,11 +198,11 @@ class CrudR {
      * get Find condition
      */
     _getFindCond() {
-        if (this.rform == null)
+        if (_me.rform == null)
             return null;
 
-        var row = _form.toRow(this.rform);
-        var find2 = this.rform2;
+        var row = _form.toRow(_me.rform);
+        var find2 = _me.rform2;
         if (find2 !== null && _obj.isShow(find2))
             _json.copy(_form.toRow(find2), row);
         return row;
@@ -330,7 +334,7 @@ class CrudR {
      * onclick find2 button for show/hide find2 form
      */
     onFind2() {
-        var find2 = this.rform2;
+        var find2 = _me.rform2;
         if (find2 == null)
             return;
         else if (_obj.isShow(find2))
@@ -343,9 +347,9 @@ class CrudR {
      * onclick reset find form
      */
     onResetFind() {
-        _form.reset(this.rform);
-        if (this.rform2 != null)
-            _form.reset(this.rform2);
+        _form.reset(_me.rform);
+        if (_me.rform2 != null)
+            _form.reset(_me.rform2);
     }
 
     /**

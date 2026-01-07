@@ -27,42 +27,44 @@ class CrudE {
         this._nowFun = '';    //now fun of edit0 form
         //this.updName = updName;
 
-        //多個編輯畫面時利用這個變數來切換, 顯示Read時會重設為null
+        //for _multiEdit only, 多個編輯畫面時利用這個變數來切換, 顯示Read時會重設為null
         this._multiEdit = false;
+        this._edits = [];
         this._nowEditNo = 0;
 
         //divEdit = $('#divEdit');
         //var hasEdit = (divEdit.length > 0);
 
-        //set _me, 以下與 editNo 無關
+        //set _me(crudE, hasEdit, divEdit(_multiEdit = false only)), 以下與 editNo 無關
         _me.crudE = this;
 
         //_me.divEdit = divEdit;
         //_me.hasEdit = hasEdit;
 
         if (edits && edits[0] instanceof DtoEdit) {
-            //如果傳入 DtoEdit[], 表示有2個以上的編輯畫面
+            //如果傳入 DtoEdit[], 表示有2個以上的編輯畫面, divEdit為動態讀取
             this._multiEdit = true;
+            this._edits = edits;
+            _me.hasEdit = true;
             for (var i = 0; i < edits.length; i++) {
                 var dto = edits[i];
-                //if (dto.divEdit == null)
-                //    dto.divEdit = _me.divEdit;
-                this._initEdit0(dto.edits);
+                this._initEdit0(dto.edits);    //此時dto.edits不為空白
             }
 
             //set now edit no & _me & related variables
             this.mEditSetEditNo(0);
         } else {
             var divEdit = $('#divEdit');
-            _me.hasEdit = (divEdit.length > 0);;
+            _me.hasEdit = (divEdit.length > 0);
             _me.divEdit = divEdit;
             if (_me.hasEdit) {
+                if (edits == null || edits.length == 0)
+                    edits = [new EditOne()]
                 this._initEdit0(edits);
                 _me.edit0 = edits[0];
                 _me.eform0 = _me.edit0.eform;
             }
         }
-        this._edits = edits;
 
         //for xgOpenModal
         //this.modal = null;
@@ -76,7 +78,7 @@ class CrudE {
         var edit0 = edits[0];
         if (edit0 == null) {
             edit0 = new EditOne();
-            edits[0] = edit0;   //寫回
+            edits[0] = edit0;   //必須寫回, 來源才能更新
         }
 
         //ary0 是master, 把2nd以後的edit寫入Childs欄位
@@ -108,7 +110,7 @@ class CrudE {
      */
     mEditGetDivEdit() {
         return this._multiEdit
-            ? this._edits[this._nowEditNo].divEdit || _me.divEdit
+            ? this._edits[this._nowEditNo].divEdit
             : _me.divEdit;
     }
 
@@ -126,8 +128,6 @@ class CrudE {
             _me.divEdit = dto.divEdit;
             _me.edit0 = dto.edits[0];
             _me.eform0 = _me.edit0.eform;
-        //} else {
-        //    edit0 = this._edits[0];
         }
     }
 

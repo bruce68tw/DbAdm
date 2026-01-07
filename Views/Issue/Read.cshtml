@@ -168,6 +168,11 @@
             _me.crudR.onFind();
         },
 
+        //因為onFind2使用_form.hideShow, 這裡必須一致才能正確顯示rform2
+        showRform2: function () {
+            _form.hideShow(null, [_me.rform2]);
+        },
+
         onMyWeek: function () {
             var box = _me.rform;
             _me.crudR.onResetFind();   //reset
@@ -180,34 +185,43 @@
         //我的未結案
         onMyNotFinish: function () {
             var box = _me.rform;
+            var box2 = _me.rform2;
+            //_obj.show(box2);
+            _me.showRform2();
             _me.crudR.onResetFind();   //reset
             _iselect.set('OwnerId', _fun.userId, box);
-            _iselect.set('IsFinish', '0', box);
+            _iselect.set('IsFinish', '0', box2);
             _me.crudR.onFind();
         },
         
         //我的追踪
         onMyWatch: function () {
-            var box = _me.rform;
+            var box2 = _me.rform2;
+            //_obj.show(box2);
+            _me.showRform2();
             _me.crudR.onResetFind();   //reset
-            _iselect.set('_IsWatch', '1', box);
+            _iselect.set('_IsWatch', '1', box2);
             _me.crudR.onFind();
         },
 
         //我的交辦(全部)
         onMyAskAll: function () {
-            var box = _me.rform;
+            var box2 = _me.rform2;
+            //_obj.show(box2);
+            _me.showRform2();
             _me.crudR.onResetFind();   //reset
-            _iselect.set('FromMgr', _fun.userId, box);
+            _iselect.set('FromMgr', _fun.userId, box2);
             _me.crudR.onFind();
         },
 
         //我的交辦(未完成)
         onMyAskPend: function () {
-            var box = _me.rform;
+            var box2 = _me.rform2;
+            //_obj.show(box2);
+            _me.showRform2();
             _me.crudR.onResetFind();   //reset
-            _iselect.set('FromMgr', _fun.userId, box);
-            _iselect.set('IsFinish', '0', box);
+            _iselect.set('FromMgr', _fun.userId, box2);
+            _iselect.set('IsFinish', '0', box2);
             _me.crudR.onFind();
         },
 
@@ -267,22 +281,16 @@
 <vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
-		<form id='formRead' class='x-form'>
+        <form id='formRead' class='x-form mb-0'>
             <div class="row">
                 @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "_ProjectId", Rows = ViewBag.Projects, InRow = true, FnOnChange = "_me.onChgProject", EventArgs = "0" })
-                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true, HasFind2 = true })
             </div>
             @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案功能", Fid = "ProgId", Rows = ViewBag.PrjProgs })
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "工作標題", Fid = "Title" })
             @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "資料種類", Fid = "IssueType", Rows = ViewBag.IssueTypes })
-            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "已結案", Fid = "IsFinish", Rows = ViewBag.YesNos })
             @* 底線欄位 _IsWatch 在後端用程式調整sql *@
-            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "已追踪", Fid = "_IsWatch", Rows = ViewBag.YesNos })
-            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "有回報人", Fid = "_HasRptUser", Rows = ViewBag.YesNos })
-            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "有收問卷", Fid = "_HasSurvey", Rows = ViewBag.YesNos })
             @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "回報人員", Fid = "RptUser" })
             @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Rows = ViewBag.Users })
-            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "交辦主管", Fid = "FromMgr", Rows = ViewBag.Users })
             <div class="row">
                 <div class="col-md-2 x-label">工作日期</div>
                 <div class="col-md-10 x-input">
@@ -291,6 +299,15 @@
                     @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "WorkDate2", InRow = true })
                 </div>
             </div>
+        </form>
+
+        <form id='formRead2' class='x-form mb-0 d-none'>
+            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "工作標題", Fid = "Title" })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "已結案", Fid = "IsFinish", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "已追踪", Fid = "_IsWatch", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "有回報人", Fid = "_HasRptUser", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "有收問卷", Fid = "_HasSurvey", Rows = ViewBag.YesNos })
+            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "交辦主管", Fid = "FromMgr", Rows = ViewBag.Users })
             <div class="row">
                 <div class="col-md-2 x-label">建檔日期</div>
                 <div class="col-md-10 x-input">
@@ -300,6 +317,7 @@
                 </div>
             </div>
         </form>
+        <div class="x-h10"></div>
 
 		<div class='x-btns-box'>
 			<vc:xg-create/>

@@ -22,7 +22,7 @@
         },
 
         onNowWeek: function () {
-            var box = _me.crudR.rform;
+            var box = _me.rform;
             _me.crudR.onResetFind();   //reset
             _idate.set('WorkDate', _date.uiWeekMonday(), box);
             _idate.set('WorkDate2', _date.uiWeekFriday(), box);
@@ -30,7 +30,7 @@
         },
 
         onNowMonth: function () {
-            var box = _me.crudR.rform;
+            var box = _me.rform;
             _me.crudR.onResetFind();   //reset
             _idate.set('WorkDate', _date.uiMonthDay1(), box);
             _idate.set('WorkDate2', _date.uiMonthDayLast(), box);

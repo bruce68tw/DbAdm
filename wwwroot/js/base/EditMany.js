@@ -413,7 +413,7 @@ class EditMany {
      */
     idToRowBox(id) {
         var filter = _input.fidFilter(this.kid) + `[value='${id}']`;
-        return this.eform.find(filter).parent();
+        return this.eform.find(filter).closest(this.rowFilter);
     }
 
     /**
@@ -737,7 +737,7 @@ class EditMany {
         }
 
         //kid和IsNew必須放在同一層 !!
-        var box2 = _obj.get(this.kid, box).parent();
+        var box2 = _obj.get(this.kid, box).closest(this.rowFilter);
         _itext.set(this.kid, newId, box2);
         //_edit.addIsNew(box2);    //增加_IsNew隱藏欄位
         return newId;

@@ -96,28 +96,54 @@ where r.IssueId=@Id
         private async Task<List<ErrorRowDto>?> FnValidateA(bool isNew, JObject json)
         {
 			var row = _Json.GetRows0(json);
-			var workDate = _Json.GetFidStr(row, "WorkDate");
-			if (_Str.IsEmpty(workDate))
-				return null;
-
-			//工作日期不可大於今天
 			var result = new List<ErrorRowDto>();
-            if (_Date.CsToDate(workDate) > _Date.Today())
-			{
-				result.Add(new ErrorRowDto()
-				{
-					Fid = "WorkDate",
-					Msg = "工作日期不可大於今天 !!",
-				});
-				return result;
-			}
 
-			//如果issueType為主要4類, 則RptUser不可為空
+			#region 工作日期不可大於今天
+			var workDate = _Json.GetFidStr(row, "WorkDate");
+			if (_Str.NotEmpty(workDate))
+			{
+				if (_Date.CsToDate(workDate) > _Date.Today())
+				{
+					result.Add(new ErrorRowDto()
+					{
+						Fid = "WorkDate",
+						Msg = "工作日期不可大於今天 !!",
+					});
+					return result;
+				}
+			}
+			#endregion
+
+			#region 檢查 RptUser
+			//var issueType = _Json.GetFidStr(row, "IssueType");
+			var issueType = _Json.GetFidStr(row, "_IssueType");
+			var rptType = _Json.GetFidStr(row, "RptType");
+			if (_Str.NotEmpty(rptType))
+			{
+				//如果 issueType 為 RptAuth, 則 rptType 只能為: MisDesk, BpmForm, Form, SignDocu
+				if (issueType == IssueTypeEstr.RptAuth &&
+					!new[]{ IssueRptTypeEstr.MisDesk, 
+						IssueRptTypeEstr.BpmForm,
+						IssueRptTypeEstr.Form,
+						IssueRptTypeEstr.SignDocu
+					}.Contains(rptType))
+				{
+					result.Add(new ErrorRowDto()
+					{
+						Fid = "RptType",
+						Msg = "[資料種類]為[資料與權限調整]時，[回報方式]必須是填寫表單相關 !!",
+					});
+					return result;
+				}
+			}
+			#endregion
+
+			#region 檢查 RptUser
 			var rptUser = _Json.GetFidStr(row, "_RptUser");
 			if (_Str.IsEmpty(rptUser))
 			{
-                var mainTypes = new List<string>() { IssueTypeEstr.RptBug, IssueTypeEstr.RptOp, IssueTypeEstr.RptPerson, IssueTypeEstr.RptAuth };
-                var issueType = _Json.GetFidStr(row, "_IssueType");
+				//如果issueType為主要4類, 則RptUser不可為空
+				var mainTypes = new List<string>() { IssueTypeEstr.RptBug, IssueTypeEstr.RptOp, IssueTypeEstr.RptPerson, IssueTypeEstr.RptAuth };
 				if (mainTypes.Contains(issueType))
 				{
                     result.Add(new ErrorRowDto()
@@ -128,17 +154,34 @@ where r.IssueId=@Id
 					return result;
 				}
 			}
-
-            /*
-			//如果有傳入員編, 則檢查正確性並且寫入RptDeptCode
-			rptUser = _Json.GetFidStr(row, "RptUser");
-			if (_Str.NotEmpty(rptUser))
+			else
 			{
-				_Db.GetStrA("select DeptCode from dbo.Xp")
-			}
-			*/
+				//回報人員編不可錯誤, 同時寫入 RptDeptCode
+				var deptNo = await _Db.GetStrA(@"
+select d.DeptNo
+from dbo.OrgEmp e
+join dbo.OrgDept d on e.DeptId=d.Id
+where e.EmpNo=@EmpNo
+", ["EmpNo", rptUser]);
 
-            await Task.CompletedTask;   //模擬 async 結束, 此函數實際為同步!!
+				if (_Str.IsEmpty(deptNo))
+				{
+					result.Add(new ErrorRowDto()
+					{
+						Fid = "RptUser",
+						Msg = "回報人員編輸入錯誤 !!",
+					});
+					return result;
+				}
+				else
+				{
+					//寫入RptDeptCode
+					row!["RptDeptCode"] = deptNo;
+				}
+			}
+			#endregion
+
+			await Task.CompletedTask;   //模擬 async 結束, 此函數實際為同步!!
             return result;
         }
 

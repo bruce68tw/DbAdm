@@ -13,7 +13,9 @@
 	</div>
 	<div class="row">
 		@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "_ProjectId", Required = true, Rows = ViewBag.Projects, FnOnChange = "_me.onChgProject", EventArgs = "1",  InRow = true })
+		@*
 		@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "回報單位代號", Fid = "RptDeptCode", MaxLen = 10, Cols = "2,2", InRow = true })
+		*@
 	</div>
 	<div class="row">
 		@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案功能", Fid = "ProgId", Required = true, InRow = true })
