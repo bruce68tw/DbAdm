@@ -2,7 +2,7 @@
 namespace DbAdm.Enums
 {
 	/// <summary>
-	/// 問題種類, map to XpCode.Type=RptType
+	/// 問題種類, map to XpCode.Type=IssueRptType
 	/// </summary>
 	public class IssueRptTypeEstr
 	{
