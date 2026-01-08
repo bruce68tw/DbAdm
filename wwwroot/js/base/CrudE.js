@@ -1,5 +1,5 @@
 ﻿/**
- * 控制 CRUD 編輯畫面
+ * 控制 CRUD 編輯畫面, 可以有多個編輯區域
  * 說明:
  *   前端使用固定 filter: #divEdit
  * 寫入 _me 屬性:
@@ -29,7 +29,7 @@ class CrudE {
 
         //for _multiEdit only, 多個編輯畫面時利用這個變數來切換, 顯示Read時會重設為null
         this._multiEdit = false;
-        this._edits = [];
+        this._dtoEdits = [];
         this._nowEditNo = 0;
 
         //divEdit = $('#divEdit');
@@ -44,7 +44,7 @@ class CrudE {
         if (edits && edits[0] instanceof DtoEdit) {
             //如果傳入 DtoEdit[], 表示有2個以上的編輯畫面, divEdit為動態讀取
             this._multiEdit = true;
-            this._edits = edits;
+            this._dtoEdits = edits;
             _me.hasEdit = true;
             for (var i = 0; i < edits.length; i++) {
                 var dto = edits[i];
@@ -99,9 +99,9 @@ class CrudE {
 
         _idate.init(edit.eform);  //init all date inputs
         edit.validator = _valid.init(edit.eform);   //set valid variables for _ihtml.js !!
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++)
-            this._initForm(this._getEditChild(edit, i));
+            this._initForm(this._editGetChild(edit, i));
     }
 
     /**
@@ -110,7 +110,7 @@ class CrudE {
      */
     mEditGetDivEdit() {
         return this._multiEdit
-            ? this._edits[this._nowEditNo].divEdit
+            ? this._dtoEdits[this._nowEditNo].divEdit
             : _me.divEdit;
     }
 
@@ -124,7 +124,7 @@ class CrudE {
             this._nowEditNo = editNo;
 
             //設定 _me 屬性
-            var dto = this._edits[editNo];
+            var dto = this._dtoEdits[editNo];
             _me.divEdit = dto.divEdit;
             _me.edit0 = dto.edits[0];
             _me.eform0 = _me.edit0.eform;
@@ -150,9 +150,9 @@ class CrudE {
         edit.dataJson = json;
 
         //load childs rows(只需載入第一層)
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = this._getEditChild(edit, i);
+            var edit2 = this._editGetChild(edit, i);
             edit2.dataJson = this.getChildJson(json, i);
             edit2.loadRowsBySys(this.jsonGetRows(edit2.dataJson));
         }
@@ -236,9 +236,9 @@ class CrudE {
         if (edit.hasFile)
             return true;
 
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = this._getEditChild(edit, i);
+            var edit2 = this._editGetChild(edit, i);
             if (edit2.hasFile)
                 return true;
         }
@@ -268,9 +268,9 @@ class CrudE {
         //load child(multiple) rows
         var hasChild = false;
         var childs = [];
-        var childLen = this._getEditChildLen(edit0);
+        var childLen = this._editGetChildLen(edit0);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = this._getEditChild(edit0, i);
+            var edit2 = this._editGetChild(edit0, i);
 
             //file
             if (edit2.hasFile) {
@@ -330,10 +330,10 @@ class CrudE {
         //custom valid
 
         //check child Edit
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
             //check system error
-            var edit2 = this._getEditChild(edit, i);
+            var edit2 = this._editGetChild(edit, i);
             if (_str.notEmpty(edit2.systemError)) {
                 _tool.msg(edit2.systemError);
                 return false;
@@ -382,9 +382,9 @@ class CrudE {
         edit.reset();
 
         //reset childs
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = this._getEditChild(edit, i);
+            var edit2 = this._editGetChild(edit, i);
             edit2.reset();
 
             //如果為1對1, 把row設為新增
@@ -405,7 +405,7 @@ class CrudE {
 
         var me = this;
         var data = { key: key };
-        //如果多個編輯畫面, 傳入目前編輯序號, 後端個別method必須配合修改
+        //如果多個編輯畫面, 傳入目前編輯序號(base 0), 後端個別method必須配合修改
         if (this._multiEdit)
             data.editNo = this._nowEditNo;
         var act = (fun == EstrFun.Update)
@@ -425,7 +425,7 @@ class CrudE {
      * @param {int} childIdx - child index, base 0
      * @returns {EditMany}
      */
-    _getEditChild(edit, childIdx) {
+    _editGetChild(edit, childIdx) {
         return edit[_edit.Childs][childIdx];
     }
 
@@ -433,7 +433,7 @@ class CrudE {
      * get edit child len
      * @param edit {object} edit object
      */
-    _getEditChildLen(edit) {
+    _editGetChildLen(edit) {
         var fid = _edit.Childs;
         return (edit[fid] == null) ? 0 : edit[fid].length;
     }
@@ -450,7 +450,7 @@ class CrudE {
             : json[_edit.Rows];
     }
 
-    //get child json
+    //upJson get child json
     //_getChildJson -> getChildJson
     getChildJson(upJson, childIdx) {
         var childs = _edit.Childs;
@@ -459,14 +459,14 @@ class CrudE {
             : upJson[childs][childIdx];
     }
 
-    //get child rows
+    //upJson get child rows
     getChildRows(upJson, childIdx) {
         var child = this.getChildJson(upJson, childIdx);
         return this.jsonGetRows(child);
     }
 
     /**
-     * set child rows
+     * upJson set child rows
      * @param upJson {json}
      * @param childIdx {int}
      * @param rows {jsons}
@@ -499,9 +499,9 @@ class CrudE {
         edit.resetKey();
 
         //reset childs key
-        var childLen = this._getEditChildLen(edit);
+        var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
-            var edit2 = this._getEditChild(edit, i);
+            var edit2 = this._editGetChild(edit, i);
             edit2.rowsToNew();
         }
     }

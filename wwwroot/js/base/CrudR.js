@@ -58,7 +58,7 @@ class CrudR {
             }
         }
 
-        this._edits = edits;
+        //this._edits = edits;
         this._updName = updName;
 
         //2.init edit
@@ -163,7 +163,7 @@ class CrudR {
         return (value == '1') ? _BR.Yes : '';
     }
 
-    //顯示紅色
+    //顯示紅色文字 by status
     dtRed(text, status) {
         return status
             ? '<span class="text-danger">' + text + '</span>'
@@ -182,15 +182,16 @@ class CrudR {
      */
     //dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, fnOnUpdate, fnOnDelete, fnOnView) {
     dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, hasCopy) {
+        const preStr = `button type="button" class="btn btn-link"`;
         var funs = '';
         if (hasUpdate)
-            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onUpdateA" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudE.onUpdateA" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
         if (hasDelete)
-            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudR.onDeleteA" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudR.onDeleteA" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
         if (hasView)
-            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onViewA" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudE.onViewA" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
         if (hasCopy)
-            funs += `<button type="button" class="btn btn-link" data-onclick="_me.crudE.onCopyA" data-args="${key}"><i class="ico-copy" title="${_BR.TipCopy}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudE.onCopyA" data-args="${key}"><i class="ico-copy" title="${_BR.TipCopy}"></i></button>`;
         return funs;
     }
 
@@ -472,8 +473,5 @@ class CrudR {
         });
     }
     //=== event end ===
-
-    //call last
-    //this._init();
 
 }//class
