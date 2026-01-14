@@ -99,7 +99,7 @@ class EditOne {
      * @param row {json}
      */
     loadRow(row) {
-        _edit.loadRow(this, row);
+        _edit.loadRow(this, this.eform, row);
     }
 
     /**

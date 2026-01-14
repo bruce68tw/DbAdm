@@ -40,6 +40,7 @@ var _BR = {
     NewFileNotView: 'Save First Then View !',
 
     //message-others
+    PlsSelect: '-Select-',
     PlsSelectDeleted: 'Please Select Deleted Rows.',
     PlsSelectRows: 'Please Select Rows First.',
     SureDeleteRow: 'Sure to Delete Row ?',

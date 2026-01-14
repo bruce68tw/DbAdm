@@ -40,6 +40,7 @@ var _BR = {
     NewFileNotView: '新檔案尚未上傳, 無法檢視。',
 
     //message-others
+    PlsSelect: '-請選取-',
     PlsSelectDeleted: '請選取要刪除的資料。',
     PlsSelectRows: '請先選取資料。',
     SureDeleteRow: '是否確定刪除這筆資料?',

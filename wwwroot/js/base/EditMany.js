@@ -250,7 +250,7 @@ class EditMany {
             if (_array.isEmpty(rows))
                 this._resetAndNew();
             else
-                _edit.loadRow(this, rows[0]);
+                _edit.loadRow(this, this.eform, rows[0]);
 
         } else {
             //var rows = (json == null || json[_edit.Rows] == null)

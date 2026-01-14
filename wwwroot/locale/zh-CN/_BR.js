@@ -40,6 +40,7 @@ var _BR = {
     NewFileNotView: '新档案尚未上传, 无法检视。 ',
 
     //message-others
+    PlsSelect: '-請選取-',
     PlsSelectDeleted: '请选取要删除的资料。 ',
     PlsSelectRows: '请先选取资料。 ',
     SureDeleteRow: '是否确定删除这笔资料?',

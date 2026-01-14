@@ -1,7 +1,7 @@
 ﻿/**
- * 做為 EditOne/EditMany 的延伸函數庫, 可以在這裡存取private變數!!
+ * 做為 EditOne/EditMany 的延伸函數庫, 可以在這裡存取其 instance 變數!!
  * 許多函數在初始化執行, 所以無法放在CrudE.js
- * only for CrudE.js, EditOne.js, EditMany.js !!
+ * 主要called by CrudE.js, EditOne.js, EditMany.js, 但其它程式也可呼叫 !!
  * 內容為: 
  *   1.靜態 constant
  *   2.初始化函數
@@ -33,11 +33,11 @@ var _edit = {
     /**
      * setFidTypeVars + setFileVars -> initVars
      * 設定: fidTypes, fidTypeLen, fileFids, fileLen, hasFile
-     * param me {object} EditOne/EditMany object
+     * param edit {object} EditOne/EditMany object
      * param box {object} container
      * return void
      */
-    initVars: function (me, box) {
+    initVars: function (edit, box) {
         var fidTypes = [];
         box.find(_input.fidFilter()).each(function (i, item) {
             var obj = $(item);
@@ -45,15 +45,15 @@ var _edit = {
             fidTypes[j] = _input.getFid(obj);
             fidTypes[j + 1] = _input.getType(obj);
         });
-        me.fidTypes = fidTypes;
-        me.fidTypeLen = me.fidTypes.length;
+        edit.fidTypes = fidTypes;
+        edit.fidTypeLen = edit.fidTypes.length;
 
-        me.fileFids = [];      //upload file fid array
+        edit.fileFids = [];      //upload file fid array
         box.find('[data-type=file]').each(function (index, item) {
-            me.fileFids[index] = _input.getFid($(item));
+            edit.fileFids[index] = _input.getFid($(item));
         });
-        me.fileLen = me.fileFids.length;
-        me.hasFile = me.fileFids.length > 0; //has input file or not
+        edit.fileLen = edit.fileFids.length;
+        edit.hasFile = edit.fileFids.length > 0; //has input file or not
     },
 
     /**
@@ -109,15 +109,17 @@ var _edit = {
     /**
      * load row into 單筆UI
      * called by EditOne, EditMany(mode=one)
+     * @param edit {EditOne/EditMany}
+     * @param box {jQuery}
      * @param row {json}
      */
-    loadRow: function(me, row) {
-        _form.loadRow(me.eform, row);
+    loadRow: function(edit, box, row) {
+        _form.loadRow(box, row);
 
         //set old value for each field
-        for (var i = 0; i < me.fidTypeLen; i = i + 2) {
-            var fid = me.fidTypes[i];
-            var obj = _obj.get(fid, me.eform);
+        for (var i = 0; i < edit.fidTypeLen; i = i + 2) {
+            var fid = edit.fidTypes[i];
+            var obj = _obj.get(fid, box);
             obj.data(_edit.DataOld, row[fid]);
         }
     },
@@ -125,24 +127,24 @@ var _edit = {
     /**
      * get one updated row for New/Updated
      * 只讀取有異動的欄位
-     * @param me {EditOne/EditMany}
+     * @param edit {EditOne/EditMany}
      * @param box {object} form object
      * @returns json row
      */
-    getUpdRow: function(me, box) {
+    getUpdRow: function(edit, box) {
         //case new return row
         var result = {};
         var fid, ftype, value, obj;
         var row = _form.toRow(box);     //內容只包含需要儲存的欄位, PKey如何為唯讀可能不會寫入!!
 
         //無條件加入PKey欄位, 才能判斷是否新增
-        row[me.kid] = _input.get(me.kid, box);
+        row[edit.kid] = _input.get(edit.kid, box);
 
         //case of New row
-        if (_edit.isNewRow(row, me.kid)) {
-            for (var j = 0; j < me.fidTypes.length; j = j + 2) {
-                fid = me.fidTypes[j];
-                ftype = me.fidTypes[j + 1];
+        if (_edit.isNewRow(row, edit.kid)) {
+            for (var j = 0; j < edit.fidTypes.length; j = j + 2) {
+                fid = edit.fidTypes[j];
+                ftype = edit.fidTypes[j + 1];
                 obj = _input.getObj(fid, box, ftype);
                 value = row[fid];
                 if (_var.notEmpty(value)) {
@@ -157,7 +159,7 @@ var _edit = {
         }
 
         /*
-        var key = _input.get(me.kid, box);
+        var key = _input.get(edit.kid, box);
         if (_str.isEmpty(key))
             return row;
         */
@@ -165,10 +167,10 @@ var _edit = {
         //case update: 讀取有異動的欄位
         var diff = false;
         var old;
-        for (var j = 0; j < me.fidTypes.length; j = j + 2) {
+        for (var j = 0; j < edit.fidTypes.length; j = j + 2) {
             //skip read only type
-            fid = me.fidTypes[j];
-            ftype = me.fidTypes[j + 1];
+            fid = edit.fidTypes[j];
+            ftype = edit.fidTypes[j + 1];
             //if (ftype === 'link' || ftype === 'read')
             //    continue;
 
@@ -192,7 +194,7 @@ var _edit = {
             return null;
 
         //無條件加入PKey, 後端才能判是否新增
-        result[me.kid] = _input.get(me.kid, box);
+        result[edit.kid] = _input.get(edit.kid, box);
         return result;
     },
 
