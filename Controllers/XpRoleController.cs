@@ -5,8 +5,6 @@ using BaseApi.Controllers;
 using DbAdm.Attributes;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DbAdm.Controllers
 {
@@ -80,7 +78,7 @@ where (@Account is null or u.Account like @Account)
 and d.Id=iif(@DeptId is null, d.Id, @DeptId)
 order by d.Id, u.Account
 ";
-            var rows = await _Db.GetRowsA(sql, new List<object>() { "Account", account, "DeptId" , deptId });
+            var rows = await _Db.GetRowsA(sql, ["Account", account, "DeptId" , deptId]);
             return Content(rows == null ? "" : rows.ToString(), ContentTypeEstr.Json);
         }
 
