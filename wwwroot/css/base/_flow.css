@@ -93,7 +93,7 @@
 
 /* context menu */
 .xf-menu {
-	display: none;
+	/*display: none;*/
 	z-index: 1000;
 	position: absolute;
 	overflow: hidden;

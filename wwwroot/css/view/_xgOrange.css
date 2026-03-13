@@ -1,46 +1,46 @@
 ﻿:root {
     /*=== 6個主色 ===*/
-    --top-bg: #d6dde4; /* 主色1 */
-    --left-bg: #394750; /* 主色2 */
-    --right-bg: #f1f1f1; /* 主色3 */
-    --left-hbg: #83cc53; /* 主色4 */
-    --right: #212529; /* 主色5 */
+    --top-bg: #F8DCC4; /* 主色1 */
+    --left-bg: #E2E8E4; /* 主色2 */
+    --right-bg: #F4F6F8; /* 主色3 */
+    --left-hbg: #6B7BA6; /* 主色4 */
+    --right: #2e3338; /* 主色5 */
     --right2: #ffffff; /* 主色6 */
     /*=== top ===*/
-    --top: #6c7176;
-    --top-bd: #c2c9d0; /* 主色1-1 */
-    --top-icon: #6c7176;
-    --top-title: #6c7176;
+    --top: #2e3338;
+    --top-bd: #e6cbb3; /* 主色1-1 */
+    --top-icon: #2e3338;
+    --top-title: #2e3338;
     /*=== left 區域 & 第一層 menu ===*/
-    --left1: #a9b2b8;
-    --left1-line: #4a5861;
+    --left1: #2f3a35;
+    --left1-line: #cfd8d3;
     --left-hover: #ffffff;
     /*=== 第二層 menu ===*/
-    --left2-bg: #4a5861; /* 主色2+1 */
-    --left2: #e9eef1;
-    --left2-line: #5a6872;
+    --left2-bg: #f0f4f1; /* 主色2+1 */
+    --left2: #3f4a45;
+    --left2-line: #c2ccc6;
     /*=== 程式路徑 ===*/
-    --prog-path: #343a40; /* 主色5-1 */
+    --prog-path: #5f666d; /* 主色5-1 */
     /*=== Table ===*/
-    --table-head-bg: #d6e9f9;
+    --table-head-bg: #dde3ea; /* 主色3+2 */
     --table: var(--right);
-    --table-row-hbg: #e5ecf1;
+    --table-row-hbg: #e9edf1; /* 主色3+1 */
     /*=== 小訊息視窗 ===*/
-    --alert-bg: #6fb545; /* 主色4-1 */
+    --alert-bg: var(--left-bg); /* 主色4-1 */
     --alert: var(--right);
     /*=== 分群文字 & 分隔線 ===*/
-    --group-title: #343a40; /* 主色5-1 */
+    --group-title: #5f666d; /* 主色5-1 */
     --group-title-hover: var(--right2); /* 主色6 */
     --group-title-hbg: var(--left-hbg); /* 主色4 */
-    --group-line: #495057; /* 主色5-2 */
+    --group-line: #c2c8cf; /* 主色5-2 */
     /*=== button btn1 ===*/
     --btn1: var(--right2);
-    --btn1-bg: #0d6efd;
+    --btn1-bg: #5b84c6;
     --btn1-bd: #466aa2;
     --btn1-hbd: rgba(91,132,198,0.45);
     /*=== button btn2 ===*/
     --btn2: var(--right2);
-    --btn2-bg: #157347;
+    --btn2-bg: #7ea48a;
     --btn2-bd: #648871;
     --btn2-hbd: rgba(126,164,138,0.45);
     /*=== button cancel ===*/
@@ -50,7 +50,7 @@
     --btn-cancel-hbd: rgba(0,0,0,0.25);
     /*=== button other ===*/
     --btn-other: var(--right2);
-    --btn-other-bg: #6c757d;
+    --btn-other-bg: #7a8796;
     --btn-other-bd: #606c79;
     --btn-other-hbd: rgba(122,135,150,0.45);
     /*=== button red ===*/
@@ -64,6 +64,6 @@
     --row-btn-bd: #4b7687;
     --row-btn-hbd: rgba(95,143,163,0.45);
     /*=== Modal ===*/
-    --modal-head-bg: #f7f7f7; /* 主色3+1 */
+    --modal-head-bg: #e3e7ec; /* 主色3+1 */
     --modal-bg: var(--right-bg);
 }

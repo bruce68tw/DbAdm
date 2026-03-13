@@ -14,8 +14,7 @@
     "inputFiles": [
       // bundler will change fonts path in css file, must pust fonts under css folder !!
       "wwwroot/css/icomoon.css",
-      "wwwroot/css/base/*.css",
-      "wwwroot/css/view/_xgGrey.css"
+      "wwwroot/css/base/*.css"
     ]
   },
 

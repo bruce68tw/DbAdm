@@ -12,12 +12,10 @@
     line-height: 1.5 !important;
     border-radius: .2rem !important;
 }
-
     /* space in button & icon */
     .btn > i {
         padding-left: 3px;
     }
-
 
 /* table button with link style */
 .btn-link {
@@ -30,8 +28,8 @@
 }
 
 /* change height, 38 -> 36 */
-.form-control, select.form-control {
-    height: 36px !important;
+.form-control, .form-select, select.form-control {
+    height: 38px !important;
     /*padding: 3px 6px !important;*/
 }
 

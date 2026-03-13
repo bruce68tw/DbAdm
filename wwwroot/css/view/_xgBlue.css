@@ -1,169 +1,69 @@
-﻿/* color & font size only */
-
-/* === html, body === */
-html, body {
-    font-size: 16px !important; /* global */
-    font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
-    /*background: #232B3F;*/
+﻿:root {
+    /*=== 6個主色 ===*/
+    --top-bg: #87c5da; /* 主色1 */
+    --left-bg: #52ABCB; /* 主色2 */
+    --right-bg: #f1f1f1; /* 主色3 */
+    --left-hbg: #086384; /* 主色4 */
+    --right: #000; /* 主色5 */
+    --right2: #fff; /* 主色6 */
+    /*=== top ===*/
+    --top: #fff;
+    --top-bd: #6fb6cd; /* 主色1-1 */
+    --top-icon: #fff;
+    --top-title: #fff;
+    /*=== left 區域 & 第一層 menu ===*/
+    --left1: #fff;
+    --left1-line: #8099a5;
+    --left-hover: #ffffff;
+    /*=== 第二層 menu ===*/
+    --left2-bg: #4695b2;
+    --left2: #fff;
+    --left2-line: #8099a5;
+    /*=== 程式路徑 ===*/
+    --prog-path: #333333; /* 主色5-1 */
+    /*=== Table ===*/
+    --table-head-bg: #d6e9f9;
+    --table: var(--right);
+    --table-row-hbg: #e5ecf1;
+    /*=== 小訊息視窗 ===*/
+    --alert-bg: #064f6a; /* 主色4-1 */
+    --alert: var(--right);
+    /*=== 分群文字 & 分隔線 ===*/
+    --group-title: #333333; /* 主色5-1 */
+    --group-title-hover: var(--right2); /* 主色6 */
+    --group-title-hbg: var(--left-hbg); /* 主色4 */
+    --group-line: #666666; /* 主色5-2 */
+    /*=== button btn1 ===*/
+    --btn1: var(--right2);
+    --btn1-bg: #0d6efd;
+    --btn1-bd: #0b5ed7;
+    --btn1-hbd: rgba(13,110,253,0.45);
+    /*=== button btn2 ===*/
+    --btn2: var(--right2);
+    --btn2-bg: #157347;
+    --btn2-bd: #146c43;
+    --btn2-hbd: rgba(21,115,71,0.45);
+    /*=== button cancel ===*/
+    --btn-cancel: #333333;
+    --btn-cancel-bg: #e6e8eb;
+    --btn-cancel-bd: #cfd4d9;
+    --btn-cancel-hbd: rgba(0,0,0,0.25);
+    /*=== button other ===*/
+    --btn-other: var(--right2);
+    --btn-other-bg: #6c757d;
+    --btn-other-bd: #5c636a;
+    --btn-other-hbd: rgba(108,117,125,0.45);
+    /*=== button red ===*/
+    --btn-red: var(--right2);
+    --btn-red-bg: #c94a42;
+    --btn-red-bd: #b02f2a;
+    --btn-red-hbd: rgba(201,74,66,0.5);
+    /*=== row button（table 內） ===*/
+    --row-btn: var(--right2);
+    --row-btn-bg: #5f8fa3;
+    --row-btn-bd: #4b7687;
+    --row-btn-hbd: rgba(95,143,163,0.45);
+    /*=== Modal ===*/
+    --modal-head-bg: #f7f7f7; /* 主色3+1 */
+    --modal-bg: var(--right-bg);
 }
-body, label {
-    /* color: #9797AB !important;*/
-}
-.form-control, .form-select {
-    /*background: #1A202E;*/
-}
-
-/* === 主畫面 === */
-.x-main-top {
-    height: 45px;
-    color: #fff;
-    background: #87c5da;
-    border-bottom: 1px solid #8099a5;
-}
-
-    .x-main-top i {
-        font-size: 20px;
-        color: #fff;
-    }
-
-    .x-main-top a {
-        color: #fff;
-    }
-
-.x-main-down {
-    height: calc(100vh - 45px); /* 減去xu-top高度, 右邊捲軸才能與左邊分開!! */
-}
-
-.x-main-right {
-    background: #f1f1f1;
-}
-
-/* === left menu === */
-.x-leftmenu {
-    background: #52ABCB;
-    border-right: 1px solid #8099a5;
-}
-
-    /* 分隔線 */
-    .x-leftmenu li {
-        border-bottom: solid 1px #8099a5;
-    }
-
-    /* 文字 */
-    .x-leftmenu a {
-        font-size: 15px;
-    }
-
-    .x-leftmenu a, .x-leftmenu i {
-        color: #fff !important;
-    }
-
-        .x-leftmenu a:hover, .x-leftmenu a:hover i {
-            color: #fff !important;
-            background: #086384;
-        }
-
-/* 子功能表 */
-.x-leftmenu-subbox {
-    background: #4695B2;
-}
-
-    .x-leftmenu-subbox a {
-        color: #fff;
-    }
-
-        .x-leftmenu-subbox a:hover {
-            background: #086384 !important;
-        }
-
-
-/* === table === */
-.x-table th {
-    background: #d6e9f9 !important;
-}
-
-.x-table tr:hover {
-    background: #e5ecf1 !important;
-}
-
-/* === modal === */
-.x-modal .modal-header {
-    border-bottom: none;
-    background: #FAFAFA;
-}
-.x-modal .modal-body, .x-modal .modal-footer {
-    /*background: #404040;*/
-}
-
-/* === checkbox/radio === */
-/* checkbox, span is square/round checked sign */
-.xi-check > span {
-    /*border: 2px solid #BFBFBF;
-	background: white;*/
-}
-
-/* checked background */
-.xi-check > input:checked + span {
-    /*border: 2px solid #0D6EFD;
-	background: #0D6EFD;*/
-}
-
-/* checked sign */
-.xi-check > input:checked + span:after {
-    /*border: 2px solid #F1F6FF;
-	background: #1266F1;*/
-}
-
-/* radio checked sign 填滿 */
-.xi-check > input:checked + .xi-rspan:after {
-    /*background: #F1F6FF;*/
-}   
-
-/* disabled */
-.xi-check > input:disabled + span {
-    /*color: #b8b8b8;
-    border: 2px solid #86B7FE;
-    background: #86B7FE;
-    */
-}
-
-.x-wait {
-    font-size: 24px;    
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.5); /* 半透明背景色 */
-}
-
-.xp-prog-title {
-    height: 20px;
-    font-style: italic;
-    margin-bottom: 10px;
-}
-
-/* chart.js */
-.chart-title {
-    font-size: 24px;
-}
-
-
-@media (max-width:768px) {
-    .x-table {
-        background: #fff !important;
-    } 
-}
-
-/* bootstrap */
-.btn {
-    font-size: .875rem !important;
-}
-
-/* change height, 38 -> 36 */
-.form-control, select.form-control {
-    font-size: 16px !important;
-}
-
-    .form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
-        background-color: #eee !important;
-    }
-
-
-

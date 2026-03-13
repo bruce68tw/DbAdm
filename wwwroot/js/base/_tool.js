@@ -91,13 +91,11 @@ var _tool = {
 
     //??show waiting
     showWait: function () {
-        //$('body').addClass('x-show-loading');
-        _obj.show($('.x-wait'));
+        _obj.show($('.x-alert'));
     },
     //??
     hideWait: function () {
-        //$('body').removeClass('x-show-loading');
-        _obj.hide($('.x-wait'));
+        _obj.hide($('.x-alert'));
     },
 
     /**

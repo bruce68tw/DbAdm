@@ -495,7 +495,7 @@ var _me = {
 
     //on change tableId at ritem modal
     onChangeItemTable: async function () {
-        await _me.changeItemTableA(_iselect.getO(_fun.getMe(true)));
+        await _me.changeItemTableA(_iselect.getO(_fun.getMe()));
     },
 
     //called by 2 places

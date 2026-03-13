@@ -152,8 +152,30 @@ body {
 .x-w400 {
     width: 400px !important;
 }
+/* 500以上同時設定max-width for bootstrap modal */
 .x-w500 {
     width: 500px !important;
+    max-width: 500px !important;
+}
+.x-w600 {
+    width: 600px !important;
+    max-width: 600px !important;
+}
+.x-w700 {
+    width: 700px !important;
+    max-width: 700px !important;
+}
+.x-w800 {
+    width: 800px !important;
+    max-width: 800px !important;
+}
+.x-w900 {
+    width: 900px !important;
+    max-width: 900px !important;
+}
+.x-w1000 {
+    width: 1000px !important;
+    max-width: 1000px !important;
 }
 
 /* 最小高度 */

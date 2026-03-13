@@ -24,6 +24,7 @@
 .x-group-title {
     /*font-weight: 600;
     color: #0d6efd;*/
+    cursor: pointer;
     white-space: nowrap;
     display: flex;
     align-items: center;

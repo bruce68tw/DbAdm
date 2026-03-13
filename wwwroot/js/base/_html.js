@@ -2,6 +2,18 @@
  * handle html data
  */
 var _html = {
+    //load css theme
+    loadTheme: function (color) {
+        const link = document.getElementById('xgTheme');
+        link.href = `/css/view/_xg${color}.css`;
+    },
+
+    loadThemeByElm: function () {
+        var color = _iselect.getO(_fun.getMe());
+        _html.loadTheme(color);
+    },
+    
+
     //*** 必要屬性 or 函式 ***
     //get locale code
     encodeRow: function (row, fields) {

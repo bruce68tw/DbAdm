@@ -648,7 +648,7 @@ class CrudE {
      * @param maxLen {int} 
      */
     onOpenModal(title, fid, required, maxLen) {
-        var tr = _fun.getMe(true).closest('tr');
+        var tr = _fun.getMe().closest('tr');
         _tool.showArea(title, _itext.get(fid, tr), this.isEditMode(), function(result) {
             _itext.set(fid, result, tr);
         });

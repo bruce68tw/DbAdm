@@ -4,7 +4,6 @@
 @inject IAntiforgery Antiforgery
 
 @{
-    //網頁變數
     var libVer = _Xp.LibVer;
     var myVer = _Xp.MyVer;
     var min = _Fun.IsDev ? "" : ".min";   //min js
@@ -102,10 +101,12 @@
         <!-- tail ver will load failed !! -->
         <link rel="stylesheet" asp-href-include="~/css/icomoon.css" />
         <link rel="stylesheet" asp-href-include="~/css/base/*.css" />
-        <link rel="stylesheet" asp-href-include="~/css/view/_xgGrey.css" />
         <script nonce="@_Fun.Nonce" asp-src-include="~/js/base/*.js"></script>
         <script nonce="@_Fun.Nonce" asp-src-include="~/js/view/_*.js"></script>
     </environment>
+    <!-- 加上id for 動態載入 -->
+    <link rel="stylesheet" asp-href-include="~/css/view/_themeLight.css" />
+    <link id="xgTheme" rel="stylesheet" asp-href-include="~/css/view/_xgGrey.css" />
 
     <!-- 4.load local js -->
     <script nonce="@_Fun.Nonce" src="~/js/@(locale+min).js?v=@myVer"></script>
@@ -131,9 +132,9 @@
         </a>
 
         <!-- Logo -->
-        <img src="/image/logo.png" class="xu-logo">        
+        <img src="/image/logo.png" class="xu-logo">
 
-        <a class="navbar-brand" href="#">@_Fun.Config.SystemName</a>
+        <div class="title">@_Fun.Config.SystemName</div>
         <div class="navbar-collapse collapse justify-content-end">
             <ul class="navbar-nav ml-auto">
                 @*
@@ -141,7 +142,21 @@
                 @Html.XiSelect("_Locale", _Session.Locale, locales, prop: new PropSelectDto() { AddEmptyRow = false, FnOnChange = "_xp.onChangeLocale" })
                 </li>
                 *@
-
+                @*
+                @{
+                    List<IdStrDto> colors = new()
+                    {
+                        new(){ Id = "Orange", Str = "温馨橘" },
+                        new(){ Id = "GreenApple", Str = "蘋果綠" },
+                        new(){ Id = "Blue", Str = "舒適藍" },
+                        //new(){ Id = "Green", Str = "時尚綠" },
+                        new(){ Id = "Grey", Str = "紳士灰" },
+                    };
+                }
+                <li>
+                    <vc:xi-select dto='new() { Fid = "Color", Rows = colors, ClsBox = "x-w100", AddEmpty = false, FnOnChange = "_html.loadThemeByElm"}' />
+                </li>
+                *@
                 <li>
                     <a class="nav-link" href="@Url.Action("Index", "Home")">
                         <i class="ico-home"></i>

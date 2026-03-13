@@ -1,4 +1,9 @@
 
+/*
+select * from orgEmp where id='16079'
+select * from orgEmp where EmpNo in ('16131','16132')
+*/
+
 truncate table dbo.OrgEmp
 truncate table dbo.OrgDept
 

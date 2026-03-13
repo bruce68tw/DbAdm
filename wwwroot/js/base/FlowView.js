@@ -295,7 +295,7 @@ class FlowNode {
 		let me = this;	//FlowNode
 		let flowView = this.flowView;
 
-		this.elm.node.addEventListener('contextmenu', function (e) {
+		this.elm.node.addEventListener(EstrMouse.RightMenu, function (e) {
 			e.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			if (flowView.fnShowMenu)
 				flowView.fnShowMenu(e, true, me);
@@ -573,7 +573,7 @@ class FlowLine {
 
 	_setEvent() {
 		var me = this;	//FlowLine
-		this.path2.node.addEventListener('contextmenu', function (event) {
+		this.path2.node.addEventListener(EstrMouse.RightMenu, function (event) {
 			event.preventDefault(); // 阻止瀏覽器的右鍵功能表
 			if (me.flowView.fnShowMenu)
 				me.flowView.fnShowMenu(event, false, me);

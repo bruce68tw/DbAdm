@@ -1,0 +1,69 @@
+﻿:root {
+    /*=== 6個主色 ===*/
+    --top-bg: #DDEBE4; /* 主色1 */
+    --left-bg: #EEF4F1; /* 主色2 */
+    --right-bg: #F7F7F7; /* 主色3 */
+    --left-hbg: #916A6C; /* 主色4 */
+    --right: #2F3A36; /* 主色5 */
+    --right2: #FFFFFF; /* 主色6 */
+    /*=== top ===*/
+    --top: #355F4B;
+    --top-bd: #C5D6CE; /* 主色1-1 */
+    --top-icon: #355F4B;
+    --top-title: #355F4B;
+    /*=== left 區域 & 第一層 menu ===*/
+    --left1: #1F3D2B;
+    --left1-line: #B1C8BF;
+    --left-hover: var(--right2);
+    /*=== 第二層 menu ===*/
+    --left2-bg: #C2D8CF; /* 主色2-1 */
+    --left2: #2F3A36;
+    --left2-line: #C7D9D2;
+    /*=== 程式路徑 ===*/
+    --prog-path: #7B8F8B; /* 主色5+1 */
+    /*=== Table ===*/
+    --table-head-bg: #E6E9E7;
+    --table: var(--right);
+    --table-row-hbg: #ECEFEC;
+    /*=== 小訊息視窗 ===*/
+    --alert-bg: rgba(0,0,0,0.5);
+    --alert: var(--right);
+    /*=== 分群文字 & 分隔線 ===*/
+    --group-title: #916A6C;
+    --group-title-hover: var(--right2); /* 主色6 */
+    --group-title-hbg: var(--left-hbg); /* 主色4 */
+    --group-line: #B8C2BF;
+    /*=== button btn1 ===*/
+    --btn1: #F5F7F9;
+    --btn1-bg: #0089BE;
+    --btn1-bd: #006C99;
+    --btn1-hbd: rgba(0,161,214,0.5);
+    /*=== button btn2 ===*/
+    --btn2: #F6F7FB;
+    --btn2-bg: #006C5D;
+    --btn2-bd: #00564B;
+    --btn2-hbd: rgba(0,140,116,0.5);
+    /*=== button cancel ===*/
+    --btn-cancel: #666666;
+    --btn-cancel-bg: #ECECEC;
+    --btn-cancel-bd: #D0D0D0;
+    --btn-cancel-hbd: rgba(0,0,0,0.25);
+    /*=== button other ===*/
+    --btn-other: var(--right2);
+    --btn-other-bg: #6B7280;
+    --btn-other-bd: #555555;
+    --btn-other-hbd: rgba(119,119,119,0.5);
+    /*=== button red ===*/
+    --btn-red: #FFF;
+    --btn-red-bg: #C0392B;
+    --btn-red-bd: #992623;
+    --btn-red-hbd: rgba(231,76,60,0.5);
+    /*=== row button（table 內） ===*/
+    --row-btn: #FFF;
+    --row-btn-bg: #4695B2;
+    --row-btn-bd: #357A9A;
+    --row-btn-hbd: rgba(90,160,195,0.5);
+    /*=== Modal ===*/
+    --modal-head-bg: #FAFAFA; /* 主色3+1 */
+    --modal-bg: var(--right-bg);
+}

@@ -1,0 +1,259 @@
+﻿/* color & font size only */
+
+/* === html, body === */
+html, body {
+    font-size: 16px !important;
+    font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
+}
+
+body, label {
+}
+
+/* === main screen === */
+.x-main-top {
+    height: 45px;
+    color: var(--top);
+    background: var(--top-bg);
+    border-bottom: 1px solid var(--top-bd);
+}
+
+    .x-main-top i {
+        font-size: 20px;
+        color: var(--top-icon);
+    }
+
+    .x-main-top .title {
+        font-size: 20px;
+        color: var(--top-title);
+    }
+
+.x-main-down {
+    height: calc(100vh - 45px);
+}
+
+.x-main-right {
+    background: var(--right-bg);
+}
+
+/* === left menu (淺橘系) === */
+.x-leftmenu {
+    /*border-right: 1px solid #FFCC99;*/
+    background: var(--left-bg); 
+}
+
+.x-leftmenu2 {
+    background: var(--left2-bg);
+}
+
+.x-leftmenu li {
+    border-bottom: 1px solid var(--left1-line);
+}
+
+.x-leftmenu2 li {
+    border-bottom: 1px solid var(--left2-line);
+}
+
+/* 第1層文字, icon */
+.x-leftmenu a,
+.x-leftmenu a i {
+    color: var(--left1);
+}
+/* 第2層文字 */
+.x-leftmenu2 a {
+    color: var(--left2);
+}
+
+    /* 第1,2層 hover */
+    .x-leftmenu a:hover,
+    .x-leftmenu a:hover i,
+    .x-leftmenu2 a:hover {
+        color: var(--left-hover);
+        background: var(--left-hbg);
+    }
+
+/* === table === */
+.x-table th {
+    color: var(--table-head) !important;
+    background-color: var(--table-head-bg) !important;
+    /*font-weight: 600 !important;*/
+}
+
+.x-table th, .x-table td {
+    border-bottom: 1px solid #D1D8D4;
+}
+
+.x-table tr:hover {
+    background: var(--table-row-hbg) !important;
+}
+
+/* === modal === */
+.x-modal .modal-header {
+    border-bottom: none;
+    background: var(--modal-bg);
+}
+
+.x-modal .modal-body,
+.x-modal .modal-footer {
+}
+
+/* === checkbox/radio 等保留原樣 === */
+
+/* === wait overlay === */
+.x-alert {
+    /*font-size: 24px;*/
+    color: var(--alert);
+    background-color: var(--alert-bg);
+}
+
+.x-prog-path {
+    color: var(--prog-path);
+    font-style: italic;
+    /*margin-bottom: 10px;
+    height: 20px;*/
+}
+
+/*=== 欄位分群 ===*/
+.x-group-title {
+    color: var(--group-title);
+    /*font-weight: 600;*/
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+}
+
+    .x-group-title:hover {
+        color: var(--group-title-hover);
+        background: var(--group-title-hbg);
+    }
+
+    /* icon */
+    .x-group-title i {
+        font-size: 0.9rem;
+        color: #D9A679;
+    }
+
+/* 點狀分隔線 */
+.x-group-line {
+    color: var(--group-line);
+    /*font-size: 0.9rem;*/
+}
+
+@media (max-width:768px) {
+    .x-table {
+        background: #fff !important;
+    }
+}
+
+
+/* chart.js */
+.chart-title {
+    font-size: 24px;
+}
+
+/* === buttons === */
+/* bootstrap */
+.btn {
+    font-size: 14px !important;
+    border: 1px solid transparent;
+    box-sizing: border-box; /* border 不影響尺寸 */
+}
+
+/* === primary === */
+.x-btn1,
+.page-link.active,
+.active > .page-link {
+    color: var(--btn1);
+    background-color: var(--btn1-bg);
+    border-color: var(--btn1-bd);
+}
+
+    .x-btn1:hover {
+        color: var(--btn1);
+        background-color: var(--btn1-bg);
+        outline: 3px solid var(--btn1-hbd);
+    }
+
+/* === second === */
+.x-btn2 {
+    color: var(--btn2);
+    background-color: var(--btn2-bg);
+    border-color: var(--btn2-bd);
+}
+
+    .x-btn2:hover {
+        color: var(--btn2);
+        background-color: var(--btn2-bg);
+        outline: 3px solid var(--btn2-hbd);
+    }
+
+/* === cancel === */
+.x-btn-cancel {
+    color: var(--btn-cancel);
+    background-color: var(--btn-cancel-bg);
+    border-color: var(--btn-cancel-bd);
+}
+
+    .x-btn-cancel:hover {
+        color: var(--btn-cancel);
+        background-color: var(--btn-cancel-bg);
+        outline: 3px solid var(--btn-cancel-hbd);
+    }
+
+/* === danger === */
+.x-btn-red {
+    color: var(--btn-red);
+    background-color: var(--btn-red-bg);
+    border-color: var(--btn-red-bd);
+}
+
+    .x-btn-red:hover {
+        color: var(--btn-red);
+        background-color: var(--btn-red-bg);
+        outline: 3px solid var(--btn-red-hbd);
+    }
+
+/* === other === */
+.x-btn-other {
+    color: var(--btn-other);
+    background-color: var(--btn-other-bg);
+    border-color: var(--btn-other-bd);
+}
+
+    .x-btn-other:hover {
+        color: var(--btn-other);
+        background-color: var(--btn-other-bg);
+        outline: 3px solid var(--btn-other-hbd);
+    }
+
+/* === table row button === */
+.x-row-btn {
+    color: var(--row-btn);
+    background-color: var(--row-btn-bg);
+    border-color: var(--row-btn-bd);
+}
+
+    .x-row-btn:hover {
+        color: var(--row-btn);
+        background-color: var(--row-btn-bg);
+        outline: 3px solid var(--row-btn-hbd);
+    }
+
+.x-delete {
+    color: red !important;
+}
+
+/* === form controls === */
+.form-control, select.form-control {
+    font-size: 16px !important;
+}
+
+    .form-control:disabled,
+    .form-control[readonly],
+    .form-select:disabled,
+    .form-select[readonly] {
+        background-color: #eee !important;
+    }
+
+.x-alert .xd-msg {
+    color: var(--alert);
+}

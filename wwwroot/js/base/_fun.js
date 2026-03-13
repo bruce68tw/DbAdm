@@ -74,10 +74,19 @@ var _fun = {
         });
     },
 
+    //remove isObj 參數
     //get 目前event this
     //param {bool} isObj: true(jQuery object)
-    getMe: function (isObj) {
-        return isObj ? $(_fun.nowDom) : _fun.nowDom;
+    getMe: function () {
+        return $(_fun.nowDom);
+    },
+
+    getMeElm: function () {
+        return _fun.nowDom;
+    },
+    //注意, 無法get radio value(因為需要 box !!)
+    getMeValue: function () {
+        return _input.getO($(_fun.nowDom));
     },
 
     /**

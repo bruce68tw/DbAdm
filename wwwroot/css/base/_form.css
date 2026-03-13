@@ -37,3 +37,13 @@
     display: none;
 }
 */
+
+.x-hr {
+    /*border: 0;*/
+    height: 2px;
+    width: 90%;
+    margin: 10px auto 5px auto;
+    /*
+    opacity: 0.1;
+        background-color: gray;*/
+}

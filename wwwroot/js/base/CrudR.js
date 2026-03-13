@@ -187,7 +187,7 @@ class CrudR {
         if (hasUpdate)
             funs += `<${preStr} data-onclick="_me.crudE.onUpdateA" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
         if (hasDelete)
-            funs += `<${preStr} data-onclick="_me.crudR.onDeleteA" data-args="${key},${rowName}"><i class="ico-delete" title="${_BR.TipDelete}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudR.onDeleteA" data-args="${key},${rowName}"><i class="ico-delete x-delete" title="${_BR.TipDelete}"></i></button>`;
         if (hasView)
             funs += `<${preStr} data-onclick="_me.crudE.onViewA" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
         if (hasCopy)
@@ -216,18 +216,10 @@ class CrudR {
      * //param nowDiv {object} (default _me.divEdit) now div to show
      * //param fnCallback {function} (optional) callback function
      */
-    swap(toRead) {
-        if (!_me.hasRead || !_me.hasEdit) {
-            //if (fnCallback)
-            //    fnCallback();
+    swap(toRead, fnCallback) {
+        //同時有read, edit才執行
+        if (!_me.hasRead || !_me.hasEdit)
             return;
-        }
-
-        /*
-        var isDefault = _var.isEmpty(nowDiv);
-        if (isDefault)
-            nowDiv = _me.divEdit;
-        */
 
         //考慮多個編輯畫面
         var divEdit = _me.crudE.mEditGetDivEdit();
@@ -247,7 +239,15 @@ class CrudR {
 
             setTimeout(() => {
                 newDiv.removeClass('x-on');
-                //if (fnCallback) fnCallback();
+
+                if (fnCallback) {
+                    fnCallback();
+
+                    if (_me.fnAfterSwap)
+                        _me.fnAfterSwap(toRead);
+                    if (toRead)
+                        _me.crudE.mEditSetEditNo(0);
+                }
             }, 500);
         }, 200);
 
@@ -257,48 +257,17 @@ class CrudR {
         //還原 nowEditNo
         if (toRead)
             _me.crudE.mEditSetEditNo(0);
-
-        /*
-        // fadeOut 用 d-none 隱藏
-        oldDiv.animate({ opacity: 0 }, 200, function () {
-            oldDiv.addClass('d-none').css('opacity', 1);  // 動畫結束後隱藏並還原透明度
-
-            // fadeIn 用 d-none 顯示
-            newDiv.removeClass('d-none').css('opacity', 0).animate({ opacity: 1 }, 500);
-
-            if (fnCallback)
-                fnCallback();
-        });
-        */
-
-        /*
-        newDiv.fadeIn(500, function () {
-            //debugger;
-            oldDiv.fadeOut(200);
-        });
-        
-        if (toRead) {
-            //nowDiv.fadeOut(200);
-            //this.divRead.fadeIn(500);
-        } else {
-            //this.divRead.fadeOut(200);
-            //nowDiv.fadeIn(500);
-        }
-        */
-        //if (isDefault)
-            //this._afterSwap(toRead);
     }
 
     /**
-     * 移除參數 fnCallback
-     * to edit(U/V) mode
+     * to edit mode
      * XpFlowSign Read.cshtml 待處理!! 
-     * @param {any} fun
-     * //param {any} fnCallback
+     * param fun {string} U/V
+     * param fnCallback {function} 如果進入編輯畫面後要處理畫面, 必須以非同步方式處理
      */
     //toEditMode = function(fun, data) {
-    toEditMode(fun) {
-        this.swap(false);  //call first
+    toEditMode(fun, fnCallback) {
+        this.swap(false, fnCallback);  //call first
         _prog.setPath(fun, this._updName);
     }
 

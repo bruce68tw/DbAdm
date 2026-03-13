@@ -129,7 +129,8 @@ class FlowMany {
 
         // Show contextmenu
         menu.finish()
-            .toggle(100)
+            //.show(100)
+            .removeClass('d-none')  //show/hide使用統一方式d-none
             .css({
                 position: 'fixed',  //使用 fixed 定位
                 left: event.clientX + 'px',
@@ -160,11 +161,12 @@ class FlowMany {
         $(document).on(EstrMouse.MouseDown, function (e) {
             //if (_obj.isShow(me.popupMenu))
             //    me.popupMenu.hide(100);
-            
+
             //"this" is not work here !!
             var filter = me.FtMenu;
-            if (!$(e.target).parents(filter).length > 0)
-                _obj.hide($(filter));            
+            //if (!$(e.target).parents(filter).length > 0)
+            if ($(e.target).closest(filter).length === 0)
+                _obj.hide($(filter));
         });
     }
 
@@ -559,11 +561,12 @@ class FlowMany {
     */
 
     _menuStatus(me) {
-        return !me.classList.contains('off');
+        return !me[0].classList.contains('off');
     }
 
     //context menu event
-    onMenuEdit(me) {
+    onMenuEdit() {
+        var me = _fun.getMe();
         if (!this._menuStatus(me)) return;
 
         if (this.nowIsNode)
@@ -572,22 +575,24 @@ class FlowMany {
             this.showLineProp(this.nowFlowItem);
     }
 
-    onMenuDelete(me) {
+    onMenuDelete() {
+        var me = _fun.getMe();
         if (!this._menuStatus(me)) return;
 
-        var me = this;
-        if (me.nowIsNode) {
+        var the = this;
+        if (the.nowIsNode) {
             _tool.ans('是否確定刪除這個節點和流程線?', function () {
-                me.deleteNode(me.nowFlowItem);
+                the.deleteNode(the.nowFlowItem);
             });
         } else {
             _tool.ans('是否確定刪除這一條流程線?', function () {
-                me.deleteLine(me.nowFlowItem);
+                the.deleteLine(the.nowFlowItem);
             });
         }
     }
 
-    onMenuView(me) {
+    onMenuView() {
+        var me = _fun.getMe();
         //todo
     }
 

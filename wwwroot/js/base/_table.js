@@ -3,11 +3,11 @@ var _table = {
 
     //btn: fun button in tr
     rowMoveUp: function () {
-        var row = _fun.getMe(true).closest('tr');
+        var row = _fun.getMe().closest('tr');
         row.insertBefore(row.prev());
     },
     rowMoveDown: function () {
-        var row = _fun.getMe(true).closest('tr');
+        var row = _fun.getMe().closest('tr');
         row.insertAfter(row.next());
     },
 
