@@ -22,7 +22,7 @@ order by p.Id, c.ProgName
             TableAs = "c",
             Items = [
                 new() { Fid = "ProjectId" },
-                new() { Fid = "ProgCode", Op = ItemOpEstr.Like },
+                new() { Fid = "ProgCode", Op = QitemOpEstr.Like },
                 //new() { Fid = "Status" },
             ],
         };

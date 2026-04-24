@@ -134,7 +134,7 @@
 <ul class="nav nav-tabs" id="navEtable"></ul>
 <div class="tab-content" id="tabEtable"></div>
 @*
-<vc:xg-save-back />
+<vc:xg-save2 />
 *@
 
 <!-- multiple row template, must set width, Nullable set false first then front side will set it -->
@@ -312,7 +312,7 @@
         data-name='{{Name}}'
         data-datatype='{{DataType}}'>
         <td>
-            @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "_check0" })
+            @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = _Fun.FidCheck0 })
         </td>
         <td>{{Fid}}</td>
         <td>{{Name}}</td>

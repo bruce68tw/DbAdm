@@ -1313,18 +1313,18 @@ namespace DbAdm.Services
         {
             return type switch
             {
-                ItemOpEstr.Equal => "",//not show
-                ItemOpEstr.Like => "ItemOpEstr.Like",
-                ItemOpEstr.NotLike => "ItemOpEstr.NotLike",
-                ItemOpEstr.In => "ItemOpEstr.In",
-                ItemOpEstr.Like2 => "ItemOpEstr.Like2",
-                ItemOpEstr.LikeList => "ItemOpEstr.LikeList",
-                ItemOpEstr.LikeCols => "ItemOpEstr.LikeCols",
-                ItemOpEstr.Like2Cols => "ItemOpEstr.Like2Cols",
-                ItemOpEstr.IsNull => "ItemOpEstr.IsNull",
-                ItemOpEstr.NotNull => "ItemOpEstr.NotNull",
-                ItemOpEstr.InRange => "ItemOpEstr.InRange",
-                ItemOpEstr.UserDefined => "ItemOpEstr.UserDefined",
+                QitemOpEstr.Equal => "",//not show
+                QitemOpEstr.Like => "ItemOpEstr.Like",
+                QitemOpEstr.NotLike => "ItemOpEstr.NotLike",
+                QitemOpEstr.In => "ItemOpEstr.In",
+                QitemOpEstr.Like2 => "ItemOpEstr.Like2",
+                QitemOpEstr.LikeList => "ItemOpEstr.LikeList",
+                QitemOpEstr.LikeCols => "ItemOpEstr.LikeCols",
+                QitemOpEstr.Like2Cols => "ItemOpEstr.Like2Cols",
+                QitemOpEstr.IsNull => "ItemOpEstr.IsNull",
+                QitemOpEstr.NotNull => "ItemOpEstr.NotNull",
+                QitemOpEstr.InRange => "ItemOpEstr.InRange",
+                QitemOpEstr.UserDefined => "ItemOpEstr.UserDefined",
                 _ => "??",
             };
         }

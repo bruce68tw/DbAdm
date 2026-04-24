@@ -148,12 +148,10 @@
     line-height: 1.5 !important;
     border-radius: .2rem !important;
 }
-
     /* space in button & icon */
     .btn > i {
         padding-left: 3px;
     }
-
 
 /* table button with link style */
 .btn-link {
@@ -166,8 +164,8 @@
 }
 
 /* change height, 38 -> 36 */
-.form-control, select.form-control {
-    height: 36px !important;
+.form-control, .form-select, select.form-control {
+    height: 38px !important;
     /*padding: 3px 6px !important;*/
 }
 
@@ -464,8 +462,30 @@ body {
 .x-w400 {
     width: 400px !important;
 }
+/* 500以上同時設定max-width for bootstrap modal */
 .x-w500 {
     width: 500px !important;
+    max-width: 500px !important;
+}
+.x-w600 {
+    width: 600px !important;
+    max-width: 600px !important;
+}
+.x-w700 {
+    width: 700px !important;
+    max-width: 700px !important;
+}
+.x-w800 {
+    width: 800px !important;
+    max-width: 800px !important;
+}
+.x-w900 {
+    width: 900px !important;
+    max-width: 900px !important;
+}
+.x-w1000 {
+    width: 1000px !important;
+    max-width: 1000px !important;
 }
 
 /* 最小高度 */
@@ -550,6 +570,8 @@ body {
 
 /* table row button */
 .x-row-btn {
+    padding: 2px 6px;
+    margin: 2px;
 }
 
 /* jquery validate error label */
@@ -712,7 +734,7 @@ span.error, label.error {
 
 /* context menu */
 .xf-menu {
-	display: none;
+	/*display: none;*/
 	z-index: 1000;
 	position: absolute;
 	overflow: hidden;
@@ -781,6 +803,17 @@ span.error, label.error {
     display: none;
 }
 */
+
+.x-hr {
+    /*border: 0;*/
+    height: 2px;
+    width: 90%;
+    margin: 10px auto 5px auto;
+    /*
+    opacity: 0.1;
+        background-color: gray;*/
+}
+
 
 /**
  * checkbox, radio, use pure css, no js
@@ -967,6 +1000,7 @@ span.error, label.error {
 .x-group-title {
     /*font-weight: 600;
     color: #0d6efd;*/
+    cursor: pointer;
     white-space: nowrap;
     display: flex;
     align-items: center;
@@ -1066,14 +1100,10 @@ input[type=number] {
 .x-main-top {
     padding: 2px 15px !important;
 }
-    .x-main-top .navbar-brand {
-        cursor: default !important; /* 不會出現小手 */
-    }
     .x-main-top a {
         text-decoration: none;
         cursor: pointer;
     }
-
     .x-main-top li {
         margin: auto 5px;
     }
@@ -1092,8 +1122,8 @@ input[type=number] {
 
 /* 左側功能表 */
 .x-leftmenu {
-    margin-left: 0;
     padding: 0;
+    margin-left: 0;
     min-width: 250px;
     height: 100%;
     transition: 0.5s;
@@ -1120,8 +1150,6 @@ input[type=number] {
     .x-leftmenu li {
         /*text-indent: 0;*/
         line-height: 42px;
-        border-bottom: solid 1px #E5E5E5;
-        /*color: #fff;*/
     }
 
     /* 文字 */
@@ -1157,7 +1185,7 @@ input[type=number] {
     }
 
 /* 子功能表(第2層) 的外框 */
-.x-leftmenu-subbox {
+.x-leftmenu2 {
     list-style: none;
     /*
     -moz-padding-start: 0;
@@ -1169,14 +1197,12 @@ input[type=number] {
     padding: 0;
 }
 
-    .x-leftmenu-subbox li {
+    .x-leftmenu2 li {
         border: none;
     }
 
     /* sub menu text */
-    .x-leftmenu-subbox a {
-        /*font-size: 15px;
-        color: #fff;*/
+    .x-leftmenu2 a {
         padding-left: 22px;
     }
 
@@ -1245,12 +1271,13 @@ input[type=number] {
 
 /* prog path, razor 只支援 inline style */
 .x-prog-path {
-    height: 38px;
+    height: 40px;
     padding: 8px 16px;
-    font-size: 16px;
-    color: #808080;
+    /*font-size: 16px;
+    color: #808080;*/
 }
 
+/*
     .x-prog-path ul {
         padding: 10px 0 10px 10px;
         font-size: 15px;
@@ -1263,9 +1290,10 @@ input[type=number] {
         font-style: italic;
     }
 }
+    */
 
 .x-prog {
-    margin: 5px 15px 10px 15px;
+    margin: 0 15px 10px 15px;
     padding: 15px;
     border: 1px solid #ddd !important;
     border-radius: 4px;
@@ -1473,15 +1501,6 @@ tr select {
     border-radius: 5px
 }
 
-/*
-#x-wait {
-    display: none;  
-    position: fixed;
-    top: 33%;
-    left: 50%;
-}
-*/
-
 /* x-msg class for both xgMsg & xgAns */
 .x-msg .modal-dialog {
     min-width: 280px;
@@ -1538,199 +1557,14 @@ tr select {
     margin: auto;
 }
 
-/* When the body has the wait class, we turn
+/* ?? When the body has the wait class, we turn
 the scrollbar off with overflow:hidden */
 body .x-show-wait {
     overflow: hidden;
 }
 
-/* Anytime the body has the wait class, our
+/* ?? Anytime the body has the wait class, our
    modal element will be visible */
 body.x-show-wait .x-wait {
     display: block;
-}
-
-/* color & font size only */
-
-/* === html, body === */
-html, body {
-    font-size: 16px !important; /* global */
-    font-family: 微軟正黑體,Arial,Roboto,Helvetica Neue,Helvetica,sans-serif;
-    /*background: #232B3F;*/
-}
-body, label {
-    /* color: #9797AB !important;*/
-}
-
-/* chart.js */
-.chart-title {
-    font-size: 24px;
-}
-
-/* bootstrap */
-.btn {
-    font-size: .875rem !important;
-}
-
-/* change height, 38 -> 36 */
-.form-control, select.form-control {
-    font-size: 16px !important;
-}
-
-.form-control:disabled, .form-control[readonly], .form-select:disabled, .form-select[readonly] {
-    background-color: #eee !important;
-}
-
-.form-control, .form-select {
-    /*background: #1A202E;*/
-}
-
-/* === 主畫面 === */
-.x-main-top {
-    height: 45px;
-    color: #8E959C;
-    background: #D6DDE4;
-    border-bottom: 1px solid #8099a5;
-}
-
-    .x-main-top i {
-        font-size: 20px;
-        color: #8E959C;
-    }
-
-    .x-main-top a {
-        color: #8E959C;
-    }
-
-.x-main-down {
-    height: calc(100vh - 45px); /* 減去xu-top高度, 右邊捲軸才能與左邊分開!! */
-}
-
-.x-main-right {
-    background: #f1f1f1;
-}
-
-/* === left menu === */
-.x-leftmenu {
-    background: #394750;
-    border-right: 1px solid #8099a5;
-}
-
-    /* 分隔線 */
-    .x-leftmenu li {
-        border-bottom: solid 1px #535a5e;
-    }
-
-    /* 文字 */
-    .x-leftmenu a {
-        font-size: 15px;
-    }
-
-    .x-leftmenu a, .x-leftmenu i {
-        color: #A9B2B8 !important;
-    }
-
-        .x-leftmenu a:hover, .x-leftmenu a:hover i {
-            color: #fff !important;
-            background: #83CC53;
-        }
-
-/* 子功能表 */
-.x-leftmenu-subbox {
-    background: #4695B2;
-}
-
-    .x-leftmenu-subbox a {
-        color: #A9B2B8;
-    }
-
-        .x-leftmenu-subbox a:hover {
-            background: #83CC53 !important;
-        }
-
-
-/* === table === */
-.x-table th {
-    background: #d6e9f9 !important;
-}
-
-.x-table tr:hover {
-    background: #e5ecf1 !important;
-}
-
-/* === modal === */
-.x-modal .modal-header {
-    border-bottom: none;
-    background: #FAFAFA;
-}
-.x-modal .modal-body, .x-modal .modal-footer {
-    /*background: #404040;*/
-}
-
-/* === checkbox/radio === */
-/* checkbox, span is square/round checked sign */
-.xi-check > span {
-    /*border: 2px solid #BFBFBF;
-	background: white;*/
-}
-
-/* checked background */
-.xi-check > input:checked + span {
-    /*border: 2px solid #0D6EFD;
-	background: #0D6EFD;*/
-}
-
-/* checked sign */
-.xi-check > input:checked + span:after {
-    /*border: 2px solid #F1F6FF;
-	background: #1266F1;*/
-}
-
-/* radio checked sign 填滿 */
-.xi-check > input:checked + .xi-rspan:after {
-    /*background: #F1F6FF;*/
-}   
-
-/* disabled */
-.xi-check > input:disabled + span {
-    /*color: #b8b8b8;
-    border: 2px solid #86B7FE;
-    background: #86B7FE;
-    */
-}
-
-.x-wait {
-    font-size: 24px;    
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.5); /* 半透明背景色 */
-}
-
-.xp-prog-title {
-    height: 20px;
-    font-style: italic;
-    margin-bottom: 10px;
-}
-
-/*=== 欄位分群 ===*/
-/* Label + Icon */
-.x-group-title {
-    font-weight: 600;
-    color: #0d6efd;
-}
-
-    .x-group-title i {
-        font-size: 0.9rem;
-        color: #0d6efd;
-    }
-
-/* 點狀分隔線 */
-.x-group-line {
-    color: #0d6efd;
-    font-size: 0.9rem;
-}
-
-@media (max-width:768px) {
-    .x-table {
-        background: #fff !important;
-    } 
 }

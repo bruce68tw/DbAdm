@@ -54,6 +54,7 @@ class CrudE {
             //set now edit no & _me & related variables
             this.mEditSetEditNo(0);
         } else {
+            //此為一般正常情形
             var divEdit = $('#divEdit');
             _me.hasEdit = (divEdit.length > 0);
             _me.divEdit = divEdit;
@@ -63,6 +64,12 @@ class CrudE {
                 this._initEdit0(edits);
                 _me.edit0 = edits[0];
                 _me.eform0 = _me.edit0.eform;
+
+                //如果child為EditOne(1對1), 則設isChild=true
+                for (var i = 1; i < edits.length; i++) {
+                    if (edits[i] instanceof EditOne)
+                        edits[i].setIsChild();
+                }
             }
         }
 
@@ -146,15 +153,20 @@ class CrudE {
     loadJson(json) {
         //load master(single) row
         var edit = _me.edit0;
-        edit.loadRow(json);
-        edit.dataJson = json;
+        edit.loadRow(this.jsonGetRows(json)[0]);
+        edit.dataJson = json;   //for edit0 only !!
 
         //load childs rows(只需載入第一層)
         var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
             var edit2 = this._editGetChild(edit, i);
-            edit2.dataJson = this.getChildJson(json, i);
-            edit2.loadRowsBySys(this.jsonGetRows(edit2.dataJson));
+            var json2 = this.getChildJson(json, i);
+            var rows = this.jsonGetRows(json2);
+            if (_edit.isEditOne(edit2))
+                edit2.loadRow(_array.isEmpty(rows) ? null : rows[0]);
+            else
+                edit2.loadRowsBySys(rows);
+
         }
 
         //call fnAfterLoadJson() if existed
@@ -278,8 +290,10 @@ class CrudE {
                 _json.copy(fileJson2, fileJson);
             }
 
-            var childJson = edit2.getUpdJsonBySys(key);
-            if (childJson == null)
+            var childJson = _edit.isEditOne(edit2)
+                ? edit2.getUpdRow(key)
+                : edit2.getUpdJsonBySys(key);
+            if (_json.isEmpty(childJson))
                 continue;
 
             //has child rows
@@ -374,18 +388,41 @@ class CrudE {
     }
 
     /**
+     * (public) after save
+     * data: ResultDto
+     */
+    _afterSaveDraft(data) {
+        //save no rows
+        if (data.Value === '0') {
+            _tool.msg(_BR.SaveNone);
+            return;
+        }
+
+        //case of ok
+        _tool.alert(_BR.SaveOk);
+
+        if (_me.crudR) {
+            _me.crudR.toReadMode();
+        }
+    }
+
+    /**
      * (recursive)reset main form and childs
      * @param edit {EditOne}
+     * @param init {bool} 是否填入初始值
      */
-    _resetForm(edit) {
+    _resetForm(edit, init) {
         //reset this
-        edit.reset();
+        edit.reset(init);
 
         //reset childs
         var childLen = this._editGetChildLen(edit);
         for (var i = 0; i < childLen; i++) {
             var edit2 = this._editGetChild(edit, i);
-            edit2.reset();
+            if (_edit.isEditOne(edit2))
+                edit2.reset(init);
+            else
+                edit2.reset();
 
             //如果為1對1, 把row設為新增
         }
@@ -411,19 +448,28 @@ class CrudE {
         var act = (fun == EstrFun.Update)
             ? 'GetUpdJson' : 'GetViewJson';
         return await _ajax.getJsonA(act, data, function (json) {
+            me.loadJsonAndEdit(json, fun);
+            /*
             me.loadJson(json);
             me.setEditStatus(fun);
             me.afterOpen(fun, json);
             _me.crudR.toEditMode(fun);
+            */
         });
     }
 
+    loadJsonAndEdit(json, fun) {
+        this.loadJson(json);
+        this.setEditStatus(fun);
+        this.afterOpen(fun, json);
+        _me.crudR.toEditMode(fun);
+    }
 
     /**
      * get edit child
      * @param {EditOne} edit - edit object
      * @param {int} childIdx - child index, base 0
-     * @returns {EditMany}
+     * @returns {EditOne/EditMany}
      */
     _editGetChild(edit, childIdx) {
         return edit[_edit.Childs][childIdx];
@@ -614,7 +660,7 @@ class CrudE {
      */
     onCreate() {
         var fun = EstrFun.Create;
-        this._resetForm(_me.edit0);   //reset main/child
+        this._resetForm(_me.edit0, true);   //reset main/child
         this.setEditStatus(fun);
         this.afterOpen(fun, null);
     }
@@ -723,6 +769,54 @@ class CrudE {
 
             await _ajax.getJsonA(action, data, function(result) {
                 me.afterSave(result);
+            });
+        }
+    }
+
+    /**
+     * on click draft(程式參考onSaveA)
+     * below variables are sent to backend
+     *   key, row(包含_childs, _deletes, _fileNo), files
+     */
+    async onDraftA() {
+        //get saving json
+        var formData = new FormData();  //for upload files if need
+        var json = this._getUpdJson(formData);
+        if (_json.isEmpty(json)) {
+            _tool.msg(_BR.SaveNone);
+            return;
+        }
+
+        //save rows, call backend Save action
+        var edit0 = _me.edit0;
+        //var isNew = (this._nowFun == EstrFun.Create);
+        var action = 'Draft';
+        var data = null;
+        var me = this;
+        if (this._hasFile()) {
+            //has files, use formData
+            data = formData;
+            data.append('json', _json.toStr(json));
+            data.append('key', edit0.getKey());
+
+            //考慮多個編輯畫面 ??
+            if (this._multiEdit)
+                data.append('editNo', this._nowEditNo);
+
+            await _ajax.getJsonByFdA(action, data, function (result) {
+                me._afterSaveDraft(result);
+            });
+        } else {
+            //no file, use json
+            data = { json: _json.toStr(json) };
+            data.key = edit0.getKey();
+
+            //考慮多個編輯畫面
+            if (this._multiEdit)
+                data.editNo = this._nowEditNo;
+
+            await _ajax.getJsonA(action, data, function (result) {
+                me._afterSaveDraft(result);
             });
         }
     }

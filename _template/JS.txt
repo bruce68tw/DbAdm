@@ -34,7 +34,7 @@ var _me = {
     //TODO: add your code
     //onclick viewFile, called by XiFile component
     onViewFile: function (table, fid) {
-        _me.edit0.viewFile(table, fid, _fun.getMe());
+        _me.edit0.onViewFile(table, fid);
     },
 
     {{/if}}

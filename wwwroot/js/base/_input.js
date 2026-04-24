@@ -7,6 +7,10 @@
  */
 var _input = {
 
+    isRadio: function (ftype) {
+        return (ftype == EstrInputType.Radio);
+    },
+
     //get input value
     get: function (fid, box) {
         return _input.getO(_obj.get(fid, box), box);
@@ -125,7 +129,8 @@ var _input = {
      */
     getObj: function (fid, box, ftype) {
         ftype = ftype || _input.getType(_obj.get(fid, box));
-        return (ftype === EstrInputType.Radio) ? _iradio.getObj(fid, box) : _obj.get(fid, box);
+        return _input.isRadio(ftype)
+            ? _iradio.getObj(fid, box) : _obj.get(fid, box);
     },
 
     /**

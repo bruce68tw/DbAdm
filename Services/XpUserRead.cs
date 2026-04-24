@@ -18,8 +18,8 @@ join dbo.XpDept d on u.DeptId=d.Id
 order by u.Name
 ",
             Items = new QitemDto[] {
-                new() { Fid = "Account", Op = ItemOpEstr.Like },
-                new() { Fid = "Name", Op = ItemOpEstr.Like },
+                new() { Fid = "Account", Op = QitemOpEstr.Like },
+                new() { Fid = "Name", Op = QitemOpEstr.Like },
                 new() { Fid = "DeptId" },
             },
         };

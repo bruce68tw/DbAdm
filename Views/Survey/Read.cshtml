@@ -36,11 +36,11 @@
         <form id='formRead' class='x-form'>
             <div class="row">
                 <div class="col-md-2 x-label">填寫時間</div>
-                <div class="col-md-10 x-input">
+                <div class="col-md-10 x-input x-hbox">
                     @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "Created", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "Created2", InRow = true })
-                    @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { SpanMode = true, HasReset = true })
+                    @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
                 </div>
             </div>
         </form>

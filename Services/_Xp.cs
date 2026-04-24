@@ -59,13 +59,13 @@ namespace DbAdm.Services
 			return DirBaseUpload + subDir + (sep ? _Fun.DirSep : "");
 		}
 
-		private static async Task<FileResult?> ViewFileA(string dir, string fid, string key, string ext)
+		private static async Task<IActionResult> ViewFileA(string dir, string fid, string key, string ext)
 		{
 			var path = $"{dir}{fid}_{key}.{ext}";
 			return await _HttpFile.ViewFileA(path, $"{fid}.{ext}");
 		}
 
-		public static async Task<FileResult?> ViewIssueFileA(string fid, string key, string ext)
+		public static async Task<IActionResult> ViewIssueFileA(string fid, string key, string ext)
 		{
 			return await ViewFileA(DirIssueFile, fid, key, ext);
 		}

@@ -44,7 +44,7 @@
 </form>
 
 {{/ChildTables}}
-<vc:xg-save-back/>
+<vc:xg-save2/>
 
 {{#ChildTables}}
 <script id="tpl{{TableCode}}" type="text/template">

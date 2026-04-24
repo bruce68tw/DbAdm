@@ -38,7 +38,7 @@ class Datatable {
         var config = {
             //deferLoading: 0,    //0表示一開始不自動執行
             pageLength: _fun.pageRows || 10,
-            lengthMenu: [10, 20, 50, 100], //25 -> 20 for more friendly
+            lengthMenu: _fun.lengthMenu,
             processing: false,  //use custom processing msg
             serverSide: true,   //server pagination
             jQueryUI: false,

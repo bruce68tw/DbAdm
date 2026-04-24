@@ -61,11 +61,14 @@ class CrudR {
         //this._edits = edits;
         this._updName = updName;
 
+        //是否有草稿功能
+        this.hasDraft = ($('#BtnDraft').length > 0);
+
         //2.init edit
         new CrudE(edits);
 
-        //3.initial forms(recursive)
-        _prog.init();   //prog path
+        //3.set prog path
+        _prog.init();
 
         //set _me
         _me.crudR = this;
@@ -104,14 +107,13 @@ class CrudR {
      * checkbox for multiple select
      * @param value {string} [1] checkbox value
      * @param editable {bool} [true]
-     * //param fid {string} [_icheck.Check0Id] data-fid value
      */
     dtCheck0(value, editable) {
         if (_str.isEmpty(value))
             value = 1;
 
         //attr
-        var attr = "data-fid='" + _icheck.Check0Id + "'" +
+        var attr = "data-fid='" + _icheck.FidCheck0 + "'" +
             " data-value='" + value + "'";
         if (editable === false)
             attr += ' readonly';
@@ -130,7 +132,7 @@ class CrudR {
     dtRadio1(value, editable) {
         if (editable === undefined)
             editable = true;
-        return _iradio.render(_icheck.Check0Id, '', false, value, editable);
+        return _iradio.render(_icheck.FidCheck0, '', false, value, editable);
     }
 
     /**
@@ -339,11 +341,32 @@ class CrudR {
 
     /**
      * onclick Create button
+     * 字尾暫不加上A(非同步)
      */
-    onCreate() {
+    async onCreate() {
         //var fun = EstrFun.Create;
         //this.swap(false);  //call first
         //_prog.setPath(fun);
+
+        if (this.hasDraft) {
+            //讀取草稿 if any
+            await _ajax.getJsonA('GetDraftJson', data, function (json) {
+                if (_json.isEmpty(json))
+                    this.createAndEdit();
+                else
+                    _me.crudE.loadJsonAndEdit(json, EstrFun.Create);
+
+            });
+        } else {
+            this.createAndEdit();
+            /*
+            _me.crudE.onCreate();
+            this.toEditMode(EstrFun.Create);
+            */
+        }
+    }
+
+    createAndEdit() {
         _me.crudE.onCreate();
         this.toEditMode(EstrFun.Create);
     }
@@ -395,7 +418,7 @@ class CrudR {
      */
     //onCheckAll(me, box, fid) {
     onCheckAll(me, box) {
-        _icheck.setF(_input.fidFilter(_icheck.Check0Id) + ':not(:disabled)', _icheck.isCheckedO($(me)), box);
+        _icheck.setF(_icheck.FltCheckeds + ':not(:disabled)', _icheck.isCheckedO($(me)), box);
     }
 
     /**
@@ -425,7 +448,7 @@ class CrudR {
     //async onDeleteRowsA(box, fid) {
     async onDeleteRowsA(box) {
         //get selected keys
-        var keys = _icheck.getCheckeds(box);
+        var keys = _icheck.getCheck0Values(box);
         if (keys.length === 0) {
             _tool.msg(_BR.PlsSelectDeleted);
             return;

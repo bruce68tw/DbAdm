@@ -155,7 +155,7 @@
         //onclick viewFile, called by XiFile component
         onViewFile: function (table, fid) {
             if (fid == 'FileName')
-                _me.mIssueFile.viewFile(table, fid, _fun.getMe());
+                _me.mIssueFile.onViewFile(table, fid);
         },
 
         onMyToday: function () {
@@ -293,7 +293,7 @@
             @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "處理人員", Fid = "OwnerId", Rows = ViewBag.Users })
             <div class="row">
                 <div class="col-md-2 x-label">工作日期</div>
-                <div class="col-md-10 x-input">
+                <div class="col-md-10 x-input x-hbox">
                     @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "WorkDate", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "WorkDate2", InRow = true })

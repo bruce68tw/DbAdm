@@ -40,13 +40,13 @@ namespace DbAdm.Controllers
         /// </summary>
         /// <param name="file">file name</param>
         /// <returns>file</returns>
-        public async Task<FileResult?> Template()
+        public async Task<IActionResult> Template()
         {
             return await _HttpFile.ViewFileA(TplPath);  //use this instead of PhysicalFile()
         }
 
         //download source import file
-        public async Task<FileResult?> GetSource(string id, string name)
+        public async Task<IActionResult> GetSource(string id, string name)
         {
             return await GetFile(id, name);
             /*
@@ -57,13 +57,13 @@ namespace DbAdm.Controllers
         }
 
         //download failed import file
-        public async Task<FileResult?> GetFail(string id, string name)
+        public async Task<IActionResult> GetFail(string id, string name)
         {
             return await GetFile(id + "_fail", name);
         }
 
         //download import file
-        private async Task<FileResult?> GetFile(string realFileStem, string downFileName)
+        private async Task<IActionResult> GetFile(string realFileStem, string downFileName)
         {
             return await _HttpFile.ViewFileA($"{DirUpload}/{realFileStem}.xlsx", downFileName);
         }

@@ -207,7 +207,7 @@
                 <tbody id="tbodyRoleProg"></tbody>
             </table>
         </form>
-        <vc:xg-save-back />
+        <vc:xg-save2 />
     </div>
 </div>
 
@@ -308,7 +308,7 @@
         data-userName='{{UserName}}'
         data-deptName='{{DeptName}}'>
         <td>
-            @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "_check0" })
+            @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = _Fun.FidCheck0 })
         </td>
         <td>{{DeptName}}</td>
         <td>{{Account}}</td>

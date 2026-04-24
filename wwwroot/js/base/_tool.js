@@ -1,19 +1,23 @@
 ﻿
 //small public components
 var _tool = {
-    //for ansA
+    //constant
+    //msg text
+    FltMsgText: '.xd-msg',
+
+    //variables for ansA
     ansStatus: false,
     fnResolve: null,
 
     init: function () {
         //alert
-        _tool.xgMsg = $('#xgMsg');      //使用id
-        _tool.xgAns = $('#xgAns');      //使用id
-        _tool.xgAnsA = $('#xgAnsA');    //使用id, 非同步
-        _tool.xgAlert = $('.x-alert');
-        _tool.xgArea = $('.x-area');
-        _tool.xgImage = $('.x-image');
-        _tool.xgWork = $('.x-work');
+        _tool.xMsg = $('#xMsg');      //使用id
+        _tool.xAns = $('#xAns');      //使用id
+        _tool.xAnsA = $('#xAnsA');    //使用id, 非同步
+        _tool.xAlert = $('.x-alert');
+        _tool.xArea = $('.x-area');
+        _tool.xImage = $('.x-image');
+        _tool.xWork = $('.x-work');
     },
 
     /**
@@ -22,8 +26,8 @@ var _tool = {
      * param fnOk {function} callback function
      */
     msg: function (msg, fnClose) {
-        var box = _tool.xgMsg;
-        box.find('.xd-msg').html(msg);
+        var box = _tool.xMsg;
+        box.find(_tool.FltMsgText).html(msg);
         _modal.show(box);
 
         //set callback
@@ -37,8 +41,8 @@ var _tool = {
      * param {function} fnNo
      */
     ans: function (msg, fnYes, fnNo) {
-        var box = _tool.xgAns;
-        box.find('.xd-msg').html(msg);
+        var box = _tool.xAns;
+        box.find(_tool.FltMsgText).html(msg);
         _modal.show(box);
 
         //set callback
@@ -53,8 +57,8 @@ var _tool = {
      * return {bool} yes/no
      */
     ansA: async function (msg) {
-        var box = _tool.xgAnsA;
-        box.find('.xd-msg').html(msg);
+        var box = _tool.xAnsA;
+        box.find(_tool.FltMsgText).html(msg);
         _modal.show(box);
 
         return new Promise((resolve) => {
@@ -69,7 +73,7 @@ var _tool = {
         if (_tool.ansStatus) return;
 
         _tool.ansStatus = true;
-        _modal.hide(_tool.xgAnsA);
+        _modal.hide(_tool.xAnsA);
         _tool.fnResolve(value == 1);
     },
 
@@ -79,8 +83,8 @@ var _tool = {
      * param {string} color: default blue, R(red)
      */
     alert: function (msg, color) {
-        var box = _tool.xgAlert;
-        box.find('.xd-msg').text(msg)
+        var box = _tool.xAlert;
+        box.find(_tool.FltMsgText).text(msg)
         box.fadeIn(500, function () {
             _obj.show(box);
             setTimeout(function () {
@@ -91,11 +95,11 @@ var _tool = {
 
     //??show waiting
     showWait: function () {
-        _obj.show($('.x-alert'));
+        _obj.show(_tool.xAlert);
     },
     //??
     hideWait: function () {
-        _obj.hide($('.x-alert'));
+        _obj.hide(_tool.xAlert);
     },
 
     /**
@@ -107,7 +111,7 @@ var _tool = {
      */
     showArea: function (title, value, isEdit, fnOk) {
         //set title
-        var box = _tool.xgArea;
+        var box = _tool.xArea;
         box.find('.modal-title').text(title);
 
         //get value & yes button status
@@ -125,7 +129,7 @@ var _tool = {
     },
 
     onAreaYes: function () {
-        var box = _tool.xgArea;
+        var box = _tool.xArea;
         if (_tool._fnOnAreaYes) {
             _modal.hide(box);
             var value = box.find('textarea').val();
@@ -139,7 +143,7 @@ var _tool = {
      * param imageSrc {string} image src
      */ 
     showImage: function (fileName, imageSrc) {
-        var box = _tool.xgImage;
+        var box = _tool.xImage;
         box.find('img').attr('src', imageSrc);
         box.find('label').text(fileName);
         _modal.show(box);
@@ -149,7 +153,7 @@ var _tool = {
      * onclick alert close button
      */
     onAlertClose: function () {
-        var box = _tool.xgAlert;
+        var box = _tool.xAlert;
         box.fadeOut(500, function () {
             _obj.hide(box);
         });
@@ -161,19 +165,19 @@ var _tool = {
      */
     onAnsYes: function () {
         if (_tool._fnOnAnsYes) {
-            _modal.hide(_tool.xgAns);
+            _modal.hide(_tool.xAns);
             _tool._fnOnAnsYes();
         }
     },
     onAnsNo: function () {
         if (_tool._fnOnAnsNo)
             _tool._fnOnAnsNo();
-        _modal.hide(_tool.xgAns);
+        _modal.hide(_tool.xAns);
     },
     onMsgClose: function () {
         if (_tool._fnOnMsgClose)
             _tool._fnOnMsgClose();
-        _modal.hide(_tool.xgMsg);
+        _modal.hide(_tool.xMsg);
     },
 
 }; //class

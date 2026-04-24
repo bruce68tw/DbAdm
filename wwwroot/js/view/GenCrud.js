@@ -394,7 +394,7 @@ var _me = {
 
     //get checked table id array
 	getCheckedTables: function () {
-        var values = _icheck.getCheckeds(_me.crudR.divRead);
+        var values = _icheck.getCheck0Values(_me.crudR.divRead);
 		if (values.length === 0)
 			_tool.msg('請選取資料。');
 		return values;
@@ -828,7 +828,7 @@ var _me = {
     /*
     //generate json
     onGenJson: function () {
-        var values = _icheck.getCheckeds(_me.crudR.divRead);
+        var values = _icheck.getCheck0Values(_me.crudR.divRead);
         if (values.length > 0)
             window.location = 'GenJson?key=' + values.join(',');
         else

@@ -1,6 +1,17 @@
 ﻿
 var _table = {
 
+    //讀取某個欄位值
+    //傳回字串陣列
+    getFidValues: function (box, trFilter, fid) {
+        var ary = [];  //return array
+        box.find(trFilter).each(function (idx, trElm) {
+            var key = _input.get(fid, $(trElm));
+            ary.push(key);
+        });
+        return ary;
+    },
+
     //btn: fun button in tr
     rowMoveUp: function () {
         var row = _fun.getMe().closest('tr');

@@ -86,7 +86,7 @@ namespace DbAdm.Controllers
             return Json(await _XpCode.PrjProgsA(parentId));
         }
 
-		public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
+		public async Task<IActionResult?> ViewFile(string table, string fid, string key, string ext)
 		{
 			return (fid == "FileName")
 				? await _Xp.ViewIssueFileA(fid, key, ext)

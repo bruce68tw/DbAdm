@@ -131,6 +131,7 @@ var _obj = {
             _obj.hide(obj);
     },
 
+    //如果data-屬性不存在會傳回''
     getData: function (obj, fid) {
         //return obj.data(fid); //傳回json
         return obj.attr('data-' + fid); //傳回字串!!

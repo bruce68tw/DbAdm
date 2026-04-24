@@ -53,7 +53,7 @@ class FlowView {
 
 	//由元件內部發動, 所以必須提供此功能
 	getNewLineId() {
-		this.newLineId++;
+		this.newLineId--;	//負號表示新增
 		return this.newLineId;
 	}
 

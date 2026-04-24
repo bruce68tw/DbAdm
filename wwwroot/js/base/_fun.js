@@ -25,6 +25,7 @@ var _fun = {
     pageRows: 10,   //must be 10,20(not 25),50,100    
     userId: '',     //now userId
     nowDom: '',     //now dom event element
+    lengthMenu: [10, 20, 50, 100],    //dataTables lengthMenu, 可在程式中修改, 必須配合 _Page.cs LengthMenu
 
     //mid variables
     data: {},
@@ -149,11 +150,11 @@ var _fun = {
 
     //for CSP, 不使用 jQuery.blockUI(), 會有inline style 衝突!!
     block: function (obj) {
-        _obj.show(_tool.xgWork);
+        _obj.show(_tool.xWork);
     },
 
     unBlock: function (obj) {
-        _obj.hide(_tool.xgWork);
+        _obj.hide(_tool.xWork);
     },
 
     //#region remark code

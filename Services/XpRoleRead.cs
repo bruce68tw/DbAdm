@@ -15,7 +15,7 @@ select * from dbo.XpRole
 order by Id
 ",
             Items = new QitemDto[] {
-                new() { Fid = "Name", Op = ItemOpEstr.Like },
+                new() { Fid = "Name", Op = QitemOpEstr.Like },
             },
         };
 

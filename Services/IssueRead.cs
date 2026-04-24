@@ -50,7 +50,7 @@ order by p.Id, pp.Sort, i.Created desc
                     new() { Fid = "WorkDate", Type = QitemTypeEnum.Date },
                     new() { Fid = "Created", Type = QitemTypeEnum.Date },
                     new() { Fid = "IssueType" },
-                    new() { Fid = "Title", Op = ItemOpEstr.Like2 },
+                    new() { Fid = "Title", Op = QitemOpEstr.Like2 },
                     new() { Fid = "RptUser" },
                     new() { Fid = "OwnerId" },
                     //new() { Fid = "Creator" },

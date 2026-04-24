@@ -22,7 +22,7 @@ order by p.Id, a.Sort
             TableAs = "a",
             Items = [
                 new() { Fid = "ProjectId" },
-                new() { Fid = "Name", Op = ItemOpEstr.Like2 },
+                new() { Fid = "Name", Op = QitemOpEstr.Like2 },
             ],
         };
 

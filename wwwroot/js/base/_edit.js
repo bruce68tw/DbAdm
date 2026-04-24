@@ -15,6 +15,8 @@ var _edit = {
     Childs: '_childs',      //同時用在資料、EditOne/EditMany(表達下層物件)
     Deletes: '_deletes',
 
+    DataFkeyFid: '_fkeyfid',  //data field for fkey fid, lowercase
+
     //server side fid for file input collection, must pre '_'
     //key-value of file serverFid vs row key
     FileJson: '_fileJson',
@@ -54,6 +56,10 @@ var _edit = {
         });
         edit.fileLen = edit.fileFids.length;
         edit.hasFile = edit.fileFids.length > 0; //has input file or not
+    },
+
+    isEditOne: function (edit) {
+        return (edit instanceof EditOne);
     },
 
     /**
@@ -174,11 +180,10 @@ var _edit = {
             //if (ftype === 'link' || ftype === 'read')
             //    continue;
 
-            //obj = (ftype === 'radio') ? _iradio.getObj(fid, box) : _obj.get(fid, box);
+            //radio如果沒有選取會傳回null !!
             obj = _input.getObj(fid, box, ftype);
-            //value = _input.getO(obj, box, ftype);
+            old = obj ? _obj.getData(obj, _edit.DataOld) : '';
             value = row[fid];
-            old = obj.data(_edit.DataOld);
             //if fully compare, string will not equal numeric !!
             if (value != old) {
                 //date/dt old value has more length

@@ -46,10 +46,10 @@ var _ifile = $.extend({}, _ibase, {
     //file: input element
     onChangeFile: function () {
         //case of empty file
-        var file = _fun.getMe();
-        var obj = _ifile._elmToObj(file);
-        var fileObj = $(file);
-        var value = file.value; //full path
+        var fileElm = _fun.getMeElm();
+        var obj = _ifile._elmToObj(fileElm);
+        var fileObj = $(fileElm);
+        var value = fileElm.value; //full path
         if (_str.isEmpty(value)) {
             _ifile.setO(obj, '');
             return;
@@ -62,16 +62,16 @@ var _ifile = $.extend({}, _ibase, {
             exts = ',' + exts + ',';
             if (exts.indexOf(',' + ext + ',') < 0) {
                 _tool.msg(_BR.UploadFileNotMatch);
-                file.value = '';
+                fileElm.value = '';
                 return;
             }
         }
 
         //check file size
         var max = fileObj.data('max');
-        if (file.files[0].size > max * 1024 * 1024) {
+        if (fileElm.files[0].size > max * 1024 * 1024) {
             _tool.msg(_str.format(_BR.UploadFileNotBig, max));
-            file.value = '';
+            fileElm.value = '';
             return;
         }
 

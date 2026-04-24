@@ -17,7 +17,7 @@ var _iradio = $.extend({}, _ibase, {
         return _iradio._getByName(_obj.getName(obj), box);
     },
 
-    //get checked object
+    //get checked object, 如果沒有選取則會回傳null !!
     getObj: function (fid, box) {
         return _obj.getByFt('[name=' + fid + ']:checked', box);
     },

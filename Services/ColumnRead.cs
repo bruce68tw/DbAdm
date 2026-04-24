@@ -29,9 +29,9 @@ Order by p.Id, t.Id, c.Sort
             //2.set query fields
             Items = [
                 new() { Fid = "ProjectId", Col = "t.ProjectId" },
-                new() { Fid = "TableCode", Col = "t.Code", Op = ItemOpEstr.Like },
-                new() { Fid = "Fid", Op = ItemOpEstr.Like2 },
-                new() { Fid = "Name", Op = ItemOpEstr.Like2 },
+                new() { Fid = "TableCode", Col = "t.Code", Op = QitemOpEstr.Like },
+                new() { Fid = "Fid", Op = QitemOpEstr.Like2 },
+                new() { Fid = "Name", Op = QitemOpEstr.Like2 },
                 //以下for排序用途
                 new() { Fid = "DataType" },
             ],

@@ -33,7 +33,7 @@ class EditMany {
     constructor(kid, rowsBoxId, rowTplId, rowFilter, sortFid) {
 
         //constant
-        this.DataFkeyFid = '_fkeyfid';  //data field for fkey fid, lowercase
+        //this.DataFkeyFid = '_fkeyfid';  //(移到 _edit.js)data field for fkey fid, lowercase
 
         //private
         this[_edit.Childs] = null;
@@ -44,7 +44,7 @@ class EditMany {
         //this.isUrm = false;           //is urm or not
 
         //public
-        this.dataJson = null;   //參考EditOne
+        //this.dataJson = null;   //參考EditOne??
         this.systemError = '';
 
         this.kid = kid;
@@ -82,6 +82,24 @@ class EditMany {
     }
 
     /**
+     * todo(測試): 顯示自訂錯誤, EditOne作法不同
+     * @param rows {jArray} 每筆包含3個欄位: fid、id、msg
+     * @returns {void}
+     */
+    showErrors(rows) {
+        if (rows == null) return;
+
+        //loop
+        for (var i=0; i<rows.length; i++) {
+            //用fid和id找到單一欄位後用showLabel
+            var row = rows[i];
+            var item = _obj.get(row.fid, this.idToRowBox(row.id));
+            this.validator.showLabel(item[0], row.msg);
+            item.addClass('error');
+        }
+    }
+
+    /**
      * set child array
      * @param childs {EditOne/EditMany array}
      */
@@ -100,12 +118,12 @@ class EditMany {
     }
 
     /**
-     * initial one mode
-     */
+     * initial one mode for 1對1
     initOneMode() {
         this.mode = EstrEditMode.One;
         _edit.initVars(this, this.eform);
     }
+     */
 
     /**
      * isNewTr -> _isNewBox
@@ -120,7 +138,7 @@ class EditMany {
     /**
      * reset edit form
      * @param rowsBox {object} optional
-     * @param forNew {bool} 是否為新增
+     * ??@param forNew {bool} 是否為新增
      */
     reset(rowsBox, forNew) {
         if (forNew == null) forNew = false;
@@ -131,8 +149,8 @@ class EditMany {
             this.fnReset();
         } else if (this.mode == EstrEditMode.UR) {
             this._urmReset();
-        } else if (this.mode == EstrEditMode.One) {
-            this._resetAndNew();
+        //} else if (this.mode == EstrEditMode.One) {
+        //    this._resetAndNew();
         } else if (this.hasEform) {
             rowsBox.empty();   //empty rows ui first
             this._resetVar();
@@ -228,12 +246,14 @@ class EditMany {
         objs.data('key', '');
     }
 
-    //reset and set new row for 1to1 only
+    /*
+    //??reset and set new row for 1對1 only
     //清空UI, 設為new row(key=-1)
     _resetAndNew() {
         _form.reset(this.eform);
         _itext.set(this.kid, -1, this.eform);
     }
+    */
 
     /**
      * loadJson(json) -> loadRows(rows) -> loadRowsBySys
@@ -246,12 +266,13 @@ class EditMany {
             this.fnLoadRows(rows);
         } else if (this.mode == EstrEditMode.UR) {
             this._urmLoadRows(rows, _me.divRoles, _me.mUserRoleFids);
+        /*
         } else if (this.mode == EstrEditMode.One) {
             if (_array.isEmpty(rows))
                 this._resetAndNew();
             else
                 _edit.loadRow(this, this.eform, rows[0]);
-
+        */
         } else {
             //var rows = (json == null || json[_edit.Rows] == null)
             //    ? null : json[_edit.Rows];
@@ -428,11 +449,13 @@ class EditMany {
             return this.fnGetUpdJson(upKey);
         else if (this.mode == EstrEditMode.UR)
             return this._urmGetUpdJson(upKey);
+        /*
         else if (this.mode == EstrEditMode.One) {
             var json = {};
             json[_edit.Rows] = [this.getUpdRow(this.eform)];
             return json;
-        } else
+        */
+        else
             return this.getUpdJsonByRsb(upKey, this.rowsBox);
     }
 
@@ -488,7 +511,7 @@ class EditMany {
             var key = _input.get(me.kid, box);
             if (me._isNewBox(box)) {
                 var row2 = _form.toRow(box);
-                row2[me.DataFkeyFid] = upKey;   //write anyway !!
+                row2[_edit.DataFkeyFid] = upKey;   //write anyway !!
                 rows.push(row2);
                 return;     //continue;
             }
@@ -526,7 +549,7 @@ class EditMany {
                 }
                 */
                 diffRow[me.kid] = key;    //set key value
-                //diffRow[me.DataFkeyFid] = upKey;   //無條件寫入這個欄位!!
+                //diffRow[_edit.DataFkeyFid] = upKey;   //無條件寫入這個欄位!!
                 rows.push(diffRow);
             }
         });
@@ -614,13 +637,16 @@ class EditMany {
     }
 
     /**
-     * onViewFile -> viewFile
+     * onViewFile -> viewFile -> onViewFile
+     * 實際有event動作, 在此函數讀取 _fun.getMeElm(), 簡化外部呼叫函數
      * onclick viewFile
      * @param table {string} table name
      * @param fid {string}
      * @param elm {element} link element
      */
-    viewFile(table, fid, elm) {
+    //viewFile(table, fid, elm) {
+    onViewFile(table, fid) {
+        var elm = _fun.getMeElm();
         var key = this.getKey(this._elmToRowBox(elm));
         _edit.viewFile(table, fid, elm, key);   //非初始階段可以讀取_me.crudE
     }
@@ -680,7 +706,7 @@ class EditMany {
      */
     rowSetFkey(row, fkey) {
         if (row != null && _edit.isNewRow(row, fkey))
-            row[this.DataFkeyFid] = fkey;
+            row[_edit.DataFkeyFid] = fkey;
     }
 
     /**
@@ -693,7 +719,7 @@ class EditMany {
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
                 if (row != null && _edit.isNewRow(row, this.kid))
-                    row[this.DataFkeyFid] = fkey;
+                    row[_edit.DataFkeyFid] = fkey;
             }
         }
     }

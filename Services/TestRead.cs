@@ -23,8 +23,8 @@ order by a.Id desc
 			TableAs = "a",
             Items = new QitemDto[] {
                 new() { Fid = "ProjectId" },
-                new() { Fid = "Code", Op = ItemOpEstr.Like },
-                new() { Fid = "Name", Op = ItemOpEstr.Like },
+                new() { Fid = "Code", Op = QitemOpEstr.Like },
+                new() { Fid = "Name", Op = QitemOpEstr.Like },
                 new() { Fid = "TranLog" },
             },
         };

@@ -18,8 +18,8 @@ Order by a.Code
 ",
             TableAs = "a",
             Items = [
-                new() { Fid = "Code", Op = ItemOpEstr.Like },
-                new() { Fid = "Name", Op = ItemOpEstr.Like2 },
+                new() { Fid = "Code", Op = QitemOpEstr.Like },
+                new() { Fid = "Name", Op = QitemOpEstr.Like2 },
                 new() { Fid = "TableType" },
                 new() { Fid = "TableTypeName", Col = "a.TableType" },   //for sort
             ],

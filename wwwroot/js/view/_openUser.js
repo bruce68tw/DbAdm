@@ -101,7 +101,7 @@ var _openUser = {
         //var fn = ou.boxId + 'OnClickOk';  //要callback的函數名稱 !!
         if (ou.isRows) {
             //多選
-            var keys = _icheck.getCheckeds(box, _icheck.Check0Id);
+            var keys = _icheck.getCheck0Values(box, _icheck.Check0Id);
             if (keys.length == 0) {
                 _tool.msg('請先選取資料。');
             } else {

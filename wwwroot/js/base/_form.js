@@ -5,6 +5,14 @@
  */
 var _form = {
 
+    /*
+    //顯示自訂錯誤
+    //json: {fid: msg, ...}
+    showErrors(form, json) {
+        form.validate().showErrors(json);
+    },
+    */
+
     /**
      * get input values, 排除不儲存的欄位, 可用在多筆的單行
      * param form {object} input form
@@ -66,11 +74,20 @@ var _form = {
     /**
      * reset all inputs with name attribute
      * param form {object}
+     * param init {bool} 是否填入初始值, default false
      */
-    reset: function (form) {
-        form.find(_input.fidFilter()).each(function () {
-            _input.setO($(this), '', form);
-        });
+    reset: function (form, init) {
+        var items = form.find(_input.fidFilter());
+        if (init) {
+            items.each(function () {
+                var obj = $(this);
+                _input.setO(obj, obj.data('init'), form);
+            });
+        } else {
+            items.each(function () {
+                _input.setO($(this), '', form);
+            });
+        }
     },
 
     /**
