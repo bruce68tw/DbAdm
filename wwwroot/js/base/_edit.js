@@ -217,8 +217,11 @@ var _edit = {
         } else {
         */
         var ext = _file.getFileExt(elm.innerText);
+        var url = _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext);
         if (_file.isImageExt(ext))
-            _tool.showImage(elm.innerHTML, _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext));
+            _tool.showImage(elm.innerHTML, url);
+        else
+            window.location = url;
     },
 
     /**
