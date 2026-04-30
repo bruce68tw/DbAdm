@@ -85,9 +85,55 @@ var _ajax = {
     },
 
     /**
+     * 使用fetch, 將來考慮取代jquery ajax
+     * GET ok, 但是 POST 有問題(所以用GET) !!
+     * param fnOk {function} 目前無作用
+     * return {file/string(錯誤訊息)/空白(檔案不存在)}
+     */
+    getFileA: async function (url, data, elm, fnOk) {
+        var args = new URLSearchParams(data);
+        var resp = await fetch(`${url}?${args}`);
+        if (resp.ok) {
+            //blob
+            var blob = await resp.blob();
+            var contentType = resp.headers.get('Content-Type');
+            var isImage = contentType && contentType.startsWith('image/');
+
+            //圖檔直接顯示, 其他則下載
+            if (isImage) {
+                var url = URL.createObjectURL(blob);
+                _tool.showImage(elm.innerHTML, url);
+            } else {
+                var a = document.createElement('a');
+                var downUrl = URL.createObjectURL(blob);
+
+                a.href = downUrl;
+                a.download = elm.innerText;
+                document.body.appendChild(a);
+                a.click();
+
+                //清理
+                a.remove();
+                URL.revokeObjectURL(downUrl);
+            }
+        } else {
+            //無錯誤訊息表示檔案不存在(後端傳回null)
+            var result = await resp.text();
+            var msg;
+            if (_var.isEmpty(result)) {
+                msg = _BR.NoFile;
+            } else {
+                msg = _ajax.resultToErrMsg(_str.toJson(result));
+            }            
+            _tool.msg(msg);
+        }
+    },
+
+    /**
      * ajax return image file
      * return {bool/file}
      */
+    /*
     getImageFileA: async function (url, data, block) {
         var json = {
             url: url,
@@ -97,6 +143,7 @@ var _ajax = {
         };
         return await _ajax._rpcA(json, null, block);
     },
+    */
 
     /**
      * ajax upload file

@@ -27,7 +27,7 @@
     --table-row-hbg: #ECEFEC;
     /*=== 小訊息視窗 ===*/
     --alert-bg: rgba(0,0,0,0.5);
-    --alert: var(--right);
+    --alert: var(--right2);
     /*=== 分群文字 & 分隔線 ===*/
     --group-title: #916A6C;
     --group-title-hover: var(--right2); /* 主色6 */

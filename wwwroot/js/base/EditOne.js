@@ -198,10 +198,10 @@ class EditOne {
      * @param elm {element} link element
      */
     //viewFile(table, fid, elm) {
-    onViewFile(table, fid) {
+    async onViewFile(table, fid) {
         var elm = _fun.getMeElm();
         var key = this.getKey();
-        _edit.viewFile(table, fid, elm, key);
+        await _edit.viewFileA(table, fid, elm, key);
     }
 
 }//class

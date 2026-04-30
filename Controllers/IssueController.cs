@@ -86,11 +86,12 @@ namespace DbAdm.Controllers
             return Json(await _XpCode.PrjProgsA(parentId));
         }
 
-		public async Task<IActionResult?> ViewFile(string table, string fid, string key, string ext)
+        //[HttpPost]
+        [XgProgAuth(CrudEnum.View)]
+        public IActionResult ViewFile(string table, string fid, string key, string ext)
 		{
-			return (fid == "FileName")
-				? await _Xp.ViewIssueFileA(fid, key, ext)
-				: null;
+            var file = _Xp.ViewIssueFile(fid, key, ext);
+            return (file == null) ? NotFound() : file;
 		}
 
         //加入追踪

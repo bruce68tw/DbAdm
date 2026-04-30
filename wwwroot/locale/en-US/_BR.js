@@ -50,6 +50,7 @@ var _BR = {
     NoAuthUser: 'No right for this user, Please connect Admin.',
     NoAuthDept: 'No right for this department, Please connect Admin.',
     NoAuthProg: 'You have not access right, Please connect Admin.',
+    NoFile: 'No File Existed.',
     NotLogin: 'Please Login First.',
 
     //others

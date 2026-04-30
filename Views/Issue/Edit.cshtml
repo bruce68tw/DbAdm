@@ -92,7 +92,7 @@
 <script id="tplIssueFile" type="text/template">
 	<tr>
 		@await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
-		<td>@await Component.InvokeAsync("XiFile", new XiFileDto { Fid = "FileName", FileType = UpFileTypeEnum.All })</td>
+		<td>@await Component.InvokeAsync(XiEstr.File, new XiFileDto { Fid = "FileName", FileType = UpFileTypeEnum.All })</td>
 		<td>@await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Fid = "Created" })</td>
 		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mIssueFile.onDeleteRow")</td>
 	</tr>

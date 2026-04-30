@@ -645,10 +645,10 @@ class EditMany {
      * @param elm {element} link element
      */
     //viewFile(table, fid, elm) {
-    onViewFile(table, fid) {
+    async onViewFile(table, fid) {
         var elm = _fun.getMeElm();
         var key = this.getKey(this._elmToRowBox(elm));
-        _edit.viewFile(table, fid, elm, key);   //非初始階段可以讀取_me.crudE
+        await _edit.viewFileA(table, fid, elm, key);   //非初始階段可以讀取_me.crudE
     }
 
     /**

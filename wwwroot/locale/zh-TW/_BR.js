@@ -50,6 +50,7 @@ var _BR = {
     NoAuthUser: '您只能存取個人資料，請聯絡管理者。',
     NoAuthDept: '您只能存取同部門資料，請聯絡管理者。',
     NoAuthProg: '您沒有此功能的權限，請聯絡管理者。',
+    NoFile: '檔案不存在。',
     NotLogin: '您尚未登入系統。',
 
     //others

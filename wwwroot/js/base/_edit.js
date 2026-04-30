@@ -205,23 +205,34 @@ var _edit = {
 
     /**
      * onclick viewFile
+     * 雖然直接開啟(pdf,docx...)比較方便, 但是各瀏覽器行為不同, 最後只有圖檔直接開啟, 其他則下載
+     * window.open(url, "_blank") 會出現小方塊, 故不採用
      * @param table {string} table name
      * @param fid {string}
      * @param elm {element} link element
      * @param key {string} row key
      */
-    viewFile: function(table, fid, elm, key) {
+    viewFileA: async function (table, fid, elm, key) {
         /*
         if (this.isNewKey(key)) {
             _tool.msg(_BR.NewFileNotView);
         } else {
         */
-        var ext = _file.getFileExt(elm.innerText);
-        var url = _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext);
+        var data = {
+            table: table,
+            fid: fid,
+            key: key,
+            ext: _file.getFileExt(elm.innerText),
+        };
+        await _ajax.getFileA('ViewFile', data, elm);
+
+        /*
+        //var url = _str.format('ViewFile?table={0}&fid={1}&key={2}&ext={3}', table, fid, key, ext);
         if (_file.isImageExt(ext))
             _tool.showImage(elm.innerHTML, url);
         else
             window.location = url;
+        */
     },
 
     /**
