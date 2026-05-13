@@ -153,6 +153,9 @@ var _input = {
             : `[data-fid='${fid}']`;
     },
 
+    preFidFilter: function (fid) {
+        return `[data-fid^='${fid}']`;
+    },
 
     //#region remark code
     /**

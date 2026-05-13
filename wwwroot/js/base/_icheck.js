@@ -77,9 +77,12 @@ var _icheck = $.extend({}, _ibase, {
     //getCheckeds: function (form, fid) {
     getCheck0Values: function (form) {
         var ary = [];
-        _obj.getByFt(_icheck.FltCheckeds, form).each(function (i) {
-            ary[i] = $(this).data('value');
-        });
+        var items = _obj.getByFt(_icheck.FltCheckeds, form);
+        if (_array.notEmpty(items)) {
+            items.each(function (i) {
+                ary[i] = $(this).data('value');
+            });
+        }
         return ary;
     },
 
@@ -92,7 +95,7 @@ var _icheck = $.extend({}, _ibase, {
     getCheckedValues: function (form, preFid) {
         var ary = [];
         var items = _obj.getByFt(`[data-fid^='${preFid}']:checked`, form);
-        if (items != null && items.length > 0) {
+        if (_array.notEmpty(items)) {
             items.each(function (i) {
                 ary[i] = $(this).data('value');
             });

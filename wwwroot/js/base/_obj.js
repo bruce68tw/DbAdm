@@ -63,6 +63,10 @@ var _obj = {
         return _obj.getByFt('#' + id, box);
     },
 
+    getByPreFid: function (id, box) {
+        return _obj.getByFt('#' + id, box);
+    },
+
     //以下function都傳入object
     /**
      * get id of object
