@@ -219,7 +219,7 @@ class EditMany {
                     //new row
                     var row = {};
                     //row[_edit.IsNew] = '1';     //new row flag
-                    row[fids[0]] = ++newIdx;            //Id, base 1 !!
+                    row[fids[0]] = --newIdx;            //Id, 從0減
                     row[fids[1]] = _icheck.getO(obj);   //RoleId
                     me.rowSetFkey(row, upKey);  //set foreign key value
                     rows[rows.length] = row;

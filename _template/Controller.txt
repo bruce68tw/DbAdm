@@ -108,9 +108,10 @@ namespace {{Project}}.Controllers
                 {{#if AuthType2}}
         [XgProgAuth(CrudEnum.View)]
                 {{/if}}
-        public async Task<FileResult?> ViewFile(string table, string fid, string key, string ext)
+        public IActionResult ViewFile(string table, string fid, string key, string ext)
         {
-            return await _Xp.View{{ProgCode}}A(fid, key, ext);
+            var file = _Xp.View{{ProgCode}}(fid, key, ext);
+            return ViewFile(file);
         }
             {{/if}}
         {{else}}
