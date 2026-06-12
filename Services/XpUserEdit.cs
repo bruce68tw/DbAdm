@@ -1,4 +1,5 @@
-﻿using Base.Models;
+﻿using Base.Enums;
+using Base.Models;
 using Base.Services;
 
 namespace DbAdm.Services
@@ -7,7 +8,7 @@ namespace DbAdm.Services
     {
         public XpUserEdit(string ctrl) : base(ctrl) { }
 
-        override public EditDto GetDto()
+        override public EditDto GetDto(CrudEnum fun)
         {
             return new EditDto
             {

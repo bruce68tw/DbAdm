@@ -1,7 +1,6 @@
 ﻿using Base.Enums;
 using Base.Models;
 using Base.Services;
-using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
 {
@@ -9,7 +8,7 @@ namespace DbAdm.Services
     {
         public TestEdit(string ctrl) : base(ctrl) { }
 
-        override public EditDto GetDto()
+        override public EditDto GetDto(CrudEnum fun)
         {
             return new EditDto
             {

@@ -17,7 +17,7 @@ namespace {{Project}}.Services
     {
         public {{ProgCode}}Edit(string ctrl) : base(ctrl) { }
 
-        override public EditDto GetDto()
+        override public EditDto GetDto(CrudEnum fun)
         {
             return new EditDto
             {

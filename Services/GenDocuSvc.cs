@@ -15,7 +15,7 @@ namespace DbAdm.Services
         /// generate database word document
         /// </summary>
         /// <param name="projectId"></param>
-        /// <param name="tableIds"></param>
+        /// <param name="tableIds">如果要產生某些table的資料, 則填此欄位, 並且projectId為空</param>
         /// <return>error msg if any</return>
         public async Task<bool> RunA(string projectId, string[]? tableIds = null)
         {
@@ -36,7 +36,7 @@ namespace DbAdm.Services
             }
             #endregion
 
-            #region 2.read column rows & group by
+            #region 2.read all column rows & group by
             var db = _Xp.GetDb();
             var query = (from c in db.Column
                          join t in db.Table on c.TableId equals t.Id

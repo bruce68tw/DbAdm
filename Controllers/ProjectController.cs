@@ -5,7 +5,6 @@ using BaseApi.Attributes;
 using BaseApi.Controllers;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace DbAdm.Controllers
 {

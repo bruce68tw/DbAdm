@@ -1,3 +1,4 @@
+using Base.Enums;
 using Base.Models;
 using Base.Services;
 
@@ -9,7 +10,7 @@ namespace DbAdm.Services
     {
         public ColumnEdit(string ctrl) : base(ctrl) { }
 
-        override public EditDto GetDto()
+        override public EditDto GetDto(CrudEnum fun)
         {
             //修改:改成實際要寫入的資料表資訊
             return new EditDto()

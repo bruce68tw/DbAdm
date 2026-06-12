@@ -1,4 +1,5 @@
-﻿using Base.Models;
+﻿using Base.Enums;
+using Base.Models;
 using Base.Services;
 using BaseApi.Services;
 using DbAdm.Enums;
@@ -10,7 +11,7 @@ namespace DbAdm.Services
     {
         public IssueEdit(string ctrl) : base(ctrl) { }
 
-        override public EditDto GetDto()
+        override public EditDto GetDto(CrudEnum fun)
         {
             return new()
 			{
@@ -188,7 +189,7 @@ where e.EmpNo=@EmpNo
         public async Task<ResultDto> CreateA(JObject json, List<IFormFile> t00_FileName)
 		{
 			var service = EditSvc();
-			var result = await service.CreateA(json);
+			var result = await service.CreateA(json, GetDto(CrudEnum.Create));
 			if (_Valid.ResultStatus(result))
 			{
 				var newKeyJson = service.GetNewKeyJson();
@@ -201,7 +202,7 @@ where e.EmpNo=@EmpNo
 		public async Task<ResultDto> UpdateA(string key, JObject json, List<IFormFile> t00_FileName)
 		{
 			var service = EditSvc();
-			var result = await service.UpdateA(key, json);
+			var result = await service.UpdateA(key, json, GetDto(CrudEnum.Update));
 			if (_Valid.ResultStatus(result))
 			{
 				var newKeyJson = service.GetNewKeyJson();

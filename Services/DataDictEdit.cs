@@ -1,6 +1,6 @@
+using Base.Enums;
 using Base.Models;
 using Base.Services;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace DbAdm.Services
 {
@@ -8,7 +8,7 @@ namespace DbAdm.Services
     {
         public DataDictEdit(string ctrl) : base(ctrl) { }
 
-        override public EditDto GetDto()
+        override public EditDto GetDto(CrudEnum fun)
         {
             return new EditDto()
             {                
