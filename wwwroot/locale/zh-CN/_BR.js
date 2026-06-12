@@ -56,5 +56,5 @@ var _BR = {
     //others
     Working: '作业处理中...',
     TimeOut: '待机时间过久，或未登入系统。',
-
+    UniqueError: '此笔资料已经存在，不可重复。'
 };

@@ -19,7 +19,7 @@ var _iradio = $.extend({}, _ibase, {
 
     //get checked object, 如果沒有選取則會回傳null !!
     getObj: function (fid, box) {
-        return _obj.getByFt('[name=' + fid + ']:checked', box);
+        return _obj.getByFt(`[name='${fid}']:checked`, box);
     },
 
     //get data-value by checked name
@@ -39,9 +39,15 @@ var _iradio = $.extend({}, _ibase, {
         _iradio._setByName(_obj.getName(obj), value, box);
     },
 
+    reset: function (fid, box) {
+        var objs = _obj.getByFt(`[name='${fid}']`, box);
+        if (objs != null)
+            objs.prop('checked', false);
+    },
+
     //set checked status by name & data-value
     _setByName: function (name, value, box) {
-        var obj = _obj.getByFt('[name=' + name + '][data-value=' + value + ']', box);
+        var obj = _obj.getByFt(`[name='${name}'][data-value='${value}']`, box);
         if (obj != null) 
             obj.prop('checked', true);
     },
@@ -50,10 +56,24 @@ var _iradio = $.extend({}, _ibase, {
     //改成用name來查欄位
     setEdit: function (fid, status, box) {
         //use getN() !!
-        _iradio.setEditOs(_obj.get(fid, box));
+        _iradio.setEditO(_obj.get(fid, box));
     },
-    setEditOs: function (objs, status) {
-        objs.attr('disabled', !status); //use attr !!
+
+    /**
+     * setEditOs -> setEditO, 因為上層呼叫 setEditO !!
+     * @param {object} obj, 可以是複數
+     * @param {bool} status
+     */
+    setEditO: function (obj, status) {
+        obj.attr('disabled', !status); //use attr !!
+    },
+
+    //for modal單選畫面
+    //傳回checked一筆資料, 讀取tr全部data欄位
+    getCheck0Tr: function (form) {
+        var radio = _obj.getByFt(_icheck.FltCheckeds, form).first();
+        return (radio.length == 1)
+            ? radio.closest('tr') : null;
     },
 
     /**

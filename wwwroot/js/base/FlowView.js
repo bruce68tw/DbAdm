@@ -167,6 +167,10 @@ class FlowNode {
 		this.PinWidth = 12;
 		this.PinGap = 3;
 
+		//gulp最小化css時會移除不穩定svg屬性, 所以改用設定
+		this.NodeRadius = 20;
+		this.NodeRx = 5;	//rx, ry
+
 		this.self = this;
 		this.flowView = flowView;
 		this.svg = flowView.svg;
@@ -206,9 +210,9 @@ class FlowNode {
 				.addClass(cssClass);
 
 			//移動circle時會參考radius, 所以先更新, 從css讀取radius, 而不是從circle建立的屬性 !!
-			let style = window.getComputedStyle(this.boxElm.node);	//不能直接讀取circle屬性
-			let radius = parseFloat(style.getPropertyValue('r'));	//轉浮點
-			this.boxElm.attr('r', radius);	//reset radius
+			//let style = window.getComputedStyle(this.boxElm.node);	//不能直接讀取circle屬性
+			//let radius = parseFloat(style.getPropertyValue('r'));	//轉浮點
+			this.boxElm.attr('r', this.NodeRadius);	//reset radius
 
 			//起迄節點不會改變文字和大小, 直接設定
 			this.nameElm = this.elm.text(nodeText)
@@ -226,7 +230,12 @@ class FlowNode {
 			cssClass = 'xf-node';
 			this.boxElm = this.elm.rect()
 				.addClass(cssClass)
-				.attr({ 'text-anchor': 'middle', 'dominant-baseline': 'middle' }); //水平垂直置中
+				.attr({
+					'text-anchor': 'middle',
+					'dominant-baseline': 'middle',
+					'rx': this.NodeRx, 
+					'ry': this.NodeRx, 
+				}); //水平垂直置中
 			//.move(this.json.PosX, this.json.PosY);
 
 			this.nameElm = this.elm.text('')

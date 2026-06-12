@@ -1,4 +1,8 @@
-﻿
+﻿/**
+ * modal 多選參考 XpRole/Read.cshtml 選取用戶
+ * modal 單選參考 XpRole/Read.cshtml 選取用戶
+ */
+
 var _modal = {
 
     //showO -> show

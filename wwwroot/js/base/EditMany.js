@@ -1,6 +1,7 @@
 ﻿/**
  * 多筆編輯畫面(包含1對1), 全部屬性皆為 private !!
- * notice:
+ * 注意:
+ *   如果有radio, 系統會自動name後面增"_x", 才能正常設定checkec狀態
  *   set data-fkeyFid when save
  *   函數名稱後面ByRsb(表示by RowsBox)為擴充原本函數, 參數rowsBox空白則為this.RowsBox
  * 公用屬性:(同EditOne)
@@ -41,7 +42,6 @@ class EditMany {
         //variables
         this.mode = EstrEditMode.Base;  //default value
         this.modeData = '';             //for different mode
-        //this.isUrm = false;           //is urm or not
 
         //public
         //this.dataJson = null;   //參考EditOne??
@@ -108,13 +108,12 @@ class EditMany {
     }
 
     /**
-     * initial urm, 參考 XpUser Read.cshmtl
+     * initial urm, 參考 XpUser Read.cshtml
      * @param fids: 要傳到後端的欄位id array
      */ 
     initUrm(fids) {
         this.mode = EstrEditMode.UR;
         this.modeData = fids;
-        //this.isUrm = true;
     }
 
     /**
@@ -211,26 +210,26 @@ class EditMany {
         var newIdx = 0;
         var fids = this.modeData;   //string array
         this._resetDeletes();    //reset first
-        this.rowsBox.find(':checkbox').each(function () {
-            var obj = $(this);
-            var key = obj.data('key');
-            if (_str.isEmpty(key)) {
-                if (_icheck.isCheckedO(obj)) {
-                    //new row
-                    var row = {};
-                    //row[_edit.IsNew] = '1';     //new row flag
-                    row[fids[0]] = --newIdx;            //Id, 從0減
-                    row[fids[1]] = _icheck.getO(obj);   //RoleId
-                    me.rowSetFkey(row, upKey);  //set foreign key value
-                    rows[rows.length] = row;
+            this.rowsBox.find(':checkbox').each(function () {
+                var obj = $(this);
+                var key = obj.data('key');
+                if (_str.isEmpty(key)) {
+                    if (_icheck.isCheckedO(obj)) {
+                        //new row
+                        var row = {};
+                        //row[_edit.IsNew] = '1';     //new row flag
+                        row[fids[0]] = --newIdx;            //Id, 從0減
+                        row[fids[1]] = _icheck.getO(obj);   //RoleId
+                        me.rowSetFkey(row, upKey);  //set foreign key value
+                        rows[rows.length] = row;
+                    }
+                } else {
+                    if (!_icheck.isCheckedO(obj)) {
+                        //delete row
+                        me.deleteRow(key);
+                    }
                 }
-            } else {
-                if (!_icheck.isCheckedO(obj)) {
-                    //delete row
-                    me.deleteRow(key);
-                }
-            }
-        });
+            });
 
         if (rows.length > 0)
             json[_edit.Rows] = rows;
@@ -294,23 +293,29 @@ class EditMany {
         //    return;
 
         row.Index = index;
-        var box = $(Mustache.render(this.rowTpl, row)); //for 顯示欄位
+        var tr = $(Mustache.render(this.rowTpl, row)); //for 顯示欄位
 
         //set old value for each field
         var fid;
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
             fid = this.fidTypes[i];
-            _edit.setOld(_obj.get(fid, box), row[fid]);
+            _edit.setOld(_obj.get(fid, tr), row[fid]);
+        }
+
+        //rename radio name 才能正常設定checked狀態
+        for (var i = 0; i < this.fidRadios.length; i++) {
+            fid = this.fidRadios[i];
+            tr.find(`[name='${fid}']`).attr('name', `${fid}_${index}`);
         }
 
         //set date input
-        _idate.init(box);
+        _idate.init(tr);
 
         //one row into UI for 輸入欄位
-        _form.loadRow(box, row);    
+        _form.loadRow(tr, row);    
 
-        //rowBox.append(box);
-        box.appendTo(rowBox);
+        //rowBox.append(tr);
+        tr.appendTo(rowBox);
     }
 
     /**

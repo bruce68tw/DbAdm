@@ -12,7 +12,7 @@ var _edit = {
 
     //constant with underline
     Rows: '_rows',
-    Childs: '_childs',      //同時用在資料、EditOne/EditMany(表達下層物件)
+    Childs: '_childs',      //注意: 同時用在json資料、EditOne/EditMany(表達下層物件)
     Deletes: '_deletes',
 
     DataFkeyFid: '_fkeyfid',  //data field for fkey fid, lowercase
@@ -31,6 +31,64 @@ var _edit = {
     //ModeBase: 'Base',
     //ModeUR: 'UR',   //user role mode
 
+    /**
+     * get rows of json 
+     * @param {any} json
+     * @returns
+     */
+    jsonGetRows: function (json) {
+        return (json == null || json[_edit.Rows] == null)
+            ? null
+            : json[_edit.Rows];
+    },
+    jsonGetRows0: function (json) {
+        var rows = _edit.jsonGetRows(json);
+        return (rows == null || rows.length == 0)
+            ? null
+            : rows[0];
+    },
+
+    //upJson get child json
+    //_getChildJson -> getChildJson
+    getChildJson: function (upJson, childIdx) {
+        var childs = _edit.Childs;
+        return (upJson == null || upJson[childs] == null || upJson[childs].length <= childIdx)
+            ? null
+            : upJson[childs][childIdx];
+    },
+
+    //upJson get child rows
+    getChildRows: function (upJson, childIdx) {
+        var child = _edit.getChildJson(upJson, childIdx);
+        return _edit.jsonGetRows(child);
+    },
+
+    getChildRows0: function (upJson, childIdx) {
+        var rows = _edit.getChildRows(upJson, childIdx);
+        return (rows == null || rows.length == 0)
+            ? null : rows[0];
+    },
+
+    /**
+     * upJson set child rows
+     * @param upJson {json}
+     * @param childIdx {int}
+     * @param rows {jsons}
+     * @returns {json} child object
+     */
+    setChildRows: function (upJson, childIdx, rows) {
+        var fid = _edit.Childs;
+        if (upJson == null)
+            upJson = {};
+        if (upJson[fid] == null)
+            upJson[fid] = [];
+        if (upJson[fid].length <= childIdx)
+            upJson[fid][childIdx] = {};
+
+        var child = upJson[fid][childIdx];
+        child[_edit.Rows] = rows;
+        return child;
+    },
 
     /**
      * setFidTypeVars + setFileVars -> initVars
@@ -41,14 +99,20 @@ var _edit = {
      */
     initVars: function (edit, box) {
         var fidTypes = [];
+        var fidRadios = []
         box.find(_input.fidFilter()).each(function (i, item) {
             var obj = $(item);
             var j = i * 2;
-            fidTypes[j] = _input.getFid(obj);
-            fidTypes[j + 1] = _input.getType(obj);
+            var fid = _input.getFid(obj);
+            var ftype = _input.getType(obj);
+            fidTypes[j] = fid;
+            fidTypes[j + 1] = ftype;
+            if (ftype == 'radio')
+                fidRadios[fidRadios.length] = fid;
         });
         edit.fidTypes = fidTypes;
         edit.fidTypeLen = edit.fidTypes.length;
+        edit.fidRadios = [...new Set(fidRadios)];   //移除重複元素, ES6語法 !!
 
         edit.fileFids = [];      //upload file fid array
         box.find('[data-type=file]').each(function (index, item) {
@@ -101,7 +165,7 @@ var _edit = {
     },
 
     /**
-     * check is new key or not
+     * check is new key or not, key為空值或是小於0都視為new key
      * param key {string}
      * return {bool}
      */

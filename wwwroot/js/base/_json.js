@@ -87,6 +87,15 @@ var _json = {
         return !_json.isEmpty(json);
     },
 
+    fidIsEmpty: function (json, fid) {
+        return _json.isEmpty(json)
+            ? true
+            : _var.isEmpty(json[fid]);
+    },
+    fidNotEmpty: function (json, fid) {
+        return !_json.fidIsEmpty(json, fid);
+    },
+
     //check is key-value pair
     isKeyValue: function (value) {
         return (Object.prototype.toString.call(value) === '[object Object]');

@@ -1,10 +1,7 @@
-﻿using Base.Enums;
-using Base.Models;
+﻿using Base.Models;
 using Base.Services;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {

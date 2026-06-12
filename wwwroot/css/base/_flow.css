@@ -14,7 +14,7 @@
 
 /* 1.開始節點(also button) */
 .xf-start {
-	r: 20; /* 半徑, 沒有單位 */
+	/*r: 20; 半徑, 沒有單位 */
 	fill: #E2F4D7;
 	background: #E2F4D7;
 	stroke: #BAE89F;
@@ -24,7 +24,7 @@
 
 /* 2.結束節點(also button) */
 .xf-end {
-	r: 20;
+	/*r: 20; */
 	fill: #FEE1ED;
 	background: #FEE1ED;
 	stroke: #FD88BF;
@@ -39,8 +39,9 @@
 	stroke: #B6B4E9;
 	stroke-width: 1px;
 	border: #B6B4E9 1px solid;
-	rx: 5px; /* 水平圓角半徑 */
-	ry: 5px; /* 垂直圓角半徑 */
+	/* 水平圓角半徑, 不是穩定 style, 改用程式設定
+	rx: 5px; 
+	ry: 5px; */
 }
 
 /* 4.自動節點?? */

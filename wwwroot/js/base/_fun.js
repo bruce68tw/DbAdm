@@ -33,8 +33,10 @@ var _fun = {
     //datatables column define default values
     dtColDef: {
         className: 'x-center',
-        orderable: false,
         targets: '_all',
+        type: 'string',     //dt會依欄位為數字或文字而設定排序箭頭位置, 強制設為文字, 讓箭頭在右
+        orderable: false,   //預設欄位無排序功能, 自行設定
+        orderSequence: ['asc', 'desc'], //改為升、降排序, 原本預設有3種:升、降、無
     },
 
     /**

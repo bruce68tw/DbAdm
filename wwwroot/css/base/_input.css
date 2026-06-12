@@ -4,7 +4,8 @@
     min-height: 43px;
 }
 /* 輸入欄位後面文字 */
-.x-input-note{    
+.x-input-note{
+    line-height: 36px;  /* 調整垂直位置 */
 }
 
 @media (max-width:768px) {

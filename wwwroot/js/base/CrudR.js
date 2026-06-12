@@ -62,7 +62,7 @@ class CrudR {
         this._updName = updName;
 
         //是否有草稿功能
-        this.hasDraft = ($('#BtnDraft').length > 0);
+        this.hasDraft = ($('#btnDraft').length > 0);
 
         //2.init edit
         new CrudE(edits);
@@ -100,7 +100,7 @@ class CrudR {
      * @returns button html string
      */ 
     dtBtn(id, label, fnOnclick) {
-        return `<button type="button" class="btn btn-outline-secondary btn-sm" data-onclick="${fnOnclick}" data-args="${id}">${label}</button>`;
+        return `<button type="button" class="btn btn-sm x-btn-other" data-onclick="${fnOnclick}" data-args="${id}">${label}</button>`;
     }
 
     /**
@@ -348,11 +348,12 @@ class CrudR {
         //this.swap(false);  //call first
         //_prog.setPath(fun);
 
+        var me = this;
         if (this.hasDraft) {
             //讀取草稿 if any
-            await _ajax.getJsonA('GetDraftJson', data, function (json) {
+            await _ajax.getJsonA('GetDraftJson', { key: ''}, function (json) {
                 if (_json.isEmpty(json))
-                    this.createAndEdit();
+                    me.createAndEdit();
                 else
                     _me.crudE.loadJsonAndEdit(json, EstrFun.Create);
 

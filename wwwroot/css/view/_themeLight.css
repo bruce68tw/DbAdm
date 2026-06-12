@@ -71,6 +71,11 @@ body, label {
         background: var(--left-hbg);
     }
 
+/* === input === */
+.x-input-note {
+    color: blue;
+}
+
 /* === table === */
 .x-table th {
     color: var(--table-head) !important;

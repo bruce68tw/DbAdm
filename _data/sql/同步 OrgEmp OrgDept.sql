@@ -1,6 +1,6 @@
 
 /*
-select * from orgEmp where id='16079'
+select * from orgEmp where id='16336'
 select * from orgEmp where EmpNo in ('16131','16132')
 */
 

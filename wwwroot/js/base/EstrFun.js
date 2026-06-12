@@ -7,5 +7,6 @@ var EstrFun = {
     Update: 'U',
     Delete: 'D',
     View: 'V',
+    //Sign: 'S',    //直接使用Create權限!!
 
 };

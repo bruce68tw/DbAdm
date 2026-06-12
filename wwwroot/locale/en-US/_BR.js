@@ -56,4 +56,5 @@ var _BR = {
     //others
     Working: 'Working...',
     TimeOut: 'Standby too long, or not Login.',
+    UniqueError: 'Record Exists no Repeated.'
 };

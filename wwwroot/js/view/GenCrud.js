@@ -189,7 +189,7 @@ var _me = {
         //_iselect.set(_me.TableId, json[_me.TableId], form);
 
         //set tabEtable(s) tableId select 欄位
-        var navRows = _me.crudE.getChildRows(json, _me.etableChdIdx);
+        var navRows = _edit.getChildRows(json, _me.etableChdIdx);
         var navLen = (navRows == null) ? 0 : navRows.length;
         for (var i = 0; i < navLen; i++) {
             //set dropdown source
@@ -276,8 +276,8 @@ var _me = {
         //_me.etNavRemoveAct();
 
         //render etables & eitems
-        //var eitemRows = _me.crudE.getChildRows(json, 0);   //已改為傳入rows, 不是json
-        var eitemRows = _me.crudE.getChildRows(_me.mEtable.dataJson, 0);   //從dataJson讀取 !!
+        //var eitemRows = _edit.getChildRows(json, 0);   //已改為傳入rows, 不是json
+        var eitemRows = _edit.getChildRows(_me.mEtable.dataJson, 0);   //從dataJson讀取 !!
         for (var i = 0; i < rows.length; i++) {
             //add tab (only)
             var row = rows[i];
@@ -334,7 +334,7 @@ var _me = {
             if (rows2 != null) {
                 if (rows[i] == null)
                     rows[i] = {};
-                _me.crudE.setChildRows(rows[i], 0, rows2);
+                _edit.setChildRows(rows[i], 0, rows2);
             }
             */
         });

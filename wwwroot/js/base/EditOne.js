@@ -8,11 +8,13 @@
  * 公用屬性
  *   kid:
  *   eform:
- *   isChild: default false, true表示1對1, 利用 setIsChild()設定 
+ *   is1to1: default false, true表示1對1, 利用 setIs1to1()設定 
  *   systemError:
  *   dataJson: (只記在edit0)載入資料後(update/view)在CrudE.js自動設定, 個別程式可以自行使用, 例如: DbAdm GenCrud.js
  *   hasFile
  *   validator: jquery vallidation object (EditMany同), 在 _me.crudE.js _initForm() 設定
+ *   fidTypes: 在 _edit.initVar() 設定
+ *   fidRadios: 在 _edit.initVar() 設定, 目前用於 EditMany
  * 自定函數 called by _me.crudE.js
  *   //void fnAfterLoadJson(json)
  *   //void fnAfterOpenEdit(fun, json): called after open edit form
@@ -26,20 +28,20 @@ class EditOne {
 
     /**
      * @constructor
-     * initial & and instance variables (this.validator is by _valid.init())
+     * 只能有一個 constructor, initial & and instance variables (this.validator is by _valid.init())
      * @param kid {string} (default 'Id') pkey field id for getKey value & getUpdRow,
      *   must existed or will set systemError variables !!
      * @param eformId {string} (default 'eform') must existed or will set systemError variables !!
      * note!! if these two parameters not Id/eform, must new EditOne() and set them !!
      */
-    constructor(kid, eformId) {
+    constructor(kid, eformId, childs) {
         //private
-        this[_edit.Childs] = null;
+        this[_edit.Childs] = childs;
 
         this.kid = kid || 'Id';
         eformId = eformId || 'eform';
         this.eform = $('#' + eformId);     //multiple rows container object
-        this.isChild = false;
+        this.is1to1 = false;
         this.dataJson = null;   //只記在edit0
 
         //check input & alert error if wrong
@@ -65,8 +67,9 @@ class EditOne {
         this.validator.showErrors(json);
     }
 
-    setIsChild() {
-        this.isChild = true;
+	//setChild -> setIs1to1
+    setIs1to1() {
+        this.is1to1 = true;
     }
 
     //reset and set new row for 1對1 only
@@ -121,22 +124,24 @@ class EditOne {
      * @param row {json}
      */
     loadRow(row) {
-        if (this.isChild && _json.isEmpty(row))
+        if (this.is1to1 && _json.isEmpty(row))
             this._resetAndNew();
         else
             _edit.loadRow(this, this.eform, row);
     }
 
     /**
+     * 改傳回json, 不含 _rows 欄位 !!
      * get updated row, 包含 _childs
-     * @param upKey {string} 上一層key for isChild=true only !!
+     * @param upKey {string} 上一層key for is1to1=true only !!
      * @returns {json} different column only
      */
     getUpdRow(upKey) {
         var row = _edit.getUpdRow(this, this.eform);
-        if (this.isChild && row != null) {
+        if (this.is1to1 && row != null) {
             row[_edit.DataFkeyFid] = upKey;
-            return { [_edit.Rows]: [row] }
+            //return { [_edit.Rows]: [row] }
+            return row;
         } else {
             return row;
         }
@@ -147,7 +152,7 @@ class EditOne {
      * param init {bool} 是否填入初始值, default false
      */
     reset(init) {
-        if (this.isChild)
+        if (this.is1to1)
             this._resetAndNew(init);
         else
             _form.reset(this.eform, init);
@@ -190,7 +195,7 @@ class EditOne {
     }
 
     /**
-     * onViewFile -> viewFile -> onViewFile
+     * viewFile -> onViewFile
      * 實際有event動作, 在此函數讀取 _fun.getMeElm(), 簡化外部呼叫函數
      * onclick viewFile
      * @param table {string} table name
