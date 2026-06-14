@@ -28,7 +28,7 @@ namespace DbAdm.Services
             }
 
             //var locale = _Fun.GetLocale();
-            var tplPath = _Xp.GetTplPath("Table.docx", true);
+            var tplPath = _Xp.GetTplPath("Table.docx", false);
             if (!File.Exists(tplPath))
             {
                 error = "no file " + tplPath;
