@@ -88,6 +88,7 @@
 	<Compile Remove="Controllers\UiController.cs" />
 	<Content Include="key.txt" />
     <Content Include="Views\Shared\Error.cshtml_old" />
+    <Content Include="Views\Table\Edit.cshtml_104" />
     <Content Include="_image\noImage.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
