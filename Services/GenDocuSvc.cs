@@ -1,12 +1,6 @@
-﻿using Base.Interfaces;
-using Base.Services;
+﻿using Base.Services;
 using BaseApi.Services;
-using DocumentFormat.OpenXml.Packaging;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-
+ 
 namespace DbAdm.Services
 {
     public class GenDocuSvc
@@ -64,7 +58,7 @@ namespace DbAdm.Services
                     a.c.DefaultValue,
                     a.c.Note,
                     //docx template file use "S" as field name for less space !!
-                    S = a.c.Sort,
+                    S = a.c.Sort,   //配合template欄位名稱
                 })
                 .ToList()
                 .GroupBy(a => new { a.ProjectCode, a.TableCode, a.TableName })
@@ -74,7 +68,8 @@ namespace DbAdm.Services
                     a.Key.ProjectCode, 
                     a.Key.TableCode, 
                     a.Key.TableName,
-                    Cols = a.OrderBy(b => b.S).ToList(),
+                    //只有一個child, 不必使用childs
+                    Child = a.OrderBy(b => b.S).ToList(),
                 })
                 .ToList();
 
@@ -86,84 +81,14 @@ namespace DbAdm.Services
             }
             #endregion
 
-            /*
-            #region 3.get memory stream for download file
-            var ms = new MemoryStream();
-            var tplBytes = File.ReadAllBytes(tplPath);
-            ms.Write(tplBytes, 0, tplBytes.Length);
-            #endregion
-            */
-            var childs = new List<dynamic>()
-            {
-                tables
-            };
-            var ms = await _Word.TplToMsA(tplPath, null, childs);
-
-            //binding stream && docx
-            #region 4.get body/row template string
-            //var wordSet = new WordSetSvc(docx);
-            //var mainTplStr = wordSet.GetMainPartStr();
-
-            //get word body start/end pos
-            //int bodyStart = 0, bodyEnd = 0; //no start/end tag
-            //var bodyTpl = wordSet.GetBodyTpl(mainTplStr);
-
-            //get row template string
-            //int rowStart = 0, rowEnd = 0;
-            /*
-            var rowTpl = wordSet.GetRowTpl(bodyTpl.TplStr);
-            if (rowTpl == null)
-            {
-                error = "can not find rowTpl String.";
-                goto lab_error;
-            }
-            */
-            #endregion
-
-            /*
-            //table list loop
-            var bodyLeft = bodyTpl.TplStr[..rowTpl.StartPos];
-            var bodyRight = bodyTpl.TplStr[rowTpl.EndPos..];
-            var fileStr = "";   //file string to echo
-            for (var i = 0; i < tableLen; i++)
-            {
-                #region 5.get table string
-                var tableCode = tables[i].TableCode;
-                var tableCols = tables[i].Cols;
-                fileStr += bodyLeft.Replace("[Table]", tableCode + "(" + tables[i].TableName + ")") +
-                    _Word.TplFillRows(rowTpl.TplStr, tableCols) +
-                    bodyRight;
-                #endregion
-
-                #region 6.add page break if need
-                if (i < tableLen - 1)
-                    fileStr += wordSet.GetPageBreak();
-                #endregion
-            }
-
-            #region 7.get file string
-            fileStr = mainTplStr[..bodyTpl.StartPos] +
-                fileStr +
-                mainTplStr[(bodyTpl.EndPos + 1)..];
-
-            //write string into docx
-            wordSet.SetMainPartStr(fileStr);
-            #endregion
-            */
-
-            #region remark testing code
-            //Debug.Assert(IsDocxValid(doc), "Invalid File!");
-            //no save, but can debug !!
-            //mainPart.Document.Save();
-            //return;
-            #endregion
+            var ms = _Word.TplRowsToMs(tplPath, tables);
 
             //8.download file
-            await _FunApi.ExportByStreamA(ms, "Tables.docx");
+            await _FunApi.ExportByStreamA(ms!, "Tables.docx");
             return true;
 
         lab_error:
-            await _Log.ErrorRootA("GenDocuService.cs RunA() failed: " + error);
+            await _Log.ErrorRootA("GenDocuSvc.cs RunA() failed: " + error);
             return false;
         }
 

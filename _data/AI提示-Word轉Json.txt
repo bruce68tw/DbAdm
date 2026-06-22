@@ -1,7 +1,7 @@
 把上面的 word 檔案的輸入表單轉成 json, 並遵循以下規則：
 一.json 內容包括4種資料, 以 Item 稱呼, 每個 Item 有以下欄位：
   1.Info：Item 的綜合資訊, 格式為 json 
-  2.Childs2：是個2維陣列, Childs2[x] 內容為1維陣列, 儲存子 Item 清單
+  2.Childs2：是一個2維陣列, Childs2[x] 內容為1維陣列, 儲存子 Item 清單
   3.ItemType：Item 種類, 有以下 5 種(a-e)：
     a.輸入欄位：用 'I' 表示, Info欄位內容有以下欄位：
 	  a1.Title：左邊的欄位名稱
