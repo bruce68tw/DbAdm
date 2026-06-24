@@ -1,4 +1,5 @@
-﻿using Base.Enums;
+﻿using AngleSharp.Dom;
+using Base.Enums;
 using Base.Models;
 using Base.Services;
 using BaseApi.Attributes;
@@ -90,8 +91,7 @@ namespace DbAdm.Controllers
         [XgProgAuth(CrudEnum.View)]
         public IActionResult ViewFile(string table, string fid, string key, string ext)
 		{
-            var file = _Xp.ViewIssueFile(fid, key, ext);
-            return (file == null) ? NotFound() : file;
+            return FileToResult(_Xp.ViewIssueFile(fid, key, ext));
 		}
 
         //加入追踪

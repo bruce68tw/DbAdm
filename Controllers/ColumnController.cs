@@ -73,5 +73,13 @@ namespace DbAdm.Controllers
             return JsonToCnt(await EditSvc().GetViewJsonA(key));
         }
 
+        /*
+        [XgProgAuth(CrudEnum.View)]
+        public IActionResult ViewFile(string table, string fid, string key, string ext)
+        {
+            return FileToResult(_Xp.ViewIssueFile(fid, key, ext));
+        }
+        */
+
     }//class
 }

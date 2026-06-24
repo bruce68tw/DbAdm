@@ -196,11 +196,14 @@ class EditOne {
 
     /**
      * viewFile -> onViewFile
+     * 實作步驟：
+     *   1.Read.cshtml onViewFile
+     *   2.Edit.cshtml 是否需要傳入 table name
+     *   3.Controller ViewFile
      * 實際有event動作, 在此函數讀取 _fun.getMeElm(), 簡化外部呼叫函數
      * onclick viewFile
      * @param table {string} table name
      * @param fid {string}
-     * @param elm {element} link element
      */
     //viewFile(table, fid, elm) {
     async onViewFile(table, fid) {
