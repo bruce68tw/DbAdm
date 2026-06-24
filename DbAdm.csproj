@@ -5,80 +5,32 @@
     <UserSecretsId>6b53b027-76c0-4cf7-b55a-c17f2031c2ba</UserSecretsId>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<SatelliteResourceLanguages>zh-TW</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\css_old\**" />
-    <Compile Remove="wwwroot\js_old\**" />
-    <Compile Remove="wwwroot\locale_old\**" />
-    <Compile Remove="wwwroot\old\**" />
-    <Compile Remove="wwwroot_old2\**" />
-    <Compile Remove="wwwroot_old\**" />
+    <Compile Remove="_data\**" />
     <Compile Remove="_log\**" />
-    <Compile Remove="_source\**" />
-    <Compile Remove="_source_old\**" />
-    <Compile Remove="_sql\**" />
-    <Content Remove="wwwroot\css_old\**" />
-    <Content Remove="wwwroot\js_old\**" />
-    <Content Remove="wwwroot\locale_old\**" />
-    <Content Remove="wwwroot\old\**" />
-    <Content Remove="wwwroot_old2\**" />
-    <Content Remove="wwwroot_old\**" />
+    <Compile Remove="_upload\**" />
+    <Content Remove="_data\**" />
     <Content Remove="_log\**" />
-    <Content Remove="_source\**" />
-    <Content Remove="_source_old\**" />
-    <Content Remove="_sql\**" />
-    <EmbeddedResource Remove="wwwroot\css_old\**" />
-    <EmbeddedResource Remove="wwwroot\js_old\**" />
-    <EmbeddedResource Remove="wwwroot\locale_old\**" />
-    <EmbeddedResource Remove="wwwroot\old\**" />
-    <EmbeddedResource Remove="wwwroot_old2\**" />
-    <EmbeddedResource Remove="wwwroot_old\**" />
+    <Content Remove="_upload\**" />
+    <EmbeddedResource Remove="_data\**" />
     <EmbeddedResource Remove="_log\**" />
-    <EmbeddedResource Remove="_source\**" />
-    <EmbeddedResource Remove="_source_old\**" />
-    <EmbeddedResource Remove="_sql\**" />
-    <None Remove="wwwroot\css_old\**" />
-    <None Remove="wwwroot\js_old\**" />
-    <None Remove="wwwroot\locale_old\**" />
-    <None Remove="wwwroot\old\**" />
-    <None Remove="wwwroot_old2\**" />
-    <None Remove="wwwroot_old\**" />
+    <EmbeddedResource Remove="_upload\**" />
+    <None Remove="_data\**" />
     <None Remove="_log\**" />
-    <None Remove="_source\**" />
-    <None Remove="_source_old\**" />
-    <None Remove="_sql\**" />
+    <None Remove="_upload\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="bundleconfig_old.json" />
     <Content Remove="Views\Column\TestFlow.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Controllers\MyController.cs_old" />
-    <None Remove="Enums\QEitemTypeEstr.cs_old" />
     <None Remove="key.txt" />
-    <None Remove="Models\CrudFitemDto.cs_old" />
-    <None Remove="Models\ErrorViewModel.cs_old" />
-    <None Remove="Models\SessionModel.cs_old" />
-    <None Remove="Program.cs_old" />
-    <None Remove="Services\GenCrudService.cs_bak" />
-    <None Remove="Services\GenCrudUiSvc.cs_old" />
-    <None Remove="Services\GenDocuService.cs_old" />
-    <None Remove="Services\GenTableRelatService.cs_old" />
-    <None Remove="Services\MyCrudSvc.cs_old" />
-    <None Remove="Services\MyCrudUiSvc.cs_old" />
-    <None Remove="Services\zz_MyProfile0Service.cs_old" />
-    <None Remove="Services\zz__Session.cs_old" />
-    <None Remove="Services\_ProgPath.cs_old" />
-    <None Remove="Startup.cs.bak" />
-    <None Remove="Startup.cs_old" />
-    <None Remove="Views\Shared\Error.cshtml_old" />
-    <None Remove="Views\Shared\zz_Top.cshtml_old" />
     <None Remove="_image\noImage.jpg" />
     <None Remove="_template\EmailMisSurvey.html" />
-    <None Remove="_template\old\zh-TW\RptIssue.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -104,7 +56,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MySql.Data" Version="9.1.0" />
     <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
@@ -132,10 +83,6 @@
     <None Include="wwwroot\locale\zh-TW\dataTables.txt" />
     <None Include="wwwroot\locale\zh-TW\_BR.js" />
     <None Include="wwwroot\locale\zh-TW\validate.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="_template\old\zh-TW\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
