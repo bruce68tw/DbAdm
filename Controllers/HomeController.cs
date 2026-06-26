@@ -108,7 +108,7 @@ insert into dbo.Survey(Id, UserId, Q1, Q2, Q3, Q4, Q5, Created) values (
         private async Task<(string Error, JObject? Row)> CheckSurveyDataA(string data)
         {
             //傳入的url encode資料在後端不必再decode, 系統會自動decode !!
-            var cols = _Xp.EnDecode(false, data).Split(',');
+            var cols = _Str.Decode(data).Split(',');
             if (cols.Length != 2)
                 return ("傳入的問卷資料格式不正確。", null);
 

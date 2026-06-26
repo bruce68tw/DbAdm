@@ -74,7 +74,7 @@ where Id=@Id
                 { "Title", row!["Title"]!.ToString() },
                 { "UserName", row!["UserName"]!.ToString() },
                 { "ServerUrl", _Xp.Config.ServerUrl },
-                { "SurveyData", _Http.UrlEncode(_Xp.EnDecode(true, $"{rptUser},{issueId}")) },   //必須進行url encode
+                { "SurveyData", _Http.UrlEncode(_Str.Encode($"{rptUser},{issueId}")) },   //必須進行url encode
             };
 
             //寄送email & 回傳執行結果

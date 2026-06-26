@@ -70,12 +70,14 @@ namespace DbAdm.Services
 			return ViewFile(DirIssueFile, fid, key, ext);
 		}
 
+        /*
         public static string EnDecode(bool isEncode, string data)
         {
             return isEncode 
                 ? _Str.Encode(data, AesKey)
                 : _Str.Decode(data, AesKey);
         }
+        */
 
         /*
         public static SessionModel GetSession()

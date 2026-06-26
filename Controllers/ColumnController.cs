@@ -18,6 +18,11 @@ namespace DbAdm.Controllers
         [XgProgAuth(CrudEnum.Read)]
         public async Task<ActionResult> Read()
         {
+            //test encode
+            var str = $"Account123@@Amount456@Idno789";
+            var encode = _Str.Encode(str);
+            var decode = _Str.Decode(encode);
+
             //修改:如果沒有下拉欄位則不必設定ViewBag
             ViewBag.Projects = await _XpCode.ProjectsA();   //for 下拉欄位
             return View();
