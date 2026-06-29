@@ -11,7 +11,7 @@ namespace DbAdm.Services
     {
         public IssueEdit(string ctrl) : base(ctrl) { }
 
-        override public EditDto GetDto(CrudEnum fun)
+        override public EditDto GetDto()
         {
             return new()
 			{
@@ -189,7 +189,7 @@ where e.EmpNo=@EmpNo
         public async Task<ResultDto> CreateA(JObject json, List<IFormFile> t00_FileName)
 		{
 			var service = EditSvc();
-			var result = await service.CreateA(json, GetDto(CrudEnum.Create));
+			var result = await service.CreateA(json, GetDto());
 			if (_Valid.ResultStatus(result))
 			{
 				var newKeyJson = service.GetNewKeyJson();
@@ -202,7 +202,7 @@ where e.EmpNo=@EmpNo
 		public async Task<ResultDto> UpdateA(string key, JObject json, List<IFormFile> t00_FileName)
 		{
 			var service = EditSvc();
-			var result = await service.UpdateA(key, json, GetDto(CrudEnum.Update));
+			var result = await service.UpdateA(key, json, GetDto());
 			if (_Valid.ResultStatus(result))
 			{
 				var newKeyJson = service.GetNewKeyJson();

@@ -8,7 +8,7 @@ namespace DbAdm.Services
     {
         public GenCrudEdit(string ctrl) : base(ctrl) { }
 
-        override public EditDto GetDto(CrudEnum fun) {
+        override public EditDto GetDto() {
             //4 tables
             return new EditDto
             {

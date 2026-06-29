@@ -8,7 +8,7 @@ namespace DbAdm.Services
     {
         public PrjProgEdit(string ctrl) : base(ctrl) { }
 
-        override public EditDto GetDto(CrudEnum fun)
+        override public EditDto GetDto()
         {
             return new EditDto
             {
