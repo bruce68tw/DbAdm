@@ -11,7 +11,13 @@ public partial class CrudEitem
 
     public string EtableId { get; set; } = null!;
 
-    public string ColumnId { get; set; } = null!;
+    public string? ColumnId { get; set; }
+
+    public string? Fid { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? DataType { get; set; }
 
     public string InputType { get; set; } = null!;
 

@@ -1,13 +1,10 @@
-﻿using Base.Enums;
-using Base.Models;
+﻿using Base.Models;
 using Base.Services;
 
 namespace DbAdm.Services
 {
-    public class XpUserEdit : BaseEditSvc
+    public class XpUserEdit(string ctrl) : BaseEditSvc(ctrl)
     {
-        public XpUserEdit(string ctrl) : base(ctrl) { }
-
         override public EditDto GetDto()
         {
             return new EditDto

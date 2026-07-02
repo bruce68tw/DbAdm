@@ -1,5 +1,5 @@
 declare @pid varchar(10)
-set @pid = 'vdLeBA5DxR'	--104¤H¸ê
+set @pid = 'Db'	--DbAdm
 
 /*
 select * from dbo.Project
@@ -12,17 +12,18 @@ select c.*
 from dbo.[Column] c
 join dbo.[Table] t on c.TableId=t.Id
 where 1=1
-and t.ProjectId='vdLeBA5DxR'
+and t.ProjectId=@pid
 --and c.Code = 'SYS_CALENDAR_LEAVE'
 --and (c.Name is null or c.Name = '')
 --and c.Code like 'ZZ_%'
 
+/*
 group by c.Code
 having count(*) > 10
 order by count(*) desc
+*/
 
-
-UPDATE_DATE
+--UPDATE_DATE
 --and Status=1
 --and Code like '%old%'
 /*

@@ -28,12 +28,7 @@ namespace DbAdm.Controllers
             return JsonToCnt(await new XgImportRead(ImportType).GetPageA(Ctrl, dt));
         }
 
-        //run import, drived class implement !!
-        //abstract could not be async(CS1994), must use virtual method !!
-        virtual public async Task<JsonResult> Import(IFormFile file) 
-        { 
-            return await Task.FromResult<JsonResult>(result: null);
-        }
+        public abstract Task<JsonResult> Import(IFormFile file);
 
         /// <summary>
         /// download template file

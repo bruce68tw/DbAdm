@@ -13,10 +13,8 @@ using System.Threading.Tasks;
 
 namespace {{Project}}.Services
 {
-    public class {{ProgCode}}Edit : BaseEditSvc
+    public class {{ProgCode}}Edit(string ctrl) : BaseEditSvc(ctrl)
     {
-        public {{ProgCode}}Edit(string ctrl) : base(ctrl) { }
-
         override public EditDto GetDto()
         {
             return new EditDto

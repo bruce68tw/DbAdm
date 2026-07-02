@@ -9,8 +9,6 @@ public partial class Issue
 
     public string Id { get; set; } = null!;
 
-    public string? zz_ProjectId { get; set; }
-
     public string ProgId { get; set; } = null!;
 
     public string? OwnerId { get; set; }
@@ -34,13 +32,11 @@ public partial class Issue
 
     public string? RptDeptCode { get; set; }
 
-    public string? RptDeptId { get; set; }
-
     public string? RptUser { get; set; }
 
     public string? RptType { get; set; }
 
-    public byte SendTimes { get; set; }
+    public short? SendTimes { get; set; }
 
     /// <summary>
     /// 建檔人員

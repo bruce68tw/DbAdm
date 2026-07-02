@@ -7,10 +7,8 @@ using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
 {
-    public class IssueEdit : BaseEditSvc
+    public class IssueEdit(string ctrl) : BaseEditSvc(ctrl)
     {
-        public IssueEdit(string ctrl) : base(ctrl) { }
-
         override public EditDto GetDto()
         {
             return new()

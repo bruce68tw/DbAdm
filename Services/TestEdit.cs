@@ -4,10 +4,8 @@ using Base.Services;
 
 namespace DbAdm.Services
 {
-    public class TestEdit : BaseEditSvc
+    public class TestEdit(string ctrl) : BaseEditSvc(ctrl)
     {
-        public TestEdit(string ctrl) : base(ctrl) { }
-
         override public EditDto GetDto()
         {
             return new EditDto
@@ -15,26 +13,26 @@ namespace DbAdm.Services
 				Table = "dbo.[Table]",
                 PkeyFid = "Id",
                 Col4 = null,
-                Items = new EitemDto[] 
-				{
-					new() { Fid = "Id" },
+                Items =
+                [
+                    new() { Fid = "Id" },
 					new() { Fid = "ProjectId", Required = true },
 					new() { Fid = "Code", Required = true },
 					new() { Fid = "Name", Required = true },
 					new() { Fid = "TranLog" },
 					new() { Fid = "Status" },
-                },
-                Childs = new EditDto[]
-                {
+                ],
+                Childs =
+                [
                     new EditDto
                     {
                         Table = "dbo.[Column]",
                         PkeyFid = "Id",
                         FkeyFid = "TableId",
                         Col4 = null,
-                        Items = new EitemDto[] 
-						{
-							new() { Fid = "Id" },
+                        Items =
+                        [
+                            new() { Fid = "Id" },
 							new() { Fid = "TableId" },
 							new() { Fid = "Code", Required = true },
 							new() { Fid = "Name", Required = true },
@@ -44,9 +42,9 @@ namespace DbAdm.Services
 							new() { Fid = "Sort" },
 							new() { Fid = "Note" },
 							new() { Fid = "Status" },
-                        },
+                        ],
                     },
-                },
+                ],
             };
         }
 

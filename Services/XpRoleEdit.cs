@@ -4,10 +4,8 @@ using Base.Services;
 
 namespace DbAdm.Services
 {
-    public class XpRoleEdit : BaseEditSvc
+    public class XpRoleEdit(string ctrl) : BaseEditSvc(ctrl)
     {
-        public XpRoleEdit(string ctrl) : base(ctrl) { }
-
         override public EditDto GetDto()
         {
             return new EditDto

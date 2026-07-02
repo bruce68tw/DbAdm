@@ -5,10 +5,8 @@ using Newtonsoft.Json.Linq;
 
 namespace DbAdm.Services
 {
-    public class GenCrudUiEdit : BaseEditSvc
+    public class GenCrudUiEdit(string ctrl) : BaseEditSvc(ctrl)
     {
-        public GenCrudUiEdit(string ctrl) : base(ctrl) { }
-
         override public EditDto GetDto()
         {
             return new EditDto()

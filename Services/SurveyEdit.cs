@@ -4,10 +4,8 @@ using Base.Services;
 
 namespace DbAdm.Services
 {
-    public class SurveyEdit : BaseEditSvc
+    public class SurveyEdit(string ctrl) : BaseEditSvc(ctrl)
     {
-        public SurveyEdit(string ctrl) : base(ctrl) { }
-
         override public EditDto GetDto()
         {
             return new EditDto()

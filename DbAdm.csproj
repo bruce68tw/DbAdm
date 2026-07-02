@@ -6,19 +6,16 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	<SatelliteResourceLanguages>zh-TW</SatelliteResourceLanguages>
+	<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="_data\**" />
     <Compile Remove="_log\**" />
     <Compile Remove="_upload\**" />
-    <Content Remove="_data\**" />
     <Content Remove="_log\**" />
     <Content Remove="_upload\**" />
-    <EmbeddedResource Remove="_data\**" />
     <EmbeddedResource Remove="_log\**" />
     <EmbeddedResource Remove="_upload\**" />
-    <None Remove="_data\**" />
     <None Remove="_log\**" />
     <None Remove="_upload\**" />
   </ItemGroup>

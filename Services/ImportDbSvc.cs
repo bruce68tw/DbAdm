@@ -193,7 +193,7 @@ values(
 ",
 _Str.NewId(), col["TableId"]!.ToString(), col["Fid"]!.ToString(), 
 Convert.ToByte(col["Nullable"]),
-col["Note"]!.ToString()
+col["Note"]!.ToString().Replace("'", "")
 ));
                 }
             }
@@ -220,7 +220,7 @@ update c set
     Note=case when (c.Note is null or c.Note = '') then tc.Note else c.Note end
 from dbo.[Column] c
 inner join dbo.[Table] t on t.Id=c.TableId
-inner join #tmpColumn tc on t.Fid=tc.TableCode and c.Fid=tc.Fid
+inner join #tmpColumn tc on t.Code=tc.TableCode and c.Fid=tc.Fid
 where t.projectId='{0}'
 ", projectId));
             #endregion
