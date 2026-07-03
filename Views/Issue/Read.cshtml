@@ -67,8 +67,8 @@
                 _me.onChgProject(1, row0.ProgId);
 
                 //設定追踪按鈕
-                _me.issueId = json.Id;
-                _me.hasWatchId = _str.notEmpty(json.WatchId);
+                _me.issueId = row0.Id;
+                _me.hasWatchId = _str.notEmpty(row0.WatchId);
                 _me.setWatchBtn(true);
 
                 //set edit status
@@ -80,7 +80,7 @@
                 }
 
                 //設定延續工作按鈕的狀態
-                _me.setKeepBtn(json.OwnerId == _fun.userId);
+                _me.setKeepBtn(row0.OwnerId == _fun.userId);
             } else {
                 //新增
                 _iselect.set('OwnerId', _fun.userId, eform);       //處理人員預設自己

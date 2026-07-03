@@ -62,7 +62,7 @@ services.AddSingleton<ICacheSvc, CacheMemSvc>();
 //initial & set locale
 var app = builder.Build();
 var isDev = app.Environment.IsDevelopment();
-_Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row, true);
+_Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row);
 await _Locale.SetCultureA(_Fun.Config.Locale);
 
 
