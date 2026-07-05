@@ -76,6 +76,12 @@ var _date = {
         return mm.format(_BR.MmUiDt2Fmt);
     },
 
+    dsToUiDate: function (ds) {
+        return _str.isEmpty(ds)
+            ? ''
+            : _date.mmToUiDate(moment(ds, _fun.MmDateFmt));
+    },
+
     dtsToUiDate: function (dts) {
         return _str.isEmpty(dts)
             ? ''

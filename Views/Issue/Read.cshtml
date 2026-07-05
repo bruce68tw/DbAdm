@@ -28,6 +28,9 @@
                     { data: '_fun' },
                 ],
                 columnDefs: [
+                    { targets: [3], render: function (data, type, full, meta) {
+                        return _date.dsToUiDate(data);
+                    }},
                     { targets: [7], render: function (data, type, full, meta) {
                         return _me.crudR.dtYesEmpty(data);
                     }},
@@ -311,7 +314,7 @@
             @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "交辦主管", Fid = "FromMgr", Rows = ViewBag.Users })
             <div class="row">
                 <div class="col-md-2 x-label">建檔日期</div>
-                <div class="col-md-10 x-input">
+                <div class="col-md-10 x-input x-hbox">
                     @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "Created", InRow = true })
                     <span>～</span>
                     @await Component.InvokeAsync(XiEstr.Date, new XiDateDto { Fid = "Created2", InRow = true })

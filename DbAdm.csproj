@@ -77,7 +77,7 @@
     <None Include="wwwroot\locale\zh-CN\validate.js" />
     <None Include="wwwroot\locale\zh-CN\_BR.js" />
     <None Include="wwwroot\locale\zh-TW\bootstrap-datepicker.js" />
-    <None Include="wwwroot\locale\zh-TW\dataTables.txt" />
+    <None Include="wwwroot\locale\zh-TW\dataTables.json" />
     <None Include="wwwroot\locale\zh-TW\_BR.js" />
     <None Include="wwwroot\locale\zh-TW\validate.js" />
   </ItemGroup>

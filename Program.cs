@@ -6,7 +6,6 @@ using BaseApi.Services;
 using BaseWeb.Services;
 using DbAdm.Models;
 using DbAdm.Services;
-using Microsoft.AspNetCore.Mvc;
 using System.Data.Common;
 using System.Data.SqlClient;
 
@@ -29,6 +28,8 @@ builder.SetBuilder(config.AllowOrigins);
 //1.config MVC
 //資安: controller 防止 CSRF
 var services = builder.Services;
+services.SetServices();
+/*
 services.AddControllersWithViews(opts => { opts.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); })
 //services.AddControllersWithViews()
     //view Localization
@@ -38,11 +39,9 @@ services.AddControllersWithViews(opts => { opts.Filters.Add(new AutoValidateAnti
     //use pascal for MVC json
     .AddJsonOptions(opts => { opts.JsonSerializerOptions.PropertyNamingPolicy = null; });
 
-//2.set Resources path
-//services.AddLocalization(opts => opts.ResourcesPath = "Resources");
-
 //3.http context
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+*/
 
 //4.user info for base component
 services.AddSingleton<IBaseUserSvc, MyBaseUserSvc>();
@@ -56,6 +55,26 @@ services.AddTransient<DbCommand, SqlCommand>();
 services.AddMemoryCache();
 //services.AddStackExchangeRedisCache(opts => { opts.Configuration = config.Redis; });
 services.AddSingleton<ICacheSvc, CacheMemSvc>();
+
+/*
+//2.set Resources path
+//services.AddLocalization(opts => opts.ResourcesPath = "Resources");
+
+//多國語初始化 if need
+services.AddLocalization();
+var cultures = new[]
+{
+    new CultureInfo("zh-TW"),
+    new CultureInfo("zh-CN"),
+    new CultureInfo("en-US"),
+};
+var options = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("zh-TW"),
+    SupportedCultures = cultures,
+    SupportedUICultures = cultures,
+};
+*/
 #endregion
 
 #region set app
@@ -65,7 +84,8 @@ var isDev = app.Environment.IsDevelopment();
 _Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row);
 await _Locale.SetCultureA(_Fun.Config.Locale);
 
-
+app.SetApp(isDev);
+/*
 // Configure the HTTP request pipeline.
 if (isDev)
 {
@@ -89,7 +109,8 @@ app.UseAuthorization();     //授權
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Login}/{id?}");
+*/
 
-app.SetApp();   //資安設定, 參考_WebExt.cs
+app.SetAppSafe();   //資安設定 in _WebExt.cs
 app.Run();
 #endregion

@@ -114,6 +114,8 @@ var _idate = $.extend({}, _ibase, {
     },
 
     _boxSetDate: function (box, date) {
+        //先轉成UI的format
+        date = _date.dsToUiDate(date);
         box.datepicker('update', date);
         //var input = _idate._boxGetInput(box);
         //input.datepicker('update', date);

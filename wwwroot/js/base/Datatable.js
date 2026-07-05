@@ -53,7 +53,7 @@ class Datatable {
 
             //set locale file
             language: {
-                url: "/locale/" + _fun.locale + "/dataTables.txt",
+                url: "/locale/" + _fun.locale + "/dataTables.json",
             },
 
             //default toolbar layout
