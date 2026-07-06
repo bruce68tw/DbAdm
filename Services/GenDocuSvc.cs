@@ -68,8 +68,8 @@ namespace DbAdm.Services
                     a.Key.ProjectCode, 
                     a.Key.TableCode, 
                     a.Key.TableName,
-                    //只有一個child, 不必使用childs
-                    Child = a.OrderBy(b => b.S).ToList(),
+                    //只有一個_Child, 不必使用childs
+                    _child = a.OrderBy(b => b.S).ToList(),  //同 _Fun.FidChild
                 })
                 .ToList();
 
