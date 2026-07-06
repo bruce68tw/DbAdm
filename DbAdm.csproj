@@ -35,8 +35,12 @@
 	<Compile Remove="Controllers\Table2Controller.cs" />
 	<Compile Remove="Controllers\TestController.cs" />
 	<Compile Remove="Controllers\UiController.cs" />
+	<TypeScriptCompile Remove="vite.config.ts" />
+	<TypeScriptCompile Remove="wwwroot\ts\base\_Array.ts" />
+	<Content Include="vite.config.ts" />
 	<Content Include="key.txt" />
     <Content Include="Views\Shared\Error.cshtml_old" />
+    <Content Include="wwwroot\ts\base\_Array.ts" />
     <Content Include="_image\noImage.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -74,6 +78,7 @@
     <None Include="Views\GenCrud\Read.cshtml" />
     <None Include="Views\Project\Edit.cshtml" />
     <None Include="Views\Project\Read.cshtml" />
+    <None Include="vite.config.ts" />
     <None Include="wwwroot\css\icomoon.css" />
     <None Include="wwwroot\locale\en-US\bootstrap-datepicker.js" />
     <None Include="wwwroot\locale\en-US\_BR.js" />
