@@ -31,8 +31,8 @@ var multiLang = false;
 var services = builder.Services;
 services.SetServices(multiLang);
 
-services.AddSingleton<IBaseUserSvc, MyBaseUserSvc>();   //4.user info for base component
-services.AddTransient<DbConnection, SqlConnection>();   //5.ado.net for mssql
+services.AddSingleton<IBaseUserSvc, MyBaseUserSvc>();   //user info for base component
+services.AddTransient<DbConnection, SqlConnection>();   //ado.net for mssql
 services.AddTransient<DbCommand, SqlCommand>();
 
 //cache server
@@ -44,7 +44,6 @@ services.AddSingleton<ICacheSvc, CacheMemSvc>();
 
 #region 3.set app & run
 var app = builder.Build();
-
 var isDev = app.Environment.IsDevelopment();
 _Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row);
 await _Locale.SetCultureA(_Fun.Config.Locale);
