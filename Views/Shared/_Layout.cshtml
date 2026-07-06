@@ -29,11 +29,11 @@
     <meta name="csrf-token" content="@(Antiforgery.GetAndStoreTokens(Context).RequestToken)" />
 
     <!-- 1.load css -->
-    <link rel="stylesheet" href="~/css/lib@(min).css?v=@libVer" />
+    <link rel="stylesheet" href="~/lib@(min).css?v=@libVer" />
     @RenderSection("styles", required: false)
 
     <!-- 2.load lib js -->
-    <script nonce="@_Fun.Nonce" src="~/js/lib@(min).js?v=@libVer"></script>
+    <script nonce="@_Fun.Nonce" src="~/lib@(min).js?v=@libVer"></script>
 
     <!-- 3.load my site js(debug/production mode) !! -->
     <environment include="Production">
