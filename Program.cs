@@ -23,7 +23,7 @@ builder.Configuration.GetSection("MyConfig").Bind(myConfig);
 _Xp.Config = myConfig;
 
 //set builder
-builder.SetBuilder(config.AllowOrigins);
+builder.SetBuilder();
 #endregion
 
 #region 2.set services
@@ -45,7 +45,7 @@ services.AddSingleton<ICacheSvc, CacheMemSvc>();
 #region 3.set app & run
 var app = builder.Build();
 var isDev = app.Environment.IsDevelopment();
-_Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row);
+_Fun.Init(isDev, app.Services, DbTypeEnum.MSSql, AuthTypeEnum.Row, multiLang);
 await _Locale.SetCultureA(_Fun.Config.Locale);
 
 app.SetApp(isDev);

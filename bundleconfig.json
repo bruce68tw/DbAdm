@@ -4,16 +4,15 @@
     "inputFiles": [
       "wwwroot/css/lib/bootstrap-5.2.3.css",
       "wwwroot/css/lib/datatables-2.3.2.css",
-      "wwwroot/css/lib/bootstrap-datepicker-1.9.css"
+      "wwwroot/css/lib/bootstrap-datepicker-1.9.css",
       //"wwwroot/css/lib/summernote-bs5.css"
+      "wwwroot/css/lib/icomoon.css"
     ]
   },
 
   {
     "outputFileName": "wwwroot/my.css",
     "inputFiles": [
-      // bundler will change fonts path in css file, must pust fonts under css folder !!
-      "wwwroot/css/icomoon.css",
       "wwwroot/css/base/*.css"
     ]
   },

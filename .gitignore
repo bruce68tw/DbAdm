@@ -3,6 +3,7 @@ bin/
 obj/
 _log/
 _upload/
+_draft/
 packages/
 *.rar
 *.bak

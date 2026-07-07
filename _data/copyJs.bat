@@ -17,7 +17,7 @@ rem set toDirs=DbAdm Mantis TplMvc BaoAdm BaoCust
 rem set toDirs=Mantis TplMvc BaoAdm BaoCust
 rem(常用) 
 rem set toDirs=DbAdm GroupProg AdoptAdm TplMvc
-set toDirs=AdoptAdm
+set toDirs=Early GroupProg AdoptAdm TplMvc HrAdm
 
 set baseDir=d:\_project
 rem set fromDir=%baseDir%\HrAdm\wwwroot
@@ -31,14 +31,13 @@ for %%a in (%toDirs%) do (
 	rem 無條件覆寫 base/lib css/js, icomoon
 	rem css & js(ico, base, lib)
 	rem /XO for exclude if source files are old
-	robocopy %fromDir%\css !toDir!\css icomoon.*
 	robocopy %fromDir%\css\base !toDir!\css\base *.css
 	robocopy %fromDir%\css\lib !toDir!\css\lib *.css
 	robocopy %fromDir%\js\base !toDir!\js\base *.js
 	robocopy %fromDir%\js\lib !toDir!\js\lib *.js
 	
 	rem icomoon font
-	robocopy %fromDir%\css\fonts !toDir!\css\fonts *
+	robocopy %fromDir%\font !toDir!\font *
 	
 	rem locale
 	rem /XF for exclude file with name
