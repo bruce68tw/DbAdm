@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <None Remove="key.txt" />
+    <None Remove="tsconfig.json_old" />
     <None Remove="_image\noImage.jpg" />
     <None Remove="_template\EmailMisSurvey.html" />
   </ItemGroup>
@@ -35,12 +36,10 @@
 	<Compile Remove="Controllers\Table2Controller.cs" />
 	<Compile Remove="Controllers\TestController.cs" />
 	<Compile Remove="Controllers\UiController.cs" />
-	<TypeScriptCompile Remove="vite.config.ts" />
-	<TypeScriptCompile Remove="wwwroot\ts\base\_Array.ts" />
-	<Content Include="vite.config.ts" />
+	<Content Include="tsconfig.json_old" />
+	<Content Include="vite.config.t_old" />
 	<Content Include="key.txt" />
     <Content Include="Views\Shared\Error.cshtml_old" />
-    <Content Include="wwwroot\ts\base\_Array.ts" />
     <Content Include="_image\noImage.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -54,10 +53,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="6.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -78,7 +73,6 @@
     <None Include="Views\GenCrud\Read.cshtml" />
     <None Include="Views\Project\Edit.cshtml" />
     <None Include="Views\Project\Read.cshtml" />
-    <None Include="vite.config.ts" />
     <None Include="wwwroot\css\icomoon.css" />
     <None Include="wwwroot\locale\en-US\bootstrap-datepicker.js" />
     <None Include="wwwroot\locale\en-US\_BR.js" />
