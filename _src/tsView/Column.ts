@@ -1,0 +1,43 @@
+﻿//import CrudR from "@base/svc/CrudR";
+
+let _me:any = {
+    init: function () {
+        var config = {
+            //修改:查詢結果欄位,與後端read service對應, 這是 Datatables config
+            columns: [
+                { data: 'ProjectCode', orderable: true },
+                { data: 'TableCode', orderable: true },
+                { data: 'Fid', orderable: true },
+                { data: 'Name' },
+                { data: 'DataType', orderable: true },
+                { data: 'CreatorName' },
+                { data: '_Fun' },
+                { data: 'Status', orderable: true },
+            ],
+
+            //修改:如果查詢結果欄位有特殊的顯示規則就寫在這裡
+            columnDefs: [
+                {
+                    targets: [6], render: function (data, type, full, meta) {
+                        return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    }
+                },
+                {
+                    targets: [7], render: function (data, type, full, meta) {
+                        return _me.crudR.dtStatusName(data);
+                    }
+                },
+            ],
+        };
+
+        //init crud
+        new CrudR(config);
+    },
+
+    /*
+    onViewFile: function (table, fid) {
+        _me.edit0.onViewFile(table, fid);
+    },
+    */
+
+}; //class

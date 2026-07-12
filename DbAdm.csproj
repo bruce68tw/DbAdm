@@ -10,18 +10,37 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="old\**" />
+    <Compile Remove="wwwroot\css\**" />
+    <Compile Remove="wwwroot_old\**" />
     <Compile Remove="_log\**" />
     <Compile Remove="_upload\**" />
+    <Content Remove="old\**" />
+    <Content Remove="wwwroot\css\**" />
+    <Content Remove="wwwroot_old\**" />
     <Content Remove="_log\**" />
     <Content Remove="_upload\**" />
+    <EmbeddedResource Remove="old\**" />
+    <EmbeddedResource Remove="wwwroot\css\**" />
+    <EmbeddedResource Remove="wwwroot_old\**" />
     <EmbeddedResource Remove="_log\**" />
     <EmbeddedResource Remove="_upload\**" />
+    <None Remove="old\**" />
+    <None Remove="wwwroot\css\**" />
+    <None Remove="wwwroot_old\**" />
     <None Remove="_log\**" />
     <None Remove="_upload\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="Views\Column\TestFlow.cshtml" />
+    <Content Remove="wwwroot\cssView\Login.css" />
+    <Content Remove="wwwroot\cssView\_themeLight.css" />
+    <Content Remove="wwwroot\cssView\_xgBlue.css" />
+    <Content Remove="wwwroot\cssView\_xgGreenApple.css" />
+    <Content Remove="wwwroot\cssView\_xgGrey.css" />
+    <Content Remove="wwwroot\cssView\_xgOrange.css" />
+    <Content Remove="wwwroot\cssView\_xgPrint.cs_old" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,9 +55,8 @@
 	<Compile Remove="Controllers\Table2Controller.cs" />
 	<Compile Remove="Controllers\TestController.cs" />
 	<Compile Remove="Controllers\UiController.cs" />
-	<Content Include="tsconfig.json_old" />
-	<Content Include="vite.config.t_old" />
 	<Content Include="key.txt" />
+	<Content Include="old\tsconfig.json_old" />
     <Content Include="Views\Shared\Error.cshtml_old" />
     <Content Include="_image\noImage.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -73,16 +91,19 @@
     <None Include="Views\GenCrud\Read.cshtml" />
     <None Include="Views\Project\Edit.cshtml" />
     <None Include="Views\Project\Read.cshtml" />
-    <None Include="wwwroot\css\lib\icomoon.css" />
-    <None Include="wwwroot\locale\en-US\bootstrap-datepicker.js" />
-    <None Include="wwwroot\locale\en-US\_BR.js" />
-    <None Include="wwwroot\locale\zh-CN\bootstrap-datepicker.js" />
-    <None Include="wwwroot\locale\zh-CN\validate.js" />
-    <None Include="wwwroot\locale\zh-CN\_BR.js" />
-    <None Include="wwwroot\locale\zh-TW\bootstrap-datepicker.js" />
-    <None Include="wwwroot\locale\zh-TW\dataTables.json" />
-    <None Include="wwwroot\locale\zh-TW\_BR.js" />
-    <None Include="wwwroot\locale\zh-TW\validate.js" />
+    <None Include="wwwroot\jsView\GenCrud.js2" />
+    <None Include="wwwroot\jsView\UiMany.js2" />
+    <None Include="wwwroot\jsView\UiView.js2" />
+    <None Include="wwwroot\jsView\zz_MyCrudUi.j_old" />
+    <None Include="wwwroot\jsView\_openUser.js" />
+    <None Include="wwwroot\jsView\_xp.js" />
+    <None Include="wwwroot\cssView\Login.css" />
+    <None Include="wwwroot\cssView\_themeLight.css" />
+    <None Include="wwwroot\cssView\_xgBlue.css" />
+    <None Include="wwwroot\cssView\_xgGreenApple.css" />
+    <None Include="wwwroot\cssView\_xgGrey.css" />
+    <None Include="wwwroot\cssView\_xgOrange.css" />
+    <None Include="wwwroot\cssView\_xgPrint.cs_old" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

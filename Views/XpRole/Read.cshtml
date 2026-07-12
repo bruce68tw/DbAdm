@@ -76,17 +76,17 @@
 
         //on open select user modal
         onOpenUser: function () {
-            _modal.show(_me.modalUser);
+            _Modal.show(_me.modalUser);
         },
 
         //onclick find user
         onFindUserA: async function () {        
             var data = {
-                account: _itext.get('Account', _me.modalUser),
-                deptId: _iselect.get('DeptId', _me.modalUser),
-                name: _itext.get('Name', _me.modalUser),
+                account: _iText.get('Account', _me.modalUser),
+                deptId: _iSelect.get('DeptId', _me.modalUser),
+                name: _iText.get('Name', _me.modalUser),
             };
-            await _ajax.getJsonA('GetUsers', data, function (rows) {
+            await _Ajax.getJsonA('GetUsers', data, function (rows) {
                 _me.modalUserBody.empty();
                 for (var i = 0; i < rows.length; i++) {
                     //這裡不必註記"新增"
@@ -124,14 +124,14 @@
                     continue;
 
                 var tr = $(Mustache.render(_me.tplUr, row));
-                _form.loadRow(tr, row);
+                _Form.loadRow(tr, row);
                 _me.mUserRole.setNewIdByBox(tr);
                 _me.divUrBody.append(tr);
             }
 
             //remove checked for next usage, hide modal
             _me.modalUser.find(':checkbox:checked').prop('checked', false);
-            _modal.hide(_me.modalUser);
+            _Modal.hide(_me.modalUser);
         },
 
     }; //class

@@ -1,4 +1,4 @@
-﻿//resource for js base component
+//resource for js base component
 var _BR = {
 
     //=== moment.js ymd format ===

@@ -29,14 +29,14 @@
                 ],
                 columnDefs: [
                     { targets: [3], render: function (data, type, full, meta) {
-                        return _date.dsToUiDate(data);
+                        return _Date.dsToUiDate(data);
                     }},
                     { targets: [7], render: function (data, type, full, meta) {
                         return _me.crudR.dtYesEmpty(data);
                     }},
                     { targets: [11], render: function (data, type, full, meta) {
-                        return _str.notEmpty(full.SurveyId) ? '是' :
-                            (full.IsFinish == 1 && _str.notEmpty(full.RptUser) && (full.OwnerId == _fun.userId || _fun.userId=='Bruce'))
+                        return _Str.notEmpty(full.SurveyId) ? '是' :
+                            (full.IsFinish == 1 && _Str.notEmpty(full.RptUser) && (full.OwnerId == _fun.userId || _fun.userId=='Bruce'))
                                 ? `<button type='button' class='btn btn-secondary' data-onclick='_me.onSurvey' data-args='${full.Id}'>寄問卷</button>`
                                 : '';
                     }},
@@ -66,32 +66,32 @@
 
             if (isFunU || fun == EstrFun.View) {
                 //設定專案功能欄位
-                var row0 = _edit.jsonGetRows0(json);
+                var row0 = _Edit.jsonGetRows0(json);
                 _me.onChgProject(1, row0.ProgId);
 
                 //設定追踪按鈕
                 _me.issueId = row0.Id;
-                _me.hasWatchId = _str.notEmpty(row0.WatchId);
+                _me.hasWatchId = _Str.notEmpty(row0.WatchId);
                 _me.setWatchBtn(true);
 
                 //set edit status
 
                 if (isFunU){
-                    var hasFromMsg = _str.notEmpty(_iselect.get(FromMgr, eform));
-                    _itext.setEdit('Title', !hasFromMsg, eform);
-                    _iselect.setEdit(FromMgr, !hasFromMsg, eform);
+                    var hasFromMsg = _Str.notEmpty(_iselect.get(FromMgr, eform));
+                    _iText.setEdit('Title', !hasFromMsg, eform);
+                    _iSelect.setEdit(FromMgr, !hasFromMsg, eform);
                 }
 
                 //設定延續工作按鈕的狀態
                 _me.setKeepBtn(row0.OwnerId == _fun.userId);
             } else {
                 //新增
-                _iselect.set('OwnerId', _fun.userId, eform);       //處理人員預設自己
-                _idate.set('WorkDate', _date.uiToday(), eform);    //工作日期預設今天
+                _iSelect.set('OwnerId', _Fun.userId, eform);       //處理人員預設自己
+                _iDate.set('WorkDate', _Date.uiToday(), eform);    //工作日期預設今天
 
                 //set edit status
-                _itext.setEdit('Title', true, eform);
-                _iselect.setEdit(FromMgr, true, eform);
+                _iText.setEdit('Title', true, eform);
+                _iSelect.setEdit(FromMgr, true, eform);
 
                 _me.setWatchBtn(false);
                 _me.setKeepBtn(false);
@@ -101,16 +101,16 @@
         fnWhenSave: function (fun) {
             //set _IssueType, _RptUser
             var form = _me.eform0;
-            _itext.set('_IssueType', _iselect.get('IssueType', form), form);
-            _itext.set('_RptUser', _itext.get('RptUser', form), form);
+            _iText.set('_IssueType', _iSelect.get('IssueType', form), form);
+            _iText.set('_RptUser', _iText.get('RptUser', form), form);
         },
 
         //寄問卷
         onSurvey: async function (issueId) {
-            if (await _tool.ansA('是否確定寄送問卷?')) {
-                await _ajax.getStrA('SendSurvey', { issueId: issueId }, function (str) {
+            if (await _Tool.ansA('是否確定寄送問卷?')) {
+                await _Ajax.getStrA('SendSurvey', { issueId: issueId }, function (str) {
                     var ok = (str == '1');
-                    _tool.msg(ok ? '成功寄送問卷。' : '無法寄送問卷 !!');
+                    _Tool.msg(ok ? '成功寄送問卷。' : '無法寄送問卷 !!');
                     if (ok) {
                         _me.crudR.dt.reload();
                     }
@@ -124,13 +124,13 @@
             if (isShow)
                 _me.showBtn(btn);
             else
-                _obj.hide(btn);
+                _Obj.hide(btn);
         },
 
         //show & enabled button
         showBtn: function (btn) {
-            _obj.show(btn);
-            _btn.setEdit(btn, true);
+            _Obj.show(btn);
+            _Btn.setEdit(btn, true);
         },
 
         //設定追踪按鈕的狀態
@@ -139,21 +139,21 @@
             var btnAdd = box.find('#btnAddWatch');
             var btnDel = box.find('#btnDeleteWatch');
             if (!isShow){
-                _obj.hide(btnAdd);
-                _obj.hide(btnDel);
+                _Obj.hide(btnAdd);
+                _Obj.hide(btnDel);
             } else if (_me.hasWatchId){
-                _obj.hide(btnAdd);
+                _Obj.hide(btnAdd);
                 _me.showBtn(btnDel);
             } else {
                 _me.showBtn(btnAdd);
-                _obj.hide(btnDel);
+                _Obj.hide(btnDel);
             }
         },
 
         //on change projectId
         //此時isEdit為字串, 因為 EventArgs 無法傳bool
         onChgProject: function (isEdit, progId) {
-            _iselect.changeParent('_ProjectId', 'ProgId', progId, 'GetPrjProgs', (isEdit == 1));
+            _iSelect.changeParent('_ProjectId', 'ProgId', progId, 'GetPrjProgs', (isEdit == 1));
         },
 
         //onclick viewFile, called by XiFile component
@@ -163,26 +163,26 @@
         },
 
         onMyToday: function () {
-            var today = _date.uiToday();
+            var today = _Date.uiToday();
             var box = _me.rform;
             _me.crudR.onResetFind();   //reset
-            _iselect.set('OwnerId', _fun.userId, box);
-            _idate.set('WorkDate', today, box);
-            _idate.set('WorkDate2', today, box);
+            _iSelect.set('OwnerId', _Fun.userId, box);
+            _iDate.set('WorkDate', today, box);
+            _iDate.set('WorkDate2', today, box);
             _me.crudR.onFind();
         },
 
         //因為onFind2使用_form.hideShow, 這裡必須一致才能正確顯示rform2
         showRform2: function () {
-            _form.hideShow(null, [_me.rform2]);
+            _Form.hideShow(null, [_me.rform2]);
         },
 
         onMyWeek: function () {
             var box = _me.rform;
             _me.crudR.onResetFind();   //reset
-            _iselect.set('OwnerId', _fun.userId, box);
-            _idate.set('WorkDate', _date.uiWeekMonday(), box);
-            _idate.set('WorkDate2', _date.uiWeekFriday(), box);
+            _iSelect.set('OwnerId', _Fun.userId, box);
+            _iDate.set('WorkDate', _Date.uiWeekMonday(), box);
+            _iDate.set('WorkDate2', _Date.uiWeekFriday(), box);
             _me.crudR.onFind();
         },
 
@@ -193,8 +193,8 @@
             //_obj.show(box2);
             _me.showRform2();
             _me.crudR.onResetFind();   //reset
-            _iselect.set('OwnerId', _fun.userId, box);
-            _iselect.set('IsFinish', '0', box2);
+            _iSelect.set('OwnerId', _Fun.userId, box);
+            _iSelect.set('IsFinish', '0', box2);
             _me.crudR.onFind();
         },
         
@@ -204,7 +204,7 @@
             //_obj.show(box2);
             _me.showRform2();
             _me.crudR.onResetFind();   //reset
-            _iselect.set('_IsWatch', '1', box2);
+            _iSelect.set('_IsWatch', '1', box2);
             _me.crudR.onFind();
         },
 
@@ -214,7 +214,7 @@
             //_obj.show(box2);
             _me.showRform2();
             _me.crudR.onResetFind();   //reset
-            _iselect.set('FromMgr', _fun.userId, box2);
+            _iSelect.set('FromMgr', _Fun.userId, box2);
             _me.crudR.onFind();
         },
 
@@ -224,17 +224,17 @@
             //_obj.show(box2);
             _me.showRform2();
             _me.crudR.onResetFind();   //reset
-            _iselect.set('FromMgr', _fun.userId, box2);
-            _iselect.set('IsFinish', '0', box2);
+            _iSelect.set('FromMgr', _Fun.userId, box2);
+            _iSelect.set('IsFinish', '0', box2);
             _me.crudR.onFind();
         },
 
         //加入追踪
         onAddWatch: async()=>{
-            _tool.ans('是否確定加入追踪?', async()=>{
-                await _ajax.getStrA('AddWatch', {issueId: _me.issueId}, function(str){
+            _Tool.ans('是否確定加入追踪?', async()=>{
+                await _Ajax.getStrA('AddWatch', {issueId: _me.issueId}, function(str){
                     var ok = (str == '1');
-                    _tool.msg(ok ? '成功加入追踪。' : '無法加入此筆追踪 !!');
+                    _Tool.msg(ok ? '成功加入追踪。' : '無法加入此筆追踪 !!');
                     if (ok){
                         _me.hasWatchId = true;
                         _me.setWatchBtn(true);
@@ -245,10 +245,10 @@
 
         //取消追踪
         onDeleteWatch: async () => {
-            _tool.ans('是否確定取消追踪?', async()=>{
-                await _ajax.getStrA('DeleteWatch', { issueId: _me.issueId }, (str) => {
+            _Tool.ans('是否確定取消追踪?', async()=>{
+                await _Ajax.getStrA('DeleteWatch', { issueId: _me.issueId }, (str) => {
                     var ok = (str == '1');
-                    _tool.msg(ok ? '已取消追踪。' : '無法取消此筆追踪 !!');
+                    _Tool.msg(ok ? '已取消追踪。' : '無法取消此筆追踪 !!');
                     if (ok){
                         _me.hasWatchId = false;
                         _me.setWatchBtn(true);
@@ -259,7 +259,7 @@
 
         //延續工作        
         onKeepIssue: ()=>{
-            _tool.ans('是否確定延續此筆工作?', ()=>{
+            _Tool.ans('是否確定延續此筆工作?', ()=>{
                 //變成新增狀態
                 _me.crudE.editToNew(); 
 
@@ -269,8 +269,8 @@
 
                 //title欄位前面加上'(續)'
                 var title = _obj.get('Title', _me.eform0);
-                _itext.setO(title, '(續)'+_itext.getO(title))
-                _idate.set('WorkDate', _date.uiToday(), _me.eform0);    //工作日期預設今天
+                _iText.setO(title, '(續)'+ _iText.getO(title))
+                _iDate.set('WorkDate', _Date.uiToday(), _me.eform0);    //工作日期預設今天
 
                 //reset & 增加一筆相關工作
                 _me.mIssueFile.reset();

@@ -29,40 +29,32 @@
     <meta name="csrf-token" content="@(Antiforgery.GetAndStoreTokens(Context).RequestToken)" />
 
     <!-- 1.load css -->
-    <link rel="stylesheet" href="~/lib@(min).css?v=@libVer" />
+    <link rel="stylesheet" href="~/lib.min.css?v=@libVer" />
     @RenderSection("styles", required: false)
 
     <!-- 2.load lib js -->
-    <script nonce="@_Fun.Nonce" src="~/lib@(min).js?v=@libVer"></script>
+    <script nonce="@_Fun.Nonce" src="~/lib.min.js?v=@libVer"></script>
 
     <!-- 3.load my site js(debug/production mode) !! -->
-    <environment include="Production">
-        <link rel="stylesheet" href="~/my@(min).css?v=@myVer" />
-        <script nonce="@_Fun.Nonce" src="~/my@(min).js?v=@myVer"></script>
-    </environment>
-    <environment include="Development">
-        <!-- tail ver will load failed !! -->
-        <link rel="stylesheet" asp-href-include="~/css/icomoon.css" />
-        <link rel="stylesheet" asp-href-include="~/css/base/*.css" />
-        <script nonce="@_Fun.Nonce" asp-src-include="~/js/base/*.js"></script>
-        <script nonce="@_Fun.Nonce" asp-src-include="~/js/view/_*.js"></script>
-    </environment>
-    <!-- 加上id for 動態載入 -->
-    <link rel="stylesheet" asp-href-include="~/css/view/_themeLight.css" />
-    <link id="xgTheme" rel="stylesheet" asp-href-include="~/css/view/_xgGrey.css" />
+    <link rel="stylesheet" href="~/base.min.css?v=@myVer" />
+    <script nonce="@_Fun.Nonce" src="~/base.min.js?v=@myVer"></script>
+
+    <!-- 配色 -->
+    <link rel="stylesheet" asp-href-include="~/cssView/_themeLight.css" />
+    <link id="xgTheme" rel="stylesheet" asp-href-include="~/cssView/_xgGrey.css" />
 
     <!-- 4.load local js -->
-    <script nonce="@_Fun.Nonce" src="~/locale/@(locale+min).js?v=@myVer"></script>
+    <script nonce="@_Fun.Nonce" src="~/locale/@(locale).min.js?v=@myVer"></script>
 
     @RenderSection("scripts", required: false)
 
     <!-- 5.initial -->
     <script nonce="@_Fun.Nonce">
         $(function () {
-            _fun.init('@locale');
-            _fun.pageRows = 20;
+            _Fun.init('@locale');
+            _Fun.pageRows = 20;
             //_fun.lengthMenu = [10, 20, 50, 100, 150];
-            _fun.userId = '@_Fun.UserId()';
+            _Fun.userId = '@_Fun.UserId()';
         });
     </script>
 </head>

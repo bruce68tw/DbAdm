@@ -22,14 +22,14 @@
                 columnDefs: [
 				    { targets: [1], render: function (data, type, full, meta) {
                         return (data > 0)
-                            ? _str.format('<a href="GetFail?id={0}&name={1}">{2}</a>', full.Id, full.FileName, data)
+                            ? _Str.format('<a href="GetFail?id={0}&name={1}">{2}</a>', full.Id, full.FileName, data)
                             : data;
                     }},
 				    { targets: [3], render: function (data, type, full, meta) {
-                        return _str.format('<a href="GetSource?id={0}&name={1}">{2}</a>', full.Id, full.FileName, data);
+                        return _Str.format('<a href="GetSource?id={0}&name={1}">{2}</a>', full.Id, full.FileName, data);
                     }},
 				    { targets: [5], render: function (data, type, full, meta) {
-                        return _date.dtsToUiDt(data);
+                        return _Date.dtsToUiDt(data);
                     }},
                 ],
             };
@@ -41,24 +41,24 @@
 
         //on open import modal
         onOpenImport: function () {
-            _modal.show(_me.modalImport);
+            _Modal.show(_me.modalImport);
         },
 
         //on run import
         onImport: async function () {
             var modal = _me.modalImport;
             var fileObj = modal.find(':file');
-            var file = _ifile.getUploadFile(fileObj);
+            var file = _iFile.getUploadFile(fileObj);
             if (file == null) {
-                _tool.msg('請先選取匯入檔案。');
+                _Tool.msg('請先選取匯入檔案。');
                 return;
             }
 
             var formData = new FormData();
             formData.append('file', file);
-            await _ajax.getJsonByFdA('Import', formData, function (data) {
-                _modal.hide(modal);
-                _tool.msg(_str.format('匯入完成。', data.OkCount, data.FailCount));
+            await _Ajax.getJsonByFdA('Import', formData, function (data) {
+                _Modal.hide(modal);
+                _Tool.msg(_str.format('匯入完成。', data.OkCount, data.FailCount));
                 _me.dt.reload();
             });
         },

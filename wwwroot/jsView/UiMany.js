@@ -1,0 +1,3 @@
+(() => {
+})();
+//# sourceMappingURL=UiMany.js.map

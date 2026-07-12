@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    //"outDir": "./_src/jsBase", //JavaScript 輸出目錄
+    "baseUrl": ".",
+    "module": "ESNext", // ES Module
+    "target": "ES2018", // 編譯版本
+    "moduleResolution": "Bundler", // Vite相容解析
+    //"moduleResolution": "node", // Vite相容解析
+    //"ignoreDeprecations": "6.0",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "strict": false, // 舊JS轉TS較容易
+    "skipLibCheck": false, // 忽略第三方型別
+    "allowUmdGlobalAccess": true, //UMD套件如 moment
+    "types": [ "jquery", "jquery.validation", "datatables.net", "bootstrap" ],
+    "paths": {
+      "@base/*": [ "../Base/BaseTs/*" ]
+    }
+  },
+  "include": [
+    "../Base/BaseTs/global.d.ts", //內容同 BaseTs
+    "../Base/BaseTs/**/*.ts",
+    "_src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules" //排除 npm 套件
+  ]
+}

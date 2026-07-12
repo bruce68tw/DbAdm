@@ -6,18 +6,18 @@
     */
     async function onSave() {
         var form = $('#eform');
-        var oldPwd = _itext.get('OldPwd', form);
-        var newPwd = _itext.get('NewPwd', form);
+        var oldPwd = _iText.get('OldPwd', form);
+        var newPwd = _iText.get('NewPwd', form);
         if (newPwd == '') {
-            _tool.msg('新密碼不可空白。');
+            _Tool.msg('新密碼不可空白。');
             return;
         }
-        if (newPwd !== _itext.get('NewPwd2', form)) {
-            _tool.msg('確認新密碼輸入錯誤。');
+        if (newPwd !== _iText.get('NewPwd2', form)) {
+            _Tool.msg('確認新密碼輸入錯誤。');
             return;
         }
-        await _ajax.getStrA('Save', { oldPwd: oldPwd, newPwd: newPwd }, function (msg) {
-            _tool.msg(msg || '儲存完成。');
+        await _Ajax.getStrA('Save', { oldPwd: oldPwd, newPwd: newPwd }, function (msg) {
+            _Tool.msg(msg || '儲存完成。');
         });
     }
 
