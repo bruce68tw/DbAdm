@@ -3,6 +3,7 @@ import type EditOne from "./svc/EditOne";
 import type EditMany from "./svc/EditMany";
 
 /**
+ * for IDE 檢查typeScript語法
  * 個別套件做法不同:
  *  moment: UMD套件, tsconfig 加 allowUmdGlobalAccess: true
  *  Mustache: @types/mustache 已有 export as namespace Mustache, 不需要 global.d.ts 宣告
@@ -30,6 +31,7 @@ declare global {
     type JsonN = Json | null;
     type JQueryN = JQuery | null;
     type Elm = HTMLElement;
+    type ElmN = HTMLElement | null;
     type FnN = Function | null;
     type FnVoidN = ((result: any) => void) | null;
     type OneMany = EditOne | EditMany;

@@ -1,4 +1,3 @@
-import ResultDto from '../dto/ResultDto';
 export default class _Ajax {
     /** * ajax return json
      * param url {string} action url
@@ -7,7 +6,8 @@ export default class _Ajax {
      * param block {bool} block ui or not, default true
      * return {bool/json}
      */
-    static getJsonA(url: string, data: any, fnOk?: (res: ResultDto) => void, block?: any): Promise<boolean | ResultDto | null>;
+    static getJsonA(url: string, data: Json, fnOk?: (res: Json) => void, block?: boolean): Promise<Json>;
+    static getJsonsA(url: string, data: Json, fnOk?: (res: Json[]) => void, block?: boolean): Promise<Json[]>;
     /**
      * ajax return json by FormData(Fd), for upload file
      * param url {string}
@@ -16,22 +16,22 @@ export default class _Ajax {
      * param block {bool} block ui or not, default true
      * return {bool/json}
      */
-    static getJsonByFdA(url: string, data: FormData, fnOk?: (res: ResultDto) => void, block?: any): Promise<boolean | ResultDto | null>;
+    static getJsonByFdA(url: string, data: FormData, fnOk?: (res: Json) => void, block?: boolean): Promise<Json>;
     /**
      * ajax return string
      * param fnOk {function} (optional) callback function
      * param block {bool} block ui or not, default true
      * return {bool/string}
      */
-    static getStrA(url: string, data: any, fnOk?: (res: string) => void, block?: any): Promise<boolean | string | null>;
-    static getIntA(url: string, data: any, fnOk?: (res: number) => void, block?: any): Promise<boolean | number | null>;
+    static getStrA(url: string, data: Json, fnOk?: (res: string) => void, block?: boolean): Promise<string>;
+    static getIntA(url: string, data: Json, fnOk?: (res: number) => void, block?: boolean): Promise<number>;
     /**
      * ajax return html string
      * param fnOk {function} (optional) callback function
      * param block {bool} block ui or not, default true
      * return {bool/html string}
      */
-    static getViewA(url: string, data: any, fnOk?: (res: string) => void, block?: any): Promise<boolean | string | null>;
+    static getViewA(url: string, data: Json, fnOk?: (res: string) => void, block?: boolean): Promise<string>;
     /**
      * 使用fetch, 將來考慮取代jquery ajax
      * GET ok, 但是 POST 有問題(所以用GET) !!
@@ -41,7 +41,7 @@ export default class _Ajax {
      * param fnOk {function} 目前無作用
      * return {file/string(錯誤訊息)/空白(檔案不存在)}
      */
-    static getFileA(url: string, data: any, elm?: Elm | null, fnOk?: (res: any) => void): Promise<void>;
+    static getFileA(url: string, data: Json, elm?: Elm, fnOk?: (res: any) => void): Promise<void>;
     /**
      * ajax call(private), only return success info(include custom message)
      * 使用 async/await 傳回值 for caller 判斷執行結果是否成功

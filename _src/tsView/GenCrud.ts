@@ -1,10 +1,11 @@
 import UiMany from "./UiMany";
 import FunEstr from "@base/enum/FunEstr";
 import MouseEstr from "@base/enum/MouseEstr";
+import EditDto from "@base/dto/EditDto";
+
 import CrudR from "@base/svc/CrudR";
 import EditOne from "@base/svc/EditOne";
 import EditMany from "@base/svc/EditMany";
-import EditDto from "@base/dto/EditDto";
 import _Ajax from "@base/svc/_Ajax";
 import _Array from "@base/svc/_Array";
 import _Edit from "@base/svc/_Edit";
@@ -23,22 +24,6 @@ import _Tab from "@base/svc/_Tab";
 import _Tool from "@base/svc/_Tool";
 import _Valid from "@base/svc/_Valid";
 
-/**
- * 提供語法提示
- * @typedef {Object} Me
- * @property {CrudR} crudR
- * @property {CrudE} crudE
- * @property {EditOne} edit0
- * @property {EditMany} mQitem
- * @property {EditMany} mRitem
- * @property {EditMany} mEtable
- * @property {EditMany} mEitem
- * @property {EditMany} mUiItem
- * @property {UiMany} uiMany
- * @property {UiView} uiView
- */
-
-/** @type {Me} */
 var _me:any = {
     //#region for Crud
     init: function () {
@@ -191,7 +176,7 @@ var _me:any = {
     },
 
     //auto called !!
-    fnAfterOpenEdit: async function (fun, json) {
+    fnAfterOpenEdit: async function (fun: FunEstr, json:Json) {
         var isEdit1 = _me.isEdit1();    //拖拉編輯
         _Prog.setBorder(!isEdit1);
         if (isEdit1)
@@ -202,7 +187,7 @@ var _me:any = {
 
     //set etable TableId(dropdown)
     //edit0_afterLoadJson: function (json) {
-    fnAfterOpenEdit0: async function (fun, json) {
+    fnAfterOpenEdit0: async function (fun: FunEstr, json: Json) {
         //edit2會隱藏 prog border, 這裡打開        
         if (fun == FunEstr.Create) return;
 
@@ -230,7 +215,7 @@ var _me:any = {
     },
 
     //reset when create
-    fnAfterOpenEdit1: function (fun, json) {
+    fnAfterOpenEdit1: function (fun: FunEstr, json: Json) {
         _me.uiMany.reset();
         var isAdd = (fun == FunEstr.Create);
         _me.uiMany.setEdit(isAdd || (fun == FunEstr.Update));
@@ -242,14 +227,14 @@ var _me:any = {
         return (_me.crudE.mEditGetEditNo() == 1);
     },
 
-    fnWhenSave: function (fun) {
+    fnWhenSave: function (fun: FunEstr) {
         return _me.isEdit1()
             ? _me.fnWhenSave1(fun)
             : _me.fnWhenSave0(fun);
     },
 
     //set sort
-    fnWhenSave0: function (fun) {
+    fnWhenSave0: function (fun: FunEstr) {
 
         //qitem set sort
         _me.tbodyQitem.find('.xu-tr').each(function (i, item) {
@@ -264,7 +249,7 @@ var _me:any = {
         //etable/eitem set sort
         var error = '';
         var tableIds = [];
-        _me.etGetForms().each(function (i, item) {
+        _me.etGetForms().each(function (i:number, item:Elm) {
             //Etable不可重複
             var form = $(item);
             var tableId = _iText.get(_me.TableId, form);
@@ -289,7 +274,7 @@ var _me:any = {
     },
 
     //load etable
-    mEtable_loadRows: function (rows) {
+    mEtable_loadRows: function (rows:Json[]) {
         //empty first
         _me.navEtable.empty();
         _me.tabEtable.empty();
@@ -340,7 +325,7 @@ var _me:any = {
     },
 
     //GetUpdJson
-    mEtable_getUpdJson: function (upKey) {
+    mEtable_getUpdJson: function (upKey:StrNum) {
         //var upKey = _iText.get('Id', _me.crudE.getEform0());
         var rows = [];
         var eitems = [];
@@ -376,7 +361,7 @@ var _me:any = {
      */ 
     mEtable_valid: function () {
         var status = true;
-        _me.etGetForms().each(function (i, item) {
+        _me.etGetForms().each(function (i:number, item:Elm) {
             //focus nav first, or will not work !!
             var form = $(item);
             //var nav = _me.etGetNav(form.data('index'));
@@ -404,7 +389,7 @@ var _me:any = {
      * onclick generate crud
      * (如果在VS下產生DbAdm的CRUD會reload !!)
      */ 
-    onGenCrud: async function (id) {
+    onGenCrud: async function (id:StrNum) {
         /*
         var keys = _me.getCheckedTables();
         if (keys.length === 0)
@@ -463,7 +448,7 @@ var _me:any = {
         var pid = _me.getProjectId();
         if (_Str.isEmpty(pid)) return false;
 
-        var rows = await _Ajax.getJsonA('/XpCode/Tables', { projectId: pid });
+        var rows = await _Ajax.getJsonsA('/XpCode/Tables', { projectId: pid });
         if (_Array.isEmpty(rows)) return false;
 
         //case of ok
@@ -481,7 +466,7 @@ var _me:any = {
 
     //on open item modal
     //type: Q(qitem), R(ritem), E(eitem), S(edit eitem)
-    onOpenItem: function (type) {
+    onOpenItem: function (type:string) {
         //如果為主table, 則不必重新讀取
         //_me.initRitemDt();
 
@@ -524,7 +509,7 @@ var _me:any = {
     },
 
     //called by 2 places
-    changeItemTableA: async function (tableId) {
+    changeItemTableA: async function (tableId:string) {
         await _Ajax.getJsonA('GetColumns', { tableId: tableId }, function (rows) {
             _me.divItemsBody.empty();
             for (var i = 0; i < rows.length; i++) {
@@ -610,7 +595,7 @@ var _me:any = {
         var index = _me.etableLen;
         var json = { Index: index };
         var newTab = $(Mustache.render(_me.tplTabEtable, json));
-        debugger;
+        //debugger;
         _me.mEtable.setNewIdByBox(newTab);    //set new row key !!
         _iSelect.setItems(_me.TableId, _me.tables, newTab); //set dropdown source
         _me.tabEtable.append(newTab);
@@ -692,7 +677,7 @@ var _me:any = {
         //_me.swapEitemCols();
     },
 
-    etFocusNav: function (navObj) {
+    etFocusNav: function (navObj: JQuery) {
         //debugger;
         //navObj.focus();
         navObj.find('a').click();    
@@ -709,14 +694,14 @@ var _me:any = {
 
     //set(show) tableName at edit edit page
     //param {bool} reset: reset table list or not 
-    etShowName: function (index) {
+    etShowName: function (index:number) {
         var name = _iSelect.getText(_me.TableId, _me.etGetTab(index));
         if (name === '')
             name = '(Empty)';
         _me.navEtable.find('li[data-index=' + index + '] a').text(name);
     },
 
-    onChangeNowTable: function (index) {
+    onChangeNowTable: function (index: number) {
         _me.etShowName(index);
     },
 
@@ -728,14 +713,14 @@ var _me:any = {
     }, 
 
     //onclick etable nav
-    onEtNav: function (index) {
+    onEtNav: function (index: number) {
         //_me.etNavRemoveAct();
         _me.etableIdx = index;
     },
 
     //get edit edit active nav
     //return nav object
-    etGetNav: function (index) {
+    etGetNav: function (index: number) {
         index = index || _me.etableIdx;
         var find = '[data-index=' + index + ']';
         return _me.navEtable.find('li' + find);
@@ -743,7 +728,7 @@ var _me:any = {
 
     //get edit edit active tab
     //return tab object
-    etGetTab: function (index) {
+    etGetTab: function (index: number) {
         index = index || _me.etableIdx;
         return _me.tabEtable.find('#divEtable' + index);
     },
@@ -757,21 +742,21 @@ var _me:any = {
 
     /*
      * get eitem form by etable form
-     */ 
-    getEitemForm: function (etableForm) {
+     */
+    getEitemForm: function (etableForm: JQuery) {
         return etableForm.parent().find('.xu-form2');
     },
     //#endregion
 
 
     //#region for 拖拉編輯(分離檔案無法使用 IntelliSense)
-    onOpenEdit1: async function (id) {
+    onOpenEdit1: async function (id:StrNum) {
         _me.crudE.mEditSetEditNo(1);
         await _me.crudE.onUpdateA(id);
     },
 
     //下載 table sql
-    onDownTableSql: async function (id) {
+    onDownTableSql: async function (id: StrNum) {
         if (await _Tool.ansA('是否確定下載這個功能的 Table SQL ?')) {
             await _Ajax.getStrA('DownTableSql', { id: id }, function (result) {
                 _Str.saveFile(result, 'table.txt');
@@ -862,7 +847,7 @@ var _me:any = {
     */
 
     //#region auto called function
-    fnAfterSwap: function (toRead) {
+    fnAfterSwap: function (toRead:boolean) {
         var tbar = $('.xd-prog-tbar');
         if (toRead) {
             _Obj.hide(tbar);
@@ -881,7 +866,7 @@ var _me:any = {
      * param {string} key
      * returns {bool}
      */
-    zz_fnUpdateOrViewA: async function (fun, key) {
+    zz_fnUpdateOrViewA: async function (fun: FunEstr, key:StrNum) {
         var act = (fun == FunEstr.Update)
             ? 'GetUpdJson' : 'GetViewJson';
         return await _Ajax.getJsonA(act, { key: key }, function (json) {
@@ -899,7 +884,7 @@ var _me:any = {
      * 重設 uiItem的 BoxId、ChildNo、Sort
      * return {string} error msg if any
      */
-    fnWhenSave1: function (fun) {
+    fnWhenSave1: function (fun: FunEstr) {
         //get changed box ids
         let uiView = _me.uiMany.uiView;
         let boxJsons = uiView.getChgBoxJsons();
@@ -931,12 +916,12 @@ var _me:any = {
 
     //#region mUiItem custom function
     //load items
-    mUiItem_loadRows: async function (rows) {
+    mUiItem_loadRows: async function (rows:Json[]) {
         await _me.uiMany.loadRowsA(rows);
     },
 
     //getUpdJson
-    mUiItem_getUpdJson: function (upKey) {
+    mUiItem_getUpdJson: function (upKey:StrNum) {
         return _me.mUiItem.getUpdJsonByRsb(upKey);
     },
 

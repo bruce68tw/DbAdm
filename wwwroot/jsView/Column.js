@@ -1,26 +1,2 @@
-(() => {
-  var __create = Object.create;
-  var __defProp = Object.defineProperty;
-  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-  var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getProtoOf = Object.getPrototypeOf;
-  var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __copyProps = (to, from, except, desc) => {
-    if (from && typeof from === "object" || typeof from === "function") {
-      for (let key of __getOwnPropNames(from))
-        if (!__hasOwnProp.call(to, key) && key !== except)
-          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-    }
-    return to;
-  };
-  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-    // If the importer is in node compatibility mode or this is not an ESM
-    // file that has been converted to a CommonJS file using a Babel-
-    // compatible transform (i.e. "__esModule" has not been set), then set
-    // "default" to the CommonJS "module.exports" for node compatibility.
-    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-    mod
-  ));
-  var import_CrudR = __toESM(require("@base/svc/CrudR"));
-})();
+(()=>{var m=Object.create;var u=Object.defineProperty;var c=Object.getOwnPropertyDescriptor;var l=Object.getOwnPropertyNames;var i=Object.getPrototypeOf,b=Object.prototype.hasOwnProperty;var f=(e,t,a,d)=>{if(t&&typeof t=="object"||typeof t=="function")for(let r of l(t))!b.call(e,r)&&r!==a&&u(e,r,{get:()=>t[r],enumerable:!(d=c(t,r))||d.enumerable});return e};var s=(e,t,a)=>(a=e!=null?m(i(e)):{},f(t||!e||!e.__esModule?u(a,"default",{value:e,enumerable:!0}):a,e));var o=s(require("@base/svc/CrudR"));let n={init:function(){var e={columns:[{data:"ProjectCode",orderable:!0},{data:"TableCode",orderable:!0},{data:"Fid",orderable:!0},{data:"Name"},{data:"DataType",orderable:!0},{data:"CreatorName"},{data:"_Fun"},{data:"Status",orderable:!0}],columnDefs:[{targets:[6],render:function(t,a,d,r){return n.crudR.dtCrudFun(d.Id,d.Name,!0,!0,!0)}},{targets:[7],render:function(t,a,d,r){return n.crudR.dtStatusName(t)}}]};new o.default(e)}};})();
 //# sourceMappingURL=Column.js.map

@@ -151,11 +151,11 @@ export default class _Fun {
     }
     */
    
-    static block(obj?: JQuery): void {
+    static block(): void {
         _Obj.show(_Tool.xWork);
     }
 
-    static unBlock(obj?: JQuery): void {
+    static unBlock(): void {
         _Obj.hide(_Tool.xWork);
     }
 }

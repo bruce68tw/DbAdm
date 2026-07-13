@@ -38,6 +38,6 @@ export default class _Fun {
      */
     static default(val: StrNum, defVal: StrNum): StrNum;
     static hasValue(obj: StrNum): boolean;
-    static block(obj?: JQuery): void;
-    static unBlock(obj?: JQuery): void;
+    static block(): void;
+    static unBlock(): void;
 }

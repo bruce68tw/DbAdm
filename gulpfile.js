@@ -30,13 +30,16 @@ function cleanTask() {
 // tsBase to w3/base.min.js
 async function doTsBase() {
     await esbuild.build({
-        entryPoints: [`${dirSrc}tsBase/forRun.ts`],
-        bundle: true,
+        entryPoints: [`${dirSrc}tsBase/forBuild.ts`],
+        //temp 2 to false
+        bundle: true,   //重要!!
         minify: true,
+        //minify: false,
         sourcemap: true,
+        treeShaking: false,
         outfile: "wwwroot/base.min.js",
         format: "iife",
-        target: ["es2018"]
+        target: ["es2019"]
     });
 }
 
@@ -51,16 +54,16 @@ async function doTsView() {
         const name = path.basename(file, ".ts");
         await esbuild.build({
             entryPoints: [`${dir}/${file}`],
-            //temp remark
-            //bundle: true,
-            //minify: true,
-            bundle: false,
-            minify: false,
+            //temp 2 to false
+            minify: true,
+            //minify: false,
+            bundle: false,  //重要!!
+            treeShaking: false,
             sourcemap: true,
             outfile: `wwwroot/jsView/${name}.js`,
             //format: "esm",
             format: "iife",
-            target: ["es2018"]
+            target: ["es2019"]
         });
     }
 }

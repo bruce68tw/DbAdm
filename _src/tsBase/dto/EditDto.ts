@@ -1,7 +1,7 @@
 export default class EditDto {
-    public edits: any[];
-    public divEdit: string;
-    public updName: string | undefined;
+    public edits: OneMany[];
+    public divEdit: JQuery;
+    public updName?: string;
 
     /**
      * initial jquery datatables, 參數參考前面的建構子
@@ -9,7 +9,7 @@ export default class EditDto {
      * @param divEdit {string} div edit id, 不可空白
      * @param updName {string} update name, default by system
      */
-    constructor(edits: any[], divEdit: string, updName?: string) {
+    constructor(edits: OneMany[], divEdit: JQuery, updName?: string) {
         this.edits = edits;
         this.divEdit = divEdit; //default _me.divEdit
         this.updName = updName; //default by system

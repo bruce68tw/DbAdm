@@ -1,11 +1,8 @@
 {
   "compilerOptions": {
-    //"rootDir": ".",
-    //"baseUrl": ".",
     //"outDir": "_src/_dist", //JavaScript 輸出目錄
-    //"baseUrl": ".",
     "module": "ESNext", // ES Module
-    "target": "ES2018", // 編譯版本
+    "target": "ES2019", // 編譯版本
     "moduleResolution": "Bundler", // Vite相容解析
     //"moduleResolution": "node", // Vite相容解析
     "ignoreDeprecations": "6.0",
@@ -14,6 +11,8 @@
     "strict": false, // 舊JS轉TS較容易
     "skipLibCheck": false, // 忽略第三方型別
     "allowUmdGlobalAccess": true, //UMD套件如 moment
+    "declaration": true,
+    "emitDeclarationOnly": true,
     "types": [ "jquery", "jquery.validation", "bootstrap", "datatables.net", "mustache" ],
     "paths": {
       "@base/*": [ "./_src/tsBase/*" ]

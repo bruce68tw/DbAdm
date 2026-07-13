@@ -1,12 +1,12 @@
 import ErrorRowDto from '../dto/ErrorRowDto';
 import ResultDto from '../dto/ResultDto';
 import AjaxDto from '../dto/AjaxDto';
-import _Var from './_Var';
+import CrudE from './CrudE';
 import _Fun from './_Fun';
+import _Var from './_Var';
 import _Jwt from './_Jwt';
 import _Str from './_Str';
 import _Tool from './_Tool';
-import CrudE from './CrudE';
 
 export default class _Ajax {
     /** * ajax return json
@@ -16,7 +16,16 @@ export default class _Ajax {
      * param block {bool} block ui or not, default true
      * return {bool/json}
      */
-    static async getJsonA(url: string, data: any, fnOk?: (res: ResultDto) => void, block?: any): Promise<boolean | ResultDto | null> {
+    static async getJsonA(url: string, data: Json, fnOk?: (res: Json) => void, block?: boolean): Promise<Json> {
+        const json: AjaxDto = {
+            url: url,
+            type: 'POST',
+            data: data,
+            dataType: 'json',   //return type: ContentType,JsonResult
+        };
+        return await _Ajax._rpcA(json, fnOk, block);
+    }
+    static async getJsonsA(url: string, data: Json, fnOk?: (res: Json[]) => void, block?: boolean): Promise<Json[]> {
         const json: AjaxDto = {
             url: url,
             type: 'POST',
@@ -34,7 +43,7 @@ export default class _Ajax {
      * param block {bool} block ui or not, default true
      * return {bool/json}
      */
-    static async getJsonByFdA(url: string, data: FormData, fnOk?: (res: ResultDto) => void, block?: any): Promise<boolean | ResultDto | null> {
+    static async getJsonByFdA(url: string, data: FormData, fnOk?: (res: Json) => void, block?: boolean): Promise<Json> {
         const json: AjaxDto = {
             url: url,
             type: 'POST',
@@ -53,7 +62,7 @@ export default class _Ajax {
      * param block {bool} block ui or not, default true
      * return {bool/string}
      */ 
-    static async getStrA(url: string, data: any, fnOk?: (res: string) => void, block?: any): Promise<boolean | string | null> {
+    static async getStrA(url: string, data: Json, fnOk?: (res: string) => void, block?: boolean): Promise<string> {
         const json: AjaxDto = {
             url: url,
             type: 'POST',
@@ -63,7 +72,7 @@ export default class _Ajax {
         return await _Ajax._rpcA(json, fnOk, block);
     }
 
-    static async getIntA(url: string, data: any, fnOk?: (res: number) => void, block?: any): Promise<boolean | number | null> {
+    static async getIntA(url: string, data: Json, fnOk?: (res: number) => void, block?: boolean): Promise<number> {
         const json: AjaxDto = {
             url: url,
             type: 'POST',
@@ -79,7 +88,7 @@ export default class _Ajax {
      * param block {bool} block ui or not, default true
      * return {bool/html string}
      */
-    static async getViewA(url: string, data: any, fnOk?: (res: string) => void, block?: any): Promise<boolean | string | null> {
+    static async getViewA(url: string, data: Json, fnOk?: (res: string) => void, block?: boolean): Promise<string> {
         const json: AjaxDto = {
             url: url,
             type: 'POST',
@@ -98,7 +107,7 @@ export default class _Ajax {
      * param fnOk {function} 目前無作用
      * return {file/string(錯誤訊息)/空白(檔案不存在)}
      */
-    static async getFileA(url: string, data: any, elm?: Elm | null, fnOk?: (res: any) => void): Promise<void> {
+    static async getFileA(url: string, data: Json, elm?: Elm, fnOk?: (res: any) => void): Promise<void> {
         const args = new URLSearchParams(data);
         const resp = await fetch(`${url}?${args}`);
         if (resp.ok) {
@@ -167,9 +176,9 @@ export default class _Ajax {
      * bool: fnOk not empty, return false when error
      * json/any: fnOk is empty, return null when error
      */
-    private static async _rpcA(json: any, fnOk?: (res: any) => void, block?: any): Promise<any> {
+    private static async _rpcA(json: Json, fnOk?: (res: any) => void, block?: boolean): Promise<any> {
         if (_Var.isEmpty(block)) block = true;
-        if (block) _Fun.block(block);
+        if (block) _Fun.block();
 
         //改用 async/await
         let status = false;
@@ -202,7 +211,7 @@ export default class _Ajax {
             console.error(error);
         }
 
-        if (block) _Fun.unBlock(block);
+        if (block) _Fun.unBlock();
         return (fnOk == null) ? result : status;
     }
 

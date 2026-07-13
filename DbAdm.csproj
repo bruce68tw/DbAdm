@@ -52,7 +52,6 @@
     <None Remove="key.txt" />
     <None Remove="tsconfig.json_old" />
     <None Remove="_image\noImage.jpg" />
-    <None Remove="_src\tsView\UiView.ts2" />
     <None Remove="_template\EmailMisSurvey.html" />
   </ItemGroup>
 
@@ -77,10 +76,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="6.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -117,7 +112,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="_src\tsView\UiView.ts2" />
+    <TypeScriptCompile Include="_src\tsView\UiView.ts" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,12 +1,7 @@
-﻿import MouseEstr from "@base/enum/MouseEstr";
+﻿import UiView from "./UiView";
+import MouseEstr from "@base/enum/MouseEstr";
 import UiItemTypeEstr from "@base/enum/UiItemTypeEstr";
 import InputTypeEstr from "@base/enum/InputTypeEstr";
-
-import EditDto from "@base/dto/EditDto";
-import ResultDto from "@base/dto/ResultDto";
-
-import CrudR from "@base/svc/CrudR";
-import EditOne from "@base/svc/EditOne";
 import EditMany from "@base/svc/EditMany";
 
 import _Ajax from "@base/svc/_Ajax";
@@ -27,13 +22,6 @@ import _Tool from "@base/svc/_Tool";
 import _Valid from "@base/svc/_Valid";
 
 /**
- * 提供語法提示
- * @typedef {Object} Me
- * @property {EditMany} mItem
- * @property {UiView} uiView
- */
-
-/**
  * 控制 EditMany, 參考 FlowMany.js, called by Read.cshtml only !!
  * 處理 UI 元素和多筆資料之間的轉換
  * 注意:
@@ -43,7 +31,6 @@ import _Valid from "@base/svc/_Valid";
  * param ftWorkArea {string} filter of work area
  * return {UiMany}
  */ 
-/** @type {Me} */
 export default class UiMany {
 
     private FtMenu: string;
@@ -270,7 +257,7 @@ export default class UiMany {
     }
 
     //on show right menu
-    showMenu(e: JQuery.MouseUpEvent, item: any) {
+    showMenu(event: JQuery.MouseUpEvent, item: JQuery) {
         //set instance variables
         this.modalItem = item;
         this.modalItemId = this.uiView.itemGetId(item);
@@ -298,8 +285,8 @@ export default class UiMany {
 
         //視覺效果較好
         menu.css({
-            top: e.pageY,
-            left: e.pageX
+            top: event.pageY,
+            left: event.pageX
         }).show();
     }
 
@@ -481,7 +468,7 @@ export default class UiMany {
 
     //check menu item status
     _menuStatus() {
-        let me = _Fun.getMe();
+        let me = _Fun.getMeElm();
         return !me.classList.contains('off');
     }
 
