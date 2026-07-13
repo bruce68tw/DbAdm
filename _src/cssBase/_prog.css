@@ -1,0 +1,42 @@
+﻿/* 右側工作區上方功能名稱 */
+
+/* prog path, razor 只支援 inline style */
+.x-prog-path {
+    height: 40px;
+    padding: 8px 16px;
+    /*font-size: 16px;
+    color: #808080;*/
+}
+
+/*
+    .x-prog-path ul {
+        padding: 10px 0 10px 10px;
+        font-size: 15px;
+        color: #a5a5a5;
+        background: none;
+    }
+
+@media (max-width:768px) {
+    .x-prog-path {
+        font-style: italic;
+    }
+}
+    */
+
+.x-prog {
+    margin: 0 15px 10px 15px;
+    padding: 15px;
+    border: 1px solid #ddd !important;
+    border-radius: 4px;
+}
+/* 控制不顯示 border */
+.x-prog.x-flag {
+    border: none !important;
+}
+
+@media (max-width:768px) {
+    .x-prog {
+        border: none !important;
+        padding: 0;
+    }
+}

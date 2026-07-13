@@ -1,0 +1,54 @@
+﻿
+/* 用在 form裡面的 button */
+/*
+.x-small-btn {
+    padding: 2px 5px;
+}
+*/
+
+/* 功能按鈕, 空白則為 basic button 
+.x-fun-btn {    
+}
+*/
+
+/* look like link */
+.x-link-btn {
+    background: none !important;
+    /*color: inherit;*/
+    border: none;
+    padding: 0 !important;
+    /*font: inherit;*/
+    /*border is optional*/
+    border-bottom: 1px solid #444;
+    cursor: pointer;
+}
+
+/* 用來放多個 button */
+.x-btns-box {
+    padding: 3px 0 3px 0;
+    display: flex; /* 間距會變小 */
+    gap: 2px;
+}
+
+/* 功能按鈕, 空白則為 basic button */
+/* 只設定大小 
+.x-btn {
+    padding: .25rem .5rem;
+    margin-right: 3px;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+}
+
+.x-btn-gray {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+*/
+
+/* table row button */
+.x-row-btn {
+    padding: 2px 6px;
+    margin: 2px;
+}

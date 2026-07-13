@@ -1,0 +1,7 @@
+_src/tsView/GenCrud.ts(101,77): error TS2345: Argument of type 'JQuery<HTMLElement>' is not assignable to parameter of type 'string'.
+_src/tsView/GenCrud.ts(467,28): error TS2345: Argument of type 'boolean | ResultDto' is not assignable to parameter of type 'any[]'.
+  Type 'boolean' is not assignable to type 'any[]'.
+_src/tsView/GenCrud.ts(530,38): error TS2339: Property 'length' does not exist on type 'ResultDto'.
+_src/tsView/UiMany.ts(102,27): error TS2304: Cannot find name 'UiView'.
+_src/tsView/UiMany.ts(485,20): error TS2339: Property 'classList' does not exist on type 'JQuery<HTMLElement>'.
+_src/tsView/UiMany.ts(510,41): error TS2550: Property 'trimEnd' does not exist on type 'string'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.

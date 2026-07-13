@@ -1,0 +1,180 @@
+﻿
+/* file url */
+.x-edit-table td {
+    border-top: none;
+    border-bottom: none;
+}
+
+/* include: read, edit table */
+.x-table {
+    border-collapse: separate !important;
+    width: 100% !important;
+    font-size: 15px;
+    border-width: 1px 0 0 1px !important;
+    border-color: lightgray !important;
+    border-style: solid !important;
+    margin-bottom: 0;
+}
+
+    .x-table th, .x-table td {
+        font-weight: normal !important;
+        border-width: 0 1px 1px 0 !important;
+        border-color: lightgray !important;
+        border-style: solid !important;
+        vertical-align: middle !important;
+        text-align: center !important;
+        padding: 0.75rem; /* front web */
+    }
+
+    /*
+    .x-table th {
+        background: #eee;
+    }
+
+    .x-table tr:hover {
+        background: #F6F6F6;
+    }
+    */
+
+    .x-table.x-no-hline {
+        border-width: 1px 0 1px 1px !important;
+    }
+
+        .x-table.x-no-hline td {
+            border-width: 0 1px 0 0 !important;
+        }
+
+    .x-table th .xi-check > span {
+        top: 0 !important;
+        left: 0 !important;
+    }
+    .x-table .xi-check > span {
+        top: -15px !important;
+        left: 8px !important;
+    }
+
+/*
+.x-table th .xi-check {
+    top: -6px !important;
+    left: -3px !important;
+}
+.x-table tbody .xi-check {
+    top: -8px !important;
+}
+*/
+
+/* 排序 icon 固定右邊, 無作用 !! */
+table.dataTable thead th {
+    position: relative;
+}
+
+    table.dataTable thead th.sorting::after,
+    table.dataTable thead th.sorting_asc::after,
+    table.dataTable thead th.sorting_desc::after {
+        position: absolute;
+        right: 8px; /* 固定在右側 */
+        /*top: 50%;
+        transform: translateY(-50%);*/
+    }
+
+
+/* table v scroll */
+.x-table-vscroll {
+    border-width: 1px 0 1px 1px !important;
+}
+
+.x-table-vscroll tbody {
+    display: block;
+    overflow-y: scroll;
+}
+
+.x-table-vscroll tr {
+  display:flex;
+}
+
+tr input {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+}
+tr select {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+}
+
+.x-scroll {
+    /*max-height: 300px;*/
+    overflow-y: auto !important;
+}
+
+    .x-scroll thead th {
+        position: sticky !important;
+        top: 0;
+        z-index: 2;
+    }
+
+    .x-scroll th, .x-scroll td {
+        /*min-width: 150px;*/
+    }
+
+@media (max-width:768px) {
+    .x-table {
+        /*background: #fff;*/
+        overflow: hidden;
+        border: none;
+    }
+
+        /*
+        .x-table tr:nth-of-type(2n) {
+            background: #eee;
+        }
+        .x-table th, .x-table td {
+            margin: 0.5em 1em;
+        }
+
+    .x-table {
+        min-width: 100%;
+    }
+        */
+
+    .x-table tbody {
+        padding-top: 3px;
+    }
+
+        .x-table th {
+            display: none;
+        }
+
+        .x-table td {
+            text-align: left;
+            display: block;
+            border: none !important;
+        }
+
+            .x-table td:first-child {
+                padding-top: 15px;
+                border-top: 1px solid lightgray !important;
+            }
+            .x-table td:last-child {
+                padding-bottom: 15px;
+            }
+
+            .x-table td:before {
+                content: attr(data-rwd-th);
+                font-weight: bold;
+                /*width: 6.5em;*/
+                display: inline-block;
+                color: darkblue;
+                text-align: left;
+            }
+
+        /*
+        .x-table th, .x-table td {
+            text-align: left;
+        }
+
+            .x-table th, .x-table td:before {
+                color: #D20B2A;
+                font-weight: bold;
+            }
+        */
+}

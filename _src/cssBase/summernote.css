@@ -1,0 +1,7 @@
+﻿.note-toolbar {
+    background: #eee !important;
+}
+
+.note-editable[contenteditable=false] {
+    background: #eee !important;
+}

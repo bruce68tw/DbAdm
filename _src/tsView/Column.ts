@@ -1,4 +1,4 @@
-﻿//import CrudR from "@base/svc/CrudR";
+﻿import CrudR from "@base/svc/CrudR";
 
 let _me:any = {
     init: function () {

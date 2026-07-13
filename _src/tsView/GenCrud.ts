@@ -1,3 +1,28 @@
+import UiMany from "./UiMany";
+import FunEstr from "@base/enum/FunEstr";
+import MouseEstr from "@base/enum/MouseEstr";
+import CrudR from "@base/svc/CrudR";
+import EditOne from "@base/svc/EditOne";
+import EditMany from "@base/svc/EditMany";
+import EditDto from "@base/dto/EditDto";
+import _Ajax from "@base/svc/_Ajax";
+import _Array from "@base/svc/_Array";
+import _Edit from "@base/svc/_Edit";
+import _Form from "@base/svc/_Form";
+import _Fun from "@base/svc/_Fun";
+import _iCheck from "@base/svc/_iCheck";
+import _iSelect from "@base/svc/_iSelect";
+import _iText from "@base/svc/_iText";
+import _Json from "@base/svc/_Json";
+import _Modal from "@base/svc/_Modal";
+import _Nav from "@base/svc/_Nav";
+import _Obj from "@base/svc/_Obj";
+import _Prog from "@base/svc/_Prog";
+import _Str from "@base/svc/_Str";
+import _Tab from "@base/svc/_Tab";
+import _Tool from "@base/svc/_Tool";
+import _Valid from "@base/svc/_Valid";
+
 /**
  * 提供語法提示
  * @typedef {Object} Me
@@ -179,25 +204,25 @@ var _me:any = {
     //edit0_afterLoadJson: function (json) {
     fnAfterOpenEdit0: async function (fun, json) {
         //edit2會隱藏 prog border, 這裡打開        
-        if (fun == EstrFun.Create) return;
+        if (fun == FunEstr.Create) return;
 
         //set tables list, async call, send function parameter 
         if (!await _me.onChangeProject()) return;
 
         //set form0 tableId select 欄位
         //var form = _me.crudE.getEform0();
-        //_iselect.set(_me.TableId, json[_me.TableId], form);
+        //_iSelect.set(_me.TableId, json[_me.TableId], form);
 
         //set tabEtable(s) tableId select 欄位
-        var navRows = _edit.getChildRows(json, _me.etableChdIdx);
+        var navRows = _Edit.getChildRows(json, _me.etableChdIdx);
         var navLen = (navRows == null) ? 0 : navRows.length;
         for (var i = 0; i < navLen; i++) {
             //set dropdown source
             var tabObj = _me.etGetTab(i);
-            _iselect.setItems(_me.TableId, _me.tables, tabObj);
+            _iSelect.setItems(_me.TableId, _me.tables, tabObj);
 
             //set value
-            _iselect.set(_me.TableId, navRows[i][_me.TableId], tabObj);
+            _iSelect.set(_me.TableId, navRows[i][_me.TableId], tabObj);
 
             //show edit table name
             _me.etShowName(i);
@@ -207,8 +232,8 @@ var _me:any = {
     //reset when create
     fnAfterOpenEdit1: function (fun, json) {
         _me.uiMany.reset();
-        var isAdd = (fun == EstrFun.Create);
-        _me.uiMany.setEdit(isAdd || (fun == EstrFun.Update));
+        var isAdd = (fun == FunEstr.Create);
+        _me.uiMany.setEdit(isAdd || (fun == FunEstr.Update));
         //_btn.setEdit($('.xd-btns').find('button'), true);
     },
 
@@ -242,7 +267,7 @@ var _me:any = {
         _me.etGetForms().each(function (i, item) {
             //Etable不可重複
             var form = $(item);
-            var tableId = _itext.get(_me.TableId, form);
+            var tableId = _iText.get(_me.TableId, form);
             if (_Array.find(tableIds, tableId) >= 0) {
                 error = '維護的資料表(Etable)不可重複。';
                 return false;   //break
@@ -257,7 +282,7 @@ var _me:any = {
             //eitem sort
             //var tbody = form.parent().find('tbody');
             _me.getEitemForm(form).find('.xu-tr').each(function (j, item2) {
-                _itext.set('Sort', j, $(item2));    //set sort 
+                _iText.set('Sort', j, $(item2));    //set sort 
             });
         });
         return error;
@@ -276,8 +301,8 @@ var _me:any = {
         //_me.etNavRemoveAct();
 
         //render etables & eitems
-        //var eitemRows = _edit.getChildRows(json, 0);   //已改為傳入rows, 不是json
-        var eitemRows = _edit.getChildRows(_me.mEtable.dataJson, 0);   //從dataJson讀取 !!
+        //var eitemRows = _Edit.getChildRows(json, 0);   //已改為傳入rows, 不是json
+        var eitemRows = _Edit.getChildRows(_me.mEtable.dataJson, 0);   //從dataJson讀取 !!
         for (var i = 0; i < rows.length; i++) {
             //add tab (only)
             var row = rows[i];
@@ -387,7 +412,7 @@ var _me:any = {
         */
         if (await _Tool.ansA('是否確定產生這個功能的CRUD程式?')) {
             await _Ajax.getStrA('GenCrud', { id: id }, function (error) {
-                _Tool.msg(_str.isEmpty(error) ? '執行成功' : error);
+                _Tool.msg(_Str.isEmpty(error) ? '執行成功' : error);
             });
         }
     },
@@ -417,7 +442,7 @@ var _me:any = {
 
     onQitemAdd: function () {
         var box = $(Mustache.render(_me.tplQitem, {}));
-        _form.loadRow(box, {});
+        _Form.loadRow(box, {});
         _me.mQitem.setNewIdByBox(box);
         _me.tbodyQitem.append(box);
     },
@@ -463,11 +488,11 @@ var _me:any = {
         /*
         //get tableId
         var form = _me.eform0;
-        var tableId = _iselect.get(_me.TableId, form);
+        var tableId = _iSelect.get(_me.TableId, form);
 
         //get編輯畫面tableId
         if (tableId === '') {
-            _tool.msg('請先選取資料表。');
+            _Tool.msg('請先選取資料表。');
             return;
         }
         */
@@ -478,13 +503,13 @@ var _me:any = {
         /*
         //set modal tableId if need
         var obj = _obj.get(_me.TableId, _me.modalItems);
-        var modalTableId = _iselect.getO(obj);
+        var modalTableId = _iSelect.getO(obj);
         if (modalTableId === '')
-            _iselect.setItemsO(obj, _me.tables);
+            _iSelect.setItemsO(obj, _me.tables);
 
         //set modal tableId dropdown list if need
         if (tableId !== modalTableId) {
-            _iselect.setO(obj, tableId);
+            _iSelect.setO(obj, tableId);
             _me.changeItemTable(tableId);
         }
         */
@@ -564,7 +589,7 @@ var _me:any = {
         //append query rows
         for (var i = 0; i < rowLen; i++) {
             var box = $(Mustache.render(tplItem, rows[i]));
-            _form.loadRow(box, rows[i]);
+            _Form.loadRow(box, rows[i]);
             //if (mItem != null)
             //    mItem.boxSetMapId(box, crudId);
             mItem.setNewIdByBox(box);
@@ -572,7 +597,7 @@ var _me:any = {
         }
 
         //show
-        _modal.hide(_me.modalItems);
+        _Modal.hide(_me.modalItems);
     },
 
     //onclick add on (edit)nav
@@ -587,7 +612,7 @@ var _me:any = {
         var newTab = $(Mustache.render(_me.tplTabEtable, json));
         debugger;
         _me.mEtable.setNewIdByBox(newTab);    //set new row key !!
-        _iselect.setItems(_me.TableId, _me.tables, newTab); //set dropdown source
+        _iSelect.setItems(_me.TableId, _me.tables, newTab); //set dropdown source
         _me.tabEtable.append(newTab);
 
         //add nav
@@ -612,7 +637,7 @@ var _me:any = {
             return;
 
         //confirm
-        _tool.ans('是否移除畫面資料?', function () {
+        _Tool.ans('是否移除畫面資料?', function () {
             var nav = _me.etGetNav();
             var tab = _me.etGetTab();
 
@@ -644,7 +669,7 @@ var _me:any = {
             tab.remove();
             nav.remove();
             _me.etableLen--;
-            etableIdx = index;
+            _me.etableIdx = index;
 
             //focus new tab
             if (index >= 0)
@@ -758,8 +783,8 @@ var _me:any = {
     //onclick generate crud(產生在主機)
     /*
     onGenCrud: function (id) {
-        await _ajax.getStrA('GenCrud', { id: id }, function (error) {
-            _tool.msg(_str.isEmpty(error) ? '執行成功' : error);
+        await _Ajax.getStrA('GenCrud', { id: id }, function (error) {
+            _Tool.msg(_Str.isEmpty(error) ? '執行成功' : error);
         });
     },
     */
@@ -784,7 +809,7 @@ var _me:any = {
     //匯入json(巢狀格式) to edit(查詢條件、結果only)/edit2 form
     //called by modalImprot
     onImport: async function () {
-        var value = _itext.get('Import', _me.modalImport).trim();
+        var value = _iText.get('Import', _me.modalImport).trim();
         if (_Str.isEmpty(value)) {
             _Tool.msg('匯入資料不可空白。');
             return;
@@ -795,7 +820,7 @@ var _me:any = {
         //    value = '{' + value + '}';
 
         //string to json
-        var jsons = _str.toJson(value);
+        var jsons = _Str.toJson(value);
         if (jsons == null) {
             _Tool.msg('匯入資料必須是Json格式。');
             return;
@@ -832,7 +857,7 @@ var _me:any = {
         if (values.length > 0)
             window.location = 'GenJson?key=' + values.join(',');
         else
-            _tool.msg('請先選取資料。');
+            _Tool.msg('請先選取資料。');
     },
     */
 
@@ -857,9 +882,9 @@ var _me:any = {
      * returns {bool}
      */
     zz_fnUpdateOrViewA: async function (fun, key) {
-        var act = (fun == EstrFun.Update)
+        var act = (fun == FunEstr.Update)
             ? 'GetUpdJson' : 'GetViewJson';
-        return await _ajax.getJsonA(act, { key: key }, function (json) {
+        return await _Ajax.getJsonA(act, { key: key }, function (json) {
             //show container first
             _me.crudR.toEditMode(fun, () => {
                 _me.crudE.loadJson(json);
@@ -878,7 +903,7 @@ var _me:any = {
         //get changed box ids
         let uiView = _me.uiMany.uiView;
         let boxJsons = uiView.getChgBoxJsons();
-        boxLen = boxJsons.length;
+        let boxLen = boxJsons.length;
         if (boxLen == 0) return '';
 
         //reset BoxId, ChildNo, Sort

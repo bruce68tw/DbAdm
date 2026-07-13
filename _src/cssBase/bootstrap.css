@@ -1,0 +1,70 @@
+﻿
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.btn {
+    padding: .25rem .5rem !important;
+    margin-right: 1px !important;
+    line-height: 1.5 !important;
+    border-radius: .2rem !important;
+}
+    /* space in button & icon */
+    .btn > i {
+        padding-left: 3px;
+    }
+
+/* table button with link style */
+.btn-link {
+    padding: 0 !important;
+    text-decoration: none !important;
+}
+
+.table-condensed {
+    font-size: 14px;
+}
+
+/* change height, 38 -> 36 */
+.form-control, .form-select, select.form-control {
+    height: 38px !important;
+    /*padding: 3px 6px !important;*/
+}
+
+textarea.form-control {
+    height: auto !important;
+}
+
+/* modal */
+/* background-color 會覆蓋 border-radius 效果 */
+/*
+.modal-header {
+    padding: 10px;
+    border-bottom: 1px solid #e5e5e5;
+    background-color: #eee; 
+}
+*/
+
+/* placeholder color */
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: lightgrey !important;
+    opacity: 1; /* Firefox */
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: lightgrey !important;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: lightgrey !important;
+}
+
+/* fix bootstrap 5 */
+.table > :not(:first-child) {
+    border-top: none !important;
+}
+
+.input-group > .form-control,
+.input-group > .form-select {
+    width: 100% !important;    
+}

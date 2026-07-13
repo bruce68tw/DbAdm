@@ -1,0 +1,6 @@
+﻿
+[data-type="link"] {
+    height: 32px;
+    display: table-cell;
+    vertical-align: middle;
+}

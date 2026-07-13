@@ -3,6 +3,7 @@
   <PropertyGroup>
     <ShowAllFiles>false</ShowAllFiles>
     <NameOfLastUsedPublishProfile>D:\_project\DbAdm\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
+    <ToolsVersionPromptShown>0.0</ToolsVersionPromptShown>
   </PropertyGroup>
   <ItemGroup />
 </Project>

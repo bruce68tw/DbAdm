@@ -1,0 +1,50 @@
+﻿/* 輸入欄位的外框 */
+.x-input {
+    padding-top: 7px;
+    min-height: 43px;
+}
+/* 輸入欄位後面文字 */
+.x-input-note{
+    line-height: 36px;  /* 調整垂直位置 */
+}
+
+@media (max-width:768px) {
+    .x-input {
+        padding-top: 0;
+    }
+}
+
+/*=== 欄位分群 ===*/
+.x-group {
+    display: flex;
+    align-items: center;
+    margin: 20px 0 8px;
+}
+
+/* Title + Icon */
+.x-group-title {
+    /*font-weight: 600;
+    color: #0d6efd;*/
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+    .x-group-title i {
+        margin-left: 6px;
+        /*font-size: 0.9rem;
+        color: #0d6efd;*/
+    }
+
+/* 點狀分隔線 */
+.x-group-line {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    /*color: #0d6efd;
+    font-size: 0.9rem;*/
+    letter-spacing: 6px; /* 調整點之間的間距 */
+}

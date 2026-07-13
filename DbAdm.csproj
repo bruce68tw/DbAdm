@@ -6,30 +6,35 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	<SatelliteResourceLanguages>zh-TW</SatelliteResourceLanguages>
-	<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <TypeScriptConfiguration Include="tsconfig.json" />
     <Compile Remove="old\**" />
     <Compile Remove="wwwroot\css\**" />
     <Compile Remove="wwwroot_old\**" />
     <Compile Remove="_log\**" />
+    <Compile Remove="_src\jsBase\**" />
     <Compile Remove="_upload\**" />
     <Content Remove="old\**" />
     <Content Remove="wwwroot\css\**" />
     <Content Remove="wwwroot_old\**" />
     <Content Remove="_log\**" />
+    <Content Remove="_src\jsBase\**" />
     <Content Remove="_upload\**" />
     <EmbeddedResource Remove="old\**" />
     <EmbeddedResource Remove="wwwroot\css\**" />
     <EmbeddedResource Remove="wwwroot_old\**" />
     <EmbeddedResource Remove="_log\**" />
+    <EmbeddedResource Remove="_src\jsBase\**" />
     <EmbeddedResource Remove="_upload\**" />
     <None Remove="old\**" />
     <None Remove="wwwroot\css\**" />
     <None Remove="wwwroot_old\**" />
     <None Remove="_log\**" />
+    <None Remove="_src\jsBase\**" />
     <None Remove="_upload\**" />
+    <TypeScriptCompile Remove="_src\jsBase\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +52,7 @@
     <None Remove="key.txt" />
     <None Remove="tsconfig.json_old" />
     <None Remove="_image\noImage.jpg" />
+    <None Remove="_src\tsView\UiView.ts2" />
     <None Remove="_template\EmailMisSurvey.html" />
   </ItemGroup>
 
@@ -71,6 +77,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="6.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -104,6 +114,14 @@
     <None Include="wwwroot\cssView\_xgGrey.css" />
     <None Include="wwwroot\cssView\_xgOrange.css" />
     <None Include="wwwroot\cssView\_xgPrint.cs_old" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="_src\tsView\UiView.ts2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="_src\_dist\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
