@@ -1,4 +1,4 @@
-﻿import { CrudR, EditOne } from "@base";
+﻿import { CrudR, EditOne } from "@baseJs";
 
 _me = {
     init: function () {

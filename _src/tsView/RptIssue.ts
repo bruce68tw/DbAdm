@@ -1,4 +1,4 @@
-﻿import { CrudR, _Date, _iDate } from "@base";
+﻿import { CrudR, _Date, _iDate } from "@baseJs";
 
 _me = {
     init: function () {

@@ -1,15 +1,10 @@
-//import type { Dayjs } from "dayjs";
-
+//import type { Moment } from "moment";   //必須加!!
 import _Fun from './_Fun';
 import _Str from './_Str';
 import _iDate from './_iDate';
 import _iSelect from './_iSelect';
 
 export default class _Date {
-
-    static setLocale(locale: string) {
-        dayjs.locale(locale);
-    }
 
     /**
      * ?? 傳回起迄日期(json) for 日期欄位查詢
@@ -26,7 +21,7 @@ export default class _Date {
      * get today date string in UI format
      */
     static uiToday(): string {
-        var mm = dayjs();
+        var mm = moment();
         return _Date.mmToUiDate(mm);
     }
 
@@ -34,12 +29,12 @@ export default class _Date {
      * get this week monday in UI format
      */
     static uiWeekMonday(): string {
-        var mm = dayjs().day(1);
+        var mm = moment().day(1);
         return _Date.mmToUiDate(mm);
     }
 
     static uiWeekFriday(): string {
-        var mm = dayjs().day(5);
+        var mm = moment().day(5);
         return _Date.mmToUiDate(mm);
     }
 
@@ -47,7 +42,7 @@ export default class _Date {
      * get this month first day
      */
     static uiMonthDay1(): string {
-        var mm = dayjs().startOf('month');
+        var mm = moment().startOf('month');
         return _Date.mmToUiDate(mm);
     }
 
@@ -55,64 +50,63 @@ export default class _Date {
      * get this month last day
      */
     static uiMonthDayLast(): string {
-        var mm = dayjs().endOf('month');
+        var mm = moment().endOf('month');
         return _Date.mmToUiDate(mm);
     }
 
     /**
      * get current year, ex: 2021
-     */
+     */ 
     static nowYear(): number {
         return (new Date()).getFullYear();
     }
 
-    static mmToUiDate(mm: Dayjs): string {
+    static mmToUiDate(mm: Moment): string {
         return mm.format(_BR.MmUiDateFmt);
     }
 
-    static mmToUiDt(mm: Dayjs): string {
+    static mmToUiDt(mm: Moment): string {
         return mm.format(_BR.MmUiDtFmt);
     }
 
-    static mmToUiDt2(mm: Dayjs): string {
+    static mmToUiDt2(mm: Moment): string {
         return mm.format(_BR.MmUiDt2Fmt);
     }
 
     static dsToUiDate(ds: string): string {
         return _Str.isEmpty(ds)
             ? ''
-            : _Date.mmToUiDate(dayjs(ds));
+            : _Date.mmToUiDate(moment(ds, _Fun.MmDateFmt));
     }
 
     static dtsToUiDate(dts: string): string {
         return _Str.isEmpty(dts)
             ? ''
-            : _Date.mmToUiDate(dayjs(dts));
+            : _Date.mmToUiDate(moment(dts, _Fun.MmDtFmt));
     }
 
     /**
      * js date string to ui date string
      * param ds {string} js date string
      * return {string} ui date string
-     */
+     */ 
     static dtsToFormat(dts: string, format: string): string;
     static dtsToFormat(ds: string): string;
     static dtsToFormat(ds: string, format?: string): string {
         if (format !== undefined) {
             return (_Str.isEmpty(ds))
                 ? ''
-                : dayjs(ds).format(format);
+                : moment(ds, _Fun.MmDtFmt).format(format);
         }
-
         return _Str.isEmpty(ds)
             ? ''
-            : _Date.mmToUiDate(dayjs(ds));
+            : _Date.mmToUiDate(moment(ds, _Fun.MmDateFmt));
     }
 
     static dtsToUiDt(dts: string): string {
         return _Str.isEmpty(dts)
             ? ''
-            : _Date.mmToUiDt(dayjs(dts));
+            : _Date.mmToUiDt(moment(dts, _Fun.MmDtFmt));
     }
 
     /**
@@ -123,20 +117,20 @@ export default class _Date {
     static dtsToUiDt2(dts: string): string {
         return _Str.isEmpty(dts)
             ? ''
-            : _Date.mmToUiDt2(dayjs(dts));
+            : _Date.mmToUiDt2(moment(dts, _Fun.MmDtFmt));
     }
 
     //get datetime value for compare
     static dtsToValue(dts: string): number {
         return (_Str.isEmpty(dts))
             ? 0
-            : dayjs(dts).valueOf();
+            : moment(dts, _Fun.MmDtFmt).valueOf();
     }
 
-    static dtsToMoment(dts: string): Dayjs | null {
+    static dtsToMoment(dts: string): any {
         return (_Str.isEmpty(dts))
             ? null
-            : dayjs(dts);
+            : moment(dts, _Fun.MmDtFmt);
     }
 
     /**
@@ -146,8 +140,7 @@ export default class _Date {
      */
     static uiToMmDate(ds: string): string {
         var date = _Str.isEmpty(ds)
-            ? ''
-            : dayjs(ds, _BR.MmUiDateFmt).format(_Fun.MmDateFmt);
+            ? '' : moment(ds, _BR.MmUiDateFmt).format(_Fun.MmDateFmt);
         return date;
     }
 
@@ -159,7 +152,7 @@ export default class _Date {
     static tsToUiDt(ts: string): string {
         return (ts == '')
             ? ''
-            : dayjs(parseInt(ts) * 1000).format(_BR.MmUiDtFmt);
+            : moment(parseInt(ts) * 1000).format(_BR.MmUiDtFmt);
     }
 
     /**
@@ -189,30 +182,30 @@ export default class _Date {
      * return {bool}
      */
     static isBig(ds1: string, ds2: string): boolean {
-        return dayjs(ds1).isAfter(dayjs(ds2));
+        return moment(ds1, _Fun.MmDtFmt).isAfter(moment(ds2, _Fun.MmDtFmt));
     }
 
     /**
      * get month difference by date string
      * param ds1 {string} start date string
      * param ds2 {string} end date string
-     * return {int}
-     */
+     * return {int} 
+     */ 
     static getMonthDiff(ds1: string, ds2: string): number {
         return (_Str.isEmpty(ds1) || _Str.isEmpty(ds2))
             ? 0
-            : _Date.getMonthDiffByDate(dayjs(ds1), dayjs(ds2));
+            : _Date.getMonthDiffByDate(moment(ds1, _Fun.MmDtFmt), moment(ds2, _Fun.MmDtFmt));
     }
 
     /**
      * get month difference by date
-     * param dt1 {dayjs obj} start date
-     * param dt2 {dayjs obj} end date
-     * return {int}
-     */
-    static getMonthDiffByDate(dt1: Dayjs, dt2: Dayjs): number {
-        return (dt2.year() - dt1.year()) * 12
-            + dt2.month() - dt1.month() + 1;
+     * param dt1 {moment obj} start date
+     * param dt2 {moment obj} end date
+     * return {int} 
+     */ 
+    static getMonthDiffByDate(dt1: any, dt2: any): number {
+        return (dt2.getFullYear() - dt1.getFullYear()) * 12
+            + dt2.getMonth() - dt1.getMonth() + 1;
     }
 
     /**
@@ -221,9 +214,9 @@ export default class _Date {
      * param ds {string} js date string
      * param year {int} year to add
      * return {string} new js date string
-     */
+     */ 
     static dsAddYear(ds: string, year: number): string {
-        return dayjs(ds).add(year, 'year').format(_Fun.MmDtFmt);
+        return moment(ds, _Fun.MmDtFmt).add(year, 'y').format(_Fun.MmDtFmt);
     }
 
 }

@@ -16,6 +16,7 @@ export { default as ErrorRowDto } from "./tsBase/dto/ErrorRowDto";
 export { default as IdStrDto } from "./tsBase/dto/IdStrDto";
 export { default as IdStrExtDto } from "./tsBase/dto/IdStrExtDto";
 export { default as ResultDto } from "./tsBase/dto/ResultDto";
+export { default as DragItemDto } from "./tsBase/dto/DragItemDto";
 
 export { default as _Ajax } from "./tsBase/svc/_Ajax";
 export { default as _Array } from "./tsBase/svc/_Array";

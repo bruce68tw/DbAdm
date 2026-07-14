@@ -10,7 +10,9 @@ import type EditMany from "./tsBase/svc/EditMany";
  *  chart: 是 ES Module，不提供 global namespace, 在 global.d.ts 宣告
  */
 //沒有提供 @types 的第3方套件要手動加入宣告 type
-import type { Moment as MomentType } from "moment";
+//import type { Moment as MomentType } from "moment";
+//import type { Dayjs as DayjsType } from "dayjs";
+import dayjsLib, { Dayjs as DayjsType } from "dayjs";
 import type { Chart as ChartType } from "chart.js";
 
 declare global {
@@ -20,7 +22,12 @@ declare global {
     //const moment: moment.MomentStatic;
 
     //for ts 編譯的型別宣告
-    type Moment = MomentType;
+    //type Moment = MomentType;
+    type Dayjs = DayjsType;
+
+    // Day.js global object (window.dayjs)
+    const dayjs: typeof dayjsLib;
+    //const dayjs: typeof import("dayjs").default;
 
     //自定型別
     type StrN = string | null;

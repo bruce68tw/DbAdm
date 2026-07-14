@@ -1,10 +1,10 @@
-//import moment from "moment";
 import _Ajax from './_Ajax';
 import _Leftmenu from './_Leftmenu';
 import _Pjax from './_Pjax';
 import _Tool from './_Tool';
 import _Input from './_Input';
 import _Obj from './_Obj';
+import _Date from './_Date';
 
 /*
 export interface DtColDef {
@@ -65,7 +65,7 @@ export default class _Fun {
         _Pjax.init('.x-main-right');
         _Tool.init();
         _Fun.setLocaleA(locale);
-        moment.locale(_Fun.locale);
+        _Date.setLocale(locale);
 
         //註冊事件, 避免使用inline script for CSRF
         var body = $('body');
@@ -82,10 +82,16 @@ export default class _Fun {
 
     static async setLocaleA(code: string) {
         const module = await import(
-            `/locale/${code}/_BR.js`
+            `/locale/${code}.min.js`
         );
 
         window._BR = module.default;
+
+        // Dayjs locale
+        dayjs.locale(code.toLowerCase());
+
+        // bootstrap-datepicker
+        ($.fn as any).datepicker.dates[code] = module.datepicker;
     }
 
     static async onHelloA(): Promise<void> {
@@ -151,15 +157,6 @@ export default class _Fun {
         return !(obj == null);
     }
 
-    /*
-    //move to _Locale.setLocaleA
-    static async onSetLocaleA(code: string): Promise<void> {
-        await _Ajax.getStrA('../Fun/SetLocale', { code: code }, function (msg: string) {
-            location.reload();
-        });
-    }
-    */
-   
     static block(): void {
         _Obj.show(_Tool.xWork);
     }

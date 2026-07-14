@@ -1,4 +1,4 @@
-﻿import { _Ajax, _Tool, _iText } from "@base";
+﻿import { _Ajax, _Tool, _iText } from "@baseJs";
 
 async function onSave() {
     var form = $('#eform');

@@ -1,4 +1,4 @@
-﻿import { CrudR, _Ajax, _Chart, _Form, _Json, _iSelect } from "@base";
+﻿import { CrudR, _Ajax, _Chart, _Form, _Json, _iSelect } from "@baseJs";
 
 _me = {
     init: function () {

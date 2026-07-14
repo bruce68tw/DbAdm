@@ -1,16 +1,7 @@
-import InputTypeEstr from "@base/enum/InputTypeEstr";
-import UiItemTypeEstr from "@base/enum/UiItemTypeEstr";
-import MouseEstr from "@base/enum/MouseEstr";
-import DragItemDto from "@base/dto/DragItemDto";
-import _Ajax from "@base/svc/_Ajax";
-import _Array from "@base/svc/_Array";
-import _Input from "@base/svc/_Input";
-import _Json from "@base/svc/_Json";
-import _Obj from "@base/svc/_Obj";
-import _Str from "@base/svc/_Str";
-import _Tool from "@base/svc/_Tool";
-import _Var from "@base/svc/_Var";
 import UiMany from "./UiMany";
+import { InputTypeEstr, MouseEstr, UiItemTypeEstr, _Ajax, _Array,
+	_Input, _Json, _Obj, _Prog, _Str, _Tool, _Var, DragItemDto
+} from "@baseJs";
 
 /**
  * 處理畫面操作, 包含基本元件, 使用jQuery

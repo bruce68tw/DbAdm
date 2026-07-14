@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     //"baseUrl": ".",
-    "outDir": "_srcOut", //如果執行 npx tsc 會輸出到此目錄
+    //"outDir": "_srcOut", //如果執行 npx tsc 會輸出到此目錄
+    "rootDir": ".",
+    "outDir": "_srcOut",
     "module": "ESNext", // ES Module
     "target": "ES2019", // 編譯版本
     "moduleResolution": "Bundler", // Vite相容解析
@@ -14,10 +16,10 @@
     "allowUmdGlobalAccess": true, //UMD套件如 moment
     "declaration": true,
     "emitDeclarationOnly": true,
-    "types": [ "jquery", "jquery.validation", "bootstrap", "datatables.net", "mustache" ],
+    "types": [ "jquery", "bootstrap", "jquery.validation", "datatables.net", "mustache" ],
     "paths": {
-      //"@base/*": [ "./_src/tsBase/*" ]
-      "@base": [ "./_src/forBoth.ts" ]
+      "@base/*": [ "./_src/tsBase/*" ],
+      "@baseJs": [ "./_src/forBoth.ts" ]
     }
   },
   "include": [

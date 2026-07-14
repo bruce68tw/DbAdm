@@ -70,8 +70,6 @@ async function doTsView() {
             //format: "iife",
             platform: "browser",
             target: ["es2019"],
-            //alias: { "@base": "./_src/tsBase" },
-            //tsconfig: "./tsconfig.json"
             //plugins: [tsconfigPaths()]
         });
     }
@@ -79,7 +77,7 @@ async function doTsView() {
 
 // jsLib to w3/lib.min.js
 function doJsLib() {
-    //JS 順序很重要
+    //JS 順序很重要, pjax在dayjs上面
     const dir = `${dirSrc}jsLib/`;
     return gulp.src([
             `${dir}jquery-3.7.1.js`,
@@ -88,7 +86,8 @@ function doJsLib() {
             `${dir}datatables-2.3.2.js`,
             `${dir}jquery.validate-1.19.3-bruce.js`,
             `${dir}jquery.pjax-2.0.1-bruce.js`,
-            `${dir}moment-2.30.1.js`,
+            `${dir}dayjs-1.11.21.min.js`,
+            //`${dir}customParseFormat-1.11.21.js`,
             `${dir}mustache-3.1.js`,
             `${dir}chart-4.4.1.js`
         ])

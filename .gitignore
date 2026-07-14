@@ -4,6 +4,7 @@ obj/
 _log/
 _upload/
 _draft/
+_srcOut/
 packages/
 *.rar
 *.bak

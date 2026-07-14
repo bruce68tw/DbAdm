@@ -4,7 +4,7 @@ import {
     _Array, _Form, _Fun, _iCheck, _iSelect,
     _iText, _Json, _Modal, _Nav, _Obj,
     _Prog, _Str, _Tab, _Tool, _Valid
-} from "@base";
+} from "@baseJs";
 
 /*
 import MouseEstr from "@base/enum/MouseEstr";
