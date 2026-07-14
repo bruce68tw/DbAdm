@@ -114,10 +114,6 @@
     <TypeScriptCompile Include="_src\tsView\UiView.ts" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="_src\_dist\" />
-  </ItemGroup>
-
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

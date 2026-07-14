@@ -33,8 +33,8 @@ async function doTsBase() {
     await esbuild.build({
         entryPoints: [`${dirSrc}forBoth.ts`],
         //temp minify to false
-        minify: false,
-        //minify: true,
+        //minify: false,
+        minify: true,
         bundle: true,   //重要!! merged to base.min.js
         sourcemap: true,
         treeShaking: false, //true會清空未使用類別
@@ -80,16 +80,17 @@ function doJsLib() {
     //JS 順序很重要, pjax在dayjs上面
     const dir = `${dirSrc}jsLib/`;
     return gulp.src([
-            `${dir}jquery-3.7.1.js`,
-            `${dir}bootstrap.bundle-5.2.3.js`,
+            `${dir}jquery-3.7.1.min.js`,
+            `${dir}bootstrap.bundle-5.2.3.min.js`,
             `${dir}bootstrap-datepicker-1.9.js`,
-            `${dir}datatables-2.3.2.js`,
+            `${dir}datatables-2.3.2.min.js`,
+            `${dir}dataTables.bootstrap5-2.3.2.min.js`,
             `${dir}jquery.validate-1.19.3-bruce.js`,
             `${dir}jquery.pjax-2.0.1-bruce.js`,
             `${dir}dayjs-1.11.21.min.js`,
             //`${dir}customParseFormat-1.11.21.js`,
-            `${dir}mustache-3.1.js`,
-            `${dir}chart-4.4.1.js`
+            `${dir}mustache-3.1.js`
+            //`${dir}chart-4.4.1.js`
         ])
         .pipe(sourcemaps.init())
         .pipe(concat("lib.min.js"))
@@ -114,6 +115,8 @@ function doCssLib() {
     return gulp.src([
         `${dir}bootstrap-5.2.3.css`,
         `${dir}datatables-2.3.2.css`,
+        //`${dir}dataTables.dataTables-2.3.2.min.css`,
+        //`${dir}dataTables.bootstrap5-2.3.2.min.css`,
         `${dir}bootstrap-datepicker-1.9.css`,
         //`${dir}summernote-bs5.css`,
         `${dir}icomoon.css`
