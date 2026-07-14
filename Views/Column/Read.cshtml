@@ -1,4 +1,6 @@
-﻿<script nonce="@_Fun.Nonce">
+﻿<script nonce="@_Fun.Nonce" type="module" src="~/jsView/Column.min.js"></script>
+@*
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
@@ -33,14 +35,13 @@
             new CrudR(config);
         },
 
-        /*
-        onViewFile: function (table, fid) {
-            _me.edit0.onViewFile(table, fid);
-        },
-        */
+        //onViewFile: function (table, fid) {
+        //    _me.edit0.onViewFile(table, fid);
+        //},
 
     }; //class
 </script>
+*@
 
 <vc:xg-prog-path />
 <div class="x-prog">

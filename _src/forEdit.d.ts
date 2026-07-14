@@ -1,6 +1,6 @@
-﻿import type BaseResDto  from "./dto/BaseResDto";
-import type EditOne from "./svc/EditOne";
-import type EditMany from "./svc/EditMany";
+﻿import type BaseResDto  from "./tsBase/dto/BaseResDto";
+import type EditOne from "./tsBase/svc/EditOne";
+import type EditMany from "./tsBase/svc/EditMany";
 
 /**
  * for IDE 檢查typeScript語法
@@ -16,6 +16,8 @@ import type { Chart as ChartType } from "chart.js";
 declare global {
     //for js 執行的全域變數宣告
     const Chart: typeof ChartType;
+
+    //const moment: moment.MomentStatic;
 
     //for ts 編譯的型別宣告
     type Moment = MomentType;
@@ -41,7 +43,9 @@ declare global {
 
     //window 才會有全域變數 window._BR
     interface Window {
-        _BR: BaseResDto;
+        _me: any,
+        _BR: BaseResDto,
+        //moment: typeof import("moment"),
     }
 
     /** 目前功能畫面 */

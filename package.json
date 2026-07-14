@@ -1,9 +1,4 @@
 {
-  "scripts": {
-    "build:gulp": "gulp",
-    "copy:font": "xcopy /E /I /Y ..\\Base\\BaseTs\\_src\\font .\\wwwroot\\font",
-    "build": "npm run build:gulp && npm run copy:font"
-  },
   "devDependencies": {
     "@types/bootstrap": "^5.2.11",
     "@types/datatables.net": "^1.10.28",
@@ -13,6 +8,7 @@
     "bootstrap-datepicker": "^1.9.0",
     "chart.js": "^4.4.1",
     "esbuild": "^0.28.1",
+    "esbuild-plugin-tsconfig-paths": "^1.0.2",
     "gulp": "^5.0.1",
     "gulp-clean": "^0.4.0",
     "gulp-clean-css": "^4.3.0",

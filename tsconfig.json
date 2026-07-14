@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    //"outDir": "_src/_dist", //JavaScript 輸出目錄
+    //"baseUrl": ".",
+    "outDir": "_srcOut", //如果執行 npx tsc 會輸出到此目錄
     "module": "ESNext", // ES Module
     "target": "ES2019", // 編譯版本
     "moduleResolution": "Bundler", // Vite相容解析
@@ -15,13 +16,15 @@
     "emitDeclarationOnly": true,
     "types": [ "jquery", "jquery.validation", "bootstrap", "datatables.net", "mustache" ],
     "paths": {
-      "@base/*": [ "./_src/tsBase/*" ]
+      //"@base/*": [ "./_src/tsBase/*" ]
+      "@base": [ "./_src/forBoth.ts" ]
     }
   },
   "include": [
-    "_src/tsBase/forEdit.d.ts",
-    "_src/tsBase/*.ts",
-    "_src/tsView/*.ts"
+    "./_src/forEdit.d.ts",
+    //"./_src/tsBase.d.ts",
+    "./_src/tsBase/**/*.ts",
+    "./_src/tsView/*.ts"
   ],
   "exclude": [
     "node_modules" //排除 npm 套件

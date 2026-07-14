@@ -1,4 +1,5 @@
-﻿<style nonce="@_Fun.Nonce">
+﻿<script nonce="@_Fun.Nonce" type="module" src="~/jsView/ChartSatis.min.js"></script>
+<style nonce="@_Fun.Nonce">
     .chart-box {
         width: 600px;
         height: 450px;
@@ -6,6 +7,7 @@
     }
 </style>
 
+@*
 <script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
@@ -31,31 +33,6 @@
                     config.values[i] = parseFloat((rows[i]['Num'] / rowLen).toFixed(1));  //取一位小數
                 }
                 _Chart.hbar('chart', config);
-
-                /*
-// Bar chart
-new Chart(document.getElementById("chart"), {
-    type: 'bar',
-    data: {
-      labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
-      datasets: [
-        {
-          label: "Population (millions)",
-          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-          data: [2478,5267,734,784,433]
-        }
-      ]
-    },
-    options: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: 'Predicted world population (millions) in 2050'
-      }
-    }
-});
-*/
-
             });
         },
 
@@ -66,6 +43,7 @@ new Chart(document.getElementById("chart"), {
 
     }; //class
 </script>
+*@
 
 <vc:xg-prog-path />
 <div class="xp-prog">

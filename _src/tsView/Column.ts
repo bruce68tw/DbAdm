@@ -1,6 +1,6 @@
-﻿import CrudR from "@base/svc/CrudR";
+﻿import { CrudR } from "@base";
 
-let _me:any = {
+_me = {
     init: function () {
         var config = {
             //修改:查詢結果欄位,與後端read service對應, 這是 Datatables config
@@ -17,16 +17,12 @@ let _me:any = {
 
             //修改:如果查詢結果欄位有特殊的顯示規則就寫在這裡
             columnDefs: [
-                {
-                    targets: [6], render: function (data, type, full, meta) {
-                        return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
-                    }
-                },
-                {
-                    targets: [7], render: function (data, type, full, meta) {
-                        return _me.crudR.dtStatusName(data);
-                    }
-                },
+                { targets: [6], render: function (data, type, full, meta) {
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                }},
+                { targets: [7], render: function (data, type, full, meta) {
+                    return _me.crudR.dtStatusName(data);
+                }},
             ],
         };
 
@@ -41,3 +37,7 @@ let _me:any = {
     */
 
 }; //class
+
+$(function () {
+    _me.init();
+});

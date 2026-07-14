@@ -1,14 +1,15 @@
 const gulp = require("gulp");
 const clean = require("gulp-clean");
 const concat = require("gulp-concat");
-const uglify = require("gulp-uglify");
-const rename = require("gulp-rename");
+//const uglify = require("gulp-uglify");
+//const rename = require("gulp-rename");
 const esbuild = require("esbuild");
 const fs = require("fs");
 const cleanCSS = require("gulp-clean-css");
 const terser = require("gulp-terser");
 const sourcemaps = require("gulp-sourcemaps");
 const path = require("path");
+//const tsconfigPaths = require("esbuild-plugin-tsconfig-paths");
 
 const dirSrc = "_src/";
 //const dirSrc = `${dirSrc}_src/`;
@@ -30,16 +31,20 @@ function cleanTask() {
 // tsBase to w3/base.min.js
 async function doTsBase() {
     await esbuild.build({
-        entryPoints: [`${dirSrc}tsBase/forBuild.ts`],
-        //temp 2 to false
-        bundle: true,   //重要!!
-        minify: true,
-        //minify: false,
+        entryPoints: [`${dirSrc}forBoth.ts`],
+        //temp minify to false
+        minify: false,
+        //minify: true,
+        bundle: true,   //重要!! merged to base.min.js
         sourcemap: true,
-        treeShaking: false,
+        treeShaking: false, //true會清空未使用類別
         outfile: "wwwroot/base.min.js",
-        format: "iife",
-        target: ["es2019"]
+        //format: "iife",
+        format: "esm",
+        platform: "browser",
+        target: ["es2019"],
+        //tsconfig: "./tsconfig.json"
+        //plugins: [tsconfigPaths()]
     });
 }
 
@@ -54,16 +59,20 @@ async function doTsView() {
         const name = path.basename(file, ".ts");
         await esbuild.build({
             entryPoints: [`${dir}/${file}`],
-            //temp 2 to false
-            minify: true,
-            //minify: false,
-            bundle: false,  //重要!!
+            //temp minify to false
+            minify: false,
+            //minify: true,
+            bundle: false,  //重要!! (false)single file, 如果true會merge base
             treeShaking: false,
             sourcemap: true,
-            outfile: `wwwroot/jsView/${name}.js`,
-            //format: "esm",
-            format: "iife",
-            target: ["es2019"]
+            outfile: `wwwroot/jsView/${name}.min.js`,
+            format: "esm",	//重要!!
+            //format: "iife",
+            platform: "browser",
+            target: ["es2019"],
+            //alias: { "@base": "./_src/tsBase" },
+            //tsconfig: "./tsconfig.json"
+            //plugins: [tsconfigPaths()]
         });
     }
 }

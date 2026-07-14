@@ -1,9 +1,7 @@
+<script nonce="@_Fun.Nonce" type="module" src="~/jsView/SetPwd.min.js"></script>
+
+@*
 <script nonce="@_Fun.Nonce">
-    /*
-    $(function () {
-        _me.init();
-    });
-    */
     async function onSave() {
         var form = $('#eform');
         var oldPwd = _iText.get('OldPwd', form);
@@ -20,8 +18,8 @@
             _Tool.msg(msg || '儲存完成。');
         });
     }
-
 </script>
+*@
 
 @await Component.InvokeAsync("XgProgPath", new { path = "設定密碼" })
 <div class="x-prog">

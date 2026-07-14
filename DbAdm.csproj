@@ -61,7 +61,6 @@
 	<Compile Remove="Controllers\TestController.cs" />
 	<Compile Remove="Controllers\UiController.cs" />
 	<Content Include="key.txt" />
-	<Content Include="old\tsconfig.json_old" />
     <Content Include="Views\Shared\Error.cshtml_old" />
     <Content Include="_image\noImage.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>

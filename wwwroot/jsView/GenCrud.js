@@ -1,2 +1,630 @@
-(()=>{var O=Object.create;var G=Object.defineProperty;var j=Object.getOwnPropertyDescriptor;var D=Object.getOwnPropertyNames;var P=Object.getPrototypeOf,V=Object.prototype.hasOwnProperty;var W=(e,a,n,o)=>{if(a&&typeof a=="object"||typeof a=="function")for(let r of D(a))!V.call(e,r)&&r!==n&&G(e,r,{get:()=>a[r],enumerable:!(o=j(a,r))||o.enumerable});return e};var m=(e,a,n)=>(n=e!=null?O(P(e)):{},W(a||!e||!e.__esModule?G(n,"default",{value:e,enumerable:!0}):n,e));var J=m(require("./UiMany")),I=m(require("@base/enum/FunEstr")),T=m(require("@base/enum/MouseEstr")),_=m(require("@base/dto/EditDto")),M=m(require("@base/svc/CrudR")),B=m(require("@base/svc/EditOne")),v=m(require("@base/svc/EditMany")),p=m(require("@base/svc/_Ajax")),C=m(require("@base/svc/_Array")),S=m(require("@base/svc/_Edit")),h=m(require("@base/svc/_Form")),Q=m(require("@base/svc/_Fun")),L=m(require("@base/svc/_iCheck")),b=m(require("@base/svc/_iSelect")),s=m(require("@base/svc/_iText")),R=m(require("@base/svc/_Json")),y=m(require("@base/svc/_Modal")),U=m(require("@base/svc/_Nav")),x=m(require("@base/svc/_Obj")),k=m(require("@base/svc/_Prog")),E=m(require("@base/svc/_Str")),A=m(require("@base/svc/_Tab")),f=m(require("@base/svc/_Tool")),F=m(require("@base/svc/_Valid")),t={init:function(){var e={columns:[{data:"ProjectCode"},{data:"ProjectName"},{data:"ProgCode"},{data:"ProgName"},{data:"IsUi"},{data:"_Fun"},{data:"Created"},{data:"_CrudFun"},{data:"Status"}],columnDefs:[{targets:[4],render:function(o,r,i,d){return o==1?`<button type="button" class="btn btn-link" data-onclick="_me.onOpenEdit1" data-args="${i.Id}">\u62D6\u62C9\u7DE8\u8F2F</button> | <button type="button" class="btn btn-link" data-onclick="_me.onDownTableSql" data-args="${i.Id}">\u4E0B\u8F09Table SQL</button>`:""}},{targets:[5],render:function(o,r,i,d){var l=i.Status==1?"":"disabled";return`<button type="button" ${l} class="btn btn-outline-secondary btn-sm" data-onclick="_me.onGenCrud" data-args="${i.Id}">\u7522\u751FCRUD</button>`}},{targets:[7],render:function(o,r,i,d){return t.crudR.dtCrudFun(i.Id,i.Name,!0,!0,!1,!0)}},{targets:[8],render:function(o,r,i,d){return t.crudR.dtStatusName(o)}}]};t.TableId="TableId",t.Active="active",t.mQitem=new v.default("Id","tbodyQitem","tplQitem",".xu-tr"),t.mRitem=new v.default("Id","tbodyRitem","tplRitem",".xu-tr"),t.mEtable=new v.default("Id",null,"tplTabEtable",".x-form"),t.mEitem=new v.default("Id",null,"tplEitem",".xu-tr"),t.mEtable.setChilds([t.mEitem]),t.mUiItem=new v.default("Id","eformUiItem","tplUiItem",".xu-tr"),t.divEdit1=$("#divEdit1");var a=new _.default([null,t.mQitem,t.mRitem,t.mEtable],$("#divEdit")),n=new _.default([new B.default(null,"eform1"),t.mUiItem],t.divEdit1,"\u62D6\u62C9\u7DE8\u8F2F");new M.default(e,[a,n]),t.etableChdIdx=2,t.eitemChdIdx=0,t.mEtable.fnLoadRows=t.mEtable_loadRows,t.mEtable.fnGetUpdJson=t.mEtable_getUpdJson,t.mEtable.fnValid=t.mEtable_valid,t.tplQitem=$("#tplQitem").html(),t.tbodyQitem=$("#tbodyQitem"),t.tplRitem=$("#tplRitem").html(),t.tbodyRitem=$("#tbodyRitem"),t.navEtable=$("#navEtable"),t.tabEtable=$("#tabEtable"),t.tplNavEtable=$("#tplNavEtable").html(),t.tplTabEtable=$("#tplTabEtable").html(),t.tplEitem=$("#tplEitem").html(),t.modalItems=$("#modalItems"),t.divItemsBody=t.modalItems.find("tbody"),t.tplModalItem=$("#tplModalItem").html(),t.ritemTableId="",t.tables=[],t.etableLen=0,t.etableIdx=0,t.nowItemType="",t.modalImport=$("#modalUiImport"),t.mUiItem.fnLoadRows=t.mUiItem_loadRows,t.mUiItem.fnGetUpdJson=t.mUiItem_getUpdJson,t.mUiItem.fnValid=t.mUiItem_valid,t.uiMany=new J.default(".xu-ui-area",t.mUiItem),t.divEdit1.on(T.default.DragStart,".xu-btn",function(o){let r=$(o.target).data("type");t.uiMany.startDragBtn(!0,r)}).on(T.default.DragEnd,function(o){t.uiMany.onDragEnd(o)})},getProjectId:function(){return b.default.get("ProjectId",t.eform0)},fnAfterOpenEdit:async function(e,a){var n=t.isEdit1();k.default.setBorder(!n),n?t.fnAfterOpenEdit1(e,a):t.fnAfterOpenEdit0(e,a)},fnAfterOpenEdit0:async function(e,a){if(e!=I.default.Create&&await t.onChangeProject())for(var n=S.default.getChildRows(a,t.etableChdIdx),o=n==null?0:n.length,r=0;r<o;r++){var i=t.etGetTab(r);b.default.setItems(t.TableId,t.tables,i),b.default.set(t.TableId,n[r][t.TableId],i),t.etShowName(r)}},fnAfterOpenEdit1:function(e,a){t.uiMany.reset();var n=e==I.default.Create;t.uiMany.setEdit(n||e==I.default.Update)},isEdit1:function(){return t.crudE.mEditGetEditNo()==1},fnWhenSave:function(e){return t.isEdit1()?t.fnWhenSave1(e):t.fnWhenSave0(e)},fnWhenSave0:function(e){t.tbodyQitem.find(".xu-tr").each(function(o,r){s.default.set("Sort",o,$(r))}),t.tbodyRitem.find(".xu-tr").each(function(o,r){s.default.set("Sort",o,$(r))});var a="",n=[];return t.etGetForms().each(function(o,r){var i=$(r),d=s.default.get(t.TableId,i);if(C.default.find(n,d)>=0)return a="\u7DAD\u8B77\u7684\u8CC7\u6599\u8868(Etable)\u4E0D\u53EF\u91CD\u8907\u3002",!1;n[o]=d,s.default.set("Sort",o,i),t.getEitemForm(i).find(".xu-tr").each(function(l,u){s.default.set("Sort",l,$(u))})}),a},mEtable_loadRows:function(e){if(t.navEtable.empty(),t.tabEtable.empty(),!(e==null||e.length==0))for(var a=S.default.getChildRows(t.mEtable.dataJson,0),n=0;n<e.length;n++){var o=e[n];t.mEtable.loadRowByBox(t.tabEtable,o,n);var r=$(Mustache.render(t.tplNavEtable,{Index:n}));t.navEtable.append(r),t.etableLen++,n===0&&r.find("a")[0].click();var i=t.tabEtable.find("#divEtable"+n+" form"),d=i.first();F.default.init(d);var l=i.last(),u=R.default.filterRows(a,"EtableId",s.default.get("Id",d));t.mEitem.loadRowsByRsb(u,!0,l.find("tbody")),F.default.init(l)}},mEtable_getUpdJson:function(e){var a=[],n=[];return t.etGetForms().each(function(o,r){var i=$(r);a[o]=t.mEtable.getUpdRow(i),t.mEtable.rowSetFkey(a[o],e);var d=s.default.get("Id",i),l=t.getEitemForm(i),u=t.mEitem.getUpdRows(d,l.find("tbody"));R.default.appendRows(u,n)}),{_rows:a,_deletes:t.mEtable.getDeletes(),_childs:[{_rows:n,_deletes:t.mEitem.getDeletes()}]}},mEtable_valid:function(){var e=!0;return t.etGetForms().each(function(a,n){var o=$(n);if(e=o.valid(),e&&(e=t.getEitemForm(o).valid()),!e){var r=o.data("index");return t.etFocusNav(t.etGetNav(r)),!1}}),e},onGenCrud:async function(e){await f.default.ansA("\u662F\u5426\u78BA\u5B9A\u7522\u751F\u9019\u500B\u529F\u80FD\u7684CRUD\u7A0B\u5F0F?")&&await p.default.getStrA("GenCrud",{id:e},function(a){f.default.msg(E.default.isEmpty(a)?"\u57F7\u884C\u6210\u529F":a)})},getCheckedTables:function(){var e=L.default.getCheck0Values(t.crudR.divRead);return e.length===0&&f.default.msg("\u8ACB\u9078\u53D6\u8CC7\u6599\u3002"),e},resetEdits:function(){t.navEtable.empty(),t.tabEtable.empty(),t.etableLen=0},onCreate:function(){t.crudR.onCreate(),t.resetEdits()},onQitemAdd:function(){var e=$(Mustache.render(t.tplQitem,{}));h.default.loadRow(e,{}),t.mQitem.setNewIdByBox(e),t.tbodyQitem.append(e)},onRitemAdd:function(){var e=$(Mustache.render(t.tplRitem,{}));h.default.loadRow(e,{}),t.mRitem.setNewIdByBox(e),t.tbodyRitem.append(e)},onChangeProject:async function(){var e=t.getProjectId();if(E.default.isEmpty(e))return!1;var a=await p.default.getJsonsA("/XpCode/Tables",{projectId:e});if(C.default.isEmpty(a))return!1;t.tables=a;var n=x.default.get(t.TableId,t.modalItems);return b.default.setItemsO(n,t.tables),b.default.setO(n,""),!0},onOpenItem:function(e){t.nowItemType=e,y.default.show(t.modalItems)},onChangeItemTable:async function(){await t.changeItemTableA(b.default.getO(Q.default.getMe()))},changeItemTableA:async function(e){await p.default.getJsonA("GetColumns",{tableId:e},function(a){t.divItemsBody.empty();for(var n=0;n<a.length;n++)t.divItemsBody.append($(Mustache.render(t.tplModalItem,a[n])))})},fnItemDtGetRows:function(e){return e.data},onItemModalOk:function(){var e=[];t.divItemsBody.find(":checkbox:checked").each(function(u){var g=$(this),c=g.closest("tr");e[u]={ColumnId:c.data("id"),Fid:c.data("fid"),Name:c.data("name"),DataType:c.data("datatype")}});var a=e.length;if(a===0){f.default.msg("\u8ACB\u5148\u9078\u53D6\u8CC7\u6599\u3002");return}var n=t.nowItemType,o,r,i=null;n==="Q"?(o=t.tbodyQitem,r=t.tplQitem,i=t.mQitem):n==="R"?(o=t.tbodyRitem,r=t.tplRitem,i=t.mRitem):(o=t.etGetTab().find("tbody"),r=t.tplEitem,i=t.mEitem);for(var d=0;d<a;d++){var l=$(Mustache.render(r,e[d]));h.default.loadRow(l,e[d]),i.setNewIdByBox(l),o.append(l)}y.default.hide(t.modalItems)},onEtAdd:function(){t.etNavRemoveAct();var e=t.etableLen,a={Index:e},n=$(Mustache.render(t.tplTabEtable,a));t.mEtable.setNewIdByBox(n),b.default.setItems(t.TableId,t.tables,n),t.tabEtable.append(n);var o=$(Mustache.render(t.tplNavEtable,a));t.navEtable.append(o),t.etableLen++,t.etFocusNav(o),t.etShowName(e)},onEtDelete:function(){t.etableLen!=0&&f.default.ans("\u662F\u5426\u79FB\u9664\u756B\u9762\u8CC7\u6599?",function(){var e=t.etGetNav(),a=t.etGetTab(),n,o=t.etableIdx==t.etableLen-1?t.etableIdx-1:t.etableIdx;o>=0&&(n=o===t.etableIdx?e.next():e.prev());var r=t.etGetForm(a),i=t.mEtable.getKey(r);t.mEtable.deleteRow(i);var d=t.getEitemForm(r);d.find(".xu-tr").each(function(){i=t.mEitem.getKey($(this)),t.mEitem.deleteRow(i)}),t.etNavRemoveAct(),a.remove(),e.remove(),t.etableLen--,t.etableIdx=o,o>=0&&t.etFocusNav(n)})},onEtLeft:function(){U.default.moveLeft(t.etGetNav()),A.default.moveLeft(t.etGetTab())},onEtRight:function(){U.default.moveRight(t.etGetNav()),A.default.moveRight(t.etGetTab())},etFocusNav:function(e){e.find("a").click()},etShowName:function(e){var a=b.default.getText(t.TableId,t.etGetTab(e));a===""&&(a="(Empty)"),t.navEtable.find("li[data-index="+e+"] a").text(a)},onChangeNowTable:function(e){t.etShowName(e)},etNavRemoveAct:function(){var e=t.etGetNav();e.removeClass(t.Active),t.tabEtable.find(".tab-pane."+t.Active).removeClass(t.Active)},onEtNav:function(e){t.etableIdx=e},etGetNav:function(e){e=e||t.etableIdx;var a="[data-index="+e+"]";return t.navEtable.find("li"+a)},etGetTab:function(e){return e=e||t.etableIdx,t.tabEtable.find("#divEtable"+e)},etGetForms:function(){return t.tabEtable.find(".x-form")},etGetForm:function(e){return e.find(".x-form")},getEitemForm:function(e){return e.parent().find(".xu-form2")},onOpenEdit1:async function(e){t.crudE.mEditSetEditNo(1),await t.crudE.onUpdateA(e)},onDownTableSql:async function(e){await f.default.ansA("\u662F\u5426\u78BA\u5B9A\u4E0B\u8F09\u9019\u500B\u529F\u80FD\u7684 Table SQL ?")&&await p.default.getStrA("DownTableSql",{id:e},function(a){E.default.saveFile(a,"table.txt")})},onDownCrud:function(){},onOpenImport:function(){s.default.set("Import","",t.modalImport),y.default.show(t.modalImport)},onImport:async function(){var e=s.default.get("Import",t.modalImport).trim();if(E.default.isEmpty(e)){f.default.msg("\u532F\u5165\u8CC7\u6599\u4E0D\u53EF\u7A7A\u767D\u3002");return}var a=E.default.toJson(e);if(a==null){f.default.msg("\u532F\u5165\u8CC7\u6599\u5FC5\u9808\u662FJson\u683C\u5F0F\u3002");return}await t.uiMany.loadJsonsA(a),y.default.hide(t.modalImport)},onExport:async function(){let e=t.uiMany.getJsons();if(R.default.isEmpty(e)){f.default.msg("\u76EE\u524D\u756B\u9762\u7121\u4EFB\u4F55\u8CC7\u6599\u3002");return}const a=new Blob([JSON.stringify(e,null,2)],{type:"application/json"}),n=document.createElement("a");n.href=URL.createObjectURL(a),n.download="data.json",n.click()},fnAfterSwap:function(e){var a=$(".xd-prog-tbar");e?x.default.hide(a):x.default.show(a)},zz_fnUpdateOrViewA:async function(e,a){var n=e==I.default.Update?"GetUpdJson":"GetViewJson";return await p.default.getJsonA(n,{key:a},function(o){t.crudR.toEditMode(e,()=>{t.crudE.loadJson(o),t.crudE.setEditStatus(e),t.crudE.afterOpen(e,o)})})},fnWhenSave1:function(e){let a=t.uiMany.uiView,n=a.getChgBoxJsons(),o=n.length;if(o==0)return"";let r=t.mUiItem;for(let i=0;i<o;i++){let d=n[i],l=d.BoxId;for(let u=0;u<d.ChildNos.length;u++){let g=d.ChildNos[u],c=a.boxGetChildIds(l,g);for(let w=0;w<(c||[]).length;w++){let N=r.idToRowBox(c[w]);s.default.set("BoxId",l,N),s.default.set("ChildNo",g,N),s.default.set("Sort",w+1,N)}}}return""},mUiItem_loadRows:async function(e){await t.uiMany.loadRowsA(e)},mUiItem_getUpdJson:function(e){return t.mUiItem.getUpdJsonByRsb(e)},mUiItem_valid:function(){return!0}};})();
+import UiMany from "./UiMany";
+import FunEstr from "@base/enum/FunEstr";
+import MouseEstr from "@base/enum/MouseEstr";
+import EditDto from "@base/dto/EditDto";
+import CrudR from "@base/svc/CrudR";
+import EditOne from "@base/svc/EditOne";
+import EditMany from "@base/svc/EditMany";
+import _Ajax from "@base/svc/_Ajax";
+import _Array from "@base/svc/_Array";
+import _Edit from "@base/svc/_Edit";
+import _Form from "@base/svc/_Form";
+import _Fun from "@base/svc/_Fun";
+import _iCheck from "@base/svc/_iCheck";
+import _iSelect from "@base/svc/_iSelect";
+import _iText from "@base/svc/_iText";
+import _Json from "@base/svc/_Json";
+import _Modal from "@base/svc/_Modal";
+import _Nav from "@base/svc/_Nav";
+import _Obj from "@base/svc/_Obj";
+import _Prog from "@base/svc/_Prog";
+import _Str from "@base/svc/_Str";
+import _Tab from "@base/svc/_Tab";
+import _Tool from "@base/svc/_Tool";
+import _Valid from "@base/svc/_Valid";
+var _me = {
+  //#region for Crud
+  init: function() {
+    var config = {
+      columns: [
+        //{ data: '_F1' },
+        { data: "ProjectCode" },
+        { data: "ProjectName" },
+        { data: "ProgCode" },
+        { data: "ProgName" },
+        { data: "IsUi" },
+        { data: "_Fun" },
+        { data: "Created" },
+        { data: "_CrudFun" },
+        { data: "Status" }
+      ],
+      columnDefs: [
+        /*
+        { targets: [0], render: function (data, type, full, meta) {
+                        return _me.crudR.dtCheck0(full.Id);
+        }},
+                    */
+        { targets: [4], render: function(data, type, full, meta) {
+          return data == 1 ? `<button type="button" class="btn btn-link" data-onclick="_me.onOpenEdit1" data-args="${full.Id}">\u62D6\u62C9\u7DE8\u8F2F</button> | <button type="button" class="btn btn-link" data-onclick="_me.onDownTableSql" data-args="${full.Id}">\u4E0B\u8F09Table SQL</button>` : "";
+        } },
+        { targets: [5], render: function(data, type, full, meta) {
+          var dis = full.Status == 1 ? "" : "disabled";
+          return `<button type="button" ${dis} class="btn btn-outline-secondary btn-sm" data-onclick="_me.onGenCrud" data-args="${full.Id}">\u7522\u751FCRUD</button>`;
+        } },
+        { targets: [7], render: function(data, type, full, meta) {
+          return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, false, true);
+        } },
+        { targets: [8], render: function(data, type, full, meta) {
+          return _me.crudR.dtStatusName(data);
+        } }
+      ]
+    };
+    _me.TableId = "TableId";
+    _me.Active = "active";
+    _me.mQitem = new EditMany("Id", "tbodyQitem", "tplQitem", ".xu-tr");
+    _me.mRitem = new EditMany("Id", "tbodyRitem", "tplRitem", ".xu-tr");
+    _me.mEtable = new EditMany("Id", null, "tplTabEtable", ".x-form");
+    _me.mEitem = new EditMany("Id", null, "tplEitem", ".xu-tr");
+    _me.mEtable.setChilds([_me.mEitem]);
+    _me.mUiItem = new EditMany("Id", "eformUiItem", "tplUiItem", ".xu-tr");
+    _me.divEdit1 = $("#divEdit1");
+    var ary0 = new EditDto([null, _me.mQitem, _me.mRitem, _me.mEtable], $("#divEdit"));
+    var ary1 = new EditDto([new EditOne(null, "eform1"), _me.mUiItem], _me.divEdit1, "\u62D6\u62C9\u7DE8\u8F2F");
+    new CrudR(config, [ary0, ary1]);
+    _me.etableChdIdx = 2;
+    _me.eitemChdIdx = 0;
+    _me.mEtable.fnLoadRows = _me.mEtable_loadRows;
+    _me.mEtable.fnGetUpdJson = _me.mEtable_getUpdJson;
+    _me.mEtable.fnValid = _me.mEtable_valid;
+    _me.tplQitem = $("#tplQitem").html();
+    _me.tbodyQitem = $("#tbodyQitem");
+    _me.tplRitem = $("#tplRitem").html();
+    _me.tbodyRitem = $("#tbodyRitem");
+    _me.navEtable = $("#navEtable");
+    _me.tabEtable = $("#tabEtable");
+    _me.tplNavEtable = $("#tplNavEtable").html();
+    _me.tplTabEtable = $("#tplTabEtable").html();
+    _me.tplEitem = $("#tplEitem").html();
+    _me.modalItems = $("#modalItems");
+    _me.divItemsBody = _me.modalItems.find("tbody");
+    _me.tplModalItem = $("#tplModalItem").html();
+    _me.ritemTableId = "";
+    _me.tables = [];
+    _me.etableLen = 0;
+    _me.etableIdx = 0;
+    _me.nowItemType = "";
+    _me.modalImport = $("#modalUiImport");
+    _me.mUiItem.fnLoadRows = _me.mUiItem_loadRows;
+    _me.mUiItem.fnGetUpdJson = _me.mUiItem_getUpdJson;
+    _me.mUiItem.fnValid = _me.mUiItem_valid;
+    _me.uiMany = new UiMany(".xu-ui-area", _me.mUiItem);
+    _me.divEdit1.on(MouseEstr.DragStart, ".xu-btn", function(e) {
+      let itemType = $(e.target).data("type");
+      _me.uiMany.startDragBtn(true, itemType);
+    }).on(MouseEstr.DragEnd, function(e) {
+      _me.uiMany.onDragEnd(e);
+    });
+  },
+  /*
+  //reset eitem columns: re show/hide eitem layoutcols, width property
+  swapEitemCols: function () {
+      $('.xu-edit').each(function (idx, item) {
+          var me = $(item);
+          if (idx == 0) {
+              //me.find('.xu-layout').show();
+              //me.find('.xu-width').hide();
+          } else {
+              //me.find('.xu-layout').hide();
+              //me.find('.xu-width').show();
+          }
+      });
+  },
+  */
+  getProjectId: function() {
+    return _iSelect.get("ProjectId", _me.eform0);
+  },
+  //auto called !!
+  fnAfterOpenEdit: async function(fun, json) {
+    var isEdit1 = _me.isEdit1();
+    _Prog.setBorder(!isEdit1);
+    if (isEdit1)
+      _me.fnAfterOpenEdit1(fun, json);
+    else
+      _me.fnAfterOpenEdit0(fun, json);
+  },
+  //set etable TableId(dropdown)
+  //edit0_afterLoadJson: function (json) {
+  fnAfterOpenEdit0: async function(fun, json) {
+    if (fun == FunEstr.Create) return;
+    if (!await _me.onChangeProject()) return;
+    var navRows = _Edit.getChildRows(json, _me.etableChdIdx);
+    var navLen = navRows == null ? 0 : navRows.length;
+    for (var i = 0; i < navLen; i++) {
+      var tabObj = _me.etGetTab(i);
+      _iSelect.setItems(_me.TableId, _me.tables, tabObj);
+      _iSelect.set(_me.TableId, navRows[i][_me.TableId], tabObj);
+      _me.etShowName(i);
+    }
+  },
+  //reset when create
+  fnAfterOpenEdit1: function(fun, json) {
+    _me.uiMany.reset();
+    var isAdd = fun == FunEstr.Create;
+    _me.uiMany.setEdit(isAdd || fun == FunEstr.Update);
+  },
+  //拖拉編輯
+  isEdit1: function() {
+    return _me.crudE.mEditGetEditNo() == 1;
+  },
+  fnWhenSave: function(fun) {
+    return _me.isEdit1() ? _me.fnWhenSave1(fun) : _me.fnWhenSave0(fun);
+  },
+  //set sort
+  fnWhenSave0: function(fun) {
+    _me.tbodyQitem.find(".xu-tr").each(function(i, item) {
+      _iText.set("Sort", i, $(item));
+    });
+    _me.tbodyRitem.find(".xu-tr").each(function(i, item) {
+      _iText.set("Sort", i, $(item));
+    });
+    var error = "";
+    var tableIds = [];
+    _me.etGetForms().each(function(i, item) {
+      var form = $(item);
+      var tableId = _iText.get(_me.TableId, form);
+      if (_Array.find(tableIds, tableId) >= 0) {
+        error = "\u7DAD\u8B77\u7684\u8CC7\u6599\u8868(Etable)\u4E0D\u53EF\u91CD\u8907\u3002";
+        return false;
+      }
+      tableIds[i] = tableId;
+      _iText.set("Sort", i, form);
+      _me.getEitemForm(form).find(".xu-tr").each(function(j, item2) {
+        _iText.set("Sort", j, $(item2));
+      });
+    });
+    return error;
+  },
+  //load etable
+  mEtable_loadRows: function(rows) {
+    _me.navEtable.empty();
+    _me.tabEtable.empty();
+    if (rows == null || rows.length == 0)
+      return;
+    var eitemRows = _Edit.getChildRows(_me.mEtable.dataJson, 0);
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      _me.mEtable.loadRowByBox(_me.tabEtable, row, i);
+      var newNav = $(Mustache.render(_me.tplNavEtable, { Index: i }));
+      _me.navEtable.append(newNav);
+      _me.etableLen++;
+      if (i === 0)
+        newNav.find("a")[0].click();
+      var forms = _me.tabEtable.find("#divEtable" + i + " form");
+      var form = forms.first();
+      _Valid.init(form);
+      var form2 = forms.last();
+      var rows2 = _Json.filterRows(eitemRows, "EtableId", _iText.get("Id", form));
+      _me.mEitem.loadRowsByRsb(rows2, true, form2.find("tbody"));
+      _Valid.init(form2);
+    }
+  },
+  //GetUpdJson
+  mEtable_getUpdJson: function(upKey) {
+    var rows = [];
+    var eitems = [];
+    _me.etGetForms().each(function(i, item) {
+      var form = $(item);
+      rows[i] = _me.mEtable.getUpdRow(form);
+      _me.mEtable.rowSetFkey(rows[i], upKey);
+      var upKey2 = _iText.get("Id", form);
+      var form2 = _me.getEitemForm(form);
+      var rows2 = _me.mEitem.getUpdRows(upKey2, form2.find("tbody"));
+      _Json.appendRows(rows2, eitems);
+    });
+    return {
+      _rows: rows,
+      _deletes: _me.mEtable.getDeletes(),
+      _childs: [{ _rows: eitems, _deletes: _me.mEitem.getDeletes() }]
+    };
+  },
+  /**
+   * error時顯示對應的table page
+   * return boolean
+   */
+  mEtable_valid: function() {
+    var status = true;
+    _me.etGetForms().each(function(i, item) {
+      var form = $(item);
+      status = form.valid();
+      if (status)
+        status = _me.getEitemForm(form).valid();
+      if (!status) {
+        var idx = form.data("index");
+        _me.etFocusNav(_me.etGetNav(idx));
+        return false;
+      }
+    });
+    return status;
+  },
+  /**
+   * onclick generate crud
+   * (如果在VS下產生DbAdm的CRUD會reload !!)
+   */
+  onGenCrud: async function(id) {
+    if (await _Tool.ansA("\u662F\u5426\u78BA\u5B9A\u7522\u751F\u9019\u500B\u529F\u80FD\u7684CRUD\u7A0B\u5F0F?")) {
+      await _Ajax.getStrA("GenCrud", { id }, function(error) {
+        _Tool.msg(_Str.isEmpty(error) ? "\u57F7\u884C\u6210\u529F" : error);
+      });
+    }
+  },
+  //get checked table id array
+  getCheckedTables: function() {
+    var values = _iCheck.getCheck0Values(_me.crudR.divRead);
+    if (values.length === 0)
+      _Tool.msg("\u8ACB\u9078\u53D6\u8CC7\u6599\u3002");
+    return values;
+  },
+  resetEdits: function() {
+    _me.navEtable.empty();
+    _me.tabEtable.empty();
+    _me.etableLen = 0;
+  },
+  //onclick Create(table)
+  onCreate: function() {
+    _me.crudR.onCreate();
+    _me.resetEdits();
+  },
+  onQitemAdd: function() {
+    var box = $(Mustache.render(_me.tplQitem, {}));
+    _Form.loadRow(box, {});
+    _me.mQitem.setNewIdByBox(box);
+    _me.tbodyQitem.append(box);
+  },
+  onRitemAdd: function() {
+    var box = $(Mustache.render(_me.tplRitem, {}));
+    _Form.loadRow(box, {});
+    _me.mRitem.setNewIdByBox(box);
+    _me.tbodyRitem.append(box);
+  },
+  //on change project id
+  //多個地方呼叫
+  ////fnCallback: (optional) callback function
+  //return {bool}
+  //onChangeProject: async function (fnCallback) {
+  onChangeProject: async function() {
+    var pid = _me.getProjectId();
+    if (_Str.isEmpty(pid)) return false;
+    var rows = await _Ajax.getJsonsA("/XpCode/Tables", { projectId: pid });
+    if (_Array.isEmpty(rows)) return false;
+    _me.tables = rows;
+    var obj = _Obj.get(_me.TableId, _me.modalItems);
+    _iSelect.setItemsO(obj, _me.tables);
+    _iSelect.setO(obj, "");
+    return true;
+  },
+  //on open item modal
+  //type: Q(qitem), R(ritem), E(eitem), S(edit eitem)
+  onOpenItem: function(type) {
+    _me.nowItemType = type;
+    _Modal.show(_me.modalItems);
+  },
+  //on change tableId at ritem modal
+  onChangeItemTable: async function() {
+    await _me.changeItemTableA(_iSelect.getO(_Fun.getMe()));
+  },
+  //called by 2 places
+  changeItemTableA: async function(tableId) {
+    await _Ajax.getJsonA("GetColumns", { tableId }, function(rows) {
+      _me.divItemsBody.empty();
+      for (var i = 0; i < rows.length; i++) {
+        _me.divItemsBody.append($(Mustache.render(_me.tplModalItem, rows[i])));
+      }
+    });
+  },
+  //?? delegate: item modal 過濾查詢結果
+  fnItemDtGetRows: function(result) {
+    return result.data;
+  },
+  //onclick ok at Item(R/Q/E) modal
+  onItemModalOk: function() {
+    var rows = [];
+    _me.divItemsBody.find(":checkbox:checked").each(function(idx) {
+      var obj = $(this);
+      var tr = obj.closest("tr");
+      rows[idx] = {
+        //CrudId: crudId, //mapId
+        ColumnId: tr.data("id"),
+        Fid: tr.data("fid"),
+        //for Ritem
+        //Code: tr.data('code'),
+        Name: tr.data("name"),
+        DataType: tr.data("datatype")
+        //inputType ??
+      };
+    });
+    var rowLen = rows.length;
+    if (rowLen === 0) {
+      _Tool.msg("\u8ACB\u5148\u9078\u53D6\u8CC7\u6599\u3002");
+      return;
+    }
+    var type = _me.nowItemType;
+    var body, tplItem;
+    var mItem = null;
+    if (type === "Q") {
+      body = _me.tbodyQitem;
+      tplItem = _me.tplQitem;
+      mItem = _me.mQitem;
+    } else if (type === "R") {
+      body = _me.tbodyRitem;
+      tplItem = _me.tplRitem;
+      mItem = _me.mRitem;
+    } else {
+      body = _me.etGetTab().find("tbody");
+      tplItem = _me.tplEitem;
+      mItem = _me.mEitem;
+    }
+    for (var i = 0; i < rowLen; i++) {
+      var box = $(Mustache.render(tplItem, rows[i]));
+      _Form.loadRow(box, rows[i]);
+      mItem.setNewIdByBox(box);
+      body.append(box);
+    }
+    _Modal.hide(_me.modalItems);
+  },
+  //onclick add on (edit)nav
+  //must set id=new index
+  onEtAdd: function() {
+    _me.etNavRemoveAct();
+    var index = _me.etableLen;
+    var json = { Index: index };
+    var newTab = $(Mustache.render(_me.tplTabEtable, json));
+    _me.mEtable.setNewIdByBox(newTab);
+    _iSelect.setItems(_me.TableId, _me.tables, newTab);
+    _me.tabEtable.append(newTab);
+    var newNav = $(Mustache.render(_me.tplNavEtable, json));
+    _me.navEtable.append(newNav);
+    _me.etableLen++;
+    _me.etFocusNav(newNav);
+    _me.etShowName(index);
+  },
+  onEtDelete: function() {
+    if (_me.etableLen == 0)
+      return;
+    _Tool.ans("\u662F\u5426\u79FB\u9664\u756B\u9762\u8CC7\u6599?", function() {
+      var nav = _me.etGetNav();
+      var tab = _me.etGetTab();
+      var nav2;
+      var index = _me.etableIdx == _me.etableLen - 1 ? _me.etableIdx - 1 : _me.etableIdx;
+      if (index >= 0) {
+        nav2 = index === _me.etableIdx ? nav.next() : nav.prev();
+      }
+      var form = _me.etGetForm(tab);
+      var key = _me.mEtable.getKey(form);
+      _me.mEtable.deleteRow(key);
+      var form2 = _me.getEitemForm(form);
+      form2.find(".xu-tr").each(function() {
+        key = _me.mEitem.getKey($(this));
+        _me.mEitem.deleteRow(key);
+      });
+      _me.etNavRemoveAct();
+      tab.remove();
+      nav.remove();
+      _me.etableLen--;
+      _me.etableIdx = index;
+      if (index >= 0)
+        _me.etFocusNav(nav2);
+    });
+  },
+  onEtLeft: function() {
+    _Nav.moveLeft(_me.etGetNav());
+    _Tab.moveLeft(_me.etGetTab());
+  },
+  onEtRight: function() {
+    _Nav.moveRight(_me.etGetNav());
+    _Tab.moveRight(_me.etGetTab());
+  },
+  etFocusNav: function(navObj) {
+    navObj.find("a").click();
+  },
+  /*
+  etGetObject: function (index) {
+      return _me.tabEtable.find('#divEtable' + index);
+  },
+  */
+  //set(show) tableName at edit edit page
+  //param {bool} reset: reset table list or not 
+  etShowName: function(index) {
+    var name = _iSelect.getText(_me.TableId, _me.etGetTab(index));
+    if (name === "")
+      name = "(Empty)";
+    _me.navEtable.find("li[data-index=" + index + "] a").text(name);
+  },
+  onChangeNowTable: function(index) {
+    _me.etShowName(index);
+  },
+  //set child not active
+  etNavRemoveAct: function() {
+    var nav = _me.etGetNav();
+    nav.removeClass(_me.Active);
+    _me.tabEtable.find(".tab-pane." + _me.Active).removeClass(_me.Active);
+  },
+  //onclick etable nav
+  onEtNav: function(index) {
+    _me.etableIdx = index;
+  },
+  //get edit edit active nav
+  //return nav object
+  etGetNav: function(index) {
+    index = index || _me.etableIdx;
+    var find = "[data-index=" + index + "]";
+    return _me.navEtable.find("li" + find);
+  },
+  //get edit edit active tab
+  //return tab object
+  etGetTab: function(index) {
+    index = index || _me.etableIdx;
+    return _me.tabEtable.find("#divEtable" + index);
+  },
+  etGetForms: function() {
+    return _me.tabEtable.find(".x-form");
+  },
+  etGetForm: function(tabObj) {
+    return tabObj.find(".x-form");
+  },
+  /*
+   * get eitem form by etable form
+   */
+  getEitemForm: function(etableForm) {
+    return etableForm.parent().find(".xu-form2");
+  },
+  //#endregion
+  //#region for 拖拉編輯(分離檔案無法使用 IntelliSense)
+  onOpenEdit1: async function(id) {
+    _me.crudE.mEditSetEditNo(1);
+    await _me.crudE.onUpdateA(id);
+  },
+  //下載 table sql
+  onDownTableSql: async function(id) {
+    if (await _Tool.ansA("\u662F\u5426\u78BA\u5B9A\u4E0B\u8F09\u9019\u500B\u529F\u80FD\u7684 Table SQL ?")) {
+      await _Ajax.getStrA("DownTableSql", { id }, function(result) {
+        _Str.saveFile(result, "table.txt");
+      });
+    }
+  },
+  //#region read form function
+  //onclick generate crud(產生在主機)
+  /*
+  onGenCrud: function (id) {
+      await _Ajax.getStrA('GenCrud', { id: id }, function (error) {
+          _Tool.msg(_Str.isEmpty(error) ? '執行成功' : error);
+      });
+  },
+  */
+  //onclick download crud
+  onDownCrud: function() {
+  },
+  //#endregion
+  //#region edit form function
+  //on click open import modal
+  onOpenImport: function() {
+    _iText.set("Import", "", _me.modalImport);
+    _Modal.show(_me.modalImport);
+  },
+  //匯入json(巢狀格式) to edit(查詢條件、結果only)/edit2 form
+  //called by modalImprot
+  onImport: async function() {
+    var value = _iText.get("Import", _me.modalImport).trim();
+    if (_Str.isEmpty(value)) {
+      _Tool.msg("\u532F\u5165\u8CC7\u6599\u4E0D\u53EF\u7A7A\u767D\u3002");
+      return;
+    }
+    var jsons = _Str.toJson(value);
+    if (jsons == null) {
+      _Tool.msg("\u532F\u5165\u8CC7\u6599\u5FC5\u9808\u662FJson\u683C\u5F0F\u3002");
+      return;
+    }
+    await _me.uiMany.loadJsonsA(jsons);
+    _Modal.hide(_me.modalImport);
+  },
+  //export 前端 edit form to json
+  onExport: async function() {
+    let jsons = _me.uiMany.getJsons();
+    if (_Json.isEmpty(jsons)) {
+      _Tool.msg("\u76EE\u524D\u756B\u9762\u7121\u4EFB\u4F55\u8CC7\u6599\u3002");
+      return;
+    }
+    const blob = new Blob([JSON.stringify(jsons, null, 2)], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "data.json";
+    link.click();
+  },
+  //#endregion
+  /*
+  //generate json
+  onGenJson: function () {
+      var values = _icheck.getCheck0Values(_me.crudR.divRead);
+      if (values.length > 0)
+          window.location = 'GenJson?key=' + values.join(',');
+      else
+          _Tool.msg('請先選取資料。');
+  },
+  */
+  //#region auto called function
+  fnAfterSwap: function(toRead) {
+    var tbar = $(".xd-prog-tbar");
+    if (toRead) {
+      _Obj.hide(tbar);
+    } else {
+      _Obj.show(tbar);
+    }
+  },
+  /**
+   * ?? auto called
+   * jsPlumb line container must visible when rendering
+   * see _me.crudE.js _updateOrViewA()
+   * param {string} fun
+   * param {string} key
+   * returns {bool}
+   */
+  zz_fnUpdateOrViewA: async function(fun, key) {
+    var act = fun == FunEstr.Update ? "GetUpdJson" : "GetViewJson";
+    return await _Ajax.getJsonA(act, { key }, function(json) {
+      _me.crudR.toEditMode(fun, () => {
+        _me.crudE.loadJson(json);
+        _me.crudE.setEditStatus(fun);
+        _me.crudE.afterOpen(fun, json);
+      });
+    });
+  },
+  /**
+   * auto called
+   * 重設 uiItem的 BoxId、ChildNo、Sort
+   * return {string} error msg if any
+   */
+  fnWhenSave1: function(fun) {
+    let uiView = _me.uiMany.uiView;
+    let boxJsons = uiView.getChgBoxJsons();
+    let boxLen = boxJsons.length;
+    if (boxLen == 0) return "";
+    let mUiItem = _me.mUiItem;
+    for (let i = 0; i < boxLen; i++) {
+      let boxJson = boxJsons[i];
+      let boxId = boxJson.BoxId;
+      for (let j = 0; j < boxJson.ChildNos.length; j++) {
+        let childNo = boxJson.ChildNos[j];
+        let itemIds = uiView.boxGetChildIds(boxId, childNo);
+        for (let k = 0; k < (itemIds || []).length; k++) {
+          let rb = mUiItem.idToRowBox(itemIds[k]);
+          _iText.set("BoxId", boxId, rb);
+          _iText.set("ChildNo", childNo, rb);
+          _iText.set("Sort", k + 1, rb);
+        }
+      }
+    }
+    return "";
+  },
+  //#endregion 
+  //#region mUiItem custom function
+  //load items
+  mUiItem_loadRows: async function(rows) {
+    await _me.uiMany.loadRowsA(rows);
+  },
+  //getUpdJson
+  mUiItem_getUpdJson: function(upKey) {
+    return _me.mUiItem.getUpdJsonByRsb(upKey);
+  },
+  //return boolean
+  mUiItem_valid: function() {
+    return true;
+  }
+  /*
+  //return boolean
+  mLine_valid: function () {
+      return true;
+  },
+  */
+  //#endregion
+  //#endregion
+};
 //# sourceMappingURL=GenCrud.js.map

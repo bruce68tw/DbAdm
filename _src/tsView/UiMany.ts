@@ -1,4 +1,12 @@
 ﻿import UiView from "./UiView";
+import {
+    MouseEstr, UiItemTypeEstr, InputTypeEstr, EditMany, _Ajax,
+    _Array, _Form, _Fun, _iCheck, _iSelect,
+    _iText, _Json, _Modal, _Nav, _Obj,
+    _Prog, _Str, _Tab, _Tool, _Valid
+} from "@base";
+
+/*
 import MouseEstr from "@base/enum/MouseEstr";
 import UiItemTypeEstr from "@base/enum/UiItemTypeEstr";
 import InputTypeEstr from "@base/enum/InputTypeEstr";
@@ -20,6 +28,7 @@ import _Str from "@base/svc/_Str";
 import _Tab from "@base/svc/_Tab";
 import _Tool from "@base/svc/_Tool";
 import _Valid from "@base/svc/_Valid";
+*/
 
 /**
  * 控制 EditMany, 參考 FlowMany.js, called by Read.cshtml only !!

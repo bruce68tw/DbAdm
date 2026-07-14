@@ -1,17 +1,495 @@
-(()=>{var J=Object.create;var D=Object.defineProperty;var E=Object.getOwnPropertyDescriptor;var R=Object.getOwnPropertyNames;var k=Object.getPrototypeOf,P=Object.prototype.hasOwnProperty;var Q=(y,t,e,i)=>{if(t&&typeof t=="object"||typeof t=="function")for(let s of R(t))!P.call(y,s)&&s!==e&&D(y,s,{get:()=>t[s],enumerable:!(i=E(t,s))||i.enumerable});return y};var c=(y,t,e)=>(e=y!=null?J(k(y)):{},Q(t||!y||!y.__esModule?D(e,"default",{value:y,enumerable:!0}):e,y));var f=c(require("@base/enum/InputTypeEstr")),n=c(require("@base/enum/UiItemTypeEstr")),x=c(require("@base/enum/MouseEstr")),_=c(require("@base/dto/DragItemDto")),w=c(require("@base/svc/_Ajax")),v=c(require("@base/svc/_Array")),N=c(require("@base/svc/_Input")),A=c(require("@base/svc/_Json")),d=c(require("@base/svc/_Obj")),T=c(require("@base/svc/_Str")),B=c(require("@base/svc/_Tool")),C=c(require("@base/svc/_Var"));class L{constructor(t,e){this.uiMany=t,this.Area=$(e),this.BoxId0="0",this.ClsItem="xu-item",this.ClsChild="xu-child",this.ClsRowCol="xu-row-col",this.ClsDragging="xu-dragging",this.DataId="id",this.DataItemType="itemtype",this.DefaultCols="2,3",this.DropLine=$(".xu-drop-line"),this.FtItem="."+this.ClsItem,this.FtLabel=".x-label",this.FtInput=".x-input",this.FtReq=".x-required",this.FtTipIcon=".ico-info",this.FtInputNote=".x-input-note",this.FtChild="."+this.ClsChild,this.FtGroupTitle=".x-group-title",this.FtTable=".x-table",this.FtTableTitle=".x-span-label",this.NameInput="[\u8F38\u5165\u6B04\u4F4D]",this.NameGroup="[\u5206\u7FA4\u6587\u5B57]",this.NameChecks="[\u591A\u9078\u6B04\u4F4D]",this.NameRB="[\u591A\u6B04\u5BB9\u5668]",this.NameTable="[\u591A\u7B46\u8868\u683C]",this.NameTabPage="[\u591A\u9801\u5BB9\u5668]",this.isEdit=!0,this.newItemId=0,this.chgBoxJsons=[],this.inputMap={},this.groupHtml="",this.dragItem=new _.default,this.dropItem=new _.default,this.dragIsNew=!1,this.dragging=!1,this.dropElm=null,this.dropArea=null,this.dropError="";let i=this;this.Area.on(x.default.RightMenu,this.FtItem,function(s){s.preventDefault();let o=i._elmToItem(s.target);i.uiMany.showMenu(s,o)}),this.Area.on(x.default.DragStart,function(s){i.isEdit&&i._onDragStart(s)}).on(x.default.DragOver,function(s){i.dragging&&i._onDragOver(s)}).on(x.default.DragEnd,function(s){i.onDragEnd(s)})}_onDragStart(t){this._setDragging(!0);let e=this.dragItem;e.item=$(t.target),e.itemType=this.itemGetType(e.item);let i=this._getBox(e.item);e.boxType=this.itemGetType(i),e.boxId=i==null?this.BoxId0:this.itemGetId(i)}_onDragOver(t){t.preventDefault();let e=t.target;if(this.dropElm==e)return;let i=$(e),s=i.closest(this.FtItem),o=d.default.notEmpty(s);this.dropElm=e;let a=this.dragItem,r=this.dropItem;r.item=s,r.itemType=this.itemGetType(s);let l=!1,h=!1;if(o){if(this.isBox(r.itemType)&&i.hasClass(this.ClsChild))h=!0,r.boxType=r.itemType,r.boxId=this.itemGetId(s),l=!0;else{var p=this._getBox(s);r.boxType=this.itemGetType(p),r.boxId=p==null?this.BoxId0:this.itemGetId(p),l=this.isBox(r.boxType)}console.log(`dragType=${a.itemType}, dropType=${r.itemType}, drop.boxType=${r.boxType}, 
-				up css=${i.attr("class")}, up item boxId=${i.find(this.FtItem).length}, 
-				dropInBox=${l}`)}else i=this.Area,h=!0;//!dropInBox 則都可以 drop
-let u="",m="";if(o&&r.boxType!=null)switch(a.itemType){case n.default.Input:r.boxType==n.default.Table&&i.find(this.FtItem).length>0&&(u=`${this.NameTable}\u53EA\u80FD\u653E\u4E00\u500B${this.NameInput}\u3002`);break;case n.default.Group:m=this.NameGroup,r.boxType===n.default.Table&&(u=`${m}\u4E0D\u80FD\u653E\u5728${this.NameTable}\u88E1\u9762\u3002`);break;case n.default.Checks:m=this.NameChecks,r.boxType===n.default.Table&&(u=`${m}\u4E0D\u80FD\u653E\u5728${this.NameTable}\u88E1\u9762\u3002`);break;case n.default.RowBox:switch(m=this.NameRB,r.boxType){case n.default.RowBox:u=`${m}\u4E0D\u80FD\u653E\u5728${this.NameRB}\u88E1\u9762\u3002`;break;case n.default.Table:u=`${m}\u4E0D\u80FD\u653E\u5728${this.NameTable}\u88E1\u9762\u3002`;break}break;case n.default.Table:case n.default.TabPage:m=a.itemType==n.default.Table?this.NameTable:this.NameTabPage,this.isBox(r.itemType)?u=`${m}\u4E0D\u80FD\u653E\u5728${this._typeToName(r.itemType)}\u88E1\u9762\u3002`:u=`${m}\u4E0D\u80FD\u653E\u5728${this._typeToName(r.boxType)}\u88E1\u9762\u3002`;break}this.dropError=u;let I=this._getDropLine();if(d.default.show(I),h)i.append(I);else{let g=r.item[0].getBoundingClientRect();t.clientY<g.top+g.height/2?I.insertBefore(r.item):I.insertAfter(r.item)}}async onDragEnd(t){if(!this.dragging)return;const e=this.Area[0].getBoundingClientRect(),i=t.clientX,s=t.clientY,o=i>=e.left&&i<=e.right&&s>=e.top&&s<=e.bottom;if(this.dropError!="")B.default.msg(this.dropError);else if(o){let a=this.dragItem,r=this.dropItem,l=this.dragItem.itemType,h=this._getDropLine(),p=C.default.isEmpty(r.boxId)?this.BoxId0:r.boxId,u=$(this.dropElm).closest(this.FtChild).index();this._setChgBoxJsons(p,u);let m,I;if(this.dragIsNew){let g=this.uiMany.addItemRow(l);I=g.Id,m=T.default.toJson(g.Info);let b=await this._newItemA(l,I,m);a.item=b}else I=this.itemGetId(a.item),m=this.itemGetInfo(a.item);if(l==n.default.Input||l==n.default.Checks){let g=n.default.RowBox;if(this._isBoxTypeXor(g)){let b=r.boxType==g,F=b?this._getUpGridNum(h):0,G={Cols:this._resizeItemByRB(a.item,b,F)};this._setInfoProp(I,G)}g=n.default.Table,this._isBoxTypeXor(g)&&this._setInputForTable(a.item,r.boxType==g)}a.item.insertAfter(h)}this._setDragging(!1)}boxGetChildIds(t,e){let i=t==this.BoxId0?this.Area:this._findItem(t).find(this.FtChild).eq(e);if(d.default.isEmpty(i))return null;let s=this;return i.children(this.FtItem).map(function(){return d.default.getData($(this),s.DataId)}).get()}_findItem(t){return $(`[data-${this.DataId}="${t}"]`)}getChgBoxJsons(){return this.chgBoxJsons}_setChgBoxJsons(t,e){e<0&&(e=0);let i=this.chgBoxJsons.find(s=>s.BoxId===t);i?i.ChildNos.includes(e)||i.ChildNos.push(e):this.chgBoxJsons.push({BoxId:t,ChildNos:[e]})}_getDropLine(){return this.DropLine}startDragBtn(t,e){this._setDragging(t),this.dragIsNew=t,this.dragItem.itemType=e}_setDragging(t){t?(this.dragging=!0,this.dragItem=new _.default,this.dropItem=new _.default,this.dropElm=null,this.Area.addClass(this.ClsDragging)):(this.dragging=!1,this.dragIsNew=!1,this.Area.removeClass(this.ClsDragging),d.default.hide(this._getDropLine()))}_typeToName(t){switch(t){case n.default.Input:return this.NameInput;case n.default.Group:return this.NameGroup;case n.default.Checks:return this.NameChecks;case n.default.RowBox:return this.NameRB;case n.default.Table:return this.NameTable;case n.default.TabPage:return this.NameTabPage}}_isBoxTypeXor(t){let e=this.dragItem.boxType===t,i=this.dropItem.boxType===t;return e!==i}isBox(t){return t==n.default.RowBox||t==n.default.Table||t==n.default.TabPage}async _newItemA(t,e,i){switch(t){case n.default.Input:return await this._newInputA(e,i);case n.default.Group:return await this._newGroupA(e,i);case n.default.Checks:return this._newChecks(e,i);case n.default.RowBox:return this._newRB(e,i);case n.default.Table:return await this._newTableA(e,i);case n.default.TabPage:return this._newTabPage(e,i)}}async _newInputA(t,e){const i="_fid_",s="_title_",o="_titleTip_",a="_inputNote_";let r=this.inputMap,l=e.InputType;if(r[l]==null){let u={inputType:l,title:s,titleTip:o,fid:i,required:!0,cols:this.DefaultCols,inputNote:a},m=await w.default.getStrA("GetInputHtml",u);r[l]=m}let h=r[l];h=T.default.replaceAll(h,i,e.Fid).replace(s,e.Title).replace(o,e.TitleTip||"").replace(a,e.InputNote||"");let p=$(h);return this._itemAddProp(t,p,n.default.Input),await this._infoToInputA(e,p),p}async _newGroupA(t,e){const i="_title_";T.default.isEmpty(this.groupHtml)&&(this.groupHtml=await w.default.getStrA("GetGroupHtml",{title:i}));let s=this.groupHtml;s=s.replace(i,e.Title);let o=$(s);return this._itemAddProp(t,o,n.default.Group),o}_newChecks(t,e){let i=`<div class='row py-2'>${this._htmlChecks(t,e)}</div>`,s=$(i);return this._itemAddProp(t,s,n.default.Checks),s}_htmlChecks(t,e){let i=e.LabelFids.split(","),s="";for(let l=0;l<i.length;l+=2){let h=i[l+1];s+=`
+import InputTypeEstr from "@base/enum/InputTypeEstr";
+import UiItemTypeEstr from "@base/enum/UiItemTypeEstr";
+import MouseEstr from "@base/enum/MouseEstr";
+import DragItemDto from "@base/dto/DragItemDto";
+import _Ajax from "@base/svc/_Ajax";
+import _Array from "@base/svc/_Array";
+import _Input from "@base/svc/_Input";
+import _Json from "@base/svc/_Json";
+import _Obj from "@base/svc/_Obj";
+import _Str from "@base/svc/_Str";
+import _Tool from "@base/svc/_Tool";
+import _Var from "@base/svc/_Var";
+class UiView {
+  //建構子不能執行非同步
+  constructor(uiMany, ftWorkArea) {
+    this.uiMany = uiMany;
+    this.Area = $(ftWorkArea);
+    this.BoxId0 = "0";
+    this.ClsItem = "xu-item";
+    this.ClsChild = "xu-child";
+    this.ClsRowCol = "xu-row-col";
+    this.ClsDragging = "xu-dragging";
+    this.DataId = "id";
+    this.DataItemType = "itemtype";
+    this.DefaultCols = "2,3";
+    this.DropLine = $(".xu-drop-line");
+    this.FtItem = "." + this.ClsItem;
+    this.FtLabel = ".x-label";
+    this.FtInput = ".x-input";
+    this.FtReq = ".x-required";
+    this.FtTipIcon = ".ico-info";
+    this.FtInputNote = ".x-input-note";
+    this.FtChild = "." + this.ClsChild;
+    this.FtGroupTitle = ".x-group-title";
+    this.FtTable = ".x-table";
+    this.FtTableTitle = ".x-span-label";
+    this.NameInput = "[\u8F38\u5165\u6B04\u4F4D]";
+    this.NameGroup = "[\u5206\u7FA4\u6587\u5B57]";
+    this.NameChecks = "[\u591A\u9078\u6B04\u4F4D]";
+    this.NameRB = "[\u591A\u6B04\u5BB9\u5668]";
+    this.NameTable = "[\u591A\u7B46\u8868\u683C]";
+    this.NameTabPage = "[\u591A\u9801\u5BB9\u5668]";
+    this.isEdit = true;
+    this.newItemId = 0;
+    this.chgBoxJsons = [];
+    this.inputMap = {};
+    this.groupHtml = "";
+    this.dragItem = new DragItemDto();
+    this.dropItem = new DragItemDto();
+    this.dragIsNew = false;
+    this.dragging = false;
+    this.dropElm = null;
+    this.dropArea = null;
+    this.dropError = "";
+    let me = this;
+    this.Area.on(MouseEstr.RightMenu, this.FtItem, function(e) {
+      e.preventDefault();
+      let item = me._elmToItem(e.target);
+      me.uiMany.showMenu(e, item);
+    });
+    this.Area.on(MouseEstr.DragStart, function(e) {
+      if (me.isEdit)
+        me._onDragStart(e);
+    }).on(MouseEstr.DragOver, function(e) {
+      if (me.dragging)
+        me._onDragOver(e);
+    }).on(MouseEstr.DragEnd, function(e) {
+      me.onDragEnd(e);
+    });
+  }
+  //#region drag/drop 事件相關
+  _onDragStart(e) {
+    this._setDragging(true);
+    let drag = this.dragItem;
+    drag.item = $(e.target);
+    drag.itemType = this.itemGetType(drag.item);
+    let box = this._getBox(drag.item);
+    drag.boxType = this.itemGetType(box);
+    drag.boxId = box == null ? this.BoxId0 : this.itemGetId(box);
+  }
+  _onDragOver(e) {
+    e.preventDefault();
+    let dropElm = e.target;
+    if (this.dropElm == dropElm) return;
+    let dropObj = $(dropElm);
+    let dropItem = dropObj.closest(this.FtItem);
+    let hasDropItem = _Obj.notEmpty(dropItem);
+    this.dropElm = dropElm;
+    let drag = this.dragItem;
+    let drop = this.dropItem;
+    drop.item = dropItem;
+    drop.itemType = this.itemGetType(dropItem);
+    let dropInBox = false;
+    let boxAppendItem = false;
+    if (hasDropItem) {
+      if (this.isBox(drop.itemType) && dropObj.hasClass(this.ClsChild)) {
+        boxAppendItem = true;
+        drop.boxType = drop.itemType;
+        drop.boxId = this.itemGetId(dropItem);
+        dropInBox = true;
+      } else {
+        var box = this._getBox(dropItem);
+        drop.boxType = this.itemGetType(box);
+        drop.boxId = box == null ? this.BoxId0 : this.itemGetId(box);
+        dropInBox = this.isBox(drop.boxType);
+      }
+      console.log(`dragType=${drag.itemType}, dropType=${drop.itemType}, drop.boxType=${drop.boxType}, 
+				up css=${dropObj.attr("class")}, up item boxId=${dropObj.find(this.FtItem).length}, 
+				dropInBox=${dropInBox}`);
+    } else {
+      dropObj = this.Area;
+      boxAppendItem = true;
+    }
+    //!dropInBox 則都可以 drop
+    let error = "";
+    let dragName = "";
+    if (hasDropItem && drop.boxType != null) {
+      switch (drag.itemType) {
+        case UiItemTypeEstr.Input:
+          if (drop.boxType == UiItemTypeEstr.Table) {
+            if (dropObj.find(this.FtItem).length > 0)
+              error = `${this.NameTable}\u53EA\u80FD\u653E\u4E00\u500B${this.NameInput}\u3002`;
+          }
+          break;
+        case UiItemTypeEstr.Group:
+          dragName = this.NameGroup;
+          switch (drop.boxType) {
+            /*
+            case UiItemTypeEstr.Span:
+            	error = `${dragName}不能放在${this.NameSpan}裡面。`;
+            	break;
+            */
+            case UiItemTypeEstr.Table:
+              error = `${dragName}\u4E0D\u80FD\u653E\u5728${this.NameTable}\u88E1\u9762\u3002`;
+              break;
+          }
+          break;
+        case UiItemTypeEstr.Checks:
+          dragName = this.NameChecks;
+          switch (drop.boxType) {
+            /*
+            case UiItemTypeEstr.Span:
+            	error = `${dragName}不能放在${this.NameSpan}裡面。`;
+            	break;
+            */
+            case UiItemTypeEstr.Table:
+              error = `${dragName}\u4E0D\u80FD\u653E\u5728${this.NameTable}\u88E1\u9762\u3002`;
+              break;
+          }
+          break;
+        /*
+        case UiItemTypeEstr.Span:
+        	dragName = this.NameSpan;
+        	switch (drop.boxType) {
+        		case UiItemTypeEstr.Span:
+        			error = `${dragName}不能放在${this.NameSpan}裡面。`;
+        			break;
+        		case UiItemTypeEstr.Table:
+        			error = `${dragName}不能放在${this.NameTable}裡面。`;
+        			break;
+        	}
+        	break;
+        */
+        case UiItemTypeEstr.RowBox:
+          dragName = this.NameRB;
+          switch (drop.boxType) {
+            case UiItemTypeEstr.RowBox:
+              error = `${dragName}\u4E0D\u80FD\u653E\u5728${this.NameRB}\u88E1\u9762\u3002`;
+              break;
+            case UiItemTypeEstr.Table:
+              error = `${dragName}\u4E0D\u80FD\u653E\u5728${this.NameTable}\u88E1\u9762\u3002`;
+              break;
+          }
+          break;
+        case UiItemTypeEstr.Table:
+        case UiItemTypeEstr.TabPage:
+          dragName = drag.itemType == UiItemTypeEstr.Table ? this.NameTable : this.NameTabPage;
+          let dropIsBox = this.isBox(drop.itemType);
+          if (dropIsBox) {
+            error = `${dragName}\u4E0D\u80FD\u653E\u5728${this._typeToName(drop.itemType)}\u88E1\u9762\u3002`;
+          } else {
+            error = `${dragName}\u4E0D\u80FD\u653E\u5728${this._typeToName(drop.boxType)}\u88E1\u9762\u3002`;
+          }
+          break;
+      }
+    }
+    this.dropError = error;
+    let dropLine = this._getDropLine();
+    _Obj.show(dropLine);
+    if (boxAppendItem) {
+      dropObj.append(dropLine);
+    } else {
+      let dropRect = drop.item[0].getBoundingClientRect();
+      let mouseY = e.clientY;
+      let isUpPos = mouseY < dropRect.top + dropRect.height / 2;
+      if (isUpPos) {
+        dropLine.insertBefore(drop.item);
+      } else {
+        dropLine.insertAfter(drop.item);
+      }
+    }
+  }
+  //會改變Item的BoxId、ChildNo
+  //also called by uiMany drag/drop button
+  async onDragEnd(e) {
+    if (!this.dragging) return;
+    const rect = this.Area[0].getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    const inArea = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+    if (this.dropError != "") {
+      _Tool.msg(this.dropError);
+    } else if (inArea) {
+      let drag = this.dragItem;
+      let drop = this.dropItem;
+      let dragType = this.dragItem.itemType;
+      let dropLine = this._getDropLine();
+      let boxId = _Var.isEmpty(drop.boxId) ? this.BoxId0 : drop.boxId;
+      let childNo = $(this.dropElm).closest(this.FtChild).index();
+      this._setChgBoxJsons(boxId, childNo);
+      let info, itemId;
+      if (this.dragIsNew) {
+        let row = this.uiMany.addItemRow(dragType);
+        itemId = row.Id;
+        info = _Str.toJson(row.Info);
+        let item = await this._newItemA(dragType, itemId, info);
+        drag.item = item;
+      } else {
+        itemId = this.itemGetId(drag.item);
+        info = this.itemGetInfo(drag.item);
+      }
+      if (dragType == UiItemTypeEstr.Input || dragType == UiItemTypeEstr.Checks) {
+        let checkType = UiItemTypeEstr.RowBox;
+        if (this._isBoxTypeXor(checkType)) {
+          let inTable = drop.boxType == checkType;
+          let gridNum = inTable ? this._getUpGridNum(dropLine) : 0;
+          let prop = { Cols: this._resizeItemByRB(drag.item, inTable, gridNum) };
+          this._setInfoProp(itemId, prop);
+        }
+        checkType = UiItemTypeEstr.Table;
+        if (this._isBoxTypeXor(checkType))
+          this._setInputForTable(drag.item, drop.boxType == checkType);
+      }
+      drag.item.insertAfter(dropLine);
+    }
+    this._setDragging(false);
+  }
+  //只找第一層item
+  boxGetChildIds(boxId, childNo) {
+    let box = boxId == this.BoxId0 ? this.Area : this._findItem(boxId).find(this.FtChild).eq(childNo);
+    if (_Obj.isEmpty(box)) return null;
+    let me = this;
+    return box.children(this.FtItem).map(function() {
+      return _Obj.getData($(this), me.DataId);
+    }).get();
+  }
+  _findItem(itemId) {
+    return $(`[data-${this.DataId}="${itemId}"]`);
+  }
+  getChgBoxJsons() {
+    return this.chgBoxJsons;
+  }
+  //add chgBoxJsons
+  _setChgBoxJsons(boxId, childNo) {
+    if (childNo < 0) childNo = 0;
+    let row = this.chgBoxJsons.find((a) => a.BoxId === boxId);
+    if (!row) {
+      this.chgBoxJsons.push({ BoxId: boxId, ChildNos: [childNo] });
+    } else {
+      if (!row.ChildNos.includes(childNo))
+        row.ChildNos.push(childNo);
+    }
+  }
+  _getDropLine() {
+    return this.DropLine;
+  }
+  /**
+   * box item add child item 
+   * param {object} box
+   * param {string} boxType, null 表示工作區
+   * param {int} childNo child 位置, base 0
+   * param {object} item
+   */
+  /*
+  	_boxAddItem(box, boxType, childNo, item) {
+  		let upElm;	//container element
+  		switch (boxType) {
+  			case null:
+  				upElm = this.Area;
+  				break;
+  			case UiItemTypeEstr.RowBox:
+  				//找col位置
+  				upElm = box.children().eq(childNo);
+  				break;
+  			case UiItemTypeEstr.Table:
+  				//hide label, inputNote
+  				this._setInputForTable(item, true);
+  
+  				//找td位置: tr第0列
+  				upElm = box.find('tbody tr').eq(0).find('td').eq(childNo);
+  				break;
+  			case UiItemTypeEstr.TabPage:
+  				//todo
+  				//page位置
+  				break;
+  			default:
+  				return;
+  		}
+  
+  		upElm.append(item);
+  	}
+  	*/
+  //drag by button
+  //also called by uiMany
+  startDragBtn(status, itemType) {
+    this._setDragging(status);
+    this.dragIsNew = status;
+    this.dragItem.itemType = itemType;
+  }
+  _setDragging(status) {
+    if (status) {
+      this.dragging = true;
+      this.dragItem = new DragItemDto();
+      this.dropItem = new DragItemDto();
+      this.dropElm = null;
+      this.Area.addClass(this.ClsDragging);
+    } else {
+      this.dragging = false;
+      this.dragIsNew = false;
+      this.Area.removeClass(this.ClsDragging);
+      _Obj.hide(this._getDropLine());
+    }
+  }
+  //#endregion
+  //#region 判斷 & 轉換
+  //item type to item show name
+  _typeToName(itemType) {
+    switch (itemType) {
+      case UiItemTypeEstr.Input:
+        return this.NameInput;
+      case UiItemTypeEstr.Group:
+        return this.NameGroup;
+      case UiItemTypeEstr.Checks:
+        return this.NameChecks;
+      //case UiItemTypeEstr.Span:
+      //	return this.NameSpan;
+      case UiItemTypeEstr.RowBox:
+        return this.NameRB;
+      case UiItemTypeEstr.Table:
+        return this.NameTable;
+      case UiItemTypeEstr.TabPage:
+        return this.NameTabPage;
+    }
+  }
+  //互斥檢查 for 移入/移出 的boxType
+  //param {string} checkType: 要檢查的 itemType
+  //return {bool} 是否互斥
+  _isBoxTypeXor(checkType) {
+    let dragBoxYes = this.dragItem.boxType === checkType;
+    let dropBoxYes = this.dropItem.boxType === checkType;
+    return dragBoxYes !== dropBoxYes;
+  }
+  //called by: this, uiMany
+  isBox(type) {
+    return (
+      /*type == UiItemTypeEstr.Span ||*/
+      type == UiItemTypeEstr.RowBox || type == UiItemTypeEstr.Table || type == UiItemTypeEstr.TabPage
+    );
+  }
+  //#endregion
+  //#region 新增 item
+  //產生新item
+  //called: onDragEnd、loadJsonsA 
+  //param {json} info: item info 資訊
+  async _newItemA(itemType, itemId, info) {
+    switch (itemType) {
+      case UiItemTypeEstr.Input:
+        return await this._newInputA(itemId, info);
+      case UiItemTypeEstr.Group:
+        return await this._newGroupA(itemId, info);
+      case UiItemTypeEstr.Checks:
+        return this._newChecks(itemId, info);
+      //case UiItemTypeEstr.Span:
+      //	return this._newSpan(itemId, info);
+      case UiItemTypeEstr.RowBox:
+        return this._newRB(itemId, info);
+      case UiItemTypeEstr.Table:
+        return await this._newTableA(itemId, info);
+      case UiItemTypeEstr.TabPage:
+        return this._newTabPage(itemId, info);
+    }
+  }
+  /**
+   * add input
+   * called _newItemA, onModalOk
+   * param {string} id
+   * param {json} info 包含欄位: Fid, Title, Required
+   * returns item
+   */
+  async _newInputA(id, info) {
+    const Fid = "_fid_";
+    const Title = "_title_";
+    const TitleTip = "_titleTip_";
+    const InputNote = "_inputNote_";
+    let map = this.inputMap;
+    let inputType = info.InputType;
+    if (map[inputType] == null) {
+      let data = {
+        inputType,
+        title: Title,
+        titleTip: TitleTip,
+        fid: Fid,
+        //前端重設以下欄位
+        required: true,
+        //後端先傳回req mark, 前端若無則hide
+        cols: this.DefaultCols,
+        inputNote: InputNote
+      };
+      let tpl = await _Ajax.getStrA("GetInputHtml", data);
+      map[inputType] = tpl;
+    }
+    let html = map[inputType];
+    html = _Str.replaceAll(html, Fid, info.Fid).replace(Title, info.Title).replace(TitleTip, info.TitleTip || "").replace(InputNote, info.InputNote || "");
+    let item = $(html);
+    this._itemAddProp(id, item, UiItemTypeEstr.Input);
+    await this._infoToInputA(info, item);
+    return item;
+  }
+  async _newGroupA(id, info) {
+    const Title = "_title_";
+    if (_Str.isEmpty(this.groupHtml))
+      this.groupHtml = await _Ajax.getStrA("GetGroupHtml", { title: Title });
+    let html = this.groupHtml;
+    html = html.replace(Title, info.Title);
+    let item = $(html);
+    this._itemAddProp(id, item, UiItemTypeEstr.Group);
+    return item;
+  }
+  _newChecks(id, info) {
+    let html = `<div class='row py-2'>${this._htmlChecks(id, info)}</div>`;
+    let item = $(html);
+    this._itemAddProp(id, item, UiItemTypeEstr.Checks);
+    return item;
+  }
+  //get checks 內部 html only
+  //called by _newChecks, onModalOk
+  _htmlChecks(id, info) {
+    let fids = info.LabelFids.split(",");
+    let html = "";
+    for (let i = 0; i < fids.length; i += 2) {
+      let fid = fids[i + 1];
+      html += `
 <label class='xi-check'>
-    <input data-fid='${h}' name='${h}' data-edit checked='' type='checkbox' data-type='check' data-value=''>${i[l]}
+    <input data-fid='${fid}' name='${fid}' data-edit checked='' type='checkbox' data-type='check' data-value=''>${fids[i]}
     <span class='xi-cspan'></span>
 </label>
-`}let o=this.ClsRowCol,a=e.Cols.split(","),r=C.default.toBool(e.IsHori)?"x-hbox":"x-vbox";return s=`
-<div class='col-md-${a[0]} x-label'>${e.Title}</div>
-<div class='col-md-${a[1]} x-input ${r}'>
-	${s}
+`;
+    }
+    let clsCol = this.ClsRowCol;
+    let cols = info.Cols.split(",");
+    let cls = _Var.toBool(info.IsHori) ? "x-hbox" : "x-vbox";
+    html = `
+<div class='col-md-${cols[0]} x-label'>${info.Title}</div>
+<div class='col-md-${cols[1]} x-input ${cls}'>
+	${html}
 </div>
-`,s}_newRB(t,e){let i=e.RowType.split(","),s="";for(let a=0;a<i.length;a++)s+=`<div class='col-md-${i[a]} ${this.ClsRowCol} ${this.ClsChild}'></div>`;s=`<div class='row py-2'>${s}</div>`;let o=$(s);return this._itemAddProp(t,o,n.default.RowBox),o}async _newTableA(t,e){let s=$(`
+`;
+    return html;
+  }
+  /*
+  _newSpan(id, info) {
+  	//加上py-2上下空間, 才能drop, dragOver時e.target為本身item !!
+  	let html = '<div class="d-flex w-100 xu-span"></div>';
+  	let item = $(html);
+  	this._itemAddProp(id, item, UiItemTypeEstr.Span);
+  	return item;
+  }
+  */
+  //add new RowBox
+  _newRB(id, info) {
+    let cols = info.RowType.split(",");
+    let html = "";
+    for (let i = 0; i < cols.length; i++) {
+      html += `<div class='col-md-${cols[i]} ${this.ClsRowCol} ${this.ClsChild}'></div>`;
+    }
+    html = `<div class='row py-2'>${html}</div>`;
+    let item = $(html);
+    this._itemAddProp(id, item, UiItemTypeEstr.RowBox);
+    return item;
+  }
+  async _newTableA(id, info) {
+    let html = `
 <div class='py-2'>
 	<div class='x-btns-box'>
 		<span class='x-span-label'>\u591A\u7B46\u8868\u683C</span>
@@ -30,11 +508,352 @@ let u="",m="";if(o&&r.boxType!=null)switch(a.itemType){case n.default.Input:r.bo
 		</tbody>
 	</table>
 </div>
-`);return await this._infoToTableA(e,s),this._itemAddProp(t,s,n.default.Table),s}_newTabPage(t,e){return null}_itemAddProp(t,e,i){e.addClass(this.ClsItem),e.attr("draggable","true"),d.default.setData(e,this.DataId,t),d.default.setData(e,this.DataItemType,i)}_noteSetStatus(t){d.default.showByStatus(t,t.text().trim()!="")}_setInputForTable(t,e){let i=t.find(this.FtLabel),s=t.find(this.FtInputNote);this._objShowGrid(t.find(this.FtInput),!e),e?(d.default.hide(i),d.default.hide(s)):(d.default.show(i),this._noteSetStatus(s))}_resizeItemByRB(t,e,i){let s=t.find(this.FtLabel),o=t.find(this.FtInput),a=t.find(this.FtInputNote),r=e?i==6?"4,6":a.text().trim()!=""?"3,6":"6,6":this.DefaultCols,l=r.split(",");return this._objSetGrid(s,l[0]),this._objSetGrid(o,l[1]),r}_objShowGrid(t,e){let s=this._getGridCss(t);if(!s)return;let o=s.endsWith("h");e&&o?d.default.renameCss(t,s,s.slice(0,-1)):!e&&!o&&d.default.renameCss(t,s,s+"h")}_objSetGrid(t,e){let i=this._getGridCss(t);i&&d.default.renameCss(t,i,"col-md-"+e)}async infoToItemA(t,e){let i=t.Id,s={status:!0,itemIds:null};switch(this.itemGetType(e)){case n.default.Input:let o=this._getInputType(e);if(await this._infoToInputA(t,e),o!=t.InputType){let r=(await this._newInputA(t.Id,t)).find(this.FtInput).html();e.find(this.FtInput).html(r)}break;case n.default.Group:e.find(this.FtGroupTitle).text(t.Title||"");break;case n.default.Checks:t.LabelFids=T.default.replaceAll(t.LabelFids,`
-`,","),e.html(this._htmlChecks(i,t));break;case n.default.RowBox:break;case n.default.Table:return await this._infoToTableA(t,e);case n.default.TabPage:break}return s}async _infoToInputA(t,e){let i=e.find(this.FtLabel),s=e.find(this.FtInput),o=(t.Cols||this.DefaultCols).split(",");this._objSetGrid(i,o[0]),this._objSetGrid(s,o[1]),i.html(`<span class="x-required">*</span>${t.Title}`);let a=t.InputType;if(a!=f.default.Check&&a!=f.default.Radio&&a!=f.default.File&&s.find("input").attr("placeholder",t.Fid),d.default.showByStatus(e.find(this.FtReq),t.Required),d.default.showByStatus(e.find(this.FtTipIcon),T.default.notEmpty(t.TitleTip)),this._noteSetStatus(e.find(this.FtInputNote)),a==f.default.Radio&&T.default.notEmpty(t.ExtInfo)){let r="",l=t.Fid,h=t.ExtInfo.split(",");for(let p=0;p<h.length;p++)r+=`
+`;
+    let item = $(html);
+    await this._infoToTableA(info, item);
+    this._itemAddProp(id, item, UiItemTypeEstr.Table);
+    return item;
+  }
+  //todo
+  _newTabPage(id, info) {
+    return null;
+  }
+  //item 加入共用屬性, 不儲存 info
+  _itemAddProp(id, item, itemType) {
+    item.addClass(this.ClsItem);
+    item.attr("draggable", "true");
+    _Obj.setData(item, this.DataId, id);
+    _Obj.setData(item, this.DataItemType, itemType);
+  }
+  //#endregion
+  _noteSetStatus(note) {
+    _Obj.showByStatus(note, note.text().trim() != "");
+  }
+  //#region 更新 item 外觀
+  //移除/增加 label & inputNote, 直接搬到table, 因為內容有變
+  //called by mouseUp
+  //param {bool} inBox: drop位置是否在Table裡面
+  _setInputForTable(item, inBox) {
+    let label = item.find(this.FtLabel);
+    let note = item.find(this.FtInputNote);
+    this._objShowGrid(item.find(this.FtInput), !inBox);
+    if (inBox) {
+      _Obj.hide(label);
+      _Obj.hide(note);
+    } else {
+      _Obj.show(label);
+      this._noteSetStatus(note);
+    }
+  }
+  /**
+   * 重設item寬度, 不處理show/hide
+   * param {bool} inBox: in box or not
+   * param {int} contGridNum: inBox=true時必須傳入, drop container object(row col)
+   * return {string} cols
+   */
+  _resizeItemByRB(item, inBox, contGridNum) {
+    let label = item.find(this.FtLabel);
+    let input = item.find(this.FtInput);
+    let note = item.find(this.FtInputNote);
+    let cols = !inBox ? this.DefaultCols : contGridNum == 6 ? "4,6" : note.text().trim() != "" ? "3,6" : "6,6";
+    let values = cols.split(",");
+    this._objSetGrid(label, values[0]);
+    this._objSetGrid(input, values[1]);
+    return cols;
+  }
+  //啟動/停用 css RWD
+  //param {bool} status
+  _objShowGrid(obj, status) {
+    const tail = "h";
+    let css = this._getGridCss(obj);
+    if (!css) return;
+    let findTail = css.endsWith(tail);
+    if (status && findTail) {
+      _Obj.renameCss(obj, css, css.slice(0, -1));
+    } else if (!status && !findTail) {
+      _Obj.renameCss(obj, css, css + tail);
+    }
+  }
+  //設定css grid
+  //param {int} colNum 新的 col-md- 數字
+  _objSetGrid(obj, colNum) {
+    let css = this._getGridCss(obj);
+    if (css) {
+      _Obj.renameCss(obj, css, "col-md-" + colNum);
+    }
+  }
+  /**
+   * called by UiMany onModalOk(修改item內容)
+   * 更新畫面上的Item(含外觀、不含Info欄位)
+   * param {json} info
+   * param {object} item
+   * return {status:bool, itemIds:string[]}如果box有刪減欄位, 則傳回要刪除的itemId 字串陣列
+   */
+  async infoToItemA(info, item) {
+    let id = info.Id;
+    let defResult = { status: true, itemIds: null };
+    switch (this.itemGetType(item)) {
+      case UiItemTypeEstr.Input:
+        let oldType = this._getInputType(item);
+        await this._infoToInputA(info, item);
+        if (oldType != info.InputType) {
+          let newItem = await this._newInputA(info.Id, info);
+          let inputHtml = newItem.find(this.FtInput).html();
+          item.find(this.FtInput).html(inputHtml);
+        }
+        break;
+      case UiItemTypeEstr.Group:
+        item.find(this.FtGroupTitle).text(info.Title || "");
+        break;
+      case UiItemTypeEstr.Checks:
+        info.LabelFids = _Str.replaceAll(info.LabelFids, "\n", ",");
+        item.html(this._htmlChecks(id, info));
+        break;
+      /*
+      case UiItemTypeEstr.Span:
+      	//do nothing
+      	break;
+      */
+      case UiItemTypeEstr.RowBox:
+        break;
+      case UiItemTypeEstr.Table:
+        return await this._infoToTableA(info, item);
+      //break;
+      case UiItemTypeEstr.TabPage:
+        break;
+    }
+    return defResult;
+  }
+  /**
+   * info json write to input item UI
+   * called: _newInputA, InfoToItemA
+   * param {json} info 
+   * param {jquery object} item 
+   */
+  async _infoToInputA(info, item) {
+    let label = item.find(this.FtLabel);
+    let input = item.find(this.FtInput);
+    let cols = (info.Cols || this.DefaultCols).split(",");
+    this._objSetGrid(label, cols[0]);
+    this._objSetGrid(input, cols[1]);
+    label.html(`<span class="x-required">*</span>${info.Title}`);
+    let inputType = info.InputType;
+    if (inputType != InputTypeEstr.Check && inputType != InputTypeEstr.Radio && inputType != InputTypeEstr.File) {
+      input.find("input").attr("placeholder", info.Fid);
+    }
+    _Obj.showByStatus(item.find(this.FtReq), info.Required);
+    _Obj.showByStatus(item.find(this.FtTipIcon), _Str.notEmpty(info.TitleTip));
+    this._noteSetStatus(item.find(this.FtInputNote));
+    if (inputType == InputTypeEstr.Radio && _Str.notEmpty(info.ExtInfo)) {
+      let html = "";
+      let fid = info.Fid;
+      let values = info.ExtInfo.split(",");
+      for (let i = 0; i < values.length; i++) {
+        html += `
 <label class='xi-check'>
-	<input type='radio' data-fid='${l}' name='${l}' data-edit data-value='${p+1}' data-type='radio'>${h[p]}
+	<input type='radio' data-fid='${fid}' name='${fid}' data-edit data-value='${i + 1}' data-type='radio'>${values[i]}
 	<span class='xi-rspan'></span>
 </label>
-`;e.find(".xi-box").html(r)}}_getUpGridNum(t){let e=t.closest("[class*='col-md-']"),i=this._getGridCss(e);return i?parseInt(i.split("-")[2],10):0}_getGridCss(t){let e=t.attr("class");return e&&e.split(/\s+/).find(i=>i.startsWith("col-md-"))||""}async _infoToTableA(t,e){let i=e.find("th").length,s=t.Heads.split(",");if(i>s.length&&!await B.default.ansA("\u662F\u5426\u78BA\u5B9A\u6E1B\u5C11\u6B04\u4F4D\u6578\u76EE\uFF0C\u5C3E\u7AEF\u6B04\u4F4D\u5C07\u6703\u88AB\u79FB\u9664?"))return{status:!1};let o=s.length,a=e.find("thead tr"),r=e.find("tbody tr"),l=o-i,h=[];if(l>0)for(let p=i;p<o;p++)a.append("<th></th>"),r.append(`<td class="${this.ClsChild}"></td>`);else if(l<0){let p=r.find("td").slice(l);h=p.find("[data-id]").map(function(){return $(this).data("id")}).get(),a.find("th").slice(l).remove(),p.remove()}return e.find(this.FtTableTitle).text(t.Name||""),a.find("th").each(function(p){$(this).text(s[p]||"")}),{status:!0,itemIds:h}}reset(){this.Area.empty(),this.chgBoxJsons=[]}async loadJsonsA(t,e){if(v.default.isEmpty(t))return;let i=e||this.Area,s=this;for(let o=0;o<t.length;o++){let a=t[o];if(A.default.isEmpty(a))continue;C.default.isStr(a.Info)&&(a.Info=T.default.toJson(a.Info));let r=await this._newItemA(a.ItemType,a.Id,a.Info);a.ItemType==n.default.Input&&this.itemGetType(i.closest(this.FtItem))==n.default.Table&&this._setInputForTable(r,!0),i.append(r);let l=a.Childs2;if(v.default.isEmpty(l))continue;let h=l.length;const p=r.find(this.FtChild);for(let u=0;u<p.length&&u<h;u++)v.default.isEmpty(l[u])||await s.loadJsonsA(l[u],$(p[u]))}}getJsons(){let t=this;function e(s){let o=t.itemGetType(s),a={ItemType:o,Info:t.itemGetInfo(s)};return t.isBox(o)&&(a.Childs2=[],s.find(t.FtChild).each(function(r){let l=[];$(this).children(t.FtItem).each(function(h){l[h]=e($(this))}),a.Childs2[r]=l})),a}let i=[];return this.Area.children(this.FtItem).each(function(){i.push(e($(this)))}),i}deleteItem(t){t.remove()}_getInputType(t){return N.default.getType(t.find(this.FtInput))}itemGetId(t){return d.default.getData(t,this.DataId)}itemGetType(t){return d.default.isEmpty(t)?null:d.default.getData(t,this.DataItemType)}itemGetInfo(t){return this._getInfo(this.itemGetId(t))}_getInfo(t){return this.uiMany.getInfo(t)}_setInfo(t,e){return this.uiMany.setInfo(t,e)}_setInfoProp(t,e){return this.uiMany.setInfoProp(t,e)}_elmToItem(t){return $(t).closest(this.FtItem)}_getBox(t){let e=t.parents(this.FtItem).first();return d.default.isEmpty(e)?null:e}setEdit(t){this.isEdit=t}}})();
+`;
+      }
+      item.find(".xi-box").html(html);
+    }
+  }
+  //讀取上層 col-md- 後面的"文數字"
+  _getUpGridNum(obj) {
+    let col = obj.closest("[class*='col-md-']");
+    let css = this._getGridCss(col);
+    return css ? parseInt(css.split("-")[2], 10) : 0;
+  }
+  //get col css class
+  _getGridCss(obj) {
+    let className = obj.attr("class");
+    if (!className) return "";
+    return className.split(/\s+/).find((a) => a.startsWith("col-md-")) || "";
+  }
+  /**
+   * info to table item ui
+   * called by: 1.新增, 2.改變欄位數
+   * //param {function} fnCallback 可為空
+   * return {string[]} 要刪除的 itemId 字串陣列
+   */
+  async _infoToTableA(info, item) {
+    let oldLen = item.find("th").length;
+    let heads = info.Heads.split(",");
+    if (oldLen > heads.length && !await _Tool.ansA("\u662F\u5426\u78BA\u5B9A\u6E1B\u5C11\u6B04\u4F4D\u6578\u76EE\uFF0C\u5C3E\u7AEF\u6B04\u4F4D\u5C07\u6703\u88AB\u79FB\u9664?"))
+      return { status: false };
+    let newLen = heads.length;
+    let headBox = item.find("thead tr");
+    let bodyBox = item.find("tbody tr");
+    let addLen = newLen - oldLen;
+    let ids = [];
+    if (addLen > 0) {
+      for (let i = oldLen; i < newLen; i++) {
+        headBox.append("<th></th>");
+        bodyBox.append(`<td class="${this.ClsChild}"></td>`);
+      }
+    } else if (addLen < 0) {
+      let tdList = bodyBox.find("td").slice(addLen);
+      ids = tdList.find("[data-id]").map(function() {
+        return $(this).data("id");
+      }).get();
+      headBox.find("th").slice(addLen).remove();
+      tdList.remove();
+    }
+    item.find(this.FtTableTitle).text(info.Name || "");
+    headBox.find("th").each(function(i) {
+      $(this).text(heads[i] || "");
+    });
+    return { status: true, itemIds: ids };
+  }
+  //清空工作區
+  reset() {
+    this.Area.empty();
+    this.chgBoxJsons = [];
+  }
+  /**
+   * (recursive)載入items(巢狀格式), 此時Info欄位可能為Json或字串 !!
+   * called by uiMany loadRowsA、loadJsonsA
+   * param {json array} jsons: 內含Id
+   * param {object} (this.Area) cont child container
+   */
+  async loadJsonsA(jsons, cont) {
+    if (_Array.isEmpty(jsons)) return;
+    let targetCont = cont || this.Area;
+    let me = this;
+    for (let i = 0; i < jsons.length; i++) {
+      let json = jsons[i];
+      if (_Json.isEmpty(json)) continue;
+      if (_Var.isStr(json.Info))
+        json.Info = _Str.toJson(json.Info);
+      let item = await this._newItemA(json.ItemType, json.Id, json.Info);
+      if (json.ItemType == UiItemTypeEstr.Input && this.itemGetType(targetCont.closest(this.FtItem)) == UiItemTypeEstr.Table)
+        this._setInputForTable(item, true);
+      targetCont.append(item);
+      let childs2 = json.Childs2;
+      if (_Array.isEmpty(childs2)) continue;
+      let childLen = childs2.length;
+      const children = item.find(this.FtChild);
+      for (let idx = 0; idx < children.length && idx < childLen; idx++) {
+        if (_Array.isEmpty(childs2[idx]))
+          continue;
+        await me.loadJsonsA(childs2[idx], $(children[idx]));
+      }
+    }
+  }
+  //ui to jsons
+  getJsons() {
+    let me = this;
+    function _item2Json(item) {
+      let itemType = me.itemGetType(item);
+      let json = {
+        ItemType: itemType,
+        Info: me.itemGetInfo(item)
+        //data-info取出來為json型態!!
+      };
+      if (me.isBox(itemType)) {
+        json.Childs2 = [];
+        item.find(me.FtChild).each(function(idx) {
+          let childs = [];
+          $(this).children(me.FtItem).each(function(idx2) {
+            childs[idx2] = _item2Json($(this));
+          });
+          json.Childs2[idx] = childs;
+        });
+      }
+      return json;
+    }
+    let jsons = [];
+    this.Area.children(this.FtItem).each(function() {
+      jsons.push(_item2Json($(this)));
+    });
+    return jsons;
+  }
+  //刪除item, 包含子item
+  deleteItem(item) {
+    item.remove();
+  }
+  //#endregion
+  //#region 讀取 item
+  //get item inputType for UiItemTypeEstr.Input
+  _getInputType(item) {
+    return _Input.getType(item.find(this.FtInput));
+  }
+  //also called by UiMany
+  itemGetId(item) {
+    return _Obj.getData(item, this.DataId);
+  }
+  //get item type, also called outside
+  itemGetType(item) {
+    return _Obj.isEmpty(item) ? null : _Obj.getData(item, this.DataItemType);
+  }
+  itemGetInfo(item) {
+    return this._getInfo(this.itemGetId(item));
+  }
+  /**
+   * item get info 
+   * param {object} item
+   * returns {json}
+   */
+  _getInfo(itemId) {
+    return this.uiMany.getInfo(itemId);
+  }
+  _setInfo(itemId, info) {
+    return this.uiMany.setInfo(itemId, info);
+  }
+  _setInfoProp(itemId, prop) {
+    return this.uiMany.setInfoProp(itemId, prop);
+  }
+  /*
+  itemSetInfo(item, info) {
+  	//_Obj.setData(item, this.DataInfo, _Json.toStr(info));
+  	this._setInfo(this.itemGetId(item), info);
+  }
+  */
+  //內部element to Item object
+  _elmToItem(elm) {
+    return $(elm).closest(this.FtItem);
+  }
+  //傳回上一層item, 沒有則傳回null
+  _getBox(item) {
+    let box = item.parents(this.FtItem).first();
+    return _Obj.isEmpty(box) ? null : box;
+  }
+  //#endregion
+  //#region 其他
+  setEdit(status) {
+    this.isEdit = status;
+  }
+  /*
+  	//??
+  	async addItem(json, box) {
+  		//this.nodeCount++;
+  		//if (json.id == null)
+  		//	json.id = (this.items.length + 1) * (-1);
+  		let itemType = json.ItemType;
+  		let item = (itemType == UiItemTypeEstr.Input) ? new UiInput(this, json) :
+  			(itemType == UiItemTypeEstr.RowBox) ? new UiBox(this, json) :
+  			(itemType == UiItemTypeEstr.Group) ? new UiGroup(this, json) :
+  			(itemType == UiItemTypeEstr.Table) ? new UiTable(this, json) :
+  			null;
+  
+  		if (item == null) {
+  			console.log(`json.ItemType is wrong.(${json.ItemType})`);
+  			return null;
+  		}
+  
+  		//產生UI元件
+  		let html = await item.newHtml(json);
+  		box.append(html);
+  
+  		this.newItemId++;
+  		this.items.push(item);
+  		return item;
+  	}
+  	*/
+  //#endregion
+}
+export {
+  UiView as default
+};
 //# sourceMappingURL=UiView.js.map

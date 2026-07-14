@@ -64,6 +64,7 @@ export default class _Fun {
         _Leftmenu.init();
         _Pjax.init('.x-main-right');
         _Tool.init();
+        _Fun.setLocaleA(locale);
         moment.locale(_Fun.locale);
 
         //註冊事件, 避免使用inline script for CSRF
@@ -77,6 +78,14 @@ export default class _Fun {
                 'RequestVerificationToken': $('meta[name="csrf-token"]').attr('content')
             }
         });
+    }
+
+    static async setLocaleA(code: string) {
+        const module = await import(
+            `/locale/${code}/_BR.js`
+        );
+
+        window._BR = module.default;
     }
 
     static async onHelloA(): Promise<void> {

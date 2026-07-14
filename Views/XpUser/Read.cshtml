@@ -1,14 +1,13 @@
-﻿<script nonce="@_Fun.Nonce">
-    /// <reference path="../../wwwroot/js/base/CrudR.js" />
-    /// <reference path="../../wwwroot/js/base/EditMany.js" />
+﻿<script nonce="@_Fun.Nonce" type="module" src="~/jsView/XpUser.min.js"></script>
+
+@*
+<script nonce="@_Fun.Nonce">
     $(function () {
         _me.init();
     });
 
     var _me = {
-        /** @@type {CrudR} */
         crudR: null,
-        /** @@type {EditMany} */
         mUserRole: null,
 
         init: function () {        
@@ -39,6 +38,7 @@
 
     }; //class
 </script>
+*@
 
 <vc:xg-prog-path />
 <div class="x-prog">
