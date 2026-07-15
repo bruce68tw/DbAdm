@@ -95,9 +95,6 @@
     <None Include="Views\GenCrud\Read.cshtml" />
     <None Include="Views\Project\Edit.cshtml" />
     <None Include="Views\Project\Read.cshtml" />
-    <None Include="wwwroot\jsView\GenCrud.js2" />
-    <None Include="wwwroot\jsView\UiMany.js2" />
-    <None Include="wwwroot\jsView\UiView.js2" />
     <None Include="wwwroot\jsView\zz_MyCrudUi.j_old" />
     <None Include="wwwroot\jsView\_openUser.js" />
     <None Include="wwwroot\jsView\_xp.js" />

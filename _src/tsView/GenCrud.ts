@@ -1,11 +1,11 @@
 //import Mustache from "mustache";
-import UiMany from "./UiMany";
+import UiMany from "./UiMany.js";
 import { CrudR, EditDto, EditMany, EditOne, FunEstr, MouseEstr, _Ajax,
     _Array, _Edit, _Form, _Fun, _Json, _Modal, _Nav, _Obj, _Prog, _Str,
     _Tab, _Tool, _Valid, _iCheck, _iSelect, _iText
 } from "@baseJs";
 
-var _me:any = {
+_me = {
     //#region for Crud
     init: function () {
 		//datatable config
@@ -921,3 +921,7 @@ var _me:any = {
 
     //#endregion
 }; //class
+
+$(function () {
+    _me.init();
+});

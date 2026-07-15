@@ -17,9 +17,11 @@ BaseTs 安裝 js 套件：
 
 引用 BaseTs 的專案:
   安裝 js 套件:
-    npm install -D gulp esbuild esbuild-plugin-tsconfig-paths gulp-clean gulp-concat gulp-clean-css gulp-terser gulp-sourcemaps gulp-uglify gulp-rename
+    npm install -D gulp esbuild esbuild-plugin-tsconfig-paths gulp-clean gulp-concat gulp-clean-css gulp-terser gulp-sourcemaps
+    //npm uninstall lgulp-uglify gulp-rename
     //npm install -D gulp-rename
     npm install -D esbuild-plugin-tsconfig-paths
+
   建立 js & copy css, lib:
     gulp
 

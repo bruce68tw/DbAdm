@@ -1,4 +1,4 @@
-import UiMany from "./UiMany";
+import type UiMany from "./UiMany.js";
 import { InputTypeEstr, MouseEstr, UiItemTypeEstr, _Ajax, _Array,
 	_Input, _Json, _Obj, _Prog, _Str, _Tool, _Var, DragItemDto
 } from "@baseJs";
@@ -12,6 +12,8 @@ import { InputTypeEstr, MouseEstr, UiItemTypeEstr, _Ajax, _Array,
  * 3.Info 儲存在 uiMany
  */
 export default class UiView {
+	public DefaultCols: string;
+
 	private uiMany: UiMany;
 	private Area: JQuery;
 	private BoxId0: string;
@@ -21,7 +23,6 @@ export default class UiView {
 	private ClsDragging: string;
 	private DataId: string;
 	private DataItemType: string;
-	private DefaultCols: string;
 	private DropLine: JQuery;
 	private FtItem: string;
 	private FtLabel: string;
@@ -119,7 +120,7 @@ export default class UiView {
 		//work area註冊全域事件
 		//右鍵選單事件
 		let me = this;
-		this.Area.on(MouseEstr.RightMenu, this.FtItem, function (e: JQuery.MouseUpEvent) {
+		this.Area.on(MouseEstr.RightMenu, this.FtItem, function (e) {
 			e.preventDefault();  // 取消瀏覽器預設右鍵選單
 			//e.stopPropagation(); // 阻止冒泡，避免先被 document 的 mousedown 處理
 

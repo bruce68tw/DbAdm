@@ -23,8 +23,7 @@
     }
   },
   "include": [
-    "./_src/forEdit.d.ts",
-    //"./_src/tsBase.d.ts",
+    "./_src/forEdit.d.ts",  //建立全域變數
     "./_src/tsBase/**/*.ts",
     "./_src/tsView/*.ts"
   ],

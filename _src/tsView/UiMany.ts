@@ -1,34 +1,10 @@
-﻿import UiView from "./UiView";
+﻿import UiView from "./UiView.js";
 import {
     MouseEstr, UiItemTypeEstr, InputTypeEstr, EditMany, _Ajax,
     _Array, _Form, _Fun, _iCheck, _iSelect,
     _iText, _Json, _Modal, _Nav, _Obj,
     _Prog, _Str, _Tab, _Tool, _Valid
 } from "@baseJs";
-
-/*
-import MouseEstr from "@base/enum/MouseEstr";
-import UiItemTypeEstr from "@base/enum/UiItemTypeEstr";
-import InputTypeEstr from "@base/enum/InputTypeEstr";
-import EditMany from "@base/svc/EditMany";
-
-import _Ajax from "@base/svc/_Ajax";
-import _Array from "@base/svc/_Array";
-import _Form from "@base/svc/_Form";
-import _Fun from "@base/svc/_Fun";
-import _iCheck from "@base/svc/_iCheck";
-import _iSelect from "@base/svc/_iSelect";
-import _iText from "@base/svc/_iText";
-import _Json from "@base/svc/_Json";
-import _Modal from "@base/svc/_Modal";
-import _Nav from "@base/svc/_Nav";
-import _Obj from "@base/svc/_Obj";
-import _Prog from "@base/svc/_Prog";
-import _Str from "@base/svc/_Str";
-import _Tab from "@base/svc/_Tab";
-import _Tool from "@base/svc/_Tool";
-import _Valid from "@base/svc/_Valid";
-*/
 
 /**
  * 控制 EditMany, 參考 FlowMany.js, called by Read.cshtml only !!
@@ -56,7 +32,7 @@ export default class UiMany {
     private mItem: EditMany;
     private newInputNo: number;
     private eformItems: JQuery;
-    private uiView: any;
+    private uiView: UiView;
 
     /**
      * @param {string} ftWorkArea
@@ -266,7 +242,7 @@ export default class UiMany {
     }
 
     //on show right menu
-    showMenu(event: JQuery.MouseUpEvent, item: JQuery) {
+    showMenu(event: any, item: JQuery) {
         //set instance variables
         this.modalItem = item;
         this.modalItemId = this.uiView.itemGetId(item);

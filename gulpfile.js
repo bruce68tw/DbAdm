@@ -42,9 +42,7 @@ async function doTsBase() {
         //format: "iife",
         format: "esm",
         platform: "browser",
-        target: ["es2019"],
-        //tsconfig: "./tsconfig.json"
-        //plugins: [tsconfigPaths()]
+        target: ["es2019"]
     });
 }
 
@@ -65,12 +63,11 @@ async function doTsView() {
             bundle: false,  //重要!! (false)single file, 如果true會merge base
             treeShaking: false,
             sourcemap: true,
-            outfile: `wwwroot/jsView/${name}.min.js`,
+            outfile: `wwwroot/jsView/${name}.js`,   //檔名不使用min, 因為需要import .js
             format: "esm",	//重要!!
             //format: "iife",
             platform: "browser",
-            target: ["es2019"],
-            //plugins: [tsconfigPaths()]
+            target: ["es2019"]
         });
     }
 }
@@ -150,6 +147,7 @@ function zz_doFont() {
         .pipe(gulp.dest("wwwroot/font"));
 }
 
+/*
 // Watch
 function watch() {
     gulp.watch(
@@ -157,6 +155,7 @@ function watch() {
         doTsView
     );
 }
+*/
 
 // Build
 const build =
@@ -184,6 +183,6 @@ exports.build = build;
 exports.watch =
     gulp.series(
         build,
-        watch
+        //watch
     );
 exports.default = build;

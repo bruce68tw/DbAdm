@@ -13,9 +13,8 @@ old/
 wwwroot_old/
 node_modules/
 .config/
-/wwwroot/js/my*.js
-/wwwroot/js/lib*.js
-/wwwroot/css/my*.css
-/wwwroot/css/lib*.css
+wwwroot/jsView/
+wwwroot/base.*
+wwwroot/lib.*
 /appsettings.Production.json
 /appsettings.Production-net.json

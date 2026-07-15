@@ -1,4 +1,4 @@
-import UiView from "./UiView";
+import UiView from "./UiView.js";
 import {
   MouseEstr,
   UiItemTypeEstr,
@@ -13,7 +13,7 @@ import {
   _Obj,
   _Str,
   _Tool
-} from "@base";
+} from "@baseJs";
 class UiMany {
   /**
    * @param {string} ftWorkArea
