@@ -629,7 +629,4 @@ _me = {
   //#endregion
   //#endregion
 };
-$(function() {
-  _me.init();
-});
 //# sourceMappingURL=GenCrud.js.map

@@ -55,6 +55,8 @@ options: {
 
 }; //class
 
+/*
 $(function () {
     _me.init();
 });
+*/

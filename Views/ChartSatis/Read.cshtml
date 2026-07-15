@@ -1,4 +1,4 @@
-﻿<script nonce="@_Fun.Nonce" type="module" src="~/jsView/ChartSatis.min.js"></script>
+﻿<script nonce="@_Fun.Nonce" type="module" src="~/jsView/ChartSatis.js"></script>
 <style nonce="@_Fun.Nonce">
     .chart-box {
         width: 600px;
@@ -6,44 +6,6 @@
         margin: 20px 0 0 150px;
     }
 </style>
-
-@*
-<script nonce="@_Fun.Nonce">
-    $(function () {
-        _me.init();
-    });
-
-    var _me = {
-        init: function () {
-            _me.rform = $('#formRead');
-        },
-
-        //on select bao item
-        onFind: async function () {
-            var data = _Json.toStr(_Form.toRow(_me.rform));
-            await _Ajax.getJsonA('GetData', { json: data }, function (row) {
-                //前端需要筆數, 前端處理則後端sql比較單純
-                var rowLen = row['Rows'];     //筆數
-                var config = { title: `滿意度問卷統計-共 ${rowLen} 筆資料` };
-                config.labels = ['Q1', 'Q2', 'Q3', 'Q4'];           //後端固定的資料欄位
-                config.values = [];
-                var rows = _Json.toChartRows(row, config.labels);   //x軸轉y軸(Id,Num欄位)
-                //計算value, rows.length=config.labels.length
-                for (var i=0; i<rows.length; i++){
-                    config.values[i] = parseFloat((rows[i]['Num'] / rowLen).toFixed(1));  //取一位小數
-                }
-                _Chart.hbar('chart', config);
-            });
-        },
-
-        //on change projectId
-        onChgProject: function () {
-            _iSelect.changeParent('_ProjectId', 'ProgId', '', 'GetPrjProgs', false);
-        },
-
-    }; //class
-</script>
-*@
 
 <vc:xg-prog-path />
 <div class="xp-prog">

@@ -16,7 +16,8 @@
     "allowUmdGlobalAccess": true, //UMD套件如 moment
     "declaration": true,
     "emitDeclarationOnly": true,
-    "types": [ "jquery", "bootstrap", "jquery.validation", "datatables.net", "mustache" ],
+    //加入有@types的套件做為全域變數
+    "types": [ "jquery", "bootstrap", "jquery.validation", "datatables.net", "mustache", "bootstrap-datepicker" ],
     "paths": {
       "@base/*": [ "./_src/tsBase/*" ],
       "@baseJs": [ "./_src/forBoth.ts" ]

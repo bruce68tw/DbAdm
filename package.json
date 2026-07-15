@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@types/bootstrap": "^5.2.11",
+    "@types/bootstrap-datepicker": "^1.10.1",
     "@types/datatables.net": "^1.10.28",
     "@types/jquery": "^3.5.32",
     "@types/jquery.validation": "^1.17.1",

@@ -95,9 +95,6 @@
     <None Include="Views\GenCrud\Read.cshtml" />
     <None Include="Views\Project\Edit.cshtml" />
     <None Include="Views\Project\Read.cshtml" />
-    <None Include="wwwroot\jsView\zz_MyCrudUi.j_old" />
-    <None Include="wwwroot\jsView\_openUser.js" />
-    <None Include="wwwroot\jsView\_xp.js" />
     <None Include="wwwroot\cssView\Login.css" />
     <None Include="wwwroot\cssView\_themeLight.css" />
     <None Include="wwwroot\cssView\_xgBlue.css" />
@@ -105,6 +102,7 @@
     <None Include="wwwroot\cssView\_xgGrey.css" />
     <None Include="wwwroot\cssView\_xgOrange.css" />
     <None Include="wwwroot\cssView\_xgPrint.cs_old" />
+    <None Include="wwwroot\ext\chartjs-plugin-datalabels-2.1.0.js" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,7 +6,7 @@ import _Var from './_Var';
 
 export default class Datatable {
     public dt: any;
-    public findJson: any;
+    public findJson: Json;
     public recordsFiltered: number;
     public defaultShowOk: boolean;
     public showWork: boolean;
@@ -18,8 +18,8 @@ export default class Datatable {
     constructor(
         selector: string,
         url: string,
-        dtConfig: any,
-        findJson?: any,
+        dtConfig: Json,
+        findJson?: Json,
         fnOk?: (result: any) => any[],
         tbarHtml?: string,
         fnAfterFind?: (result: any) => void
@@ -43,7 +43,7 @@ export default class Datatable {
         this._nowShowOk = this.defaultShowOk;
 
         //default config for dataTables
-        var config: any = {
+        var config: Json = {
             //deferLoading: 0,    //0表示一開始不自動執行
             pageLength: _Fun.pageRows || 10,
             lengthMenu: _Fun.lengthMenu,
@@ -230,7 +230,7 @@ t
     /**
      * reset found count
      */
-    public resetCount(): void {
+    resetCount(): void {
         //var count = reset ? -1 : this.dt.recordsFiltered;
         this.recordsFiltered = -1;
     }
@@ -239,7 +239,7 @@ t
      * find rows
      * param findJson {json} find condition
      */
-    public find(findJson: any): void {
+    find(findJson: any): void {
         this.findJson = findJson;
         //this.findStr = findStr || '';
         this.resetCount();   //recount first
@@ -253,7 +253,7 @@ t
      * refind with same condition for refresh form
      * not show find ok msg
      */
-    public reload(): void {
+    reload(): void {
         this._keepStart = true;
         this._nowShowOk = false;  //not show find ok msg
         this.find(this.findJson);

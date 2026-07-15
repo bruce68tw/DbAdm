@@ -922,6 +922,8 @@ _me = {
     //#endregion
 }; //class
 
+/*
 $(function () {
     _me.init();
 });
+*/

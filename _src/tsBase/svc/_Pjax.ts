@@ -1,10 +1,9 @@
-//import 'jquery-pjax';
 import _Leftmenu from './_Leftmenu';
 import _Prog from './_Prog';
 import _Str from './_Str';
 import _Ajax from './_Ajax';
 
-//SPA pjax
+//jquery-pjax type 使用 any
 export default class _Pjax {
 
     /**
@@ -17,7 +16,7 @@ export default class _Pjax {
         (docu as any).pjax('[data-pjax]', boxFt, { type: 'POST' });
 
         //點擊功能項目時記錄功能名稱
-        docu.on('click', '.x-leftmenu [data-pjax]', function (this: any) {
+        docu.on('click', '.x-leftmenu [data-pjax]', function (this: Elm) {
             const menuPath = _Leftmenu.getMenuPath($(this));
             _Prog.storePath(menuPath);
         });
@@ -32,8 +31,17 @@ export default class _Pjax {
         
         //'data' 是後端回傳字串, 可能為 HTML 或錯誤訊息
         docu.on('pjax:success', function (event: any, data: any, status: any, xhr: any, opts: any) {
+        //docu.on('pjax:end', function (event: any, data: any, status: any, xhr: any, opts: any) {
             const json = _Str.toJson(data);
-            if (json != null) {
+            if (json == null) {
+                /*
+                //case ok ok
+                if (typeof _me?.init === 'function') {
+                //if (_me.init != null) {
+                    _me.init();
+                }
+                */
+            } else {
                 //只顯示錯誤訊息, 不處理欄位 validation error
                 const errMsg = _Ajax.resultToErrMsg(json);
                 if (errMsg) {

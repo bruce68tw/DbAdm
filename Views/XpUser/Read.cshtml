@@ -1,44 +1,4 @@
-﻿<script nonce="@_Fun.Nonce" type="module" src="~/jsView/XpUser.min.js"></script>
-
-@*
-<script nonce="@_Fun.Nonce">
-    $(function () {
-        _me.init();
-    });
-
-    var _me = {
-        crudR: null,
-        mUserRole: null,
-
-        init: function () {        
-            //datatable config
-            var config = {
-                columns: [
-                    { data: 'Account', sortable: true },
-                    { data: 'Name', sortable: true },
-                    { data: 'DeptName' },
-                    { data: 'Status', sortable: true },
-                    { data: '_Fun' },
-                ],
-                columnDefs: [
-				    { targets: [3], render: function(data) {
-                        return _me.crudR.dtStatusName(data);
-                    }},
-				    { targets: [4], render: (data, type, full) => {
-                        return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
-                    }},
-                ],
-            };
-
-            //initial
-            this.mUserRole = new EditMany('Id', 'divRoles');
-            this.mUserRole.initUrm(['Id', 'RoleId']);    //for urm
-            new CrudR(config, [null, this.mUserRole]);
-        },
-
-    }; //class
-</script>
-*@
+﻿<script nonce="@_Fun.Nonce" type="module" src="~/jsView/XpUser.js"></script>
 
 <vc:xg-prog-path />
 <div class="x-prog">

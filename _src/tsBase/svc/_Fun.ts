@@ -91,7 +91,7 @@ export default class _Fun {
         dayjs.locale(code.toLowerCase());
 
         // bootstrap-datepicker
-        ($.fn as any).datepicker.dates[code] = module.datepicker;
+        //$.fn.datepicker.dates[code] = module.datepicker;
     }
 
     static async onHelloA(): Promise<void> {
