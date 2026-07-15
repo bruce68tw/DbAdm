@@ -1,5 +1,3 @@
-<script nonce="@_Fun.Nonce" type="module" src="~/jsView/SetPwd.js"></script>
-
 @await Component.InvokeAsync("XgProgPath", new { path = "設定密碼" })
 <div class="x-prog">
     <div id="divEdit">
@@ -11,5 +9,5 @@
     </div>
 </div>
 <div class='col-md-6 d-flex x-center'>
-    <button type='button' class='btn btn-success' data-onclick='onSave'>儲存<i class='ico-save'></i></button>
+    <button type='button' class='btn btn-success' data-onclick='_me.onSave'>儲存<i class='ico-save'></i></button>
 </div>

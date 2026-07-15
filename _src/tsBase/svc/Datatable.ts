@@ -44,6 +44,7 @@ export default class Datatable {
 
         //default config for dataTables
         var config: Json = {
+            //destroy: true,
             //deferLoading: 0,    //0表示一開始不自動執行
             pageLength: _Fun.pageRows || 10,
             lengthMenu: _Fun.lengthMenu,

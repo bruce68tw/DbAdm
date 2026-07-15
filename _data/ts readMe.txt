@@ -1,9 +1,8 @@
 BaseTs 安裝 js 套件：
   npm install -D typescript 
   npm install -D @types/jquery@3.5.32 
-  npm install -D @types/bootstrap@5.2.11
+  npm install -D @types/bootstrap
   npm install -D @types/mustache
-  //npm install -D @types/bootstrap
   npm install -D @types/jquery.validation
   npm install -D @types/datatables.net
   npm install -D @types/bootstrap-datepicker

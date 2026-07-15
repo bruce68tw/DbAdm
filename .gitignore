@@ -8,13 +8,14 @@ _srcOut/
 packages/
 *.rar
 *.bak
+*.map
 zz_*.*
 old/
 wwwroot_old/
 node_modules/
 .config/
-wwwroot/jsView/
-wwwroot/base.*
-wwwroot/lib.*
+wwwroot/jsView/*.*
+wwwroot/base.min.*
+wwwroot/lib.min.*
 /appsettings.Production.json
 /appsettings.Production-net.json

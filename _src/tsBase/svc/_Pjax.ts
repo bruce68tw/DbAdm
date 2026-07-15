@@ -2,6 +2,7 @@ import _Leftmenu from './_Leftmenu';
 import _Prog from './_Prog';
 import _Str from './_Str';
 import _Ajax from './_Ajax';
+import _Fun from './_Fun';
 
 //jquery-pjax type 使用 any
 export default class _Pjax {
@@ -17,7 +18,10 @@ export default class _Pjax {
 
         //點擊功能項目時記錄功能名稱
         docu.on('click', '.x-leftmenu [data-pjax]', function (this: Elm) {
-            const menuPath = _Leftmenu.getMenuPath($(this));
+            const me = $(this);
+            _Fun.data.nowProgCode = me.attr("href").split("/")[1];
+
+            const menuPath = _Leftmenu.getMenuPath(me);
             _Prog.storePath(menuPath);
         });
 
@@ -30,17 +34,19 @@ export default class _Pjax {
         */
         
         //'data' 是後端回傳字串, 可能為 HTML 或錯誤訊息
-        docu.on('pjax:success', function (event: any, data: any, status: any, xhr: any, opts: any) {
-        //docu.on('pjax:end', function (event: any, data: any, status: any, xhr: any, opts: any) {
+        docu.on('pjax:success', async function (event: any, data: any, status: any, xhr: any, opts: any) {
             const json = _Str.toJson(data);
             if (json == null) {
-                /*
                 //case ok ok
-                if (typeof _me?.init === 'function') {
-                //if (_me.init != null) {
-                    _me.init();
+                const progCode = _Fun.data.nowProgCode; //目前程式代碼
+                if (_Str.notEmpty(progCode)) {
+                    //後面加上時間亂數避免cache !!
+                    await import(`/jsView/${progCode}.js?v=${Date.now()}`);
+                    //如果有init則執行
+                    if (_me && _me.init) {
+                        _me.init();
+                    }
                 }
-                */
             } else {
                 //只顯示錯誤訊息, 不處理欄位 validation error
                 const errMsg = _Ajax.resultToErrMsg(json);

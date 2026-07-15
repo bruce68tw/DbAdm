@@ -27,7 +27,3 @@ _me = {
         new CrudR(config, [new EditOne('Code')]);
     },
 };
-
-$(function () {
-    _me.init();
-});

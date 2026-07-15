@@ -280,7 +280,3 @@ _me = {
     },
 
 }; //class
-
-$(function () {
-    _me.init();
-});

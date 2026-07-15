@@ -7,7 +7,7 @@ import _Ajax from './_Ajax';
 //program, 包含 crud功能
 export default class _Prog {
     //filter: '.x-prog-path',
-    static me: any = null;       //prog path object
+    static me: JQuery = null;       //prog path object
     static initPath: string = '';   //original path
 
     static init(): void {
@@ -39,6 +39,11 @@ export default class _Prog {
     //storeProgPath -> storePath
     static storePath(progPath: string): void {
         _Fun.data.progPath = progPath;
+    }
+
+    static getProgCode(): string {
+        let cols: string[] = _Fun.data.progPath.split('//');
+        return (cols.length > 1) ? cols[1] : '';
     }
     
     //reset path to initial

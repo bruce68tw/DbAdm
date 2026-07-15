@@ -40,7 +40,7 @@ export default class _Leftmenu {
         _Leftmenu.menu.toggleClass('x-close');
     }
 
-    static getMenuPath(me: any): string {
+    static getMenuPath(me: JQuery): string {
         const menuName = me.text().trim();
 
         // 找父層文字

@@ -27,9 +27,3 @@ _me = {
         new CrudR(config);
     },
 }; //class
-
-/*
-$(function () {
-    _me.init();
-});
-*/
