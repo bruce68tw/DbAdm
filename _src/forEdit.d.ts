@@ -43,12 +43,14 @@ declare global {
 
     //自訂全域變數, 寫入 window
     interface Window {
-        _me: any,
+        _xg: Json,
+        _me: Json,
         _BR: BaseResDto,
     }
 
     //自訂全域變數初始值
-    let _me: any;
+    let _xg: Json;
+    let _me: Json;
     let _BR: BaseResDto;
 }
 

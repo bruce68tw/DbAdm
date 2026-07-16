@@ -8,9 +8,9 @@ BaseTs 安裝 js 套件：
   npm install -D @types/bootstrap-datepicker
   npm install -D chart.js@4.4.1 
   npm install -D dayjs@1.11.21
+  
   //npm install -D bootstrap-datepicker@1.9.0
   //npm install -D jquery-pjax@2.0.1
-
   //npm install -D bootstrap@5.2.3
   //npm install -D mustache@3.1.0
   //npm install -D moment@2.30.1 

@@ -3,13 +3,7 @@ import _Obj from './_Obj';
 import _Str from './_Str';
 import _Ajax from './_Ajax';
 import IdStrExtDto from '../dto/IdStrExtDto';
-
-
-interface SelectItem {
-    Id: string | number;
-    Str: string;
-    Ext?: any;
-}
+import IdStrDto from '../dto/IdStrDto';
 
 export default class _iSelect extends _iBase {
     static get(fid: string, box?: JQuery): any {
@@ -86,12 +80,12 @@ export default class _iSelect extends _iBase {
 
     //重新設定option內容
     //items: 來源array, 欄位為:Id,Str
-    static setItems(fid: string, items: SelectItem[] | null, box?: JQuery): void {
+    static setItems(fid: string, items: IdStrDto[] | null, box?: JQuery): void {
         const obj = _Obj.get(fid, box);
         this.setItemsO(obj, items);
     }
     //by object
-    static setItemsO(obj: JQuery, items: SelectItem[] | null): void {
+    static setItemsO(obj: JQuery, items: IdStrDto[] | null): void {
         obj.find('option').remove();
         if (items === null) return;
         for (let i = 0; i < items.length; i++) {
@@ -101,12 +95,12 @@ export default class _iSelect extends _iBase {
 
     //get all options
     //getIdStrExts -> getExts
-    static getExts(fid: string, box?: JQuery): SelectItem[] {
-        const rows: SelectItem[] = [];
+    static getExts(fid: string, box?: JQuery): IdStrExtDto[] {
+        const rows: IdStrExtDto[] = [];
         _Obj.get(fid, box).find('option').each(function (this: Elm, i: number) {
             const me = $(this);
             rows[i] = {
-                Id: me.val() as string | number,
+                Id: me.val() as string,
                 Str: me.text(),
                 Ext: me.data('ext'),
             };
@@ -116,7 +110,7 @@ export default class _iSelect extends _iBase {
 
     //重新設定option內容, 欄位為:Id,Str,Ext
     //setItems2 -> setExts
-    static setExts(fid: string, items: SelectItem[] | null, box?: JQuery): void {
+    static setExts(fid: string, items: IdStrExtDto[] | null, box?: JQuery): void {
         const filter = '#' + fid;
         const obj = box ? box.find(filter) : $(filter);
         obj.find('option').remove();
@@ -138,7 +132,7 @@ export default class _iSelect extends _iBase {
     //ie 不支援 option display:none !!
     //filter options by data-ext value
     //rows: 所有option 資料(Id,Text,Ext)
-    static filterByExt(fid: string, value: any, rows: SelectItem[], box?: JQuery, allItem?: boolean, addEmptyStr?: string): void {
+    static filterByExt(fid: string, value: any, rows: IdStrExtDto[], box?: JQuery, allItem?: boolean, addEmptyStr?: string): void {
         if (allItem === undefined) {
             allItem = false;
         }

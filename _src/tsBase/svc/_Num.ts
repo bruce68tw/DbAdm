@@ -1,5 +1,10 @@
 //數字相關
 export default class _Num {
+
+    static emptyOrZero(value?: any): boolean {
+        return (isNaN(value) || value === '0' || value === 0);
+    }
+
     //是否為數字而且大於(等於)0
     //zeor: 可否為0
     static isBigZero(value: any, zero: boolean): boolean {

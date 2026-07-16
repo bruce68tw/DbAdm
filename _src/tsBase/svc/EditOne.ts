@@ -36,16 +36,16 @@ import _iFile from './_iFile';
 export default class EditOne {
     //private [_Edit.Childs]: any;
 
+    //public 
+    public _childs: OneMany[];
+    public fnValid: any;
+
     private kid: string;
     private eform: JQuery;
     private is1to1: boolean;
     private dataJson: Json;
     private systemError: string;
     private validator: any;
-    private fnValid: any;
-
-    //public 
-    public _childs: OneMany[];
 
     //public & set by _Edit
     public fidTypes: string[];

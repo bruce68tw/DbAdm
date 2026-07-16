@@ -85,11 +85,13 @@ export { default as Page } from "./tsBase/svc/Page";
 
 declare global {
     interface Window {
-        _me: any,
+        _xg: Json,   //global varaiables
+        _me: Json,
         _BR: BaseResDto,
     }
 }
 
+window._xg = {};
 window._me = {};
 window._BR = new BaseResDto();
 //if (!window._me) {
