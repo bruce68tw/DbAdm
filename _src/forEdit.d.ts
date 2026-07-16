@@ -41,14 +41,14 @@ declare global {
     //其他
     //pajx: 只有個別檔案使用, 所以用any
 
-    //自訂全域變數, 寫入 window
+    //擴充 Window 型別
     interface Window {
         _xg: Json,
         _me: Json,
         _BR: BaseResDto,
     }
 
-    //自訂全域變數初始值
+    //告訴 TypeScript 這些變數的型別是什麼
     let _xg: Json;
     let _me: Json;
     let _BR: BaseResDto;

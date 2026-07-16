@@ -83,6 +83,7 @@ export { default as FlowNode } from "./tsBase/svc/FlowNode";
 export { default as FlowView } from "./tsBase/svc/FlowView";
 export { default as Page } from "./tsBase/svc/Page";
 
+//擴充 Window 型別
 declare global {
     interface Window {
         _xg: Json,   //global varaiables
@@ -91,6 +92,7 @@ declare global {
     }
 }
 
+//執行時真的建立變數
 window._xg = {};
 window._me = {};
 window._BR = new BaseResDto();
