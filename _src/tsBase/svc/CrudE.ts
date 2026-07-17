@@ -362,7 +362,7 @@ export default class CrudE {
 
   public editToNew(): void {
     const fun = FunEstr.Create;
-    _Prog.setPath(fun);
+    _Prog.showPath(fun);
     this.setEditStatus(fun);
 
     const edit = _me.edit0;

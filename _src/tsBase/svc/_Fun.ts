@@ -5,6 +5,7 @@ import _Tool from './_Tool';
 import _Input from './_Input';
 import _Obj from './_Obj';
 import _Date from './_Date';
+import _Prog from './_Prog';
 
 /*
 export interface DtColDef {
@@ -54,7 +55,7 @@ export default class _Fun {
      * param {string} locale
      * param {string} pjaxArea Filter
      */
-    static init(locale: string): void {
+    static async init(locale: string): Promise<void> {
         //set jwt token
         _Fun.jwtToken = localStorage.getItem('_jwtToken') || '';
         localStorage.removeItem('_jwtToken');
@@ -64,7 +65,7 @@ export default class _Fun {
         _Leftmenu.init();
         _Pjax.init('.x-main-right');
         _Tool.init();
-        _Fun.setLocaleA(locale);
+        await _Fun.setLocaleA(locale);
         _Date.setLocale(locale);
 
         //註冊事件, 避免使用inline script for CSRF
@@ -78,6 +79,9 @@ export default class _Fun {
                 'RequestVerificationToken': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        //可能是F5重整, 要新載入目前功能
+        _Prog.init();
     }
 
     static async setLocaleA(code: string) {

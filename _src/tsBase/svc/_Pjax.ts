@@ -19,10 +19,10 @@ export default class _Pjax {
         //點擊功能項目時記錄功能名稱
         docu.on('click', '.x-leftmenu [data-pjax]', function (this: Elm) {
             const me = $(this);
-            _Fun.data.nowProgCode = me.attr("href").split("/")[1];
-
-            const menuPath = _Leftmenu.getMenuPath(me);
-            _Prog.storePath(menuPath);
+            const progPath = _Leftmenu.getMenuPath(me);
+            //const progCode = me.attr("href").split("/")[1];
+            const progCode = _Prog.urlToProgCode(me.attr("href"));
+            _Prog.storePathAndCode(progPath, progCode);
         });
 
         /*
@@ -38,15 +38,7 @@ export default class _Pjax {
             const json = _Str.toJson(data);
             if (json == null) {
                 //case ok ok
-                const progCode = _Fun.data.nowProgCode; //目前程式代碼
-                if (_Str.notEmpty(progCode)) {
-                    //後面加上時間亂數避免cache !!
-                    await import(`/jsView/${progCode}.js?v=${Date.now()}`);
-                    //如果有init則執行
-                    if (_me && _me.init) {
-                        _me.init();
-                    }
-                }
+                await _Prog.loadProgCodeA();
             } else {
                 //只顯示錯誤訊息, 不處理欄位 validation error
                 const errMsg = _Ajax.resultToErrMsg(json);

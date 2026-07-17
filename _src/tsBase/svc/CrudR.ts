@@ -269,9 +269,9 @@ export default class CrudR {
      * param fnCallback {function} 如果進入編輯畫面後要處理畫面, 必須以非同步方式處理
      */
     //toEditMode = function(fun, data) {
-    public toEditMode(fun: string, fnCallback?: () => void): void {
+    public toEditMode(fun: FunEstr, fnCallback?: () => void): void {
         this.swap(false, fnCallback); //call first
-        _Prog.setPath(fun, this._updName);
+        _Prog.showPath(fun, this._updName);
     }
 
     /**
