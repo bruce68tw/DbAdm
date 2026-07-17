@@ -20,6 +20,6 @@
     "gulp-uglify": "^3.0.2",
     "jquery-pjax": "^2.0.1",
     "moment": "^2.30.1",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.3"
   }
 }
