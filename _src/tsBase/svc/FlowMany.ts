@@ -1,18 +1,4 @@
-//import Mustache from "mustache";
-import MouseEstr from '../enum/MouseEstr';
-import NodeTypeEstr from '../enum/NodeTypeEstr';
-import FlowView from './FlowView';
-import _Form from './_Form';
-import _Obj from './_Obj';
-import _Str from './_Str';
-import _iSelect from './_iSelect';
-import _iText from './_iText';
-import _Modal from './_Modal';
-import _iRead from './_iRead';
-import _Tool from './_Tool';
-import _Fun from './_Fun';
-
-export default class FlowMany {
+class FlowMany {
   private OrSep: string = '{O}';
   private AndSep: string = '{A}';
   private ColSep: string = ',';
@@ -346,3 +332,4 @@ export default class FlowMany {
     _Modal.hide(modal);
   }
 }
+window.FlowMany = FlowMany;

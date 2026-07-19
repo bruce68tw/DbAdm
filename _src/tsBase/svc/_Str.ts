@@ -1,6 +1,4 @@
-import _Var from './_Var';
-
-export default class _Str {
+class _Str {
     // column separator
     static readonly colSep: string = '@@';
 
@@ -97,3 +95,4 @@ export default class _Str {
         return str.replace(regex, newStr);
     }
 }
+window._Str = _Str;

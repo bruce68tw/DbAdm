@@ -1,4 +1,4 @@
-export default class EditModeEstr {
+class EditModeEstr {
     /**
      * default mode
      */
@@ -14,3 +14,4 @@ export default class EditModeEstr {
      */
     static readonly One = 'One';
 }
+window.EditModeEstr = EditModeEstr;

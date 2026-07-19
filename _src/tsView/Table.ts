@@ -1,4 +1,4 @@
-﻿import { CrudR, EditMany, _iCheck, _Tool } from "@baseJs";
+﻿//import { CrudR, EditMany, _iCheck, _Tool } from "@baseJs";
 
 _me = {
     init: function () {

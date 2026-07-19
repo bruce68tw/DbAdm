@@ -1,4 +1,4 @@
-export default class _Time {
+class _Time {
   /**
    * 延遲指定的毫秒數
    * @param ms 延遲毫秒數
@@ -7,3 +7,4 @@ export default class _Time {
     return new Promise<void>((resolve) => setTimeout(resolve, ms));
   }
 }
+window._Time = _Time;

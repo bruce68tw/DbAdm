@@ -1,4 +1,4 @@
-﻿import { CrudR } from "@baseJs";
+﻿//import { CrudR } from "@baseJs";
 
 _me = {
     init: function () {

@@ -1,6 +1,4 @@
-//import "bootstrap";
-
-export default class _Leftmenu {
+class _Leftmenu {
     static menu: any;
 
     static init(): void {
@@ -57,3 +55,4 @@ export default class _Leftmenu {
         return fullPath;
     }
 }
+window._Leftmenu = _Leftmenu;

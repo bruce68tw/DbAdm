@@ -1,12 +1,3 @@
-import _Ajax from './_Ajax';
-import _Leftmenu from './_Leftmenu';
-import _Pjax from './_Pjax';
-import _Tool from './_Tool';
-import _Input from './_Input';
-import _Obj from './_Obj';
-import _Date from './_Date';
-import _Prog from './_Prog';
-
 /*
 export interface DtColDef {
     className?: string;
@@ -18,7 +9,7 @@ export interface DtColDef {
 }
 */
 
-export default class _Fun {
+class _Fun {
     // #region constant (big camel) ===
     static readonly MmDateFmt = 'YYYY/MM/DD';
     static readonly MmDtFmt = 'YYYY/MM/DD HH:mm:ss';
@@ -169,3 +160,4 @@ export default class _Fun {
         _Obj.hide(_Tool.xWork);
     }
 }
+window._Fun = _Fun;

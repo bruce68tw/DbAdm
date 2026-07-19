@@ -4,7 +4,7 @@ import _Str from './_Str';
 import _iDate from './_iDate';
 import _iSelect from './_iSelect';
 
-export default class _Date {
+class _Date {
 
     /**
      * ?? 傳回起迄日期(json) for 日期欄位查詢

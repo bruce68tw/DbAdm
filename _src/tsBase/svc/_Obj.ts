@@ -1,8 +1,5 @@
-import _Input from './_Input';
-import _Var from './_Var';
-
 //操作 jQuery object
-export default class _Obj {
+class _Obj {
   static toAny(obj: JQuery): any {
     return obj as any;
   }
@@ -132,3 +129,4 @@ export default class _Obj {
     obj.removeClass(oldCss).addClass(newCss);
   }
 }
+window._Obj = _Obj;

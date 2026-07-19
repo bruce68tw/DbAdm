@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
     //"baseUrl": ".",
-    //"outDir": "_srcOut", //如果執行 npx tsc 會輸出到此目錄
     "rootDir": ".",
-    "outDir": "_srcOut",
+    "outDir": "_srcOut", //如果執行 npx tsc 會輸出到此目錄
     "module": "ESNext", // ES Module
     "target": "ES2019", // 編譯版本
     "moduleResolution": "Bundler", // Vite相容解析
@@ -19,12 +18,13 @@
     //加入有@types的套件做為全域變數
     "types": [ "jquery", "bootstrap", "jquery.validation", "datatables.net", "mustache", "bootstrap-datepicker" ],
     "paths": {
-      "@base/*": [ "./_src/tsBase/*" ],
-      "@baseJs": [ "./_src/forBoth.ts" ]
+      "@base/*": [ "./_src/tsBase/*" ]
+      //"@baseJs": [ "./_src/forBoth.ts" ]
     }
   },
   "include": [
-    "./_src/forEdit.d.ts",  //建立全域變數
+    "./_src/forEdit.d.ts", //建立全域變數 for tsBase
+    "./_src/forEdit2.d.ts", //建立全域變數 for tsView
     "./_src/tsBase/**/*.ts",
     "./_src/tsView/*.ts"
   ],

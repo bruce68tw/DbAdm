@@ -1,6 +1,4 @@
-import _iBase from './_iBase';
-
-export default class _iNum extends _iBase {
+class _iNum extends _iBase {
     /*
     static getO(obj: JQuery): string {
         //return obj.html();
@@ -13,5 +11,7 @@ export default class _iNum extends _iBase {
     }
     */
 }
+window._iNum = _iNum;
 
-Object.assign(_iNum, _iBase);
+//??
+//Object.assign(_iNum, _iBase);

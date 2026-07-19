@@ -1,11 +1,5 @@
-import _Leftmenu from './_Leftmenu';
-import _Prog from './_Prog';
-import _Str from './_Str';
-import _Ajax from './_Ajax';
-import _Fun from './_Fun';
-
 //jquery-pjax type 使用 any
-export default class _Pjax {
+class _Pjax {
 
     /**
      * initial
@@ -130,3 +124,4 @@ export default class _Pjax {
     }
 
 }
+window._Pjax = _Pjax;

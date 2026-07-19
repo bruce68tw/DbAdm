@@ -1,10 +1,8 @@
-import _Obj from './_Obj';
-
 //todo
 declare const QRCode: any;
 
 //https://github.com/davidshimjs/qrcodejs
-export default class _Qrcode {
+class _Qrcode {
 
     static set(id: string, box: any, url: string, width?: number): any {
         return _Qrcode.setO(_Obj.getById(id, box), url, width);
@@ -24,3 +22,4 @@ export default class _Qrcode {
         });
     }
 }
+window._Qrcode = _Qrcode;

@@ -33,7 +33,7 @@ var _me = {
     {{#if HasFile}}
     //TODO: add your code
     //onclick viewFile, called by XiFile component
-    onViewFile: function (table, fid) {
+    fnOnViewFile: function (table, fid) {
         _me.edit0.onViewFile(table, fid);
     },
 

@@ -1,6 +1,4 @@
-import _Str from './_Str';
-
-export default class _Var {
+class _Var {
     static preZero(len: number, value: string | number): string {
         return String(value).padStart(len, '0');
     }
@@ -32,3 +30,4 @@ export default class _Var {
         return (val == '1' || val == true || val == 'True');
     }
 }
+window._Var = _Var;

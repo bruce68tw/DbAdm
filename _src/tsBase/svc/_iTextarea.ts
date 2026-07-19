@@ -1,6 +1,4 @@
-import _iBase from './_iBase';
-
-export default class _iTextarea extends _iBase {
+class _iTextarea extends _iBase {
     /*
     static getO(obj: any): any {
         //return obj.html();
@@ -13,3 +11,4 @@ export default class _iTextarea extends _iBase {
     }
     */
 }
+window._iTextarea = _iTextarea;

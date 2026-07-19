@@ -1,14 +1,9 @@
-import ErrorRowDto from '../dto/ErrorRowDto';
-import ResultDto from '../dto/ResultDto';
-import AjaxDto from '../dto/AjaxDto';
-import CrudE from './CrudE';
-import _Fun from './_Fun';
-import _Var from './_Var';
-import _Jwt from './_Jwt';
-import _Str from './_Str';
-import _Tool from './_Tool';
-
-export default class _Ajax {
+/*
+import AjaxDto from "../dto/AjaxDto";
+import ErrorRowDto from "../dto/ErrorRowDto";
+import CrudE from "./CrudE";
+*/
+class _Ajax {
     /** * ajax return json
      * param url {string} action url
      * param data {json} property should be string !!
@@ -25,6 +20,7 @@ export default class _Ajax {
         };
         return await _Ajax._rpcA(json, fnOk, block);
     }
+
     static async getJsonsA(url: string, data: Json, fnOk?: (res: Json[]) => void, block?: boolean): Promise<Json[]> {
         const json: AjaxDto = {
             url: url,
@@ -251,3 +247,7 @@ export default class _Ajax {
             : _Str.format('_Ajax.strToErrMsg() failed, no BR Fid={0}', fid);
     }
 }
+window._Ajax = _Ajax;
+
+//因為使用import, 必須讓 _Ajax 具備 esm 和 global
+//export default _Ajax;

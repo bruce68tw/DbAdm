@@ -1,9 +1,4 @@
-import _Modal from './_Modal';
-import _Obj from './_Obj';
-import _iTextarea from './_iTextarea';
-import _Btn from './_Btn';
-
-export default class _Tool {
+class _Tool {
     // constant
     // msg text
     static readonly FltMsgText: string = '.xd-msg';
@@ -208,3 +203,4 @@ export default class _Tool {
         _Modal.hide(_Tool.xMsg);
     }
 }
+window._Tool = _Tool;

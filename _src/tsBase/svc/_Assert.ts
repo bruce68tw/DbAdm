@@ -1,6 +1,4 @@
-import _Error from './_Error';
-
-export default class _Assert {
+class _Assert {
     static echo(msg: string): void {
         _Error.log('_assert.js ' + msg);
     }
@@ -19,3 +17,4 @@ export default class _Assert {
             _Assert.echo('inArray failed: ' + value);
     }
 }
+window._Assert = _Assert;

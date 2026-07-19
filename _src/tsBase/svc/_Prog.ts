@@ -1,11 +1,5 @@
-import FunEstr from '../enum/FunEstr';
-import _Fun from './_Fun';
-import _Str from './_Str';
-import _Leftmenu from './_Leftmenu';
-import _Ajax from './_Ajax';
-
 //program, 包含 crud功能
-export default class _Prog {
+class _Prog {
     //filter: '.x-prog-path',
     static me: JQuery = null;       //prog path object
     static initPath: string = '';   //original path
@@ -99,3 +93,4 @@ export default class _Prog {
         _Prog.me.text(_Prog.initPath + '-' + name);
     }
 }
+window._Prog = _Prog;

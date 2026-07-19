@@ -1,4 +1,77 @@
-_src/tsView/UiView.ts(3,49): error TS2305: Module '"@baseJs"' has no exported member 'DragItemDto'.
-_src/tsView/UiView.ts(122,16): error TS2769: No overload matches this call.
-  The last overload gave the following error.
-    Argument of type 'string' is not assignable to parameter of type 'TypeEventHandlers<HTMLElement, (e: MouseUpEvent<any, any, any, any>) => void, HTMLElement, HTMLElement>'.
+_src/tsBase/svc/_Valid.ts(56,11): error TS2551: Property 'validator' does not exist on type 'JQuery<HTMLElement>'. Did you mean 'validate'?
+_src/tsBase/svc/CrudE.ts(425,57): error TS2554: Expected 1 arguments, but got 2.
+_src/tsBase/svc/Datatable.ts(118,36): error TS2339: Property 'fnWhenFind' does not exist on type 'MeDto'.
+_src/tsBase/svc/Datatable.ts(119,34): error TS2339: Property 'fnWhenFind' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(56,13): error TS2339: Property 'mIssueFile' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(57,13): error TS2339: Property 'mIssueRelat' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(58,38): error TS2339: Property 'mIssueFile' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(58,54): error TS2339: Property 'mIssueRelat' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(76,17): error TS2339: Property 'onChgProject' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(79,17): error TS2339: Property 'issueId' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(80,17): error TS2339: Property 'hasWatchId' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(81,17): error TS2339: Property 'setWatchBtn' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(92,17): error TS2339: Property 'setKeepBtn' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(102,17): error TS2339: Property 'setWatchBtn' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(103,17): error TS2339: Property 'setKeepBtn' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(107,5): error TS2322: Type '(fun: FunEstr) => void' is not assignable to type '(fun: FunEstr) => string'.
+  Type 'void' is not assignable to type 'string'.
+_src/tsView/Issue.ts(131,17): error TS2339: Property 'showBtn' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(150,24): error TS2339: Property 'hasWatchId' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(152,17): error TS2339: Property 'showBtn' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(154,17): error TS2339: Property 'showBtn' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(168,17): error TS2339: Property 'mIssueFile' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(200,13): error TS2339: Property 'showRform2' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(211,13): error TS2339: Property 'showRform2' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(221,13): error TS2339: Property 'showRform2' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(231,13): error TS2339: Property 'showRform2' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(241,59): error TS2339: Property 'issueId' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(245,25): error TS2339: Property 'hasWatchId' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(246,25): error TS2339: Property 'setWatchBtn' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(255,63): error TS2339: Property 'issueId' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(259,25): error TS2339: Property 'hasWatchId' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(260,25): error TS2339: Property 'setWatchBtn' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(273,17): error TS2339: Property 'setWatchBtn' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(274,17): error TS2339: Property 'setKeepBtn' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(282,17): error TS2339: Property 'mIssueFile' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(283,17): error TS2339: Property 'mIssueRelat' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(284,17): error TS2339: Property 'mIssueRelat' does not exist on type 'MeDto'.
+_src/tsView/Issue.ts(284,54): error TS2339: Property 'issueId' does not exist on type 'MeDto'.
+_src/tsView/Project.ts(71,13): error TS2339: Property 'vo' does not exist on type 'MeDto'.
+_src/tsView/RptIssue.ts(21,5): error TS2353: Object literal may only specify known properties, and 'onNowWeek' does not exist in type 'MeDto'.
+_src/tsView/SetPwd.ts(4,5): error TS2353: Object literal may only specify known properties, and 'onSave' does not exist in type 'MeDto'.
+_src/tsView/Table.ts(34,13): error TS2339: Property 'mCol' does not exist on type 'MeDto'.
+_src/tsView/Table.ts(35,38): error TS2339: Property 'mCol' does not exist on type 'MeDto'.
+_src/tsView/Table.ts(39,5): error TS2353: Object literal may only specify known properties, and 'onGenWord' does not exist in type 'MeDto'.
+_src/tsView/XpImport.ts(32,13): error TS2339: Property 'modalImport' does not exist on type 'MeDto'.
+_src/tsView/XpImport.ts(36,5): error TS2353: Object literal may only specify known properties, and 'onOpenImport' does not exist in type 'MeDto'.
+_src/tsView/XpImport.ts(37,25): error TS2339: Property 'modalImport' does not exist on type 'MeDto'.
+_src/tsView/XpImport.ts(42,25): error TS2339: Property 'modalImport' does not exist on type 'MeDto'.
+_src/tsView/XpImport.ts(55,17): error TS2339: Property 'dt' does not exist on type 'MeDto'.
+_src/tsView/XpProg.ts(26,13): error TS2339: Property 'mRoleProg' does not exist on type 'MeDto'.
+_src/tsView/XpProg.ts(27,38): error TS2339: Property 'mRoleProg' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(19,13): error TS2339: Property 'mUserRole' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(20,13): error TS2339: Property 'mRoleProg' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(21,38): error TS2339: Property 'mUserRole' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(21,53): error TS2339: Property 'mRoleProg' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(25,13): error TS2339: Property 'divUrBody' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(26,13): error TS2339: Property 'tplUr' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(27,13): error TS2339: Property 'modalUser' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(28,13): error TS2339: Property 'modalUserBody' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(28,33): error TS2339: Property 'modalUser' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(29,13): error TS2339: Property 'tplUser' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(33,5): error TS2353: Object literal may only specify known properties, and 'onOpenUser' does not exist in type 'MeDto'.
+_src/tsView/XpRole.ts(34,25): error TS2339: Property 'modalUser' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(40,48): error TS2339: Property 'modalUser' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(41,48): error TS2339: Property 'modalUser' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(42,42): error TS2339: Property 'modalUser' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(45,17): error TS2339: Property 'modalUserBody' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(48,21): error TS2339: Property 'modalUserBody' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(48,64): error TS2339: Property 'tplUser' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(57,13): error TS2339: Property 'modalUserBody' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(78,21): error TS2339: Property 'divUrBody' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(81,44): error TS2339: Property 'tplUr' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(83,17): error TS2339: Property 'mUserRole' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(84,17): error TS2339: Property 'divUrBody' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(88,13): error TS2339: Property 'modalUser' does not exist on type 'MeDto'.
+_src/tsView/XpRole.ts(89,25): error TS2339: Property 'modalUser' does not exist on type 'MeDto'.
+_src/tsView/XpUser.ts(5,5): error TS2353: Object literal may only specify known properties, and 'mUserRole' does not exist in type 'MeDto'.

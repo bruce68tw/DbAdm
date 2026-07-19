@@ -1,4 +1,5 @@
-﻿export default class IdStrDto {
+﻿class IdStrDto {
     Id: string;
     Str: string;
 }
+window.IdStrDto = IdStrDto;

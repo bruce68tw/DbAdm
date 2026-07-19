@@ -1,21 +1,4 @@
-import InputTypeEstr from '../enum/InputTypeEstr';
-import _Obj from './_Obj';
-import _Var from './_Var';
-import _Str from './_Str';
-import _Date from './_Date';
-import _iText from './_iText';
-import _iTextarea from './_iTextarea';
-import _iCheck from './_iCheck';
-import _iRadio from './_iRadio';
-import _iSelect from './_iSelect';
-import _iDate from './_iDate';
-import _iDt from './_iDt';
-import _iFile from './_iFile';
-import _iHtml from './_iHtml';
-import _iRead from './_iRead';
-import _iLink from './_iLink';
-
-export default class _Input {
+class _Input {
 
     static isRadio(ftype: string): boolean {
         return (ftype === InputTypeEstr.Radio);
@@ -167,6 +150,4 @@ export default class _Input {
         return `[data-fid^='${fid}']`;
     }
 }
-
-// 為了內部自我參照
-//const _Input = _Input;
+window._Input = _Input;

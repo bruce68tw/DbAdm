@@ -1,6 +1,4 @@
-import _iBase from './_iBase';
-
-export default class _iHtml extends _iBase {
+class _iHtml extends _iBase {
     //constant
     static Filter = '[data-type=html]';
 
@@ -160,5 +158,7 @@ export default class _iHtml extends _iBase {
     },
     */
 }
+window._iHtml = _iHtml;
 
-Object.assign(_iHtml, _iBase);
+//
+//Object.assign(_iHtml, _iBase);

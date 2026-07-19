@@ -1,9 +1,4 @@
-import _iBase from './_iDate';
-import _iDate from './_iDate';
-import _iSelect from './_iSelect';
-import _Str from './_Str';
-
-export default class _iDt extends _iBase {
+class _iDt extends _iBase {
     //constant
     //BoxFilter: '.date',
 
@@ -77,3 +72,4 @@ export default class _iDt extends _iBase {
         return box.find('select:last');
     }
 }
+window._iDt = _iDt;

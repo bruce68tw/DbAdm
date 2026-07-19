@@ -1,22 +1,4 @@
-import _Edit from './_Edit';
-import _iDate from './_iDate';
-import _Valid from './_Valid';
-import _Obj from './_Obj';
-import _iHtml from './_iHtml';
-import _Array from './_Array';
-import _Str from './_Str';
-import _Tool from './_Tool';
-import _Fun from './_Fun';
-import _Json from './_Json';
-import _Ajax from './_Ajax';
-import _Prog from './_Prog';
-import _iText from './_iText';
-import FunEstr from '../enum/FunEstr';
-import EditDto from '../dto/EditDto';
-import EditOne from './EditOne';
-import EditMany from './EditMany';
-
-export default class CrudE {
+class CrudE {
     private _nowFun: FunEstr;
     private _Edits: any;
     private _multiEdit: boolean;
@@ -518,3 +500,4 @@ export default class CrudE {
         }
     }
 }
+window.CrudE = CrudE;

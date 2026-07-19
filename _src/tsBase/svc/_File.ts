@@ -1,6 +1,4 @@
-import _Str from './_Str';
-
-export default class _File {
+class _File {
   /**
    * get file name by path
    */
@@ -24,3 +22,4 @@ export default class _File {
     return ",xls,xlsx,".indexOf("," + ext + ",") >= 0;
   }
 }
+window._File = _File;

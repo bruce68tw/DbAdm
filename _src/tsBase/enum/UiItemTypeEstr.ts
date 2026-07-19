@@ -1,4 +1,4 @@
-﻿export default class UiItemTypeEstr {
+﻿class UiItemTypeEstr {
 
 	static readonly Input = 'I';		//輸入欄位(含唯讀欄位)
 	static readonly Group = 'G';		//分群文字
@@ -8,3 +8,4 @@
 	static readonly Table = 'T';		//只能放 input
 	static readonly TabPage = 'TP';	//(暫不使用)只能放 box, group, input, checks, span
 }
+window.UiItemTypeEstr = UiItemTypeEstr;

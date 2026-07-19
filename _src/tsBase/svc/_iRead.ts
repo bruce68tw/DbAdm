@@ -1,7 +1,5 @@
-import _Obj from './_Obj';
-
 //不繼承 _iBase
-export default class _iRead {
+class _iRead {
     //value by fid
     static get(fid: string, form?: JQuery): string {
         return this.getO(_Obj.get(fid, form));
@@ -30,3 +28,4 @@ export default class _iRead {
         obj.text(value);    //for XiRead
     }
 }
+window._iRead = _iRead;

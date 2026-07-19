@@ -1,6 +1,6 @@
 ﻿//ex: _Fun.FunC -> FunEstr.Create
 //for mapping to backend
-export default class FunEstr {
+class FunEstr {
 
     // 變數宣告 var 改用 let, const, 這裡用 static readonly 模擬常數
     // 雖然規則 4 是針對 function 內部的 var，但在 class 內將這些視為常數屬性更合理。
@@ -12,5 +12,5 @@ export default class FunEstr {
     static readonly Update: string = 'U';
     static readonly Delete: string = 'D';
     static readonly View: string = 'V';
-
 }
+window.FunEstr = FunEstr;

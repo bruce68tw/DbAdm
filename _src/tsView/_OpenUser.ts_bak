@@ -14,7 +14,7 @@ export interface OpenUserVo {
  * 後端固定呼叫 :
  * datatables讀資料: ../OpenUser/GetPage
  */
-export default class _OpenUser {
+class _OpenUser {
 
     //fn: 按下ok時會回call的函數
     //boxId: 必須配合引用 OpenUser partial view時的 ViewDataDictionary 的 BoxId 欄位, 2邊要一致 !! (可同時空白)

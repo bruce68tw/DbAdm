@@ -1,4 +1,4 @@
-﻿import { CrudR, EditMany } from "@baseJs";
+﻿//import { CrudR, EditMany } from "@baseJs";
 
 _me = {
     crudR: null,

@@ -1,6 +1,4 @@
-import _Obj from './_Obj';
-
-export default class _iBase {
+class _iBase {
   /**
    * get value by fid, get -> getF -> getO
    * param fid {string}
@@ -58,3 +56,4 @@ export default class _iBase {
     obj.prop('readonly', !status);
   }
 }
+window._iBase = _iBase;

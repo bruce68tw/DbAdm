@@ -1,12 +1,11 @@
-import _Fun from './_Fun';
-
-//todo
+/*
 export interface JwtHeaders {
     Authorization: string;
     [key: string]: string;
 }
+*/
 
-export default class _Jwt {
+class _Jwt {
     /**
      * get header json object for jwt
      */
@@ -16,7 +15,7 @@ export default class _Jwt {
         }
     }
 
-    static getJwtAuth(): JwtHeaders {
+    static getJwtAuth(): Json {
         return {
             'Authorization': _Jwt.getJwtBearer()
         };
@@ -26,3 +25,4 @@ export default class _Jwt {
         return 'Bearer ' + (_Fun.jwtToken || '');
     }
 }
+window._Jwt = _Jwt;

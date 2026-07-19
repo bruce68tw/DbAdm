@@ -1,4 +1,4 @@
-export default class _Log {
+class _Log {
 
     /**
      * @description 記錄程式時間功能的變數
@@ -38,3 +38,4 @@ export default class _Log {
     }
 
 }
+window._Log = _Log;

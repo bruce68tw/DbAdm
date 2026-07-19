@@ -1,7 +1,4 @@
-import _Input from './_Input';
-import _Fun from './_Fun';
-
-export default class _Table {
+class _Table {
     /**
      * 讀取某個欄位值
      * 傳回字串陣列
@@ -38,3 +35,4 @@ export default class _Table {
         return table.find(_Input.fidFilter(fid)).length;
     }
 }
+window._Table = _Table;

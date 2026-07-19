@@ -1,8 +1,4 @@
-import NodeTypeEstr from '../enum/NodeTypeEstr';
-import MouseEstr from '../enum/MouseEstr';
-import _Str from './_Str';
-
-export default class FlowNode {
+class FlowNode {
     private readonly MinWidth: number = 80;
     private readonly MinHeight: number = 42;
     private readonly LineHeight: number = 18;
@@ -267,3 +263,4 @@ export default class FlowNode {
             this._drawLines();
     }
 }
+window.FlowNode = FlowNode;

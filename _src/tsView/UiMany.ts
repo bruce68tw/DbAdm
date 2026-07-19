@@ -1,10 +1,12 @@
-﻿import UiView from "./UiView.js";
+﻿/*
+import UiView from "./UiView.js";
 import {
     MouseEstr, UiItemTypeEstr, InputTypeEstr, EditMany, _Ajax,
     _Array, _Form, _Fun, _iCheck, _iSelect,
     _iText, _Json, _Modal, _Nav, _Obj,
     _Prog, _Str, _Tab, _Tool, _Valid
 } from "@baseJs";
+*/
 
 /**
  * 控制 EditMany, 參考 FlowMany.js, called by Read.cshtml only !!
@@ -16,7 +18,7 @@ import {
  * param ftWorkArea {string} filter of work area
  * return {UiMany}
  */ 
-export default class UiMany {
+class UiMany {
 
     private FtMenu: string;
     private ModalInput: JQuery;
@@ -32,7 +34,9 @@ export default class UiMany {
     private mItem: EditMany;
     private newInputNo: number;
     private eformItems: JQuery;
-    private uiView: UiView;
+
+    //global
+    uiView: UiView;
 
     /**
      * @param {string} ftWorkArea
@@ -661,3 +665,4 @@ export default class UiMany {
     //#endregion
 
 }//class
+window.UiMany = UiMany;

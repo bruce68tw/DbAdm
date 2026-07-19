@@ -1,11 +1,4 @@
-import _iBase from './_iBase';
-import _Obj from './_Obj';
-import _Str from './_Str';
-import _Ajax from './_Ajax';
-import IdStrExtDto from '../dto/IdStrExtDto';
-import IdStrDto from '../dto/IdStrDto';
-
-export default class _iSelect extends _iBase {
+class _iSelect extends _iBase {
     static get(fid: string, box?: JQuery): any {
         return _iBase.get ? _iBase.get(fid, box) : '';
     }
@@ -177,3 +170,4 @@ export default class _iSelect extends _iBase {
         });
     }
 }
+window._iSelect = _iSelect;

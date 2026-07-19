@@ -1,4 +1,4 @@
-//export default class _Array {
+//class _Array {
 class _Array {
     /**
      * find array

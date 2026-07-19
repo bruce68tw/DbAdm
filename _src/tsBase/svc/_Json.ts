@@ -1,7 +1,4 @@
-import _Var from './_Var';
-import _Str from './_Str';
-
-export default class _Json {
+class _Json {
 
     /**
      * add json object into another object
@@ -227,5 +224,5 @@ export default class _Json {
             obj = null;
         }
     }
-
 }
+window._Json = _Json;

@@ -1,13 +1,13 @@
-﻿import { CrudR, _Ajax, _Str, _Tool } from "@baseJs";
+﻿//import { CrudR, _Ajax, _Str, _Tool } from "@baseJs";
 
 class ProjectVo {
-    prjId:string;
+    prjId: string;
 
     //import excel into Db
     async onImport(id) {
         _Array.isEmpty();
         this.prjId = id;
-        if (await _Tool.ansA('是否確定匯入資料庫結構?')){
+        if (await _Tool.ansA('是否確定匯入資料庫結構?')) {
             await _Ajax.getJsonA('Import', { id: this.prjId }, function (data) {
                 _Tool.msg(_BR.Done);
             });
@@ -16,8 +16,8 @@ class ProjectVo {
 
     //generate docx file
     onGenWord(id) {
-    _Tool.ans('是否確定產生資料庫文件?', function () {
-        window.location.href = 'GenWord?id=' + id;
+        _Tool.ans('是否確定產生資料庫文件?', function () {
+            window.location.href = 'GenWord?id=' + id;
         });
     }
 
@@ -52,19 +52,25 @@ _me = {
                 { data: 'Status', orderable: true },
             ],
             columnDefs: [
-                { targets: [4], render: function (data, type, full, meta) {
-                    var html = '' +
-                        '<button type="button" class="btn btn-link" data-onclick="_me.vo.onImport" data-args="{0}">{1}</button> | ' +
-                        '<button type="button" class="btn btn-link" data-onclick="_me.vo.onGenWord" data-args="{0}">{2}</button> | ' +
-                        '<button type="button" class="btn btn-link" data-onclick="_me.vo.onGenLogSql" data-args="{0}">{3}</button>';
+                {
+                    targets: [4], render: function (data, type, full, meta) {
+                        var html = '' +
+                            '<button type="button" class="btn btn-link" data-onclick="_me.vo.onImport" data-args="{0}">{1}</button> | ' +
+                            '<button type="button" class="btn btn-link" data-onclick="_me.vo.onGenWord" data-args="{0}">{2}</button> | ' +
+                            '<button type="button" class="btn btn-link" data-onclick="_me.vo.onGenLogSql" data-args="{0}">{3}</button>';
                         return _Str.format(html, full.Id, '匯入結構', '產生文件', '產生異動SQL');
-                }},
-                { targets: [5], render: function (data, type, full, meta) {
+                    }
+                },
+                {
+                    targets: [5], render: function (data, type, full, meta) {
                         return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
-                }},
-                { targets: [6], render: function (data, type, full, meta) {
-                    return _me.crudR.dtStatusName(data);
-                }},
+                    }
+                },
+                {
+                    targets: [6], render: function (data, type, full, meta) {
+                        return _me.crudR.dtStatusName(data);
+                    }
+                },
             ],
         };
 

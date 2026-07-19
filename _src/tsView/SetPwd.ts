@@ -1,4 +1,4 @@
-﻿import { _Ajax, _Tool, _iText } from "@baseJs";
+﻿//import { _Ajax, _Tool, _iText } from "@baseJs";
 
 _me = {
     onSave: async function () {

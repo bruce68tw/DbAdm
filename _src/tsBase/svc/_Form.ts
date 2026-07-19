@@ -1,14 +1,4 @@
-import _Input from './_Input';
-import _iText from './_iText';
-import _iTextarea from './_iTextarea';
-import _iDate from './_iDate';
-import _iSelect from './_iSelect';
-import _iCheck from './_iCheck';
-import _iRadio from './_iRadio';
-import _Btn from './_Btn';
-import _Obj from './_Obj';
-
-export default class _Form {
+class _Form {
     /**
      * get input values, 排除不儲存的欄位, 可用在多筆的單行
      * param form {object} input form
@@ -120,3 +110,4 @@ export default class _Form {
         }
     }
 }
+window._Form = _Form;

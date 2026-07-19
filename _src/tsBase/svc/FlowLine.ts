@@ -1,8 +1,4 @@
-import MouseEstr from '../enum/MouseEstr';
-import FlowView from './FlowView';
-import FlowNode from './FlowNode';
-
-export default class FlowLine {
+class FlowLine {
     private readonly MaxCntCnt1 = 6;
     private readonly MinSideCnt2 = 16;
     private readonly MinCntCnt3 = 20;
@@ -255,3 +251,4 @@ export default class FlowLine {
         this.render();
     }
 }
+window.FlowLine = FlowLine;

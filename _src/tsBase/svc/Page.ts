@@ -1,9 +1,4 @@
-import _Var from './_Var';
-import _Obj from './_Obj';
-import _Tool from './_Tool';
-import _Str from './_Str';
-import _Html from './_Html';
-
+/*
 interface PageConfig {
     pager: any;
     linker: any;
@@ -19,16 +14,17 @@ interface PageArg {
     pageRows: number;
     filterRows: number;
 }
+*/
 
-export default class Page {
+class Page {
     private pager: any;
     private linker: any;
     private action: string;
     private showMenu: boolean;
     private pageRowList: number[];
-    private pageArg!: PageArg;
+    private pageArg!: Json;
 
-    constructor(config: PageConfig) {
+    constructor(config: Json) {
         this.pager = config.pager;
         this.linker = config.linker;
         this.action = config.action;
@@ -98,7 +94,7 @@ export default class Page {
         return menu;
     }
 
-    private _getPageArg(pageStr: string): PageArg {
+    private _getPageArg(pageStr: string): Json {
         const json = JSON.parse(_Html.decode(pageStr));
         return {
             pageNo: json['pageNo'] || 1,
@@ -136,3 +132,4 @@ export default class Page {
         }
     }
 }
+window.Page = Page;

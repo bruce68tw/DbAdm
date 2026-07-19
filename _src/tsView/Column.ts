@@ -1,4 +1,4 @@
-﻿import { CrudR } from "@baseJs";
+﻿//import { CrudR } from "@baseJs";
 
 _me = {
     init: function () {
@@ -31,7 +31,7 @@ _me = {
     },
 
     /*
-    onViewFile: function (table, fid) {
+    fnOnViewFile: function (table:string, fid:string) {
         _me.edit0.onViewFile(table, fid);
     },
     */

@@ -1,4 +1,4 @@
-export default class BaseResDto {
+class BaseResDto {
 
     // moment.js convert these to UI format
     MmUiDateFmt: string;
@@ -58,3 +58,4 @@ export default class BaseResDto {
     Page: string;
     UniqueError: string;
 }
+window.BaseResDto = BaseResDto;

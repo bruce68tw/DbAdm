@@ -1,7 +1,4 @@
-import _iSelect from './_iSelect';
-import _Fun from './_Fun';
-
-export default class _Html {
+class _Html {
     //load css theme
     static loadTheme(color: string): void {
         const link = document.getElementById('xgTheme') as HTMLLinkElement | null;
@@ -53,3 +50,4 @@ export default class _Html {
         }
     }
 }
+window._Html = _Html;

@@ -1,4 +1,4 @@
-export default class EditDto {
+class EditDto {
     public edits: OneMany[];
     public divEdit: JQuery;
     public updName?: string;
@@ -15,3 +15,4 @@ export default class EditDto {
         this.updName = updName; //default by system
     }
 }
+window.EditDto = EditDto;

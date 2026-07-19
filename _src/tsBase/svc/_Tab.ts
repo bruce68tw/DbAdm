@@ -1,4 +1,4 @@
-export default class _Tab {
+class _Tab {
     static moveLeft(obj: JQuery): void {
         obj.insertBefore(obj.prev());
     }
@@ -7,3 +7,4 @@ export default class _Tab {
         obj.insertAfter(obj.next());
     }
 }
+window._Tab = _Tab;

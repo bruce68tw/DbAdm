@@ -1,23 +1,18 @@
-﻿import { CrudR, _Ajax, _Chart, _Form, _Json, _iSelect } from "@baseJs";
+﻿//import { CrudR, _Ajax, _Chart, _Form, _Json, _iSelect } from "@baseJs";
 
-_me = {
-    init: function () {
-        _me.rform = $('#formRead');
-    },
-};
-_m2 = {
+class ChartSatisVo {
     //on select bao item
-    onFind: async function () {
+    async onFind() {
         var data = _Json.toStr(_Form.toRow(_me.rform));
         await _Ajax.getJsonA('GetData', { json: data }, function (row) {
             //前端需要筆數, 前端處理則後端sql比較單純
             var rowLen = row['Rows'];     //筆數
-            var config:Json = { title: `滿意度問卷統計-共 ${rowLen} 筆資料` };
+            var config: Json = { title: `滿意度問卷統計-共 ${rowLen} 筆資料` };
             config.labels = ['Q1', 'Q2', 'Q3', 'Q4'];           //後端固定的資料欄位
             config.values = [];
             var rows = _Json.toChartRows(row, config.labels);   //x軸轉y軸(Id,Num欄位)
             //計算value, rows.length=config.labels.length
-            for (var i=0; i<rows.length; i++){
+            for (var i = 0; i < rows.length; i++) {
                 config.values[i] = parseFloat((rows[i]['Num'] / rowLen).toFixed(1));  //取一位小數
             }
             //todo: temp remark
@@ -47,11 +42,18 @@ options: {
 });
 */
         });
-    },
+    }
 
     //on change projectId
-    onChgProject: function () {
+    onChgProject() {
         _iSelect.changeParent('_ProjectId', 'ProgId', '', 'GetPrjProgs', false);
-    },
+    }
 
+}; //class
+
+_me = {
+    init: function () {
+        _me.rform = $('#formRead');
+        _me.vo = new ChartSatisVo();
+    },
 }; //class

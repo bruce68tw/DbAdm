@@ -1,19 +1,3 @@
-import FunEstr from '../enum/FunEstr';
-import Datatable from './Datatable';
-import CrudE from './CrudE';
-import _iDate from './_iDate';
-import _Var from './_Var';
-import _Prog from './_Prog';
-import _File from './_File';
-import _Tool from './_Tool';
-import _Str from './_Str';
-import _iCheck from './_iCheck';
-import _iRadio from './_iRadio';
-import _Form from './_Form';
-import _Obj from './_Obj';
-import _Json from './_Json';
-import _Ajax from './_Ajax';
-
 //todo
 //declare const window: any;
 
@@ -37,7 +21,7 @@ import _Ajax from './_Ajax';
  *   rform2
  *   dt
  */
-export default class CrudR {
+class CrudR {
     temp: Json;
     divRead: JQuery;
     dt: any;
@@ -481,3 +465,4 @@ export default class CrudR {
     }
     //=== event end ===
 }
+window.CrudR = CrudR;

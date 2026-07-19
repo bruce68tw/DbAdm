@@ -1,7 +1,7 @@
-import IdStrDto from '../dto/IdStrDto';
-import IdStrExtDto from '../dto/IdStrExtDto';
+//import IdStrDto from "../dto/IdStrDto";
+//import IdStrExtDto from "../dto/IdStrExtDto";
 
-export default class _Code {
+class _Code {
     //add empty option
     static addEmptyOpt(rows: IdStrDto[] = []): IdStrDto[] {
         //rows ??= [];
@@ -24,3 +24,5 @@ export default class _Code {
             : result;
     }
 }
+window._Code = _Code;
+//export default _Code;

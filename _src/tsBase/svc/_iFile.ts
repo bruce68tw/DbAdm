@@ -1,11 +1,4 @@
-import _iBase from './_iBase';
-import _Obj from './_Obj';
-import _Fun from './_Fun';
-import _Str from './_Str';
-import _File from './_File';
-import _Tool from './_Tool';
-
-export default class _iFile extends _iBase {
+class _iFile extends _iBase {
     //=== overwrite start ===
     /**
      * get border object
@@ -158,5 +151,7 @@ export default class _iFile extends _iBase {
         return (files && files.length > 0) ? files[0] : null;
     }
 }
+window._iFile = _iFile;
 
-Object.assign(_iFile, _iBase);
+//??
+//Object.assign(_iFile, _iBase);

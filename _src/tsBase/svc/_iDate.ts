@@ -1,10 +1,4 @@
-import _iBase from './_iBase';
-import _Obj from './_Obj';
-import _Fun from './_Fun';
-import _Str from './_Str';
-import _Date from './_Date';
-
-export default class _iDate extends _iBase {
+class _iDate extends _iBase {
   public static BoxFilter: string = '.date';
 
   /**
@@ -107,3 +101,4 @@ export default class _iDate extends _iBase {
     return box.find('input');
   }
 }
+window._iDate = _iDate;

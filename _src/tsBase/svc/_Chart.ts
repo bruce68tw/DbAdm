@@ -1,7 +1,6 @@
-import _Json from './_Json';
-import ChartDto from '../dto/ChartDto';
+//import ChartDto from "../dto/ChartDto";
 
-export default class _Chart {
+class _Chart {
     //彩虹顏色
     static rainbowColors: string[] = [
         "#F32E37",
@@ -228,3 +227,5 @@ export default class _Chart {
         return new Chart(canvasElm, config0);
     }
 }
+window._Chart = _Chart;
+//export default _Chart;

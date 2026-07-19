@@ -1,4 +1,4 @@
-export default class AjaxDto {
+class AjaxDto {
     url: string;
     type: string;
     data: any;
@@ -7,3 +7,4 @@ export default class AjaxDto {
     contentType?: boolean | string;
     processData?: boolean;
 }
+window.AjaxDto = AjaxDto;

@@ -1,14 +1,3 @@
-import _Fun from './_Fun';
-import _Edit from './_Edit';
-import _Obj from './_Obj';
-import _Form from './_Form';
-import _Str from './_Str';
-import _Tool from './_Tool';
-import _Input from './_Input';
-import _Json from './_Json';
-import _iText from './_iText';
-import _iFile from './_iFile';
-
 /**
  * 單筆編輯畫面, 全部屬性皆為 private !!
  * single edit form, called by _me.crudE.js
@@ -33,21 +22,21 @@ import _iFile from './_iFile';
  *   //error fnWhenSave() ??
  *   //void fnAfterSave()
  */ 
-export default class EditOne {
+class EditOne {
     //private [_Edit.Childs]: any;
-
-    //
-    _childs: OneMany[];
-    fnValid: any;
-    eform: JQuery;
-    systemError: string;
 
     private kid: string;
     private is1to1: boolean;
     private dataJson: Json;
-    private validator: any;
 
-    //& set by _Edit
+    //global
+    _childs: OneMany[];
+    fnValid: any;
+    eform: JQuery;
+    systemError: string;
+    validator: any;
+
+    //global& set by _Edit
     fidTypes: string[];
     fidTypeLen: number;
     fidRadios: string[];
@@ -164,3 +153,4 @@ export default class EditOne {
         await _Edit.viewFileA(table, fid, elm, key);
     }
 }
+window.EditOne = EditOne;

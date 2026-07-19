@@ -1,8 +1,4 @@
-import _iBase from './_iBase';
-import _Obj from './_Obj';
-import _Array from './_Array';
-
-export default class _iCheck extends _iBase {
+class _iCheck extends _iBase {
     /**
      * Check0Id -> FidCheck0
      * default data-fid attribute value for multiple selection
@@ -100,5 +96,7 @@ export default class _iCheck extends _iBase {
         _iCheck.setO(form.find(_iCheck.fltCheckeds), status);
     }
 }
+window._iCheck = _iCheck;
 
-Object.assign(_iCheck, _iBase);
+//??
+//Object.assign(_iCheck, _iBase);

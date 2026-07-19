@@ -1,7 +1,9 @@
+/*
 import type UiMany from "./UiMany.js";
 import { InputTypeEstr, MouseEstr, UiItemTypeEstr, _Ajax, _Array,
 	_Input, _Json, _Obj, _Prog, _Str, _Tool, _Var, DragItemDto
 } from "@baseJs";
+*/
 
 /**
  * 處理畫面操作, 包含基本元件, 使用jQuery
@@ -11,7 +13,7 @@ import { InputTypeEstr, MouseEstr, UiItemTypeEstr, _Ajax, _Array,
  * 2.whenSave 重新設定新增或位置有改變的Item的 BoxId, ChildNo, Sort欄位
  * 3.Info 儲存在 uiMany
  */
-export default class UiView {
+class UiView {
 	public DefaultCols: string;
 
 	private uiMany: UiMany;

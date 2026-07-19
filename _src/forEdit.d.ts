@@ -1,9 +1,11 @@
-﻿import type BaseResDto  from "./tsBase/dto/BaseResDto";
+﻿/*
+import type BaseResDto from "./tsBase/dto/BaseResDto";
 import type EditOne from "./tsBase/svc/EditOne";
 import type EditMany from "./tsBase/svc/EditMany";
 import type MeDto from "./tsBase/dto/MeDto";
-
+//import type _Ajax from "./tsBase/svc/_Ajax";
 //import type _Tool from "./tsBase/svc/_Tool";
+*/
 
 /**
  * for IDE 檢查typeScript語法
@@ -48,18 +50,100 @@ declare global {
     interface Window {
         _xg: Json,
         _me: MeDto,
-        _vo: Json,
+        //_m2: Json,
+        //_vo: Json,
         _BR: BaseResDto,
 
         //#region tsBase
+        EditModeEstr: typeof EditModeEstr;
+        FunEstr: typeof FunEstr;
+        InputTypeEstr: typeof InputTypeEstr;
+        MouseEstr: typeof MouseEstr;
+        NodeTypeEstr: typeof NodeTypeEstr;
+        UiItemTypeEstr: typeof UiItemTypeEstr;
+
+        AjaxDto: typeof AjaxDto;
+        BaseResDto: typeof BaseResDto;
+        ChartDto: typeof ChartDto;
+        EditDto: typeof EditDto;
+        ErrorRowDto: typeof ErrorRowDto;
+        IdStrDto: typeof IdStrDto;
+        IdStrExtDto: typeof IdStrExtDto;
+        ResultDto: typeof ResultDto;
+        DragItemDto: typeof DragItemDto;
+        MeDto: typeof MeDto;
+
         _Array: typeof _Array;
+        _Ajax: typeof _Ajax;
+        _Assert: typeof _Assert;
+        _Browser: typeof _Browser;
+        _Btn: typeof _Btn;
+        _Chart: typeof _Chart;
+        _Code: typeof _Code;
+        _Date: typeof _Date;
+        _Dom: typeof _Dom;
+        _Edit: typeof _Edit;
+        _Error: typeof _Error;
+        _File: typeof _File;
+        _Flow: typeof _Flow;
+        _Form: typeof _Form;
+        _Fun: typeof _Fun;
+        _Group: typeof _Group;
+        _Helper: typeof _Helper;
+        _Html: typeof _Html;
+        _iBase: typeof _iBase;
+        _iCheck: typeof _iCheck;
+        _iColor: typeof _iColor;
+        _iDate: typeof _iDate;
+        _iDt: typeof _iDt;
+        _iFile: typeof _iFile;
+        _iHtml: typeof _iHtml;
+        _iLink: typeof _iLink;
+        _Input: typeof _Input;
+        _iNum: typeof _iNum;
+        _iRadio: typeof _iRadio;
+        _iRead: typeof _iRead;
+        _iSelect: typeof _iSelect;
+        _iText: typeof _iText;
+        _iTextarea: typeof _iTextarea;
+        _Json: typeof _Json;
+        _Jwt: typeof _Jwt;
+        _Leftmenu: typeof _Leftmenu;
+        _Log: typeof _Log;
+        _Modal: typeof _Modal;
+        _Nav: typeof _Nav;
+        _Num: typeof _Num;
+        _Obj: typeof _Obj;
+        _Pjax: typeof _Pjax;
+        _Prog: typeof _Prog;
+        _Qrcode: typeof _Qrcode;
+        _Str: typeof _Str;
+        _Switch: typeof _Switch;
+        _Tab: typeof _Tab;
+        _Table: typeof _Table;
+        _Temp: typeof _Temp;
+        _Time: typeof _Time;
+        _Tool: typeof _Tool;
+        _Valid: typeof _Valid;
+        _Var: typeof _Var;
+
+        CrudE: typeof CrudE;
+        CrudR: typeof CrudR;
+        Datatable: typeof Datatable;
+        EditMany: typeof EditMany;
+        EditOne: typeof EditOne;
+        FlowLine: typeof FlowLine;
+        FlowMany: typeof FlowMany;
+        FlowNode: typeof FlowNode;
+        FlowView: typeof FlowView;
+        Page: typeof Page;
         //#endregion
     }
 
     //告訴 TypeScript 這些變數的型別是什麼
     let _xg: Json;
     let _me: MeDto;
-    let _vo: Json;
+    //let _m2: Json;
     let _BR: BaseResDto;
     //let _Array: _Array;
 }

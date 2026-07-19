@@ -1,5 +1,5 @@
 //數字相關
-export default class _Num {
+class _Num {
 
     static emptyOrZero(value?: any): boolean {
         return (isNaN(value) || value === '0' || value === 0);
@@ -47,3 +47,4 @@ export default class _Num {
         return x1 + x2;
     }
 }
+window._Num = _Num;

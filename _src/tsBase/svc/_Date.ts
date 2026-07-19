@@ -1,11 +1,4 @@
-//import type { Dayjs } from "dayjs";
-
-import _Fun from './_Fun';
-import _Str from './_Str';
-import _iDate from './_iDate';
-import _iSelect from './_iSelect';
-
-export default class _Date {
+class _Date {
 
     static setLocale(locale: string) {
         dayjs.locale(locale);
@@ -227,3 +220,4 @@ export default class _Date {
     }
 
 }
+window._Date = _Date;

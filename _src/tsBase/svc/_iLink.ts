@@ -1,7 +1,5 @@
-import _Obj from './_Obj';
-
 //不繼承 _iBase
-export default class _iLink {
+class _iLink {
     //value by fid
     static get(fid: string, form?: JQuery): string {
         return this.getO(_Obj.get(fid, form));
@@ -20,3 +18,4 @@ export default class _iLink {
         obj.text(value);
     }
 }
+window._iLink = _iLink;

@@ -1,10 +1,4 @@
-import _Fun from './_Fun';
-import _Json from './_Json';
-import _Ajax from './_Ajax';
-import _Tool from './_Tool';
-import _Var from './_Var';
-
-export default class Datatable {
+class Datatable {
     dt: any;
     findJson: Json;
     recordsFiltered: number;
@@ -260,3 +254,4 @@ t
         this.find(this.findJson);
     }
 }
+window.Datatable = Datatable;

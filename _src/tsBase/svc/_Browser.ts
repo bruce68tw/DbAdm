@@ -1,6 +1,4 @@
-import _Obj from './_Obj';
-
-export default class _Browser {
+class _Browser {
     // 傳到後端的語系code 欄位
     private static _langCode: string = '_langCode';
 
@@ -36,3 +34,4 @@ export default class _Browser {
         */
     }
 }
+window._Browser = _Browser;

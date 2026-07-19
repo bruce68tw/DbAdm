@@ -1,4 +1,4 @@
-//todo
+/*
 export interface SignRow {
     NodeName: string;
     SignerName: string;
@@ -6,9 +6,10 @@ export interface SignRow {
     SignStatusName: string;
     Note: string;
 }
+*/
 
-export default class _Flow {
-    static showSignRows(tbody: any, rows: SignRow[] | null | undefined): void {
+class _Flow {
+    static showSignRows(tbody: any, rows: Json[] | null): void {
         tbody.empty();
         if (rows == null) return;
 
@@ -26,3 +27,4 @@ export default class _Flow {
         }
     }
 }
+window._Flow = _Flow;

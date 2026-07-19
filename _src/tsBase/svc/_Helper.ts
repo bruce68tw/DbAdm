@@ -1,6 +1,4 @@
-import _Str from './_Str';
-
-export default class _Helper {
+class _Helper {
     /**
      * ??
      */ 
@@ -42,3 +40,4 @@ export default class _Helper {
         return attr;
     }
 }
+window._Helper = _Helper;

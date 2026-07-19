@@ -1,4 +1,4 @@
-﻿import { CrudR, _Ajax, _Date, _Modal, _Str, _Tool, _iFile } from "@baseJs";
+﻿//import { CrudR, _Ajax, _Date, _Modal, _Str, _Tool, _iFile } from "@baseJs";
 
 _me = {
     init: function () {        

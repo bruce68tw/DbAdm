@@ -1,13 +1,3 @@
-import _Input from './_Input';
-import _Form from './_Form';
-import _Date from './_Date';
-import _Var from './_Var';
-import _Obj from './_Obj';
-import _File from './_File';
-import _Ajax from './_Ajax';
-import EditOne from './EditOne';
-import EditMany from './EditMany';
-
 /**
  * 做為 EditOne/EditMany 的延伸函數庫, 可以在這裡存取其 instance 變數!!
  * 許多函數在初始化執行, 所以無法放在CrudE.js
@@ -18,7 +8,7 @@ import EditMany from './EditMany';
  * 3.get/set old value
  * 4.判斷是否為新資料 & 處理
  */ 
-export default class _Edit {
+class _Edit {
 
     //constant with underline
     static readonly Rows = '_rows';
@@ -161,7 +151,7 @@ export default class _Edit {
      * param key {string}
      * return {bool}
      */
-    static isNewRow(row: any, kid: string): boolean {
+    static isNewRow(row: Json, kid: string): boolean {
         return _Edit.isNewKey(row[kid]);
     }
 
@@ -180,7 +170,7 @@ export default class _Edit {
      * param key {string}
      * return {bool}
      */
-    static isNewKey(key: any): boolean {
+    static isNewKey(key?: StrNum): boolean {
         if (key == null) return true;
 
         const num = Number(key);
@@ -351,3 +341,4 @@ export default class _Edit {
     */
 
 }
+window._Edit = _Edit;

@@ -1,20 +1,4 @@
-//import Mustache from "mustache";
-import EditModeEstr from '../enum/EditModeEstr';
-import _Edit from './_Edit';
-import _Str from './_Str';
-import _Obj from './_Obj';
-import _Input from './_Input';
-import _iCheck from './_iCheck';
-import _iDate from './_iDate';
-import _Var from './_Var';
-import _Form from './_Form';
-import _Log from './_Log';
-import _Ajax from './_Ajax';
-import _Fun from './_Fun';
-import _iText from './_iText';
-import _iFile from './_iFile';
-
-export default class EditMany {
+class EditMany {
     //private [_Edit.Childs]: any = null;
 
     private mode: any = EditModeEstr.Base;
@@ -33,16 +17,16 @@ export default class EditMany {
     private deletedRows: string[] = [];
     private newIndex: number = 0;
 
-    private validator: any;
     private fnReset: any;
     private fnLoadRows: any;
     private fnValid: any;
     private fnGetUpdJson: any;
 
-    //
+    //global
     _childs: EditMany[];
+    validator: any;
 
-    //& set by _Edit
+    //global & set by _Edit
     fidTypes: string[];
     fidTypeLen: number;
     fidRadios: string[];
@@ -146,6 +130,7 @@ export default class EditMany {
         }
     }
 
+    //todo: upKey: key or fKid?
     private _urmGetUpdJson(upKey: string): any {
         var json: any = {};
         var rows: any[] = [];
@@ -280,7 +265,7 @@ export default class EditMany {
             return this.getUpdJsonByRsb(upKey, this.rowsBox);
     }
 
-    getUpdJsonByRsb(upKey: string, rowsBox?: JQuery): any {
+    getUpdJsonByRsb(upKey: StrNum, rowsBox?: JQuery): any {
         var json: any = {};
         json[_Edit.Rows] = this.getUpdRows(upKey, this._getRowsBox(rowsBox));
         json[_Edit.Deletes] = this.getDeletes();
@@ -291,7 +276,7 @@ export default class EditMany {
         return _Edit.getUpdRow(this, box);
     }
 
-    getUpdRows(upKey: string, rowsBox?: JQuery): any[] | null {
+    getUpdRows(upKey: StrNum, rowsBox?: JQuery): any[] | null {
         if (!this._checkRowFilter()) return null;
 
         rowsBox = this._getRowsBox(rowsBox);
@@ -428,9 +413,9 @@ export default class EditMany {
         return fileJson;
     }
 
-    rowSetFkey(row: any, fkey: string): void {
-        if (row != null && _Edit.isNewRow(row, fkey))
-            row[_Edit.DataFkeyFid] = fkey;
+    rowSetFkey(row: any, fKid: string): void {
+        if (row != null && _Edit.isNewRow(row, fKid))
+            row[_Edit.DataFkeyFid] = fKid;
     }
 
     rowsSetFkey(rows: any[] | null, fkey: string): void {
@@ -485,3 +470,4 @@ export default class EditMany {
         return rowsBox || this.rowsBox;
     }
 }
+window.EditMany = EditMany;

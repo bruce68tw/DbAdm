@@ -1,6 +1,4 @@
-import _Str from './_Str';
-
-export default class _Switch {
+class _Switch {
     /**
      * 傳回元件內容字串 for client render
      */
@@ -30,3 +28,4 @@ export default class _Switch {
         return _Str.format(html, yes, no, width, attr, cls, inline2);
     }
 }
+window._Switch = _Switch;

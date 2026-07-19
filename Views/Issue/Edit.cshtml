@@ -6,13 +6,13 @@
 		<div class="col-md-2 x-label">資料Id</div>
 		<div class="col-md-5 x-input">
 			@await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Fid = "Id", InRow = true, InputAttr = "id='Id'", Width = 100 })
-			<button type="button" id="btnAddWatch" class="btn btn-success" data-onclick="_me.onAddWatch">加入追踪</button>
-			<button type="button" id="btnDeleteWatch" class="btn btn-danger" data-onclick="_me.onDeleteWatch">取消追踪</button>
-			<button type="button" id="btnKeepIssue" class="btn btn-secondary" data-onclick="_me.onKeepIssue">延續工作</button>
+			<button type="button" id="btnAddWatch" class="btn btn-success" data-onclick="_me.vo.onAddWatch">加入追踪</button>
+			<button type="button" id="btnDeleteWatch" class="btn btn-danger" data-onclick="_me.vo.onDeleteWatch">取消追踪</button>
+			<button type="button" id="btnKeepIssue" class="btn btn-secondary" data-onclick="_me.vo.onKeepIssue">延續工作</button>
 		</div>
 	</div>
 	<div class="row">
-		@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "_ProjectId", Required = true, Rows = ViewBag.Projects, FnOnChange = "_me.onChgProject", EventArgs = "1",  InRow = true })
+		@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "_ProjectId", Required = true, Rows = ViewBag.Projects, FnOnChange = "_me.vo.onChgProject", EventArgs = "1", InRow = true })
 		@*
 		@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "回報單位代號", Fid = "RptDeptCode", MaxLen = 10, Cols = "2,2", InRow = true })
 		*@
@@ -55,7 +55,7 @@
 
 <div class='x-btns-box'>
     <span class="x-span-label">上傳檔案</span>
-	@await Component.InvokeAsync("XgAddRow", "_me.mIssueFile.onAddRow")
+	@await Component.InvokeAsync("XgAddRow", "_me.vo.mIssueFile.onAddRow")
 </div>
 <form id='eformIssueFile' class='x-form border-0'>
     <table class="table x-table x-no-hline" cellspacing="0">
@@ -72,7 +72,7 @@
 
 <div class='x-btns-box'>
 	<span class="x-span-label">相關問題</span>
-	@await Component.InvokeAsync("XgAddRow", "_me.mIssueRelat.onAddRow")
+	@await Component.InvokeAsync("XgAddRow", "_me.vo.mIssueRelat.onAddRow")
 </div>
 <form id='eformIssueRelat' class='x-form border-0'>
 	<table class="table x-table x-no-hline" cellspacing="0">
@@ -94,7 +94,7 @@
 		@await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
 		<td>@await Component.InvokeAsync(XiEstr.File, new XiFileDto { Fid = "FileName", FileType = UpFileTypeEnum.All })</td>
 		<td>@await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Fid = "Created", Format = BrFormatEstr.Dt })</td>
-		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mIssueFile.onDeleteRow")</td>
+		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.vo.mIssueFile.onDeleteRow")</td>
 	</tr>
 </script>
 <script id="tplIssueRelat" type="text/template">
@@ -103,7 +103,7 @@
 		<td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "SourceIssue", Required = true })</td>
 		<td>@await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Fid = "Title" })</td>
 		<td>@await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Fid = "Created", Format = BrFormatEstr.Dt })</td>
-		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.mIssueRelat.onDeleteRow")</td>
+		<td width='60px' class='text-center'>@await Component.InvokeAsync("XgDeleteRow", "_me.vo.mIssueRelat.onDeleteRow")</td>
 	</tr>
 </script>
 

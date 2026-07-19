@@ -1,7 +1,3 @@
-import NodeTypeEstr from '../enum/NodeTypeEstr';
-import FlowNode from './FlowNode';
-import FlowLine from './FlowLine';
-
 /**
  * FlowBase -> FlowView
  * 建立 FlowView 簡化外部程式, 考慮模組化, 所以不使用jQuery
@@ -18,7 +14,7 @@ import FlowLine from './FlowLine';
 // declare var _str: any;
 // declare var SVG: any;
 
-export default class FlowView {
+class FlowView {
     isEdit: boolean = false;
     newNodeId: number = 0;
     newLineId: number = 0;
@@ -117,3 +113,4 @@ export default class FlowView {
         return this.nodes.some(node => node.getNodeType() == NodeTypeEstr.Start);
     }
 }
+window.FlowView = FlowView;

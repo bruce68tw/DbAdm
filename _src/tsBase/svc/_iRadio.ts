@@ -1,10 +1,4 @@
-import _iBase from './_iBase';
-import _Obj from './_Obj';
-import _iCheck from './_iCheck';
-import _Str from './_Str';
-import _Ajax from './_Ajax';
-
-export default class _iRadio extends _iBase {
+class _iRadio extends _iBase {
     //=== get ===
     //get checked data-value
     static get(fid: string, box?: JQuery): string {
@@ -115,5 +109,7 @@ export default class _iRadio extends _iBase {
         return _Str.format(html, extClass, extProp, label);
     }
 }
+window._iRadio = _iRadio;
 
-Object.assign(_iRadio, _iBase);
+//??
+//Object.assign(_iRadio, _iBase);

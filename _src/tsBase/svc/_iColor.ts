@@ -1,8 +1,6 @@
-import _Obj from './_Obj';
-
 //不繼承 iBase
 //bootstrap-colorpicker 支援到 bootstrap4, 若要用此功能可改用其他元件
-export default class _iColor {
+class _iColor {
     /*
     static init(): void {
         $('.x-color').colorpicker({
@@ -65,3 +63,4 @@ export default class _iColor {
     },
     */
 }
+window._iColor = _iColor;
