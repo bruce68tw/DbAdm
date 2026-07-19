@@ -12,13 +12,13 @@ export default class _Tool {
     static ansStatus: boolean = false;
     static fnResolve: ((value: boolean) => void) | null = null;
 
-    static xMsg: any;
-    static xAns: any;
-    static xAnsA: any;
-    static xAlert: any;
-    static xArea: any;
-    static xImage: any;
-    static xWork: any;
+    static xMsg: JQuery;
+    static xAns: JQuery;
+    static xAnsA: JQuery;
+    static xAlert: JQuery;
+    static xArea: JQuery;
+    static xImage: JQuery;
+    static xWork: JQuery;
 
     private static _fnOnMsgClose: (() => void) | null | undefined = null;
     private static _fnOnAnsYes: (() => void) | null | undefined = null;
@@ -63,7 +63,7 @@ export default class _Tool {
 
         // set callback
         _Tool._fnOnAnsYes = fnYes;
-        _Tool._fnOnAnsNo = (fnNo === undefined) ? null : fnNo;
+        _Tool._fnOnAnsNo = (fnNo == null) ? null : fnNo;
     }
 
     /**
@@ -77,6 +77,10 @@ export default class _Tool {
         box.find(_Tool.FltMsgText).html(msg);
         _Modal.show(box);
 
+        // set callback
+        _Tool._fnOnAnsYes = null;
+        _Tool._fnOnAnsNo = null;
+
         return new Promise<boolean>((resolve) => {
             // reset flag, 防止重複 resolve
             _Tool.ansStatus = false;
@@ -85,7 +89,7 @@ export default class _Tool {
     }
 
     // called by ansA yes/no onclick event
-    static onAnsA(value: string | number): void {
+    static onAnsA(value: StrNum): void {
         if (_Tool.ansStatus) return;
 
         _Tool.ansStatus = true;

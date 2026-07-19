@@ -15,14 +15,34 @@ import _Json from './_Json';
 import _Ajax from './_Ajax';
 
 //todo
-declare const window: any;
+//declare const window: any;
 
+/**
+ * 控制 CRUD 查詢(含編輯)畫面
+ * 說明:
+ *   允許不同編輯畫面共用查詢畫面, 參考 Crud/Read.cshtml
+ *   前端使用固定 filter: #divRead、#formRead、#formRead2、#tableRead
+ *   後端固定呼叫 GetPage action
+ * 寫入 _me 屬性:
+ *   crudR
+ *   divRead
+ *   hasRead
+ *   rform
+ *   rform2
+ * 自動呼叫 _me 函數:
+ *   fnAfterFind(result):
+ *   void fnAfterSwap(toRead):
+ * 公用屬性:
+ *   rform
+ *   rform2
+ *   dt
+ */
 export default class CrudR {
-    public temp: Record<string, any>;
-    public divRead: any;
-    public dt: any;
-    private _updName: string | undefined;
-    public hasDraft: boolean;
+    temp: Json;
+    divRead: JQuery;
+    dt: any;
+    hasDraft: boolean;
+    private _updName: string;
 
     constructor(dtConfig: any, edits?: any[], updName?: string) {
         //save middle variables
@@ -83,7 +103,7 @@ export default class CrudR {
      * @param elm {element} link element
      * @param key {string} row key
      */
-    public viewFile(table: string, fid: string, key: string, fileName: string): void {
+    viewFile(table: string, fid: string, key: string, fileName: string): void {
         var ext: string = _File.getFileExt(fileName);
         if (_File.isImageExt(ext))
             _Tool.showImage(
@@ -100,7 +120,7 @@ export default class CrudR {
      * @param fnArgs {string} 多個時逗號分隔
      * @returns button html string
      */
-    public dtBtn(id: string, label: string, fnOnclick: string): string {
+    dtBtn(id: string, label: string, fnOnclick: string): string {
         return `<button type="button" class="btn btn-sm x-btn-other" data-onclick="${fnOnclick}" data-args="${id}">${label}</button>`;
     }
 
@@ -109,7 +129,7 @@ export default class CrudR {
      * @param value {string} [1] checkbox value
      * @param editable {bool} [true]
      */
-    public dtCheck0(value: StrNum, editable?: boolean): string {
+    dtCheck0(value: StrNum, editable?: boolean): string {
         if (_Str.isEmpty(value as string)) value = 1;
 
         //attr
@@ -131,7 +151,7 @@ export default class CrudR {
     }
 
     //??
-    public dtRadio1(value: any, editable?: boolean): string {
+    dtRadio1(value: any, editable?: boolean): string {
         if (editable === undefined) editable = true;
         return _iRadio.render(_iCheck.fidCheck0, '', false, value, editable);
     }
@@ -141,7 +161,7 @@ export default class CrudR {
      * @param value {string} checkbox value, will translate to bool
      * @param fnOnClick {string} onclick function, default to this.onSetStatusA
      */
-    public dtSetStatus(key: string, value: any, fnOnClick?: string): string {
+    dtSetStatus(key: string, value: any, fnOnClick?: string): string {
         //TODO: pending
         return '';
 
@@ -156,18 +176,18 @@ export default class CrudR {
         */
     }
 
-    public dtStatusName(value: string | number): string {
+    dtStatusName(value: string | number): string {
         return value == '1'
             ? '<span>' + _BR.StatusYes + '</span>'
             : '<span class="text-danger">' + _BR.StatusNo + '</span>';
     }
 
-    public dtYesEmpty(value: string | number): string {
+    dtYesEmpty(value: string | number): string {
         return value == '1' ? _BR.Yes : '';
     }
 
     //顯示紅色文字 by status
-    public dtRed(text: string, status: boolean): string {
+    dtRed(text: string, status: boolean): string {
         return status
             ? '<span class="text-danger">' + text + '</span>'
             : '<span>' + text + '</span>';
@@ -184,13 +204,13 @@ export default class CrudR {
      * @param hasView {bool} has view icon or not
      */
     //dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, fnOnUpdate, fnOnDelete, fnOnView) {
-    public dtCrudFun(
+    dtCrudFun(
         key: string,
         rowName: string,
-        hasUpdate: boolean,
-        hasDelete: boolean,
-        hasView: boolean,
-        hasCopy: boolean
+        hasUpdate: boolean = false,
+        hasDelete: boolean = false,
+        hasView: boolean = false,
+        hasCopy: boolean = false
     ): string {
         const preStr: string = `button type="button" class="btn btn-link"`;
         var funs: string = '';
@@ -224,7 +244,7 @@ export default class CrudR {
      * //param nowDiv {object} (default _me.divEdit) now div to show
      * //param fnCallback {function} (optional) callback function
      */
-    public swap(toRead: boolean, fnCallback?: () => void): void {
+    swap(toRead: boolean, fnCallback?: () => void): void {
         //同時有read, edit才執行
         if (!_me.hasRead || !_me.hasEdit) return;
 
@@ -269,7 +289,7 @@ export default class CrudR {
      * param fnCallback {function} 如果進入編輯畫面後要處理畫面, 必須以非同步方式處理
      */
     //toEditMode = function(fun, data) {
-    public toEditMode(fun: FunEstr, fnCallback?: () => void): void {
+    toEditMode(fun: FunEstr, fnCallback?: () => void): void {
         this.swap(false, fnCallback); //call first
         _Prog.showPath(fun, this._updName);
     }
@@ -277,7 +297,7 @@ export default class CrudR {
     /**
      * back to list form
      */
-    public toReadMode(): void {
+    toReadMode(): void {
         //_Obj.show(this.divReadTool);
         _Prog.resetPath();
         this.swap(true);
@@ -298,7 +318,7 @@ export default class CrudR {
     /**
      * onclick find rows
      */
-    public onFind(): void {
+    onFind(): void {
         var cond: any = this._getFindCond();
         this.dt.find(cond);
     }
@@ -306,7 +326,7 @@ export default class CrudR {
     /**
      * onclick find2 button for show/hide find2 form
      */
-    public onFind2(): void {
+    onFind2(): void {
         var find2: any = _me.rform2;
         if (find2 == null) return;
         else if (_Obj.isShow(find2)) _Form.hideShow([find2]);
@@ -316,7 +336,7 @@ export default class CrudR {
     /**
      * onclick reset find form
      */
-    public onResetFind(): void {
+    onResetFind(): void {
         _Form.reset(_me.rform);
         if (_me.rform2 != null) _Form.reset(_me.rform2);
     }
@@ -324,15 +344,15 @@ export default class CrudR {
     /**
      * onClick export excel button
      */
-    public onExport(): void {
+    onExport(): void {
         var find: any = this._getFindCond();
-        window.location = 'Export?find=' + _Json.toStr(find);
+        window.location.href = 'Export?find=' + _Json.toStr(find);
     }
 
     /**
      * onclick toRead button
      */
-    public onToRead(): void {
+    onToRead(): void {
         this.toReadMode();
     }
 
@@ -340,7 +360,7 @@ export default class CrudR {
      * onclick Create button
      * 字尾暫不加上A(非同步)
      */
-    public async onCreate(): Promise<void> {
+    async onCreate(): Promise<void> {
         //var fun = FunEstr.Create;
         //this.swap(false);  //call first
         //_Prog.setPath(fun);
@@ -361,7 +381,7 @@ export default class CrudR {
         }
     }
 
-    public createAndEdit(): void {
+    createAndEdit(): void {
         _me.crudE.onCreate();
         this.toEditMode(FunEstr.Create);
     }
@@ -397,7 +417,7 @@ export default class CrudR {
      * me {element} checkbox element
      * key {string} row key
      */
-    public async onSetStatusA(me: any, key: string): Promise<void> {
+    async onSetStatusA(me: any, key: string): Promise<void> {
         var status: boolean = _iCheck.isCheckedO($(me));
         await _Ajax.getStrA('SetStatus', { key: key, status: status }, function (msg: string) {
             _Tool.alert(_BR.UpdateOk);
@@ -412,7 +432,7 @@ export default class CrudR {
      * @param fid {string} fid
      */
     //onCheckAll(me, box, fid) {
-    public onCheckAll(me: any, box: any): void {
+    onCheckAll(me: any, box: any): void {
         _iCheck.setF(_iCheck.fltCheckeds + ':not(:disabled)', _iCheck.isCheckedO($(me)), box);
     }
 
@@ -421,7 +441,7 @@ export default class CrudR {
      * key {string} row key
      * rowName {string} for confirm
      */
-    public async onDeleteA(key: string, rowName: string): Promise<void> {
+    async onDeleteA(key: string, rowName: string): Promise<void> {
         //_temp.data = { key: key }
         var me: this = this;
         _Tool.ans(_BR.SureDeleteRow + ' (' + rowName + ')', async function () {
@@ -441,7 +461,7 @@ export default class CrudR {
      * fid {string} 
      */
     //async onDeleteRowsA(box, fid) {
-    public async onDeleteRowsA(box: any): Promise<void> {
+    async onDeleteRowsA(box: any): Promise<void> {
         //get selected keys
         var keys: any[] = _iCheck.getCheck0Values(box);
         if (keys.length === 0) {

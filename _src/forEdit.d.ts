@@ -1,6 +1,9 @@
 ﻿import type BaseResDto  from "./tsBase/dto/BaseResDto";
 import type EditOne from "./tsBase/svc/EditOne";
 import type EditMany from "./tsBase/svc/EditMany";
+import type MeDto from "./tsBase/dto/MeDto";
+
+//import type _Tool from "./tsBase/svc/_Tool";
 
 /**
  * for IDE 檢查typeScript語法
@@ -44,14 +47,21 @@ declare global {
     //擴充 Window 型別
     interface Window {
         _xg: Json,
-        _me: Json,
+        _me: MeDto,
+        _vo: Json,
         _BR: BaseResDto,
+
+        //#region tsBase
+        _Array: typeof _Array;
+        //#endregion
     }
 
     //告訴 TypeScript 這些變數的型別是什麼
     let _xg: Json;
-    let _me: Json;
+    let _me: MeDto;
+    let _vo: Json;
     let _BR: BaseResDto;
+    //let _Array: _Array;
 }
 
 export { };

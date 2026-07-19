@@ -13,15 +13,15 @@ export default class FlowNode {
     private readonly NodeRadius: number = 20;
     private readonly NodeRx: number = 5;
 
-    public self: FlowNode;
-    public flowView: any;
-    public svg: any;
-    public json: any;
-    public elm: any;
-    public boxElm: any;
-    public nameElm: any;
-    public pinElm: any;
-    public lines: any[];
+    self: FlowNode;
+    flowView: any;
+    svg: any;
+    json: any;
+    elm: any;
+    boxElm: any;
+    nameElm: any;
+    pinElm: any;
+    lines: any[];
 
     constructor(flowView: any, json: any) {
         this.self = this;
@@ -92,7 +92,7 @@ export default class FlowNode {
         this._setEvent();
     }
 
-    public getLines(): any[] {
+    getLines(): any[] {
         return this.lines;
     }
 
@@ -100,21 +100,21 @@ export default class FlowNode {
         return (this.json.NodeType == NodeTypeEstr.Start || this.json.NodeType == NodeTypeEstr.End);
     }
 
-    public getNodeType(): any {
+    getNodeType(): any {
         return this.json.NodeType;
     }
 
-    public getPos(): { x: number, y: number } {
+    getPos(): { x: number, y: number } {
         let elm = this.elm;
         return { x: elm.x(), y: elm.y() };
     }
 
-    public getSize(): { w: number, h: number } {
+    getSize(): { w: number, h: number } {
         let elm = this.boxElm;
         return { w: elm.width(), h: elm.height() };
     }
 
-    public getCenter(): { x: number, y: number } {
+    getCenter(): { x: number, y: number } {
         let elm = this.boxElm;
         return { x: elm.cx(), y: elm.cy() };
     }
@@ -228,24 +228,24 @@ export default class FlowNode {
         }
     }
 
-    public getId(): string {
+    getId(): string {
         return this.json.Id;
     }
 
-    public addLine(line: any): void {
+    addLine(line: any): void {
         this.lines.push(line);
     }
 
-    public deleteLine(line: any): void {
+    deleteLine(line: any): void {
         let index = this.lines.findIndex((item: any) => item.Id == line.Id);
         this.lines.splice(index, 1);
     }
 
-    public getName(): string {
+    getName(): string {
         return this.nameElm.text();
     }
 
-    public setName(name: string, drawLine: boolean): void {
+    setName(name: string, drawLine: boolean): void {
         let lines = _Str.replaceAll(name, '\\n', '\n').split('\n');
         this.nameElm.clear().text((add: any) => {
             lines.forEach((line, i) => {

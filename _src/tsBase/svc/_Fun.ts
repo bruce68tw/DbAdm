@@ -34,7 +34,7 @@ export default class _Fun {
     static maxFileSize = 50971520;  //upload file limit(50M)
     static isRwd = false;   
     static pageRows = 10;   //must be 10,20(not 25),50,100
-    static nowDom: any = '';    //now dom event element
+    static nowDom: Elm;    //now dom event element
     static lengthMenu = [10, 20, 50, 100];
     static jwtToken = '';   //for JWT, 登入後自行設定內容
 
@@ -123,12 +123,12 @@ export default class _Fun {
      */
     static setEvent(box: JQuery, eventName: string): void {
         var event2 = 'on' + eventName;
-        box.on(eventName, `[data-${event2}]`, function (this: any) {
+        box.on(eventName, `[data-${event2}]`, function (this: Elm) {
             _Fun.nowDom = this;
 
-            var me = $(this);
+            const me = $(this);
             const fnPath = me.data(event2);
-            var argsStr = me.data("args");
+            let argsStr = me.data("args");
             argsStr = (argsStr == null) ? "" : argsStr.toString();
             const args = argsStr ? argsStr.split(",") : [];
 

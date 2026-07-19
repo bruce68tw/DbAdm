@@ -88,7 +88,7 @@ export default class FlowMany {
     this.mLine.addRow(json, null, json.Id);
   }
 
-  public fnShowMenu(event: any, isNode: boolean, flowItem: any): void {
+  fnShowMenu(event: any, isNode: boolean, flowItem: any): void {
     this.nowIsNode = isNode;
     this.nowFlowItem = flowItem;
 
@@ -115,11 +115,11 @@ export default class FlowMany {
       });
   }
 
-  public reset(): void {
+  reset(): void {
     this.flowView.reset();
   }
 
-  public setEdit(status: boolean): void {
+  setEdit(status: boolean): void {
     this.isEdit = status;
     this.flowView.setEdit(status);
   }
@@ -133,12 +133,12 @@ export default class FlowMany {
     });
   }
 
-  public loadNodes(rows: any): void {
+  loadNodes(rows: any): void {
     this.mNode.loadRowsByRsb(rows, true);
     this.flowView.loadNodes(rows);
   }
 
-  public loadLines(rows: any): void {
+  loadLines(rows: any): void {
     this.mLine.loadRowsByRsb(rows, true);
     if (rows != null) {
       for (let i = 0; i < rows.length; i++) {
@@ -148,7 +148,7 @@ export default class FlowMany {
     this.flowView.loadLines(rows);
   }
 
-  public addNode(nodeType: string, name?: string): void {
+  addNode(nodeType: string, name?: string): void {
     let nodeName = name || '';
     if (nodeType == NodeTypeEstr.Start) {
       nodeName = 'S';
@@ -168,7 +168,7 @@ export default class FlowMany {
     this.flowView.addNode(row);
   }
 
-  public deleteNode(node: any): void {
+  deleteNode(node: any): void {
     this.mNode.deleteRow(node.getId());
     node.getLines().forEach((line: any) => {
       this.mLine.deleteRow(line.getId());
@@ -176,7 +176,7 @@ export default class FlowMany {
     this.flowView.deleteNode();
   }
 
-  public deleteLine(line: any): void {
+  deleteLine(line: any): void {
     this.mLine.deleteRow(line.getId());
     this.flowView.deleteLine(line);
   }
@@ -232,13 +232,13 @@ export default class FlowMany {
     return condStr;
   }
 
-  public showNodeProp(node: any): void {
+  showNodeProp(node: any): void {
     const rowBox = this.mNode.idToRowBox(node.getId());
     _Form.loadRow(this.modalNodeProp, _Form.toRow(rowBox));
     _Modal.show(this.modalNodeProp);
   }
 
-  public showLineProp(line: any): void {
+  showLineProp(line: any): void {
     const rowBox = this.mLine.idToRowBox(line.getId());
     const form = this.modalLineProp.find('form');
     _iRead.set('FromNodeName', line.fromNode.getName(), form);
@@ -260,7 +260,7 @@ export default class FlowMany {
     }
   }
 
-  public onAddNode(nodeType: string): void {
+  onAddNode(nodeType: string): void {
     if (nodeType == NodeTypeEstr.Start && this.flowView.hasStartNode()) {
       _Tool.msg('起始節點已經存在，不可再新增。');
       return;
@@ -272,7 +272,7 @@ export default class FlowMany {
     return !me[0].classList.contains('off');
   }
 
-  public onMenuEdit(): void {
+  onMenuEdit(): void {
     const me = _Fun.getMe();
     if (!this._menuStatus(me)) return;
 
@@ -282,7 +282,7 @@ export default class FlowMany {
       this.showLineProp(this.nowFlowItem);
   }
 
-  public onMenuDelete(): void {
+  onMenuDelete(): void {
     const me = _Fun.getMe();
     if (!this._menuStatus(me)) return;
 
@@ -298,11 +298,11 @@ export default class FlowMany {
     }
   }
 
-  public onMenuView(): void {
+  onMenuView(): void {
     // todo
   }
 
-  public onAddLineCond(): void {
+  onAddLineCond(): void {
     const row = {
       AndOr: this.AndSep,
       Op: 'eq',
@@ -312,11 +312,11 @@ export default class FlowMany {
     this.tbodyLineCond.append(cond);
   }
 
-  public onDeleteLineCond(btn: Elm): void {
+  onDeleteLineCond(btn: Elm): void {
     $(btn).closest('tr').remove();
   }
 
-  public onModalNodeOk(): void {
+  onModalNodeOk(): void {
     const row = _Form.toRow(this.eformNodeProp);
     const node = this.nowFlowItem;
     const rowBox = this.mNode.idToRowBox(node.getId());
@@ -329,7 +329,7 @@ export default class FlowMany {
     _Modal.hide(this.modalNodeProp);
   }
 
-  public onModalLineOk(): void {
+  onModalLineOk(): void {
     const modal = this.modalLineProp;
     const row = {
       CondStr: this._getCondStr(),

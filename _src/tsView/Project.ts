@@ -1,5 +1,43 @@
 ﻿import { CrudR, _Ajax, _Str, _Tool } from "@baseJs";
 
+class ProjectVo {
+    prjId:string;
+
+    //import excel into Db
+    async onImport(id) {
+        _Array.isEmpty();
+        this.prjId = id;
+        if (await _Tool.ansA('是否確定匯入資料庫結構?')){
+            await _Ajax.getJsonA('Import', { id: this.prjId }, function (data) {
+                _Tool.msg(_BR.Done);
+            });
+        }
+    }
+
+    //generate docx file
+    onGenWord(id) {
+    _Tool.ans('是否確定產生資料庫文件?', function () {
+        window.location.href = 'GenWord?id=' + id;
+        });
+    }
+
+    /*
+    //generate txt file for table relationship
+    onGenRelat: function (id) {
+        _Tool.ans('是否確定產生資料表產生關聯?', function () {
+            window.location = 'GenRelat?id=' + id;
+        });
+    }
+    */
+
+    //generate tranlog sql file
+    onGenLogSql(id) {
+        _Tool.ans('是否確定產生異動SQL檔案?', function () {
+            window.location.href = 'GenLogSql?id=' + id;
+        });
+    }
+}
+
 _me = {
     init: function () {
         //datatable config
@@ -16,9 +54,9 @@ _me = {
             columnDefs: [
                 { targets: [4], render: function (data, type, full, meta) {
                     var html = '' +
-                        '<button type="button" class="btn btn-link" data-onclick="_me.onImport" data-args="{0}">{1}</button> | ' +
-                        '<button type="button" class="btn btn-link" data-onclick="_me.onGenWord" data-args="{0}">{2}</button> | ' +
-                        '<button type="button" class="btn btn-link" data-onclick="_me.onGenLogSql" data-args="{0}">{3}</button>';
+                        '<button type="button" class="btn btn-link" data-onclick="_me.vo.onImport" data-args="{0}">{1}</button> | ' +
+                        '<button type="button" class="btn btn-link" data-onclick="_me.vo.onGenWord" data-args="{0}">{2}</button> | ' +
+                        '<button type="button" class="btn btn-link" data-onclick="_me.vo.onGenLogSql" data-args="{0}">{3}</button>';
                         return _Str.format(html, full.Id, '匯入結構', '產生文件', '產生異動SQL');
                 }},
                 { targets: [5], render: function (data, type, full, meta) {
@@ -30,41 +68,10 @@ _me = {
             ],
         };
 
+        _me.vo = new ProjectVo();
+
         //initial
         new CrudR(config);
-    },
-
-    //import excel into Db
-    onImport: async function (id) {
-        _me.prjId = id;
-        _Tool.ans('是否確定匯入資料庫結構?', async function () {
-            await _Ajax.getJsonA('Import', { id: _me.prjId }, function (data) {
-                _Tool.msg(_BR.Done);
-            });
-        });
-    },
-
-    //generate docx file
-    onGenWord: function (id) {
-        _Tool.ans('是否確定產生資料庫文件?', function () {
-            window.location.href = 'GenWord?id=' + id;
-        });
-    },
-
-    /*
-    //generate txt file for table relationship
-    onGenRelat: function (id) {
-        _tool.ans('是否確定產生資料表產生關聯?', function () {
-            window.location = 'GenRelat?id=' + id;
-        });
-    },
-    */
-
-    //generate tranlog sql file
-    onGenLogSql: function (id) {
-        _Tool.ans('是否確定產生異動SQL檔案?', function () {
-            window.location.href = 'GenLogSql?id=' + id;
-        });
     },
 
 }; //class

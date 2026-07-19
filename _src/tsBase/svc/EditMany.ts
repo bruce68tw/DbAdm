@@ -39,16 +39,16 @@ export default class EditMany {
     private fnValid: any;
     private fnGetUpdJson: any;
 
-    //public 
-    public _childs: EditMany[];
+    //
+    _childs: EditMany[];
 
-    //public & set by _Edit
-    public fidTypes: string[];
-    public fidTypeLen: number;
-    public fidRadios: string[];
-    public hasFile: boolean;
-    public fileLen: number;
-    public fileFids: string[];
+    //& set by _Edit
+    fidTypes: string[];
+    fidTypeLen: number;
+    fidRadios: string[];
+    hasFile: boolean;
+    fileLen: number;
+    fileFids: string[];
 
     constructor(kid: string, rowsBoxId?: string, rowTplId?: string, rowFilter?: string, sortFid?: string) {
         this.kid = kid;

@@ -1,4 +1,5 @@
-export default class _Array {
+//export default class _Array {
+class _Array {
     /**
      * find array
      * @param ary {any[]} target array
@@ -32,3 +33,4 @@ export default class _Array {
         return !_Array.isEmpty(ary);
     }
 }
+window._Array = _Array;

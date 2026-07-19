@@ -19,37 +19,37 @@ import FlowLine from './FlowLine';
 // declare var SVG: any;
 
 export default class FlowView {
-    public isEdit: boolean = false;
-    public newNodeId: number = 0;
-    public newLineId: number = 0;
-    public svg: any;
-    public nodes: FlowNode[] = [];
-    public lines: FlowLine[] = [];
-    public fromNode: FlowNode | null = null;
-    public fnMoveNode: ((node: FlowNode, x: number, y: number) => void) | null = null;
-    public fnAfterAddLine: ((json: any) => void) | null = null;
-    public fnShowMenu: ((event: Event, isNode: boolean, item: FlowNode | FlowLine) => void) | null = null;
+    isEdit: boolean = false;
+    newNodeId: number = 0;
+    newLineId: number = 0;
+    svg: any;
+    nodes: FlowNode[] = [];
+    lines: FlowLine[] = [];
+    fromNode: FlowNode | null = null;
+    fnMoveNode: ((node: FlowNode, x: number, y: number) => void) | null = null;
+    fnAfterAddLine: ((json: any) => void) | null = null;
+    fnShowMenu: ((event: Event, isNode: boolean, item: FlowNode | FlowLine) => void) | null = null;
 
     constructor(boxId: string) {
         let boxDom = document.getElementById(boxId);
         this.svg = (window as any).SVG().addTo(boxDom!).size('100%', '100%');
     }
 
-    public getNewNodeId(): number {
+    getNewNodeId(): number {
         this.newNodeId++;
         return this.newNodeId;
     }
 
-    public getNewLineId(): number {
+    getNewLineId(): number {
         this.newLineId--;
         return this.newLineId;
     }
 
-    public setEdit(status: boolean): void {
+    setEdit(status: boolean): void {
         this.isEdit = status;
     }
 
-    public reset(): void {
+    reset(): void {
         this.nodes = [];
         this.lines = [];
         this.fromNode = null;
@@ -59,14 +59,14 @@ export default class FlowView {
         });
     }
 
-    public loadNodes(rows: Json[]): void {
+    loadNodes(rows: Json[]): void {
         this.reset();
         for (let i = 0; i < rows.length; i++) {
             this.addNode(rows[i]);
         }
     }
 
-    public loadLines(rows?: Json[]): void {
+    loadLines(rows?: Json[]): void {
         if (rows != null) {
             for (let i = 0; i < rows.length; i++) {
                 this.addLine(rows[i]);
@@ -74,31 +74,31 @@ export default class FlowView {
         }
     }
 
-    public addNode(json: Json): FlowNode {
+    addNode(json: Json): FlowNode {
         let node = new FlowNode(this, json);
         this.nodes.push(node);
         return node;
     }
 
-    public addLine(json: Json): FlowLine {
+    addLine(json: Json): FlowLine {
         return new FlowLine(this, json);
     }
 
-    public deleteNode(node: FlowNode): void {
+    deleteNode(node: FlowNode): void {
         let id = node.getId();
         this.svg.findOne(`g[data-id="${id}"]`).remove();
     }
 
-    public deleteLine(line: FlowLine): void {
+    deleteLine(line: FlowLine): void {
         let id = line.getId();
         this.svg.find(`path[data-id="${id}"]`).remove();
     }
 
-    public drawLineStart(fromNode: FlowNode): void {
+    drawLineStart(fromNode: FlowNode): void {
         this.fromNode = fromNode;
     }
 
-    public drawLineEnd(toNode: FlowNode): any {
+    drawLineEnd(toNode: FlowNode): any {
         let json = {
             Id: this.newLineId,
             FromNodeId: this.fromNode!.getId(),
@@ -109,11 +109,11 @@ export default class FlowView {
         return json;
     }
 
-    public idToNode?(id: StrNum): FlowNode {
+    idToNode?(id: StrNum): FlowNode {
         return this.nodes.find(node => node.getId() == id);
     }
 
-    public hasStartNode(): boolean {
+    hasStartNode(): boolean {
         return this.nodes.some(node => node.getNodeType() == NodeTypeEstr.Start);
     }
 }

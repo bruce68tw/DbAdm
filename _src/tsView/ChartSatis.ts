@@ -4,7 +4,8 @@ _me = {
     init: function () {
         _me.rform = $('#formRead');
     },
-
+};
+_m2 = {
     //on select bao item
     onFind: async function () {
         var data = _Json.toStr(_Form.toRow(_me.rform));

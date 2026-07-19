@@ -15,7 +15,7 @@ wwwroot_old/
 node_modules/
 .config/
 wwwroot/jsView/*.*
-wwwroot/base.min.*
-wwwroot/lib.min.*
-/appsettings.Production.json
-/appsettings.Production-net.json
+wwwroot/base.*
+wwwroot/lib.*
+appsettings.Production.json
+appsettings.Production-net.json

@@ -14,19 +14,19 @@ export default class FlowLine {
     private readonly FromTypeV = 'V';
     private readonly FromTypeH = 'H';
 
-    public flowView: FlowView;
-    public json: Json;
-    public svg: any;
-    public fromNode: FlowNode;
-    public toNode: FlowNode;
-    public path: any;
-    public path2: any;
-    public labelElm: any;
-    public arrow: any;
+    flowView: FlowView;
+    json: Json;
+    svg: any;
+    fromNode: FlowNode;
+    toNode: FlowNode;
+    path: any;
+    path2: any;
+    labelElm: any;
+    arrow: any;
     
-    public fromType!: string;
-    public isFromTypeV!: boolean;
-    public isFromTypeH!: boolean;
+    fromType!: string;
+    isFromTypeV!: boolean;
+    isFromTypeH!: boolean;
 
     constructor(flowView: FlowView, json: Json, fromNode?: FlowNode, toNode?: FlowNode) {
         json = json || {};
@@ -87,11 +87,11 @@ export default class FlowLine {
         });
     }
 
-    public setLabel(label: string): void {
+    setLabel(label: string): void {
         this.labelElm.text(label);
     }
 
-    public render(): void {
+    render(): void {
         const fromPos = this.fromNode.getPos();
         const fromSize = this.fromNode.getSize();
         const fromCnt = { x: fromPos.x + fromSize.w / 2, y: fromPos.y + fromSize.h / 2 };
@@ -241,15 +241,15 @@ export default class FlowLine {
         this.arrow.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
     }
 
-    public getId(): string {
+    getId(): string {
         return this.json.Id;
     }
 
-    public getFromType(): string {
+    getFromType(): string {
         return this.json.FromType;
     }
 
-    public setFromType(fromType: string): void {
+    setFromType(fromType: string): void {
         if (fromType === this.json.FromType) return;
         this._setFromTypeVars(fromType);
         this.render();

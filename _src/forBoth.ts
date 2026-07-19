@@ -1,4 +1,5 @@
 import BaseResDto from "./tsBase/dto/BaseResDto";
+import MeDto from "./tsBase/dto/MeDto";
 
 //for gulp 寫入 base.min.js
 export { default as EditModeEstr } from "./tsBase/enum/EditModeEstr";
@@ -19,7 +20,7 @@ export { default as ResultDto } from "./tsBase/dto/ResultDto";
 export { default as DragItemDto } from "./tsBase/dto/DragItemDto";
 
 export { default as _Ajax } from "./tsBase/svc/_Ajax";
-export { default as _Array } from "./tsBase/svc/_Array";
+//export { default as _Array } from "./tsBase/svc/_Array";
 export { default as _Assert } from "./tsBase/svc/_Assert";
 export { default as _Browser } from "./tsBase/svc/_Browser";
 export { default as _Btn } from "./tsBase/svc/_Btn";
@@ -87,14 +88,16 @@ export { default as Page } from "./tsBase/svc/Page";
 declare global {
     interface Window {
         _xg: Json,   //global varaiables
-        _me: Json,
+        _me: MeDto,
+        _vo: Json,
         _BR: BaseResDto,
     }
 }
 
 //執行時真的建立變數
 window._xg = {};
-window._me = {};
+window._me = new MeDto();
+window._vo = {};
 window._BR = new BaseResDto();
 //if (!window._me) {
 //}

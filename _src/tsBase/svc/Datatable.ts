@@ -5,11 +5,11 @@ import _Tool from './_Tool';
 import _Var from './_Var';
 
 export default class Datatable {
-    public dt: any;
-    public findJson: Json;
-    public recordsFiltered: number;
-    public defaultShowOk: boolean;
-    public showWork: boolean;
+    dt: any;
+    findJson: Json;
+    recordsFiltered: number;
+    defaultShowOk: boolean;
+    showWork: boolean;
     private _fnAfterFind: ((result: any) => void) | undefined;
     private _keepStart: boolean;
     private _start: number;
@@ -24,7 +24,7 @@ export default class Datatable {
         tbarHtml?: string,
         fnAfterFind?: (result: any) => void
     ) {
-        //public property 
+        //property 
         this.dt = null;             //jquery datatables object
         this.findJson = findJson;   //find condition
         this.recordsFiltered = -1;  //found count, -1 for recount, name map to DataTables

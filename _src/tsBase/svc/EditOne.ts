@@ -36,25 +36,24 @@ import _iFile from './_iFile';
 export default class EditOne {
     //private [_Edit.Childs]: any;
 
-    //public 
-    public _childs: OneMany[];
-    public fnValid: any;
+    //
+    _childs: OneMany[];
+    fnValid: any;
+    eform: JQuery;
+    systemError: string;
 
     private kid: string;
-    private eform: JQuery;
     private is1to1: boolean;
     private dataJson: Json;
-    private systemError: string;
     private validator: any;
 
-    //public & set by _Edit
-    public fidTypes: string[];
-    public fidTypeLen: number;
-    public fidRadios: string[];
-    public hasFile: boolean;
-    public fileLen: number;
-    public fileFids: string[];
-
+    //& set by _Edit
+    fidTypes: string[];
+    fidTypeLen: number;
+    fidRadios: string[];
+    hasFile: boolean;
+    fileLen: number;
+    fileFids: string[];
 
     constructor(kid?: string, eformId?: string, childs?: OneMany[]) {
         this._childs = childs;
