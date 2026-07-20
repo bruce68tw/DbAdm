@@ -1,6 +1,4 @@
-﻿//import { CrudR, _Date, _iDate } from "@baseJs";
-
-_vo = {
+﻿_vo = {
     onNowWeek() {
         var box = _me.rform;
         _me.crudR.onResetFind();   //reset

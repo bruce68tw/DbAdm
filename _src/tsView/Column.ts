@@ -1,5 +1,4 @@
-﻿//import { CrudR } from "@baseJs";
-
+﻿
 _me = {
     init() {
         var config = {

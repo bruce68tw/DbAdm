@@ -1,11 +1,4 @@
-﻿/*
-import {
-    CrudR, EditMany, FunEstr, _Ajax, _Btn, _Date, _Edit, _Form, _Fun,
-    _Obj, _Str, _Tool, _iDate, _iSelect, _iText
-} from "@baseJs";
-*/
-
-class IssueVo {
+﻿class IssueVo {
     issueId = '';        //要追踪或取消的Issue.Id
     hasWatchId = false;     //是否有IssueWatch.Id
     mIssueFile = new EditMany('Id', 'tbodyIssueFile', 'tplIssueFile', 'tr');
@@ -180,7 +173,7 @@ class IssueVo {
     }
 }
 _vo = new IssueVo();
-const vo = _vo as IssueVo;
+//const vo = _vo as IssueVo;
 
 _me = {
     init() {
@@ -223,9 +216,7 @@ _me = {
         };
 
         //initial
-        //_vo = new IssueVo();
-        //const vo = _vo as IssueVo;
-        //_me.vo = vo;
+        const vo = _vo as IssueVo;
         new CrudR(config, [null, vo.mIssueFile, vo.mIssueRelat]);
 
     },
@@ -237,7 +228,7 @@ _me = {
     //開啟編輯畫面時自動觸發
     //如果是主管交辦, 則標題、交辦主管設定唯讀
     fnAfterOpenEdit(fun, json) {
-        //const vo = _vo as IssueVo;
+        const vo = _vo as IssueVo;
         const FromMgr = 'FromMgr';
         var isFunU = (fun == FunEstr.Update);
         var eform = _me.eform0;
@@ -285,7 +276,8 @@ _me = {
     },
 
     //onclick viewFile, called by XiFile component
-    async fnViewFileA(table:string, fid:string) {
+    async fnViewFileA(table: string, fid: string) {
+        const vo = _vo as IssueVo;
         if (fid == 'FileName')
             vo.mIssueFile.onViewFile(table, fid);
     },

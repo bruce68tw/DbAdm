@@ -1,6 +1,4 @@
-﻿//import { CrudR, _Ajax, _Date, _Modal, _Str, _Tool, _iFile } from "@baseJs";
-
-_vo = {
+﻿_vo = {
     modalImport: $('#modalImport'),
 
     //on open import modal
@@ -26,7 +24,7 @@ _vo = {
             _me.crudR.dt.reload();
         });
     },
-}
+};
 
 _me = {
     init: function () {        

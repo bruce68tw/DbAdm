@@ -73,7 +73,7 @@
     }
 }
 _vo = new XpRoleVo();
-var vo = _vo as XpRoleVo;
+//var vo = _vo as XpRoleVo;
 
 _me = {
     init: function () {        

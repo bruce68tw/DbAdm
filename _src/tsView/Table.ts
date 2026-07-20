@@ -1,6 +1,4 @@
-﻿//import { CrudR, EditMany, _iCheck, _Tool } from "@baseJs";
-
-_vo = {
+﻿_vo = {
     mCol: new EditMany('Id', 'tbodyCol', 'tplCol', 'tr'),
 
     //generate Word document

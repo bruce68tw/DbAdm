@@ -1,6 +1,4 @@
-﻿//import { CrudR, _Ajax, _Chart, _Form, _Json, _iSelect } from "@baseJs";
-
-_vo = {
+﻿_vo = {
     //on select bao item
     async onFind() {
         var data = _Json.toStr(_Form.toRow(_me.rform));

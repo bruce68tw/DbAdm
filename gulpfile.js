@@ -12,7 +12,9 @@ const path = require("path");
 //const tsconfigPaths = require("esbuild-plugin-tsconfig-paths");
 
 const dirSrc = "_src/";
-//const dirSrc = `${dirSrc}_src/`;
+
+//是否傳入 -a 表示 build all, 否則只 build tsView
+const isAll = process.argv.includes('-a'); 
 
 // Clean
 function cleanTask() {
@@ -158,8 +160,9 @@ function watch() {
 */
 
 // Build
-const build =
-    gulp.series(
+//傳入 a 表示build all(-a)
+const build = isAll
+    ? gulp.series(
         cleanTask,
         doTsBase,
         doTsView,
@@ -171,6 +174,9 @@ const build =
         doLang('zh-CN'),
         doLang('en-US'),
         //doFont
+    )
+    : gulp.series(
+        doTsView,
     );
 
 // Export

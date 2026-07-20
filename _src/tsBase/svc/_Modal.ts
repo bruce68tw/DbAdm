@@ -5,12 +5,12 @@
 class _Modal {
 
     //showO -> show
-    static show(obj: any): void {
+    static show(obj: JQuery): void {
         obj.modal('show');
     }
     
     //hideO -> hide
-    static hide(obj: any): void {
+    static hide(obj: JQuery): void {
         obj.modal('hide');
     }
     

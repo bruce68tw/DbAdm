@@ -1,6 +1,4 @@
-﻿//import { CrudR, EditMany } from "@baseJs";
-
-_vo = {
+﻿_vo = {
     mRoleProg: new EditMany('Id', 'tbodyRoleProg', 'tplRoleProg', 'tr'),
 }
 

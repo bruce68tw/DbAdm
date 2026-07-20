@@ -576,6 +576,7 @@ class GenCrudVo {
   //#endregion
   //#region
 }
+_vo = new GenCrudVo();
 _me = {
   //#region for Crud
   init: function() {
@@ -613,7 +614,6 @@ _me = {
         } }
       ]
     };
-    _vo = new GenCrudVo();
     const vo = _vo;
     var ary0 = new EditDto([null, vo.mQitem, vo.mRitem, vo.mEtable], $("#divEdit"));
     var ary1 = new EditDto([new EditOne(null, "eform1"), vo.mUiItem], vo.divEdit1, "\u62D6\u62C9\u7DE8\u8F2F");

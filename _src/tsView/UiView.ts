@@ -1,10 +1,3 @@
-/*
-import type UiMany from "./UiMany.js";
-import { InputTypeEstr, MouseEstr, UiItemTypeEstr, _Ajax, _Array,
-	_Input, _Json, _Obj, _Prog, _Str, _Tool, _Var, DragItemDto
-} from "@baseJs";
-*/
-
 /**
  * 處理畫面操作, 包含基本元件, 使用jQuery
  * ItemType Input欄位和Group由後端傳入, RowBox、Table、TabPage由前端產生

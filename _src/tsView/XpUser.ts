@@ -1,16 +1,6 @@
-﻿//import { CrudR, EditMany } from "@baseJs";
-
-/*
-class XpUserVo {
-    mUserRole = new EditMany('Id', 'divRoles');
-}
-*/
-//export { }
-_vo = {
+﻿_vo = {
     mUserRole: new EditMany('Id', 'divRoles'),
 };
-//const _vo = globalThis._vo as XpUserVo;
-//_vo = new XpUserVo() as XpUserVo;
 
 _me = {
     init() {        
@@ -34,8 +24,7 @@ _me = {
         };
 
         //initial
-        //_me.vo = new XpUserVo() as XpUserVo;
-        //_vo.mUserRole.initUrm(['Id', 'RoleId']);    //for urm
+        _vo.mUserRole.initUrm(['Id', 'RoleId']);    //for urm
         new CrudR(config, [null, _vo.mUserRole]);
     },
 

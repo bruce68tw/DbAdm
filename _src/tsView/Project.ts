@@ -1,6 +1,4 @@
-﻿//import { CrudR, _Ajax, _Str, _Tool } from "@baseJs";
-
-class ProjectVo {
+﻿class ProjectVo {
     prjId: string = '';
 
     //import excel into Db

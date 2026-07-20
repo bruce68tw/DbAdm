@@ -1,11 +1,3 @@
-/*
-import UiMany from "./UiMany.js";
-import { CrudR, EditDto, EditMany, EditOne, FunEstr, MouseEstr, _Ajax,
-    _Array, _Edit, _Form, _Fun, _Json, _Modal, _Nav, _Obj, _Prog, _Str,
-    _Tab, _Tool, _Valid, _iCheck, _iSelect, _iText
-} from "@baseJs";
-*/
-
 class GenCrudVo {
     TableId = 'TableId';    //column name of TableId for many forms
     Active = 'active';      //active class
@@ -857,6 +849,8 @@ class GenCrudVo {
 
     //#region
 }
+_vo = new GenCrudVo();
+//const vo = _vo as GenCrudVo;
 
 _me = {
     //#region for Crud
@@ -899,9 +893,6 @@ _me = {
 				}},
 			],
         };
-
-        //const vo = new GenCrudVo();
-        _vo = new GenCrudVo();
 
         const vo = _vo as GenCrudVo;
         var ary0 = new EditDto([null, vo.mQitem, vo.mRitem, vo.mEtable], $('#divEdit'));

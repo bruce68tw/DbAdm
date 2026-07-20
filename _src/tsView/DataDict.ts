@@ -1,6 +1,4 @@
-﻿//import { CrudR, EditOne } from "@baseJs";
-
-_me = {
+﻿_me = {
     init: function () {
         var config = {
             columns: [
