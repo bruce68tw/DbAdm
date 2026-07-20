@@ -1,5 +1,9 @@
 ﻿//import { CrudR, EditMany } from "@baseJs";
 
+_vo = {
+    mRoleProg: new EditMany('Id', 'tbodyRoleProg', 'tplRoleProg', 'tr'),
+}
+
 _me = {
     init: function () {
         //datatable config
@@ -23,8 +27,7 @@ _me = {
         };
 
         //initial
-        _me.mRoleProg = new EditMany('Id', 'tbodyRoleProg', 'tplRoleProg', 'tr');
-        new CrudR(config, [null, _me.mRoleProg]);
+        new CrudR(config, [null, _vo.mRoleProg]);
     },
 
 }; //class

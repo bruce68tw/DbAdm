@@ -1,6 +1,6 @@
 ﻿//import { CrudR, _Ajax, _Chart, _Form, _Json, _iSelect } from "@baseJs";
 
-class ChartSatisVo {
+_vo = {
     //on select bao item
     async onFind() {
         var data = _Json.toStr(_Form.toRow(_me.rform));
@@ -17,43 +17,17 @@ class ChartSatisVo {
             }
             //todo: temp remark
             //_Chart.hbar('chart', config);
-
-            /*
-// Bar chart
-new Chart(document.getElementById("chart"), {
-type: 'bar',
-data: {
-    labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
-    datasets: [
-    {
-        label: "Population (millions)",
-        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-        data: [2478,5267,734,784,433]
-    }
-    ]
-},
-options: {
-    legend: { display: false },
-    title: {
-    display: true,
-    text: 'Predicted world population (millions) in 2050'
-    }
-}
-});
-*/
         });
-    }
+    },
 
     //on change projectId
     onChgProject() {
         _iSelect.changeParent('_ProjectId', 'ProgId', '', 'GetPrjProgs', false);
-    }
-
-}; //class
+    },
+};
 
 _me = {
-    init: function () {
+    init () {
         _me.rform = $('#formRead');
-        _me.vo = new ChartSatisVo();
     },
 }; //class

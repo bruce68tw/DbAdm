@@ -85,11 +85,16 @@ import "./tsBase/svc/FlowNode";
 import "./tsBase/svc/FlowView";
 import "./tsBase/svc/Page";
 
-/*
+//加上 tsView
+import "./forBuild2";
+
+//必須自行定義
+type Json = Record<string, any>;
+
 //擴充 Window 型別
 declare global {
     interface Window {
-        _xg: Json,   //global varaiables
+        _xg: Json,   //global varaiables, 這裡無法用 Json
         _me: MeDto,
         _vo: Json,
         _BR: BaseResDto,
@@ -101,4 +106,3 @@ window._xg = {};
 window._me = new MeDto();
 window._vo = {};
 window._BR = new BaseResDto();
-*/

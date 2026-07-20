@@ -1,7 +1,6 @@
 ﻿//import { CrudR } from "@baseJs";
 
 _me = {
-
     init: function () {
         //datatable config
         var config = {

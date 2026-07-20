@@ -1,7 +1,20 @@
 ﻿//import { CrudR, EditMany, _iCheck, _Tool } from "@baseJs";
 
+_vo = {
+    mCol: new EditMany('Id', 'tbodyCol', 'tplCol', 'tr'),
+
+    //generate Word document
+    onGenWord() {
+        var values = _iCheck.getCheck0Values(_me.crudR.divRead);
+        if (values.length > 0)
+            window.location.href = 'GenWord?keys=' + values.join(',');
+        else
+            _Tool.msg(_BR.PlsSelectRows);
+    },
+}
+
 _me = {
-    init: function () {
+    init () {
         var config = {
             columns: [
                 { data: '_F1' },
@@ -31,17 +44,7 @@ _me = {
         };
 
         //init crud
-        _me.mCol = new EditMany('Id', 'tbodyCol', 'tplCol', 'tr');
-        new CrudR(config, [null, _me.mCol]);
-    },
-
-    //generate Word document
-    onGenWord: function () {
-        var values = _iCheck.getCheck0Values(_me.crudR.divRead);
-        if (values.length > 0)
-            window.location.href = 'GenWord?keys=' + values.join(',');
-        else
-            _Tool.msg(_BR.PlsSelectRows);
+        new CrudR(config, [null, _vo.mCol]);
     },
 
 }; //class

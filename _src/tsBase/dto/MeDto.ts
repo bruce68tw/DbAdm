@@ -19,7 +19,7 @@ class MeDto {
     fnAfterOpenEdit?: (fun: FunEstr, json: Json) => void;
     fnGetJsonAndEditA?: (fun: string, key: StrNum) => Promise<boolean>;
     fnViewFileA?: (table: string, fid: string) => Promise<void>;
-    vo?: any;
+    //vo?: TVo;
     //[key: string]: any; //有此欄位 _me 才能設定其他欄位內容
 }
 window.MeDto = MeDto;

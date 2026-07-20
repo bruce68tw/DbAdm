@@ -1,10 +1,19 @@
 ﻿//import { CrudR, EditMany } from "@baseJs";
 
-_me = {
-    crudR: null,
-    mUserRole: null,
+/*
+class XpUserVo {
+    mUserRole = new EditMany('Id', 'divRoles');
+}
+*/
+//export { }
+_vo = {
+    mUserRole: new EditMany('Id', 'divRoles'),
+};
+//const _vo = globalThis._vo as XpUserVo;
+//_vo = new XpUserVo() as XpUserVo;
 
-    init: function () {        
+_me = {
+    init() {        
         //datatable config
         var config = {
             columns: [
@@ -25,9 +34,9 @@ _me = {
         };
 
         //initial
-        this.mUserRole = new EditMany('Id', 'divRoles');
-        this.mUserRole.initUrm(['Id', 'RoleId']);    //for urm
-        new CrudR(config, [null, this.mUserRole]);
+        //_me.vo = new XpUserVo() as XpUserVo;
+        //_vo.mUserRole.initUrm(['Id', 'RoleId']);    //for urm
+        new CrudR(config, [null, _vo.mUserRole]);
     },
 
 }; //class

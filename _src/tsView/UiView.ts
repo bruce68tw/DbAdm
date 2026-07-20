@@ -14,7 +14,7 @@ import { InputTypeEstr, MouseEstr, UiItemTypeEstr, _Ajax, _Array,
  * 3.Info 儲存在 uiMany
  */
 class UiView {
-	public DefaultCols: string;
+	DefaultCols: string;
 
 	private uiMany: UiMany;
 	private Area: JQuery;
@@ -1221,3 +1221,4 @@ class UiView {
 	*/
 	//#endregion
 }
+window.UiView = UiView;

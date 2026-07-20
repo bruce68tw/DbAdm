@@ -24,11 +24,12 @@
 class CrudR {
     temp: Json;
     divRead: JQuery;
-    dt: any;
+    dt: Datatable;
     hasDraft: boolean;
+
     private _updName: string;
 
-    constructor(dtConfig: any, edits?: any[], updName?: string) {
+    constructor(dtConfig: Json, edits?: OneMany[] | EditDto[], updName?: string) {
         //save middle variables
         this.temp = {};
 
@@ -87,7 +88,7 @@ class CrudR {
      * @param elm {element} link element
      * @param key {string} row key
      */
-    viewFile(table: string, fid: string, key: string, fileName: string): void {
+    viewFile(table: string, fid: string, key: StrNum, fileName: string): void {
         var ext: string = _File.getFileExt(fileName);
         if (_File.isImageExt(ext))
             _Tool.showImage(
@@ -98,14 +99,14 @@ class CrudR {
 
     /**
      * button html string
-     * @param id {string}
+     * @param key {StrNum}
      * @param label {string}
      * @param fnOnclick {string}
      * @param fnArgs {string} 多個時逗號分隔
      * @returns button html string
      */
-    dtBtn(id: string, label: string, fnOnclick: string): string {
-        return `<button type="button" class="btn btn-sm x-btn-other" data-onclick="${fnOnclick}" data-args="${id}">${label}</button>`;
+    dtBtn(key: StrNum, label: string, fnOnclick: string): string {
+        return `<button type="button" class="btn btn-sm x-btn-other" data-onclick="${fnOnclick}" data-args="${key}">${label}</button>`;
     }
 
     /**
@@ -135,7 +136,7 @@ class CrudR {
     }
 
     //??
-    dtRadio1(value: any, editable?: boolean): string {
+    dtRadio1(value: StrNum, editable?: boolean): string {
         if (editable === undefined) editable = true;
         return _iRadio.render(_iCheck.fidCheck0, '', false, value, editable);
     }
@@ -145,7 +146,7 @@ class CrudR {
      * @param value {string} checkbox value, will translate to bool
      * @param fnOnClick {string} onclick function, default to this.onSetStatusA
      */
-    dtSetStatus(key: string, value: any, fnOnClick?: string): string {
+    dtSetStatus(kid: string, value: StrNum, fnOnClick?: string): string {
         //TODO: pending
         return '';
 
@@ -160,13 +161,13 @@ class CrudR {
         */
     }
 
-    dtStatusName(value: string | number): string {
+    dtStatusName(value: StrNum): string {
         return value == '1'
             ? '<span>' + _BR.StatusYes + '</span>'
             : '<span class="text-danger">' + _BR.StatusNo + '</span>';
     }
 
-    dtYesEmpty(value: string | number): string {
+    dtYesEmpty(value: StrNum): string {
         return value == '1' ? _BR.Yes : '';
     }
 
@@ -212,12 +213,13 @@ class CrudR {
     /**
      * get Find condition
      */
-    private _getFindCond(): any {
+    private _getFindCond(): Json {
         if (_me.rform == null) return null;
 
-        var row: any = _Form.toRow(_me.rform);
-        var find2: any = _me.rform2;
-        if (find2 !== null && _Obj.isShow(find2)) _Json.copy(_Form.toRow(find2), row);
+        var row: Json = _Form.toRow(_me.rform);
+        var find2: JQuery = _me.rform2;
+        if (find2 !== null && _Obj.isShow(find2))
+            _Json.copy(_Form.toRow(find2), row);
         return row;
     }
 
@@ -233,7 +235,7 @@ class CrudR {
         if (!_me.hasRead || !_me.hasEdit) return;
 
         //考慮多個編輯畫面
-        var divEdit: any = _me.crudE.mEditGetDivEdit();
+        var divEdit: any = _me.crudE.getDivEdit();
         var oldDiv: any, newDiv: any;
         if (toRead) {
             oldDiv = divEdit;
@@ -401,8 +403,8 @@ class CrudR {
      * me {element} checkbox element
      * key {string} row key
      */
-    async onSetStatusA(me: any, key: string): Promise<void> {
-        var status: boolean = _iCheck.isCheckedO($(me));
+    async onSetStatusA(elm: Elm, key: string): Promise<void> {
+        var status: boolean = _iCheck.isCheckedO($(elm));
         await _Ajax.getStrA('SetStatus', { key: key, status: status }, function (msg: string) {
             _Tool.alert(_BR.UpdateOk);
         });
@@ -411,13 +413,13 @@ class CrudR {
     /**
      * TODO: need test
      * onclick check all, check/uncheck box all checkbox of fid field
-     * @param me {string} row key
+     * @param elm {string} row key
      * @param box {string} row key
      * @param fid {string} fid
      */
     //onCheckAll(me, box, fid) {
-    onCheckAll(me: any, box: any): void {
-        _iCheck.setF(_iCheck.fltCheckeds + ':not(:disabled)', _iCheck.isCheckedO($(me)), box);
+    onCheckAll(elm: Elm, box: JQuery): void {
+        _iCheck.setF(_iCheck.fltCheckeds + ':not(:disabled)', _iCheck.isCheckedO($(elm)), box);
     }
 
     /**
@@ -425,9 +427,9 @@ class CrudR {
      * key {string} row key
      * rowName {string} for confirm
      */
-    async onDeleteA(key: string, rowName: string): Promise<void> {
+    async onDeleteA(key: StrNum, rowName: string): Promise<void> {
         //_temp.data = { key: key }
-        var me: this = this;
+        const me = this;
         _Tool.ans(_BR.SureDeleteRow + ' (' + rowName + ')', async function () {
             await _Ajax.getJsonA('Delete', { key: key }, function (msg: any) {
                 _Tool.alert(_BR.DeleteOk);

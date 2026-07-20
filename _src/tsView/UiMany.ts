@@ -194,7 +194,7 @@ class UiMany {
      * param {json array} rows
      * return {json array} nested json array
      */
-    _dbRowsToJsons(rows: any[]): any[] {
+    _dbRowsToJsons(rows: Json[]): Json[] {
         if (!rows || rows.length === 0) return [];
 
         // 依 BoxId 分組
@@ -321,7 +321,7 @@ class UiMany {
     getInfo(itemId: string) {
         return this._getInfoByRB(this._idToRB(itemId));
     }
-    setInfo(itemId: string, info: any) {
+    setInfo(itemId: string, info: Json) {
         this._setInfoByRB(this._idToRB(itemId), info);
     }
     /*
@@ -333,7 +333,7 @@ class UiMany {
     */
 
     //set info property
-    setInfoProp(itemId: string, prop: any) {
+    setInfoProp(itemId: string, prop: Json) {
         let rb = this.mItem.idToRowBox(itemId);
         let info = _Json.copy(prop, this._getInfoByRB(rb));
         this._setInfoByRB(rb, info);
@@ -342,13 +342,13 @@ class UiMany {
     _getInfoByRB(rb: JQuery) {
         return _Str.toJson(_iText.get('Info', rb));
     }
-    _setInfoByRB(rb: JQuery, info: any) {
+    _setInfoByRB(rb: JQuery, info: Json) {
         _iText.set('Info', _Json.toStr(info), rb);
     }
 
     //#region 功能按鈕相關
     //return row
-    _mItemAddRow(itemType: string, info: any) {
+    _mItemAddRow(itemType: string, info: Json) {
         //配合後端DB, 欄位使用大camel
         let itemJson = {
             ItemType: itemType,
@@ -420,7 +420,7 @@ class UiMany {
     _addRB() {
         //使用畫面上的設定RowType
         let info = {
-            RowType: _iSelect.get('_RowType', (window as any)._me.eform0),
+            RowType: _iSelect.get('_RowType', _me.eform0),
         };
 
         //add to mItem
@@ -594,7 +594,7 @@ class UiMany {
     }
 
     //called by mUiItem_loadRows
-    async loadRowsA(rows: any[]) {
+    async loadRowsA(rows: Json[]) {
         //EditMany load rows by rowsBox
         this.mItem.loadRowsByRsb(rows, true);
 
@@ -610,7 +610,7 @@ class UiMany {
      * called by onImport()
      * param {json array} jsons: 巢狀資料
      */
-    async loadJsonsA(jsons: any[]) {
+    async loadJsonsA(jsons: Json[]) {
         //jsons(巢狀) to rows(扁平), 同時設定全部Id為小於0數值表示新增
         let rows = this._newJsonsToRows(jsons);
 
@@ -634,10 +634,10 @@ class UiMany {
      * param {json array} jsons nested json array
      * return {json array} json array
      */
-    _jsonsToRows(jsons: any[]): any[] {
+    _jsonsToRows(jsons: Json[]): Json[] {
         const rows: any[] = [];    //result
 
-        function flatten(jsons2: any[], upId: string) {
+        function flatten(jsons2: Json[], upId: string) {
             for (const json of jsons2) {
                 const { ChildNo, ...row } = json;   //取出ChildNo 和其餘屬性
                 row.BoxId = upId;

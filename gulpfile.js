@@ -31,7 +31,7 @@ function cleanTask() {
 // tsBase to w3/base.min.js
 async function doTsBase() {
     await esbuild.build({
-        entryPoints: [`${dirSrc}forBuild.ts`, `${dirSrc}forBuild2.ts`],
+        entryPoints: [`${dirSrc}forBuild.ts`],
         //temp minify to false
         //minify: false,
         minify: true,

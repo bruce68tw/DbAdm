@@ -6,13 +6,13 @@ import {
 */
 
 class IssueVo {
-    issueId: '';        //要追踪或取消的Issue.Id
-    hasWatchId: false;     //是否有IssueWatch.Id
+    issueId = '';        //要追踪或取消的Issue.Id
+    hasWatchId = false;     //是否有IssueWatch.Id
     mIssueFile = new EditMany('Id', 'tbodyIssueFile', 'tplIssueFile', 'tr');
     mIssueRelat = new EditMany('Id', 'tbodyIssueRelat', 'tplIssueRelat', 'tr');
 
     //寄問卷
-    async onSurvey(issueId:string) {
+    async onSurvey(issueId: string) {
         if (await _Tool.ansA('是否確定寄送問卷?')) {
             await _Ajax.getStrA('SendSurvey', { issueId: issueId }, function (str) {
                 var ok = (str == '1');
@@ -25,7 +25,7 @@ class IssueVo {
     }
 
     //設定延續工作按鈕的狀態
-    setKeepBtn(isShow:boolean) {
+    setKeepBtn(isShow: boolean) {
         var btn = _me.divEdit.find('#btnKeepIssue');
         if (isShow)
             this.showBtn(btn);
@@ -34,13 +34,13 @@ class IssueVo {
     }
 
     //show & enabled button
-    showBtn(btn:JQuery) {
+    showBtn(btn: JQuery) {
         _Obj.show(btn);
         _Btn.setEdit(btn, true);
     }
 
     //設定追踪按鈕的狀態
-    setWatchBtn(isShow:boolean) {
+    setWatchBtn(isShow: boolean) {
         var box = _me.divEdit;
         var btnAdd = box.find('#btnAddWatch');
         var btnDel = box.find('#btnDeleteWatch');
@@ -57,9 +57,9 @@ class IssueVo {
     }
 
     //on change projectId
-    //此時isEdit為字串, 因為 EventArgs 無法傳bool
-    onChgProject(isEdit:boolean, progId:string) {
-        _iSelect.changeParent('_ProjectId', 'ProgId', progId, 'GetPrjProgs', isEdit);
+    //此時isEditStr為字串, 因為 EventArgs 無法傳bool
+    onChgProject(isEditStr: string, progId: string) {
+        _iSelect.changeParent('_ProjectId', 'ProgId', progId, 'GetPrjProgs', (isEditStr == '1'));
     }
 
     onMyToday() {
@@ -130,9 +130,9 @@ class IssueVo {
     }
 
     //加入追踪
-    async onAddWatch(){
+    async onAddWatch() {
         _Tool.ans('是否確定加入追踪?', async () => {
-            await _Ajax.getStrA('AddWatch', { issueId: this.issueId }, function (str) {
+            await _Ajax.getStrA('AddWatch', { issueId: this.issueId }, (str) => {
                 var ok = (str == '1');
                 _Tool.msg(ok ? '成功加入追踪。' : '無法加入此筆追踪 !!');
                 if (ok) {
@@ -178,11 +178,12 @@ class IssueVo {
             this.mIssueRelat.addRow({ SourceIssue: this.issueId });
         });
     }
-
-};
+}
+_vo = new IssueVo();
+const vo = _vo as IssueVo;
 
 _me = {
-    init: function () {
+    init() {
         //datatable config
         var config = {
             //showWork: true,     //顯示作業中
@@ -212,7 +213,7 @@ _me = {
                 { targets: [11], render: function (data, type, full, meta) {
                     return _Str.notEmpty(full.SurveyId) ? '是' :
                         (full.IsFinish == 1 && _Str.notEmpty(full.RptUser) && (full.OwnerId == _Fun.userId || _Fun.userId=='Bruce'))
-                            ? `<button type='button' class='btn btn-secondary' data-onclick='_me.vo.onSurvey' data-args='${full.Id}'>寄問卷</button>`
+                            ? `<button type='button' class='btn btn-secondary' data-onclick='_vo.onSurvey' data-args='${full.Id}'>寄問卷</button>`
                             : '';
                 }},
                 { targets: [12], render: function (data, type, full, meta) {
@@ -222,20 +223,21 @@ _me = {
         };
 
         //initial
-        var vo = new IssueVo();
-        _me.vo = vo;
+        //_vo = new IssueVo();
+        //const vo = _vo as IssueVo;
+        //_me.vo = vo;
         new CrudR(config, [null, vo.mIssueFile, vo.mIssueRelat]);
 
     },
 
-    fnAfterFind: function (result) {
+    fnAfterFind(result) {
         $('#SumHours').text(result.SumHours || 0);
     },
 
     //開啟編輯畫面時自動觸發
     //如果是主管交辦, 則標題、交辦主管設定唯讀
-    fnAfterOpenEdit: function (fun, json) {
-        const vo = _me.vo;
+    fnAfterOpenEdit(fun, json) {
+        //const vo = _vo as IssueVo;
         const FromMgr = 'FromMgr';
         var isFunU = (fun == FunEstr.Update);
         var eform = _me.eform0;
@@ -243,7 +245,7 @@ _me = {
         if (isFunU || fun == FunEstr.View) {
             //設定專案功能欄位
             var row0 = _Edit.jsonGetRows0(json);
-            vo.onChgProject(1, row0.ProgId);
+            vo.onChgProject('1', row0.ProgId);
 
             //設定追踪按鈕
             vo.issueId = row0.Id;
@@ -274,7 +276,7 @@ _me = {
         }
     },
 
-    fnWhenSave: function (fun: FunEstr): string {
+    fnWhenSave(fun: FunEstr): string {
         //set _IssueType, _RptUser
         var form = _me.eform0;
         _iText.set('_IssueType', _iSelect.get('IssueType', form), form);
@@ -283,9 +285,9 @@ _me = {
     },
 
     //onclick viewFile, called by XiFile component
-    fnViewFileA: async function (table:string, fid:string) {
+    async fnViewFileA(table:string, fid:string) {
         if (fid == 'FileName')
-            _me.vo.mIssueFile.onViewFile(table, fid);
+            vo.mIssueFile.onViewFile(table, fid);
     },
 
 }; //class

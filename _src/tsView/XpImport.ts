@@ -1,5 +1,33 @@
 ﻿//import { CrudR, _Ajax, _Date, _Modal, _Str, _Tool, _iFile } from "@baseJs";
 
+_vo = {
+    modalImport: $('#modalImport'),
+
+    //on open import modal
+    onOpenImport() {
+        _Modal.show(_vo.modalImport);
+    },
+
+    //on run import
+    async onImport() {
+        var modal = _vo.modalImport;
+        var fileObj = modal.find(':file');
+        var file = _iFile.getUploadFile(fileObj);
+        if (file == null) {
+            _Tool.msg('請先選取匯入檔案。');
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append('file', file);
+        await _Ajax.getJsonByFdA('Import', formData, function (data) {
+            _Modal.hide(modal);
+            _Tool.msg(_Str.format('匯入完成。', data.OkCount, data.FailCount));
+            _me.crudR.dt.reload();
+        });
+    },
+}
+
 _me = {
     init: function () {        
         //datatable config
@@ -29,31 +57,6 @@ _me = {
 
         //initial
         new CrudR(config);
-        _me.modalImport = $('#modalImport');
-    },
-
-    //on open import modal
-    onOpenImport: function () {
-        _Modal.show(_me.modalImport);
-    },
-
-    //on run import
-    onImport: async function () {
-        var modal = _me.modalImport;
-        var fileObj = modal.find(':file');
-        var file = _iFile.getUploadFile(fileObj);
-        if (file == null) {
-            _Tool.msg('請先選取匯入檔案。');
-            return;
-        }
-
-        var formData = new FormData();
-        formData.append('file', file);
-        await _Ajax.getJsonByFdA('Import', formData, function (data) {
-            _Modal.hide(modal);
-            _Tool.msg(_Str.format('匯入完成。', data.OkCount, data.FailCount));
-            _me.dt.reload();
-        });
     },
 
 }; //class

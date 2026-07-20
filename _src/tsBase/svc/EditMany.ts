@@ -1,30 +1,30 @@
 class EditMany {
     //private [_Edit.Childs]: any = null;
 
-    private mode: any = EditModeEstr.Base;
+    private mode = EditModeEstr.Base;
     private modeData: any = '';
 
-    private systemError: string = '';
+    private systemError = '';
     private kid: string;
     private rowFilter: string;
-    private sortFid: string | undefined;
+    private sortFid: string;
     private hasRowTpl: boolean;
     private hasRowFilter: boolean;
-    private rowTpl: string = '';
+    private rowTpl = '';
     private hasEform: boolean;
-    private rowsBox: JQuery = $();
-    private eform: JQuery = $();
+    private rowsBox: JQuery;
     private deletedRows: string[] = [];
-    private newIndex: number = 0;
-
-    private fnReset: any;
-    private fnLoadRows: any;
-    private fnValid: any;
-    private fnGetUpdJson: any;
+    private newIndex = 0;
 
     //global
     _childs: EditMany[];
+    eform: JQuery;
     validator: any;
+    dataJson: Json; //主要用於EditOne存原始資料, GenCrud屬特殊情形mTable會使用 
+    fnReset: () => void;
+    fnLoadRows: (rows: Json[]) => void;
+    fnValid: () => boolean;
+    fnGetUpdJson: (upKey: StrNum) => Json;
 
     //global & set by _Edit
     fidTypes: string[];
@@ -37,7 +37,7 @@ class EditMany {
     constructor(kid: string, rowsBoxId?: string, rowTplId?: string, rowFilter?: string, sortFid?: string) {
         this.kid = kid;
         this.rowFilter = rowFilter || '';
-        this.sortFid = sortFid;
+        this.sortFid = sortFid || '';
         this.hasRowTpl = _Str.notEmpty(rowTplId);
         this.hasRowFilter = _Str.notEmpty(rowFilter);
 
@@ -131,7 +131,7 @@ class EditMany {
     }
 
     //todo: upKey: key or fKid?
-    private _urmGetUpdJson(upKey: string): any {
+    private _urmGetUpdJson(upKey: StrNum): Json {
         var json: any = {};
         var rows: any[] = [];
         var me = this;
@@ -256,7 +256,7 @@ class EditMany {
         return this.eform.find(filter).closest(this.rowFilter);
     }
 
-    getUpdJsonBySys(upKey: string): any {
+    getUpdJsonBySys(upKey: StrNum): Json {
         if (this.fnGetUpdJson)
             return this.fnGetUpdJson(upKey);
         else if (this.mode == EditModeEstr.UR)
@@ -413,9 +413,9 @@ class EditMany {
         return fileJson;
     }
 
-    rowSetFkey(row: any, fKid: string): void {
-        if (row != null && _Edit.isNewRow(row, fKid))
-            row[_Edit.DataFkeyFid] = fKid;
+    rowSetFkey(row: Json, fKey: StrNum): void {
+        if (row != null && _Edit.isNewKey(fKey))
+            row[_Edit.DataFkeyFid] = fKey;
     }
 
     rowsSetFkey(rows: any[] | null, fkey: string): void {

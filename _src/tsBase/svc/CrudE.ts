@@ -1,13 +1,13 @@
 class CrudE {
     private _nowFun: FunEstr;
-    private _Edits: any;
+    private _edits: OneMany[] | EditDto[];
     private _multiEdit: boolean;
     private _nowEditNo: number;
-    private _Edit0: any;
+    private _edit0: EditOne;
 
-    constructor(edits: any) {
+    constructor(edits: OneMany[] | EditDto[]) {
         this._nowFun = '';
-        this._Edits = edits;
+        this._edits = edits;
         this._multiEdit = false;
         this._nowEditNo = 0;
 
@@ -17,7 +17,7 @@ class CrudE {
             this._multiEdit = true;
             _me.hasEdit = true;
             for (let i = 0; i < edits.length; i++) {
-                const dto = edits[i];
+                const dto = edits[i] as EditDto;
                 this._initEdit0(dto.edits);
             }
             this.mEditSetEditNo(0);
@@ -29,32 +29,32 @@ class CrudE {
                 if (edits == null || edits.length == 0) {
                     edits = [new EditOne()];
                 }
-                this._initEdit0(edits);
-                _me.edit0 = edits[0];
+                this._initEdit0(edits as OneMany[]);
+                _me.edit0 = edits[0] as EditOne;
                 _me.eform0 = _me.edit0.eform;
 
                 for (let i = 1; i < edits.length; i++) {
                     if (edits[i] instanceof EditOne) {
-                        edits[i].setIs1to1();
+                        (edits[i] as EditOne).setIs1to1();
                     }
                 }
             }
         }
 
-        this._Edit0 = _me.edit0;
+        this._edit0 = _me.edit0;
     }
 
-    getEditByNo(editNo: number): EditOne | EditMany {
-        return this._Edits[editNo];
+    getEditByNo(editNo: number): OneMany {
+        return this._edits[editNo] as OneMany;
     }
 
     viewFileByEditNo(editNo: number, table: string, fid: string): void {
-        this._Edits[editNo].onViewFile(table, fid);
+        (this._edits[editNo] as OneMany).onViewFile(table, fid);
     }
 
     setGlobal(): void {
         _me.crudE = this;
-        _me.edit0 = this._Edit0;
+        _me.edit0 = this._edit0;
         _me.eform0 = _me.edit0.eform;
     }
 
@@ -74,7 +74,7 @@ class CrudE {
         this._initForm(edit0);
     }
 
-    private _initForm(edit: any): void {
+    private _initForm(edit: OneMany): void {
         if (edit.eform == null) return;
 
         _iDate.init(edit.eform);
@@ -85,9 +85,10 @@ class CrudE {
         }
     }
 
-    mEditGetDivEdit(): any {
+    //mEditGetDivEdit -> getDivEdit
+    getDivEdit(): JQuery {
         return this._multiEdit
-            ? this._Edits[this._nowEditNo].divEdit
+            ? (this._edits[this._nowEditNo] as EditDto).divEdit
             : _me.divEdit;
     }
 
@@ -95,9 +96,9 @@ class CrudE {
         if (this._multiEdit) {
             this._nowEditNo = editNo;
 
-            const dto = this._Edits[editNo];
+            const dto = this._edits[editNo] as EditDto;
             _me.divEdit = dto.divEdit;
-            _me.edit0 = dto.edits[0];
+            _me.edit0 = dto.edits[0] as EditOne;
             _me.eform0 = _me.edit0.eform;
         }
     }
@@ -106,17 +107,18 @@ class CrudE {
         return this._nowEditNo;
     }
 
-    loadJson(json: any): void {
+    loadJson(json: Json): void {
         this._loadJson2(_me.edit0, json);
     }
 
-    private _loadJson2(edit: any, json: any): void {
+    private _loadJson2(edit: OneMany, json: Json): void {
         const rows = _Edit.jsonGetRows(json);
         if (_Edit.isEditOne(edit)) {
-            edit.loadRow(_Array.isEmpty(rows) ? null : rows[0]);
-            edit.dataJson = json;
+            const edit1 = edit as EditOne;
+            edit1.loadRow(_Array.isEmpty(rows) ? null : rows[0]);
+            edit1.dataJson = json;
         } else {
-            edit.loadRowsBySys(rows);
+            (edit as EditMany).loadRowsBySys(rows);
         }
 
         const childLen = this._EditGetChildLen(edit);
@@ -136,7 +138,7 @@ class CrudE {
     setEditStatus(fun: FunEstr): void {
         this._nowFun = fun;
 
-        const box = this.mEditGetDivEdit();
+        const box = this.getDivEdit();
         const items = box.find('[data-edit]');
         _Obj.setEdit(items, false);
         if (fun == FunEstr.View) {
@@ -197,7 +199,7 @@ class CrudE {
         return dataJson;
     }
 
-    private _getUpdJson2(edit: any, key: any, levelStr: string, formData: FormData, fileJson: any, dataJson: any): boolean {
+    private _getUpdJson2(edit: OneMany, key: StrNum, levelStr: string, formData: FormData, fileJson: Json, dataJson: Json): boolean {
         if (edit.hasFile) {
             const fileJson2 = edit.dataAddFiles(levelStr, formData);
             _Json.copy(fileJson2, fileJson);
@@ -205,8 +207,8 @@ class CrudE {
 
         const isOne = _Edit.isEditOne(edit);
         const json = isOne
-            ? edit.getUpdRow(key)
-            : edit.getUpdJsonBySys(key);
+            ? (edit as EditOne).getUpdRow(key)
+            : (edit as EditMany).getUpdJsonBySys(key);
         if (_Json.isEmpty(json)) return false;
 
         if (isOne) {
@@ -333,11 +335,11 @@ class CrudE {
         _me.crudR.toEditMode(fun);
     }
 
-    private _EditGetChild(edit: EditOne, childIdx: number): any {
+    private _EditGetChild(edit: OneMany, childIdx: number): any {
         return edit._childs[childIdx];
     }
 
-    private _EditGetChildLen(edit: EditOne): number {
+    private _EditGetChildLen(edit: OneMany): number {
         //const fid = _Edit.Childs;
         return (edit._childs == null) ? 0 : edit._childs.length;
     }

@@ -48,12 +48,6 @@ declare global {
 
     //擴充 Window 型別
     interface Window {
-        _xg: Json,
-        _me: MeDto,
-        //_m2: Json,
-        //_vo: Json,
-        _BR: BaseResDto,
-
         //#region tsBase
         EditModeEstr: typeof EditModeEstr;
         FunEstr: typeof FunEstr;
@@ -138,14 +132,18 @@ declare global {
         FlowView: typeof FlowView;
         Page: typeof Page;
         //#endregion
+
+        _xg: Json,
+        _vo: Json,
+        _me: MeDto,
+        _BR: BaseResDto,
     }
 
     //告訴 TypeScript 這些變數的型別是什麼
     let _xg: Json;
+    let _vo: Json;
     let _me: MeDto;
-    //let _m2: Json;
     let _BR: BaseResDto;
-    //let _Array: _Array;
 }
 
 export { };

@@ -27,7 +27,6 @@ class EditOne {
 
     private kid: string;
     private is1to1: boolean;
-    private dataJson: Json;
 
     //global
     _childs: OneMany[];
@@ -35,6 +34,7 @@ class EditOne {
     eform: JQuery;
     systemError: string;
     validator: any;
+    dataJson: Json;
 
     //global& set by _Edit
     fidTypes: string[];
@@ -65,7 +65,7 @@ class EditOne {
         _Edit.initVars(this, this.eform);
     }
 
-    showErrors(json: any): void {
+    showErrors(json: Json): void {
         this.validator.showErrors(json);
     }
 
@@ -89,7 +89,7 @@ class EditOne {
         return (this.fnValid) ? this.fnValid() : true;
     }
 
-    getKey(): string {
+    getKey(): StrNum {
         return _Input.get(this.kid, this.eform);
     }
 
@@ -101,14 +101,14 @@ class EditOne {
         return _Edit.isNewBox(this.eform, this.kid);
     }
 
-    loadRow(row: any): void {
+    loadRow(row: Json): void {
         if (this.is1to1 && _Json.isEmpty(row))
             this._resetAndNew();
         else
             _Edit.loadRow(this, this.eform, row);
     }
 
-    getUpdRow(upKey: string): any {
+    getUpdRow(upKey: StrNum): Json {
         var row = _Edit.getUpdRow(this, this.eform);
         if (this.is1to1 && row != null) {
             row[_Edit.DataFkeyFid] = upKey;
@@ -149,7 +149,7 @@ class EditOne {
 
     async onViewFile(table: string, fid: string): Promise<void> {
         var elm = _Fun.getMeElm();
-        var key = this.getKey();
+        var key = this.getKey() as string;
         await _Edit.viewFileA(table, fid, elm, key);
     }
 }

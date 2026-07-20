@@ -1,283 +1,292 @@
-import UiMany from "./UiMany.js";
-import {
-  CrudR,
-  EditDto,
-  EditMany,
-  EditOne,
-  FunEstr,
-  MouseEstr,
-  _Ajax,
-  _Array,
-  _Edit,
-  _Form,
-  _Fun,
-  _Json,
-  _Modal,
-  _Nav,
-  _Obj,
-  _Prog,
-  _Str,
-  _Tab,
-  _Tool,
-  _Valid,
-  _iCheck,
-  _iSelect,
-  _iText
-} from "@baseJs";
-_m2 = {
-  init: function() {
-    _m2.TableId = "TableId";
-    _m2.Active = "active";
-    _m2.mQitem = new EditMany("Id", "tbodyQitem", "tplQitem", ".xu-tr");
-    _m2.mRitem = new EditMany("Id", "tbodyRitem", "tplRitem", ".xu-tr");
-    _m2.mEtable = new EditMany("Id", null, "tplTabEtable", ".x-form");
-    _m2.mEitem = new EditMany("Id", null, "tplEitem", ".xu-tr");
-    _m2.mEtable.setChilds([_m2.mEitem]);
-    _m2.mUiItem = new EditMany("Id", "eformUiItem", "tplUiItem", ".xu-tr");
-    _m2.divEdit1 = $("#divEdit1");
-    _m2.etableChdIdx = 2;
-    _m2.eitemChdIdx = 0;
-    _m2.mEtable.fnLoadRows = _m2.mEtable_loadRows;
-    _m2.mEtable.fnGetUpdJson = _m2.mEtable_getUpdJson;
-    _m2.mEtable.fnValid = _m2.mEtable_valid;
-    _m2.tplQitem = $("#tplQitem").html();
-    _m2.tbodyQitem = $("#tbodyQitem");
-    _m2.tplRitem = $("#tplRitem").html();
-    _m2.tbodyRitem = $("#tbodyRitem");
-    _m2.navEtable = $("#navEtable");
-    _m2.tabEtable = $("#tabEtable");
-    _m2.tplNavEtable = $("#tplNavEtable").html();
-    _m2.tplTabEtable = $("#tplTabEtable").html();
-    _m2.tplEitem = $("#tplEitem").html();
-    _m2.modalItems = $("#modalItems");
-    _m2.divItemsBody = _m2.modalItems.find("tbody");
-    _m2.tplModalItem = $("#tplModalItem").html();
-    _m2.ritemTableId = "";
-    _m2.tables = [];
-    _m2.etableLen = 0;
-    _m2.etableIdx = 0;
-    _m2.nowItemType = "";
-    _m2.modalImport = $("#modalUiImport");
-    _m2.mUiItem.fnLoadRows = _m2.mUiItem_loadRows;
-    _m2.mUiItem.fnGetUpdJson = _m2.mUiItem_getUpdJson;
-    _m2.mUiItem.fnValid = _m2.mUiItem_valid;
-    _m2.uiMany = new UiMany(".xu-ui-area", _m2.mUiItem);
-    _m2.divEdit1.on(MouseEstr.DragStart, ".xu-btn", function(e) {
+class GenCrudVo {
+  constructor() {
+    this.TableId = "TableId";
+    //column name of TableId for many forms
+    this.Active = "active";
+    //active class
+    //maintain tables:
+    //this.edit0: new EditOne(),
+    this.mQitem = new EditMany("Id", "tbodyQitem", "tplQitem", ".xu-tr");
+    this.mRitem = new EditMany("Id", "tbodyRitem", "tplRitem", ".xu-tr");
+    this.mEtable = new EditMany("Id", null, "tplTabEtable", ".x-form");
+    this.mEitem = new EditMany("Id", null, "tplEitem", ".xu-tr");
+    //edit2: initial edit one/many, rowsBox(參數2) 使用 eform
+    this.mUiItem = new EditMany("Id", "eformUiItem", "tplUiItem", ".xu-tr");
+    //不同編輯畫面共用查詢畫面
+    this.divEdit1 = $("#divEdit1");
+    //new CrudR(config, [_m2.edit0, _m2.mQitem, _m2.mRitem, _m2.mEtable]),
+    //this.ritemChdIdx: 0,    //child index of Ritem
+    this.etableChdIdx = 2;
+    //child index of Etable nav(CrudEdit)
+    this.eitemChdIdx = 0;
+    //child index of Eitem
+    //Qitem(Q)
+    this.tplQitem = $("#tplQitem").html();
+    this.tbodyQitem = $("#tbodyQitem");
+    //Ritem(R)
+    this.tplRitem = $("#tplRitem").html();
+    this.tbodyRitem = $("#tbodyRitem");
+    //CrudEdit table(use nav)
+    this.navEtable = $("#navEtable");
+    this.tabEtable = $("#tabEtable");
+    this.tplNavEtable = $("#tplNavEtable").html();
+    this.tplTabEtable = $("#tplTabEtable").html();
+    //Eitem(E)
+    this.tplEitem = $("#tplEitem").html();
+    //Item modal(for Q,R,E)
+    this.modalItems = $("#modalItems");
+    //modal for select items
+    this.divItemsBody = null;
+    this.tplModalItem = $("#tplModalItem").html();
+    //tpl of modal item row
+    //variables
+    this.ritemTableId = "";
+    //now ritem table Id
+    this.tables = [];
+    //for table dropdownlist
+    this.etableLen = 0;
+    //edit table count(累加)
+    this.etableIdx = 0;
+    //now edit nav selected index
+    this.nowItemType = "";
+    //modal item type: R,E,S
+    //#region *** for edit2 ***
+    this.modalImport = $("#modalUiImport");
+    //initial uiMany
+    this.uiMany = null;
+    this.divItemsBody = this.modalItems.find("tbody");
+    this.mEtable.setChilds([this.mEitem]);
+    this.mEtable.fnLoadRows = this.mEtable_loadRows;
+    this.mEtable.fnGetUpdJson = this.mEtable_getUpdJson;
+    this.mEtable.fnValid = this.mEtable_valid;
+    this.mUiItem.fnLoadRows = this.mUiItem_loadRows;
+    this.mUiItem.fnGetUpdJson = this.mUiItem_getUpdJson;
+    this.mUiItem.fnValid = this.mUiItem_valid;
+    this.uiMany = new UiMany(".xu-ui-area", this.mUiItem);
+    const me = this;
+    this.divEdit1.on(MouseEstr.DragStart, ".xu-btn", function(e) {
       let itemType = $(e.target).data("type");
-      _m2.uiMany.startDragBtn(true, itemType);
+      this.uiMany.startDragBtn(true, itemType);
     }).on(MouseEstr.DragEnd, function(e) {
-      _m2.uiMany.onDragEnd(e);
+      me.uiMany.onDragEnd(e);
     });
+  }
+  /*
+  //reset eitem columns: re show/hide eitem layoutcols, width property
+  swapEitemCols () {
+      $('.xu-edit').each(function (idx, item) {
+          var me = $(item);
+          if (idx == 0) {
+              //me.find('.xu-layout').show();
+              //me.find('.xu-width').hide();
+          } else {
+              //me.find('.xu-layout').hide();
+              //me.find('.xu-width').show();
+          }
+      });
   },
-  getProjectId: function() {
+  */
+  getProjectId() {
     return _iSelect.get("ProjectId", _me.eform0);
-  },
-  //auto called !!
-  fnAfterOpenEdit: async function(fun, json) {
-    var isEdit1 = _m2.isEdit1();
-    _Prog.setBorder(!isEdit1);
-    if (isEdit1)
-      _m2.fnAfterOpenEdit1(fun, json);
-    else
-      _m2.fnAfterOpenEdit0(fun, json);
-  },
+  }
   //set etable TableId(dropdown)
-  //edit0_afterLoadJson: function (json) {
-  fnAfterOpenEdit0: async function(fun, json) {
+  //edit0_afterLoadJson (json) {
+  async fnAfterOpenEdit0(fun, json) {
     if (fun == FunEstr.Create) return;
-    if (!await _m2.onChangeProject()) return;
-    var navRows = _Edit.getChildRows(json, _m2.etableChdIdx);
+    if (!await this.onChangeProject()) return;
+    var navRows = _Edit.getChildRows(json, this.etableChdIdx);
     var navLen = navRows == null ? 0 : navRows.length;
     for (var i = 0; i < navLen; i++) {
-      var tabObj = _m2.etGetTab(i);
-      _iSelect.setItems(_m2.TableId, _m2.tables, tabObj);
-      _iSelect.set(_m2.TableId, navRows[i][_m2.TableId], tabObj);
-      _m2.etShowName(i);
+      var tabObj = this.etGetTab(i);
+      _iSelect.setItems(this.TableId, this.tables, tabObj);
+      _iSelect.set(this.TableId, navRows[i][this.TableId], tabObj);
+      this.etShowName(i);
     }
-  },
+  }
   //reset when create
-  fnAfterOpenEdit1: function(fun, json) {
-    _m2.uiMany.reset();
+  fnAfterOpenEdit1(fun, json) {
+    this.uiMany.reset();
     var isAdd = fun == FunEstr.Create;
-    _m2.uiMany.setEdit(isAdd || fun == FunEstr.Update);
-  },
+    this.uiMany.setEdit(isAdd || fun == FunEstr.Update);
+  }
   //拖拉編輯
-  isEdit1: function() {
+  isEdit1() {
     return _me.crudE.mEditGetEditNo() == 1;
-  },
-  fnWhenSave: function(fun) {
-    return _m2.isEdit1() ? _m2.fnWhenSave1(fun) : _m2.fnWhenSave0(fun);
-  },
+  }
   //set sort
-  fnWhenSave0: function(fun) {
-    _m2.tbodyQitem.find(".xu-tr").each(function(i, item) {
+  fnWhenSave0(fun) {
+    this.tbodyQitem.find(".xu-tr").each(function(i, item) {
       _iText.set("Sort", i, $(item));
     });
-    _m2.tbodyRitem.find(".xu-tr").each(function(i, item) {
+    this.tbodyRitem.find(".xu-tr").each(function(i, item) {
       _iText.set("Sort", i, $(item));
     });
     var error = "";
     var tableIds = [];
-    _m2.etGetForms().each(function(i, item) {
+    const me = this;
+    this.etGetForms().each(function(i, item) {
       var form = $(item);
-      var tableId = _iText.get(_m2.TableId, form);
+      var tableId = _iText.get(me.TableId, form);
       if (_Array.find(tableIds, tableId) >= 0) {
         error = "\u7DAD\u8B77\u7684\u8CC7\u6599\u8868(Etable)\u4E0D\u53EF\u91CD\u8907\u3002";
         return false;
       }
       tableIds[i] = tableId;
       _iText.set("Sort", i, form);
-      _m2.getEitemForm(form).find(".xu-tr").each(function(j, item2) {
+      me.getEitemForm(form).find(".xu-tr").each(function(j, item2) {
         _iText.set("Sort", j, $(item2));
       });
     });
     return error;
-  },
+  }
   //load etable
-  mEtable_loadRows: function(rows) {
-    _m2.navEtable.empty();
-    _m2.tabEtable.empty();
+  mEtable_loadRows(rows) {
+    const vo = _vo;
+    vo.navEtable.empty();
+    vo.tabEtable.empty();
     if (rows == null || rows.length == 0)
       return;
-    var eitemRows = _Edit.getChildRows(_m2.mEtable.dataJson, 0);
+    var eitemRows = _Edit.getChildRows(vo.mEtable.dataJson, 0);
     for (var i = 0; i < rows.length; i++) {
       var row = rows[i];
-      _m2.mEtable.loadRowByBox(_m2.tabEtable, row, i);
-      var newNav = $(Mustache.render(_m2.tplNavEtable, { Index: i }));
-      _m2.navEtable.append(newNav);
-      _m2.etableLen++;
+      vo.mEtable.loadRowByBox(vo.tabEtable, row, i);
+      var newNav = $(Mustache.render(vo.tplNavEtable, { Index: i }));
+      vo.navEtable.append(newNav);
+      vo.etableLen++;
       if (i === 0)
         newNav.find("a")[0].click();
-      var forms = _m2.tabEtable.find("#divEtable" + i + " form");
+      var forms = vo.tabEtable.find("#divEtable" + i + " form");
       var form = forms.first();
       _Valid.init(form);
       var form2 = forms.last();
       var rows2 = _Json.filterRows(eitemRows, "EtableId", _iText.get("Id", form));
-      _m2.mEitem.loadRowsByRsb(rows2, true, form2.find("tbody"));
+      vo.mEitem.loadRowsByRsb(rows2, true, form2.find("tbody"));
       _Valid.init(form2);
     }
-  },
+  }
   //GetUpdJson
-  mEtable_getUpdJson: function(upKey) {
+  mEtable_getUpdJson(upKey) {
     var rows = [];
     var eitems = [];
-    _m2.etGetForms().each(function(i, item) {
+    const vo = _vo;
+    vo.etGetForms().each(function(i, item) {
       var form = $(item);
-      rows[i] = _m2.mEtable.getUpdRow(form);
-      _m2.mEtable.rowSetFkey(rows[i], upKey);
+      rows[i] = vo.mEtable.getUpdRow(form);
+      vo.mEtable.rowSetFkey(rows[i], upKey);
       var upKey2 = _iText.get("Id", form);
-      var form2 = _m2.getEitemForm(form);
-      var rows2 = _m2.mEitem.getUpdRows(upKey2, form2.find("tbody"));
+      var form2 = vo.getEitemForm(form);
+      var rows2 = vo.mEitem.getUpdRows(upKey2, form2.find("tbody"));
       _Json.appendRows(rows2, eitems);
     });
     return {
       _rows: rows,
-      _deletes: _m2.mEtable.getDeletes(),
-      _childs: [{ _rows: eitems, _deletes: _m2.mEitem.getDeletes() }]
+      _deletes: vo.mEtable.getDeletes(),
+      _childs: [{ _rows: eitems, _deletes: vo.mEitem.getDeletes() }]
     };
-  },
+  }
   /**
    * error時顯示對應的table page
    * return boolean
    */
-  mEtable_valid: function() {
+  mEtable_valid() {
     var status = true;
-    _m2.etGetForms().each(function(i, item) {
+    const vo = _vo;
+    vo.etGetForms().each(function(i, item) {
       var form = $(item);
       status = form.valid();
       if (status)
-        status = _m2.getEitemForm(form).valid();
+        status = vo.getEitemForm(form).valid();
       if (!status) {
         var idx = form.data("index");
-        _m2.etFocusNav(_m2.etGetNav(idx));
+        vo.etFocusNav(vo.etGetNav(idx));
         return false;
       }
     });
     return status;
-  },
+  }
   /**
    * onclick generate crud
    * (如果在VS下產生DbAdm的CRUD會reload !!)
    */
-  onGenCrud: async function(id) {
+  async onGenCrud(id) {
     if (await _Tool.ansA("\u662F\u5426\u78BA\u5B9A\u7522\u751F\u9019\u500B\u529F\u80FD\u7684CRUD\u7A0B\u5F0F?")) {
       await _Ajax.getStrA("GenCrud", { id }, function(error) {
         _Tool.msg(_Str.isEmpty(error) ? "\u57F7\u884C\u6210\u529F" : error);
       });
     }
-  },
+  }
   //get checked table id array
-  getCheckedTables: function() {
+  getCheckedTables() {
     var values = _iCheck.getCheck0Values(_me.crudR.divRead);
     if (values.length === 0)
       _Tool.msg("\u8ACB\u9078\u53D6\u8CC7\u6599\u3002");
     return values;
-  },
-  resetEdits: function() {
-    _m2.navEtable.empty();
-    _m2.tabEtable.empty();
-    _m2.etableLen = 0;
-  },
+  }
+  resetEdits() {
+    this.navEtable.empty();
+    this.tabEtable.empty();
+    this.etableLen = 0;
+  }
   //onclick Create(table)
-  onCreate: function() {
+  onCreate() {
     _me.crudR.onCreate();
-    _m2.resetEdits();
-  },
-  onQitemAdd: function() {
-    var box = $(Mustache.render(_m2.tplQitem, {}));
+    this.resetEdits();
+  }
+  onQitemAdd() {
+    var box = $(Mustache.render(this.tplQitem, {}));
     _Form.loadRow(box, {});
-    _m2.mQitem.setNewIdByBox(box);
-    _m2.tbodyQitem.append(box);
-  },
-  onRitemAdd: function() {
-    var box = $(Mustache.render(_m2.tplRitem, {}));
+    this.mQitem.setNewIdByBox(box);
+    this.tbodyQitem.append(box);
+  }
+  onRitemAdd() {
+    var box = $(Mustache.render(this.tplRitem, {}));
     _Form.loadRow(box, {});
-    _m2.mRitem.setNewIdByBox(box);
-    _m2.tbodyRitem.append(box);
-  },
+    this.mRitem.setNewIdByBox(box);
+    this.tbodyRitem.append(box);
+  }
   //on change project id
   //多個地方呼叫
   ////fnCallback: (optional) callback function
   //return {bool}
   //onChangeProject: async function (fnCallback) {
-  onChangeProject: async function() {
-    var pid = _m2.getProjectId();
+  async onChangeProject() {
+    var pid = this.getProjectId();
     if (_Str.isEmpty(pid)) return false;
     var rows = await _Ajax.getJsonsA("/XpCode/Tables", { projectId: pid });
     if (_Array.isEmpty(rows)) return false;
-    _m2.tables = rows;
-    var obj = _Obj.get(_m2.TableId, _m2.modalItems);
-    _iSelect.setItemsO(obj, _m2.tables);
+    this.tables = rows;
+    var obj = _Obj.get(this.TableId, this.modalItems);
+    _iSelect.setItemsO(obj, this.tables);
     _iSelect.setO(obj, "");
     return true;
-  },
+  }
   //on open item modal
   //type: Q(qitem), R(ritem), E(eitem), S(edit eitem)
-  onOpenItem: function(type) {
-    _m2.nowItemType = type;
-    _Modal.show(_m2.modalItems);
-  },
+  onOpenItem(type) {
+    this.nowItemType = type;
+    _Modal.show(this.modalItems);
+  }
   //on change tableId at ritem modal
-  onChangeItemTable: async function() {
-    await _m2.changeItemTableA(_iSelect.getO(_Fun.getMe()));
-  },
+  async onChangeItemTable() {
+    await this.changeItemTableA(_iSelect.getO(_Fun.getMe()));
+  }
   //called by 2 places
-  changeItemTableA: async function(tableId) {
+  async changeItemTableA(tableId) {
     await _Ajax.getJsonA("GetColumns", { tableId }, function(rows) {
-      _m2.divItemsBody.empty();
+      this.divItemsBody.empty();
       for (var i = 0; i < rows.length; i++) {
-        _m2.divItemsBody.append($(Mustache.render(_m2.tplModalItem, rows[i])));
+        this.divItemsBody.append($(Mustache.render(this.tplModalItem, rows[i])));
       }
     });
-  },
+  }
   //?? delegate: item modal 過濾查詢結果
-  fnItemDtGetRows: function(result) {
+  fnItemDtGetRows(result) {
     return result.data;
-  },
+  }
   //onclick ok at Item(R/Q/E) modal
-  onItemModalOk: function() {
+  onItemModalOk() {
     var rows = [];
-    _m2.divItemsBody.find(":checkbox:checked").each(function(idx) {
+    this.divItemsBody.find(":checkbox:checked").each(function(idx) {
       var obj = $(this);
       var tr = obj.closest("tr");
       rows[idx] = {
@@ -296,21 +305,21 @@ _m2 = {
       _Tool.msg("\u8ACB\u5148\u9078\u53D6\u8CC7\u6599\u3002");
       return;
     }
-    var type = _m2.nowItemType;
+    var type = this.nowItemType;
     var body, tplItem;
     var mItem = null;
     if (type === "Q") {
-      body = _m2.tbodyQitem;
-      tplItem = _m2.tplQitem;
-      mItem = _m2.mQitem;
+      body = this.tbodyQitem;
+      tplItem = this.tplQitem;
+      mItem = this.mQitem;
     } else if (type === "R") {
-      body = _m2.tbodyRitem;
-      tplItem = _m2.tplRitem;
-      mItem = _m2.mRitem;
+      body = this.tbodyRitem;
+      tplItem = this.tplRitem;
+      mItem = this.mRitem;
     } else {
-      body = _m2.etGetTab().find("tbody");
-      tplItem = _m2.tplEitem;
-      mItem = _m2.mEitem;
+      body = this.etGetTab().find("tbody");
+      tplItem = this.tplEitem;
+      mItem = this.mEitem;
     }
     for (var i = 0; i < rowLen; i++) {
       var box = $(Mustache.render(tplItem, rows[i]));
@@ -318,151 +327,151 @@ _m2 = {
       mItem.setNewIdByBox(box);
       body.append(box);
     }
-    _Modal.hide(_m2.modalItems);
-  },
+    _Modal.hide(this.modalItems);
+  }
   //onclick add on (edit)nav
   //must set id=new index
-  onEtAdd: function() {
-    _m2.etNavRemoveAct();
-    var index = _m2.etableLen;
+  onEtAdd() {
+    this.etNavRemoveAct();
+    var index = this.etableLen;
     var json = { Index: index };
-    var newTab = $(Mustache.render(_m2.tplTabEtable, json));
-    _m2.mEtable.setNewIdByBox(newTab);
-    _iSelect.setItems(_m2.TableId, _m2.tables, newTab);
-    _m2.tabEtable.append(newTab);
-    var newNav = $(Mustache.render(_m2.tplNavEtable, json));
-    _m2.navEtable.append(newNav);
-    _m2.etableLen++;
-    _m2.etFocusNav(newNav);
-    _m2.etShowName(index);
-  },
-  onEtDelete: function() {
-    if (_m2.etableLen == 0)
+    var newTab = $(Mustache.render(this.tplTabEtable, json));
+    this.mEtable.setNewIdByBox(newTab);
+    _iSelect.setItems(this.TableId, this.tables, newTab);
+    this.tabEtable.append(newTab);
+    var newNav = $(Mustache.render(this.tplNavEtable, json));
+    this.navEtable.append(newNav);
+    this.etableLen++;
+    this.etFocusNav(newNav);
+    this.etShowName(index);
+  }
+  onEtDelete() {
+    if (this.etableLen == 0)
       return;
     _Tool.ans("\u662F\u5426\u79FB\u9664\u756B\u9762\u8CC7\u6599?", function() {
-      var nav = _m2.etGetNav();
-      var tab = _m2.etGetTab();
+      var nav = this.etGetNav();
+      var tab = this.etGetTab();
       var nav2;
-      var index = _m2.etableIdx == _m2.etableLen - 1 ? _m2.etableIdx - 1 : _m2.etableIdx;
+      var index = this.etableIdx == this.etableLen - 1 ? this.etableIdx - 1 : this.etableIdx;
       if (index >= 0) {
-        nav2 = index === _m2.etableIdx ? nav.next() : nav.prev();
+        nav2 = index === this.etableIdx ? nav.next() : nav.prev();
       }
-      var form = _m2.etGetForm(tab);
-      var key = _m2.mEtable.getKey(form);
-      _m2.mEtable.deleteRow(key);
-      var form2 = _m2.getEitemForm(form);
+      var form = this.etGetForm(tab);
+      var key = this.mEtable.getKey(form);
+      this.mEtable.deleteRow(key);
+      var form2 = this.getEitemForm(form);
       form2.find(".xu-tr").each(function() {
-        key = _m2.mEitem.getKey($(this));
-        _m2.mEitem.deleteRow(key);
+        key = this.mEitem.getKey($(this));
+        this.mEitem.deleteRow(key);
       });
-      _m2.etNavRemoveAct();
+      this.etNavRemoveAct();
       tab.remove();
       nav.remove();
-      _m2.etableLen--;
-      _m2.etableIdx = index;
+      this.etableLen--;
+      this.etableIdx = index;
       if (index >= 0)
-        _m2.etFocusNav(nav2);
+        this.etFocusNav(nav2);
     });
-  },
-  onEtLeft: function() {
-    _Nav.moveLeft(_m2.etGetNav());
-    _Tab.moveLeft(_m2.etGetTab());
-  },
-  onEtRight: function() {
-    _Nav.moveRight(_m2.etGetNav());
-    _Tab.moveRight(_m2.etGetTab());
-  },
-  etFocusNav: function(navObj) {
+  }
+  onEtLeft() {
+    _Nav.moveLeft(this.etGetNav());
+    _Tab.moveLeft(this.etGetTab());
+  }
+  onEtRight() {
+    _Nav.moveRight(this.etGetNav());
+    _Tab.moveRight(this.etGetTab());
+  }
+  etFocusNav(navObj) {
     navObj.find("a").click();
-  },
+  }
   /*
-  etGetObject: function (index) {
-      return _m2.tabEtable.find('#divEtable' + index);
-  },
+  etGetObject (index) {
+      return this.tabEtable.find('#divEtable' + index);
+  }
   */
   //set(show) tableName at edit edit page
   //param {bool} reset: reset table list or not 
-  etShowName: function(index) {
-    var name = _iSelect.getText(_m2.TableId, _m2.etGetTab(index));
+  etShowName(index) {
+    var name = _iSelect.getText(this.TableId, this.etGetTab(index));
     if (name === "")
       name = "(Empty)";
-    _m2.navEtable.find("li[data-index=" + index + "] a").text(name);
-  },
-  onChangeNowTable: function(index) {
-    _m2.etShowName(index);
-  },
+    this.navEtable.find("li[data-index=" + index + "] a").text(name);
+  }
+  onChangeNowTable(index) {
+    this.etShowName(index);
+  }
   //set child not active
-  etNavRemoveAct: function() {
-    var nav = _m2.etGetNav();
-    nav.removeClass(_m2.Active);
-    _m2.tabEtable.find(".tab-pane." + _m2.Active).removeClass(_m2.Active);
-  },
+  etNavRemoveAct() {
+    var nav = this.etGetNav();
+    nav.removeClass(this.Active);
+    this.tabEtable.find(".tab-pane." + this.Active).removeClass(this.Active);
+  }
   //onclick etable nav
-  onEtNav: function(index) {
-    _m2.etableIdx = index;
-  },
+  onEtNav(index) {
+    this.etableIdx = index;
+  }
   //get edit edit active nav
   //return nav object
-  etGetNav: function(index) {
-    index = index || _m2.etableIdx;
+  etGetNav(index) {
+    index = index || this.etableIdx;
     var find = "[data-index=" + index + "]";
-    return _m2.navEtable.find("li" + find);
-  },
+    return this.navEtable.find("li" + find);
+  }
   //get edit edit active tab
   //return tab object
-  etGetTab: function(index) {
-    index = index || _m2.etableIdx;
-    return _m2.tabEtable.find("#divEtable" + index);
-  },
-  etGetForms: function() {
-    return _m2.tabEtable.find(".x-form");
-  },
-  etGetForm: function(tabObj) {
+  etGetTab(index) {
+    index = index || this.etableIdx;
+    return this.tabEtable.find("#divEtable" + index);
+  }
+  etGetForms() {
+    return this.tabEtable.find(".x-form");
+  }
+  etGetForm(tabObj) {
     return tabObj.find(".x-form");
-  },
+  }
   /*
    * get eitem form by etable form
    */
-  getEitemForm: function(etableForm) {
+  getEitemForm(etableForm) {
     return etableForm.parent().find(".xu-form2");
-  },
+  }
   //#endregion
   //#region for 拖拉編輯(分離檔案無法使用 IntelliSense)
-  onOpenEdit1: async function(id) {
+  async onOpenEdit1(id) {
     _me.crudE.mEditSetEditNo(1);
     await _me.crudE.onUpdateA(id);
-  },
+  }
   //下載 table sql
-  onDownTableSql: async function(id) {
+  async onDownTableSql(id) {
     if (await _Tool.ansA("\u662F\u5426\u78BA\u5B9A\u4E0B\u8F09\u9019\u500B\u529F\u80FD\u7684 Table SQL ?")) {
       await _Ajax.getStrA("DownTableSql", { id }, function(result) {
         _Str.saveFile(result, "table.txt");
       });
     }
-  },
+  }
   //#region read form function
   //onclick generate crud(產生在主機)
   /*
-  onGenCrud: function (id) {
+  onGenCrud (id) {
       await _Ajax.getStrA('GenCrud', { id: id }, function (error) {
           _Tool.msg(_Str.isEmpty(error) ? '執行成功' : error);
       });
-  },
+  }
   */
   //onclick download crud
-  onDownCrud: function() {
-  },
+  onDownCrud() {
+  }
   //#endregion
   //#region edit form function
   //on click open import modal
-  onOpenImport: function() {
-    _iText.set("Import", "", _m2.modalImport);
-    _Modal.show(_m2.modalImport);
-  },
+  onOpenImport() {
+    _iText.set("Import", "", this.modalImport);
+    _Modal.show(this.modalImport);
+  }
   //匯入json(巢狀格式) to edit(查詢條件、結果only)/edit2 form
   //called by modalImprot
-  onImport: async function() {
-    var value = _iText.get("Import", _m2.modalImport).trim();
+  async onImport() {
+    var value = _iText.get("Import", this.modalImport).trim();
     if (_Str.isEmpty(value)) {
       _Tool.msg("\u532F\u5165\u8CC7\u6599\u4E0D\u53EF\u7A7A\u767D\u3002");
       return;
@@ -472,12 +481,12 @@ _m2 = {
       _Tool.msg("\u532F\u5165\u8CC7\u6599\u5FC5\u9808\u662FJson\u683C\u5F0F\u3002");
       return;
     }
-    await _m2.uiMany.loadJsonsA(jsons);
-    _Modal.hide(_m2.modalImport);
-  },
+    await this.uiMany.loadJsonsA(jsons);
+    _Modal.hide(this.modalImport);
+  }
   //export 前端 edit form to json
-  onExport: async function() {
-    let jsons = _m2.uiMany.getJsons();
+  async onExport() {
+    let jsons = this.uiMany.getJsons();
     if (_Json.isEmpty(jsons)) {
       _Tool.msg("\u76EE\u524D\u756B\u9762\u7121\u4EFB\u4F55\u8CC7\u6599\u3002");
       return;
@@ -487,27 +496,18 @@ _m2 = {
     link.href = URL.createObjectURL(blob);
     link.download = "data.json";
     link.click();
-  },
+  }
   //#endregion
   /*
   //generate json
-  onGenJson: function () {
-      var values = _icheck.getCheck0Values(_m2.crudR.divRead);
+  onGenJson () {
+      var values = _icheck.getCheck0Values(this.crudR.divRead);
       if (values.length > 0)
           window.location = 'GenJson?key=' + values.join(',');
       else
           _Tool.msg('請先選取資料。');
   },
   */
-  //#region auto called function
-  fnAfterSwap: function(toRead) {
-    var tbar = $(".xd-prog-tbar");
-    if (toRead) {
-      _Obj.hide(tbar);
-    } else {
-      _Obj.show(tbar);
-    }
-  },
   /**
    * ?? auto called
    * jsPlumb line container must visible when rendering
@@ -516,7 +516,7 @@ _m2 = {
    * param {string} key
    * returns {bool}
    */
-  zz_fnUpdateOrViewA: async function(fun, key) {
+  async zz_fnUpdateOrViewA(fun, key) {
     var act = fun == FunEstr.Update ? "GetUpdJson" : "GetViewJson";
     return await _Ajax.getJsonA(act, { key }, function(json) {
       _me.crudR.toEditMode(fun, () => {
@@ -525,18 +525,18 @@ _m2 = {
         _me.crudE.afterOpen(fun, json);
       });
     });
-  },
+  }
   /**
    * auto called
    * 重設 uiItem的 BoxId、ChildNo、Sort
    * return {string} error msg if any
    */
-  fnWhenSave1: function(fun) {
-    let uiView = _m2.uiMany.uiView;
+  fnWhenSave1(fun) {
+    let uiView = this.uiMany.uiView;
     let boxJsons = uiView.getChgBoxJsons();
     let boxLen = boxJsons.length;
     if (boxLen == 0) return "";
-    let mUiItem = _m2.mUiItem;
+    let mUiItem = this.mUiItem;
     for (let i = 0; i < boxLen; i++) {
       let boxJson = boxJsons[i];
       let boxId = boxJson.BoxId;
@@ -552,30 +552,30 @@ _m2 = {
       }
     }
     return "";
-  },
-  //#endregion 
+  }
+  //#endregion
   //#region mUiItem custom function
   //load items
-  mUiItem_loadRows: async function(rows) {
-    await _m2.uiMany.loadRowsA(rows);
-  },
+  async mUiItem_loadRows(rows) {
+    await _vo.uiMany.loadRowsA(rows);
+  }
   //getUpdJson
-  mUiItem_getUpdJson: function(upKey) {
-    return _m2.mUiItem.getUpdJsonByRsb(upKey);
-  },
+  mUiItem_getUpdJson(upKey) {
+    return _vo.mUiItem.getUpdJsonByRsb(upKey);
+  }
   //return boolean
-  mUiItem_valid: function() {
+  mUiItem_valid() {
     return true;
   }
   /*
   //return boolean
-  mLine_valid: function () {
+  mLine_valid () {
       return true;
-  },
+  }
   */
   //#endregion
-  //#endregion
-};
+  //#region
+}
 _me = {
   //#region for Crud
   init: function() {
@@ -613,10 +613,34 @@ _me = {
         } }
       ]
     };
-    _m2.init();
-    var ary0 = new EditDto([null, _m2.mQitem, _m2.mRitem, _m2.mEtable], $("#divEdit"));
-    var ary1 = new EditDto([new EditOne(null, "eform1"), _m2.mUiItem], _m2.divEdit1, "\u62D6\u62C9\u7DE8\u8F2F");
+    _vo = new GenCrudVo();
+    const vo = _vo;
+    var ary0 = new EditDto([null, vo.mQitem, vo.mRitem, vo.mEtable], $("#divEdit"));
+    var ary1 = new EditDto([new EditOne(null, "eform1"), vo.mUiItem], vo.divEdit1, "\u62D6\u62C9\u7DE8\u8F2F");
     new CrudR(config, [ary0, ary1]);
+  },
+  //auto called !!
+  fnAfterOpenEdit: async function(fun, json) {
+    const vo = _vo;
+    var isEdit1 = vo.isEdit1();
+    _Prog.setBorder(!isEdit1);
+    if (isEdit1)
+      vo.fnAfterOpenEdit1(fun, json);
+    else
+      vo.fnAfterOpenEdit0(fun, json);
+  },
+  fnWhenSave: function(fun) {
+    const vo = _vo;
+    return vo.isEdit1() ? vo.fnWhenSave1(fun) : vo.fnWhenSave0(fun);
+  },
+  //#region auto called function
+  fnAfterSwap: function(toRead) {
+    var tbar = $(".xd-prog-tbar");
+    if (toRead) {
+      _Obj.hide(tbar);
+    } else {
+      _Obj.show(tbar);
+    }
   }
 };
 //# sourceMappingURL=GenCrud.js.map

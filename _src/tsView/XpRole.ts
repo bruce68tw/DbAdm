@@ -1,60 +1,43 @@
-﻿//import { CrudR, EditMany, _Ajax, _Form, _Modal, _Tool, _iSelect, _iText } from "@baseJs";
+﻿class XpRoleVo {
+    mUserRole = new EditMany('Id', 'tbodyUserRole', 'tplUserRole', 'tr');
+    mRoleProg = new EditMany('Id', 'tbodyRoleProg', 'tplRoleProg', 'tr');
 
-_me = {
-    init: function () {        
-        //datatable config
-        var config = {
-            columns: [
-                { data: 'Name' },
-                { data: '_Fun' },
-            ],
-            columnDefs: [
-				{ targets: [1], render: function (data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
-                }},
-            ],
-        };
+    divUrBody = $('#tbodyUserRole');    //tbody of user role
+    tplUr = $('#tplUserRole').html();   //tpl of user role
+    modalUser = $('#modalUser');        //modal for select user
+    modalUserBody: JQuery;  // = modalUser.find('tbody');
+    tplUser = $('#tplUser').html();     //tpl of modal user row
 
-        //initial
-        _me.mUserRole = new EditMany('Id', 'tbodyUserRole', 'tplUserRole', 'tr');
-        _me.mRoleProg = new EditMany('Id', 'tbodyRoleProg', 'tplRoleProg', 'tr');
-        new CrudR(config, [null, _me.mUserRole, _me.mRoleProg]);
-
-        //_me.divUsers = $('#divUsers');
-        //_me.mUserRoleFids = ['Id', 'UserId']; //key fid, child fid
-        _me.divUrBody = $('#tbodyUserRole');    //tbody of user role
-        _me.tplUr = $('#tplUserRole').html();   //tpl of user role
-        _me.modalUser = $('#modalUser');        //modal for select user
-        _me.modalUserBody = _me.modalUser.find('tbody');
-        _me.tplUser = $('#tplUser').html();     //tpl of modal user row
-    },
+    constructor() {
+        this.modalUserBody = this.modalUser.find('tbody');
+    }
 
     //on open select user modal
-    onOpenUser: function () {
-        _Modal.show(_me.modalUser);
-    },
+    onOpenUser() {
+        _Modal.show(this.modalUser);
+    }
 
     //onclick find user
-    onFindUserA: async function () {        
+    async onFindUserA() {
         var data = {
-            account: _iText.get('Account', _me.modalUser),
-            deptId: _iSelect.get('DeptId', _me.modalUser),
-            name: _iText.get('Name', _me.modalUser),
+            account: _iText.get('Account', this.modalUser),
+            deptId: _iSelect.get('DeptId', this.modalUser),
+            name: _iText.get('Name', this.modalUser),
         };
-        await _Ajax.getJsonA('GetUsers', data, function (rows) {
-            _me.modalUserBody.empty();
+        await _Ajax.getJsonA('GetUsers', data, (rows) => {
+            this.modalUserBody.empty();
             for (var i = 0; i < rows.length; i++) {
                 //這裡不必註記"新增"
-                _me.modalUserBody.append($(Mustache.render(_me.tplUser, rows[i])));
+                this.modalUserBody.append($(Mustache.render(this.tplUser, rows[i])));
             }
         });
-    },
+    }
 
     //onclick ok at Item(R/Q/E) modal
-    onUserModalOk: function () {
+    onUserModalOk() {
         //get checked columns list
         var rows = [];
-        _me.modalUserBody.find(':checkbox:checked').each(function (idx) {
+        this.modalUserBody.find(':checkbox:checked').each(function (idx) {
             var obj = $(this);
             var tr = obj.closest('tr');
             //data 屬性不區分大小寫 !!
@@ -75,18 +58,40 @@ _me = {
         for (var i = 0; i < rowLen; i++) {
             //check existed
             var row = rows[i];
-            if (_me.divUrBody.find('[value=' + row.UserId + ']').length > 0)
+            if (this.divUrBody.find('[value=' + row.UserId + ']').length > 0)
                 continue;
 
-            var tr = $(Mustache.render(_me.tplUr, row));
+            var tr = $(Mustache.render(this.tplUr, row));
             _Form.loadRow(tr, row);
-            _me.mUserRole.setNewIdByBox(tr);
-            _me.divUrBody.append(tr);
+            this.mUserRole.setNewIdByBox(tr);
+            this.divUrBody.append(tr);
         }
 
         //remove checked for next usage, hide modal
-        _me.modalUser.find(':checkbox:checked').prop('checked', false);
-        _Modal.hide(_me.modalUser);
+        this.modalUser.find(':checkbox:checked').prop('checked', false);
+        _Modal.hide(this.modalUser);
+    }
+}
+_vo = new XpRoleVo();
+var vo = _vo as XpRoleVo;
+
+_me = {
+    init: function () {        
+        //datatable config
+        var config = {
+            columns: [
+                { data: 'Name' },
+                { data: '_Fun' },
+            ],
+            columnDefs: [
+				{ targets: [1], render: function (data, type, full, meta) {
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                }},
+            ],
+        };
+
+        //initial
+        new CrudR(config, [null, _vo.mUserRole, _vo.mRoleProg]);
     },
 
 }; //class

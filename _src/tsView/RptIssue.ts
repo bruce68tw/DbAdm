@@ -1,5 +1,23 @@
 ﻿//import { CrudR, _Date, _iDate } from "@baseJs";
 
+_vo = {
+    onNowWeek() {
+        var box = _me.rform;
+        _me.crudR.onResetFind();   //reset
+        _iDate.set('WorkDate', _Date.uiWeekMonday(), box);
+        _iDate.set('WorkDate2', _Date.uiWeekFriday(), box);
+        _me.crudR.onFind();
+    },
+
+    onNowMonth() {
+        var box = _me.rform;
+        _me.crudR.onResetFind();   //reset
+        _iDate.set('WorkDate', _Date.uiMonthDay1(), box);
+        _iDate.set('WorkDate2', _Date.uiMonthDayLast(), box);
+        _me.crudR.onFind();
+    },
+};
+
 _me = {
     init: function () {
         //datatable config
@@ -15,23 +33,5 @@ _me = {
 
         //initial
         new CrudR(config);
-
     },
-
-    onNowWeek: function () {
-        var box = _me.rform;
-        _me.crudR.onResetFind();   //reset
-        _iDate.set('WorkDate', _Date.uiWeekMonday(), box);
-        _iDate.set('WorkDate2', _Date.uiWeekFriday(), box);
-        _me.crudR.onFind();
-    },
-
-    onNowMonth: function () {
-        var box = _me.rform;
-        _me.crudR.onResetFind();   //reset
-        _iDate.set('WorkDate', _Date.uiMonthDay1(), box);
-        _iDate.set('WorkDate2', _Date.uiMonthDayLast(), box);
-        _me.crudR.onFind();
-    },
-
 }; //class

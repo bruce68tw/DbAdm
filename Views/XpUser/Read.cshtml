@@ -3,15 +3,15 @@
     <div id="divRead">
         <form id='formRead' class='x-form'>
             <div class="row">
-                @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "帳號", Fid = "Account", MaxLen = 20, InRow = true })
-                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true })
+                <vc:xi-text dto='new() { Title = "帳號", Fid = "Account", MaxLen = 20, InRow = true }' />
+                <vc:xg-find-tbar dto='new() { HasReset = true }' />
             </div>
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "用戶名稱", Fid = "Name", MaxLen = 20 })
-            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "部門", Fid = "DeptId", Rows = ViewBag.Depts })
+            <vc:xi-text dto='new() { Title = "用戶名稱", Fid = "Name", MaxLen = 20 }' />
+            <vc:xi-select dto='new() { Title = "部門", Fid = "DeptId", Rows = ViewBag.Depts }' />
         </form>
 
         <div class='x-btns-box'>
-            @await Component.InvokeAsync("XgCreate")
+            <vc:xg-create />
         </div>
         <table id="tableRead" class="table x-table" cellspacing="0">
             <thead>
@@ -29,29 +29,25 @@
 
     <div id="divEdit" class="d-none">
         <form id='eform' class='x-form mb-0'>
-            @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "帳號", Fid = "Account", Required = true, MaxLen = 20 })
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "用戶名稱", Fid = "Name", Required = true, MaxLen = 20 })
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "員工編號", Fid = "EmpNo", Required = true, MaxLen = 10 })
-            @*
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = R["Pwd"].Value, Fid = "Pwd", IsPwd = true, MaxLen = 32 })
-            *@
-            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "部門名稱", Fid = "DeptId", Rows = ViewBag.Depts })
-            @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "資料狀態", Fid = "Status", Label = "啟用" })
+            <vc:xi-hide dto='new() { Fid = "Id" }' />
+            <vc:xi-text dto='new() { Title = "帳號", Fid = "Account", Required = true, MaxLen = 20 }' />
+            <vc:xi-text dto='new() { Title = "用戶名稱", Fid = "Name", Required = true, MaxLen = 20 }' />
+            <vc:xi-text dto='new() { Title = "員工編號", Fid = "EmpNo", Required = true, MaxLen = 10 }' />
+            <vc:xi-select dto='new() { Title = "部門名稱", Fid = "DeptId", Rows = ViewBag.Depts }' />
+            <vc:xi-check dto='new() { Title = "資料狀態", Fid = "Status", Label = "啟用" }' />
         </form>
 
         <form class='x-form'>
             <div class='row'>
                 <div class='col-md-2 x-label'>角色清單</div>
                 <div class='col-md-8 x-input'>
-                    <!-- table for control rows column has same width -->
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tbody>
                             <tr>
                                 <td id="divRoles">
                                     @foreach (IdStrDto row in ViewBag.Roles)
                                     {
-                                        @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = row.Id, Value = row.Id, Label = row.Str })
+                                        <vc:xi-check dto='new() { Fid = row.Id, Value = row.Id, Label = row.Str }' />
                                     }
                                 </td>
                             </tr>

@@ -148,7 +148,7 @@ class _Edit {
     /**
      * check a new row or not, parseInt(ABC123) will get int, cannot use it!!
      * param row {json}
-     * param key {string}
+     * param kid {string} key fid
      * return {bool}
      */
     static isNewRow(row: Json, kid: string): boolean {

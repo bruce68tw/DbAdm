@@ -1,17 +1,3 @@
-import {
-  InputTypeEstr,
-  MouseEstr,
-  UiItemTypeEstr,
-  _Ajax,
-  _Array,
-  _Input,
-  _Json,
-  _Obj,
-  _Str,
-  _Tool,
-  _Var,
-  DragItemDto
-} from "@baseJs";
 class UiView {
   //建構子不能執行非同步
   constructor(uiMany, ftWorkArea) {
@@ -855,7 +841,5 @@ class UiView {
   	*/
   //#endregion
 }
-export {
-  UiView as default
-};
+window.UiView = UiView;
 //# sourceMappingURL=UiView.js.map

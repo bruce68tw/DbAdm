@@ -1,19 +1,3 @@
-import UiView from "./UiView.js";
-import {
-  MouseEstr,
-  UiItemTypeEstr,
-  InputTypeEstr,
-  _Array,
-  _Form,
-  _Fun,
-  _iSelect,
-  _iText,
-  _Json,
-  _Modal,
-  _Obj,
-  _Str,
-  _Tool
-} from "@baseJs";
 class UiMany {
   /**
    * @param {string} ftWorkArea
@@ -288,7 +272,7 @@ class UiMany {
       */
   _addRB() {
     let info = {
-      RowType: _iSelect.get("_RowType", window._me.eform0)
+      RowType: _iSelect.get("_RowType", _me.eform0)
     };
     return this._mItemAddRow(UiItemTypeEstr.RowBox, info);
   }
@@ -472,7 +456,5 @@ class UiMany {
       */
   //#endregion
 }
-export {
-  UiMany as default
-};
+window.UiMany = UiMany;
 //# sourceMappingURL=UiMany.js.map

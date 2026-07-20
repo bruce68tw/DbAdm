@@ -1,7 +1,7 @@
 ﻿//import { _Ajax, _Tool, _iText } from "@baseJs";
 
-_me = {
-    onSave: async function () {
+_vo = {
+    async onSave() {
         var form = $('#eform');
         var oldPwd = _iText.get('OldPwd', form);
         var newPwd = _iText.get('NewPwd', form);

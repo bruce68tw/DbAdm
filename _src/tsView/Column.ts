@@ -1,7 +1,7 @@
 ﻿//import { CrudR } from "@baseJs";
 
 _me = {
-    init: function () {
+    init() {
         var config = {
             //修改:查詢結果欄位,與後端read service對應, 這是 Datatables config
             columns: [

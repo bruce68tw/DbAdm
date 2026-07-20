@@ -33,7 +33,7 @@
     <div class="row">
         <!-- left columns -->
         <div class="col-md-5">
-            <vc:xi-select dto='new() { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols, FnOnChange = "_me.onChangeProject" }' />
+            <vc:xi-select dto='new() { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols, FnOnChange = "_vo.onChangeProject" }' />
             <vc:xi-text dto='new() { Title = "功能代碼", Fid = "ProgCode", MaxLen = 30, Required = true, Cols = cols }' />
             <vc:xi-text dto='new() { Title = "功能名稱", Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols }' />
             <vc:xi-check dto='new() { Title = "拖拉編輯畫面", Fid = "IsUi", Label = "是", Cols = cols }' />
@@ -70,8 +70,8 @@
 <!-- find buttons -->
 <div class="x-btns-box">
     <span class="x-span-label">查詢條件欄位</span>
-    @await Component.InvokeAsync("XgAddRow", "_me.onQitemAdd")
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onOpenItem' data-args='Q'>選取欄位</button>
+    @await Component.InvokeAsync("XgAddRow", "_vo.onQitemAdd")
+    <button type='button' class='btn btn-secondary' data-onclick='_vo.onOpenItem' data-args='Q'>選取欄位</button>
 </div>
 
 <!-- find field -->
@@ -101,8 +101,8 @@
 <!-- query result buttons -->
 <div class="x-btns-box">
     <span class="x-span-label">查詢結果欄位</span>
-    @await Component.InvokeAsync("XgAddRow", "_me.onRitemAdd")
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onOpenItem' data-args='R'>選取欄位</button>
+    @await Component.InvokeAsync("XgAddRow", "_vo.onRitemAdd")
+    <button type='button' class='btn btn-secondary' data-onclick='_vo.onOpenItem' data-args='R'>選取欄位</button>
 </div>
 
 <!-- query result fields -->
@@ -126,10 +126,10 @@
 <!-- Table edit form nav/tab/buttons -->
 <div class="x-btns-box">
     <span class="x-span-label">編輯畫面</span>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtAdd'>新增</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtDelete'>刪除</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtLeft'>左移</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_me.onEtRight'>右移</button>
+    <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtAdd'>新增</button>
+    <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtDelete'>刪除</button>
+    <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtLeft'>左移</button>
+    <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtRight'>右移</button>
 </div>
 <ul class="nav nav-tabs" id="navEtable"></ul>
 <div class="tab-content" id="tabEtable"></div>
@@ -153,10 +153,10 @@
                     </div>
                     <div class="col-md-6">
                         @* 動態讀取下拉欄位資料來源 *@
-                        @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "TableId", FnOnChange = "_me.onChangeItemTable" })
+                        @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "TableId", FnOnChange = "_vo.onChangeItemTable" })
                     </div>
                     <div class="col-md-4 x-right">
-                        <button type="button" class="btn btn-primary" data-onclick="_me.onItemModalOk">確定</button>
+                        <button type="button" class="btn btn-primary" data-onclick="_vo.onItemModalOk">確定</button>
                     </div>
                 </div>
 
@@ -197,7 +197,7 @@
         <td class="x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "PosGroup" })</td>
         <td class="x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Cols" })</td>
         <td class="x-center x-w60">@await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Fid = "IsFind2" })</td>
-        <td class="x-center x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mQitem" })</td>
+        <td class="x-center x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_vo.mQitem" })</td>
     </tr>
 </script>
 
@@ -211,14 +211,14 @@
         <td>@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Name" })</td>
         <td class="x-w100">@await Component.InvokeAsync(XiEstr.Int, new XiIntDto { Fid = "Width" })</td>
         <td>@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Fid = "RitemType", Rows = ViewBag.RitemTypes, AddEmpty = false, Value = "0" })</td>
-        <td class="text-center x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mRitem" })</td>
+        <td class="text-center x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_vo.mRitem" })</td>
     </tr>
 </script>
 
 <!-- template: edit form nav, use index to connect nav tab -->
 <script id="tplNavEtable" type="text/template">
     <li class='nav-item' data-index='{{Index}}'>
-        <a class='nav-link' data-bs-toggle='tab' href='#divEtable{{Index}}' data-onclick='_me.onEtNav' data-args='{{Index}}'>
+        <a class='nav-link' data-bs-toggle='tab' href='#divEtable{{Index}}' data-onclick='_vo.onEtNav' data-args='{{Index}}'>
         </a>
     </li>
 </script>
@@ -233,7 +233,7 @@
 
             <div class="row">
                 <div class="col-md-5">
-                    @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "資料表", Fid = "TableId", Required = true, Cols = cols, FnOnChange = "_me.onChangeNowTable", EventArgs = "{{Index}}" })
+                    @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "資料表", Fid = "TableId", Required = true, Cols = cols, FnOnChange = "_vo.onChangeNowTable", EventArgs = "{{Index}}" })
                     @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "主鍵Id", Fid = "PkeyFid", MaxLen = 10, Required = true, Cols = cols })
                     @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "外鍵Id", Fid = "FkeyFid", MaxLen = 10, Cols = cols, TitleTip = "2nd Table則為必填" })
                     @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "自動Id長度", Fid = "AutoIdLen", Rows = ViewBag.AutoIdLens, Cols = cols })
@@ -248,7 +248,7 @@
 
         <div class="x-btns-box">
             <span class="x-span-label">編輯欄位</span>
-            <button type='button' class='btn btn-secondary' data-onclick='_me.onOpenItem' data-args='E'>選取欄位</button>
+            <button type='button' class='btn btn-secondary' data-onclick='_vo.onOpenItem' data-args='E'>選取欄位</button>
         </div>
         <form class="xu-form2">
             <table class="table x-table x-no-hline" cellspacing="0">
@@ -301,7 +301,7 @@
         <td class="x-w60">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "PosGroup" })</td>
         <td class="xu-layout x-w80">@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Fid = "Cols" })</td>
         <td class="xu-width x-w80">@await Component.InvokeAsync(XiEstr.Int, new XiIntDto { Fid = "Width" })</td>
-        <td class="text-center  x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_me.mEitem" })</td>
+        <td class="text-center  x-w100">@await Component.InvokeAsync("XgDeleteUpDown", new { mName = "_vo.mEitem" })</td>
     </tr>
 </script>
 
