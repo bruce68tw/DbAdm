@@ -1,4 +1,7 @@
-﻿
+﻿$(function () {
+    _me.init();
+});
+
 _me = {
     init() {
         var config = {

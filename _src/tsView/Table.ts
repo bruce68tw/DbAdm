@@ -1,4 +1,8 @@
-﻿_vo = {
+﻿$(function () {
+    _me.init();
+});
+
+_vo = {
     mCol: new EditMany('Id', 'tbodyCol', 'tplCol', 'tr'),
 
     //generate Word document

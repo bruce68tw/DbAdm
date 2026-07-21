@@ -18,7 +18,7 @@ class _Prog {
                 const progPath = _Leftmenu.getMenuPath(activeLink); //從功能表找功能名稱
                 const progCode = _Prog.urlToProgCode(nowUrl);
                 _Prog.storePathAndCode(progPath, progCode);
-                await _Prog.loadProgCodeA();
+                //await _Prog.loadProgCodeA();
             }
 
             _Prog.initPath = _Prog.progPath;
@@ -26,6 +26,7 @@ class _Prog {
         }
     }
 
+    /* 停用自動載入功能js, 改成在 view 指定
     static async loadProgCodeA() {
         const progCode = _Prog.progCode;
         if (_Str.notEmpty(progCode))
@@ -42,6 +43,7 @@ class _Prog {
             }
         }
     }
+    */
 
     static setBorder(status: boolean): void {
         const prog = $('.x-prog');

@@ -1,3 +1,6 @@
+$(function () {
+    _me.init();
+});
 class GenCrudVo {
     TableId = 'TableId';    //column name of TableId for many forms
     Active = 'active';      //active class

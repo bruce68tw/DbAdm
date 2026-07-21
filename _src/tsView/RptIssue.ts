@@ -1,4 +1,8 @@
-﻿_vo = {
+﻿$(function () {
+    _me.init();
+});
+
+_vo = {
     onNowWeek() {
         var box = _me.rform;
         _me.crudR.onResetFind();   //reset

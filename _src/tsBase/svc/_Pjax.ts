@@ -31,8 +31,8 @@ class _Pjax {
         docu.on('pjax:success', async function (event: any, data: any, status: any, xhr: any, opts: any) {
             const json = _Str.toJson(data);
             if (json == null) {
-                //case ok ok
-                await _Prog.loadProgCodeA();
+                //case ok
+                //await _Prog.loadProgCodeA();
             } else {
                 //只顯示錯誤訊息, 不處理欄位 validation error
                 const errMsg = _Ajax.resultToErrMsg(json);

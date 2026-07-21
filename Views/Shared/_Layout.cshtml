@@ -29,6 +29,7 @@
     <!-- 防止 CSRF  -->
     <meta name="csrf-token" content="@(Antiforgery.GetAndStoreTokens(Context).RequestToken)" />
 
+    @*
     <script type="importmap" nonce="@nonce">
     {
       "imports": {
@@ -36,6 +37,7 @@
       }
     }
     </script>
+    *@
 
     <!-- 1.load css -->
     <link rel="stylesheet" href="~/lib.min.css?v=@libVer" />

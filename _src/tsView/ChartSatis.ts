@@ -1,4 +1,8 @@
-﻿_vo = {
+﻿$(function () {
+    _me.init();
+});
+
+_vo = {
     //on select bao item
     async onFind() {
         var data = _Json.toStr(_Form.toRow(_me.rform));

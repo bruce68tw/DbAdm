@@ -1,4 +1,8 @@
-﻿_me = {
+﻿$(function () {
+    _me.init();
+});
+
+_me = {
     init: function () {
         var config = {
             columns: [

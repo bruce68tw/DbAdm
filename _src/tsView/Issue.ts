@@ -1,4 +1,7 @@
-﻿class IssueVo {
+﻿$(function () {
+    _me.init();
+});
+class IssueVo {
     issueId = '';        //要追踪或取消的Issue.Id
     hasWatchId = false;     //是否有IssueWatch.Id
     mIssueFile = new EditMany('Id', 'tbodyIssueFile', 'tplIssueFile', 'tr');

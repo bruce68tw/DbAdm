@@ -1,3 +1,6 @@
+$(function() {
+  _me.init();
+});
 class GenCrudVo {
   constructor() {
     this.TableId = "TableId";

@@ -1,4 +1,8 @@
-﻿_vo = {
+﻿$(function () {
+    _me.init();
+});
+
+_vo = {
     mRoleProg: new EditMany('Id', 'tbodyRoleProg', 'tplRoleProg', 'tr'),
 }
 

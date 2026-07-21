@@ -1,4 +1,7 @@
-﻿class XpRoleVo {
+﻿$(function () {
+    _me.init();
+});
+class XpRoleVo {
     mUserRole = new EditMany('Id', 'tbodyUserRole', 'tplUserRole', 'tr');
     mRoleProg = new EditMany('Id', 'tbodyRoleProg', 'tplRoleProg', 'tr');
 

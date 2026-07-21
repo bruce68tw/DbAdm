@@ -1,4 +1,6 @@
-﻿<vc:xg-prog-path />
+﻿@* 使用 esm, 否則 class 會重複載入失效，後面加時間亂數才能觸發 document ready !! *@
+<script type="module" nonce="@_Fun.Nonce" src="~/jsView/Column.js@_Fun.Ver()"></script>
+<vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">
         <form id='formRead' class='x-form mb-0'>

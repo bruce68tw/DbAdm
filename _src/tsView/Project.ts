@@ -1,4 +1,7 @@
-﻿class ProjectVo {
+﻿$(function () {
+    _me.init();
+});
+class ProjectVo {
     prjId: string = '';
 
     //import excel into Db

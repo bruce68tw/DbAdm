@@ -1,4 +1,8 @@
-﻿_vo = {
+﻿$(function () {
+    _me.init();
+});
+
+_vo = {
     modalImport: $('#modalImport'),
 
     //on open import modal
