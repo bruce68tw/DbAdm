@@ -1,5 +1,5 @@
 //resource for js base component
-export default {
+_BR = {
 
     //=== moment.js convert these to UI format ===
     MmUiDateFmt: 'YYYY/MM/DD',          //match bootstrap-datepicker.js format property

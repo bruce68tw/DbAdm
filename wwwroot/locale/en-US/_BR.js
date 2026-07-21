@@ -1,5 +1,5 @@
 //resource for js base component
-var _BR = {
+_BR = {
 
     //=== moment.js ymd format ===
     MmUiDateFmt: 'MMM-D-YYYY',          //match datepicker format

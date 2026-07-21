@@ -76,17 +76,30 @@ class _Fun {
     }
 
     static async setLocaleA(code: string) {
+        /*
         const module = await import(
             `/locale/${code}.min.js`
         );
-
         window._BR = module.default;
+        */
+
+        await _Fun.loadScriptA(`/locale/${code}.min.js`);
 
         // Dayjs locale
         dayjs.locale(code.toLowerCase());
 
         // bootstrap-datepicker
         //$.fn.datepicker.dates[code] = module.datepicker;
+    }
+
+    static async loadScriptA(url: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = url;
+            script.onload = () => resolve();
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
     }
 
     static async onHelloA(): Promise<void> {

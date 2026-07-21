@@ -20,7 +20,7 @@ rem(常用)
 rem set toNames=DbAdm GroupProg AdoptAdm TplMvc
 set fromName=DbAdm
 rem set toNames=Early GroupProg AdoptAdm TplMvc HrAdm
-set toNames=AdoptAdm
+set toNames=Early
 
 set dirPrj=d:\_project
 set fromPrj=%dirPrj%\%fromName%
@@ -36,7 +36,7 @@ for %%a in (%toNames%) do (
     set toW3=!toPrj!\wwwroot
 
 	rem copy src
-	robocopy %fromSrc% !toSrc! *.ts
+	rem robocopy %fromSrc% !toSrc! *.ts
 	robocopy %fromSrc%\cssBase !toSrc!\cssBase *
 	robocopy %fromSrc%\cssLib !toSrc!\cssLib *
 	robocopy %fromSrc%\jsLib !toSrc!\jsLib *
@@ -48,6 +48,8 @@ for %%a in (%toNames%) do (
 	robocopy %fromW3%\locale !toW3!\locale * /E
 	
 	rem copy 組態單檔
+	copy /Y %fromSrc%\forBoth.ts !toSrc!\
+	copy /Y %fromSrc%\forEdit.d.ts !toSrc!\
 	copy /Y %fromPrj%\gulpfile.js !toPrj!\
 	copy /Y %fromPrj%\tsconfig.json !toPrj!\
 	

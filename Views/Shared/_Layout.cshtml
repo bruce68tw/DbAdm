@@ -41,24 +41,24 @@
     <link rel="stylesheet" href="~/lib.min.css?v=@libVer" />
     @RenderSection("styles", required: false)
 
-    <!-- 2.load lib js, not module!! -->
+    <!-- 2.load lib js -->
     <script nonce="@nonce" src="~/lib.min.js?v=@libVer"></script>
 
     <!-- 3.load my site js(debug/production mode) !! -->
     <link rel="stylesheet" href="~/base.min.css?v=@myVer" />
-    <script type="module" nonce="@nonce" src="~/base.min.js?v=@myVer"></script>
+    <script nonce="@nonce" src="~/base.min.js?v=@myVer"></script>
 
     <!-- 配色 -->
     <link rel="stylesheet" asp-href-include="~/cssView/_themeLight.css" />
     <link id="xgTheme" rel="stylesheet" asp-href-include="~/cssView/_xgGrey.css" />
 
     <!-- 4.load local js -->
-    <script type="module" nonce="@nonce" src="~/locale/@(locale).min.js?v=@myVer"></script>
+    <script nonce="@nonce" src="~/locale/@(locale).min.js?v=@myVer"></script>
 
     @RenderSection("scripts", required: false)
 
     <!-- 5.initial -->
-    <script type="module" nonce="@nonce">
+    <script nonce="@nonce">
         $(function () {
             _Fun.init('@locale');
             _Fun.pageRows = 20;
