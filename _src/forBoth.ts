@@ -86,7 +86,7 @@ import "./tsBase/svc/FlowView";
 import "./tsBase/svc/Page";
 
 //加上 tsView
-import "./forBuild2";
+import "./forBoth2";
 
 //必須自行定義
 type Json = Record<string, any>;
