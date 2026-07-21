@@ -84,7 +84,7 @@ namespace DbAdm.Services
             var ms = _Word.TplRowsToMs(tplPath, tables);
 
             //8.download file
-            await _FunApi.ExportByStreamA(ms!, "Tables.docx");
+            await _Fun2.ExportByStreamA(ms!, "Tables.docx");
             return true;
 
         lab_error:

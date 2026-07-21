@@ -1,5 +1,5 @@
-﻿@* 使用 esm, 否則 class 會重複載入失效，後面加時間亂數才能觸發 document ready !! *@
-<script type="module" nonce="@_Fun.Nonce" src="~/jsView/Column.js@_Fun.Ver()"></script>
+﻿@* 使用 esm, 否則 class 重複載入時會失敗，另外在後面加時間亂數觸發 document ready !! *@
+<script @_Fun3.Script("Column")></script>
 <vc:xg-prog-path />
 <div class="x-prog">
     <div id="divRead">

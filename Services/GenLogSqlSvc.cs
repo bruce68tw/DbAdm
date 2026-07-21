@@ -103,7 +103,7 @@ namespace DbAdm.Services
 
             //echo stream to file
             writer.Flush();
-            await _FunApi.ExportByStreamA(ms, tables[0].DbName + "_TranLog.sql");
+            await _Fun2.ExportByStreamA(ms, tables[0].DbName + "_TranLog.sql");
             return true;
             #endregion
 

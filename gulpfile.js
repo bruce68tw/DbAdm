@@ -60,8 +60,8 @@ async function doTsView() {
         await esbuild.build({
             entryPoints: [`${dir}/${file}`],
             //temp minify to false
-            minify: false,
-            //minify: true,
+            //minify: false,
+            minify: true,
             bundle: false,  //重要!! (false)single file, 如果true會merge base
             treeShaking: false,
             sourcemap: true,
