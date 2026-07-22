@@ -20,7 +20,7 @@ rem(常用)
 rem set toNames=DbAdm GroupProg AdoptAdm TplMvc
 set fromName=DbAdm
 rem set toNames=Early GroupProg AdoptAdm TplMvc HrAdm
-set toNames=AdoptAdm
+set toNames=HrAdm
 
 set dirPrj=d:\_project
 set fromPrj=%dirPrj%\%fromName%
@@ -35,7 +35,7 @@ for %%a in (%toNames%) do (
 	set toSrc=!toPrj!\_src
     set toW3=!toPrj!\wwwroot
 
-	rem copy src
+	rem copy src, 會自動建立目錄
 	rem robocopy %fromSrc% !toSrc! *.ts
 	robocopy %fromSrc%\cssBase !toSrc!\cssBase *
 	robocopy %fromSrc%\cssLib !toSrc!\cssLib *
@@ -45,6 +45,7 @@ for %%a in (%toNames%) do (
 	rem copy wwwroot
 	robocopy %fromW3%\ext !toW3!\ext *
 	robocopy %fromW3%\font !toW3!\font *
+	robocopy %fromW3%\cssView !toW3!\cssView _*.*
 	robocopy %fromW3%\locale !toW3!\locale * /E
 	
 	rem copy 組態單檔

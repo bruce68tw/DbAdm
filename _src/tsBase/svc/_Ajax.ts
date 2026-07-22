@@ -1,8 +1,3 @@
-/*
-import AjaxDto from "../dto/AjaxDto";
-import ErrorRowDto from "../dto/ErrorRowDto";
-import CrudE from "./CrudE";
-*/
 class _Ajax {
     /** * ajax return json
      * param url {string} action url

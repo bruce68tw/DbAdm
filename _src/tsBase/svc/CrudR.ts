@@ -1,6 +1,3 @@
-//todo
-//declare const window: any;
-
 /**
  * 控制 CRUD 查詢(含編輯)畫面
  * 說明:
@@ -22,10 +19,11 @@
  *   dt
  */
 class CrudR {
+    //global
     temp: Json;
     divRead: JQuery;
     dt: Datatable;
-    hasDraft: boolean;
+    hasDraft: boolean;  //是否有草稿功能
 
     private _updName: string;
 
@@ -447,9 +445,9 @@ class CrudR {
      * fid {string} 
      */
     //async onDeleteRowsA(box, fid) {
-    async onDeleteRowsA(box: any): Promise<void> {
+    async onDeleteRowsA(box: JQuery): Promise<void> {
         //get selected keys
-        var keys: any[] = _iCheck.getCheck0Values(box);
+        var keys: StrNum[] = _iCheck.getCheck0Values(box);
         if (keys.length === 0) {
             _Tool.msg(_BR.PlsSelectDeleted);
             return;
@@ -457,7 +455,7 @@ class CrudR {
 
         //刪除多筆資料, 後端固定呼叫 DeleteByKeys()
         //_temp.data = { keys: keys }
-        var me: this = this;
+        var me = this;
         _Tool.ans(_BR.SureDeleteSelected, async function () {
             await _Ajax.getStrA('DeleteByKeys', { keys: keys }, function (msg: string) {
                 _Tool.alert(_BR.DeleteOk);

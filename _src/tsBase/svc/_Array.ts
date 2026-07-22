@@ -1,4 +1,3 @@
-//class _Array {
 class _Array {
     /**
      * find array

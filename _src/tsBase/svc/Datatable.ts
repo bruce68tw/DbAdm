@@ -1,37 +1,48 @@
+//Datatable的t為小寫, jquery DataTables 的t為大寫
 class Datatable {
-    dt: any;
+    //jquery datatables class
+    dt: DataTables.Api; 
     findJson: Json;
-    recordsFiltered: number;
-    defaultShowOk: boolean;
+    //found count, -1 for recount, name map to DataTables
+    recordsFiltered = -1;
+    //whethor show find ok msg, default value
+    defaultShowOk = true;
     showWork: boolean;
-    private _fnAfterFind: ((result: any) => void) | undefined;
-    private _keepStart: boolean;
-    private _start: number;
+
+    //查詢成功後執行, 傳入result, 如果有指定fnOk
+    private _fnAfterFind?: (result: any) => void;
+    //keep start row idx, false(find), true(save reload)
+    private _keepStart = false;
+    //now start row idx, coz ajax.dataSrc() always get 0 !!
+    private _start = 0;
     private _nowShowOk: boolean;
 
     constructor(
+        //datatable filter
         selector: string,
+        //backend action url
         url: string,
+        /**
+         * 自定欄位如下：
+         *   showWork: {bool} default false, 查詢時是否顯示作業中...
+         */
         dtConfig: Json,
+        //find condition when initial
         findJson?: Json,
+        //callback after query ok, if empty then show successful msg
         fnOk?: (result: any) => any[],
+        //datatable toolbar html for extra button for 客製化 toolbar
         tbarHtml?: string,
+        //查詢成功後執行, 傳入result, 如果有指定fnOk
         fnAfterFind?: (result: any) => void
     ) {
         //property 
-        this.dt = null;             //jquery datatables object
+        //this.dt = null;             //jquery datatables object
         this.findJson = findJson;   //find condition
-        this.recordsFiltered = -1;  //found count, -1 for recount, name map to DataTables
-        this.defaultShowOk = true;  //whethor show find ok msg, default value
+        //this.recordsFiltered = -1;  //found count, -1 for recount, name map to DataTables
+        //this.defaultShowOk = true;  //whethor show find ok msg, default value
         this.showWork = (dtConfig && dtConfig.showWork == null) ? false : dtConfig.showWork;
         this._fnAfterFind = fnAfterFind;
-
-        //private
-        //keep start row idx, false(find), true(save reload)
-        this._keepStart = false;
-
-        //now start row idx, coz ajax.dataSrc() always get 0 !!
-        this._start = 0;
 
         //(now)show find ok msg or not
         this._nowShowOk = this.defaultShowOk;
@@ -71,7 +82,7 @@ t
             //call after dataTables initialize
             //1.add toolbar button list if need
             //2.change find action: find after enter !!
-            initComplete: function (this: Datatable, settings: any, json: any) {
+            initComplete: function (this: Datatable, settings: any, json: Json) {
                 //1.toolbar
                 if (tbarHtml)
                     $(this.dt).closest('.tableRead_wrapper').find('div.toolbar').html(tbarHtml);
@@ -83,13 +94,11 @@ t
                     filter.off();
 
                     //bind key enter for quick search
-                    var api = (this.dt).api();
-                    filter.on('keyup', function (this: any, e: any) {
+                    const me = this;
+                    filter.on('keyup', function (this: HTMLInputElement, e: JQuery.KeyUpEvent) {
                         if (e.key === 'Enter') {
-                            this.resetCount();
-
-                            //run search
-                            api.search(this.value).draw();     //must draw() !!
+                            me.resetCount();
+                            me.dt.search(this.value).draw();     //must draw() !!
                         }
                     });
                 } else {
@@ -189,7 +198,7 @@ t
         }
 
         //add data-rwd-th if need
-        var dt = $(selector);
+        var obj = $(selector);
         /*
         if (_Fun.isRwd) {
             //讀取多筆資料 header (set this._rwdTh[])
@@ -206,17 +215,17 @@ t
         }
         */
 
-        this.dt = (dt as any).DataTable(config);
+        this.dt = obj.DataTable(config);
         // 在 settings 物件掛自訂屬性
         this.dt.settings()[0].showWork = this.showWork;
 
         //before/after ajax call, show/hide waiting msg
-        dt.on('preXhr.dt', function (e: any, settings: any, data: any) {
+        obj.on('preXhr.dt', function (e: any, settings: any, data: any) {
             if (settings.showWork)
                 _Fun.block();
         });
 
-        dt.on('xhr.dt', function (e: any, settings: any, data: any) {
+        obj.on('xhr.dt', function (e: any, settings: any, data: any) {
             if (settings.showWork)
                 _Fun.unBlock();
         });
@@ -234,9 +243,8 @@ t
      * find rows
      * param findJson {json} find condition
      */
-    find(findJson: any): void {
+    find(findJson: Json): void {
         this.findJson = findJson;
-        //this.findStr = findStr || '';
         this.resetCount();   //recount first
 
         //trigger dataTables search event
