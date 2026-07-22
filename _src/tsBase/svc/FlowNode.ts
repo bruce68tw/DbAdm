@@ -1,3 +1,19 @@
+/**
+  流程節點
+  屬性:
+    self: this
+    flowView: FlowView object
+    svg: flowView.svg
+    json: node json, 欄位與後端XgFlowE相同: Id(不變), NodeType(不變), Name, PosX, PosY, Width, Height
+    elm: svg group element(與 html element不同)
+    boxElm: border element
+    textElm: text element
+    lines: 進入/離開此節點的流程線
+    width: width
+    height: height
+  param flowView {object} FlowView
+  param json {json} 流程節點資料
+ */
 class FlowNode {
     private readonly MinWidth: number = 80;
     private readonly MinHeight: number = 42;

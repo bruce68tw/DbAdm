@@ -97,6 +97,3 @@ class _iCheck extends _iBase {
     }
 }
 window._iCheck = _iCheck;
-
-//??
-//Object.assign(_iCheck, _iBase);

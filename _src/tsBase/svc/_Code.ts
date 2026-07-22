@@ -1,6 +1,3 @@
-//import IdStrDto from "../dto/IdStrDto";
-//import IdStrExtDto from "../dto/IdStrExtDto";
-
 class _Code {
     //add empty option
     static addEmptyOpt(rows: IdStrDto[] = []): IdStrDto[] {

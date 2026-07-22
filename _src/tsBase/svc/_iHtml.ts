@@ -159,6 +159,3 @@ class _iHtml extends _iBase {
     */
 }
 window._iHtml = _iHtml;
-
-//
-//Object.assign(_iHtml, _iBase);

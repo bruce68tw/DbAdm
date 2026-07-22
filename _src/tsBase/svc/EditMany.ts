@@ -1,3 +1,17 @@
+/**
+ * 多筆編輯畫面(包含1對1), 全部屬性皆為 private !!
+ * 注意:
+ *   如果有radio, 系統會自動name後面增"_x", 才能正常設定checkec狀態
+ *   set data-fkeyFid when save
+ *   函數名稱後面ByRsb(表示by RowsBox)為擴充原本函數, 參數rowsBox空白則為this.RowsBox
+ * 公用屬性:(同EditOne)
+ * 自定函數:
+ *   void fnLoadRows(rows)(old: fnLoadJson(json))：show json to form, use loadJson instead of loadRows for more situation !!
+ *   json fnGetUpdJson(upKey)：get updated json by form
+ *   bool fnValid()：validate check
+ *   void fnReset()：reset
+ * @class EditMany
+ */
 class EditMany {
     //private [_Edit.Childs]: any = null;
 
@@ -34,6 +48,23 @@ class EditMany {
     fileLen: number;
     fileFids: string[];
 
+    /**
+     * @constructor
+     * initial & set instance variables (this.validator by _valid.init())
+     * @param kid {string} pkey field id(single key)
+     * @param rowsBoxId {string} (optional) rows box id,
+     *   if empty, you must write functions: fnLoadRows、fnGetUpdJson、fnValid、fnReset，
+     *     新增一筆時設定newId
+     * @param rowTplId {string} (need for base mode) row template id, one mode 不可空白, 
+     *   1.if empty, it will log error when call related function.
+     *   2.system get fid-type from this variables
+     *   3.called by singleFormLoadRow、loadRowsByRsb、_renderRow
+     * @param rowFilter {string} (need for base mode) jQuery filter for find row object
+     *   1.if empty, it will log error when call related function.
+     *   2.inside element -> row(onDeleteRow),
+     *   3.rowsBox -> row(getUpdRows)
+     * @param sortFid {string} (optional) sort fid for front-side sorting function
+     */
     constructor(kid: string, rowsBoxId?: string, rowTplId?: string, rowFilter?: string, sortFid?: string) {
         this.kid = kid;
         this.rowFilter = rowFilter || '';

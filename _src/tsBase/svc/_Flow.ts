@@ -1,13 +1,3 @@
-/*
-export interface SignRow {
-    NodeName: string;
-    SignerName: string;
-    GetTime: string;
-    SignStatusName: string;
-    Note: string;
-}
-*/
-
 class _Flow {
     static showSignRows(tbody: any, rows: Json[] | null): void {
         tbody.empty();

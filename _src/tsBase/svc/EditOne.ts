@@ -44,6 +44,14 @@ class EditOne {
     fileLen: number;
     fileFids: string[];
 
+    /**
+     * @constructor
+     * 只能有一個 constructor, initial & and instance variables (this.validator is by _valid.init())
+     * @param kid {string} (default 'Id') pkey field id for getKey value & getUpdRow,
+     *   must existed or will set systemError variables !!
+     * @param eformId {string} (default 'eform') must existed or will set systemError variables !!
+     * note!! if these two parameters not Id/eform, must new EditOne() and set them !!
+     */
     constructor(kid?: string, eformId?: string, childs?: OneMany[]) {
         this._childs = childs;
 

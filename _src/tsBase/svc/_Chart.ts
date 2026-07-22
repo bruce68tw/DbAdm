@@ -1,5 +1,3 @@
-//import ChartDto from "../dto/ChartDto";
-
 class _Chart {
     //彩虹顏色
     static rainbowColors: string[] = [

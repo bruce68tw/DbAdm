@@ -1,14 +1,3 @@
-/*
-export interface DtColDef {
-    className?: string;
-    targets?: string;
-    type?: string;
-    orderable?: boolean;
-    orderSequence?: string[];
-    [key: string]: any;
-}
-*/
-
 class _Fun {
     // #region constant (big camel) ===
     static readonly MmDateFmt = 'YYYY/MM/DD';

@@ -8,12 +8,6 @@
  * void fnAfterMoveLineEnd(oldNode, newNode): after drop line end point
  */
 
-// 假設 NodeTypeEstr, MouseEstr, _str, SVG, FlowNode, FlowLine 為外部定義或引入
-// declare var NodeTypeEstr: any;
-// declare var MouseEstr: any;
-// declare var _str: any;
-// declare var SVG: any;
-
 class FlowView {
     isEdit: boolean = false;
     newNodeId: number = 0;
@@ -45,6 +39,7 @@ class FlowView {
         this.isEdit = status;
     }
 
+    //清除全部UI元件
     reset(): void {
         this.nodes = [];
         this.lines = [];

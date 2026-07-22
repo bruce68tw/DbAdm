@@ -16,6 +16,18 @@ interface PageArg {
 }
 */
 
+/**
+ * 簡易分頁元件
+ * pagin component, config has properties:
+ * pageStr {string} json string from backend(pageNo,pageRows,filterRows)
+ * pager {object} jquery page object
+ * linker {object} (optional) link object, if empty
+ * action {string} action url
+ * showMenu {bool} (default false) show page menu or not(select page rows)
+ * pageRowList {array} (default [10,25,50,100]) page menu item list
+ * onFind {function} (optional) callback for get input json
+ * return {Page}
+ */
 class Page {
     private pager: any;
     private linker: any;
@@ -31,10 +43,16 @@ class Page {
         this.showMenu = config.showMenu || _Var.notEmpty(config.pageRowList);
         this.pageRowList = config.pageRowList || [10, 25, 50, 100];
 
+        /*
         this._init(config.pageStr, config.onFind);
     }
 
     private _init(pageStr: string, onFind?: () => void): void {
+        */
+
+        const pageStr = config.pageStr;
+        const onFind = config.onFind;
+
         this.pageArg = this._getPageArg(pageStr);
         const arg = this.pageArg;
         const pager = this.pager;

@@ -1,3 +1,22 @@
+/**
+ * 控制 CRUD 編輯畫面, 可以有多個編輯區域
+ * 說明:
+ *   前端使用固定 filter: #divEdit
+ *   可以單獨使用CrudE(必要時執行CrudE.setGlobal()), 例如:簽核
+ * 寫入 _me 屬性:
+ *   crudE
+ *   divEdit
+ *   hasEdit
+ *   edit0 {EditOne}
+ *   eform0 
+ * 自動呼叫 _me 函數:
+ *   void fnAfterOpenEdit(fun, json):
+ *   fnUpdateOrViewA(fun, key) -> fnGetJsonAndEditA(fun, key)
+ *   bool fnGetJsonAndEditA(fun, key): 自訂 GetUpdJson/GetViewJson 函數, see _getJsonAndEditA
+ *   string fnWhenSave(fun): 此時還沒有產生 updated json, return error msg
+ *   void fnWhenSave2(fun, json): 此時已經產生 updated json
+ * 公用屬性: 無
+ */
 class CrudE {
     private _nowFun: FunEstr;
     private _edits: OneMany[] | EditDto[];
@@ -5,6 +24,12 @@ class CrudE {
     private _nowEditNo: number;
     private _edit0: EditOne;
 
+    /**
+     * @param edits {object Array} for edit form
+     *   1.null: means one table, get eform
+     *   2.many edit object, if ary0 is null, then call new EditOne(), 表示多個編輯"區域"
+     *   3.如果是 DtoEdit list, 表示多個編輯"畫面"
+     */
     constructor(edits: OneMany[] | EditDto[]) {
         this._nowFun = '';
         this._edits = edits;

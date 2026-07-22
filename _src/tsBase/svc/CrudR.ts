@@ -27,6 +27,14 @@ class CrudR {
 
     private _updName: string;
 
+    /**
+     * initial crud read & edit
+     * @param dtConfig {Object} datatables config
+     * @param edits {EditOne/EditMany Array} for edit form
+     *   1.null: means one table, get eform
+     *   2.many edit object, if ary0 is null, then call new EditOne()
+     * @param updName {string} update name, default to _BR.Update
+     */
     constructor(dtConfig: Json, edits?: OneMany[] | EditDto[], updName?: string) {
         //save middle variables
         this.temp = {};

@@ -110,6 +110,3 @@ class _iRadio extends _iBase {
     }
 }
 window._iRadio = _iRadio;
-
-//??
-//Object.assign(_iRadio, _iBase);

@@ -12,6 +12,3 @@ class _iNum extends _iBase {
     */
 }
 window._iNum = _iNum;
-
-//??
-//Object.assign(_iNum, _iBase);

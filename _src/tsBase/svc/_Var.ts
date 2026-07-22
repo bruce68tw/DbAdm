@@ -1,3 +1,4 @@
+//處理變數
 class _Var {
     static preZero(len: number, value: string | number): string {
         return String(value).padStart(len, '0');

@@ -152,6 +152,3 @@ class _iFile extends _iBase {
     }
 }
 window._iFile = _iFile;
-
-//??
-//Object.assign(_iFile, _iBase);
