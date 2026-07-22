@@ -1,13 +1,15 @@
 class _Ajax {
-    /** * ajax return json
+
+    /** 
+     * ajax return json, 提供 async/callback 2種方式，其中async會多一判斷是否空值(可能已被攔截錯誤)
      * param url {string} action url
      * param data {json} property should be string !!
      * param fnOk {function} (optional) callback function
      * param block {bool} block ui or not, default true
-     * return {bool/json}
+     * return {any} 由client決定傳回型態
      */
-    static async getJsonA(url: string, data: Json, fnOk?: (res: Json) => void, block?: boolean): Promise<Json> {
-        const json: AjaxDto = {
+    static async getJsonA(url: string, data: Json, fnOk?: (res: any) => void, block?: boolean): Promise<any> {
+        const json = {
             url: url,
             type: 'POST',
             data: data,
@@ -17,7 +19,7 @@ class _Ajax {
     }
 
     static async getJsonsA(url: string, data: Json, fnOk?: (res: Json[]) => void, block?: boolean): Promise<Json[]> {
-        const json: AjaxDto = {
+        const json = {
             url: url,
             type: 'POST',
             data: data,
@@ -35,7 +37,7 @@ class _Ajax {
      * return {bool/json}
      */
     static async getJsonByFdA(url: string, data: FormData, fnOk?: (res: Json) => void, block?: boolean): Promise<Json> {
-        const json: AjaxDto = {
+        const json = {
             url: url,
             type: 'POST',
             data: data,
@@ -54,7 +56,7 @@ class _Ajax {
      * return {bool/string}
      */ 
     static async getStrA(url: string, data: Json, fnOk?: (res: string) => void, block?: boolean): Promise<string> {
-        const json: AjaxDto = {
+        const json = {
             url: url,
             type: 'POST',
             data: data,
@@ -64,7 +66,7 @@ class _Ajax {
     }
 
     static async getIntA(url: string, data: Json, fnOk?: (res: number) => void, block?: boolean): Promise<number> {
-        const json: AjaxDto = {
+        const json = {
             url: url,
             type: 'POST',
             data: data,
@@ -80,7 +82,7 @@ class _Ajax {
      * return {bool/html string}
      */
     static async getViewA(url: string, data: Json, fnOk?: (res: string) => void, block?: boolean): Promise<string> {
-        const json: AjaxDto = {
+        const json = {
             url: url,
             type: 'POST',
             data: data,
@@ -243,6 +245,3 @@ class _Ajax {
     }
 }
 window._Ajax = _Ajax;
-
-//因為使用import, 必須讓 _Ajax 具備 esm 和 global
-//export default _Ajax;

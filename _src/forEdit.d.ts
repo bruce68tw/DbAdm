@@ -56,7 +56,6 @@ declare global {
         NodeTypeEstr: typeof NodeTypeEstr;
         UiItemTypeEstr: typeof UiItemTypeEstr;
 
-        AjaxDto: typeof AjaxDto;
         BaseResDto: typeof BaseResDto;
         ChartDto: typeof ChartDto;
         EditDto: typeof EditDto;

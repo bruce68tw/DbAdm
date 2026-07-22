@@ -14,15 +14,15 @@ class _Fun {
     static maxFileSize = 50971520;  //upload file limit(50M)
     static isRwd = false;   
     static pageRows = 10;   //must be 10,20(not 25),50,100
-    static nowDom: Elm;    //now dom event element
-    static lengthMenu = [10, 20, 50, 100];
+    static nowElm: Elm;    //now dom event element
+    static lengthMenu = [10, 20, 50, 100];  //名稱配合 jquery datatables
     static jwtToken = '';   //for JWT, 登入後自行設定內容
 
     // mid variables
     static data: Json = {};
 
     // datatables column define default values
-    static dtColDef: any = {
+    static dtColDef: Json = {
         className: 'x-center',
         targets: '_all',
         type: 'string',
@@ -30,12 +30,18 @@ class _Fun {
         orderSequence: ['asc', 'desc'],
     };
 
+    static async onHelloA() {
+        await _Ajax.getStrA('../Fun/Hello', null, function (msg: string) {
+            alert(msg);
+        });
+    }
+
     /**
      * initial
      * param {string} locale
      * param {string} pjaxArea Filter
      */
-    static async init(locale: string): Promise<void> {
+    static async init(locale: string) {
         //set jwt token
         _Fun.jwtToken = localStorage.getItem('_jwtToken') || '';
         localStorage.removeItem('_jwtToken');
@@ -60,27 +66,23 @@ class _Fun {
             }
         });
 
-        //可能是F5重整, 要新載入目前功能
+        //??可能是F5重整, 要新載入目前功能
         _Prog.init();
     }
 
     static async setLocaleA(code: string) {
-        /*
-        const module = await import(
-            `/locale/${code}.min.js`
-        );
-        window._BR = module.default;
-        */
-
         await _Fun.loadScriptA(`/locale/${code}.min.js`);
 
         // Dayjs locale
-        dayjs.locale(code.toLowerCase());
+        //dayjs.locale(code.toLowerCase());
+        _Date.setLocale(code);
 
         // bootstrap-datepicker
         //$.fn.datepicker.dates[code] = module.datepicker;
     }
 
+    //載入 & 執行 script
+    //這裡不能省略 Promise<void>
     static async loadScriptA(url: string): Promise<void> {
         return new Promise((resolve, reject) => {
             const script = document.createElement("script");
@@ -91,33 +93,29 @@ class _Fun {
         });
     }
 
-    static async onHelloA(): Promise<void> {
-        await _Ajax.getStrA('../Fun/Hello', null, function (msg: string) {
-            alert(msg);
-        });
-    }
-
+    //trigger 事件的 jquery object
     static getMe(): JQuery {
-        return $(_Fun.nowDom);
+        return $(_Fun.nowElm);
     }
 
     static getMeElm(): Elm {
-        return _Fun.nowDom;
+        return _Fun.nowElm;
     }
 
     static getMeValue(): any {
-        return _Input.getO($(_Fun.nowDom));
+        return _Input.getO($(_Fun.nowElm));
     }
 
     /**
      * 註冊事件, 避免使用inline script for CSRF
+     * 使用全域變數 window
      * param {object} box 容器
      * param {string} eventName name(不含on)
      */
     static setEvent(box: JQuery, eventName: string): void {
         var event2 = 'on' + eventName;
         box.on(eventName, `[data-${event2}]`, function (this: Elm) {
-            _Fun.nowDom = this;
+            _Fun.nowElm = this;
 
             const me = $(this);
             const fnPath = me.data(event2);
@@ -141,23 +139,12 @@ class _Fun {
         });
     }
 
-    /**
-     * get default value if need
-     * param val {object} checked value
-     * param defVal {object} default value to return if need
-     */
-    static default(val: StrNum, defVal: StrNum): StrNum {
-        return (val == null) ? defVal : val;
-    }
-
-    static hasValue(obj: StrNum): boolean {
-        return !(obj == null);
-    }
-
+    //block ui
     static block(): void {
         _Obj.show(_Tool.xWork);
     }
 
+    //unblock ui
     static unBlock(): void {
         _Obj.hide(_Tool.xWork);
     }
