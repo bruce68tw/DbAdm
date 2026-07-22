@@ -13,8 +13,8 @@
     "strict": false, // 舊JS轉TS較容易
     "skipLibCheck": false, // 忽略第三方型別
     "allowUmdGlobalAccess": true, //UMD套件如 moment
-    "declaration": true,
-    "emitDeclarationOnly": true,
+    "declaration": false,
+    //"emitDeclarationOnly": true, //只產生 .d.ts 型別宣告檔，不產生 .js
     //加入有@types的套件做為全域變數
     "types": [ "jquery", "bootstrap", "jquery.validation", "datatables.net", "mustache", "bootstrap-datepicker" ],
     "paths": {
