@@ -712,11 +712,11 @@ function extractContainer(data, xhr, options) {
     // Then scrub any titles from their descendants
     obj.contents.find('title').remove()
 
-    /* (Bruce remark)
-    */
+    /* Bruce remark: 否則script會載入失敗
     // Gather all script[src] elements
     obj.scripts = findAll(obj.contents, 'script[src]').remove()
     obj.contents = obj.contents.not(obj.scripts)
+    */
   }
 
   // Trim any whitespace off the title

@@ -41,8 +41,8 @@ async function doTsBase() {
         sourcemap: true,
         treeShaking: false, //true會清空未使用類別
         outfile: "wwwroot/base.min.js",
-        //format: "iife",
-        format: "esm",
+        format: "iife",
+        //format: "esm",
         platform: "browser",
         target: ["es2019"]
     });
@@ -66,8 +66,8 @@ async function doTsView() {
             treeShaking: false,
             sourcemap: true,
             outfile: `wwwroot/jsView/${name}.js`,   //檔名不使用min, 因為需要import .js
-            format: "esm",	//重要!!
-            //format: "iife",
+            //format: "esm",	//重要!!
+            format: "iife",
             platform: "browser",
             target: ["es2019"]
         });
@@ -125,12 +125,6 @@ function doCssLib() {
         .pipe(gulp.dest("wwwroot"));
 }
 
-// copy locale to w3/locale
-function zz_doLocale() {
-    return gulp.src(`${dirSrc}locale/**/*`)
-        .pipe(gulp.dest("wwwroot/locale"));
-}
-
 // locale to w3/locale/zh-TW.js...(不必壓縮)
 function doLang(lang) {
     const dir = `wwwroot/locale`;
@@ -140,6 +134,12 @@ function doLang(lang) {
             .pipe(terser())
             .pipe(gulp.dest(dir));
     };
+}
+
+// copy locale to w3/locale
+function zz_doLocale() {
+    return gulp.src(`${dirSrc}locale/**/*`)
+        .pipe(gulp.dest("wwwroot/locale"));
 }
 
 // icomoon.ttf 會損壞, 改用 package.json
