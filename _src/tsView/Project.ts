@@ -9,17 +9,17 @@ class ProjectVo {
         _Array.isEmpty();
         this.prjId = id;
         if (await _Tool.ansA('是否確定匯入資料庫結構?')) {
-            await _Ajax.getJsonA('Import', { id: _vo.prjId }, function (data) {
+            await _Ajax.getJsonA('Import', { id: _vo.prjId }, function (json) {
                 _Tool.msg(_BR.Done);
             });
         }
     }
 
     //generate docx file
-    onGenWord(id: string) {
-        _Tool.ans('是否確定產生資料庫文件?', function () {
+    async onGenWord(id: string) {
+        if (await _Tool.ansA('是否確定產生資料庫文件?')) {
             window.location.href = 'GenWord?id=' + id;
-        });
+        }
     }
 
     /*
@@ -32,10 +32,10 @@ class ProjectVo {
     */
 
     //generate tranlog sql file
-    onGenLogSql(id: string) {
-        _Tool.ans('是否確定產生異動SQL檔案?', function () {
+    async onGenLogSql(id: string) {
+        if (await _Tool.ansA('是否確定產生異動SQL檔案?')) {
             window.location.href = 'GenLogSql?id=' + id;
-        });
+        }
     }
 }
 _vo = new ProjectVo();

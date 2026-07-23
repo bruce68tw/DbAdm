@@ -1,6 +1,7 @@
+//瀏覽器
 class _Browser {
     // 傳到後端的語系code 欄位
-    private static _langCode: string = '_langCode';
+    private static _langCode = '_langCode';
 
     static pushState(url: string): void {
         history.pushState(null, '', url);

@@ -1,4 +1,4 @@
-//不繼承 iBase
+//顏色欄位, 不繼承 iBase
 //bootstrap-colorpicker 支援到 bootstrap4, 若要用此功能可改用其他元件
 class _iColor {
     /*
@@ -12,13 +12,13 @@ class _iColor {
     }
     */
    
-    static get(fid: string, form?: JQuery): string {
-        return _iColor.getO(_Obj.get(fid, form));
+    static get(fid: string, box: JQuery): string {
+        return _iColor.getO(_Obj.get(fid, box));
     }
 
     //value by filter
-    static getF(filter: string, form?: JQuery): string {
-        return _iColor.getO(_Obj.getByFt(filter, form));
+    static getF(filter: string, box: JQuery): string {
+        return _iColor.getO(_Obj.getByFt(filter, box));
     }
 
     //value by object

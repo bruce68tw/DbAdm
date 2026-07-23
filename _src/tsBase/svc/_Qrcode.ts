@@ -4,7 +4,7 @@ declare const QRCode: any;
 //https://github.com/davidshimjs/qrcodejs
 class _Qrcode {
 
-    static set(id: string, box: any, url: string, width?: number): any {
+    static set(id: string, box: JQuery, url: string, width?: number): any {
         return _Qrcode.setO(_Obj.getById(id, box), url, width);
     }
 

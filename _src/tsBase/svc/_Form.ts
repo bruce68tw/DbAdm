@@ -1,3 +1,4 @@
+//UI表
 class _Form {
     /**
      * get input values, 排除不儲存的欄位, 可用在多筆的單行
@@ -14,7 +15,7 @@ class _Form {
         return row;
     }
 
-    static toRowStr(form: any): string {
+    static toRowStr(form: JQuery): string {
         return JSON.stringify(_Form.toRow(form));
     }
 
@@ -23,7 +24,7 @@ class _Form {
      * param form {object} form or box object
      * param json {json}
      */
-    static loadRow(form: any, row: Record<string, any>): void {
+    static loadRow(form: JQuery, row: Json) {
         for (const key in row) {
             if (Object.prototype.hasOwnProperty.call(row, key)) {
                 _Input.set(key, row[key], form);
@@ -36,15 +37,15 @@ class _Form {
      * param form {object}
      * param init {bool} 是否填入初始值, default false
      */
-    static reset(form: any, init?: boolean): void {
+    static reset(form: JQuery, init?: boolean) {
         const items = form.find(_Input.fidFilter());
         if (init) {
-            items.each(function (this: any) {
+            items.each(function (this: Elm) {
                 const obj = $(this);
                 _Input.setO(obj, obj.data('init'), form);
             });
         } else {
-            items.each(function (this: any) {
+            items.each(function (this: Elm) {
                 _Input.setO($(this), '', form);
             });
         }
@@ -53,7 +54,7 @@ class _Form {
     /**
      * check has file input or not
      */ 
-    static hasFile(form: any): boolean {
+    static hasFile(form: JQuery): boolean {
         return form.find(':file').length > 0;
     }
 
@@ -62,7 +63,7 @@ class _Form {
      * param form {object} jquery form/box
      * param status {bool} edit status
      */
-    static setEdit(form: any, status: boolean): void {
+    static setEdit(form: JQuery, status: boolean) {
         //text & textArea
         _iText.setEditO(form.find('input:text'), status);
         _iTextarea.setEditO(form.find('textarea'), status);
@@ -84,11 +85,11 @@ class _Form {
     }
 
     /**
-     * hide & show div with effect
+     * hide(first) & show div with effect
      * param hides {array} object array to hide
      * param shows {array} object array to show
      */
-    static hideShow(hides?: JQuery[], shows?: JQuery[]): void {
+    static hideShow(hides?: JQuery[], shows?: JQuery[]) {
         //hide first
         if (hides) {
             for (let i = 0; i < hides.length; i++) {

@@ -347,13 +347,13 @@ class CrudE {
         const act = (fun == FunEstr.Update) ? 'GetUpdJson' :
             (fun == FunEstr.Create) ? 'GetSignJson' :
                 'GetViewJson';
-        await _Ajax.getJsonA(act, data, function (json: any) {
+        await _Ajax.getJsonA(act, data, function (json) {
             me.loadJsonAndEdit(json, fun);
         });
         return true;
     }
 
-    loadJsonAndEdit(json: any, fun: string): void {
+    loadJsonAndEdit(json: Json, fun: string): void {
         this.loadJson(json);
         this.setEditStatus(fun);
         this.afterOpen(fun, json);
@@ -483,7 +483,7 @@ class CrudE {
                 data.editNo = this._nowEditNo;
             }
 
-            await _Ajax.getJsonA(action, data, function (result: any) {
+            await _Ajax.getJsonA(action, data, function (result) {
                 me.afterSave(result);
             });
         }
@@ -521,7 +521,7 @@ class CrudE {
                 data.editNo = this._nowEditNo;
             }
 
-            await _Ajax.getJsonA(action, data, function (result: any) {
+            await _Ajax.getJsonA(action, data, function (result) {
                 me._afterSaveDraft(result);
             });
         }

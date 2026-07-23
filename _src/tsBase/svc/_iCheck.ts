@@ -1,3 +1,4 @@
+//checkbox 欄位
 class _iCheck extends _iBase {
     /**
      * Check0Id -> FidCheck0
@@ -20,8 +21,8 @@ class _iCheck extends _iBase {
     /**
      * (override)set checked or not
      */
-    static setO(obj: JQuery, value: any): void {
-        const status = !(value == null || value === '0' || value === 'False' || value === false);
+    static setO(obj: JQuery, value: StrNumB) {
+        const status = !(value == null || value == '0' || value == 'False' || value === false);
         obj.prop('checked', status);
     }
 
@@ -37,8 +38,8 @@ class _iCheck extends _iBase {
      * get checked status by fid
      * return {bool}
      */
-    static isChecked(fid: string, form?: JQuery): boolean {
-        return _iCheck.isCheckedO(_Obj.get(fid, form));
+    static isChecked(fid: string, box: JQuery): boolean {
+        return _iCheck.isCheckedO(_Obj.get(fid, box));
     }
 
     /**
@@ -57,9 +58,9 @@ class _iCheck extends _iBase {
      * fid {string} (optional '_check0') data-fid value
      * return {string array} checked value list
      */
-    static getCheck0Values(form: JQuery): string[] {
+    static getCheck0Values(box: JQuery): string[] {
         const ary: string[] = [];
-        const item = _Obj.getByFt(_iCheck.fltCheckeds, form);
+        const item = _Obj.getByFt(_iCheck.fltCheckeds, box);
         if (_Obj.notEmpty(item)) {
             item.each(function (this: Elm, i: number) {
                 ary[i] = $(this).data('value') as string;
@@ -69,14 +70,14 @@ class _iCheck extends _iBase {
     }
 
     /**
-     * (不是處理_check0)讀取多個一群checkbox的值(有勾選的欄位only)
-     * form {object} container
+     * (不是處理_check0)讀取群組內多個checkbox的值(有勾選的欄位only)
+     * box {object} container
      * preFid {string} fid前面字元
-     * return {string array} checked value list
+     * return {string[]} checked value list
      */
-    static getCheckedValues(form: JQuery, preFid: string): string[] {
+    static getCheckedValues(box: JQuery, preFid: string): string[] {
         const ary: string[] = [];
-        const item = _Obj.getByFt(`[data-fid^='${preFid}']:checked`, form);
+        const item = _Obj.getByFt(`[data-fid^='${preFid}']:checked`, box);
         if (_Obj.notEmpty(item)) {
             item.each(function (this: Elm, i: number) {
                 ary[i] = $(this).data('value') as string;
@@ -92,7 +93,7 @@ class _iCheck extends _iBase {
      * fid {string} (optional '_check0') data-fid value
      * return {string array}
      */ 
-    static checkAll(form: JQuery, status: any): void {
+    static checkAll(form: JQuery, status: boolean): void {
         _iCheck.setO(form.find(_iCheck.fltCheckeds), status);
     }
 }

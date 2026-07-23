@@ -63,18 +63,19 @@ class _Edit {
         edit.hasFile = edit.fileFids.length > 0; //has input file or not
     }
 
+    //#region get/set this/child json/rows
     /**
      * get rows of json 
      * @param {any} json
      * @returns
      */
-    static jsonGetRows(json: any): any[] | null {
+    static jsonGetRows(json: Json): Json[] | null {
         return (json == null || json[_Edit.Rows] == null)
             ? null
             : json[_Edit.Rows];
     }
 
-    static jsonGetRows0(json: any): any | null {
+    static jsonGetRows0(json: Json): JsonN {
         const rows = _Edit.jsonGetRows(json);
         return (rows == null || rows.length == 0)
             ? null
@@ -83,7 +84,7 @@ class _Edit {
 
     //upJson get child json
     //_getChildJson -> getChildJson
-    static getChildJson(upJson: any, childIdx: number): any | null {
+    static getChildJson(upJson: Json, childIdx: number): JsonN {
         const childs = _Edit.Childs;
         return (upJson == null || upJson[childs] == null || upJson[childs].length <= childIdx)
             ? null
@@ -91,12 +92,12 @@ class _Edit {
     }
 
     //upJson get child rows
-    static getChildRows(upJson: any, childIdx: number): any[] | null {
+    static getChildRows(upJson: Json, childIdx: number): Json[] | null {
         const child = _Edit.getChildJson(upJson, childIdx);
         return _Edit.jsonGetRows(child);
     }
 
-    static getChildRows0(upJson: any, childIdx: number): any | null {
+    static getChildRows0(upJson: Json, childIdx: number): JsonN {
         const rows = _Edit.getChildRows(upJson, childIdx);
         return (rows == null || rows.length == 0)
             ? null : rows[0];
@@ -107,7 +108,7 @@ class _Edit {
      * @param upJson {json}
      * @param childIdx {int}
      * @param rows {jsons}
-     * @returns {json} child object
+     * @returns {json} child json
      */
     static setChildRows(upJson: Json, childIdx: number, rows: Json[]): Json {
         const fid = _Edit.Childs;
@@ -122,8 +123,9 @@ class _Edit {
         child[_Edit.Rows] = rows;
         return child;
     }
+    //#endregion
 
-    static isEditOne(edit: any): boolean {
+    static isEditOne(edit: OneMany): boolean {
         return (edit instanceof EditOne);
     }
 
@@ -184,7 +186,7 @@ class _Edit {
      * @param box {JQuery}
      * @param row {json}
      */
-    static loadRow(edit: any, box: JQuery, row: any): void {
+    static loadRow(edit: OneMany, box: JQuery, row: Json): void {
         _Form.loadRow(box, row);
 
         //set old value for each field
@@ -202,10 +204,10 @@ class _Edit {
      * @param box {object} form object
      * @returns json row
      */
-    static getUpdRow(edit: any, box: JQuery): any | null {
+    static getUpdRow(edit: OneMany, box: JQuery): JsonN {
         //case new return row
-        const result: any = {};
-        let fid: string, ftype: string, value: any, obj: JQuery | null;
+        const result: Json = {};
+        let fid: string, ftype: string, value: any, obj: JQueryN;
         const row = _Form.toRow(box);     //內容只包含需要儲存的欄位, PKey如何為唯讀可能不會寫入!!
 
         //無條件加入PKey欄位, 才能判斷是否新增
@@ -277,7 +279,7 @@ class _Edit {
      * @param elm {element} link element
      * @param key {string} row key
      */
-    static async viewFileA(table: string, fid: string, elm: Elm, key: string): Promise<void> {
+    static async viewFileA(table: string, fid: string, elm: Elm, key: string) {
         /*
         if (this.isNewKey(key)) {
             _Tool.msg(_BR.NewFileNotView);
@@ -339,6 +341,5 @@ class _Edit {
             field.remove();
     }
     */
-
 }
 window._Edit = _Edit;

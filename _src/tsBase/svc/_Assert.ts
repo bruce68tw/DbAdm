@@ -1,3 +1,4 @@
+//假定, 用於單元測試
 class _Assert {
     static echo(msg: string): void {
         _Error.log('_assert.js ' + msg);

@@ -1,3 +1,4 @@
+//處理 _XpCode, 下拉式欄位資料
 class _Code {
     //add empty option
     static addEmptyOpt(rows: IdStrDto[] = []): IdStrDto[] {
@@ -10,7 +11,7 @@ class _Code {
      * filter json array
      * @param addEmpty {bool} default true
      */ 
-    static filterRows(rows: IdStrExtDto[] = [], value: any, addEmpty: boolean = true): IdStrDto[] {
+    static filterRows(rows: IdStrExtDto[], value: StrNum, addEmpty: boolean = true): IdStrDto[] {
         //rows ??= [];
         let result: IdStrDto[] = rows
             .filter(row => row.Ext === value)
@@ -22,4 +23,3 @@ class _Code {
     }
 }
 window._Code = _Code;
-//export default _Code;

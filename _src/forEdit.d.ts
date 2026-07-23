@@ -17,12 +17,13 @@ import type MeDto from "./tsBase/dto/MeDto";
 
 //沒有提供 @types 的第3方套件要手動加入宣告 type
 import dayjsLib, { Dayjs as DayjsType } from "dayjs";
-import type { Chart as ChartType } from "chart.js";
+import type { Chart as ChartType2 } from "chart.js";
 
 declare global {
     //自定型別
     type StrN = string | null;
     type StrNum = string | number;
+    type StrNumB = string | number | boolean;
     type StrNumN = string | number | null;
     type NumN = number | null;
     type BoolN = boolean | null;
@@ -36,9 +37,10 @@ declare global {
     type FnVoidN = ((result: any) => void) | null;
     type OneMany = EditOne | EditMany;
 
-    //chart
-    const Chart: typeof ChartType;  //for js 執行的全域變數宣告
-   
+    //chart: Chart為變數, ChartType為型別
+    const Chart: typeof ChartType2;  //for js 執行的全域變數宣告
+    type ChartType = ChartType2;     //左右相同會出現TS2456   
+    
     //dayjs 取代 moment
     type Dayjs = DayjsType; //for ts 編譯的型別宣告    
     const dayjs: typeof dayjsLib;   //Day.js global object (window.dayjs)

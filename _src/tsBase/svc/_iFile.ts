@@ -1,5 +1,6 @@
+//檔案欄位, 欄位值型態為 string(表示上傳檔名)
 class _iFile extends _iBase {
-    //=== overwrite start ===
+    //#region overwrite start
     /**
      * get border object
      * param obj {object} input object
@@ -10,9 +11,9 @@ class _iFile extends _iBase {
 
     static setO(obj: JQuery, value: string): void {
         obj.val(value);     //set hidden input value
-        _iFile._elmToLink(obj).text(value);  //set link show text
+        _iFile._eloToLink(obj).text(value);  //set link show text
     }
-    //=== overwrite end ===
+    //#endregion
 
     /**
      * formData add file for upload, called by EditOne/EditMany.js
@@ -22,9 +23,9 @@ class _iFile extends _iBase {
      * param box {object} form/row object
      * return {boolean} has file or not
      */
-    static dataAddFile(data: FormData, fid: string, serverFid: string, box?: JQuery): boolean {
+    static dataAddFile(data: FormData, fid: string, serverFid: string, box: JQuery): boolean {
         const obj = _Obj.get(fid, box);
-        const file = _iFile.getUploadFile(_iFile._elmToFile(obj));
+        const file = _iFile.getUploadFile(_iFile._eloToFile(obj));
         const hasFile = (file != null);
         if (hasFile) {
             data.append(serverFid, file!);
@@ -32,18 +33,20 @@ class _iFile extends _iBase {
         return hasFile;
     }
 
-    //=== event start ===
+    //#region event start
+    //onclick file button
     static onOpenFile(): void {
-        const btn = _Fun.getMe();
-        const file = _iFile._elmToFile(btn);
-        file.focus().trigger('click'); //focus first !!
+        const btn = _Fun.getMeElm();
+        const file = _iFile._eloToFile(btn);
+        //file.focus().trigger('click'); //focus first !!
+        file.trigger('click'); //不必先focus !!
     }
 
     //file: input element
     static onChangeFile(): void {
         //case of empty file
         const fileElm = _Fun.getMeElm() as HTMLInputElement;
-        const obj = _iFile._elmToObj(fileElm);
+        const obj = _iFile._eloToObj(fileElm);
         const fileObj = $(fileElm);
         const value = fileElm.value; //full path
         if (_Str.isEmpty(value)) {
@@ -76,10 +79,10 @@ class _iFile extends _iBase {
     }
 
     static onDeleteFile(): void {
-        const btn = _Fun.getMe();
-        _iFile.setO(_iFile._elmToObj(btn), '');
+        const btn = _Fun.getMeElm();
+        _iFile.setO(_iFile._eloToObj(btn), '');
     }
-    //=== event end ===
+    //#endregion
 
     //?? initial after load rows
     static zz_init(fid: string, path: string, form?: JQuery): void {
@@ -99,27 +102,27 @@ class _iFile extends _iBase {
 
     //=== private function below ===
     /**
-     * element to file box object
+     * element/object(elo) to file box object(file input container)
      * param elm {element}
      * return {object} file box object
      */
-    private static _elmToBox(elm: Elm | JQuery): JQuery {
+    private static _eloToBox(elm: Elm | JQuery): JQuery {
         return $(elm).closest('.xi-box');
     }
     
     //get file object
-    private static _elmToFile(elm: Elm | JQuery): JQuery {
-        return _iFile._boxGetFile(_iFile._elmToBox(elm));
+    private static _eloToFile(elm: Elm | JQuery): JQuery {
+        return _iFile._boxGetFile(_iFile._eloToBox(elm));
     }
     
     //get input object
-    private static _elmToObj(elm: Elm | JQuery): JQuery {
-        return _iFile._boxGetObj(_iFile._elmToBox(elm));
+    private static _eloToObj(elm: Elm | JQuery): JQuery {
+        return _iFile._boxGetInput(_iFile._eloToBox(elm));
     }
     
     //get link object
-    private static _elmToLink(elm: Elm | JQuery): JQuery {
-        return _iFile._boxGetLink(_iFile._elmToBox(elm));
+    private static _eloToLink(elm: Elm | JQuery): JQuery {
+        return _iFile._boxGetLink(_iFile._eloToBox(elm));
     }
 
     /**
@@ -134,9 +137,10 @@ class _iFile extends _iBase {
     private static _boxGetFile(box: JQuery): JQuery {
         return box.find(':file');
     }
-    
+
+    //_boxGetObj -> _boxGetInput
     //box get input object
-    private static _boxGetObj(box: JQuery): JQuery {
+    private static _boxGetInput(box: JQuery): JQuery {
         return box.find('[data-type=file]');
     }
 

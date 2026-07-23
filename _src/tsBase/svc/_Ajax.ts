@@ -8,7 +8,7 @@ class _Ajax {
      * param block {bool} block ui or not, default true
      * return {any} 由client決定傳回型態
      */
-    static async getJsonA(url: string, data: Json, fnOk?: (res: any) => void, block?: boolean): Promise<any> {
+    static async getJsonA(url: string, data: Json, fnOk?: (res: Json) => void, block?: boolean): Promise<Json> {
         const json = {
             url: url,
             type: 'POST',

@@ -1,3 +1,4 @@
+//統計圖
 class _Chart {
     //彩虹顏色
     static rainbowColors: string[] = [
@@ -19,7 +20,7 @@ class _Chart {
      * param percent {bool} show percentage(for pie,doughnut) or not
      */
     private static _show(type: string, canvasElm: HTMLCanvasElement, dto: ChartDto, 
-        legend = true, percent = false): any {
+        legend = true, percent = false): ChartType {
             /*
         if (legend == null)
             legend = true;
@@ -27,9 +28,9 @@ class _Chart {
             percent = false;
             */
            
-        //default config
+        //default config(must any)
         var isHbar = (type == 'hbar');
-        var config: any = {
+        var config:any = {
             type: isHbar ? 'bar' : type,
             data: {
                 labels: dto.labels,
@@ -103,12 +104,12 @@ class _Chart {
     }
 
     //線形圖
-    static line(canvasElm: HTMLCanvasElement, dto: ChartDto): any {
+    static line(canvasElm: HTMLCanvasElement, dto: ChartDto): ChartType {
         return _Chart._show('line', canvasElm, dto, false);
     }
 
     //水平條狀圖
-    static hbar(canvasElm: HTMLCanvasElement, dto: ChartDto): any {
+    static hbar(canvasElm: HTMLCanvasElement, dto: ChartDto): ChartType {
         dto.options = {
             indexAxis: 'y'
         };
@@ -117,17 +118,17 @@ class _Chart {
     }
 
     //圓餅圖
-    static pie(canvasElm: HTMLCanvasElement, dto: ChartDto): any {
+    static pie(canvasElm: HTMLCanvasElement, dto: ChartDto): ChartType {
         return _Chart._show('pie', canvasElm, dto, null, true);
     }
 
     //甜甜圈
-    static doughnut(canvasElm: HTMLCanvasElement, dto: ChartDto): any {
+    static doughnut(canvasElm: HTMLCanvasElement, dto: ChartDto): ChartType {
         return _Chart._show('doughnut', canvasElm, dto, null, true);
     }
 
     //多個線形圖
-    static groupLine(canvasElm: HTMLCanvasElement, dto: ChartDto): any {
+    static groupLine(canvasElm: HTMLCanvasElement, dto: ChartDto): ChartType {
         /*
         //set curve line
         dto.datasets.map(a => {
@@ -138,7 +139,7 @@ class _Chart {
     }
 
     //多個線形圖
-    static groupBar(canvasElm: HTMLCanvasElement, dto: ChartDto): any {
+    static groupBar(canvasElm: HTMLCanvasElement, dto: ChartDto): ChartType {
         return _Chart._show('bar', canvasElm, dto);
     }
 
@@ -183,7 +184,7 @@ class _Chart {
      * return {Chart}
      */
     static initPie(canvasElm: HTMLCanvasElement, labels: string[], values: number[], 
-        colors: string[], config?: any): any {
+        colors: string[], config?: Json): ChartType {
 
         //default config
         var config0: any = {
@@ -226,4 +227,3 @@ class _Chart {
     }
 }
 window._Chart = _Chart;
-//export default _Chart;

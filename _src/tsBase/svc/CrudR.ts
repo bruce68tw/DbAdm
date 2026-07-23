@@ -94,7 +94,7 @@ class CrudR {
      * @param elm {element} link element
      * @param key {string} row key
      */
-    viewFile(table: string, fid: string, key: StrNum, fileName: string): void {
+    viewFile(table: string, fid: string, key: StrNum, fileName: string) {
         var ext: string = _File.getFileExt(fileName);
         if (_File.isImageExt(ext))
             _Tool.showImage(
@@ -142,7 +142,7 @@ class CrudR {
     }
 
     //??
-    dtRadio1(value: StrNum, editable?: boolean): string {
+    dtRadio1(value: string, editable?: boolean): string {
         if (editable === undefined) editable = true;
         return _iRadio.render(_iCheck.fidCheck0, '', false, value, editable);
     }
@@ -236,7 +236,7 @@ class CrudR {
      * //param nowDiv {object} (default _me.divEdit) now div to show
      * //param fnCallback {function} (optional) callback function
      */
-    swap(toRead: boolean, fnCallback?: () => void): void {
+    swap(toRead: boolean, fnCallback?: () => void) {
         //同時有read, edit才執行
         if (!_me.hasRead || !_me.hasEdit) return;
 
@@ -281,7 +281,7 @@ class CrudR {
      * param fnCallback {function} 如果進入編輯畫面後要處理畫面, 必須以非同步方式處理
      */
     //toEditMode = function(fun, data) {
-    toEditMode(fun: FunEstr, fnCallback?: () => void): void {
+    toEditMode(fun: FunEstr, fnCallback?: () => void) {
         this.swap(false, fnCallback); //call first
         _Prog.showPath(fun, this._updName);
     }
@@ -289,7 +289,7 @@ class CrudR {
     /**
      * back to list form
      */
-    toReadMode(): void {
+    toReadMode() {
         //_Obj.show(this.divReadTool);
         _Prog.resetPath();
         this.swap(true);
@@ -310,7 +310,7 @@ class CrudR {
     /**
      * onclick find rows
      */
-    onFind(): void {
+    onFind() {
         var cond: any = this._getFindCond();
         this.dt.find(cond);
     }
@@ -318,7 +318,7 @@ class CrudR {
     /**
      * onclick find2 button for show/hide find2 form
      */
-    onFind2(): void {
+    onFind2() {
         var find2: any = _me.rform2;
         if (find2 == null) return;
         else if (_Obj.isShow(find2)) _Form.hideShow([find2]);
@@ -328,7 +328,7 @@ class CrudR {
     /**
      * onclick reset find form
      */
-    onResetFind(): void {
+    onResetFind() {
         _Form.reset(_me.rform);
         if (_me.rform2 != null) _Form.reset(_me.rform2);
     }
@@ -336,7 +336,7 @@ class CrudR {
     /**
      * onClick export excel button
      */
-    onExport(): void {
+    onExport() {
         var find: any = this._getFindCond();
         window.location.href = 'Export?find=' + _Json.toStr(find);
     }
@@ -344,7 +344,7 @@ class CrudR {
     /**
      * onclick toRead button
      */
-    onToRead(): void {
+    onToRead() {
         this.toReadMode();
     }
 
@@ -360,7 +360,7 @@ class CrudR {
         var me: this = this;
         if (this.hasDraft) {
             //讀取草稿 if any
-            await _Ajax.getJsonA('GetDraftJson', { key: '' }, function (json: any) {
+            await _Ajax.getJsonA('GetDraftJson', { key: '' }, function (json) {
                 if (_Json.isEmpty(json)) me.createAndEdit();
                 else _me.crudE.loadJsonAndEdit(json, FunEstr.Create);
             });
@@ -373,7 +373,7 @@ class CrudR {
         }
     }
 
-    createAndEdit(): void {
+    createAndEdit() {
         _me.crudE.onCreate();
         this.toEditMode(FunEstr.Create);
     }
@@ -424,8 +424,9 @@ class CrudR {
      * @param fid {string} fid
      */
     //onCheckAll(me, box, fid) {
-    onCheckAll(elm: Elm, box: JQuery): void {
-        _iCheck.setF(_iCheck.fltCheckeds + ':not(:disabled)', _iCheck.isCheckedO($(elm)), box);
+    onCheckAll(elm: Elm, box: JQuery) {
+        const status = _iCheck.isCheckedO($(elm));
+        _iCheck.setF(_iCheck.fltCheckeds + ':not(:disabled)', status ? '1' : '0', box);
     }
 
     /**
@@ -433,15 +434,15 @@ class CrudR {
      * key {string} row key
      * rowName {string} for confirm
      */
-    async onDeleteA(key: StrNum, rowName: string): Promise<void> {
+    async onDeleteA(key: StrNum, rowName: string) {
         //_temp.data = { key: key }
         const me = this;
-        _Tool.ans(_BR.SureDeleteRow + ' (' + rowName + ')', async function () {
-            await _Ajax.getJsonA('Delete', { key: key }, function (msg: any) {
+        if (await _Tool.ansA(`${_BR.SureDeleteRow} (${rowName})`)){
+            await _Ajax.getJsonA('Delete', { key: key }, function (json) {
                 _Tool.alert(_BR.DeleteOk);
                 me.dt.reload();
             });
-        });
+        }
     }
 
     /**
@@ -464,12 +465,12 @@ class CrudR {
         //刪除多筆資料, 後端固定呼叫 DeleteByKeys()
         //_temp.data = { keys: keys }
         var me = this;
-        _Tool.ans(_BR.SureDeleteSelected, async function () {
-            await _Ajax.getStrA('DeleteByKeys', { keys: keys }, function (msg: string) {
+        if (await _Tool.ansA(_BR.SureDeleteSelected)) {
+            await _Ajax.getStrA('DeleteByKeys', { keys: keys }, function (msg) {
                 _Tool.alert(_BR.DeleteOk);
                 me.dt.reload();
             });
-        });
+        }
     }
     //=== event end ===
 }

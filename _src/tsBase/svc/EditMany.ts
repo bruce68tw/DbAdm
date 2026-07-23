@@ -19,7 +19,6 @@ class EditMany {
     private modeData: any = '';
 
     private systemError = '';
-    private kid: string;
     private rowFilter: string;
     private sortFid: string;
     private hasRowTpl: boolean;
@@ -27,11 +26,12 @@ class EditMany {
     private rowTpl = '';
     private hasEform: boolean;
     private rowsBox: JQuery;
-    private deletedRows: string[] = [];
+    private deletedRows: StrNum[] = [];
     private newIndex = 0;
 
     //global
     _childs: EditMany[];
+    kid: string;
     eform: JQuery;
     validator: any;
     dataJson: Json; //主要用於EditOne存原始資料, GenCrud屬特殊情形mTable會使用 
@@ -256,7 +256,7 @@ class EditMany {
             true;
     }
 
-    getKey(rowBox: JQuery): string {
+    getKey(rowBox: JQuery): StrNum {
         return _Input.get(this.kid, rowBox);
     }
 
@@ -375,7 +375,7 @@ class EditMany {
         }
     }
 
-    deleteRow(key: string, rowBox?: JQuery): void {
+    deleteRow(key: StrNum, rowBox?: JQuery): void {
         var deletes = this.deletedRows;
         var found = false;
         var rowLen = deletes.length;
@@ -407,7 +407,7 @@ class EditMany {
         var box = this._elmToRowBox(elm);
         if (box) {
             var key = this.getKey(box);
-            await _Edit.viewFileA(table, fid, elm, key);
+            await _Edit.viewFileA(table, fid, elm, key as string);
         }
     }
 
@@ -466,7 +466,7 @@ class EditMany {
         me.newIndex = 0;
         me.rowsBox.find(me.rowFilter).each(function (this: Elm) {
             me.newIndex--;
-            _iText.set(me.kid, me.newIndex, $(this));
+            _iText.set(me.kid, me.newIndex.toString(), $(this));
         });
     }
 
@@ -481,7 +481,7 @@ class EditMany {
         }
 
         var box2 = _Obj.get(this.kid, box).closest(this.rowFilter);
-        _iText.set(this.kid, newId, box2);
+        _iText.set(this.kid, newId.toString(), box2);
         return newId;
     }
 
@@ -493,7 +493,7 @@ class EditMany {
         var me = this;
         rowsBox = this._getRowsBox(rowsBox);
         rowsBox.find(_Input.fidFilter(sortFid!)).each(function (this: Elm, i: number, item: Elm) {
-            _iText.set(sortFid!, i, $(item).closest(me.rowFilter));
+            _iText.set(sortFid!, i.toString(), $(item).closest(me.rowFilter));
         });
     }
 

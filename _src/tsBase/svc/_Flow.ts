@@ -1,5 +1,7 @@
+//簽核流程相關
 class _Flow {
-    static showSignRows(tbody: any, rows: Json[] | null): void {
+    //顯示簽核記錄
+    static showSignRows(tbody: JQuery, rows?: Json[]): void {
         tbody.empty();
         if (rows == null) return;
 

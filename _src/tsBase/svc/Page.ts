@@ -121,7 +121,7 @@ class Page {
         };
     }
 
-    public find(json: Record<string, any> = {}, page?: number): void {
+    find(json: Json, page?: number): void {
         const arg = this.pageArg;
         if (_Var.isEmpty(page)) {
             arg.pageNo = 1;

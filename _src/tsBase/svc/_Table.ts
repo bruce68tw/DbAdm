@@ -6,7 +6,7 @@ class _Table {
     static getFidValues(box: JQuery, trFilter: string, fid: string): string[] {
         const ary: string[] = []; // return array
         box.find(trFilter).each((_idx: number, trElm: Elm) => {
-            const key = _Input.get(fid, $(trElm));
+            const key = _Input.get(fid, $(trElm)) as string;
             ary.push(key);
         });
         return ary;

@@ -127,7 +127,7 @@ class IssueVo {
 
     //加入追踪
     async onAddWatch() {
-        _Tool.ans('是否確定加入追踪?', async () => {
+        if (await _Tool.ansA('是否確定加入追踪?')) {
             await _Ajax.getStrA('AddWatch', { issueId: this.issueId }, (str) => {
                 var ok = (str == '1');
                 _Tool.msg(ok ? '成功加入追踪。' : '無法加入此筆追踪 !!');
@@ -136,12 +136,12 @@ class IssueVo {
                     this.setWatchBtn(true);
                 }
             });
-        });
+        }
     }
 
     //取消追踪
     async onDeleteWatch() {
-        _Tool.ans('是否確定取消追踪?', async () => {
+        if (await _Tool.ansA('是否確定取消追踪?')) {
             await _Ajax.getStrA('DeleteWatch', { issueId: this.issueId }, (str) => {
                 var ok = (str == '1');
                 _Tool.msg(ok ? '已取消追踪。' : '無法取消此筆追踪 !!');
@@ -150,12 +150,12 @@ class IssueVo {
                     this.setWatchBtn(true);
                 }
             });
-        });
+        }
     }
 
     //延續工作        
-    onKeepIssue() {
-        _Tool.ans('是否確定延續此筆工作?', () => {
+    async onKeepIssue() {
+        if (await _Tool.ansA('是否確定延續此筆工作?')) {
             //變成新增狀態
             _me.crudE.editToNew();
 
@@ -172,7 +172,7 @@ class IssueVo {
             this.mIssueFile.reset();
             this.mIssueRelat.reset();
             this.mIssueRelat.addRow({ SourceIssue: this.issueId });
-        });
+        }
     }
 }
 _vo = new IssueVo();

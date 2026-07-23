@@ -1,3 +1,4 @@
+//datetime欄位, 欄位值型態為 string
 class _iDt extends _iBase {
     //constant
     //BoxFilter: '.date',
@@ -8,9 +9,7 @@ class _iDt extends _iBase {
         const date = _iDate.getO(_iDt._boxGetDate(obj));
         return _Str.isEmpty(date)
             ? ''
-            : date + ' ' +
-                _iSelect.getO(_iDt._boxGetHour(obj)) + ':' +
-                _iSelect.getO(_iDt._boxGetMin(obj));
+            : `${date} ${_iSelect.getO(_iDt._boxGetHour(obj))}:${_iSelect.getO(_iDt._boxGetMin(obj))}`;
     }
 
     /**
@@ -18,24 +17,23 @@ class _iDt extends _iBase {
      * param obj {object} datetime box object
      * param value {string} _Fun.MmDtFmt
      */
-    static setO(obj: JQuery, value: string | null | undefined): void {
+    static setO(obj: JQuery, value?: string): void {
         let date: string;
         let hour: number;
-        let min: number;
-        
+        let min: number;        
         if (_Str.isEmpty(value)) {
             date = '';
             hour = 0;
             min = 0;
         } else {
             date = value!; //_iDate will set
-            hour = parseInt(_Str.getMid(value!, ' ', ':'), 10);
-            min = parseInt(_Str.getMid(value!, ':', ':'), 10);
+            hour = parseInt(_Str.getMid(value, ' ', ':'), 10);
+            min = parseInt(_Str.getMid(value, ':', ':'), 10);
         }
         
         _iDate.setO(_iDt._boxGetDate(obj), date);
-        _iSelect.setO(_iDt._boxGetHour(obj), hour);
-        _iSelect.setO(_iDt._boxGetMin(obj), min);
+        _iSelect.setO(_iDt._boxGetHour(obj), hour.toString());
+        _iSelect.setO(_iDt._boxGetMin(obj), min.toString());
     }
 
     static setEditO(obj: JQuery, status: boolean): void {

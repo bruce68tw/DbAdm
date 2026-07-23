@@ -156,12 +156,12 @@ class GenCrudVo {
 
         //qitem set sort
         this.tbodyQitem.find('.xu-tr').each(function (i, item) {
-            _iText.set('Sort', i, $(item));
+            _iText.set('Sort', i.toString(), $(item));
         });
 
         //ritem set sort
         this.tbodyRitem.find('.xu-tr').each(function (i, item) {
-            _iText.set('Sort', i, $(item));
+            _iText.set('Sort', i.toString(), $(item));
         });
 
         //etable/eitem set sort
@@ -181,12 +181,12 @@ class GenCrudVo {
             tableIds[i] = tableId;
 
             //etable sort
-            _iText.set('Sort', i, form);
+            _iText.set('Sort', i.toString(), form);
 
             //eitem sort
             //var tbody = form.parent().find('tbody');
             me.getEitemForm(form).find('.xu-tr').each(function (j, item2) {
-                _iText.set('Sort', j, $(item2));    //set sort 
+                _iText.set('Sort', j.toString(), $(item2));    //set sort 
             });
         });
         return error;
@@ -433,7 +433,7 @@ class GenCrudVo {
 
     //called by 2 places
     async changeItemTableA(tableId: string) {
-        await _Ajax.getJsonA('GetColumns', { tableId: tableId }, function (rows) {
+        await _Ajax.getJsonsA('GetColumns', { tableId: tableId }, function (rows) {
             this.divItemsBody.empty();
             for (var i = 0; i < rows.length; i++) {
                 this.divItemsBody.append($(Mustache.render(this.tplModalItem, rows[i])));
@@ -540,13 +540,13 @@ class GenCrudVo {
         //this.swapEitemCols();
     }
 
-    onEtDelete() {
+    async onEtDelete() {
         //check
         if (this.etableLen == 0)
             return;
 
         //confirm
-        _Tool.ans('是否移除畫面資料?', function () {
+        if (await _Tool.ansA('是否移除畫面資料?')) {
             var nav = this.etGetNav();
             var tab = this.etGetTab();
 
@@ -567,9 +567,10 @@ class GenCrudVo {
 
             //delete eitem rows
             var form2 = this.getEitemForm(form);
+            var me = this;
             form2.find('.xu-tr').each(function () {
-                key = this.mEitem.getKey($(this));
-                this.mEitem.deleteRow(key);
+                key = me.mEitem.getKey($(this));
+                me.mEitem.deleteRow(key);
             });
             //===
 
@@ -583,7 +584,7 @@ class GenCrudVo {
             //focus new tab
             if (index >= 0)
                 this.etFocusNav(nav2);
-        });
+        }
     }
 
     onEtLeft() {
@@ -818,7 +819,7 @@ class GenCrudVo {
                     let rb = mUiItem.idToRowBox(itemIds[k]); //get row box
                     _iText.set('BoxId', boxId, rb);
                     _iText.set('ChildNo', childNo, rb);
-                    _iText.set('Sort', k + 1, rb);
+                    _iText.set('Sort', (k + 1).toString(), rb);
                 }
             }
         }

@@ -9,7 +9,6 @@ import "./tsBase/enum/MouseEstr";
 import "./tsBase/enum/NodeTypeEstr";
 import "./tsBase/enum/UiItemTypeEstr";
 
-import "./tsBase/dto/AjaxDto";
 import "./tsBase/dto/BaseResDto";
 import "./tsBase/dto/ChartDto";
 import "./tsBase/dto/EditDto";

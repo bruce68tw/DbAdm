@@ -25,11 +25,11 @@
 class EditOne {
     //private [_Edit.Childs]: any;
 
-    private kid: string;
     private is1to1: boolean;
 
     //global
     _childs: OneMany[];
+    kid: string;
     fnValid: any;
     eform: JQuery;
     systemError: string;
@@ -83,7 +83,7 @@ class EditOne {
 
     private _resetAndNew(init?: boolean): void {
         _Form.reset(this.eform, init);
-        _iText.set(this.kid, -1, this.eform);
+        _iText.set(this.kid, '-1', this.eform);
     }
 
     valid(): boolean {

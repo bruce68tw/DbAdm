@@ -19,7 +19,7 @@ class _Fun {
     static jwtToken = '';   //for JWT, 登入後自行設定內容
 
     // mid variables
-    static data: Json = {};
+    //static data: Json = {};
 
     // datatables column define default values
     static dtColDef: Json = {
@@ -30,6 +30,7 @@ class _Fun {
         orderSequence: ['asc', 'desc'],
     };
 
+    //for test
     static async onHelloA() {
         await _Ajax.getStrA('../Fun/Hello', null, function (msg: string) {
             alert(msg);
@@ -70,12 +71,12 @@ class _Fun {
         _Prog.init();
     }
 
-    static async setLocaleA(code: string) {
-        await _Fun.loadScriptA(`/locale/${code}.min.js`);
+    static async setLocaleA(locale: string) {
+        await _Fun.loadScriptA(`/locale/${locale}.min.js`);
 
         // Dayjs locale
         //dayjs.locale(code.toLowerCase());
-        _Date.setLocale(code);
+        _Date.setLocale(locale);
 
         // bootstrap-datepicker
         //$.fn.datepicker.dates[code] = module.datepicker;

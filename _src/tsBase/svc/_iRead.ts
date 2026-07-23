@@ -1,13 +1,13 @@
-//不繼承 _iBase
+//唯讀文字欄位, 不繼承 _iBase, 欄位型態為 string
 class _iRead {
     //value by fid
-    static get(fid: string, form?: JQuery): string {
-        return this.getO(_Obj.get(fid, form));
+    static get(fid: string, box: JQuery): string {
+        return this.getO(_Obj.get(fid, box));
     }
 
     //value by filter
-    static getF(filter: string, form?: JQuery): string {
-        return this.getO(_Obj.getByFt(filter, form));
+    static getF(filter: string, box: JQuery): string {
+        return this.getO(_Obj.getByFt(filter, box));
     }
 
     //value by object
@@ -15,17 +15,17 @@ class _iRead {
         return obj.text();
     }
 
-    static set(fid: string, value: string | number, form?: JQuery): void {
-        this.setO(_Obj.get(fid, form), value);
+    static set(fid: string, value: string, box: JQuery) {
+        this.setO(_Obj.get(fid, box), value);
     }
 
-    static setF(filter: string, value: string | number, form?: JQuery): void {
-        this.setO(_Obj.getByFt(filter, form), value);
+    static setF(filter: string, value: string, box: JQuery) {
+        this.setO(_Obj.getByFt(filter, box), value);
     }
 
-    static setO(obj: JQuery, value: string | number): void {
+    static setO(obj: JQuery, value: string) {
         obj.text(value);
-        obj.text(value);    //for XiRead
+        //obj.text(value);    //for XiRead
     }
 }
 window._iRead = _iRead;

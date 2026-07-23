@@ -1,3 +1,4 @@
+//radio欄位, 欄位型態使用 StrNum
 class _iRadio extends _iBase {
     //=== get ===
     //get checked data-value
@@ -8,6 +9,7 @@ class _iRadio extends _iBase {
     /**
      * get checked data-value by fid
      * param obj {object} single object
+     * param box {object} 可能為空值!!
      */ 
     static getO(obj: JQuery, box?: JQuery): string {
         return this._getByName(_Obj.getName(obj), box);
@@ -26,22 +28,22 @@ class _iRadio extends _iBase {
 
     //=== set ===
     //改成用name來查欄位
-    static set(fid: string, value: string | number, box?: JQuery): void {
+    static set(fid: string, value: string, box?: JQuery) {
         this._setByName(fid, value, box);
     }
     
-    static setO(obj: JQuery, value: string | number, box?: JQuery): void {
+    static setO(obj: JQuery, value: string, box?: JQuery) {
         this._setByName(_Obj.getName(obj), value, box);
     }
 
-    static reset(fid: string, box?: JQuery): void {
+    static reset(fid: string, box?: JQuery) {
         const objs = _Obj.getByFt(`[name='${fid}']`, box);
         if (objs != null)
             objs.prop('checked', false);
     }
 
     //set checked status by name & data-value
-    private static _setByName(name: string, value: string | number, box?: JQuery): void {
+    private static _setByName(name: string, value: string, box?: JQuery) {
         const obj = _Obj.getByFt(`[name='${name}'][data-value='${value}']`, box);
         if (obj != null) 
             obj.prop('checked', true);
@@ -49,7 +51,7 @@ class _iRadio extends _iBase {
 
     //set status by name
     //改成用name來查欄位
-    static setEdit(fid: string, status: boolean, box?: JQuery): void {
+    static setEdit(fid: string, status: boolean, box?: JQuery) {
         //use getN() !!
         this.setEditO(_Obj.get(fid, box), status);
     }
@@ -59,13 +61,13 @@ class _iRadio extends _iBase {
      * @param {object} obj, 可以是複數
      * @param {bool} status
      */
-    static setEditO(obj: JQuery, status: boolean): void {
+    static setEditO(obj: JQuery, status: boolean) {
         obj.attr('disabled', !status ? 'disabled' : null); //use attr !!
     }
 
     //for modal單選畫面
     //傳回checked一筆資料, 讀取tr全部data欄位
-    static getCheck0Tr(form: JQuery): JQuery | null {
+    static getCheck0Tr(form: JQuery): JQueryN {
         const radio = _Obj.getByFt(_iCheck.fltCheckeds, form).first();
         return (radio.length == 1) ? radio.closest('tr') : null;
     }
@@ -81,7 +83,7 @@ class _iRadio extends _iBase {
      * @param {string} extProp (optional) extProp
      * @return {string} html string.
     */
-    static render(fid: string, label?: string, checked?: boolean, value?: StrNum, editable?: boolean, extClass?: string, extProp?: string): string {
+    static render(fid: string, label?: string, checked?: boolean, value?: string, editable?: boolean, extClass?: string, extProp?: string): string {
         const html = "" +
             "<label class='xi-check {0}'>" +
             "   <input type='radio'{1}>{2}" +
@@ -96,7 +98,7 @@ class _iRadio extends _iBase {
         if (label == '')
             label = '&nbsp;';
         if (_Str.isEmpty(valStr as string))
-            valStr = 1;
+            valStr = '1';
 
         //attr
         extProp += " data-id='" + fid + "' name='" + fid + "'" + 

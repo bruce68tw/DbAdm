@@ -1,3 +1,4 @@
+//¼Æ­ÈÄæ¦ì
 class _iNum extends _iBase {
     /*
     static getO(obj: JQuery): string {

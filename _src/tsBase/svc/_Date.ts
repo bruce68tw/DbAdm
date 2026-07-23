@@ -1,5 +1,7 @@
+//處理日期轉換, moment因為停更, 改用dayjs
 class _Date {
 
+    //更換語系(或初始化)後必須設定
     static setLocale(locale: string) {
         dayjs.locale(locale);
     }
@@ -15,11 +17,17 @@ class _Date {
         //var start2 = box.find
     }
 
+    //傳回 dayjs 物件
+    //dts: date/datetime 字串, 空白表示目前時間
+    static getObj(dts?:string): Dayjs {
+        return dayjs(dts);
+    }
+
     /**
      * get today date string in UI format
      */
     static uiToday(): string {
-        var mm = dayjs();
+        var mm = _Date.getObj();
         return _Date.mmToUiDate(mm);
     }
 
@@ -27,12 +35,12 @@ class _Date {
      * get this week monday in UI format
      */
     static uiWeekMonday(): string {
-        var mm = dayjs().day(1);
+        var mm = _Date.getObj().day(1);
         return _Date.mmToUiDate(mm);
     }
 
     static uiWeekFriday(): string {
-        var mm = dayjs().day(5);
+        var mm = _Date.getObj().day(5);
         return _Date.mmToUiDate(mm);
     }
 
@@ -40,7 +48,7 @@ class _Date {
      * get this month first day
      */
     static uiMonthDay1(): string {
-        var mm = dayjs().startOf('month');
+        var mm = _Date.getObj().startOf('month');
         return _Date.mmToUiDate(mm);
     }
 
@@ -48,7 +56,7 @@ class _Date {
      * get this month last day
      */
     static uiMonthDayLast(): string {
-        var mm = dayjs().endOf('month');
+        var mm = _Date.getObj().endOf('month');
         return _Date.mmToUiDate(mm);
     }
 
@@ -74,13 +82,13 @@ class _Date {
     static dsToUiDate(ds: string): string {
         return _Str.isEmpty(ds)
             ? ''
-            : _Date.mmToUiDate(dayjs(ds));
+            : _Date.mmToUiDate(_Date.getObj(ds));
     }
 
     static dtsToUiDate(dts: string): string {
         return _Str.isEmpty(dts)
             ? ''
-            : _Date.mmToUiDate(dayjs(dts));
+            : _Date.mmToUiDate(_Date.getObj(dts));
     }
 
     /**
@@ -94,18 +102,18 @@ class _Date {
         if (format !== undefined) {
             return (_Str.isEmpty(ds))
                 ? ''
-                : dayjs(ds).format(format);
+                : _Date.getObj(ds).format(format);
         }
 
         return _Str.isEmpty(ds)
             ? ''
-            : _Date.mmToUiDate(dayjs(ds));
+            : _Date.mmToUiDate(_Date.getObj(ds));
     }
 
     static dtsToUiDt(dts: string): string {
         return _Str.isEmpty(dts)
             ? ''
-            : _Date.mmToUiDt(dayjs(dts));
+            : _Date.mmToUiDt(_Date.getObj(dts));
     }
 
     /**
@@ -116,20 +124,20 @@ class _Date {
     static dtsToUiDt2(dts: string): string {
         return _Str.isEmpty(dts)
             ? ''
-            : _Date.mmToUiDt2(dayjs(dts));
+            : _Date.mmToUiDt2(_Date.getObj(dts));
     }
 
     //get datetime value for compare
     static dtsToValue(dts: string): number {
         return (_Str.isEmpty(dts))
             ? 0
-            : dayjs(dts).valueOf();
+            : _Date.getObj(dts).valueOf();
     }
 
     static dtsToMoment(dts: string): Dayjs | null {
         return (_Str.isEmpty(dts))
             ? null
-            : dayjs(dts);
+            : _Date.getObj(dts);
     }
 
     /**
@@ -169,10 +177,9 @@ class _Date {
     static getDt(fDate: string, fTime: string, box: JQuery): string {
         var date = _iDate.get(fDate, box);
         var time = _iSelect.get(fTime, box);
-        if (date == '')
-            return '';
-        else
-            return (time == '') ? date : date + ' ' + time;
+        return (date == '') ? '' :
+            (time == '') ? date :
+            `${date} ${time}`;
     }
 
     /**
@@ -182,7 +189,7 @@ class _Date {
      * return {bool}
      */
     static isBig(ds1: string, ds2: string): boolean {
-        return dayjs(ds1).isAfter(dayjs(ds2));
+        return _Date.getObj(ds1).isAfter(_Date.getObj(ds2));
     }
 
     /**
@@ -194,7 +201,7 @@ class _Date {
     static getMonthDiff(ds1: string, ds2: string): number {
         return (_Str.isEmpty(ds1) || _Str.isEmpty(ds2))
             ? 0
-            : _Date.getMonthDiffByDate(dayjs(ds1), dayjs(ds2));
+            : _Date.getMonthDiffByDate(_Date.getObj(ds1), _Date.getObj(ds2));
     }
 
     /**
@@ -216,7 +223,7 @@ class _Date {
      * return {string} new js date string
      */
     static dsAddYear(ds: string, year: number): string {
-        return dayjs(ds).add(year, 'year').format(_Fun.MmDtFmt);
+        return _Date.getObj(ds).add(year, 'year').format(_Fun.MmDtFmt);
     }
 
 }

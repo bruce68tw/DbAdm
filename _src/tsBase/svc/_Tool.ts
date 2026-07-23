@@ -8,7 +8,7 @@ class _Tool {
     static fnResolve: ((value: boolean) => void) | null = null;
 
     static xMsg: JQuery;
-    static xAns: JQuery;
+    //static xAns: JQuery;
     static xAnsA: JQuery;
     static xAlert: JQuery;
     static xArea: JQuery;
@@ -16,14 +16,14 @@ class _Tool {
     static xWork: JQuery;
 
     private static _fnOnMsgClose: (() => void) | null | undefined = null;
-    private static _fnOnAnsYes: (() => void) | null | undefined = null;
-    private static _fnOnAnsNo: (() => void) | null | undefined = null;
+    //private static _fnOnAnsYes: (() => void) | null | undefined = null;
+    //private static _fnOnAnsNo: (() => void) | null | undefined = null;
     private static _fnOnAreaYes: ((value: string) => void) | null | undefined = null;
 
     static init(): void {
         // alert
         _Tool.xMsg = $('#xMsg');      // 使用id
-        _Tool.xAns = $('#xAns');      // 使用id
+        //_Tool.xAns = $('#xAns');      // 使用id
         _Tool.xAnsA = $('#xAnsA');    // 使用id, 非同步
         _Tool.xAlert = $('.x-alert');
         _Tool.xArea = $('.x-area');
@@ -51,6 +51,7 @@ class _Tool {
      * @param fnYes
      * @param fnNo
      */
+    /*
     static ans(msg: string, fnYes?: () => void, fnNo?: () => void): void {
         const box = _Tool.xAns;
         box.find(_Tool.FltMsgText).html(msg);
@@ -60,6 +61,7 @@ class _Tool {
         _Tool._fnOnAnsYes = fnYes;
         _Tool._fnOnAnsNo = (fnNo == null) ? null : fnNo;
     }
+    */
 
     /**
      * 非同步方式, 比callback function(promise)方便
@@ -73,8 +75,8 @@ class _Tool {
         _Modal.show(box);
 
         // set callback
-        _Tool._fnOnAnsYes = null;
-        _Tool._fnOnAnsNo = null;
+        //_Tool._fnOnAnsYes = null;
+        //_Tool._fnOnAnsNo = null;
 
         return new Promise<boolean>((resolve) => {
             // reset flag, 防止重複 resolve
@@ -83,6 +85,7 @@ class _Tool {
         });
     }
 
+    /*
     // called by ansA yes/no onclick event
     static onAnsA(value: StrNum): void {
         if (_Tool.ansStatus) return;
@@ -93,6 +96,7 @@ class _Tool {
             _Tool.fnResolve(value == 1);
         }
     }
+    */
 
     /**
      * show alert(auto close), use bootstrap alert
@@ -182,6 +186,7 @@ class _Tool {
      * triggered when user click confirmation yes button
      * called by XgAnsHelper
      */
+    /*
     static onAnsYes(): void {
         if (_Tool._fnOnAnsYes) {
             _Modal.hide(_Tool.xAns);
@@ -195,6 +200,7 @@ class _Tool {
         }
         _Modal.hide(_Tool.xAns);
     }
+    */
 
     static onMsgClose(): void {
         if (_Tool._fnOnMsgClose) {

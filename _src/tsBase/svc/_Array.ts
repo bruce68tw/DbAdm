@@ -20,7 +20,7 @@ class _Array {
      * @param sep {string} separator, default to ','
      * @returns {string} ex: '1,2,3'
      */ 
-    static toStr(ary: StrNum[], sep: string = ","): string {
+    static toStr(ary: StrNum[], sep = ","): string {
         return ary.join(sep);
     }
 

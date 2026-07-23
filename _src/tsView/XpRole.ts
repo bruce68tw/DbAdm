@@ -27,7 +27,7 @@ class XpRoleVo {
             deptId: _iSelect.get('DeptId', this.modalUser),
             name: _iText.get('Name', this.modalUser),
         };
-        await _Ajax.getJsonA('GetUsers', data, (rows) => {
+        await _Ajax.getJsonsA('GetUsers', data, (rows) => {
             this.modalUserBody.empty();
             for (var i = 0; i < rows.length; i++) {
                 //這裡不必註記"新增"

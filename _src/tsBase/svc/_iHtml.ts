@@ -1,3 +1,4 @@
+//html editor, 使用 summernote, 型別使用 any
 class _iHtml extends _iBase {
     //constant
     static Filter = '[data-type=html]';
@@ -26,7 +27,7 @@ class _iHtml extends _iBase {
      * param prog {string} program code
      * param height {int} (optional)input height(px)
      */
-    static init(edit: any, prog: string, height?: number): void {
+    static init(edit: OneMany, prog: string, height?: number): void {
         edit.eform.find(_iHtml.Filter).each(function (this: Elm) {
             const upMe = $(this);
             upMe.data('prog', prog);    //for onImageUpload()

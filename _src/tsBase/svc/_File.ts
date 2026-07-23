@@ -1,6 +1,7 @@
+//檔名相關資訊
 class _File {
   /**
-   * get file name by path
+   * get file name without path
    */
   static getFileName(path: string): string {
     const sep: '/' | '\\' = path.indexOf('/') > 0 ? '/' : '\\';

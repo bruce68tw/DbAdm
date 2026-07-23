@@ -3,7 +3,7 @@ class _Html {
     static loadTheme(color: string): void {
         const link = document.getElementById('xgTheme') as HTMLLinkElement | null;
         if (link) {
-            link.href = `/css/view/_xg${color}.css`;
+            link.href = `/cssView/_xg${color}.css`;
         }
     }
 
