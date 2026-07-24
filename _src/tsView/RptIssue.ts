@@ -21,7 +21,7 @@ _vo = {
 };
 
 _me = {
-    init: function () {
+    init() {
         //datatable config
         var config = {
             paginate: false, //不顯示分頁, 顯示全部資料

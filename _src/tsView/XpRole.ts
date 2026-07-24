@@ -79,15 +79,15 @@ _vo = new XpRoleVo();
 //var vo = _vo as XpRoleVo;
 
 _me = {
-    init: function () {        
+    init() {        
         //datatable config
         var config = {
             columns: [
                 { data: 'Name' },
-                { data: '_Fun' },
+                { data: '_Crud' },
             ],
             columnDefs: [
-				{ targets: [1], render: function (data, type, full, meta) {
+				{ targets: [1], render(data, type, full, meta) {
                     return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],

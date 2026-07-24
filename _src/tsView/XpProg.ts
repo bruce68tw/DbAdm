@@ -7,7 +7,7 @@ _vo = {
 }
 
 _me = {
-    init: function () {
+    init() {
         //datatable config
         var config = {
             columns: [
@@ -16,13 +16,13 @@ _me = {
                 { data: 'Url' },
                 { data: 'AuthRow' },
                 { data: 'Sort' },
-                { data: '_Fun' },
+                { data: '_Crud' },
             ],
             columnDefs: [
-                { targets: [3], render: function (data, type, full, meta) {
+                { targets: [3], render(data, type, full, meta) {
                     return _me.crudR.dtYesEmpty(data);
                 }},
-                { targets: [5], render: function (data, type, full, meta) {
+                { targets: [5], render(data, type, full, meta) {
                     return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],

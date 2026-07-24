@@ -18,7 +18,6 @@ class EditMany {
     private mode = EditModeEstr.Base;
     private modeData: any = '';
 
-    private systemError = '';
     private rowFilter: string;
     private sortFid: string;
     private hasRowTpl: boolean;
@@ -35,6 +34,7 @@ class EditMany {
     eform: JQuery;
     validator: any;
     dataJson: Json; //主要用於EditOne存原始資料, GenCrud屬特殊情形mTable會使用 
+    systemError = '';
     fnReset: () => void;
     fnLoadRows: (rows: Json[]) => void;
     fnValid: () => boolean;

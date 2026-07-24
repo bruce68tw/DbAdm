@@ -3,7 +3,7 @@
 });
 
 _me = {
-    init: function () {
+    init() {
         //datatable config
         var config = {
             columns: [
@@ -12,13 +12,13 @@ _me = {
                 { data: 'Sort' },
                 { data: 'Status' },
                 { data: 'CreatorName' },
-                { data: '_fun' },
+                { data: '_Crud' },
             ],
             columnDefs: [
-                { targets: [3], render: function (data, type, full, meta) {
+                { targets: [3], render(data, type, full, meta) {
                     return _me.crudR.dtStatusName(data);
                 }},
-                { targets: [5], render: function (data, type, full, meta) {
+                { targets: [5], render(data, type, full, meta) {
                     return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],

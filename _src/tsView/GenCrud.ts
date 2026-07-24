@@ -677,7 +677,7 @@ class GenCrudVo {
     //#region for 拖拉編輯(分離檔案無法使用 IntelliSense)
     async onOpenEdit1(id: StrNum) {
         _me.crudE.mEditSetEditNo(1);
-        await _me.crudE.onUpdateA(id);
+        await _me.crudE.onUpdate(id);
     }
 
     //下載 table sql
@@ -858,7 +858,7 @@ _vo = new GenCrudVo();
 
 _me = {
     //#region for Crud
-    init: function () {
+    init() {
 		//datatable config
 		var config = {
 			columns: [
@@ -870,31 +870,31 @@ _me = {
                 { data: 'IsUi' },
                 { data: '_Fun' },
                 { data: 'Created' },
-                { data: '_CrudFun' },
                 { data: 'Status' },
+                { data: '_Crud' },
 			],
             columnDefs: [
                 /*
-				{ targets: [0], render: function (data, type, full, meta) {
+				{ targets: [0], render(data, type, full, meta) {
                     return _me.crudR.dtCheck0(full.Id);
 				}},
                 */
-				{ targets: [4], render: function (data, type, full, meta) {
+				{ targets: [4], render(data, type, full, meta) {
                     return (data == 1)
                         ? `<button type="button" class="btn btn-link" data-onclick="_me.onOpenEdit1" data-args="${full.Id}">拖拉編輯</button> | ` +
                           `<button type="button" class="btn btn-link" data-onclick="_me.onDownTableSql" data-args="${full.Id}">下載Table SQL</button>`
                         : '';
 				}},
-				{ targets: [5], render: function (data, type, full, meta) {
+				{ targets: [5], render(data, type, full, meta) {
                     var dis = (full.Status == 1) ? '' : 'disabled';
                     return `<button type="button" ${dis} class="btn btn-outline-secondary btn-sm" data-onclick="_me.onGenCrud" data-args="${full.Id}">產生CRUD</button>`;
 				}},
-                { targets: [7], render: function (data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, false, true);
-                }},
-				{ targets: [8], render: function (data, type, full, meta) {
+				{ targets: [7], render(data, type, full, meta) {
                     return _me.crudR.dtStatusName(data);
 				}},
+                { targets: [8], render(data, type, full, meta) {
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, false, true);
+                }},
 			],
         };
 
@@ -915,7 +915,7 @@ _me = {
             vo.fnAfterOpenEdit0(fun, json);
     },
 
-    fnWhenSave: function (fun: FunEstr) {
+    fnWhenSave(fun: FunEstr) {
         const vo = _vo as GenCrudVo;
         return vo.isEdit1()
             ? vo.fnWhenSave1(fun)
@@ -923,7 +923,7 @@ _me = {
     },
 
     //#region auto called function
-    fnAfterSwap: function (toRead: boolean) {
+    fnAfterSwap(toRead: boolean) {
         var tbar = $('.xd-prog-tbar');
         if (toRead) {
             _Obj.hide(tbar);

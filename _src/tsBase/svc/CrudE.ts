@@ -3,6 +3,7 @@
  * 說明:
  *   前端使用固定 filter: #divEdit
  *   可以單獨使用CrudE(必要時執行CrudE.setGlobal()), 例如:簽核
+ *   event handler onXXX, 若是非同步後面也不加 'A' !!
  * 寫入 _me 屬性:
  *   crudE
  *   divEdit
@@ -252,7 +253,7 @@ class CrudE {
 
         for (let i = 0; i < childLen; i++) {
             const edit2 = this._EditGetChild(edit, i);
-            const key2 = (_Edit.isEditOne(edit2)) ? edit2.getKey() : key;
+            const key2 = (_Edit.isEditOne(edit2)) ? (edit2 as EditOne).getKey() : key;
 
             childs[i] = {};
             if (this._getUpdJson2(edit2, key2, levelStr + i, formData, fileJson, childs[i])) {
@@ -323,9 +324,9 @@ class CrudE {
         for (let i = 0; i < childLen; i++) {
             const edit2 = this._EditGetChild(edit, i);
             if (_Edit.isEditOne(edit2)) {
-                edit2.reset(init);
+                (edit2 as EditOne).reset(init);
             } else {
-                edit2.reset();
+                (edit2 as EditMany).reset();
             }
         }
     }
@@ -360,7 +361,7 @@ class CrudE {
         _me.crudR.toEditMode(fun);
     }
 
-    private _EditGetChild(edit: OneMany, childIdx: number): any {
+    private _EditGetChild(edit: OneMany, childIdx: number): OneMany {
         return edit._childs[childIdx];
     }
 
@@ -380,11 +381,11 @@ class CrudE {
         const childLen = this._EditGetChildLen(edit);
         for (let i = 0; i < childLen; i++) {
             const edit2 = this._EditGetChild(edit, i);
-            edit2.rowsToNew();
+            (edit2 as EditMany).rowsToNew();
         }
     }
 
-    dataSetFileJson(data: any, fileJson: any): void {
+    dataSetFileJson(data: any, fileJson: Json): void {
         if (_Json.isEmpty(fileJson)) return;
 
         const fid = _Edit.FileJson;
@@ -402,19 +403,23 @@ class CrudE {
         this.afterOpen(fun, null);
     }
 
-    async onUpdateA(key: any): Promise<boolean> {
+    //onUpdateA -> onUpdate
+    async onUpdate(key: StrNum): Promise<boolean> {
         return await this._getJsonAndEditA(FunEstr.Update, key);
     }
 
-    async onViewA(key: any): Promise<boolean> {
+    //onViewA -> onView
+    async onView(key: StrNum): Promise<boolean> {
         return await this._getJsonAndEditA(FunEstr.View, key);
     }
 
-    async onSignA(key: any): Promise<boolean> {
+    //onSignA -> onSign
+    async onSign(key: StrNum): Promise<boolean> {
         return await this._getJsonAndEditA(FunEstr.Create, key);
     }
 
-    async onCopyA(key: any): Promise<void> {
+    //onCopyA -> onCopy
+    async onCopy(key: StrNum) {
         if (await this._getJsonAndEditA(FunEstr.View, key)) {
             this.editToNew();
         }
@@ -427,7 +432,8 @@ class CrudE {
         });
     }
 
-    async onSaveA(): Promise<void> {
+    //onSaveA -> onSave
+    async onSave() {
         if (!this.validAll()) {
             _Tool.alert(_BR.InputWrong);
             return;
@@ -489,7 +495,8 @@ class CrudE {
         }
     }
 
-    async onDraftA(): Promise<void> {
+    //onDraftA -> onDraft
+    async onDraft() {
         const formData = new FormData();
         const json = this._getUpdJson(formData);
         if (_Json.isEmpty(json)) {

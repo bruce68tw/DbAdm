@@ -197,22 +197,22 @@ _me = {
                 { data: 'OwnerName' },
                 { data: 'SendTimes' },      //9:寄送問卷次數
                 { data: '_Survey' },        //10.空白(沒有問卷Id && 沒有回報人)/已填問卷(有問卷Id)/寄送問卷(有回報人)
-                { data: '_fun' },
+                { data: '_Crud' },
             ],
             columnDefs: [
-                { targets: [3], render: function (data, type, full, meta) {
+                { targets: [3], render(data, type, full, meta) {
                     return _Date.dsToUiDate(data);
                 }},
-                { targets: [7], render: function (data, type, full, meta) {
+                { targets: [7], render(data, type, full, meta) {
                     return _me.crudR.dtYesEmpty(data);
                 }},
-                { targets: [11], render: function (data, type, full, meta) {
+                { targets: [11], render(data, type, full, meta) {
                     return _Str.notEmpty(full.SurveyId) ? '是' :
                         (full.IsFinish == 1 && _Str.notEmpty(full.RptUser) && (full.OwnerId == _Fun.userId || _Fun.userId=='Bruce'))
                             ? `<button type='button' class='btn btn-secondary' data-onclick='_vo.onSurvey' data-args='${full.Id}'>寄問卷</button>`
                             : '';
                 }},
-                { targets: [12], render: function (data, type, full, meta) {
+                { targets: [12], render(data, type, full, meta) {
                     return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],

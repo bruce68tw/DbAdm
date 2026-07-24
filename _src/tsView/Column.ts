@@ -13,17 +13,17 @@ _me = {
                 { data: 'Name' },
                 { data: 'DataType', orderable: true },
                 { data: 'CreatorName' },
-                { data: '_Fun' },
                 { data: 'Status', orderable: true },
+                { data: '_Fun' },
             ],
 
             //修改:如果查詢結果欄位有特殊的顯示規則就寫在這裡
             columnDefs: [
-                { targets: [6], render: function (data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
-                }},
-                { targets: [7], render: function (data, type, full, meta) {
+                { targets: [6], render(data, type, full, meta) {
                     return _me.crudR.dtStatusName(data);
+                }},
+                { targets: [7], render(data, type, full, meta) {
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
         };
@@ -33,7 +33,7 @@ _me = {
     },
 
     /*
-    fnOnViewFile: function (table:string, fid:string) {
+    fnOnViewFile(table:string, fid:string) {
         _me.edit0.onViewFile(table, fid);
     },
     */

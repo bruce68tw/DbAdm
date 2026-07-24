@@ -155,6 +155,11 @@ class EditOne {
         return fileJson;
     }
 
+    /**
+     * 因為會讀取目前Elm, 行為類似event, 所以命名 onXXX
+     * @param table
+     * @param fid
+     */
     async onViewFile(table: string, fid: string): Promise<void> {
         var elm = _Fun.getMeElm();
         var key = this.getKey() as string;

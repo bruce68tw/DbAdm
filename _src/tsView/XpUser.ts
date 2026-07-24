@@ -15,7 +15,7 @@ _me = {
                 { data: 'Name', sortable: true },
                 { data: 'DeptName' },
                 { data: 'Status', sortable: true },
-                { data: '_Fun' },
+                { data: '_Crud' },
             ],
             columnDefs: [
 				{ targets: [3], render: function(data) {

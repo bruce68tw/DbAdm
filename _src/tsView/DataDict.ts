@@ -3,7 +3,7 @@
 });
 
 _me = {
-    init: function () {
+    init() {
         var config = {
             columns: [
                 { data: 'TableTypeName', orderable: true },
@@ -16,10 +16,10 @@ _me = {
                 { data: '_Fun' },
             ],
             columnDefs: [
-                { targets: [4], render: function (data, type, full, meta) {
+                { targets: [4], render(data, type, full, meta) {
                     return _me.crudR.dtYesEmpty(data);
                 }},
-                { targets: [7], render: function (data, type, full, meta) {
+                { targets: [7], render(data, type, full, meta) {
                     return _me.crudR.dtCrudFun(full.Code, full.Name, true, true, true);
                 }},
             ],

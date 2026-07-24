@@ -2,7 +2,7 @@
     _me.init();
 });
 class ProjectVo {
-    prjId: string = '';
+    prjId = '';
 
     //import excel into Db
     async onImport(id: string) {
@@ -24,7 +24,7 @@ class ProjectVo {
 
     /*
     //generate txt file for table relationship
-    onGenRelat: function (id) {
+    onGenRelat(id) {
         _Tool.ans('是否確定產生資料表產生關聯?', function () {
             window.location = 'GenRelat?id=' + id;
         });
@@ -50,22 +50,28 @@ _me = {
                 { data: 'DbName' },
                 { data: 'CreatorName', orderable: true },
                 { data: '_Fun' },
-                { data: '_Crud' },
                 { data: 'Status', orderable: true },
+                { data: '_Crud' },
             ],
             columnDefs: [
-                { targets: [4], render: function (data, type, full, meta) {
-                    var html = '' +
+                { targets: [4], render(data, type, full, meta) {
+                    const crudR = _me.crudR;
+                    return '' +
+                        crudR.dtLinkBtn(full.Id, '匯入結構', '_vo.onImport') + ' | ' +
+                        crudR.dtLinkBtn(full.Id, '產生文件', '_vo.onGenWord') + ' | ' +
+                        crudR.dtLinkBtn(full.Id, '產生異動SQL', '_vo.onGenLogSql');
+                        /*
                         '<button type="button" class="btn btn-link" data-onclick="_vo.onImport" data-args="{0}">{1}</button> | ' +
                         '<button type="button" class="btn btn-link" data-onclick="_vo.onGenWord" data-args="{0}">{2}</button> | ' +
                         '<button type="button" class="btn btn-link" data-onclick="_vo.onGenLogSql" data-args="{0}">{3}</button>';
                     return _Str.format(html, full.Id, '匯入結構', '產生文件', '產生異動SQL');
+                        */
                 }},
-                { targets: [5], render: function (data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
-                }},
-                { targets: [6], render: function (data, type, full, meta) {
+                { targets: [5], render(data, type, full, meta) {
                     return _me.crudR.dtStatusName(data);
+                }},
+                { targets: [6], render(data, type, full, meta) {
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
                 }},
             ],
         };

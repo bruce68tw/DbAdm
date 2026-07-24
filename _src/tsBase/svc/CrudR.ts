@@ -115,6 +115,10 @@ class CrudR {
         return `<button type="button" class="btn btn-sm x-btn-other" data-onclick="${fnOnclick}" data-args="${key}">${label}</button>`;
     }
 
+    dtLinkBtn(key: StrNum, label: string, fnOnclick: string): string {
+        return `<button type="button" class="btn btn-link" data-onclick="${fnOnclick}" data-args="${key}">${label}</button>`;
+    }
+
     /**
      * checkbox for multiple select
      * @param value {string} [1] checkbox value
@@ -124,20 +128,18 @@ class CrudR {
         if (_Str.isEmpty(value as string)) value = 1;
 
         //attr
-        var attr: string = "data-fid='" + _iCheck.fidCheck0 + "'" + " data-value='" + value + "'";
+        //var attr: string = "data-fid='" + _iCheck.fidCheck0 + "'" + " data-value='" + value + "'";
+        var attr: string = `data-fid='${_iCheck.fidCheck0}' data-value='${value}'`;
         if (editable === false) attr += ' readonly';
         //if (checked)
         //    attr += ' checked';
 
         //x-no-label for checked sign position
         return (
-            '' +
             "<label class='xi-check x-no-label'>" +
-            '   <input ' +
-            attr +
-            " type='checkbox'>" +
+            "   <input " + attr + " type='checkbox'>" +
             "   <span class='xi-cspan'></span>" +
-            '</label>'
+            "</label>"
         );
     }
 
@@ -150,7 +152,7 @@ class CrudR {
     /**
      * set status column(checkbox)
      * @param value {string} checkbox value, will translate to bool
-     * @param fnOnClick {string} onclick function, default to this.onSetStatusA
+     * @param fnOnClick {string} onclick function, default to this.onSetStatus
      */
     dtSetStatus(kid: string, value: StrNum, fnOnClick?: string): string {
         //TODO: pending
@@ -160,7 +162,7 @@ class CrudR {
         //debugger;
         var checked = _Str.toBool(value);
         if (_Str.isEmpty(fnOnClick)) {
-            fnOnClick = `_me.crudR.onSetStatusA(this,\'{0}\')`, key);
+            fnOnClick = `_me.crudR.onSetStatus(this,\'{0}\')`, key);
         }
         //??
         return _iCheck.render2(0, '', 1, checked, '', true, '', "onclick=" + fnOnClick);
@@ -206,13 +208,13 @@ class CrudR {
         const preStr: string = `button type="button" class="btn btn-link"`;
         var funs: string = '';
         if (hasUpdate)
-            funs += `<${preStr} data-onclick="_me.crudE.onUpdateA" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudE.onUpdate" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
         if (hasDelete)
-            funs += `<${preStr} data-onclick="_me.crudR.onDeleteA" data-args="${key},${rowName}"><i class="ico-delete x-delete" title="${_BR.TipDelete}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudR.onDelete" data-args="${key},${rowName}"><i class="ico-delete x-delete" title="${_BR.TipDelete}"></i></button>`;
         if (hasView)
-            funs += `<${preStr} data-onclick="_me.crudE.onViewA" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudE.onView" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
         if (hasCopy)
-            funs += `<${preStr} data-onclick="_me.crudE.onCopyA" data-args="${key}"><i class="ico-copy" title="${_BR.TipCopy}"></i></button>`;
+            funs += `<${preStr} data-onclick="_me.crudE.onCopy" data-args="${key}"><i class="ico-copy" title="${_BR.TipCopy}"></i></button>`;
         return funs;
     }
 
@@ -352,7 +354,7 @@ class CrudR {
      * onclick Create button
      * 字尾暫不加上A(非同步)
      */
-    async onCreate(): Promise<void> {
+    async onCreate() {
         //var fun = FunEstr.Create;
         //this.swap(false);  //call first
         //_Prog.setPath(fun);
@@ -379,37 +381,12 @@ class CrudR {
     }
 
     /**
-     * call _me.crudE
-     * onclick Update button
-     * @param key {string} row key
-     */
-    /*
-    async onUpdateA(key) {
-        //_me.crudE._getJsonAndSetMode(key, FunEstr.Update);
-        //this.toEditMode(FunEstr.Update);
-        await _me.crudE.onUpdateA(key);
-    }
-    */
-
-    /**
-     * call _me.crudE
-     * onclick View button
-     * @param key {string} row key
-     */
-    /*
-    async onViewA(key) {
-        //_me.crudE._getJsonAndSetMode(key, FunEstr.View);
-        await _me.crudE.onViewA(key);
-        //this.toEditMode(FunEstr.View);
-    }
-    */
-
-    /**
+     * onSetStatusA -> onSetStatus
      * click setStatus, 固定呼叫後端 SetStatus action
      * me {element} checkbox element
      * key {string} row key
      */
-    async onSetStatusA(elm: Elm, key: string): Promise<void> {
+    async onSetStatus(elm: Elm, key: string) {
         var status: boolean = _iCheck.isCheckedO($(elm));
         await _Ajax.getStrA('SetStatus', { key: key, status: status }, function (msg: string) {
             _Tool.alert(_BR.UpdateOk);
@@ -431,11 +408,12 @@ class CrudR {
     }
 
     /**
+     * onDeleteA -> onDelete
      * onclick Delete, call backend Delete()
      * key {string} row key
      * rowName {string} for confirm
      */
-    async onDeleteA(key: StrNum, rowName: string) {
+    async onDelete(key: StrNum, rowName: string) {
         //_temp.data = { key: key }
         const me = this;
         if (await _Tool.ansA(`${_BR.SureDeleteRow} (${rowName})`)){
@@ -448,14 +426,14 @@ class CrudR {
 
     /**
      * TODO: need test
+     * onDeleteRowsA -> onDeleteRows
      * 移除參數 fid
      * no called
      * 刪除選取的多筆資料, 後端固定呼叫 DeleteByKeys()
      * box {string} row key
      * fid {string} 
      */
-    //async onDeleteRowsA(box, fid) {
-    async onDeleteRowsA(box: JQuery): Promise<void> {
+    async onDeleteRows(box: JQuery) {
         //get selected keys
         var keys: StrNum[] = _iCheck.getCheck0Values(box);
         if (keys.length === 0) {
