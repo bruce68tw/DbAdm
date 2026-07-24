@@ -7,6 +7,11 @@ class _iCheck extends _iBase {
     static fidCheck0: string = '_check0';
 
     /**
+     * check0 field id, 初始代階段不可使用 _Input
+     */
+    static fltCheck0: string = "[data-fid='_check0']";
+
+    /**
      * filter for get checked list objects, 初始代階段不可使用 _Input
      */
     static fltCheckeds: string = "[data-fid='_check0']:checked";
@@ -94,7 +99,7 @@ class _iCheck extends _iBase {
      * return {string array}
      */ 
     static checkAll(form: JQuery, status: boolean): void {
-        _iCheck.setO(form.find(_iCheck.fltCheckeds), status);
+        _iCheck.setO(form.find(_iCheck.fltCheck0), status);
     }
 }
 window._iCheck = _iCheck;

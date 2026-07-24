@@ -85,6 +85,15 @@ class _Tool {
         });
     }
 
+    static onAnsYes(): void {
+        if (_Tool.ansStatus) return;
+
+        _Tool.ansStatus = true;
+        _Modal.hide(_Tool.xAnsA);
+        _Tool.fnResolve?.(true);
+        _Tool.fnResolve = undefined;
+    }
+
     /*
     // called by ansA yes/no onclick event
     static onAnsA(value: StrNum): void {
@@ -187,13 +196,6 @@ class _Tool {
      * called by XgAnsHelper
      */
     /*
-    static onAnsYes(): void {
-        if (_Tool._fnOnAnsYes) {
-            _Modal.hide(_Tool.xAns);
-            _Tool._fnOnAnsYes();
-        }
-    }
-
     static onAnsNo(): void {
         if (_Tool._fnOnAnsNo) {
             _Tool._fnOnAnsNo();

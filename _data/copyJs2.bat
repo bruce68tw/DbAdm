@@ -20,7 +20,7 @@ rem(常用)
 rem set toNames=DbAdm GroupProg AdoptAdm TplMvc
 set fromName=DbAdm
 rem set toNames=Early GroupProg AdoptAdm TplMvc HrAdm
-set toNames=AdoptAdm
+set toNames=GroupProg
 
 set dirPrj=d:\_project
 set fromPrj=%dirPrj%\%fromName%
