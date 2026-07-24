@@ -10,11 +10,11 @@ class _iLink {
         return obj.text();
     }
 
-    static set(fid: string, value: string, form?: JQuery): void {
+    static set(fid: string, value: string, form?: JQuery) {
         this.setO(_Obj.get(fid, form), value);
     }
     
-    static setO(obj: JQuery, value: string): void {
+    static setO(obj: JQuery, value: string) {
         obj.text(value);
     }
 }

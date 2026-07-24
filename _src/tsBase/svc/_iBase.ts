@@ -10,6 +10,12 @@ class _iBase {
         return this.getO(_Obj.get(fid, box));
     }
 
+    //get value by object
+    static getO(obj: JQuery): string {
+        return (obj == null) ? '' : obj.val() as string;
+    }
+
+    /*
     //??get value by id(#id)
     static getD(id: string, box: JQuery): string {
         return this.getO(_Obj.getById(id, box));
@@ -19,17 +25,18 @@ class _iBase {
     static getF(ft: string, box: JQuery): string {
         return this.getO(_Obj.getByFt(ft, box));
     }
-
-    //get value by object
-    static getO(obj: JQuery): string {
-        return (obj == null) ? '' : obj.val() as string;
-    }
+    */
 
     //set value, set -> setF -> setO
     static set(fid: string, value: string, box: JQuery) {
         this.setO(_Obj.get(fid, box), value);
     }
 
+    static setO(obj: JQuery, value: string) {
+        obj.val(value);
+    }
+
+    /*
     static setD(id: string, value: string, box: JQuery) {
         this.setO(_Obj.getById(id, box), value);
     }
@@ -37,10 +44,7 @@ class _iBase {
     static setF(ft: string, value: string, box: JQuery) {
         this.setO(_Obj.getByFt(ft, box), value);
     }
-
-    static setO(obj: JQuery, value: string) {
-        obj.val(value);
-    }
+    */
 
     //?? get input border for show red border
     //default return this, drive class could rewrite.

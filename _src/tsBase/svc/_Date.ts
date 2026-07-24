@@ -3,7 +3,7 @@ class _Date {
 
     //更換語系(或初始化)後必須設定
     static setLocale(locale: string) {
-        dayjs.locale(locale);
+        dayjs().locale(locale);
     }
 
     /**

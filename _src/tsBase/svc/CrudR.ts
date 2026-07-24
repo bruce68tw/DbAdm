@@ -426,7 +426,8 @@ class CrudR {
     //onCheckAll(me, box, fid) {
     onCheckAll(elm: Elm, box: JQuery) {
         const status = _iCheck.isCheckedO($(elm));
-        _iCheck.setF(_iCheck.fltCheckeds + ':not(:disabled)', status ? '1' : '0', box);
+        const obj = box.find(_iCheck.fltCheckeds + ':not(:disabled)');
+        _iCheck.setO(obj, status ? '1' : '0');
     }
 
     /**

@@ -1,13 +1,4 @@
-﻿/*
-import type BaseResDto from "./tsBase/dto/BaseResDto";
-import type EditOne from "./tsBase/svc/EditOne";
-import type EditMany from "./tsBase/svc/EditMany";
-import type MeDto from "./tsBase/dto/MeDto";
-//import type _Ajax from "./tsBase/svc/_Ajax";
-//import type _Tool from "./tsBase/svc/_Tool";
-*/
-
-/**
+﻿/**
  * for IDE 檢查typeScript語法
  * 個別套件做法不同:
  *  moment: UMD套件, tsconfig 加 allowUmdGlobalAccess: true
@@ -134,17 +125,21 @@ declare global {
         Page: typeof Page;
         //#endregion
 
-        _xg: Json,
-        _vo: Json,
+        //tsView
+        XpVo: typeof XpVo;
+
+        _aa: Json,
+        _xp: XpVo,
         _me: MeDto,
+        _vo: Json,
         _BR: BaseResDto,
     }
 
     //告訴 TypeScript 這些變數的型別是什麼
-    let _xg: Json;
-    let _vo: Json;
+    let _aa: Json;
+    let _xp: XpVo;
     let _me: MeDto;
+    let _vo: Json;
     let _BR: BaseResDto;
 }
-
 export { };

@@ -1,14 +1,9 @@
-﻿//import type XpVo from "./tsView/XpVo";
+﻿declare global {
 
-declare global {
-
-    //擴充 Window 型別
+    //擴充 window 型別 for tsView
     interface Window {
-        //tsView
         UiMany: typeof UiMany;
         UiView: typeof UiView;
-        XpVo: typeof XpVo;
     }
-    const _xp: XpVo;
 }
 export { };

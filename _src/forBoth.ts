@@ -1,6 +1,4 @@
-//import BaseResDto from "./tsBase/dto/BaseResDto";
-//import MeDto from "./tsBase/dto/MeDto";
-
+//編輯 & 建置都需要此檔案
 //for gulp 寫入 base.min.js
 import "./tsBase/enum/EditModeEstr";
 import "./tsBase/enum/FunEstr";
@@ -85,6 +83,7 @@ import "./tsBase/svc/FlowView";
 import "./tsBase/svc/Page";
 
 //加上 tsView
+import "./tsView/XpVo";
 import "./forBoth2";
 
 //必須自行定義
@@ -93,7 +92,8 @@ type Json = Record<string, any>;
 //擴充 Window 型別
 declare global {
     interface Window {
-        _xg: Json,   //global varaiables, 這裡無法用 Json
+        _aa: Json,   //global varaiables
+        _xp: XpVo,
         _me: MeDto,
         _vo: Json,
         _BR: BaseResDto,
@@ -101,7 +101,8 @@ declare global {
 }
 
 //執行時真的建立變數
-window._xg = {};
+window._aa = {};
+window._xp = new XpVo();
 window._me = new MeDto();
 window._vo = {};
 window._BR = new BaseResDto();
