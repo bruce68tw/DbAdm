@@ -76,20 +76,23 @@ async function doTsView() {
 
 // jsLib to w3/lib.min.js
 function doJsLib() {
-    //JS 順序很重要, pjax在dayjs上面
+    //JS 順序很重要, pjax在dayjs上面, 全部使用 UMD 版本
     const dir = `${dirSrc}jsLib/`;
     return gulp.src([
             `${dir}jquery-3.7.1.min.js`,
             `${dir}bootstrap.bundle-5.2.3.min.js`,
-            `${dir}bootstrap-datepicker-1.9.js`,
+            `${dir}bootstrap-datepicker-1.9.0.min.js`,
             `${dir}datatables-2.3.2.min.js`,
             `${dir}dataTables.bootstrap5-2.3.2.min.js`,
             `${dir}jquery.validate-1.19.3-bruce.js`,
             `${dir}jquery.pjax-2.0.1-bruce.js`,
             `${dir}dayjs-1.11.21.min.js`,
             //`${dir}customParseFormat-1.11.21.js`,
-            `${dir}mustache-3.1.js`
-            //`${dir}chart-4.4.1.js`
+            `${dir}mustache-3.1.0.min.js`,
+            `${dir}chart-4.4.1.min.js`,
+            `${dir}chartjs-plugin-datalabels-2.1.0.min.js`, //顯示label
+            `${dir}svg-3.2.min.js`,
+            `${dir}svg.draggable-3.0.3.min.js`
         ])
         .pipe(sourcemaps.init())
         .pipe(concat("lib.min.js"))

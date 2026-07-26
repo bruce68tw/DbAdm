@@ -11,6 +11,8 @@ import "./tsBase/dto/BaseResDto";
 import "./tsBase/dto/ChartDto";
 import "./tsBase/dto/EditDto";
 import "./tsBase/dto/ErrorRowDto";
+import "./tsBase/dto/FlowLineDto";
+import "./tsBase/dto/FlowNodeDto";
 import "./tsBase/dto/IdStrDto";
 import "./tsBase/dto/IdStrExtDto";
 import "./tsBase/dto/ResultDto";

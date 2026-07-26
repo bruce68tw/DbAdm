@@ -22,7 +22,7 @@ _me = {
                     return _me.crudR.dtStatusName(data);
                 }},
 				{ targets: [4], render: (data, type, full) => {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, '*');
                 }},
             ],
         };

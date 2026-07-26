@@ -115,12 +115,12 @@ class UiView {
 		//work area註冊全域事件
 		//右鍵選單事件
 		let me = this;
-		this.Area.on(MouseEstr.RightMenu, this.FtItem, function (e) {
-			e.preventDefault();  // 取消瀏覽器預設右鍵選單
+		this.Area.on(MouseEstr.RightMenu, this.FtItem, function (evt: JQuery.ContextMenuEvent) {
+			evt.preventDefault();  // 取消瀏覽器預設右鍵選單
 			//e.stopPropagation(); // 阻止冒泡，避免先被 document 的 mousedown 處理
 
-			let item = me._elmToItem(e.target);
-			me.uiMany.showMenu(e, item);
+			let item = me._elmToItem(evt.target);
+			me.uiMany.showMenu(evt, item);
 		});
 
 		//drag/drop 事件
@@ -137,13 +137,13 @@ class UiView {
 	}
 
 	//#region drag/drop 事件相關
-	private _onDragStart(e: any) {
+	private _onDragStart(evt: JQuery.DragStartEvent) {
 		//e.preventDefault();		//阻止文字被選取
 		this._setDragging(true);	//設定dragging狀態 & 變數
 
 		//記錄目前移動的Item element
 		let drag = this.dragItem;
-		drag.item = $(e.target);
+		drag.item = $(evt.target);
 		drag.itemType = this.itemGetType(drag.item);
 		let box = this._getBox(drag.item);
 		drag.boxType = this.itemGetType(box);
@@ -151,11 +151,11 @@ class UiView {
 		//drag.isBox = this.isBox(drag.itemType);
 	}
 
-	private _onDragOver(e: any) {
-		e.preventDefault();		//允許drop, 不會顯示禁止icon
+	private _onDragOver(evt: JQuery.DragOverEvent) {
+		evt.preventDefault();		//允許drop, 不會顯示禁止icon
 
 		//相同 element 不處理
-		let dropElm = e.target;		//e.target 為目前經過的最內層的 element
+		let dropElm = evt.target;		//e.target 為目前經過的最內層的 element
 		if (this.dropElm == dropElm) return;
 
 		//get drop item, 空值表示 box 為 work area
@@ -340,7 +340,7 @@ class UiView {
 			//判斷drop位置在item的上或下方
 			let dropRect = drop.item[0].getBoundingClientRect();
 			// 滑鼠在 drop.item 的相對位置
-			let mouseY = e.clientY;
+			let mouseY = evt.clientY;
 			let isUpPos = (mouseY < dropRect.top + (dropRect.height / 2));
 			//console.log(`dragRect.top=${dragRect.top}, drop pos=${dropRect.top + dropRect.height / 2}`);
 			if (isUpPos) {
@@ -353,13 +353,13 @@ class UiView {
 
 	//會改變Item的BoxId、ChildNo
 	//also called by uiMany drag/drop button
-	async onDragEnd(e: any) {
+	async onDragEnd(evt: JQuery.DragEndEvent) {
 		if (!this.dragging) return;
 
 		//工作區內外都可以觸發 DragEnd, 利用mouse座標來判斷
 		const rect = this.Area[0].getBoundingClientRect();
-		const x = e.clientX;
-		const y = e.clientY;
+		const x = evt.clientX;
+		const y = evt.clientY;
 		const inArea = (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom);
 
 		if (this.dropError != '') {
@@ -532,7 +532,7 @@ class UiView {
 
 	//#region 判斷 & 轉換
 	//item type to item show name
-	private _typeToName(itemType: any) {
+	private _typeToName(itemType: string) {
 		switch (itemType) {
 			case UiItemTypeEstr.Input:
 				return this.NameInput;
@@ -554,14 +554,14 @@ class UiView {
 	//互斥檢查 for 移入/移出 的boxType
 	//param {string} checkType: 要檢查的 itemType
 	//return {bool} 是否互斥
-	private _isBoxTypeXor(checkType: any) {
+	private _isBoxTypeXor(checkType: string) {
 		let dragBoxYes = (this.dragItem.boxType === checkType);
 		let dropBoxYes = (this.dropItem.boxType === checkType);
 		return (dragBoxYes !== dropBoxYes);
 	}
 
 	//called by: this, uiMany
-	isBox(type: any) {
+	isBox(type: string) {
 		return (/*type == UiItemTypeEstr.Span ||*/
 			type == UiItemTypeEstr.RowBox ||
 			type == UiItemTypeEstr.Table ||
@@ -573,7 +573,7 @@ class UiView {
 	//產生新item
 	//called: onDragEnd、loadJsonsA 
 	//param {json} info: item info 資訊
-	private async _newItemA(itemType: any, itemId: string, info: any): Promise<JQuery> {
+	private async _newItemA(itemType: string, itemId: string, info: Json): Promise<JQuery> {
 		switch (itemType) {
 			case UiItemTypeEstr.Input:
 				return await this._newInputA(itemId, info);
@@ -599,7 +599,7 @@ class UiView {
 	 * param {json} info 包含欄位: Fid, Title, Required
 	 * returns item
 	 */
-	private async _newInputA(id: string, info: any): Promise<JQuery> {
+	private async _newInputA(id: string, info: Json): Promise<JQuery> {
 		//constant for 後端產生input html
 		const Fid = '_fid_';
 		const Title = '_title_';
@@ -639,7 +639,7 @@ class UiView {
 		return item;
 	}
 
-	private async _newGroupA(id: string, info: any) {
+	private async _newGroupA(id: string, info: Json): Promise<JQuery> {
 		const Title = '_title_';
 		if (_Str.isEmpty(this.groupHtml))
 			this.groupHtml = await _Ajax.getStrA('GetGroupHtml', { title: Title });
@@ -701,7 +701,7 @@ class UiView {
 	*/
 
 	//add new RowBox
-	private _newRB(id: string, info: any) {
+	private _newRB(id: string, info: Json) {
 		//加上py-2上下空間, 才能drop, dragOver時e.target為本身item !!
 		//let clsCol = this.ClsRowCol;
 		let cols = info.RowType.split(',');
@@ -717,7 +717,7 @@ class UiView {
 		return item;
 	}
 
-	private async _newTableA(id: string, info: any) {
+	private async _newTableA(id: string, info: Json) {
 		let html = `
 <div class='py-2'>
 	<div class='x-btns-box'>
@@ -746,13 +746,13 @@ class UiView {
 	}
 
 	//todo
-	private _newTabPage(id: string, info: any):JQuery {
+	private _newTabPage(id: string, info: Json):JQuery {
 		//return item;
 		return null;
 	}
 
 	//item 加入共用屬性, 不儲存 info
-	private _itemAddProp(id: string, item: JQuery, itemType: any) {
+	private _itemAddProp(id: string, item: JQuery, itemType: string) {
 		//加入item屬性: .xu-item, data-itemtype
 		item.addClass(this.ClsItem);
 		item.attr('draggable', 'true');
@@ -835,7 +835,7 @@ class UiView {
 	 * param {object} item
 	 * return {status:bool, itemIds:string[]}如果box有刪減欄位, 則傳回要刪除的itemId 字串陣列
 	 */
-	async infoToItemA(info: any, item: JQuery) {
+	async infoToItemA(info: Json, item: JQuery): Promise<Json> {
 		let id = info.Id;
 		//let itemIds = [];
 		let defResult = { status: true, itemIds: null as string[] | null };	//default result
@@ -895,7 +895,7 @@ class UiView {
 	 * param {json} info 
 	 * param {jquery object} item 
 	 */
-	private async _infoToInputA(info: any, item: JQuery) {
+	private async _infoToInputA(info: Json, item: JQuery) {
 		//resize input item
 		let label = item.find(this.FtLabel);
 		let input = item.find(this.FtInput);
@@ -939,14 +939,14 @@ class UiView {
 	}
 
 	//讀取上層 col-md- 後面的"文數字"
-	private _getUpGridNum(obj: JQuery) {
+	private _getUpGridNum(obj: JQuery):number {
 		let col = obj.closest("[class*='col-md-']");
 		let css = this._getGridCss(col);
 		return css ? parseInt(css.split('-')[2], 10) : 0;
 	}
 
 	//get col css class
-	private _getGridCss(obj: JQuery) {
+	private _getGridCss(obj: JQuery):string {
 		let className = obj.attr('class');
 		if (!className) return '';
 		return className
@@ -960,7 +960,7 @@ class UiView {
 	 * //param {function} fnCallback 可為空
 	 * return {string[]} 要刪除的 itemId 字串陣列
 	 */
-	private async _infoToTableA(info: any, item: JQuery) {
+	private async _infoToTableA(info: Json, item: JQuery): Promise<Json> {
 		//update Header		
 		let oldLen = item.find('th').length;	//old th list
 		let heads = info.Heads.split(',');		//new list
@@ -994,8 +994,8 @@ class UiView {
 		item.find(this.FtTableTitle).text(info.Name || '');
 
 		//update table heads, 如果使用箭頭函數則this會指向 UiView本身!!
-		headBox.find('th').each(function (i) {
-			$(this).text(heads[i] || '');
+		headBox.find('th').each(function (idx:number) {
+			$(this).text(heads[idx] || '');
 		});
 
 		return { status: true, itemIds: ids };
@@ -1016,7 +1016,7 @@ class UiView {
 	 * param {json array} jsons: 內含Id
 	 * param {object} (this.Area) cont child container
 	 */
-	async loadJsonsA(jsons: any[], cont?: JQuery) {
+	async loadJsonsA(jsons: Json[], cont?: JQuery) {
 		//this.reset();	//reset first
 		if (_Array.isEmpty(jsons)) return;
 
@@ -1054,7 +1054,7 @@ class UiView {
 	}
 
 	//ui to jsons
-	getJsons() {
+	getJsons():Json[] {
 		let me = this;
 
 		//recursive
@@ -1068,9 +1068,9 @@ class UiView {
 
 			if (me.isBox(itemType)) {
 				json.Childs2 = [];
-				item.find(me.FtChild).each(function (idx) {
+				item.find(me.FtChild).each(function (idx:number) {
 					let childs: any[] = [];
-					$(this).children(me.FtItem).each(function (idx2) {
+					$(this).children(me.FtItem).each(function (idx2:number) {
 						childs[idx2] = _item2Json($(this));
 					});
 					json.Childs2[idx] = childs;	//使用Childs2
@@ -1126,23 +1126,23 @@ class UiView {
 
 	//#region 讀取 item
 	//get item inputType for UiItemTypeEstr.Input
-	private _getInputType(item: JQuery) {
+	private _getInputType(item: JQuery):StrN {
 		return _Input.getType(item.find(this.FtInput));
 	}
 
 	//also called by UiMany
-	itemGetId(item: JQuery) {
+	itemGetId(item: JQuery):string {
 		//return item.data(this.DataId);
 		return _Obj.getData(item, this.DataId);
 	}
 
 	//get item type, also called outside
-	itemGetType(item: JQuery) {
+	itemGetType(item: JQuery):StrN {
 		return _Obj.isEmpty(item)
 			? null : _Obj.getData(item, this.DataItemType);
 	}
 
-	itemGetInfo(item: JQuery) {
+	itemGetInfo(item: JQuery):Json {
 		return this._getInfo(this.itemGetId(item));
 	}
 
@@ -1151,14 +1151,16 @@ class UiView {
 	 * param {object} item
 	 * returns {json}
 	 */
-	private _getInfo(itemId: string) {
+	private _getInfo(itemId: string):Json {
 		return this.uiMany.getInfo(itemId);
 	}
-	private _setInfo(itemId: string, info: any) {
+	/*
+	private _setInfo(itemId: string, info: Json) {
 		return this.uiMany.setInfo(itemId, info);
 	}
-	private _setInfoProp(itemId: string, prop: any) {
-		return this.uiMany.setInfoProp(itemId, prop);
+	*/
+	private _setInfoProp(itemId: string, prop: Json) {
+		this.uiMany.setInfoProp(itemId, prop);
 	}
 
 	/*
@@ -1169,12 +1171,12 @@ class UiView {
 	*/
 
 	//內部element to Item object
-	private _elmToItem(elm: HTMLElement) {
+	private _elmToItem(elm: Elm): JQuery {
 		return $(elm).closest(this.FtItem);
 	}
 
 	//傳回上一層item, 沒有則傳回null
-	private _getBox(item: JQuery) {
+	private _getBox(item: JQuery): JQueryN {
 		let box = item.parents(this.FtItem).first();
 		return _Obj.isEmpty(box) ? null : box;
 	}

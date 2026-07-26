@@ -5,13 +5,13 @@ class _Pjax {
      * initial
      * param {string} boxFt : box(container) filter
      */
-    static init(boxFt: string): void {
+    static init(boxFt: string) {
         //if skip 'POST', it will trigger twice !!
         const docu = $(document);
         (docu as any).pjax('[data-pjax]', boxFt, { type: 'POST' });
 
         //點擊功能項目時記錄功能名稱
-        docu.on('click', '.x-leftmenu [data-pjax]', function (this: Elm) {
+        docu.on('click', '.x-leftmenu [data-pjax]', function () {
             const me = $(this);
             const progPath = _Leftmenu.getMenuPath(me);
             //const progCode = me.attr("href").split("/")[1];
@@ -28,7 +28,7 @@ class _Pjax {
         */
         
         //'data' 是後端回傳字串, 可能為 HTML 或錯誤訊息
-        docu.on('pjax:success', async function (event: any, data: any, status: any, xhr: any, opts: any) {
+        docu.on('pjax:success', (event: any, data: any, status: any, xhr: any, opts: any)=> {
             const json = _Str.toJson(data);
             if (json == null) {
                 //case ok
@@ -43,7 +43,7 @@ class _Pjax {
         });
 
         //when backend exception
-        docu.on('pjax:error', function (event: any, xhr: any, textStatus: any, errorThrown: any, opts: any) {
+        docu.on('pjax:error', (event: any, xhr: any, textStatus: any, errorThrown: any, opts: any) => {
             opts.success(xhr.responseText, textStatus, xhr);
             return false;
         });

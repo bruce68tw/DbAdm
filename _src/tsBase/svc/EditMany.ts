@@ -15,18 +15,17 @@
 class EditMany {
     //private [_Edit.Childs]: any = null;
 
-    private mode = EditModeEstr.Base;
-    private modeData: any = '';
-
-    private rowFilter: string;
-    private sortFid: string;
-    private hasRowTpl: boolean;
-    private hasRowFilter: boolean;
-    private rowTpl = '';
-    private hasEform: boolean;
-    private rowsBox: JQuery;
-    private deletedRows: StrNum[] = [];
-    private newIndex = 0;
+    private _hasRowTpl: boolean;
+    private _hasRowFilter: boolean;
+    private _hasEform: boolean;
+    private _mode = EditModeEstr.Base;
+    private _modeData: any = '';
+    private _sortFid: string;
+    private _rowTpl = '';
+    private _rowFilter: string;
+    private _rowsBox: JQuery;
+    private _deletedRows: StrNum[] = [];
+    private _newIndex = 0;
 
     //global
     _childs: EditMany[];
@@ -41,10 +40,10 @@ class EditMany {
     fnGetUpdJson: (upKey: StrNum) => Json;
 
     //global & set by _Edit
+    hasFile: boolean;
     fidTypes: string[];
     fidTypeLen: number;
     fidRadios: string[];
-    hasFile: boolean;
     fileLen: number;
     fileFids: string[];
 
@@ -67,14 +66,14 @@ class EditMany {
      */
     constructor(kid: string, rowsBoxId?: string, rowTplId?: string, rowFilter?: string, sortFid?: string) {
         this.kid = kid;
-        this.rowFilter = rowFilter || '';
-        this.sortFid = sortFid || '';
-        this.hasRowTpl = _Str.notEmpty(rowTplId);
-        this.hasRowFilter = _Str.notEmpty(rowFilter);
+        this._rowFilter = rowFilter || '';
+        this._sortFid = sortFid || '';
+        this._hasRowTpl = _Str.notEmpty(rowTplId);
+        this._hasRowFilter = _Str.notEmpty(rowFilter);
 
-        if (this.hasRowTpl) {
-            this.rowTpl = $('#' + rowTplId).html();
-            var rowObj = $(this.rowTpl);
+        if (this._hasRowTpl) {
+            this._rowTpl = $('#' + rowTplId).html();
+            var rowObj = $(this._rowTpl);
 
             if (_Obj.get(kid, rowObj) == null) {
                 this.systemError = `EditMany.js input kid is wrong (${kid})`;
@@ -84,21 +83,21 @@ class EditMany {
             _Edit.initVars(this, rowObj);
         }
 
-        this.hasEform = _Str.notEmpty(rowsBoxId);
-        if (this.hasEform) {
-            this.rowsBox = $('#' + rowsBoxId);
-            this.eform = this.rowsBox.closest('form');
-            if (this.rowsBox.length == 0) {
+        this._hasEform = _Str.notEmpty(rowsBoxId);
+        if (this._hasEform) {
+            this._rowsBox = $('#' + rowsBoxId);
+            this.eform = this._rowsBox.closest('form');
+            if (this._rowsBox.length == 0) {
                 this.systemError = `EditMany.js rowsBoxId is wrong (${rowsBoxId})`;
                 alert(this.systemError);
             }
         }
 
-        this.deletedRows = [];
-        this.newIndex = 0;
+        this._deletedRows = [];
+        this._newIndex = 0;
     }
 
-    showErrors(rows: any[] | null): void {
+    showErrors(rows: Json[] | null) {
         if (rows == null) return;
 
         for (var i = 0; i < rows.length; i++) {
@@ -109,53 +108,53 @@ class EditMany {
         }
     }
 
-    setChilds(childs: EditMany[]): void {
+    setChilds(childs: EditMany[]) {
         this._childs = childs;
     }
 
-    initUrm(fids: string[]): void {
-        this.mode = EditModeEstr.UR;
-        this.modeData = fids;
+    initUrm(fids: string[]) {
+        this._mode = EditModeEstr.UR;
+        this._modeData = fids;
     }
 
     private _isNewBox(box: JQuery): boolean {
         return _Edit.isNewBox(box, this.kid);
     }
 
-    reset(rowsBox?: JQuery, forNew?: boolean): void {
+    reset(rowsBox?: JQuery, forNew?: boolean) {
         if (forNew == null) forNew = false;
 
         rowsBox = this._getRowsBox(rowsBox);
 
         if (this.fnReset) {
             this.fnReset();
-        } else if (this.mode == EditModeEstr.UR) {
+        } else if (this._mode == EditModeEstr.UR) {
             this._urmReset();
-        } else if (this.hasEform) {
+        } else if (this._hasEform) {
             rowsBox.empty();
             this._resetVar();
         }
     }
 
-    private _resetVar(): void {
-        this.newIndex = 0;
+    private _resetVar() {
+        this._newIndex = 0;
         this._resetDeletes();
     }
 
-    private _resetDeletes(): void {
-        this.deletedRows = [];
+    private _resetDeletes() {
+        this._deletedRows = [];
     }
 
-    private _urmLoadRows(rows: any[] | null): void {
+    private _urmLoadRows(rows: Json[] | null) {
         this._urmReset();
 
         if (rows == null)
             return;
 
-        var fids = this.modeData;
+        var fids = this._modeData;
         for (var i = 0; i < rows.length; i++) {
             var row = rows[i];
-            var obj = this.rowsBox.find(_Input.fidFilter(row[fids[1]]));
+            var obj = this._rowsBox.find(_Input.fidFilter(row[fids[1]]));
             _iCheck.setO(obj, 1);
             obj.data('key', row[fids[0]]);
         }
@@ -163,18 +162,18 @@ class EditMany {
 
     //todo: upKey: key or fKid?
     private _urmGetUpdJson(upKey: StrNum): Json {
-        var json: any = {};
-        var rows: any[] = [];
+        var json: Json = {};
+        var rows: Json[] = [];
         var me = this;
         var newIdx = 0;
-        var fids = this.modeData;
+        var fids = this._modeData;
         this._resetDeletes();
-        this.rowsBox.find(':checkbox').each(function (this: Elm) {
+        this._rowsBox.find(':checkbox').each(function () {
             var obj = $(this);
             var key = obj.data('key');
             if (_Str.isEmpty(key)) {
                 if (_iCheck.isCheckedO(obj)) {
-                    var row: any = {};
+                    var row: Json = {};
                     row[fids[0]] = --newIdx;
                     row[fids[1]] = _iCheck.getO(obj);
                     me.rowSetFkey(row, upKey);
@@ -193,27 +192,27 @@ class EditMany {
         return json;
     }
 
-    private _urmReset(): void {
+    private _urmReset() {
         this._resetVar();
 
-        var objs = this.rowsBox.find(':checkbox');
+        var objs = this._rowsBox.find(':checkbox');
         _iCheck.setO(objs, 0);
         objs.data('key', '');
     }
 
-    loadRowsBySys(rows: any[]): void {
+    loadRowsBySys(rows: Json[]) {
         if (this.fnLoadRows) {
             this.fnLoadRows(rows);
-        } else if (this.mode == EditModeEstr.UR) {
+        } else if (this._mode == EditModeEstr.UR) {
             this._urmLoadRows(rows);
         } else {
             this.loadRowsByRsb(rows, true);
         }
     }
 
-    loadRowByBox(rowBox: JQuery, row: any, index: number): void {
+    loadRowByBox(rowBox: JQuery, row: Json, index: number) {
         row.Index = index;
-        var tr = $(Mustache.render(this.rowTpl, row));
+        var tr = $(Mustache.render(this._rowTpl, row));
 
         var fid: string;
         for (var i = 0; i < this.fidTypeLen; i = i + 2) {
@@ -233,7 +232,7 @@ class EditMany {
         tr.appendTo(rowBox);
     }
 
-    loadRowsByRsb(rows: any[] | null, reset?: boolean, rowsBox?: JQuery): void {
+    loadRowsByRsb(rows: Json[] | null, reset?: boolean, rowsBox?: JQuery) {
         if (!this._checkRowTpl())
             return;
 
@@ -252,7 +251,7 @@ class EditMany {
 
     valid(): boolean {
         return this.fnValid ? this.fnValid() :
-            this.hasEform ? (this.eform as any).validTable(this.validator) :
+            this._hasEform ? (this.eform as any).validTable(this.validator) :
             true;
     }
 
@@ -261,7 +260,7 @@ class EditMany {
     }
 
     private _checkRowFilter(): boolean {
-        if (this.hasRowFilter)
+        if (this._hasRowFilter)
             return true;
 
         _Log.error('EditMany.js this.rowFilter is empty.');
@@ -269,7 +268,7 @@ class EditMany {
     }
 
     private _checkRowTpl(): boolean {
-        if (this.hasRowTpl)
+        if (this._hasRowTpl)
             return true;
 
         _Log.error('EditMany.js this.rowTpl is empty.');
@@ -278,45 +277,47 @@ class EditMany {
 
     private _elmToRowBox(elm: Elm | JQuery): JQuery | null {
         return this._checkRowFilter()
-            ? $(elm).closest(this.rowFilter)
+            ? $(elm).closest(this._rowFilter)
             : null;
     }
 
-    idToRowBox(id: string): JQuery {
+    idToRowBox(id: StrNum): JQuery {
         var filter = _Input.fidFilter(this.kid) + `[value='${id}']`;
-        return this.eform.find(filter).closest(this.rowFilter);
+        return this.eform.find(filter).closest(this._rowFilter);
     }
 
     getUpdJsonBySys(upKey: StrNum): Json {
         if (this.fnGetUpdJson)
             return this.fnGetUpdJson(upKey);
-        else if (this.mode == EditModeEstr.UR)
+        else if (this._mode == EditModeEstr.UR)
             return this._urmGetUpdJson(upKey);
         else
-            return this.getUpdJsonByRsb(upKey, this.rowsBox);
+            return this.getUpdJsonByRsb(upKey, this._rowsBox);
     }
 
-    getUpdJsonByRsb(upKey: StrNum, rowsBox?: JQuery): any {
-        var json: any = {};
+    getUpdJsonByRsb(upKey: StrNum, rowsBox?: JQuery): Json {
+        var json: Json = {};
         json[_Edit.Rows] = this.getUpdRows(upKey, this._getRowsBox(rowsBox));
         json[_Edit.Deletes] = this.getDeletes();
         return json;
     }
 
-    getUpdRow(box: JQuery): any {
+    getUpdRow(box: JQuery): Json {
         return _Edit.getUpdRow(this, box);
     }
 
-    getUpdRows(upKey: StrNum, rowsBox?: JQuery): any[] | null {
+    getUpdRows(upKey: StrNum, rowsBox?: JQuery): Json[] | null {
         if (!this._checkRowFilter()) return null;
 
         rowsBox = this._getRowsBox(rowsBox);
+        if (_Obj.isEmpty(rowsBox)) return null;
+
         this.setSort(rowsBox);
 
-        var rows: any[] = [];
+        var rows: Json[] = [];
         var me = this;
-        rowsBox.find(me.rowFilter).each(function (this: Elm, idx: number, item: Elm) {
-            var box = $(item);
+        rowsBox.find(me._rowFilter).each(function (idx: number) {
+            var box = $(this);
             var key = _Input.get(me.kid, box);
             if (me._isNewBox(box)) {
                 var row2 = _Form.toRow(box);
@@ -325,9 +326,9 @@ class EditMany {
                 return;
             }
 
-            var diffRow: any = {};
+            var diffRow: Json = {};
             var diff = false;
-            var fid: string, ftype: any, value: any, obj: JQuery;
+            var fid: string, ftype: string, value: StrNum, obj: JQuery;
             for (var j = 0; j < me.fidTypes.length; j = j + 2) {
                 fid = me.fidTypes[j];
                 obj = _Obj.get(fid, box);
@@ -350,16 +351,16 @@ class EditMany {
         return (rows.length === 0) ? null : rows;
     }
 
-    getDeletes(): string | null {
-        return (this.deletedRows.length === 0)
-            ? null : this.deletedRows.join();
+    getDeletes(): StrN {
+        return (this._deletedRows.length === 0)
+            ? null : this._deletedRows.join();
     }
 
-    onAddRow(): void {
+    onAddRow() {
         this.addRow();
     }
 
-    addRow(row?: any, rowsBox?: JQuery, newId?: number): any {
+    addRow(row?: Json, rowsBox?: JQuery, newId?: number): Json {
         row = row || {};
         rowsBox = this._getRowsBox(rowsBox);
         var obj = this._renderRow(row, rowsBox);
@@ -368,15 +369,15 @@ class EditMany {
         return row;
     }
 
-    onDeleteRow(): void {
+    onDeleteRow() {
         var box = this._elmToRowBox(_Fun.getMe());
         if (box) {
             this.deleteRow(_iText.get(this.kid, box), box);
         }
     }
 
-    deleteRow(key: StrNum, rowBox?: JQuery): void {
-        var deletes = this.deletedRows;
+    deleteRow(key: StrNum, rowBox?: JQuery) {
+        var deletes = this._deletedRows;
         var found = false;
         var rowLen = deletes.length;
         for (var i = 0; i < rowLen; i++) {
@@ -393,16 +394,16 @@ class EditMany {
             rowBox!.remove();
     }
 
-    deleteAll(): void {
+    deleteAll() {
         var me = this;
-        this.rowsBox.find(this.rowFilter).each(function (this: Elm) {
+        this._rowsBox.find(this._rowFilter).each(function () {
             var box = $(this);
             var key = _Input.get(me.kid, box);
             me.deleteRow(key, box);
         });
     }
 
-    async onViewFile(table: string, fid: string): Promise<void> {
+    async onViewFile(table: string, fid: string) {
         var elm = _Fun.getMeElm();
         var box = this._elmToRowBox(elm);
         if (box) {
@@ -411,27 +412,27 @@ class EditMany {
         }
     }
 
-    private _renderRow(row: any, rowsBox?: JQuery): JQuery | null {
+    private _renderRow(row: Json, rowsBox?: JQuery): JQueryN {
         if (!this._checkRowTpl())
             return null;
 
         rowsBox = this._getRowsBox(rowsBox);
-        var obj = $(Mustache.render(this.rowTpl, row));
+        var obj = $(Mustache.render(this._rowTpl, row));
         _Form.loadRow(obj, row);
         obj.appendTo(rowsBox);
         return obj;
     }
 
-    dataAddFiles(levelStr: string, data: FormData, rowsBox?: JQuery): any {
+    dataAddFiles(levelStr: string, data: FormData, rowsBox?: JQuery): Json {
         if (!this.hasFile) return null;
         if (!this._checkRowFilter()) return null;
 
         rowsBox = this._getRowsBox(rowsBox);
         var me = this;
-        var fileJson: any = {};
-        var fileIdx: any = {};
-        rowsBox.find(me.rowFilter).each(function (this: Elm, index: number, item: Elm) {
-            var tr = $(item);
+        var fileJson: Json = {};
+        var fileIdx: Json = {};
+        rowsBox.find(me._rowFilter).each(function () {
+            var tr = $(this);
             for (var i = 0; i < me.fileLen; i++) {
                 var fid = me.fileFids[i];
                 var serverFid = _Edit.getFileSid(levelStr, fid);
@@ -444,12 +445,12 @@ class EditMany {
         return fileJson;
     }
 
-    rowSetFkey(row: Json, fKey: StrNum): void {
+    rowSetFkey(row: Json, fKey: StrNum) {
         if (row != null && _Edit.isNewKey(fKey))
             row[_Edit.DataFkeyFid] = fKey;
     }
 
-    rowsSetFkey(rows: any[] | null, fkey: string): void {
+    rowsSetFkey(rows: Json[] | null, fkey: string) {
         if (rows != null) {
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
@@ -459,46 +460,46 @@ class EditMany {
         }
     }
 
-    rowsToNew(): void {
-        if (this.rowsBox == null || this.rowsBox.length == 0) return;
+    rowsToNew() {
+        if (this._rowsBox == null || this._rowsBox.length == 0) return;
 
         var me = this;
-        me.newIndex = 0;
-        me.rowsBox.find(me.rowFilter).each(function (this: Elm) {
-            me.newIndex--;
-            _iText.set(me.kid, me.newIndex.toString(), $(this));
+        me._newIndex = 0;
+        me._rowsBox.find(me._rowFilter).each(function () {
+            me._newIndex--;
+            _iText.set(me.kid, me._newIndex.toString(), $(this));
         });
     }
 
-    setNewIndex(index: number): void {
-        this.newIndex = Math.abs(index) * -1;
+    setNewIndex(index: number) {
+        this._newIndex = Math.abs(index) * -1;
     }
 
     setNewIdByBox(box: JQuery, newId?: number): number {
         if (newId == null) {
-            this.newIndex--;
-            newId = this.newIndex;
+            this._newIndex--;
+            newId = this._newIndex;
         }
 
-        var box2 = _Obj.get(this.kid, box).closest(this.rowFilter);
+        var box2 = _Obj.get(this.kid, box).closest(this._rowFilter);
         _iText.set(this.kid, newId.toString(), box2);
         return newId;
     }
 
-    setSort(rowsBox?: JQuery): void {
-        var sortFid = this.sortFid;
+    setSort(rowsBox?: JQuery) {
+        var sortFid = this._sortFid;
         if (_Str.isEmpty(sortFid))
             return;
 
         var me = this;
         rowsBox = this._getRowsBox(rowsBox);
-        rowsBox.find(_Input.fidFilter(sortFid!)).each(function (this: Elm, i: number, item: Elm) {
-            _iText.set(sortFid!, i.toString(), $(item).closest(me.rowFilter));
+        rowsBox.find(_Input.fidFilter(sortFid!)).each(function (idx: number) {
+            _iText.set(sortFid!, idx.toString(), $(this).closest(me._rowFilter));
         });
     }
 
     private _getRowsBox(rowsBox?: JQuery): JQuery {
-        return rowsBox || this.rowsBox;
+        return rowsBox || this._rowsBox;
     }
 }
 window.EditMany = EditMany;

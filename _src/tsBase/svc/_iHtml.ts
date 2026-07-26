@@ -28,7 +28,7 @@ class _iHtml extends _iBase {
      * param height {int} (optional)input height(px)
      */
     static init(edit: OneMany, prog: string, height?: number): void {
-        edit.eform.find(_iHtml.Filter).each(function (this: Elm) {
+        edit.eform.find(_iHtml.Filter).each(function () {
             const upMe = $(this);
             upMe.data('prog', prog);    //for onImageUpload()
             //init summernote

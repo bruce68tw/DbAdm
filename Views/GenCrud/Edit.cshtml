@@ -28,15 +28,14 @@
 
 <!-- main table edit form -->
 <form id='eform' class='x-form'>
-    @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
-
+    <vc:xi-hide-id />
     <div class="row">
         <!-- left columns -->
         <div class="col-md-5">
             <vc:xi-select dto='new() { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, Required = true, Cols = cols, FnOnChange = "_vo.onChangeProject" }' />
             <vc:xi-text dto='new() { Title = "功能代碼", Fid = "ProgCode", MaxLen = 30, Required = true, Cols = cols }' />
             <vc:xi-text dto='new() { Title = "功能名稱", Fid = "ProgName", MaxLen = 30, Required = true, Cols = cols }' />
-            <vc:xi-check dto='new() { Title = "拖拉編輯畫面", Fid = "IsUi", Label = "是", Cols = cols }' />
+            <vc:xi-check dto='new() { Title = "拖拉編輯畫面", Fid = "IsUi", Label = "是", FnOnChange = "_vo.onChangeIsUi", Cols = cols }' />
 
             <div class="row">
                 <div class="col-md-4 x-label">查詢功能</div>
@@ -93,8 +92,8 @@
                 <th>維護</th>
             </tr>
         </thead>
-        <!-- body match tplQitem -->
-        <tbody id="tbodyQitem"></tbody>
+        <!-- body match qitemTpl -->
+        <tbody id="qitemBody"></tbody>
     </table>
 </form>
 
@@ -118,21 +117,23 @@
                 <th>維護</th>
             </tr>
         </thead>
-        <!-- body 搭配 tplRitem -->
-        <tbody id="tbodyRitem"></tbody>
+        <!-- body 搭配 ritemTpl -->
+        <tbody id="ritemBody"></tbody>
     </table>
 </form>
 
 <!-- Table edit form nav/tab/buttons -->
-<div class="x-btns-box">
-    <span class="x-span-label">編輯畫面</span>
-    <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtAdd'>新增</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtDelete'>刪除</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtLeft'>左移</button>
-    <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtRight'>右移</button>
+<div id="etableBox">
+    <div class="x-btns-box">
+        <span class="x-span-label">編輯畫面</span>
+        <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtableAdd'>新增</button>
+        <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtableDelete'>刪除</button>
+        <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtableLeft'>左移</button>
+        <button type='button' class='btn btn-secondary' data-onclick='_vo.onEtableRight'>右移</button>
+    </div>
+    <ul class="nav nav-tabs" id="etableNav"></ul>
+    <div class="tab-content" id="etableTab"></div>
 </div>
-<ul class="nav nav-tabs" id="navEtable"></ul>
-<div class="tab-content" id="tabEtable"></div>
 @*
 <vc:xg-save2 />
 *@
@@ -169,7 +170,7 @@
                             <th>欄位名稱</th>
                         </tr>
                     </thead>
-                    <!-- match tplModalItem -->
+                    <!-- match modalItemTpl -->
                     <tbody class="xu-tbody"></tbody>
                 </table>
             </div>
@@ -180,7 +181,7 @@
 
 <!-- ** normal type template start -->
 <!--template: edit form Qitem -->
-<script id="tplQitem" type="text/template">
+<script id="qitemTpl" type="text/template">
     <tr class="xu-tr">
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "CrudId" })
@@ -202,7 +203,7 @@
 </script>
 
 <!--template: eidt form Ritem -->
-<script id="tplRitem" type="text/template">
+<script id="ritemTpl" type="text/template">
     <tr class="xu-tr">
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "CrudId" })
@@ -216,15 +217,15 @@
 </script>
 
 <!-- template: edit form nav, use index to connect nav tab -->
-<script id="tplNavEtable" type="text/template">
+<script id="etableNavTpl" type="text/template">
     <li class='nav-item' data-index='{{Index}}'>
-        <a class='nav-link' data-bs-toggle='tab' href='#divEtable{{Index}}' data-onclick='_vo.onEtNav' data-args='{{Index}}'>
+        <a class='nav-link' data-bs-toggle='tab' href='#divEtable{{Index}}' data-onclick='_vo.onEtableNav' data-args='{{Index}}'>
         </a>
     </li>
 </script>
 
 <!-- template: CrudEdit edit form tab, layout/width fields are dynamic switch -->
-<script id="tplTabEtable" type="text/template">
+<script id="etableTabTpl" type="text/template">
     <div class="tab-pane xu-edit" id="divEtable{{Index}}">
         <!-- x-form also for myCrud.js -->
         <form class='x-form border-0 mt-3' data-index="{{Index}}">
@@ -273,7 +274,7 @@
                         <th>維護</th>
                     </tr>
                 </thead>
-                <!-- tbody tr 內容為 tplEitem -->
+                <!-- tbody tr 內容為 eitemTpl -->
                 <tbody></tbody>
             </table>
         </form>
@@ -281,7 +282,7 @@
 </script>
 
 <!-- template: edit form Eitem, xu-tr for myCrud.js, show fields use mustache render to fill -->
-<script id="tplEitem" type="text/template">
+<script id="eitemTpl" type="text/template">
     <tr class="xu-tr">
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id", Value = "{{Id}}" })
         @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "ColumnId", Value = "{{ColumnId}}" })
@@ -306,7 +307,7 @@
 </script>
 
 <!-- template: modal Items list row, data property is case insense !! -->
-<script id="tplModalItem" type="text/template">
+<script id="modalItemTpl" type="text/template">
     <tr data-id='{{Id}}'
         data-code='{{Fid}}'
         data-name='{{Name}}'
@@ -318,6 +319,3 @@
         <td>{{Name}}</td>
     </tr>
 </script>
-
-
-<!-- ** dragdrop type template start -->

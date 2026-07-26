@@ -3,8 +3,8 @@
 
     List<IdStrDto> rowTypes =
     [
-        new(){ Id = "6,6", Str = "2欄" },
-        new(){ Id = "4,4,4", Str = "3欄" },
+        new(){ Id = "6,6", Str = "2欄平均" },
+        new(){ Id = "4,4,4", Str = "3欄平均" },
         new(){ Id = "4,8", Str = "2欄(小,大)" },
         new(){ Id = "8,4", Str = "2欄(大,小)" },
     ];
@@ -91,8 +91,8 @@
 <div class="row">
     <div class="col-md-4 d-none pt-2 xu-tbar">
         <div class="x-btns-box x-center">
-            <button type="button" class="btn btn-secondary" data-onclick="_me.onOpenImport">Json匯入畫面...</button>
-            <button type="button" class="btn btn-secondary" data-onclick="_me.onExport">匯出畫面</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_vo.onOpenImport">Json匯入畫面...</button>
+            <button type="button" class="btn btn-secondary" data-onclick="_vo.onExport">匯出畫面</button>
         </div>
     </div>
 </div>
@@ -138,9 +138,9 @@
 
 <!-- context menu for node & line, xf means flow -->
 <ul class='xf-menu'>
-    <li data-onclick="_me.uiMany.onMenuEdit" class="xd-edit">Edit</li>
-    <li data-onclick="_me.uiMany.onMenuDelete" class="xd-delete">Delete</li>
-    <li data-onclick="_me.uiMany.onMenuView" class="xd-view">View</li>
+    <li data-onclick="_vo.uiMany.onMenuEdit" class="xd-edit">Edit</li>
+    <li data-onclick="_vo.uiMany.onMenuDelete" class="xd-delete">Delete</li>
+    <li data-onclick="_vo.uiMany.onMenuView" class="xd-view">View</li>
 </ul>
 
 <!-- drop位置的線狀註記 -->
@@ -188,7 +188,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
-                <button type="button" class="btn btn-primary" data-edit data-onclick="_me.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
+                <button type="button" class="btn btn-primary" data-edit data-onclick="_vo.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
             </div>
         </div>
     </div>
@@ -210,7 +210,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
-                <button type="button" class="btn btn-primary" data-edit data-onclick="_me.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
+                <button type="button" class="btn btn-primary" data-edit data-onclick="_vo.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
             </div>
         </div>
     </div>
@@ -235,7 +235,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
-                <button type="button" class="btn btn-primary" data-edit data-onclick="_me.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
+                <button type="button" class="btn btn-primary" data-edit data-onclick="_vo.onModalOk">確定<i class='ico-checked'></i></button>
             </div>
         </div>
     </div>
@@ -261,7 +261,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
-                <button type="button" class="btn btn-primary" data-edit data-onclick="_me.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
+                <button type="button" class="btn btn-primary" data-edit data-onclick="_vo.uiMany.onModalOk">確定<i class='ico-checked'></i></button>
             </div>
         </div>
     </div>
@@ -283,7 +283,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消<i class='ico-delete'></i></button>
-                <button type="button" class="btn btn-primary" data-edit data-onclick="_me.onImport">確定<i class='ico-checked'></i></button>
+                <button type="button" class="btn btn-primary" data-edit data-onclick="_vo.onImport">確定<i class='ico-checked'></i></button>
             </div>
         </div>
     </div>

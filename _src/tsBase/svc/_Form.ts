@@ -8,7 +8,7 @@ class _Form {
     static toRow(form: JQuery): Json {
         //skip link & read fields
         const row: Json = {};
-        form.find(_Input.fidFilter()).filter(':not(.xi-unsave)').each(function (this: any) {
+        form.find(_Input.fidFilter()).filter(':not(.xi-unsave)').each(function () {
             const obj = $(this);
             row[_Input.getFid(obj)] = _Input.getO(obj, form);            
         });
@@ -40,12 +40,12 @@ class _Form {
     static reset(form: JQuery, init?: boolean) {
         const items = form.find(_Input.fidFilter());
         if (init) {
-            items.each(function (this: Elm) {
+            items.each(function () {
                 const obj = $(this);
                 _Input.setO(obj, obj.data('init'), form);
             });
         } else {
-            items.each(function (this: Elm) {
+            items.each(function () {
                 _Input.setO($(this), '', form);
             });
         }

@@ -20,10 +20,10 @@
  */
 class CrudR {
     //global
-    temp: Json;
+    //temp: Json;
+    hasDraft: boolean;  //是否有草稿功能
     divRead: JQuery;
     dt: Datatable;
-    hasDraft: boolean;  //是否有草稿功能
 
     private _updName: string;
 
@@ -37,12 +37,12 @@ class CrudR {
      */
     constructor(dtConfig: Json, edits?: OneMany[] | EditDto[], updName?: string) {
         //save middle variables
-        this.temp = {};
+        //this.temp = {};
 
         //1.set instance variables
         this.divRead = $('#divRead');
-        var rform: any = null;
-        var rform2: any = null;
+        var rform: JQuery = null;
+        var rform2: JQuery = null;
         var hasRead: boolean = this.divRead.length > 0;
         if (hasRead) {
             rform = $('#formRead');
@@ -88,7 +88,7 @@ class CrudR {
     }
 
     /**
-     * onclick viewFile
+     * viewFile
      * @param table {string} table name
      * @param fid {string}
      * @param elm {element} link element
@@ -192,30 +192,39 @@ class CrudR {
      * crud functions: update,delete,view
      * @param key {string} row key
      * @param rowName {string} for show row name before delete
-     * @param hasUpdate {bool} has update icon or not
-     * @param hasDelete {bool} has delete icon or not
-     * @param hasView {bool} has view icon or not
+     * @param funs {string} UDV功能清單, '*' 表示全部, U:update, D:delete, V:view
+     * @param exts {string} 額外功能清單, C:copy, W:word, P:pdf,
+     *   copy: 後端不必實作
+     * //param hasUpdate {bool} has update icon or not
+     * //param hasDelete {bool} has delete icon or not
+     * //param hasView {bool} has view icon or not
      */
     //dtCrudFun(key, rowName, hasUpdate, hasDelete, hasView, fnOnUpdate, fnOnDelete, fnOnView) {
-    dtCrudFun(
-        key: string,
-        rowName: string,
+    dtCrudFun(key: string, rowName: string, funs: string, exts: string = ''): string {
+        /*
         hasUpdate: boolean = false,
         hasDelete: boolean = false,
         hasView: boolean = false,
         hasCopy: boolean = false
     ): string {
-        const preStr: string = `button type="button" class="btn btn-link"`;
-        var funs: string = '';
-        if (hasUpdate)
-            funs += `<${preStr} data-onclick="_me.crudE.onUpdate" data-args="${key}"><i class="ico-pen" title="${_BR.TipUpdate}"></i></button>`;
-        if (hasDelete)
-            funs += `<${preStr} data-onclick="_me.crudR.onDelete" data-args="${key},${rowName}"><i class="ico-delete x-delete" title="${_BR.TipDelete}"></i></button>`;
-        if (hasView)
-            funs += `<${preStr} data-onclick="_me.crudE.onView" data-args="${key}"><i class="ico-eye" title="${_BR.TipView}"></i></button>`;
-        if (hasCopy)
-            funs += `<${preStr} data-onclick="_me.crudE.onCopy" data-args="${key}"><i class="ico-copy" title="${_BR.TipCopy}"></i></button>`;
-        return funs;
+        */
+        //const tpl = `button type="button" class="btn btn-link"`;
+        const tpl = `<button type="button" class="btn btn-link" data-onclick="_me.{0}" data-args="{1}"><i class="{2}" title="{3}"></i></button>`;
+        let result = '';
+        if (funs == '*' || funs.indexOf('U') >= 0)
+            result += _Str.format(tpl, 'crudE.onUpdate', key, 'ico-pen', _BR.TipUpdate);
+        if (funs == '*' || funs.indexOf('D') >= 0)
+            result += _Str.format(tpl, 'crudR.onDelete', key, 'ico-delete x-delete', _BR.TipDelete);
+        if (funs == '*' || funs.indexOf('V') >= 0)
+            result += _Str.format(tpl, 'crudE.onView', key, 'ico-eye', _BR.TipView);
+
+        if (exts.indexOf('C') >= 0)
+            result += _Str.format(tpl, 'crudE.onCopy', key, 'ico-copy', _BR.TipCopy);
+        if (exts.indexOf('W') >= 0)
+            result += _Str.format(tpl, 'crudR.onWord', key, 'ico-word', _BR.TipWord);
+        if (exts.indexOf('P') >= 0)
+            result += _Str.format(tpl, 'crudR.onPdf', key, 'ico-pdf', _BR.TipPdf);
+        return result;
     }
 
     /**
@@ -243,8 +252,8 @@ class CrudR {
         if (!_me.hasRead || !_me.hasEdit) return;
 
         //考慮多個編輯畫面
-        var divEdit: any = _me.crudE.getDivEdit();
-        var oldDiv: any, newDiv: any;
+        var divEdit = _me.crudE.getDivEdit();
+        var oldDiv: JQuery, newDiv: JQuery;
         if (toRead) {
             oldDiv = divEdit;
             newDiv = this.divRead;
@@ -313,7 +322,7 @@ class CrudR {
      * onclick find rows
      */
     onFind() {
-        var cond: any = this._getFindCond();
+        var cond = this._getFindCond();
         this.dt.find(cond);
     }
 
@@ -321,7 +330,7 @@ class CrudR {
      * onclick find2 button for show/hide find2 form
      */
     onFind2() {
-        var find2: any = _me.rform2;
+        var find2 = _me.rform2;
         if (find2 == null) return;
         else if (_Obj.isShow(find2)) _Form.hideShow([find2]);
         else _Form.hideShow(null, [find2]);
@@ -339,7 +348,7 @@ class CrudR {
      * onClick export excel button
      */
     onExport() {
-        var find: any = this._getFindCond();
+        var find = this._getFindCond();
         window.location.href = 'Export?find=' + _Json.toStr(find);
     }
 
@@ -403,7 +412,7 @@ class CrudR {
     //onCheckAll(me, box, fid) {
     onCheckAll(elm: Elm, box: JQuery) {
         const status = _iCheck.isCheckedO($(elm));
-        const obj = box.find(_iCheck.fltCheckeds + ':not(:disabled)');
+        const obj = box.find(_iCheck.ftCheckeds + ':not(:disabled)');
         _iCheck.setO(obj, status ? '1' : '0');
     }
 

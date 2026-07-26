@@ -4,17 +4,22 @@ class _iCheck extends _iBase {
      * Check0Id -> FidCheck0
      * default data-fid attribute value for multiple selection
      */
-    static fidCheck0: string = '_check0';
+    static fidCheck0 = '_check0';
+
+    /**
+     * filter of checked
+     */
+    static ftChecked = ':checkbox:checked';
 
     /**
      * check0 field id, 初始代階段不可使用 _Input
      */
-    static fltCheck0: string = "[data-fid='_check0']";
+    static ftCheck0: string = "[data-fid='_check0']";
 
     /**
      * filter for get checked list objects, 初始代階段不可使用 _Input
      */
-    static fltCheckeds: string = "[data-fid='_check0']:checked";
+    static ftCheckeds: string = "[data-fid='_check0']:checked";
 
     /**
      * (override)get data-value, not checked status !!, return '0' if unchecked.
@@ -27,7 +32,7 @@ class _iCheck extends _iBase {
      * (override)set checked or not
      */
     static setO(obj: JQuery, value: StrNumB) {
-        const status = !(value == null || value == '0' || value == 'False' || value === false);
+        const status:boolean = !(value == null || value == '0' || value == 'False' || value === false);
         obj.prop('checked', status);
     }
 
@@ -65,10 +70,10 @@ class _iCheck extends _iBase {
      */
     static getCheck0Values(box: JQuery): string[] {
         const ary: string[] = [];
-        const item = _Obj.getByFt(_iCheck.fltCheckeds, box);
+        const item = _Obj.getByFt(_iCheck.ftCheckeds, box);
         if (_Obj.notEmpty(item)) {
-            item.each(function (this: Elm, i: number) {
-                ary[i] = $(this).data('value') as string;
+            item.each(function (idx: number) {
+                ary[idx] = $(this).data('value') as string;
             });
         }
         return ary;
@@ -84,22 +89,22 @@ class _iCheck extends _iBase {
         const ary: string[] = [];
         const item = _Obj.getByFt(`[data-fid^='${preFid}']:checked`, box);
         if (_Obj.notEmpty(item)) {
-            item.each(function (this: Elm, i: number) {
-                ary[i] = $(this).data('value') as string;
+            item.each(function (idx: number) {
+                ary[idx] = $(this).data('value') as string;
             });
         }
         return ary;
     }
 
     /**
-     * no used??
+     * 對象為 _check0 !!
      * get checked checkebox data-value string array
      * form {object} container
      * fid {string} (optional '_check0') data-fid value
      * return {string array}
      */ 
     static checkAll(form: JQuery, status: boolean): void {
-        _iCheck.setO(form.find(_iCheck.fltCheck0), status);
+        _iCheck.setO(form.find(_iCheck.ftCheck0), status);
     }
 }
 window._iCheck = _iCheck;

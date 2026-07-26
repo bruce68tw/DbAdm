@@ -40,7 +40,7 @@ class XpRoleVo {
     onUserModalOk() {
         //get checked columns list
         var rows = [];
-        this.modalUserBody.find(':checkbox:checked').each(function (idx) {
+        this.modalUserBody.find(_iCheck.ftChecked).each(function (idx:number) {
             var obj = $(this);
             var tr = obj.closest('tr');
             //data 屬性不區分大小寫 !!
@@ -71,7 +71,8 @@ class XpRoleVo {
         }
 
         //remove checked for next usage, hide modal
-        this.modalUser.find(':checkbox:checked').prop('checked', false);
+        //this.modalUser.find(_iCheck.ftChecked).prop('checked', false);
+        _iCheck.checkAll(this.modalUser, false);
         _Modal.hide(this.modalUser);
     }
 }
@@ -87,8 +88,8 @@ _me = {
                 { data: '_Crud' },
             ],
             columnDefs: [
-				{ targets: [1], render(data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+				{ targets: [1], render(data, type, full) {
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, '*');
                 }},
             ],
         };

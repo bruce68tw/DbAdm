@@ -11,48 +11,48 @@ class FlowLine {
     private readonly FromTypeH = 'H';
 
     flowView: FlowView;
-    json: Json;
-    svg: any;
     fromNode: FlowNode;
     toNode: FlowNode;
-    path: any;
-    path2: any;
-    labelElm: any;
-    arrow: any;
+    dto: FlowLineDto;
+    svg: Svg;
+    path: SvgPath;
+    path2: SvgPath;
+    arrow: SvgPath;
+    labelElm: SvgText;
     
     fromType!: string;
     isFromTypeV!: boolean;
     isFromTypeH!: boolean;
 
-    constructor(flowView: FlowView, json: Json, fromNode?: FlowNode, toNode?: FlowNode) {
-        json = json || {};
-        json.FromType = json.FromType || this.FromTypeAuto;
-        json.Label = json.Label || '';
-        json.Id = json.Id || flowView.getNewLineId();
+    constructor(flowView: FlowView, dto: FlowLineDto, fromNode?: FlowNode, toNode?: FlowNode) {
+        dto = dto || new FlowLineDto();
+        dto.FromType = dto.FromType || this.FromTypeAuto;
+        dto.Label = dto.Label || '';
+        dto.Id = dto.Id || flowView.getNewLineId();
 
         this.flowView = flowView;
-        this.json = json;
+        this.dto = dto;
         this.svg = flowView.svg;
-        this.fromNode = fromNode || this.flowView.idToNode(json.FromNodeId);
-        this.toNode = toNode || this.flowView.idToNode(json.ToNodeId);
+        this.fromNode = fromNode || this.flowView.idToNode(dto.FromNodeId);
+        this.toNode = toNode || this.flowView.idToNode(dto.ToNodeId);
 
         this.path = this.svg.path('')
-            .attr('data-id', json.Id)
+            .attr('data-id', dto.Id)
             .addClass('xf-line');
             
         this.path2 = this.svg.path('')
-            .attr('data-id', json.Id)
+            .attr('data-id', dto.Id)
             .fill('none')
             .stroke({ width: 10, color: 'transparent' })
             .attr({ 'pointer-events': 'stroke', 'cursor': 'pointer' });
 
-        this.labelElm = this.svg.text(json.Label)
+        this.labelElm = this.svg.text(dto.Label)
             .addClass('xf-line-text')
             .font({ anchor: 'middle' });
 
         this.arrow = this.svg.path('').addClass('xf-arrow');
 
-        this._setFromTypeVars(json.FromType);
+        this._setFromTypeVars(dto.FromType);
 
         this.fromNode.addLine(this);
         this.toNode.addLine(this);
@@ -60,21 +60,21 @@ class FlowLine {
         this.render();
     }
 
-    private _setFromTypeVars(fromType: string): void {
+    private _setFromTypeVars(fromType: string) {
         fromType = fromType || this.FromTypeAuto;
         this.fromType = fromType;
         this.isFromTypeV = (fromType === this.FromTypeV);
         this.isFromTypeH = (fromType === this.FromTypeH);
         
-        const dom = this.path.node as Elm;
+        const node = this.path.node;
         if (fromType === this.FromTypeAuto) {
-            dom.classList.remove('xf-way');
+            node.classList.remove('xf-way');
         } else {
-            dom.classList.add('xf-way');
+            node.classList.add('xf-way');
         }
     }
 
-    private _setEvent(): void {
+    private _setEvent() {
         this.path2.node.addEventListener(MouseEstr.RightMenu, (event: MouseEvent) => {
             event.preventDefault();
             if (this.flowView.fnShowMenu) {
@@ -83,11 +83,11 @@ class FlowLine {
         });
     }
 
-    setLabel(label: string): void {
+    setLabel(label: string) {
         this.labelElm.text(label);
     }
 
-    render(): void {
+    render() {
         const fromPos = this.fromNode.getPos();
         const fromSize = this.fromNode.getSize();
         const fromCnt = { x: fromPos.x + fromSize.w / 2, y: fromPos.y + fromSize.h / 2 };
@@ -128,7 +128,7 @@ class FlowLine {
         const isMinCntCnt3V = (isToDown ? toUp.y - fromDown.y : fromUp.y - toDown.y) >= this.MinCntCnt3;
 
         let fromPnt, toPnt;
-        let points: any[];
+        let points: SvgPoint[];
         let textStartAry = 0;
 
         if (!this.isFromTypeH && isMaxCntCnt1H && isMinSideSide1V) {
@@ -186,7 +186,7 @@ class FlowLine {
             (points[textStartAry].y + points[textStartAry + 1].y) / 2);
     }
 
-    private _drawLine(points: any[]): void {
+    private _drawLine(points: SvgPoint[]) {
         let pathStr = `M ${points[0].x} ${points[0].y}`;
         const pntLen = points.length;
         const radius = this.MaxCntCnt1;
@@ -223,7 +223,7 @@ class FlowLine {
         this._drawArrow(points[pntLen - 2], points[pntLen - 1]);
     }
 
-    private _drawArrow(fromPnt: any, toPnt: any): void {
+    private _drawArrow(fromPnt: SvgPoint, toPnt: SvgPoint) {
         const angle = Math.atan2(toPnt.y - fromPnt.y, toPnt.x - fromPnt.x);
         const arrowPnt1 = {
             x: toPnt.x - this.ArrowLen * Math.cos(angle) + this.ArrowWidth * Math.cos(angle - Math.PI / 2),
@@ -237,16 +237,16 @@ class FlowLine {
         this.arrow.plot(`M ${toPnt.x} ${toPnt.y} L ${arrowPnt1.x} ${arrowPnt1.y} M ${toPnt.x} ${toPnt.y} L ${arrowPnt2.x} ${arrowPnt2.y}`);
     }
 
-    getId(): string {
-        return this.json.Id;
+    getId(): StrNum {
+        return this.dto.Id;
     }
 
     getFromType(): string {
-        return this.json.FromType;
+        return this.dto.FromType;
     }
 
-    setFromType(fromType: string): void {
-        if (fromType === this.json.FromType) return;
+    setFromType(fromType: string) {
+        if (fromType === this.dto.FromType) return;
         this._setFromTypeVars(fromType);
         this.render();
     }

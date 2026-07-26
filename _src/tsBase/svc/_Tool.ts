@@ -1,7 +1,7 @@
 class _Tool {
     // constant
     // msg text
-    static readonly FltMsgText: string = '.xd-msg';
+    static readonly FtMsgText: string = '.xd-msg';
 
     // variables for ansA
     static ansStatus: boolean = false;
@@ -38,7 +38,7 @@ class _Tool {
      */
     static msg(msg: string, fnClose?: () => void): void {
         const box = _Tool.xMsg;
-        box.find(_Tool.FltMsgText).html(msg);
+        box.find(_Tool.FtMsgText).html(msg);
         _Modal.show(box);
 
         // set callback
@@ -54,7 +54,7 @@ class _Tool {
     /*
     static ans(msg: string, fnYes?: () => void, fnNo?: () => void): void {
         const box = _Tool.xAns;
-        box.find(_Tool.FltMsgText).html(msg);
+        box.find(_Tool.FtMsgText).html(msg);
         _Modal.show(box);
 
         // set callback
@@ -71,7 +71,7 @@ class _Tool {
      */
     static async ansA(msg: string): Promise<boolean> {
         const box = _Tool.xAnsA;
-        box.find(_Tool.FltMsgText).html(msg);
+        box.find(_Tool.FtMsgText).html(msg);
         _Modal.show(box);
 
         // set callback
@@ -114,7 +114,7 @@ class _Tool {
      */
     static alert(msg: string, color?: string): void {
         const box = _Tool.xAlert;
-        box.find(_Tool.FltMsgText).text(msg);
+        box.find(_Tool.FtMsgText).text(msg);
         box.fadeIn(500, function () {
             _Obj.show(box);
             setTimeout(function () {

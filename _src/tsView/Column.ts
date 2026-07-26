@@ -19,11 +19,11 @@ _me = {
 
             //修改:如果查詢結果欄位有特殊的顯示規則就寫在這裡
             columnDefs: [
-                { targets: [6], render(data, type, full, meta) {
+                { targets: [6], render(data) {
                     return _me.crudR.dtStatusName(data);
                 }},
-                { targets: [7], render(data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                { targets: [7], render(data, type, full) {
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, '*');
                 }},
             ],
         };

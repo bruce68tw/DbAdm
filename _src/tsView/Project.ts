@@ -54,12 +54,11 @@ _me = {
                 { data: '_Crud' },
             ],
             columnDefs: [
-                { targets: [4], render(data, type, full, meta) {
-                    const crudR = _me.crudR;
+                { targets: [4], render(data, type, full) {
                     return '' +
-                        crudR.dtLinkBtn(full.Id, '匯入結構', '_vo.onImport') + ' | ' +
-                        crudR.dtLinkBtn(full.Id, '產生文件', '_vo.onGenWord') + ' | ' +
-                        crudR.dtLinkBtn(full.Id, '產生異動SQL', '_vo.onGenLogSql');
+                        _me.crudR.dtLinkBtn(full.Id, '匯入結構', '_vo.onImport') + ' | ' +
+                        _me.crudR.dtLinkBtn(full.Id, '產生文件', '_vo.onGenWord') + ' | ' +
+                        _me.crudR.dtLinkBtn(full.Id, '產生異動SQL', '_vo.onGenLogSql');
                         /*
                         '<button type="button" class="btn btn-link" data-onclick="_vo.onImport" data-args="{0}">{1}</button> | ' +
                         '<button type="button" class="btn btn-link" data-onclick="_vo.onGenWord" data-args="{0}">{2}</button> | ' +
@@ -67,11 +66,11 @@ _me = {
                     return _Str.format(html, full.Id, '匯入結構', '產生文件', '產生異動SQL');
                         */
                 }},
-                { targets: [5], render(data, type, full, meta) {
+                { targets: [5], render(data) {
                     return _me.crudR.dtStatusName(data);
                 }},
-                { targets: [6], render(data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                { targets: [6], render(data, type, full) {
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, '*');
                 }},
             ],
         };

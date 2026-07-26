@@ -14,6 +14,10 @@
 安裝 gulp 工具套件：  
   npm install -D gulp esbuild esbuild-plugin-tsconfig-paths gulp-clean gulp-concat gulp-clean-css gulp-terser gulp-sourcemaps
 
+DbAdm 額外安裝 :
+  npm install -D @svgdotjs/svg.js
+  npm install -D @svgdotjs/svg.draggable.js
+
 其他說明：
   npx tsc：編譯全部TS(輸出到 _srcOut)
   gulp：打包

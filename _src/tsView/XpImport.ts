@@ -43,15 +43,15 @@ _me = {
                 { data: 'Created' },
             ],
             columnDefs: [
-				{ targets: [1], render(data, type, full, meta) {
+				{ targets: [1], render(data, type, full) {
                     return (data > 0)
                         ? _Str.format('<a href="GetFail?id={0}&name={1}">{2}</a>', full.Id, full.FileName, data)
                         : data;
                 }},
-				{ targets: [3], render(data, type, full, meta) {
+				{ targets: [3], render(data, type, full) {
                     return _Str.format('<a href="GetSource?id={0}&name={1}">{2}</a>', full.Id, full.FileName, data);
                 }},
-				{ targets: [5], render(data, type, full, meta) {
+				{ targets: [5], render(data) {
                     return _Date.dtsToUiDt(data);
                 }},
             ],

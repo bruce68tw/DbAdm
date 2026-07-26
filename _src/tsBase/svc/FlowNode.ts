@@ -15,6 +15,14 @@
   param json {json} 流程節點資料
  */
 class FlowNode {
+    /**
+     * 定義:
+     * Element: 基本 Element
+     * Elm: HTMLElement
+     * SVGGElement 就是瀏覽器看到的 SVG <g> 標籤，不要把它想成 SVG.js 的東西。
+     * SvgElm: svg 基本 Element
+    */
+
     private readonly MinWidth: number = 80;
     private readonly MinHeight: number = 42;
     private readonly LineHeight: number = 18;
@@ -26,35 +34,35 @@ class FlowNode {
     private readonly NodeRx: number = 5;
 
     self: FlowNode;
-    flowView: any;
-    svg: any;
-    json: any;
-    elm: any;
-    boxElm: any;
-    nameElm: any;
-    pinElm: any;
-    lines: any[];
+    flowView: FlowView;
+    svg: Svg;
+    dto: FlowNodeDto;
+    groupElm: SvgGroup;
+    boxElm: SvgCircle | SvgRect;  //border
+    nameElm: SvgText;   //text
+    pinElm: SvgRect;       //連結點
+    lines: FlowLine[];
 
-    constructor(flowView: any, json: any) {
+    constructor(flowView: FlowView, dto: FlowNodeDto) {
         this.self = this;
         this.flowView = flowView;
         this.svg = flowView.svg;
-        this.json = Object.assign({
+        this.dto = Object.assign({
             Name: 'Node',
             NodeType: NodeTypeEstr.Node,
-            PosX: json.PosX || 100,
-            PosY: json.PosY || 100,
-        }, json);
+            PosX: dto.PosX || 100,
+            PosY: dto.PosY || 100,
+        }, dto);
 
         this.lines = [];
 
-        let nodeType = this.json.NodeType;
+        let nodeType = this.dto.NodeType;
         let cssClass = '';
         let nodeText = '';
 
-        this.elm = this.svg
+        this.groupElm = this.svg
             .group()
-            .attr('data-id', json.Id);
+            .attr('data-id', dto.Id);
 
         let startEnd = this._isStartEnd();
         if (startEnd) {
@@ -66,18 +74,18 @@ class FlowNode {
                 nodeText = NodeTypeEstr.End;
             }
 
-            this.boxElm = this.elm.circle()
+            this.boxElm = this.groupElm.circle()
                 .addClass(cssClass);
 
             this.boxElm.attr('r', this.NodeRadius);
 
-            this.nameElm = this.elm.text(nodeText)
+            this.nameElm = this.groupElm.text(nodeText)
                 .addClass(cssClass + '-text')
                 .attr({ 'text-anchor': 'middle', 'dominant-baseline': 'middle' });
         } else {
-            nodeText = this.json.Name;
+            nodeText = this.dto.Name;
             cssClass = 'xf-node';
-            this.boxElm = this.elm.rect()
+            this.boxElm = this.groupElm.rect()
                 .addClass(cssClass)
                 .attr({
                     'text-anchor': 'middle',
@@ -86,16 +94,16 @@ class FlowNode {
                     'ry': this.NodeRx,
                 });
 
-            this.nameElm = this.elm.text('')
+            this.nameElm = this.groupElm.text('')
                 .addClass(cssClass + '-text');
 
             this.setName(nodeText, false);
         }
 
-        this.elm.move(this.json.PosX, this.json.PosY);
+        this.groupElm.move(this.dto.PosX, this.dto.PosY);
 
         if (nodeType != NodeTypeEstr.End) {
-            this.pinElm = this.elm
+            this.pinElm = this.groupElm
                 .rect(this.PinWidth, this.PinWidth)
                 .addClass('xf-pin');
             this._setPinPos();
@@ -104,34 +112,34 @@ class FlowNode {
         this._setEvent();
     }
 
-    getLines(): any[] {
+    getLines(): FlowLine[] {
         return this.lines;
     }
 
     private _isStartEnd(): boolean {
-        return (this.json.NodeType == NodeTypeEstr.Start || this.json.NodeType == NodeTypeEstr.End);
+        return (this.dto.NodeType == NodeTypeEstr.Start || this.dto.NodeType == NodeTypeEstr.End);
     }
 
-    getNodeType(): any {
-        return this.json.NodeType;
+    getNodeType(): string {
+        return this.dto.NodeType;
     }
 
     getPos(): { x: number, y: number } {
-        let elm = this.elm;
-        return { x: elm.x(), y: elm.y() };
+        let box = this.groupElm.bbox();
+        return { x: box.x, y: box.y };
     }
 
     getSize(): { w: number, h: number } {
-        let elm = this.boxElm;
-        return { w: elm.width(), h: elm.height() };
+        let box = this.boxElm.bbox();
+        return { w: box.width, h: box.height };
     }
 
     getCenter(): { x: number, y: number } {
-        let elm = this.boxElm;
-        return { x: elm.cx(), y: elm.cy() };
+        let box = this.boxElm.bbox();
+        return { x: box.cx, y: box.cy };
     }
 
-    private _setPinPos(): void {
+    private _setPinPos() {
         if (!this.pinElm) return;
 
         let bbox = this.nameElm.bbox();
@@ -139,22 +147,23 @@ class FlowNode {
         this.pinElm.move(center.x + bbox.width / 2 + 3, center.y - 5);
     }
 
-    private _setEvent(): void {
+    private _setEvent() {
         let me = this;
         let flowView = this.flowView;
-
-        this.elm.node.addEventListener(MouseEstr.RightMenu, function (e: MouseEvent) {
-            e.preventDefault();
+        this.groupElm.node.addEventListener(MouseEstr.RightMenu, (evt: MouseEvent) => {
+            evt.preventDefault();
             if (flowView.fnShowMenu)
-                flowView.fnShowMenu(e, true, me);
+                flowView.fnShowMenu(evt, true, me);
         });
 
-        this.elm.draggable().on(MouseEstr.DragMove, function (e: any) {
+        //dragMove 沒有對應event, 只能用 JQuery.Event
+        this.groupElm.draggable().on(MouseEstr.DragMove, (evt: MouseEvent) => {
             if (!flowView.isEdit) return;
             me._drawLines();
-        }).on(MouseEstr.DragEnd, function (e: any) {
+        }).on(MouseEstr.DragEnd, function (evt: CustomEvent) {
+            //CustomEvent 為 DOM event for evt.detail.box
             if (!flowView.isEdit) return;
-            let { x, y } = e.detail.box;
+            let { x, y } = evt.detail.box;
             if (me.flowView.fnMoveNode)
                 me.flowView.fnMoveNode(me, x, y);
         });
@@ -162,36 +171,37 @@ class FlowNode {
         this._setEventPin();
     }
 
-    private _drawLines(): void {
+    private _drawLines() {
         this.lines.forEach(line => line.render());
     }
 
-    private _setEventPin(): void {
+    private _setEventPin() {
         if (!this.pinElm) return;
 
-        let fromDom: any, startX: number, startY: number;
-        let tempLine: any;
-        let toElm: any = null;
-        let me = this;
+        let fromElm: Element;
+        let toElm: Element = null;
+        let startX: number, startY: number;
+        let tempLine: SvgLine;
         let flowView = this.flowView;
+        let me = this;
 
-        this.pinElm.draggable().on(MouseEstr.DragStart, (event: any) => {
+        this.pinElm.draggable().on(MouseEstr.DragStart, (evt: MouseEvent) => {
             if (!flowView.isEdit) return;
 
             let { x, y } = me.pinElm.rbox(me.svg);
             startX = x;
             startY = y;
-            fromDom = me.self.elm.node;
+            fromElm = me.self.groupElm.node;    //取node得到 dom element
 
             tempLine = me.svg.line(startX, startY, startX, startY)
                 .addClass('xf-line off');
 
             flowView.drawLineStart(me.self);
-        }).on(MouseEstr.DragMove, (event: any) => {
+        }).on(MouseEstr.DragMove, (evt: CustomEvent) => {
             if (!flowView.isEdit) return;
-            event.preventDefault();
+            evt.preventDefault();
 
-            let { x, y } = event.detail.box;
+            let { x, y } = evt.detail.box;
             let endX = x;
             let endY = y;
 
@@ -202,13 +212,13 @@ class FlowNode {
                 let viewPortX = endX + svgRect.x;
                 let viewPortY = endY + svgRect.y;
 
-                let overDom = document.elementsFromPoint(viewPortX, viewPortY)
-                    .find((dom: any) => dom != fromDom && (dom.classList.contains('xf-node') || dom.classList.contains('xf-end')));
-                if (overDom) {
-                    let overElm = (overDom as any).instance;
-                    if (toElm !== overElm) {
+                let overElm:Element = document.elementsFromPoint(viewPortX, viewPortY)
+                    .find((dom: Element) => dom != fromElm && (dom.classList.contains('xf-node') || dom.classList.contains('xf-end')));
+                if (overElm) {
+                    let elm: Element = (overElm as any).instance;    //SVG 綁定在 DOM 上的物件
+                    if (toElm !== elm) {
                         if (toElm) me._markNode(toElm, false);
-                        toElm = overElm;
+                        toElm = elm;
                         me._markNode(toElm, true);
                     }
                 } else if (toElm) {
@@ -216,12 +226,13 @@ class FlowNode {
                     toElm = null;
                 }
             }
-        }).on(MouseEstr.DragEnd, (event: any) => {
+        }).on(MouseEstr.DragEnd, (evt: MouseEvent) => {
             if (!flowView.isEdit) return;
 
             if (toElm) {
                 me._markNode(toElm, false);
-                let id = toElm.parent().node.dataset.id;
+                //let id = toElm.parent().node.dataset.id;
+                const id = toElm.parentElement.getAttribute('data-id');
                 let json = flowView.drawLineEnd(flowView.idToNode(id));
                 toElm = null;
 
@@ -232,7 +243,7 @@ class FlowNode {
         });
     }
 
-    private _markNode(elm: any, status: boolean): void {
+    private _markNode(elm: any, status: boolean) {
         if (status) {
             elm.node.classList.add('on');
         } else {
@@ -240,16 +251,16 @@ class FlowNode {
         }
     }
 
-    getId(): string {
-        return this.json.Id;
+    getId(): StrNum {
+        return this.dto.Id;
     }
 
-    addLine(line: any): void {
+    addLine(line: FlowLine) {
         this.lines.push(line);
     }
 
-    deleteLine(line: any): void {
-        let index = this.lines.findIndex((item: any) => item.Id == line.Id);
+    deleteLine(line: FlowLine) {
+        let index = this.lines.findIndex((item: FlowLine) => item.dto.Id == line.dto.Id);
         this.lines.splice(index, 1);
     }
 
@@ -257,7 +268,7 @@ class FlowNode {
         return this.nameElm.text();
     }
 
-    setName(name: string, drawLine: boolean): void {
+    setName(name: string, drawLine: boolean) {
         let lines = _Str.replaceAll(name, '\\n', '\n').split('\n');
         this.nameElm.clear().text((add: any) => {
             lines.forEach((line, i) => {

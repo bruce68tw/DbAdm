@@ -1,5 +1,5 @@
 ﻿/**
- * 控制 EditMany, 參考 FlowMany.js, called by Read.cshtml only !!
+ * 控制 EditMany, 參考 FlowMany.js, called by GenCrud/Read.cshtml only !!
  * 處理 UI 元素和多筆資料之間的轉換
  * 注意:
  * 1.whenSave 會重新設定異動Item的BoxId、ChildNo、Sort
@@ -9,7 +9,7 @@
  * return {UiMany}
  */ 
 class UiMany {
-
+    /*
     private FtMenu: string;
     private ModalInput: JQuery;
     private ModalGroup: JQuery;
@@ -17,6 +17,20 @@ class UiMany {
     private ModalTabPage: JQuery;
     private ModalChecks: JQuery;
     private Id2: string;
+    */
+    //const
+    FtMenu = '.xf-menu';   //right menu filter
+    ModalInput = $('#modalUiInput');
+    ModalGroup = $('#modalUiGroup');
+    ModalTable = $('#modalUiTable');
+    ModalTabPage = $('#modalUiTabPage');
+    ModalChecks = $('#modalUiChecks');
+    Id2 = '_Id2';   //UiItem欄位 for 儲存 kid 用於後端設定
+
+    //global
+    uiView: UiView;
+
+    /*
     private isEdit: boolean;
     private modalItem: any;
     private modalItemId: string;
@@ -24,15 +38,21 @@ class UiMany {
     private mItem: EditMany;
     private newInputNo: number;
     private eformItems: JQuery;
-
-    //global
-    uiView: UiView;
+    */
+    private isEdit = false;    //是否可編輯
+    private modalItem:JQuery;    //modal item
+    private modalItemId = '';
+    private modalItemType = '';
+    private newInputNo = 0;    //for fid、title, 累加, 不會當做主key
+    private eformItems = $('#eformItems');      //nodes edit form for editMany
+    private mItem: EditMany;
 
     /**
      * @param {string} ftWorkArea
      * @param {EditMany} mItem
      */
     constructor(ftWorkArea: string, mItem: EditMany) {
+        /*
         //const
         this.FtMenu = '.xf-menu';   //right menu filter
         this.ModalInput = $('#modalUiInput');
@@ -42,15 +62,18 @@ class UiMany {
         this.ModalChecks = $('#modalUiChecks');
         //this.EformInput = this.ModalInput.find('form');   //modalNodeProp form
         this.Id2 = '_Id2';   //UiItem欄位 for 儲存 kid 用於後端設定
-        
+        */
+
+        this.mItem = mItem;      //editMany
+        /*
         this.isEdit = false;    //是否可編輯
         this.modalItem = null;    //modal item
         this.modalItemId = '';
         this.modalItemType = '';
-        this.mItem = mItem;      //editMany
         this.newInputNo = 0;    //for fid、title, 累加, 不會當做主key
         this.eformItems = $('#eformItems');      //nodes edit form for editMany        
         //this.tplItem = $('#tplUiItem').html();    //item template
+        */
 
         //now container for add item
         //this.divEdit = $(ftBox);
@@ -69,11 +92,11 @@ class UiMany {
 
         //mouse down時hide right menu
         var me = this;
-        $(document).on(MouseEstr.MouseDown, function (e: JQuery.MouseDownEvent) {
+        $(document).on(MouseEstr.MouseDown, function (evt: JQuery.MouseDownEvent) {
             //右鍵是3，左鍵是1，中鍵是2, 不處理右鍵，避免提前 hide
-            if (e.which != 3) {
+            if (evt.which != 3) {
                 let filter = me.FtMenu;
-                if ($(e.target as HTMLElement).parents(filter).length == 0)
+                if ($(evt.target as HTMLElement).parents(filter).length == 0)
                     _Obj.hide($(filter));
             }
         });
@@ -88,7 +111,6 @@ class UiMany {
     }
     */
 
-
     /**
      * (by AI)
      * 將樹狀結構 jsons 轉換回 扁平 rows 陣列。
@@ -99,10 +121,10 @@ class UiMany {
      * param {json array} jsons
      * return {json array} flat rows array
      */
-    _newJsonsToRows(jsons: any[]): any[] {
+    private _newJsonsToRows(jsons: Json[]): Json[] {
         if (!jsons || jsons.length === 0) return [];
 
-        var rows: any[] = [];
+        var rows: Json[] = [];
         var idx = 0;    //row Id, 遞減
         var me = this;
 
@@ -111,7 +133,7 @@ class UiMany {
          * @param {Array} items 當前層的一維或二維陣列
          * @param {string} boxId 上層節點 Id
          */
-        function flatten(items: any[], boxId: string = '0') {
+        function flatten(items: Json[], boxId: string = '0') {
             if (!items) return;
 
             // 若傳入的是一維陣列（根節點），視為 ChildNo=0
@@ -184,7 +206,7 @@ class UiMany {
      * param {json array} rows
      * return {json array} nested json array
      */
-    _dbRowsToJsons(rows: Json[]): Json[] {
+    private _dbRowsToJsons(rows: Json[]): Json[] {
         if (!rows || rows.length === 0) return [];
 
         // 依 BoxId 分組
@@ -196,12 +218,12 @@ class UiMany {
         }
 
         // 遞迴建立 Childs2（二維陣列）
-        function buildTree(boxId: string): any[] | null {
+        function buildTree(boxId: string): Json[] | null {
             const childs = boxMap.get(boxId);
             if (!childs) return null;
 
             // 以 boxId 的 ChildNo 分群
-            const items2: any[][] = [];
+            const items2: Json[][] = [];
             for (const child of childs) {
                 const childNo = parseInt(child.ChildNo);
                 if (!items2[childNo])
@@ -231,12 +253,12 @@ class UiMany {
         return buildTree('0') || [];
     }
 
-    _hideMenu() {
+    private _hideMenu() {
         _Obj.hide($(this.FtMenu));
     }
 
     //on show right menu
-    showMenu(event: any, item: JQuery) {
+    showMenu(evt: JQuery.ContextMenuEvent, item: JQuery) {
         //set instance variables
         this.modalItem = item;
         this.modalItemId = this.uiView.itemGetId(item);
@@ -264,13 +286,13 @@ class UiMany {
 
         //視覺效果較好
         menu.css({
-            top: event.pageY,
-            left: event.pageX
+            top: evt.pageY,
+            left: evt.pageX
         }).show();
     }
 
     //return row
-    addItemRow(itemType: string) {
+    addItemRow(itemType: string):Json {
         switch (itemType) {
             case UiItemTypeEstr.Input:
                 return this._addInput();
@@ -298,13 +320,13 @@ class UiMany {
     }
 
     //called by view drop event
-    async onDragEnd(e: any) {
-        await this.uiView.onDragEnd(e);
+    async onDragEnd(evt: JQuery.DragEndEvent) {
+        await this.uiView.onDragEnd(evt);
     }
 
     //#endregion
 
-    _idToRB(itemId: string) {
+    private _idToRB(itemId: string) {
         return this.mItem.idToRowBox(itemId);
     }
 
@@ -329,16 +351,16 @@ class UiMany {
         this._setInfoByRB(rb, info);
     }
 
-    _getInfoByRB(rb: JQuery) {
+    private _getInfoByRB(rb: JQuery) {
         return _Str.toJson(_iText.get('Info', rb));
     }
-    _setInfoByRB(rb: JQuery, info: Json) {
+    private _setInfoByRB(rb: JQuery, info: Json) {
         _iText.set('Info', _Json.toStr(info), rb);
     }
 
     //#region 功能按鈕相關
     //return row
-    _mItemAddRow(itemType: string, info: Json) {
+    private _mItemAddRow(itemType: string, info: Json) {
         //配合後端DB, 欄位使用大camel
         let itemJson = {
             ItemType: itemType,
@@ -351,7 +373,7 @@ class UiMany {
         return row;
     }
 
-    _addInput() {
+    private _addInput() {
         //使用畫面上的設定ColsType
         //set info json first
         this.newInputNo++;
@@ -373,7 +395,7 @@ class UiMany {
         //await this.uiView.addInputA(row.Id, info);
     }
 
-    _addGroup() {
+    private _addGroup() {
         let info = {
             Title: '分群文字',
         };
@@ -385,7 +407,7 @@ class UiMany {
         //await this.uiView.addGroupA(row.Id, info);
     }
 
-    _addChecks() {
+    private _addChecks() {
         //add to mItem
         let info = {
             Title: '多選欄位',
@@ -407,7 +429,7 @@ class UiMany {
     }
     */
 
-    _addRB() {
+    private _addRB() {
         //使用畫面上的設定RowType
         let info = {
             RowType: _iSelect.get('_RowType', _me.eform0),
@@ -420,7 +442,7 @@ class UiMany {
         //this.uiView.addRow(row.Id);
     }
 
-    _addTable() {
+    private _addTable() {
         //add to mItem
         let info = {
             Code: '_table',
@@ -434,19 +456,20 @@ class UiMany {
     }
 
     //todo
-    _addTabPage() {
+    private _addTabPage(): Json {
+        return {};
     }
     //#endregion
 
     //#region menu 事件相關
-    _deleteItem() {
+    private _deleteItem() {
         //todo: 考慮有子item的情形
         this.mItem.deleteRow(this.modalItemId);
         this.uiView.deleteItem(this.modalItem);
     }
 
     //check menu item status
-    _menuStatus() {
+    private _menuStatus() {
         let me = _Fun.getMeElm();
         return !me.classList.contains('off');
     }
@@ -624,8 +647,8 @@ class UiMany {
      * param {json array} jsons nested json array
      * return {json array} json array
      */
-    _jsonsToRows(jsons: Json[]): Json[] {
-        const rows: any[] = [];    //result
+    private _jsonsToRows(jsons: Json[]): Json[] {
+        const rows: Json[] = [];    //result
 
         function flatten(jsons2: Json[], upId: string) {
             for (const json of jsons2) {

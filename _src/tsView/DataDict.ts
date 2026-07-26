@@ -16,11 +16,11 @@ _me = {
                 { data: '_Fun' },
             ],
             columnDefs: [
-                { targets: [4], render(data, type, full, meta) {
+                { targets: [4], render(data) {
                     return _me.crudR.dtYesEmpty(data);
                 }},
-                { targets: [7], render(data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Code, full.Name, true, true, true);
+                { targets: [7], render(data, type, full) {
+                    return _me.crudR.dtCrudFun(full.Code, full.Name, '*');
                 }},
             ],
         };

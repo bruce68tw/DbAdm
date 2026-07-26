@@ -200,20 +200,20 @@ _me = {
                 { data: '_Crud' },
             ],
             columnDefs: [
-                { targets: [3], render(data, type, full, meta) {
+                { targets: [3], render(data) {
                     return _Date.dsToUiDate(data);
                 }},
-                { targets: [7], render(data, type, full, meta) {
+                { targets: [7], render(data) {
                     return _me.crudR.dtYesEmpty(data);
                 }},
-                { targets: [11], render(data, type, full, meta) {
+                { targets: [11], render(data, type, full) {
                     return _Str.notEmpty(full.SurveyId) ? '是' :
                         (full.IsFinish == 1 && _Str.notEmpty(full.RptUser) && (full.OwnerId == _Fun.userId || _Fun.userId=='Bruce'))
                             ? `<button type='button' class='btn btn-secondary' data-onclick='_vo.onSurvey' data-args='${full.Id}'>寄問卷</button>`
                             : '';
                 }},
-                { targets: [12], render(data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                { targets: [12], render(data, type, full) {
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, '*');
                 }},
             ],
         };

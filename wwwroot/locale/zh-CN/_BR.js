@@ -33,6 +33,8 @@ _BR = {
     TipDelete: '删除这笔资料',
     TipView: '检视这笔资料',
     TipCopy: '复制这笔资料并且进入新增模式',
+    TipWord: '产生 Word 档案',
+    TipPdf: '产生 PDF 档案',
 
     //message-upload file
     UploadFileNotBig: '上传档案不可大于{0}M !',

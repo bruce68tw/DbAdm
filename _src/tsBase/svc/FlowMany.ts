@@ -30,10 +30,10 @@ class FlowMany {
     private tplLine: string;
     private tplLineCond: string;
     private nowIsNode: boolean = false;
-    private nowFlowItem: any = null;
+    private nowFlowItem: FlowNode | FlowLine;
     private condOpExprs: RegExp[] = [];
     private condOpShows: string[] = [];
-    private flowView: any;
+    private flowView: FlowView;
 
     constructor(areaId: string, mNode: EditMany, mLine: EditMany) {
         this.mNode = mNode;
@@ -65,7 +65,8 @@ class FlowMany {
         const flowView = new FlowView(areaId);
         flowView.fnMoveNode = (node: FlowNode, x: number, y: number) => this.fnMoveNode(node, x, y);
         flowView.fnAfterAddLine = (json: Json) => this.fnAfterAddLine(json);
-        flowView.fnShowMenu = (event: any, isNode: boolean, flowItem: any) => this.fnShowMenu(event, isNode, flowItem);
+        flowView.fnShowMenu = (evt: MouseEvent, isNode: boolean, flowItem: FlowNode | FlowLine) =>
+            this.fnShowMenu(evt, isNode, flowItem);
         this.flowView = flowView;
 
         this._setFlowEvent();
@@ -82,17 +83,17 @@ class FlowMany {
 
     /**
      * on show right menu
-     * @param event
+     * @param evt
      * @param isNode
      * @param flowItem
      */
-    fnShowMenu(event: any, isNode: boolean, flowItem: any) {
+    fnShowMenu(evt: MouseEvent, isNode: boolean, flowItem: FlowNode | FlowLine) {
         this.nowIsNode = isNode;
         this.nowFlowItem = flowItem;
 
         //一般節點才需要設定屬性
         const canEdit = isNode
-            ? (this.isEdit && flowItem.getNodeType() == NodeTypeEstr.Node)
+            ? (this.isEdit && (flowItem as FlowNode).getNodeType() == NodeTypeEstr.Node)
             : this.isEdit;
 
         //html 不會自動處理自製功能表狀態, 自行配合 css style
@@ -111,8 +112,8 @@ class FlowMany {
             .removeClass('d-none')
             .css({
                 position: 'fixed',
-                left: event.clientX + 'px',
-                top: event.clientY + 'px',
+                left: evt.clientX + 'px',
+                top: evt.clientY + 'px',
             });
     }
 
@@ -135,39 +136,39 @@ class FlowMany {
     private _setFlowEvent() {
         //hide context menu
         const me = this;
-        $(document).on(MouseEstr.MouseDown, function (e: any) {
+        $(document).on(MouseEstr.MouseDown, function (evt: JQuery.MouseDownEvent) {
             const filter = me.FtMenu;
-            if ($(e.target).closest(filter).length === 0)
+            if ($(evt.target).closest(filter).length === 0)
                 _Obj.hide($(filter));
         });
     }
 
     /**
      * load nodes into UI
-     * @param rows {json} 後端傳回的完整json
+     * @param nodes {json} 後端傳回的完整json
      */
-    loadNodes(rows: Json[]) {
+    loadNodes(nodes: FlowNodeDto[]) {
         //EditMany load rows by rowsBox
-        this.mNode.loadRowsByRsb(rows, true);
+        this.mNode.loadRowsByRsb(nodes, true);
 
         //flow loadNodes
-        this.flowView.loadNodes(rows);
+        this.flowView.loadNodes(nodes);
     }
 
     /**
-     * load nodes into UI(hide)
-     * @param rows {rows} line rows
+     * ?? load nodes into UI(hide)
+     * @param lines {rows} line rows
      */
-    loadLines(rows: Json[]) {
-        this.mLine.loadRowsByRsb(rows, true);
+    loadLines(lines: FlowLineDto[]) {
+        this.mLine.loadRowsByRsb(lines, true);
 
         //set label
-        if (rows != null) {
-            for (let i = 0; i < rows.length; i++) {
-                rows[i].Label = this._condStrToLabel(rows[i].CondStr);
+        if (lines != null) {
+            for (let i = 0; i < lines.length; i++) {
+                lines[i].Label = this._condStrToLabel(lines[i].CondStr);
             }
         }
-        this.flowView.loadLines(rows);
+        this.flowView.loadLines(lines);
     }
 
     //#region node function
@@ -196,7 +197,7 @@ class FlowMany {
         const row = this.mNode.addRow(json);    //會產生id
 
         //flow add node
-        this.flowView.addNode(row);
+        this.flowView.addNode(row as FlowNodeDto);
     }
 
     deleteNode(node: FlowNode) {
@@ -204,7 +205,7 @@ class FlowMany {
         node.getLines().forEach((line: FlowLine) => {
             this.mLine.deleteRow(line.getId());
         });
-        this.flowView.deleteNode();
+        this.flowView.deleteNode(node);
     }
     //#endregion (node function)
 
@@ -229,14 +230,14 @@ class FlowMany {
     }
 
     //convert condStr to List<Cond> for 顯示編輯畫面
-    private _condStrToList(str: string): any[] | null {
+    private _condStrToList(str: string): Json[] | null {
         if (_Str.isEmpty(str))
             return null;
 
         const orList = str.split(this.OrSep);
         const orLen = orList.length;
         const hasOr = (orLen > 1);
-        const result: any[] = [];
+        const result: Json[] = [];
         let ary = 0;
         for (let i = 0; i < orLen; i++) {
             const andList = orList[i].split(this.AndSep);
@@ -319,9 +320,9 @@ class FlowMany {
         if (!this._menuStatus(me)) return;
 
         if (this.nowIsNode)
-            this.showNodeProp(this.nowFlowItem);
+            this.showNodeProp(this.nowFlowItem as FlowNode);
         else
-            this.showLineProp(this.nowFlowItem);
+            this.showLineProp(this.nowFlowItem as FlowLine);
     }
 
     async onMenuDelete() {
@@ -331,10 +332,10 @@ class FlowMany {
         //const the = this;
         if (this.nowIsNode) {
             if (await _Tool.ansA('是否確定刪除這個節點和流程線?'))
-                this.deleteNode(this.nowFlowItem);
+                this.deleteNode(this.nowFlowItem as FlowNode);
         } else {
             if (await _Tool.ansA('是否確定刪除這一條流程線?'))
-                this.deleteLine(this.nowFlowItem);
+                this.deleteLine(this.nowFlowItem as FlowLine);
         }
     }
 
@@ -360,7 +361,7 @@ class FlowMany {
     //node prop onclick ok
     onModalNodeOk() {
         const row = _Form.toRow(this.eformNodeProp);
-        const node = this.nowFlowItem;
+        const node = this.nowFlowItem as FlowNode;
         const rowBox = this.mNode.idToRowBox(node.getId());
         const oldName = _iText.get('Name', rowBox);
         _Form.loadRow(rowBox, row);
@@ -379,7 +380,7 @@ class FlowMany {
             Sort: _iText.get('Sort', modal),
             FromType: _iSelect.get('FromType', modal),
         };
-        const line = this.nowFlowItem;
+        const line = this.nowFlowItem as FlowLine;
         const rowBox = this.mLine.idToRowBox(line.getId());
         _Form.loadRow(rowBox, row);
 

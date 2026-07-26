@@ -19,11 +19,11 @@
  * 公用屬性: 無
  */
 class CrudE {
-    private _nowFun: FunEstr;
-    private _edits: OneMany[] | EditDto[];
     private _multiEdit: boolean;
-    private _nowEditNo: number;
+    private _nowFun: FunEstr;
     private _edit0: EditOne;
+    private _edits: OneMany[] | EditDto[];
+    private _nowEditNo: number;
 
     /**
      * @param edits {object Array} for edit form
@@ -74,17 +74,17 @@ class CrudE {
         return this._edits[editNo] as OneMany;
     }
 
-    viewFileByEditNo(editNo: number, table: string, fid: string): void {
+    viewFileByEditNo(editNo: number, table: string, fid: string) {
         (this._edits[editNo] as OneMany).onViewFile(table, fid);
     }
 
-    setGlobal(): void {
+    setGlobal() {
         _me.crudE = this;
         _me.edit0 = this._edit0;
         _me.eform0 = _me.edit0.eform;
     }
 
-    private _initEdit0(edits: OneMany[]): void {
+    private _initEdit0(edits: OneMany[]) {
         let edit0 = edits[0] as EditOne;
         if (edit0 == null) {
             edit0 = new EditOne();
@@ -100,7 +100,7 @@ class CrudE {
         this._initForm(edit0);
     }
 
-    private _initForm(edit: OneMany): void {
+    private _initForm(edit: OneMany) {
         if (edit.eform == null) return;
 
         _iDate.init(edit.eform);
@@ -118,7 +118,7 @@ class CrudE {
             : _me.divEdit;
     }
 
-    mEditSetEditNo(editNo: number): void {
+    mEditSetEditNo(editNo: number) {
         if (this._multiEdit) {
             this._nowEditNo = editNo;
 
@@ -133,11 +133,11 @@ class CrudE {
         return this._nowEditNo;
     }
 
-    loadJson(json: Json): void {
+    loadJson(json: Json) {
         this._loadJson2(_me.edit0, json);
     }
 
-    private _loadJson2(edit: OneMany, json: Json): void {
+    private _loadJson2(edit: OneMany, json: Json) {
         const rows = _Edit.jsonGetRows(json);
         if (_Edit.isEditOne(edit)) {
             const edit1 = edit as EditOne;
@@ -155,13 +155,13 @@ class CrudE {
         }
     }
 
-    afterOpen(fun: FunEstr, json: Json): void {
+    afterOpen(fun: FunEstr, json: Json) {
         if (_me.fnAfterOpenEdit) {
             _me.fnAfterOpenEdit(fun, json);
         }
     }
 
-    setEditStatus(fun: FunEstr): void {
+    setEditStatus(fun: FunEstr) {
         this._nowFun = fun;
 
         const box = this.getDivEdit();
@@ -200,12 +200,12 @@ class CrudE {
         return false;
     }
 
-    private _getUpdJson(formData: FormData): any {
+    private _getUpdJson(formData: FormData): Json {
         const edit0 = _me.edit0;
         const key = edit0.getKey();
 
-        let fileJson: any = {};
-        const dataJson: any = {};
+        let fileJson: Json = {};
+        const dataJson: Json = {};
         const levelStr = '0';
         if (edit0.hasFile) {
             fileJson = edit0.dataAddFiles(levelStr, formData);
@@ -286,7 +286,7 @@ class CrudE {
         return true;
     }
 
-    afterSave(data: Json): void {
+    afterSave(data: Json) {
         if (_me.fnAfterSave) {
             _me.fnAfterSave();
         }
@@ -304,7 +304,7 @@ class CrudE {
         }
     }
 
-    private _afterSaveDraft(data: any): void {
+    private _afterSaveDraft(data: Json) {
         if (data.Value === '0') {
             _Tool.msg(_BR.SaveNone);
             return;
@@ -317,8 +317,8 @@ class CrudE {
         }
     }
 
-    private _resetForm(edit: any, init: boolean): void {
-        edit.reset(init);
+    private _resetForm(edit: OneMany, init: boolean) {
+        (edit as EditOne).reset(init);
 
         const childLen = this._EditGetChildLen(edit);
         for (let i = 0; i < childLen; i++) {
@@ -341,7 +341,7 @@ class CrudE {
         }
 
         const me = this;
-        const data: any = { key: key };
+        const data: Json = { key: key };
         if (this._multiEdit) {
             data.editNo = this._nowEditNo;
         }
@@ -354,7 +354,7 @@ class CrudE {
         return true;
     }
 
-    loadJsonAndEdit(json: Json, fun: string): void {
+    loadJsonAndEdit(json: Json, fun: string) {
         this.loadJson(json);
         this.setEditStatus(fun);
         this.afterOpen(fun, json);
@@ -370,7 +370,7 @@ class CrudE {
         return (edit._childs == null) ? 0 : edit._childs.length;
     }
 
-    editToNew(): void {
+    editToNew() {
         const fun = FunEstr.Create;
         _Prog.showPath(fun);
         this.setEditStatus(fun);
@@ -385,7 +385,7 @@ class CrudE {
         }
     }
 
-    dataSetFileJson(data: any, fileJson: Json): void {
+    dataSetFileJson(data: Json, fileJson: Json) {
         if (_Json.isEmpty(fileJson)) return;
 
         const fid = _Edit.FileJson;
@@ -396,7 +396,7 @@ class CrudE {
         data.set(fid, fileJson);
     }
 
-    onCreate(): void {
+    onCreate() {
         const fun = FunEstr.Create;
         this._resetForm(_me.edit0, true);
         this.setEditStatus(fun);
@@ -425,7 +425,7 @@ class CrudE {
         }
     }
 
-    onOpenModal(title: string, fid: string, required: boolean, maxLen: number): void {
+    onOpenModal(title: string, fid: string, required: boolean, maxLen: number) {
         const tr = _Fun.getMe().closest('tr');
         _Tool.showArea(title, _iText.get(fid, tr), this.isEditMode(), function (result: any) {
             _iText.set(fid, result, tr);
@@ -465,23 +465,23 @@ class CrudE {
         const edit0 = _me.edit0;
         const isNew = (this._nowFun == FunEstr.Create);
         const action = isNew ? 'Create' : 'Update';
-        let data: any = null;
+        //let data: FormData | Json = null;
         const me = this;
         if (this._hasFile()) {
-            data = formData;
-            data.append('json', _Json.toStr(json));
+            let fd = formData;
+            fd.append('json', _Json.toStr(json));
             if (!isNew) {
-                data.append('key', edit0.getKey());
+                fd.append('key', edit0.getKey() as string);
             }
             if (this._multiEdit) {
-                data.append('editNo', this._nowEditNo);
+                fd.append('editNo', this._nowEditNo.toString());
             }
 
-            await _Ajax.getJsonByFdA(action, data, function (result: any) {
+            await _Ajax.getJsonByFdA(action, fd, function (result: any) {
                 me.afterSave(result);
             });
         } else {
-            data = { json: _Json.toStr(json) };
+            let data:Json = { json: _Json.toStr(json) };
             if (!isNew) {
                 data.key = edit0.getKey();
             }
@@ -506,22 +506,22 @@ class CrudE {
 
         const edit0 = _me.edit0;
         const action = 'Draft';
-        let data: any = null;
+        //let data: any = null;
         const me = this;
         if (this._hasFile()) {
-            data = formData;
-            data.append('json', _Json.toStr(json));
-            data.append('key', edit0.getKey());
+            let fd = formData;
+            fd.append('json', _Json.toStr(json));
+            fd.append('key', edit0.getKey() as string);
 
             if (this._multiEdit) {
-                data.append('editNo', this._nowEditNo);
+                fd.append('editNo', this._nowEditNo.toString());
             }
 
-            await _Ajax.getJsonByFdA(action, data, function (result: any) {
+            await _Ajax.getJsonByFdA(action, fd, function (result: Json) {
                 me._afterSaveDraft(result);
             });
         } else {
-            data = { json: _Json.toStr(json) };
+            let data:Json = { json: _Json.toStr(json) };
             data.key = edit0.getKey();
 
             if (this._multiEdit) {

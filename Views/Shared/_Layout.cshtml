@@ -55,17 +55,20 @@
     <link id="xgTheme" rel="stylesheet" asp-href-include="~/cssView/_xgGrey.css" />
 
     <!-- 4.load local js 
-    <script nonce="@nonce" src="~/locale/@(locale).min.js?v=@myVer"></script>
     -->
+    <script nonce="@nonce" src="~/locale/@(locale).min.js?v=@myVer"></script>
     @RenderSection("scripts", required: false)
 
     <!-- 5.initial -->
     <script nonce="@nonce">
+        _Fun.init('@locale');
+        _Fun.pageRows = 20;
+        _Fun.userId = '@_Fun.UserId()';
+        //_Fun.lengthMenu = [10, 20, 50, 100, 150];
+
+        //操作 DOM 放 onReady 裡面
         $(function () {
-            _Fun.init('@locale');
-            _Fun.pageRows = 20;
-            //_fun.lengthMenu = [10, 20, 50, 100, 150];
-            _Fun.userId = '@_Fun.UserId()';
+            _Fun.init2();
         });
     </script>
 </head>
@@ -74,7 +77,7 @@
 <body class="x-main">
     <!-- Top -->
     <nav class="navbar navbar-expand navbar-dark x-main-top">
-        <a class="sidebar-toggle me-3 cursor-pointer" data-onclick="_leftmenu.onToggleMenu">
+        <a class="sidebar-toggle me-3 cursor-pointer" data-onclick="_Leftmenu.onToggleMenu">
             <i class="ico-menu"></i>
         </a>
 

@@ -32,6 +32,8 @@ class BaseResDto {
     TipDelete: string;
     TipView: string;
     TipCopy: string;
+    TipWord: string;
+    TipPdf: string;
 
     // message-upload file
     UploadFileNotBig: string;

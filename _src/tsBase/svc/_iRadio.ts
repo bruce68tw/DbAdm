@@ -68,7 +68,7 @@ class _iRadio extends _iBase {
     //for modal單選畫面
     //傳回checked一筆資料, 讀取tr全部data欄位
     static getCheck0Tr(form: JQuery): JQueryN {
-        const radio = _Obj.getByFt(_iCheck.fltCheckeds, form).first();
+        const radio = _Obj.getByFt(_iCheck.ftCheckeds, form).first();
         return (radio.length == 1) ? radio.closest('tr') : null;
     }
 

@@ -16,8 +16,8 @@ _me = {
 
             //修改:如果查詢結果欄位有特殊的顯示規則就寫在這裡
             columnDefs: [
-                { targets: [4], render(data, type, full, meta) {
-                        return _me.crudR.dtCrudFun(full.Id, full.Name, false, false, true);
+                { targets: [4], render(data, type, full) {
+                        return _me.crudR.dtCrudFun(full.Id, full.Name, 'V');
                 }},
             ],
         };

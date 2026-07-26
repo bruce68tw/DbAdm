@@ -95,9 +95,9 @@ class _iSelect extends _iBase {
     //getIdStrExts -> getExts
     static getExts(fid: string, box: JQuery): IdStrExtDto[] {
         const rows: IdStrExtDto[] = [];
-        _Obj.get(fid, box).find('option').each(function (this: Elm, i: number) {
+        _Obj.get(fid, box).find('option').each(function (idx: number) {
             const me = $(this);
-            rows[i] = {
+            rows[idx] = {
                 Id: me.val() as string,
                 Str: me.text(),
                 Ext: me.data('ext'),

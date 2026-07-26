@@ -10,8 +10,22 @@
 import dayjsLib, { Dayjs as DayjsType } from "dayjs";
 import type { Chart as ChartType2 } from "chart.js";
 
+import type {
+    Svg as SvgType, Path as PathType, Text as TextType,
+    Point as PointType, G as GType, Circle as CircleType, Rect as RectType,
+    Element as ElementType, Line as LineType
+} from '@svgdotjs/svg.js';
+
+//for svg draggable 
+declare module '@svgdotjs/svg.js' {
+    //svg 的基底類別
+    interface Element {
+        draggable(): this;
+    }
+}
+
 declare global {
-    //自定型別
+    //#region 自定型別
     type StrN = string | null;
     type StrNum = string | number;
     type StrNumB = string | number | boolean;
@@ -27,6 +41,8 @@ declare global {
     type FnN = Function | null;
     type FnVoidN = ((result: any) => void) | null;
     type OneMany = EditOne | EditMany;
+    //type EvtClick = JQuery.ClickEvent;
+    //#endregion 
 
     //chart: Chart為變數, ChartType為型別
     const Chart: typeof ChartType2;  //for js 執行的全域變數宣告
@@ -36,12 +52,23 @@ declare global {
     type Dayjs = DayjsType; //for ts 編譯的型別宣告    
     const dayjs: typeof dayjsLib;   //Day.js global object (window.dayjs)
 
-    //其他
     //pajx: 只有個別檔案使用, 所以用any
+
+    //#region SVG type
+    type Svg = SvgType;
+    type SvgPath = PathType;
+    type SvgText = TextType;    //避開衝突
+    type SvgPoint = PointType;
+    type SvgGroup = GType;
+    type SvgCircle = CircleType;
+    type SvgRect = RectType;
+    type SvgElm = ElementType;
+    type SvgLine = LineType;
+    //#endregion 
 
     //擴充 Window 型別
     interface Window {
-        //#region tsBase
+        //#region tsBase type
         EditModeEstr: typeof EditModeEstr;
         FunEstr: typeof FunEstr;
         InputTypeEstr: typeof InputTypeEstr;
@@ -53,6 +80,8 @@ declare global {
         ChartDto: typeof ChartDto;
         EditDto: typeof EditDto;
         ErrorRowDto: typeof ErrorRowDto;
+        FlowLineDto: typeof FlowLineDto;
+        FlowNodeDto: typeof FlowNodeDto;        
         IdStrDto: typeof IdStrDto;
         IdStrExtDto: typeof IdStrExtDto;
         ResultDto: typeof ResultDto;
@@ -125,10 +154,13 @@ declare global {
         Page: typeof Page;
         //#endregion
 
-        //tsView
+        //tsView type
         XpVo: typeof XpVo;
 
-        _aa: Json,
+        //for F5 2個 onReady 時間差
+        //siteReady: Promise<void>;
+
+        _aa: Json,  //暫存變數
         _xp: XpVo,
         _me: MeDto,
         _vo: Json,

@@ -6,7 +6,7 @@ class _Prog {
     static progPath: string = '';   //now prog path
     static progCode: string = '';   //now prog code
 
-    static async init(): Promise<void> {
+    static init() {
         _Prog.me = $('.x-prog-path');
         //_Prog.initPath = _Prog.me.text();
         if (_Prog.me.text() == '') {
@@ -45,7 +45,7 @@ class _Prog {
     }
     */
 
-    static setBorder(status: boolean): void {
+    static setBorder(status: boolean) {
         const prog = $('.x-prog');
         if (status)
             prog.removeClass(_Fun.CssFlag);
@@ -54,7 +54,7 @@ class _Prog {
     }
 
     //storeProgPath -> storePath -> storePathAndCode
-    static storePathAndCode(path: string, code:string): void {
+    static storePathAndCode(path: string, code:string) {
         _Prog.progPath = path;
         _Prog.progCode = code;
     }
@@ -68,7 +68,7 @@ class _Prog {
     }
     
     //reset path to initial
-    static resetPath(): void {
+    static resetPath() {
         _Prog.me.text(_Prog.initPath);
     }
 
@@ -77,7 +77,7 @@ class _Prog {
      * set program path
      * param fun {string} fun mode
      */
-    static showPath(fun: FunEstr, updName?: string): void {
+    static showPath(fun: FunEstr, updName?: string) {
         const name = (fun == FunEstr.Create) ? _BR.Create :
             (fun == FunEstr.View) ? _BR.View :
             (fun != FunEstr.Update) ? '??' :
@@ -91,7 +91,7 @@ class _Prog {
      * update fun name
      * param name {string} fun name
      */
-    static updFunName(name: string): void {
+    static updFunName(name: string) {
         _Prog.me.text(_Prog.initPath + '-' + name);
     }
 }

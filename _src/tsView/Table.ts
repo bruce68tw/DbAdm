@@ -30,17 +30,17 @@ _me = {
                 { data: '_Crud' },
             ],
             columnDefs: [
-                { targets: [0], render(data, type, full, meta) {
+                { targets: [0], render(data, type, full) {
                     return _me.crudR.dtCheck0(full.Id);
                 }},
-                { targets: [6], render(data, type, full, meta) {
+                { targets: [6], render(data) {
                     return _me.crudR.dtYesEmpty(data);
                 }},
-                { targets: [7], render(data, type, full, meta) {
+                { targets: [7], render(data) {
                     return _me.crudR.dtStatusName(data);
                 }},
-                { targets: [8], render(data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                { targets: [8], render(data, type, full) {
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, '*');
                 }},
             ],
         };

@@ -15,11 +15,11 @@ _me = {
                 { data: '_Crud' },
             ],
             columnDefs: [
-                { targets: [3], render(data, type, full, meta) {
+                { targets: [3], render(data) {
                     return _me.crudR.dtStatusName(data);
                 }},
-                { targets: [5], render(data, type, full, meta) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, true, true, true);
+                { targets: [5], render(data, type, full) {
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, '*');
                 }},
             ],
         };

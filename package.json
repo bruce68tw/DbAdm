@@ -1,5 +1,7 @@
 {
   "devDependencies": {
+    "@svgdotjs/svg.draggable.js": "^3.0.6",
+    "@svgdotjs/svg.js": "^3.2.7",
     "@types/bootstrap": "^5.2.11",
     "@types/bootstrap-datepicker": "^1.10.1",
     "@types/datatables.net": "^1.10.28",

@@ -33,7 +33,9 @@ _BR = {
     TipDelete: 'Delete this Row.',
     TipView: 'View this Row.',
     TipCopy: 'Copy this data and enter new mode',
-    
+    TipWord: 'Generate Word File',
+    TipPdf: 'Generate PDF File',
+
     //message-upload file
     UploadFileNotBig: 'Upload File Size Should Less Than {0}M !',
     UploadFileNotMatch: 'Upload File Type Not Match !',

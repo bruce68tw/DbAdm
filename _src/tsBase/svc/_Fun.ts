@@ -42,23 +42,16 @@ class _Fun {
      * param {string} locale
      * param {string} pjaxArea Filter
      */
-    static async init(locale: string) {
+    static init(locale: string) {
         //set jwt token
         _Fun.jwtToken = localStorage.getItem('_jwtToken') || '';
         localStorage.removeItem('_jwtToken');
 
         //initial
         _Fun.locale = locale;
-        _Leftmenu.init();
-        _Pjax.init('.x-main-right');
-        _Tool.init();
-        await _Fun.setLocaleA(locale);
+        //_Pjax.init('.x-main-right');
+        //await _Fun.setLocaleA(locale);
         _Date.setLocale(locale);
-
-        //註冊事件, 避免使用inline script for CSRF
-        var body = $('body');
-        _Fun.setEvent(body, 'click');
-        _Fun.setEvent(body, 'change');
 
         //資安: 防止CSRF
         $.ajaxSetup({
@@ -68,9 +61,24 @@ class _Fun {
         });
 
         //??可能是F5重整, 要新載入目前功能
-        _Prog.init();
+        //_Prog.init();
     }
 
+    static init2() {
+        _Pjax.init('.x-main-right');
+        _Leftmenu.init();
+        _Tool.init();
+        _Fun.setEvent();    //最後執行
+    }
+
+    static setEvent() {
+        //註冊事件, 避免使用inline script for CSRF
+        var body = $('body');
+        _Fun._setEvent2(body, 'click');
+        _Fun._setEvent2(body, 'change');
+    }
+
+    //改變語系時呼叫
     static async setLocaleA(locale: string) {
         await _Fun.loadScriptA(`/locale/${locale}.min.js`);
 
@@ -103,7 +111,7 @@ class _Fun {
         return _Fun.nowElm;
     }
 
-    static getMeValue(): any {
+    static getMeValue(): string {
         return _Input.getO($(_Fun.nowElm));
     }
 
@@ -113,7 +121,7 @@ class _Fun {
      * param {object} box 容器
      * param {string} eventName name(不含on)
      */
-    static setEvent(box: JQuery, eventName: string): void {
+    private static _setEvent2(box: JQuery, eventName: string): void {
         var event2 = 'on' + eventName;
         box.on(eventName, `[data-${event2}]`, function (this: Elm) {
             _Fun.nowElm = this;

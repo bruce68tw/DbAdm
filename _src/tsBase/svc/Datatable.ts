@@ -30,7 +30,7 @@ class Datatable {
         //find condition when initial
         findJson?: Json,
         //callback after query ok, if empty then show successful msg
-        fnOk?: (result: any) => any[],
+        fnOk?: (result: any) => Json[],
         //datatable toolbar html for extra button for 客製化 toolbar
         tbarHtml?: string,
         //查詢成功後執行, 傳入result, 如果有指定fnOk
@@ -122,7 +122,7 @@ t
                 },
                 */
                 //add input parameter for datatables
-                data: function (this: Datatable, arg: any) {
+                data: function (this: Datatable, arg: Json) {
                     //如果存在 _me.fnWhenFind(傳回bool), 則先檢查
                     if (_me && _me.fnWhenFind){
                         if (!_me.fnWhenFind())

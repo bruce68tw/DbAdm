@@ -9,16 +9,16 @@
  */
 
 class FlowView {
-    isEdit: boolean = false;
-    newNodeId: number = 0;
-    newLineId: number = 0;
-    svg: any;
+    isEdit = false;
+    newNodeId = 0;
+    newLineId = 0;
+    svg: Svg;
     nodes: FlowNode[] = [];
     lines: FlowLine[] = [];
     fromNode: FlowNode | null = null;
     fnMoveNode: ((node: FlowNode, x: number, y: number) => void) | null = null;
-    fnAfterAddLine: ((json: any) => void) | null = null;
-    fnShowMenu: ((event: Event, isNode: boolean, item: FlowNode | FlowLine) => void) | null = null;
+    fnAfterAddLine: ((json: Json) => void) | null = null;
+    fnShowMenu: ((evt: MouseEvent, isNode: boolean, item: FlowNode | FlowLine) => void) | null = null;
 
     constructor(boxId: string) {
         let boxDom = document.getElementById(boxId);
@@ -35,69 +35,69 @@ class FlowView {
         return this.newLineId;
     }
 
-    setEdit(status: boolean): void {
+    setEdit(status: boolean) {
         this.isEdit = status;
     }
 
     //清除全部UI元件
-    reset(): void {
+    reset() {
         this.nodes = [];
         this.lines = [];
         this.fromNode = null;
 
-        Array.from(this.svg.node.childNodes).forEach((node: any) => {
+        Array.from(this.svg.node.childNodes).forEach((node: ChildNode) => {
             node.remove();
         });
     }
 
-    loadNodes(rows: Json[]): void {
+    loadNodes(dtos: FlowNodeDto[]) {
         this.reset();
-        for (let i = 0; i < rows.length; i++) {
-            this.addNode(rows[i]);
+        for (let i = 0; i < dtos.length; i++) {
+            this.addNode(dtos[i]);
         }
     }
 
-    loadLines(rows?: Json[]): void {
-        if (rows != null) {
-            for (let i = 0; i < rows.length; i++) {
-                this.addLine(rows[i]);
+    loadLines(dtos?: FlowLineDto[]) {
+        if (dtos != null) {
+            for (let i = 0; i < dtos.length; i++) {
+                this.addLine(dtos[i]);
             }
         }
     }
 
-    addNode(json: Json): FlowNode {
-        let node = new FlowNode(this, json);
+    addNode(dto: FlowNodeDto): FlowNode {
+        let node = new FlowNode(this, dto);
         this.nodes.push(node);
         return node;
     }
 
-    addLine(json: Json): FlowLine {
-        return new FlowLine(this, json);
+    addLine(dto: FlowLineDto): FlowLine {
+        return new FlowLine(this, dto);
     }
 
-    deleteNode(node: FlowNode): void {
+    deleteNode(node: FlowNode) {
         let id = node.getId();
         this.svg.findOne(`g[data-id="${id}"]`).remove();
     }
 
-    deleteLine(line: FlowLine): void {
+    deleteLine(line: FlowLine) {
         let id = line.getId();
-        this.svg.find(`path[data-id="${id}"]`).remove();
+        this.svg.findOne(`path[data-id="${id}"]`).remove();
     }
 
-    drawLineStart(fromNode: FlowNode): void {
+    drawLineStart(fromNode: FlowNode) {
         this.fromNode = fromNode;
     }
 
-    drawLineEnd(toNode: FlowNode): any {
-        let json = {
-            Id: this.newLineId,
-            FromNodeId: this.fromNode!.getId(),
-            ToNodeId: toNode.getId(),
-        };
-        new FlowLine(this, json, this.fromNode!, toNode);
+    drawLineEnd(toNode: FlowNode): FlowLineDto {
+        let dto = new FlowLineDto();
+        dto.Id = this.newLineId;
+        dto.FromNodeId = this.fromNode!.getId();
+        dto.ToNodeId = toNode.getId();
+
+        new FlowLine(this, dto, this.fromNode!, toNode);
         this.fromNode = null;
-        return json;
+        return dto;
     }
 
     idToNode?(id: StrNum): FlowNode {

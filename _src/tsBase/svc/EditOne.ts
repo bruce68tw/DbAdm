@@ -25,7 +25,7 @@
 class EditOne {
     //private [_Edit.Childs]: any;
 
-    private is1to1: boolean;
+    private _is1to1: boolean;
 
     //global
     _childs: OneMany[];
@@ -37,10 +37,10 @@ class EditOne {
     dataJson: Json;
 
     //global& set by _Edit
+    hasFile: boolean;
     fidTypes: string[];
     fidTypeLen: number;
     fidRadios: string[];
-    hasFile: boolean;
     fileLen: number;
     fileFids: string[];
 
@@ -58,7 +58,7 @@ class EditOne {
         this.kid = kid || 'Id';
         eformId = eformId || 'eform';
         this.eform = $('#' + eformId);
-        this.is1to1 = false;
+        this._is1to1 = false;
         this.dataJson = null;
 
         this.systemError = '';
@@ -78,7 +78,7 @@ class EditOne {
     }
 
     setIs1to1(): void {
-        this.is1to1 = true;
+        this._is1to1 = true;
     }
 
     private _resetAndNew(init?: boolean): void {
@@ -110,7 +110,7 @@ class EditOne {
     }
 
     loadRow(row: Json): void {
-        if (this.is1to1 && _Json.isEmpty(row))
+        if (this._is1to1 && _Json.isEmpty(row))
             this._resetAndNew();
         else
             _Edit.loadRow(this, this.eform, row);
@@ -118,7 +118,7 @@ class EditOne {
 
     getUpdRow(upKey: StrNum): Json {
         var row = _Edit.getUpdRow(this, this.eform);
-        if (this.is1to1 && row != null) {
+        if (this._is1to1 && row != null) {
             row[_Edit.DataFkeyFid] = upKey;
             return row;
         } else {
@@ -127,7 +127,7 @@ class EditOne {
     }
 
     reset(init?: boolean): void {
-        if (this.is1to1)
+        if (this._is1to1)
             this._resetAndNew(init);
         else
             _Form.reset(this.eform, init);
