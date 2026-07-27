@@ -33,7 +33,7 @@ _me = {
     },
 
     /*
-    fnOnViewFile(table:string, fid:string) {
+    fnViewFileA(table:string, fid:string) {
         _me.edit0.onViewFile(table, fid);
     },
     */
