@@ -30,11 +30,14 @@ class EditOne {
     //global
     _childs: OneMany[];
     kid: string;
-    fnValid: any;
     eform: JQuery;
     systemError: string;
+
+    //dataJson -> oldJson
+    //只記在edit0, 在CrudE.js自動設定, 個別程式可以自行使用, 例如: DbAdm GenCrud.js
+    oldJson: Json;
     validator: any;
-    dataJson: Json;
+    fnValid: () => boolean;
 
     //global& set by _Edit
     hasFile: boolean;
@@ -59,7 +62,7 @@ class EditOne {
         eformId = eformId || 'eform';
         this.eform = $('#' + eformId);
         this._is1to1 = false;
-        this.dataJson = null;
+        this.oldJson = null;
 
         this.systemError = '';
         var error = (this.eform.length != 1) ? 'EditOne.js input eformId is wrong. (' + eformId + ')' :

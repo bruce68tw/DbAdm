@@ -11,6 +11,8 @@ class GenCrudVo {
     //this.edit0: new EditOne(),
     mQitem = new EditMany('Id', 'qitemBody', 'qitemTpl', this.FtTr);
     mRitem = new EditMany('Id', 'ritemBody', 'ritemTpl', this.FtTr);
+
+    //etable同時操作eitem, 2者之間不建立master-child關聯, 否則系統會重新覆寫 eitem 內容(清空) !!
     mEtable = new EditMany('Id', null, 'etableTabTpl', '.x-form');
     mEitem = new EditMany('Id', null, 'eitemTpl', this.FtTr);
 
@@ -19,7 +21,6 @@ class GenCrudVo {
 
     //不同編輯畫面共用查詢畫面
     divEdit1 = $('#divEdit1');
-    //new CrudR(config, [_m2.edit0, _m2.mQitem, _m2.mRitem, _m2.mEtable]),
 
     //this.ritemChdIdx: 0,    //child index of Ritem
     etableChdIdx = 2;   //child index of Etable nav(CrudEdit)
@@ -47,7 +48,6 @@ class GenCrudVo {
 
     //Item modal(for Q,R,E)
     modalItems = $('#modalItems');    //modal for select items
-    //modaltemsBody: JQuery = null;        //modalItems body
     modaltemsBody = this.modalItems.find('tbody');
     modalItemTpl = $('#modalItemTpl').html();   //tpl of modal item row
 
@@ -62,14 +62,13 @@ class GenCrudVo {
     modalImport = $('#modalUiImport');
 
     //initial uiMany
-    //uiMany: UiMany = null;
     uiMany = new UiMany('.xu-ui-area', this.mUiItem);
 
     constructor() {
         //this.modaltemsBody = this.modalItems.find('tbody');
 
-        //maintain tables:
-        this.mEtable.setChilds([this.mEitem]);
+        //etable, eitem之間不建立關聯, 否則系統會重新覆寫 eitem 內容(清空) 
+        //this.mEtable.setChilds([this.mEitem]);
 
         //custom function-etable
         this.mEtable.fnLoadRows = this.mEtable_loadRows;
@@ -81,19 +80,15 @@ class GenCrudVo {
         this.mUiItem.fnGetUpdJson = this.mUiItem_getUpdJson;
         this.mUiItem.fnValid = this.mUiItem_valid;
 
-        //initial uiMany
-        //this.uiMany = new UiMany('.xu-ui-area', this.mUiItem);
-
         //註刪button dragstart事件
         const me = this;
-        this.divEdit1.on(MouseEstr.DragStart, '.xu-btn', function (e) {
-            let itemType = $(e.target).data('type');
+        this.divEdit1.on(MouseEstr.DragStart, '.xu-btn', function (evt: JQuery.DragStartEvent) {
+            let itemType = $(evt.target).data('type');
             this.uiMany.startDragBtn(true, itemType);
-        }).on(MouseEstr.DragEnd, function (e) {
+        }).on(MouseEstr.DragEnd, function (evt: JQuery.DragEndEvent) {
             //不會觸發工作區的 dragEnd, 這裡必須寫
-            me.uiMany.onDragEnd(e);
+            me.uiMany.onDragEnd(evt);
         });
-        //#endregion
     }
 
     //onchange IsUi
@@ -226,7 +221,9 @@ class GenCrudVo {
 
         //render etables & eitems
         //var eitemRows = _Edit.getChildRows(json, 0);   //已改為傳入rows, 不是json
-        var eitemRows = _Edit.getChildRows(vo.mEtable.dataJson, 0);   //從dataJson讀取 !!
+        var etJson = _Edit.getChildJson(_me.edit0.oldJson, vo.etableChdIdx);
+        //var eitemRows = _Edit.getChildRows(vo.mEtable.dataJson, 0);   //從dataJson讀取 !!
+        var eitemRows = _Edit.getChildRows(etJson, 0);   //從dataJson讀取 !!
         for (var i = 0; i < rows.length; i++) {
             //add tab (only)
             var row = rows[i];
@@ -263,36 +260,47 @@ class GenCrudVo {
         */
     }
 
-    //GetUpdJson
+    //同時傳回 etable, eitem
     mEtable_getUpdJson(upKey: StrNum) {
         //var upKey = _iText.get('Id', this.crudE.getEform0());
-        var rows = [];
-        var eitems = [];
+        var etRows: Json[] = [];   //etable jsons
+        var eiRows:Json[] = [];     //不分table
         const vo = _vo as GenCrudVo;
         vo.etGetForms().each(function (idx) {
             //etable
             var form = $(this);
-            rows[idx] = vo.mEtable.getUpdRow(form); //edit table
-            vo.mEtable.rowSetFkey(rows[idx], upKey);
+            etRows[idx] = vo.mEtable.getUpdRow(form); //edit table
+            vo.mEtable.rowSetFkey(etRows[idx], upKey);
 
             //eitems
             var upKey2 = _iText.get('Id', form);
             var form2 = vo.getEitemForm(form);
-            var rows2 = vo.mEitem.getUpdRows(upKey2, form2.find('tbody'));
-            _Json.appendRows(rows2, eitems);
+            var eiRows2 = vo.mEitem.getUpdRows(upKey2, form2.find('tbody'));
+            _Json.appendRows(eiRows2, eiRows);
             /*
-            if (rows2 != null) {
-                if (rows[i] == null)
-                    rows[i] = {};
-                _Edit.setChildRows(rows[i], 0, rows2);
+            if (eiRows2 != null) {
+                if (etJsons[idx] == null)
+                    etJsons[idx] = {};
+                _Edit.setChildRows(etJsons[idx], 0, eiRows2);
             }
             */
         });
+        let etJson = {};
+        etJson[_Edit.Rows] = etRows;
+        etJson[_Edit.Deletes] = vo.mEtable.getDeletes();
+        etJson[_Edit.Childs] = [{}];
+        let eiJson0 = etJson[_Edit.Childs][0];
+        eiJson0[_Edit.Rows] = eiRows;
+        eiJson0[_Edit.Deletes] = vo.mEitem.getDeletes();
+        //{ _rows: eitems, _deletes: vo.mEitem.getDeletes() }
+        return etJson;
+        /*
         return {
             _rows: rows,
             _deletes: vo.mEtable.getDeletes(),
             _childs: [{ _rows: eitems, _deletes: vo.mEitem.getDeletes() }],
         };
+        */
     }
 
     /**

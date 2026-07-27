@@ -31,9 +31,9 @@ class EditMany {
     _childs: EditMany[];
     kid: string;
     eform: JQuery;
-    validator: any;
-    dataJson: Json; //主要用於EditOne存原始資料, GenCrud屬特殊情形mTable會使用 
+    //dataJson: Json; //主要用於EditOne存原始資料, GenCrud屬特殊情形mTable會使用 
     systemError = '';
+    validator: any;
     fnReset: () => void;
     fnLoadRows: (rows: Json[]) => void;
     fnValid: () => boolean;

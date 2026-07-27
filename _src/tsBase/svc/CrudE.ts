@@ -134,15 +134,17 @@ class CrudE {
     }
 
     loadJson(json: Json) {
-        this._loadJson2(_me.edit0, json);
+        var edit0 = _me.edit0;
+        edit0.oldJson = json;
+        this._loadJson2(edit0, json);
     }
 
+    //recursive and first called by loadJson
     private _loadJson2(edit: OneMany, json: Json) {
         const rows = _Edit.jsonGetRows(json);
         if (_Edit.isEditOne(edit)) {
             const edit1 = edit as EditOne;
             edit1.loadRow(_Array.isEmpty(rows) ? null : rows[0]);
-            edit1.dataJson = json;
         } else {
             (edit as EditMany).loadRowsBySys(rows);
         }
