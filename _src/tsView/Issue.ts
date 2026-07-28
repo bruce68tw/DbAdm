@@ -193,6 +193,7 @@ _me = {
                 { data: 'Id' },
                 { data: 'Title' },
                 { data: 'IsFinish' },       //7:Issue是否結案
+                //{ data: 'IsAddJob' },       //是否加班
                 { data: 'FromMgrName' },
                 { data: 'OwnerName' },
                 { data: 'SendTimes' },      //9:寄送問卷次數
@@ -213,7 +214,8 @@ _me = {
                             : '';
                 }},
                 { targets: [12], render(data, type, full) {
-                    return _me.crudR.dtCrudFun(full.Id, full.Name, '*');
+                    let funs = (full.IsFinish == '1') ? 'V' : '*';
+                    return _me.crudR.dtCrudFun(full.Id, full.Name, funs);
                 }},
             ],
         };
@@ -271,10 +273,15 @@ _me = {
     },
 
     fnWhenSave(fun: FunEstr): string {
-        //set _IssueType, _RptUser
+        //set field value for 後端判斷
         var form = _me.eform0;
         _iText.set('_IssueType', _iSelect.get('IssueType', form), form);
+        _iText.set('_RptType', _iSelect.get('RptType', form), form);
         _iText.set('_RptUser', _iText.get('RptUser', form), form);
+        _iText.set('_IsAddJob', _iCheck.get('IsAddJob', form), form);
+        _iText.set('_WorkDate', _iDate.get('WorkDate', form), form);
+        _iText.set('_OwnerId', _iSelect.get('OwnerId', form), form);
+        _iText.set('_WorkHours', _iNum.get('WorkHours', form), form);        
         return '';
     },
 

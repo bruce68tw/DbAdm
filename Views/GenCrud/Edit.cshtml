@@ -61,7 +61,7 @@
             <vc:xi-select dto='new() { Title = "權限種類", Fid = "AuthType", Rows = ViewBag.AuthTypes, Required = true, Cols = cols }' />
             <vc:xi-radio dto='new() { Title = "查詢Label位置", Fid = "LabelHori", Rows = _Str.ToIdStrs("1,水平,0,垂直"), Cols = cols }' />
             <vc:xi-text dto='new() { Title = "Table別名", Fid = "TableAs", MaxLen = 10, Cols = cols, TitleTip = "資料表別名" }' />
-            <vc:xi-textarea dto='new() { Title = "讀取資料 Sql", Fid = "ReadSql", Required = true, TitleTip = "讀取資料 Sql", Cols = "4,8", RowsCount = 5 }' />
+            <vc:xi-textarea dto='new() { Title = "讀取資料 Sql", Fid = "ReadSql", Required = true, TitleTip = "讀取資料 Sql，包含 order by", Cols = "4,8", RowsCount = 5 }' />
         </div>
     </div>
 </form>

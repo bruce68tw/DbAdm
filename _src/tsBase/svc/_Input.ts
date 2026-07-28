@@ -111,7 +111,8 @@ class _Input {
      * 如果obj沒有data-type, 可能存在child
      */ 
     static getType(obj: JQuery): StrN {
-        return obj.attr('data-type') ?? obj.find('[data-type]').attr('data-type');
+        //return obj.attr('data-type') ?? obj.find('[data-type]').attr('data-type');
+        return obj.data('type') ?? obj.find('[data-type]').data('type');
     }
 
     /**

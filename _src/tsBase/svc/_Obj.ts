@@ -6,7 +6,7 @@ class _Obj {
     }
     */
 
-    static setEdit(obj: JQuery, status: boolean): void {
+    static setEdit(obj: JQuery, status: boolean) {
         obj.prop('disabled', !status);
     }
 
@@ -88,16 +88,16 @@ class _Obj {
     }
 
     //如果使用show()/hide()會動態寫入 inline style, 造成CSRF !!
-    static show(obj: JQuery): void {
+    static show(obj: JQuery) {
         obj.removeClass('d-none');
     }
 
-    static hide(obj: JQuery): void {
+    static hide(obj: JQuery) {
         obj.addClass('d-none');
     }
 
     //status可能傳入文字!!
-    static showByStatus(obj: JQuery, status: any): void {
+    static showByStatus(obj: JQuery, status: any) {
         if (_Var.toBool(status)) {
             _Obj.show(obj);
         } else {
@@ -107,7 +107,8 @@ class _Obj {
 
     //如果data-屬性不存在會傳回''
     static getData(obj: JQuery, fid: string): string {
-        return obj.attr('data-' + fid) || '';
+        //return obj.attr('data-' + fid) || '';
+        return String(obj.data(fid) ?? '');
     }
 
     /**
@@ -117,7 +118,8 @@ class _Obj {
      * param {string} value
      */
     static setData(obj: JQuery, fid: string, value: string) {
-        obj.attr('data-' + fid, value);
+        //obj.attr('data-' + fid, value);
+        obj.data(fid, value);
     }
 
     //傳回小寫tagName

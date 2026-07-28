@@ -1,7 +1,13 @@
 ﻿<form id='eform' class='x-form'>
 	<!-- IssueType為主要4類, RptUser不可空白 -->
 	<vc:xi-hide dto='new() { Fid = "_IssueType" }' />
+	<vc:xi-hide dto='new() { Fid = "_RptType" }' />
 	<vc:xi-hide dto='new() { Fid = "_RptUser" }' />
+	<vc:xi-hide dto='new() { Fid = "_IsAddJob" }' />
+	<vc:xi-hide dto='new() { Fid = "_WorkDate" }' />
+	<vc:xi-hide dto='new() { Fid = "_OwnerId" }' />
+	<vc:xi-hide dto='new() { Fid = "_WorkHours" }' />
+	
 	<div class="row">
 		<div class="col-md-2 x-label">資料Id</div>
 		<div class="col-md-5 x-input">
@@ -32,11 +38,13 @@
 
 	<div class="row">
 		@await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "交辦主管", Fid = "FromMgr", Rows = ViewBag.Users, InRow = true })
-		@await Component.InvokeAsync(XiEstr.Int, new XiIntDto { Title = "工作時數", Fid = "WorkHours", Required = true, InRow = true, Cols = "2,1" })
+		@* cols 加寬 for 顯示 validate error, 設定 width for 較小欄寬 *@
+		@await Component.InvokeAsync(XiEstr.Dec, new XiDecDto { Title = "工作時數", Fid = "WorkHours", Required = true, InRow = true, Cols = "2,3", Width = 120 })
 	</div>
 
 	<div class="row">
 		@await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "已結案", Fid = "IsFinish", Label = "是", InRow = true })
+		@await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "加班", Fid = "IsAddJob", Label = "是", InRow = true })
 	</div>
 
 	@await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "標題", Fid = "Title", Required = true, MaxLen = 255, Cols = "2,6" })
