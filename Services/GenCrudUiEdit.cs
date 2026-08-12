@@ -64,7 +64,7 @@ where c.Id=@Id
                 var boxIdStr = row[BoxId]!.ToString();
                 if (int.TryParse(boxIdStr, out var boxId) && boxId < 0)
                 {
-                    var find = _Json.FindArray(rows, "_Id2", boxIdStr)!;
+                    var find = _Json.FilterOne(rows, "_Id2", boxIdStr)!;
                     row[BoxId] = find!["Id"];     //此時Id已經產生
                 }
             }

@@ -14,15 +14,13 @@ namespace DbAdm.Controllers
         [XgProgAuth(CrudEnum.Read)]
         public async Task<ActionResult> Read()
         {
-            await using (var db = new Db())
-            {
-                ViewBag.Projects = await _XpCode.ProjectsA(db);
-                ViewBag.IssueTypes = await _XpCode.IssueTypesA(db);
-				//ViewBag.Reporters = await _XpCode.ReportersA(db);
-				ViewBag.Users = await _XpCode.UsersA(db);
-                ViewBag.YesNos = _XpCode.YesNos();
-                ViewBag.RptTypes = await _XpCode.RptTypesA(db);
-            }
+            await using var db = new Db();
+            ViewBag.Projects = await _XpCode.ProjectsA(db);
+            ViewBag.IssueTypes = await _XpCode.IssueTypesA(db);
+			//ViewBag.Reporters = await _XpCode.ReportersA(db);
+			ViewBag.Users = await _XpCode.UsersA(db);
+            ViewBag.YesNos = _XpCode.YesNos();
+            ViewBag.RptTypes = await _XpCode.RptTypesA(db);
             return View();
         }
 

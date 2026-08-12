@@ -13,9 +13,9 @@ namespace DbAdm.Services
         
 
         #region 1.master table to codes
-        public static async Task<List<IdStrDto>?> DeptsA(Db? db = null)
+        public static async Task<List<IdStrDto>> DeptsA(Db? db = null)
         {
-            return await _Db.TableToCodesA("XpDept", db);
+            return await _Code.TableToCodesA("XpDept", db);
         }
 
         /*
@@ -33,9 +33,9 @@ order by Sort
         }
         */
 
-        public static async Task<List<IdStrDto>?> UsersA(Db? db = null)
+        public static async Task<List<IdStrDto>> UsersA(Db? db = null)
         {
-            return await _Db.TableToCodesA("XpUser", db);
+            return await _Code.TableToCodesA("dbo.XpUser", db);
         }
         /*
         public static async Task<List<IdStrDto>?> ReportersA(Db? db = null)
@@ -43,27 +43,14 @@ order by Sort
             return await _Db.TableToCodesA("Reporter", db);
         }
         */
-        public static async Task<List<IdStrDto>?> ProgsA(Db? db = null)
+        public static async Task<List<IdStrDto>> ProgsA(Db? db = null)
         {
-            var sql = @"
-select 
-    Id, [Name] as Str
-from dbo.XpProg
-order by Sort
-";
-            return await _Code.SqlToCodesA(sql, db);
+            return await _Code.TableToCodesA("dbo.XpProg", db, "Sort");
         }
 
-        public static async Task<List<IdStrDto>?> ProjectsA(Db? db = null)
+        public static async Task<List<IdStrDto>> ProjectsA(Db? db = null)
         {
-            //return await _Db.TableToCodesA("Project", db);
-            var sql = @"
-select 
-    Id, [Name] as Str
-from dbo.Project
-order by [Name]
-";
-            return await _Code.SqlToCodesA(sql, db);
+            return await _Code.TableToCodesA("dbo.Project", db, "Name");
         }
 
         #endregion
@@ -189,7 +176,7 @@ from dbo.XpCode
 where Type='{0}'
 order by Sort
 ", type);
-            return await _Db.SqlToCodeExtsA(sql, null, db) ?? [];
+            return await _Code.SqlToCodeExtsA(sql, db);
         }
         #endregion
 
@@ -266,7 +253,7 @@ from dbo.[Table]
 where ProjectId=@Id
 order by Code
 ";
-            var rows = await _Db.SqlToCodesA(sql, ["Id", projectId], db) ?? [];
+            var rows = await _Code.SqlToCodesA(sql, db, ["Id", projectId]);
             return _Code.AddEmpty(rows, _Locale.GetBaseRes().PlsSelect);
             //rows.Insert(0, new IdStrDto() { Id = "", Str = _Locale.GetBaseRes().PlsSelect });
             //return rows;
