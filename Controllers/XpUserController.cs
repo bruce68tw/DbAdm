@@ -16,7 +16,7 @@ namespace DbAdm.Controllers
 			//for read view
 			ViewBag.Depts = await _XpCode.DeptsA();
 			//for edit view
-			ViewBag.Roles = await _XpCode.RolesA();
+			ViewBag.Roles = await _Code.RolesA();
             return View();
         }
 

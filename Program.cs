@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 var config = new ConfigDto();
 builder.Configuration.GetSection("FunConfig").Bind(config);
 _Fun.Config = config;
+_Fun.RoleAll = "_All";  //全部人員擁有角色
 
 //set my config
 var myConfig = new MyConfigDto();

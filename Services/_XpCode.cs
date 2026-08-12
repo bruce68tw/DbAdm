@@ -17,10 +17,22 @@ namespace DbAdm.Services
         {
             return await _Db.TableToCodesA("XpDept", db);
         }
+
+        /*
         public static async Task<List<IdStrDto>?> RolesA(Db? db = null)
         {
-            return await _Db.TableToCodesA("XpRole", db);
+            //return await _Db.TableToCodesA("XpRole", db);
+            var sql = $@"
+select 
+    Id, [Name] as Str
+from dbo.XpRole
+where {_Fun.RoleAllCond("Id", false)}
+order by Sort
+";
+            return await _Code.SqlToCodesA(sql, db);
         }
+        */
+
         public static async Task<List<IdStrDto>?> UsersA(Db? db = null)
         {
             return await _Db.TableToCodesA("XpUser", db);
@@ -39,7 +51,7 @@ select
 from dbo.XpProg
 order by Sort
 ";
-            return await BySqlA(sql, db);
+            return await _Code.SqlToCodesA(sql, db);
         }
 
         public static async Task<List<IdStrDto>?> ProjectsA(Db? db = null)
@@ -51,7 +63,7 @@ select
 from dbo.Project
 order by [Name]
 ";
-            return await BySqlA(sql, db);
+            return await _Code.SqlToCodesA(sql, db);
         }
 
         #endregion
@@ -83,7 +95,7 @@ order by Id
         #region 2.XpCode to codes
 
         //讀取 XpCode.Type='InputType' and Ext = 'Q'
-        public static async Task<List<IdStrDto>> InputTypesQA(Db? db = null)
+        public static async Task<List<IdStrDto>?> InputTypesQA(Db? db = null)
         {
             var sql = @"
 select 
@@ -93,68 +105,69 @@ where Type='InputType'
 and Ext='Q'
 order by Sort
 ";
-            return await BySqlA(sql, db);
+            return await _Code.SqlToCodesA(sql, db);
         }
 
         
-        public static async Task<List<IdStrDto>> RptTypesA(Db? db = null)
+        public static async Task<List<IdStrDto>?> RptTypesA(Db? db = null)
         {
-            return await ByTypeA(RptType, db);
+            return await _Code.TypeToCodesA(RptType, db);
         }
-        public static async Task<List<IdStrDto>> UiItemTypesA(Db? db = null)
+        public static async Task<List<IdStrDto>?> UiItemTypesA(Db? db = null)
         {
-            return await ByTypeA(UiItemType, db);
+            return await _Code.TypeToCodesA(UiItemType, db);
         }
-        public static async Task<List<IdStrDto>> TableTypesA(Db? db = null)
+        public static async Task<List<IdStrDto>?> TableTypesA(Db? db = null)
         {
-            return await ByTypeA(TableType, db);
+            return await _Code.TypeToCodesA(TableType, db);
         }
-        public static async Task<List<IdStrDto>> SurveySatisesA(Db? db = null)
+        public static async Task<List<IdStrDto>?> SurveySatisesA(Db? db = null)
         {
-            return await ByTypeA("SurveySatis", db);
-        }
-
-        public static async Task<List<IdStrDto>> RitemTypesA(Db? db = null)
-        {
-            return await ByTypeA("RitemType", db);
+            return await _Code.TypeToCodesA("SurveySatis", db);
         }
 
-        public static async Task<List<IdStrDto>> InputTypesA(Db? db = null)
+        public static async Task<List<IdStrDto>?> RitemTypesA(Db? db = null)
         {
-            return await ByTypeA("InputType", db);
+            return await _Code.TypeToCodesA("RitemType", db);
         }
 
-        public static async Task<List<IdStrDto>> CheckTypesA(Db? db = null)
+        public static async Task<List<IdStrDto>?> InputTypesA(Db? db = null)
         {
-            return await ByTypeA("CheckType", db);
+            return await _Code.TypeToCodesA("InputType", db);
         }
 
-        public static async Task<List<IdStrDto>> QitemOpsA(Db? db = null)
+        public static async Task<List<IdStrDto>?> CheckTypesA(Db? db = null)
         {
-            return await ByTypeA("QitemOp", db);
+            return await _Code.TypeToCodesA("CheckType", db);
         }
 
-        public static async Task<List<IdStrDto>> AuthTypesA(Db? db = null)
+        public static async Task<List<IdStrDto>?> QitemOpsA(Db? db = null)
         {
-            return await ByTypeA("AuthType", db);
+            return await _Code.TypeToCodesA("QitemOp", db);
         }
 
-        public static async Task<List<IdStrDto>> AuthRangesA(Db? db = null)
+        public static async Task<List<IdStrDto>?> AuthTypesA(Db? db = null)
         {
-            return await ByTypeA("AuthRange", db);
-        }
-        public static async Task<List<IdStrDto>> IssueTypesA(Db? db = null)
-        {
-            return await ByTypeA(_Xp.IssueType, db);
+            return await _Code.TypeToCodesA("AuthType", db);
         }
 
-        private static async Task<List<IdStrDto>> BySqlA(string sql, Db? db = null)
+        public static async Task<List<IdStrDto>?> AuthRangesA(Db? db = null)
+        {
+            return await _Code.TypeToCodesA("AuthRange", db);
+        }
+        public static async Task<List<IdStrDto>?> IssueTypesA(Db? db = null)
+        {
+            return await _Code.TypeToCodesA(_Xp.IssueType, db);
+        }
+
+        /*
+        private static async Task<List<IdStrDto>> SqlToCodesA(string sql, Db? db = null)
         {
             return await _Db.SqlToCodesA(sql, null, db) ?? [];
         }
 
         //get by XpCode.Type
-        private static async Task<List<IdStrDto>> ByTypeA(string type, Db? db = null)
+        private static async Task<List<IdStrDto>> TypeToCodesA(string type, Db? db = null)
         {
             var sql = string.Format(@"
 select 
@@ -163,8 +176,9 @@ from dbo.XpCode
 where Type='{0}'
 order by Sort
 ", type);
-            return await BySqlA(sql, db);
+            return await SqlToCodesA(sql, db);
         }
+        */
 
         private static async Task<List<IdStrExtDto>> ByTypeExtA(string type, Db? db = null)
         {
@@ -229,7 +243,7 @@ where ProjectId=@Id
 order by Sort
 ";
             var rows = await _Db.GetModelsA<IdStrDto>(sql, ["Id", projectId], db) ?? [];
-            return _List.CodesAddEmpty(rows, _Locale.GetBaseRes().PlsSelect);
+            return _Code.AddEmpty(rows, _Locale.GetBaseRes().PlsSelect);
         }
 
         #endregion
@@ -253,8 +267,9 @@ where ProjectId=@Id
 order by Code
 ";
             var rows = await _Db.SqlToCodesA(sql, ["Id", projectId], db) ?? [];
-            rows.Insert(0, new IdStrDto() { Id = "", Str = _Locale.GetBaseRes().PlsSelect });
-            return rows;
+            return _Code.AddEmpty(rows, _Locale.GetBaseRes().PlsSelect);
+            //rows.Insert(0, new IdStrDto() { Id = "", Str = _Locale.GetBaseRes().PlsSelect });
+            //return rows;
         }
 
         /*

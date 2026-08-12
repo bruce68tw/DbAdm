@@ -17,7 +17,7 @@ namespace DbAdm.Controllers
             //for edit view
             await using (var db = new Db())
             {
-                ViewBag.Roles = await _XpCode.RolesA(db);
+                ViewBag.Roles = await _Code.RolesA(db);
                 ViewBag.AuthRanges = await _XpCode.AuthRangesA(db);
             }
             return View();

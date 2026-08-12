@@ -227,36 +227,56 @@ class CrudE {
         return dataJson;
     }
 
-    private _getUpdJson2(edit: OneMany, key: StrNum, levelStr: string, formData: FormData, fileJson: Json, dataJson: Json): boolean {
+    /**
+     * (recursive) called by _getUpdJson only
+     * 注意: edit必須是EditOne, 因為可以1-1-多, 不可以1-多-多(只能人工處理) !!
+     * @param edit
+     * @param key
+     * @param levelStr
+     * @param formData
+     * @param fileJson
+     * @param dataJson
+     * @returns {boolean} 是否有 child
+     */
+    private _getUpdJson2(edit: OneMany, key: StrNum, levelStr: string, formData: FormData,
+            fileJson: Json, dataJson: Json): boolean {
         if (edit.hasFile) {
             const fileJson2 = edit.dataAddFiles(levelStr, formData);
             _Json.copy(fileJson2, fileJson);
         }
 
+        //get data json
         const isOne = _Edit.isEditOne(edit);
         const json = isOne
             ? (edit as EditOne).getUpdRow(key)
             : (edit as EditMany).getUpdJsonBySys(key);
-        if (_Json.isEmpty(json)) return false;
+        //if (_Json.isEmpty(json)) return false;
 
-        if (isOne) {
-            dataJson[_Edit.Rows] = [json];
-        } else {
-            _Json.copy(json, dataJson);
+        //add json, 如果是單筆要包成陣列
+        if (_Json.notEmpty(json)) {
+            if (isOne) {
+                dataJson[_Edit.Rows] = [json];
+            } else {
+                _Json.copy(json, dataJson);
+            }
         }
 
         const childLen = this._EditGetChildLen(edit);
         if (childLen == 0) return false;
 
+        //initial childs
         dataJson[_Edit.Childs] = [];
         const childs = dataJson[_Edit.Childs];
 
+        //load child(multiple) rows
         let hasChild = false;
-
         for (let i = 0; i < childLen; i++) {
+            //EditMany忽略, 只能人工處理 !!
             const edit2 = this._EditGetChild(edit, i);
+            //如果是EditOne, 重讀key
             const key2 = (_Edit.isEditOne(edit2)) ? (edit2 as EditOne).getKey() : key;
 
+            //recursive !!
             childs[i] = {};
             if (this._getUpdJson2(edit2, key2, levelStr + i, formData, fileJson, childs[i])) {
                 hasChild = true;
