@@ -6,8 +6,8 @@ using BaseApi.Services;
 using BaseWeb.Services;
 using DbAdm.Models;
 using DbAdm.Services;
+using Microsoft.Data.SqlClient;
 using System.Data.Common;
-using System.Data.SqlClient;
 
 #region 1.set builder
 var builder = WebApplication.CreateBuilder(args);
