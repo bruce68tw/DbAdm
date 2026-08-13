@@ -143,7 +143,7 @@ where Code not in (
                     await db.ExecSqlA(string.Format(@"
 insert into dbo.[Table](Id, ProjectId, Code, Name, Note, Status)
 values('{0}', '{1}', '{2}', '', '{3}', 1)
-", _Str.NewId(), projectId, table["Code"]!.ToString(), table["Note"]!.ToString()));
+", _Str.NewId(), projectId, table["Code"]!.ToString().Replace("'", "''"), table["Note"]!.ToString().Replace("'", "''")));
                 }
             }
 
