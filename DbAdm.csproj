@@ -10,71 +10,32 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <TypeScriptConfiguration Include="tsconfig.json" />
-    <Compile Remove="old\**" />
-    <Compile Remove="wwwroot\css\**" />
-    <Compile Remove="wwwroot_old\**" />
+    <Compile Remove="wwwroot\**" />
     <Compile Remove="_data\**" />
     <Compile Remove="_log\**" />
-    <Compile Remove="_oldJsBase\**" />
+    <Compile Remove="_md\**" />
     <Compile Remove="_srcOut\**" />
-    <Compile Remove="_src\jsBase\**" />
     <Compile Remove="_upload\**" />
-    <Content Remove="old\**" />
-    <Content Remove="wwwroot\css\**" />
-    <Content Remove="wwwroot_old\**" />
     <Content Remove="_data\**" />
-    <Content Remove="_log\**" />
-    <Content Remove="_oldJsBase\**" />
-    <Content Remove="_srcOut\**" />
-    <Content Remove="_src\jsBase\**" />
-    <Content Remove="_upload\**" />
-    <EmbeddedResource Remove="old\**" />
-    <EmbeddedResource Remove="wwwroot\css\**" />
-    <EmbeddedResource Remove="wwwroot_old\**" />
+    <Content Remove="_md\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
     <EmbeddedResource Remove="_data\**" />
     <EmbeddedResource Remove="_log\**" />
-    <EmbeddedResource Remove="_oldJsBase\**" />
+    <EmbeddedResource Remove="_md\**" />
     <EmbeddedResource Remove="_srcOut\**" />
-    <EmbeddedResource Remove="_src\jsBase\**" />
     <EmbeddedResource Remove="_upload\**" />
-    <None Remove="old\**" />
-    <None Remove="wwwroot\css\**" />
-    <None Remove="wwwroot_old\**" />
+    <None Remove="wwwroot\**" />
     <None Remove="_data\**" />
     <None Remove="_log\**" />
-    <None Remove="_oldJsBase\**" />
+    <None Remove="_md\**" />
     <None Remove="_srcOut\**" />
-    <None Remove="_src\jsBase\**" />
     <None Remove="_upload\**" />
-    <TypeScriptCompile Remove="_src\jsBase\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="Views\Column\TestFlow.cshtml" />
-    <Content Remove="wwwroot\cssView\Login.css" />
-    <Content Remove="wwwroot\cssView\_themeLight.css" />
-    <Content Remove="wwwroot\cssView\_xgBlue.css" />
-    <Content Remove="wwwroot\cssView\_xgGreenApple.css" />
-    <Content Remove="wwwroot\cssView\_xgGrey.css" />
-    <Content Remove="wwwroot\cssView\_xgOrange.css" />
-    <Content Remove="wwwroot\cssView\_xgPrint.cs_old" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="key.txt" />
-    <None Remove="tsconfig.json_old" />
-    <None Remove="_image\noImage.jpg" />
-    <None Remove="_template\EmailMisSurvey.html" />
   </ItemGroup>
 
   <ItemGroup>
 	<Content Include="_template\**" CopyToPublishDirectory="PreserveNewest" />
-	<Compile Remove="Controllers\Table2Controller.cs" />
-	<Compile Remove="Controllers\TestController.cs" />
 	<Compile Remove="Controllers\UiController.cs" />
 	<Content Include="key.txt" />
-    <Content Include="Views\Shared\Error.cshtml_old" />
     <Content Include="_image\noImage.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -99,27 +60,6 @@
     <ProjectReference Include="..\Base\BaseApi\BaseApi.csproj" />
     <ProjectReference Include="..\Base\BaseWeb\BaseWeb.csproj" />
     <ProjectReference Include="..\Base\Base\Base.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\Column\Edit.cshtml" />
-    <None Include="Views\Column\Read.cshtml" />
-    <None Include="Views\GenCrud\Edit.cshtml" />
-    <None Include="Views\GenCrud\Read.cshtml" />
-    <None Include="Views\Project\Edit.cshtml" />
-    <None Include="Views\Project\Read.cshtml" />
-    <None Include="wwwroot\cssView\Login.css" />
-    <None Include="wwwroot\cssView\_themeLight.css" />
-    <None Include="wwwroot\cssView\_xgBlue.css" />
-    <None Include="wwwroot\cssView\_xgGreenApple.css" />
-    <None Include="wwwroot\cssView\_xgGrey.css" />
-    <None Include="wwwroot\cssView\_xgOrange.css" />
-    <None Include="wwwroot\cssView\_xgPrint.cs_old" />
-    <None Include="wwwroot\ext\chartjs-plugin-datalabels-2.1.0.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="_src\tsView\UiView.ts" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
