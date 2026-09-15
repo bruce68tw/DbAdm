@@ -5,7 +5,6 @@ using BaseApi.Services;
 using DbAdm.Attributes;
 using DbAdm.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace DbAdm.Controllers
 {
@@ -17,7 +16,7 @@ namespace DbAdm.Controllers
             //for edit view
             await using (var db = new Db())
             {
-                ViewBag.Roles = await _XpCode.RolesA(db);
+                ViewBag.Roles = await _Code.RolesA(db);
                 ViewBag.AuthRanges = await _XpCode.AuthRangesA(db);
             }
             return View();

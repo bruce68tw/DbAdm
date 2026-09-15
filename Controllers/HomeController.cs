@@ -10,7 +10,7 @@ namespace DbAdm.Controllers
 {
     public class HomeController : Controller
     {
-        private bool encodePwd = true;
+        //private bool encodePwd = true;
         private string surveyView = "Survey";
 
         //public IActionResult Index()
@@ -28,9 +28,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<ActionResult> Login(LoginVo vo)
         {
-            //await _Login.LoginA(vo, encodePwd);
-            //return View(vo);
-            return await _Login.LoginByVoA(vo, encodePwd)
+            return await _Login.LoginByVoA(vo, true)
                 ? Redirect(_Str.IsEmpty(vo.FromUrl) ? "/Home/Index" : vo.FromUrl)
                 : View(vo);
         }

@@ -19,8 +19,8 @@ rem set toNames=Mantis TplMvc BaoAdm BaoCust
 rem(常用) 
 rem set toNames=DbAdm GroupProg AdoptAdm TplMvc
 set fromName=DbAdm
-rem set toNames=Early GroupProg AdoptAdm TplMvc HrAdm DbEden YehliuAdm2
-set toNames=TplMvc
+rem set toNames=Early GroupProg AdoptAdm TplMvc HrAdm DbEden
+set toNames=DbEden
 
 set dirPrj=c:\_project
 set fromPrj=%dirPrj%\%fromName%

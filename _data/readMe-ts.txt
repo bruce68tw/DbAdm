@@ -18,5 +18,6 @@
 
 其他說明：
   npx tsc：編譯全部TS(輸出到 _srcOut)
-  gulp：打包
+  gulp -a：打包全部 ts
+  gulp：打包 tsView
   

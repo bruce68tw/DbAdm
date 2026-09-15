@@ -1,7 +1,7 @@
 ﻿using Base.Models;
 using Base.Services;
+using Microsoft.Data.SqlClient;
 using Newtonsoft.Json.Linq;
-using System.Data.SqlClient;
 
 namespace DbAdm.Services
 {
