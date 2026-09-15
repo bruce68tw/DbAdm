@@ -115,7 +115,6 @@
     <None Include="wwwroot\cssView\_xgGrey.css" />
     <None Include="wwwroot\cssView\_xgOrange.css" />
     <None Include="wwwroot\cssView\_xgPrint.cs_old" />
-    <None Include="wwwroot\ext\chartjs-plugin-datalabels-2.1.0.js" />
   </ItemGroup>
 
   <ItemGroup>
