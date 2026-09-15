@@ -28,7 +28,7 @@ namespace DbAdm.Controllers
         [HttpPost]
         public async Task<ActionResult> Login(LoginVo vo)
         {
-            return await _Login.LoginByVoA(vo, true)
+            return await _Login.LoginByVoA(vo, "", true)
                 ? Redirect(_Str.IsEmpty(vo.FromUrl) ? "/Home/Index" : vo.FromUrl)
                 : View(vo);
         }
