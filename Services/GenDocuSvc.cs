@@ -1,6 +1,7 @@
 ﻿using Base.Services;
 using BaseApi.Services;
- 
+using BaseOffice.Services;
+
 namespace DbAdm.Services
 {
     public class GenDocuSvc

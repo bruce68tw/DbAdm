@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../Base/Base"
+		},
+		{
+			"path": "../Base/BaseApi"
+		},
+		{
+			"path": "../Base/BaseWeb"
+		}
+	],
+	"settings": {}
+}

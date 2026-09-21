@@ -58,6 +58,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Base\BaseApi\BaseApi.csproj" />
+    <ProjectReference Include="..\Base\BaseOffice\BaseOffice.csproj" />
     <ProjectReference Include="..\Base\BaseWeb\BaseWeb.csproj" />
     <ProjectReference Include="..\Base\Base\Base.csproj" />
   </ItemGroup>
@@ -81,6 +82,10 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="_src\tsView\UiView.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="_data\skills\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
