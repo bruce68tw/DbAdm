@@ -1,26 +1,34 @@
 //檔名相關資訊
 class _File {
-  /**
-   * get file name without path
-   */
-  static getFileName(path: string): string {
-    const sep: '/' | '\\' = path.indexOf('/') > 0 ? '/' : '\\';
-    return _Str.getTail(path, sep);
-  }
+    /**
+     * get file name without path
+     */
+    static getFileName(path: string): string {
+        const sep: '/' | '\\' = path.indexOf('/') > 0 ? '/' : '\\';
+        return _Str.getTail(path, sep);
+    }
 
-  /**
-   * get file ext without '.' in lowerCase, ex: txt
-   */
-  static getFileExt(path: string): string {
-    return _Str.getTail(path, '.').toLowerCase();
-  }
+    /**
+     * get file ext without '.' in lowerCase, ex: txt
+     */
+    static getFileExt(path: string): string {
+        return _Str.getTail(path, '.').toLowerCase();
+    }
 
-  static isImageExt(ext: string): boolean {
-    return ",jpg,jpeg,png,gif,tif,tiff,".indexOf("," + ext + ",") >= 0;
-  }
+    static isImageExt(ext: string): boolean {
+        return ",jpg,jpeg,png,gif,tif,tiff,".indexOf("," + ext + ",") >= 0;
+    }
 
-  static isExcelExt(ext: string): boolean {
-    return ",xls,xlsx,".indexOf("," + ext + ",") >= 0;
-  }
+    static isExcelExt(ext: string): boolean {
+        return ",xls,xlsx,".indexOf("," + ext + ",") >= 0;
+    }
+
+    static isTextExt(ext: string): boolean {
+        return ",txt,".indexOf("," + ext + ",") >= 0;
+    }
+
+    static isJsonExt(ext: string): boolean {
+        return ",json,".indexOf("," + ext + ",") >= 0;
+    }
 }
 window._File = _File;

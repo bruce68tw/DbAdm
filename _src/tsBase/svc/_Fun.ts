@@ -9,6 +9,7 @@ class _Fun {
     // #endregion
 
     // variables
+    static pkeyFid = 'Id';
     static userId = '';
     static locale = 'zh-TW';
     static maxFileSize = 50971520;  //upload file limit(50M)

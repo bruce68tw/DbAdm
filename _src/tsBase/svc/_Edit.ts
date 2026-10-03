@@ -189,6 +189,8 @@ class _Edit {
     static loadRow(edit: OneMany, box: JQuery, row: Json): void {
         _Form.loadRow(box, row);
 
+        if (row == null) return;
+
         //set old value for each field
         for (let i = 0; i < edit.fidTypeLen; i = i + 2) {
             const fid = edit.fidTypes[i];

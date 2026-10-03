@@ -50,7 +50,7 @@ class EditOne {
     /**
      * @constructor
      * 只能有一個 constructor, initial & and instance variables (this.validator is by _valid.init())
-     * @param kid {string} (default 'Id') pkey field id for getKey value & getUpdRow,
+     * @param kid {string} (has default) pkey field id for getKey value & getUpdRow,
      *   must existed or will set systemError variables !!
      * @param eformId {string} (default 'eform') must existed or will set systemError variables !!
      * note!! if these two parameters not Id/eform, must new EditOne() and set them !!
@@ -58,7 +58,8 @@ class EditOne {
     constructor(kid?: string, eformId?: string, childs?: OneMany[]) {
         this._childs = childs;
 
-        this.kid = kid || 'Id';
+        kid ||= _Fun.pkeyFid;
+        this.kid = kid;
         eformId = eformId || 'eform';
         this.eform = $('#' + eformId);
         this._is1to1 = false;
@@ -66,7 +67,7 @@ class EditOne {
 
         this.systemError = '';
         var error = (this.eform.length != 1) ? 'EditOne.js input eformId is wrong. (' + eformId + ')' :
-            (_Obj.get(this.kid, this.eform) == null) ? 'EditOne.js input kid is wrong. (' + this.kid + ')' :
+            (_Obj.get(kid, this.eform) == null) ? 'EditOne.js input kid is wrong. (' + kid + ')' :
             '';
         if (error != '') {
             this.systemError = error;

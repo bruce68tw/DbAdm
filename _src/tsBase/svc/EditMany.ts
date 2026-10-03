@@ -1,15 +1,15 @@
 /**
- * ¦hµ§½s¿èµe­±(¥]§t1¹ï1), ¥þ³¡ÄÝ©Ê¬Ò¬° private !!
- * ª`·N:
- *   ¦pªG¦³radio, ¨t²Î·|¦Û°Êname«á­±¼W"_x", ¤~¯à¥¿±`³]©wcheckecª¬ºA
+ * å¤šç­†ç·¨è¼¯ç•«é¢(åŒ…å«1å°1), å…¨éƒ¨å±¬æ€§çš†ç‚º private !!
+ * æ³¨æ„:
+ *   å¦‚æžœæœ‰radio, ç³»çµ±æœƒè‡ªå‹•nameå¾Œé¢å¢ž"_x", æ‰èƒ½æ­£å¸¸è¨­å®šcheckecç‹€æ…‹
  *   set data-fkeyFid when save
- *   ¨ç¼Æ¦WºÙ«á­±ByRsb(ªí¥Üby RowsBox)¬°ÂX¥R­ì¥»¨ç¼Æ, °Ñ¼ÆrowsBoxªÅ¥Õ«h¬°this.RowsBox
- * ¤½¥ÎÄÝ©Ê:(¦PEditOne)
- * ¦Û©w¨ç¼Æ:
- *   void fnLoadRows(rows)(old: fnLoadJson(json))¡Gshow json to form, use loadJson instead of loadRows for more situation !!
- *   json fnGetUpdJson(upKey)¡Gget updated json by form
- *   bool fnValid()¡Gvalidate check
- *   void fnReset()¡Greset
+ *   å‡½æ•¸åç¨±å¾Œé¢ByRsb(è¡¨ç¤ºby RowsBox)ç‚ºæ“´å……åŽŸæœ¬å‡½æ•¸, åƒæ•¸rowsBoxç©ºç™½å‰‡ç‚ºthis.RowsBox
+ * å…¬ç”¨å±¬æ€§:(åŒEditOne)
+ * è‡ªå®šå‡½æ•¸:
+ *   void fnLoadRows(rows)(old: fnLoadJson(json))ï¼šshow json to form, use loadJson instead of loadRows for more situation !!
+ *   json fnGetUpdJson(upKey)ï¼šget updated json by form
+ *   bool fnValid()ï¼švalidate check
+ *   void fnReset()ï¼šreset
  * @class EditMany
  */
 class EditMany {
@@ -19,7 +19,7 @@ class EditMany {
     private _hasRowFilter: boolean;
     private _hasEform: boolean;
     private _mode = EditModeEstr.Base;
-    private _modeData: any = '';
+    private _modeData: any = '';    //ç‰¹å®šæ¨¡å¼çš„ç›¸é—œè³‡æ–™
     private _sortFid: string;
     private _rowTpl = '';
     private _rowFilter: string;
@@ -31,7 +31,7 @@ class EditMany {
     _childs: EditMany[];
     kid: string;
     eform: JQuery;
-    //dataJson: Json; //¥D­n¥Î©óEditOne¦s­ì©l¸ê®Æ, GenCrudÄÝ¯S®í±¡§ÎmTable·|¨Ï¥Î 
+    //dataJson: Json; //ä¸»è¦ç”¨æ–¼EditOneå­˜åŽŸå§‹è³‡æ–™, GenCrudå±¬ç‰¹æ®Šæƒ…å½¢mTableæœƒä½¿ç”¨ 
     systemError = '';
     validator: any;
     fnReset: () => void;
@@ -52,12 +52,12 @@ class EditMany {
      * initial & set instance variables (this.validator by _valid.init())
      * @param kid {string} pkey field id(single key)
      * @param rowsBoxId {string} (optional) rows box id,
-     *   if empty, you must write functions: fnLoadRows¡BfnGetUpdJson¡BfnValid¡BfnReset¡A
-     *     ·s¼W¤@µ§®É³]©wnewId
-     * @param rowTplId {string} (need for base mode) row template id, one mode ¤£¥iªÅ¥Õ, 
+     *   if empty, you must write functions: fnLoadRowsã€fnGetUpdJsonã€fnValidã€fnResetï¼Œ
+     *     æ–°å¢žä¸€ç­†æ™‚è¨­å®šnewId
+     * @param rowTplId {string} (need for base mode) row template id, one mode ä¸å¯ç©ºç™½, 
      *   1.if empty, it will log error when call related function.
      *   2.system get fid-type from this variables
-     *   3.called by singleFormLoadRow¡BloadRowsByRsb¡B_renderRow
+     *   3.called by singleFormLoadRowã€loadRowsByRsbã€_renderRow
      * @param rowFilter {string} (need for base mode) jQuery filter for find row object
      *   1.if empty, it will log error when call related function.
      *   2.inside element -> row(onDeleteRow),
@@ -65,6 +65,7 @@ class EditMany {
      * @param sortFid {string} (optional) sort fid for front-side sorting function
      */
     constructor(kid: string, rowsBoxId?: string, rowTplId?: string, rowFilter?: string, sortFid?: string) {
+        kid ||= _Fun.pkeyFid;
         this.kid = kid;
         this._rowFilter = rowFilter || '';
         this._sortFid = sortFid || '';
@@ -113,6 +114,7 @@ class EditMany {
     }
 
     initUrm(fids: string[]) {
+        fids[0] ||= _Fun.pkeyFid;
         this._mode = EditModeEstr.UR;
         this._modeData = fids;
     }
