@@ -17,12 +17,12 @@ rem set toNames=DbAdm Mantis TplMvc BaoAdm BaoCust
 rem set toNames=Mantis TplMvc BaoAdm BaoCust
 
 rem(常用) 
+set dirPrj=c:\_project
 rem set toNames=DbAdm GroupProg AdoptAdm TplMvc
 set fromName=DbAdm
 rem set toNames=Early GroupProg AdoptAdm TplMvc HrAdm DbEden
-set toNames=DbEden
+set toNames=TplMvc
 
-set dirPrj=c:\_project
 set fromPrj=%dirPrj%\%fromName%
 set fromSrc=%fromPrj%\_src
 set fromW3=%fromPrj%\wwwroot

@@ -15,25 +15,28 @@
     <Compile Remove="_log\**" />
     <Compile Remove="_md\**" />
     <Compile Remove="_srcOut\**" />
+    <Compile Remove="_template\**" />
     <Compile Remove="_upload\**" />
     <Content Remove="_data\**" />
     <Content Remove="_md\**" />
+    <Content Remove="_template\**" />
     <EmbeddedResource Remove="wwwroot\**" />
     <EmbeddedResource Remove="_data\**" />
     <EmbeddedResource Remove="_log\**" />
     <EmbeddedResource Remove="_md\**" />
     <EmbeddedResource Remove="_srcOut\**" />
+    <EmbeddedResource Remove="_template\**" />
     <EmbeddedResource Remove="_upload\**" />
     <None Remove="wwwroot\**" />
     <None Remove="_data\**" />
     <None Remove="_log\**" />
     <None Remove="_md\**" />
     <None Remove="_srcOut\**" />
+    <None Remove="_template\**" />
     <None Remove="_upload\**" />
   </ItemGroup>
 
   <ItemGroup>
-	<Content Include="_template\**" CopyToPublishDirectory="PreserveNewest" />
 	<Compile Remove="Controllers\UiController.cs" />
 	<Content Include="key.txt" />
     <Content Include="_image\noImage.jpg">
@@ -82,10 +85,6 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="_src\tsView\UiView.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="_data\skills\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

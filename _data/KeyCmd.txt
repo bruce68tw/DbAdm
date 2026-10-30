@@ -1,0 +1,3 @@
+語法: KeyCmd -e(encode)/-d(decode) key data
+
+C:\_project\KeyCmd\bin\Debug\net8.0\KeyCmd 

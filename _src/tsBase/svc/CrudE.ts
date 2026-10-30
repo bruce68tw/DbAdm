@@ -15,7 +15,7 @@
  *   fnUpdateOrViewA(fun, key) -> fnGetJsonAndEditA(fun, key)
  *   bool fnGetJsonAndEditA(fun, key): 自訂 GetUpdJson/GetViewJson 函數, see _getJsonAndEditA
  *   string fnWhenSave(fun): 此時還沒有產生 updated json, return error msg
- *   void fnWhenSave2(fun, json): 此時已經產生 updated json
+ *   string fnWhenSave2(fun, json): 此時已經產生 updated json, return error msg
  * 公用屬性: 無
  */
 class CrudE {

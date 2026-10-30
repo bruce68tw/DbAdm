@@ -52,6 +52,11 @@ class CrudR {
             if (rform != null) _iDate.init(rform);
             if (rform2 != null) _iDate.init(rform2);
 
+            //set first for datatables
+            _me.rform = rform;
+            _me.rform2 = rform2;
+            _me.hasRead = hasRead;
+
             //4.Create Datatable object
             //傳入 _me.fnAfterFind if any !!
             if (_Var.notEmpty(dtConfig)) {
@@ -81,9 +86,6 @@ class CrudR {
 
         //set _me
         _me.crudR = this;
-        _me.rform = rform;
-        _me.rform2 = rform2;
-        _me.hasRead = hasRead;
         _me.divRead = this.divRead;
     }
 

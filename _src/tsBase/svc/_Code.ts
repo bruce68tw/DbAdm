@@ -1,5 +1,11 @@
 //處理 _XpCode, 下拉式欄位資料
 class _Code {
+
+    //尋找 id 相同的物件，若找到則回傳其 name，若沒找到或 rows 為空則回傳空字串
+    static findName(rows: IdStrDto[] = [], id: string): string {
+        return rows.find(row => row.Id === id)?.Str ?? '';
+    }
+
     //add empty option
     static addEmptyOpt(rows: IdStrDto[] = []): IdStrDto[] {
         //rows ??= [];

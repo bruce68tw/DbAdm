@@ -17,6 +17,14 @@ class _Json {
     }
     */
 
+    static findName(rows: Json[], keyFid: string, nameFid:string, value: string): string {
+        for (const row of rows) {
+            if (row[keyFid] == value)
+                return row[nameFid];
+        }
+        return '';
+    }
+
     /**
      * 轉換一筆json為多筆資料, 用於產生統計圖
      * param from {json}
@@ -52,6 +60,7 @@ class _Json {
     }
 
     /**
+     * keyValuesToJson -> pairsToJson
      * convert keyValues to json object
      * param keyValues {array} keyValue array
      * param keyId {string} key field id, default to 'Key'
