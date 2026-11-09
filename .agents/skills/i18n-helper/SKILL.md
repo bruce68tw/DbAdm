@@ -1,4 +1,4 @@
-﻿---
+---
 name: i18n-helper
 description: 處理 DbAdm 專案的多語系（zh-TW / zh-CN / en-US），包含 Resources 檔案管理、View 本地化與 Enum 多語對應。
 ---

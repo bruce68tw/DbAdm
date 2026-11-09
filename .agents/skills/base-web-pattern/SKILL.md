@@ -1,4 +1,4 @@
-﻿---
+---
 name: base-web-pattern
 description: 確保程式碼遵循 DbAdm 專案與 Base/BaseWeb 框架的整合規範，包含 _Fun、_Locale、_XpCode、權限控制與命名慣例。
 ---

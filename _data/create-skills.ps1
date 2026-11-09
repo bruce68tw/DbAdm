@@ -1,4 +1,4 @@
-$root = "C:\_project\DbAdm\.github\skills"
+$root = "C:\_project\DbAdm\.agents\skills"
 
 # 建立目錄
 $dirs = @("crud-scaffold", "db-schema-sync", "base-web-pattern", "i18n-helper", "ts-jquery-helper")

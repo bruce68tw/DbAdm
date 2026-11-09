@@ -24,14 +24,12 @@ builder.Configuration.GetSection("MyConfig").Bind(myConfig);
 _Xp.Config = myConfig;
 
 //set builder
-builder.SetMyBuilder();
+var multiLang = false;
+builder.SetMyBuilder(multiLang);
 #endregion
 
 #region 2.set services
-var multiLang = false;
 var services = builder.Services;
-services.SetMyServices(multiLang);
-
 services.AddSingleton<IBaseUserSvc, MyBaseUserSvc>();   //user info for base component
 services.AddTransient<DbConnection, SqlConnection>();   //ado.net for mssql
 services.AddTransient<DbCommand, SqlCommand>();

@@ -1,4 +1,4 @@
-﻿---
+---
 name: crud-scaffold
 description: 根據 DbAdm 的 CRUD 模式自動生成完整 CRUD 頁面，包含 Controller、Service（Read/Edit）、Razor View 與 TypeScript，遵循 Base 框架與專案命名規範。
 ---

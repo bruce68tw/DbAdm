@@ -1,4 +1,4 @@
-﻿---
+---
 name: db-schema-sync
 description: 同步 MSSQL 資料庫結構至 DbAdm 專案，包含 Entity Model（Tables/*.cs）、createDb.sql 腳本與 EF Core Database First 更新。
 ---

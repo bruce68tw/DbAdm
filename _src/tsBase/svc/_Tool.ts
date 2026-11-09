@@ -7,6 +7,9 @@ class _Tool {
     static ansStatus: boolean = false;
     static fnResolve: ((value: boolean) => void) | null = null;
 
+    //是否錄音中
+    //static recording: boolean = false;
+
     static xMsg: JQuery;
     //static xAns: JQuery;
     static xAnsA: JQuery;
@@ -14,6 +17,8 @@ class _Tool {
     static xArea: JQuery;
     static xImage: JQuery;
     static xWork: JQuery;
+    static xVoice: Voice;
+    //static btnVoiceRec: JQuery;
 
     private static _fnOnMsgClose: (() => void) | null | undefined = null;
     //private static _fnOnAnsYes: (() => void) | null | undefined = null;
@@ -29,6 +34,12 @@ class _Tool {
         _Tool.xArea = $('.x-area');
         _Tool.xImage = $('.x-image');
         _Tool.xWork = $('.x-work');
+        _Tool.xVoice = new Voice();
+    }
+
+    /** 共用導覽列的語音視窗入口，錄音生命週期交由 Voice 管理。 */
+    static showVoice(actionUrl:string): void {
+        _Tool.xVoice.showVoice(actionUrl);
     }
 
     /**

@@ -26,6 +26,13 @@ class _Leftmenu {
         });
     }
 
+    //開啟功能
+    static clickByName(name:string) {
+        _Leftmenu.menu.find("a").filter(function () {
+            return $(this).text().trim() == name;
+        }).trigger('click');
+    }
+
     /*
     //set width for container of left menu
     static setBoxWidth(isOpen: boolean) {

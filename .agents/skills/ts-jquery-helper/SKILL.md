@@ -1,4 +1,4 @@
-﻿---
+---
 name: ts-jquery-helper
 description: TypeScript + jQuery + Bootstrap 5 前端開發輔助，包含 CrudR/CrudE 繼承模式、DataTable 設定、AJAX 呼叫與 Modal 操作。
 ---
