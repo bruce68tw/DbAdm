@@ -2,8 +2,8 @@
     _me.init();
 });
 
-_vo = {
-    mCol: new EditMany('Id', 'tbodyCol', 'tplCol', 'tr'),
+class TableVo {
+    mCol = new EditMany('Id', 'tbodyCol', 'tplCol', 'tr');
 
     //generate Word document
     onGenWord() {
@@ -12,8 +12,9 @@ _vo = {
             window.location.href = 'GenWord?keys=' + values.join(',');
         else
             _Tool.msg(_BR.PlsSelectRows);
-    },
+    }
 }
+_vo = new TableVo();
 
 _me = {
     init () {
@@ -27,7 +28,7 @@ _me = {
                 { data: 'CreatorName' },
                 { data: 'TranLog' },
                 { data: 'Status', orderable: true },
-                { data: '_Crud' },
+                { data: '_Fun' },
             ],
             columnDefs: [
                 { targets: [0], render(data, type, full) {

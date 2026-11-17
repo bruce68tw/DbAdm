@@ -1,0 +1,73 @@
+
+外層Base skill 用途:
+0-overview
+1-撰寫特定功能
+1-撰寫客製功能
+定義coding rules
+診斷問題
+
+當AI要寫一段程式時，先從大Base 0-overview 了解底下的公用模組有什麼功能，再決定去哪一個公用模組，開啟 0-overview skill，然後找到對應的 1-5 skill，最後拿到正確的公用程式來使用。
+
+
+//1.程式加上註解
+目錄：C:\_project\Base\BaseAI
+檢查這個目錄底下子目錄的全部 .cs 檔案, 使用以下規則補充註解，但不修改任何程式：
+1.使用 c# 格式寫註解，語言為繁體中文。
+2.檔名為 zz_ 開頭的檔案不處理。
+3.註解的內容以 AI 和程式員可以理解為原則，並且精簡。
+4.需要寫註解的地方為：類別、公用屬性、公用方法、公用方法的傳入參數、
+5.如果類別、公用屬性、公用方法的註解不清楚, 則進行補充，如果舊的註解為英文, 則改成中文，刮號內的註解則保留。
+6.如果公用方法傳入參數的註解不清楚或是空白, 則重寫此參數註解；如果對應參數不存在，則移除這個參數註解。
+7.果無法判斷註解的內容，不要亂猜，直接在前面加上 "todo:待確認"。
+8.已經 remark 的程式不要移除，
+9.最後回覆：有修改註解的類別、公用屬性、公用方法、公用方法的傳入參數的數量。
+
+
+//檢查目錄：C:\_project\Base 下的子目錄: Base、BaseAI、BaseApi、BaseFlow、BaseOffice、BaseWeb、PdfSpire、Redis、RedisStack、SmsTaiwan
+//如果存在 01-service-static 則改名 01-static-services
+
+1-static-services
+2-instance-services
+3-models
+4-enums
+5-contracts
+
+//2.產生各種類別 skills:
+將目錄：C:\_project\Base 下的子目錄: Base、BaseAI、BaseApi、BaseFlow、BaseOffice、BaseWeb、PdfSpire、Redis、RedisStack、SmsTaiwan，各自生成 skills, 規則如下 :
+1.只處理不是 zz_ 開頭的 .cs 檔案, 不必檢查檔案是否納入編譯
+2.只處理一層目錄, 例如要整理 Services 目錄, 則其下的 old 子目錄則不必整理。
+3.該專案目錄及 Services 子目錄，把不是底線開頭的檔案清單及用途整理成 skills 02-instance-services
+4.如果有 Models 子目錄，把檔案清單及用途整理成 skills 03-models
+5.如果有 Enums 子目錄，把檔案清單及用途整理成 skills 04-enums
+6.如果有 Interfaces 子目錄，把檔案清單及用途整理成 skills 05-contracts
+
+//3.產生公用專案 00-overview skills:
+請將目錄：C:\_project\Base 下的子目錄: Base、BaseAI、BaseApi、BaseFlow、BaseOffice、BaseWeb、PdfSpire、Redis、RedisStack、SmsTaiwan 的 skills 00-overview，各自生成 skills, 規則如下 :
+1-static-services
+2-instance-services
+3-models
+4-enums
+5-contracts
+
+0-overview
+
+
+請更新 C:\_project\Base 下這十個子專案各自的 `.agents/skills/00-overview/SKILL.md`：
+Base、BaseAI、BaseApi、BaseFlow、BaseOffice、BaseWeb、PdfSpire、Redis、RedisStack、SmsTaiwan。
+
+逐一讀取各子專案現有的總覽，以及同一子專案中實際存在的下列 skills：
+
+- 1-static-services
+- 2-instance-services
+- 3-models
+- 4-enums
+- 5-contracts
+
+把各 skill 的重點整合進該子專案的總覽，讓讀者能快速判斷：
+1. 這個子專案提供哪些主要能力。
+2. 遇到常見任務時，可以先查哪個服務、模型、列舉或契約。
+3. 要看完整清單或原始碼時，應開啟哪個 skill。
+
+請依實際開發情境歸納，每類用一至三句說明，必要時點名代表性的類別。完整檔案清單、方法簽章與欄位細節留在原 skill，總覽保留可用的相對連結。缺少某個 skill 時略過該類。
+
+沿用既有總覽的結構與繁體中文用語，將摘要併入最相關的段落，避免重複現有說明。只修改各子專案的 `00-overview/SKILL.md`，不修改來源 skills 或大 Base 根總覽。完成後核對新增或調整的連結，並列出有更新的子專案。

@@ -1,6 +1,6 @@
 ﻿using Base.Services;
 using BaseApi.Services;
-using BaseOffice.Services;
+using MsOffice.Services;
 
 namespace DbAdm.Services
 {
@@ -85,11 +85,11 @@ namespace DbAdm.Services
             var ms = _Word.TplRowsToMs(tplPath, tables);
 
             //8.download file
-            await _Fun2.ExportByStreamA(ms!, "Tables.docx");
+            await _Http.RespStreamToFileA(ms!, "Tables.docx");
             return true;
 
         lab_error:
-            await _Log.ErrorRootA("GenDocuSvc.cs RunA() failed: " + error);
+            _Log.Error("GenDocuSvc.cs RunA() failed: " + error);
             return false;
         }
 

@@ -1,10 +1,8 @@
 using Base.Enums;
 using Base.Models;
 using Base.Services;
-using BaseApi.Services;
-using BaseOffice.Services;
+using MsOffice.Services;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
@@ -55,8 +53,7 @@ order by p.Id, a.Code
         /// <returns></returns>
         public async Task ExportA(JObject find)
         {
-            await _HttpExcel.ExportByReadA("", dto, find, 
-                "Table.xlsx", _Xp.GetTplPath("Table.xlsx", true), 1);
+            await _HttpExcel.ExportByReadA("", dto, find, "Table.xlsx", _Xp.GetTplPath("Table.xlsx", true), 1);
         }
 
     } //class

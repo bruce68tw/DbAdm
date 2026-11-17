@@ -1,9 +1,5 @@
 ﻿using Base.Services;
 using BaseApi.Services;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DbAdm.Services
 {
@@ -103,12 +99,12 @@ namespace DbAdm.Services
 
             //echo stream to file
             writer.Flush();
-            await _Fun2.ExportByStreamA(ms, tables[0].DbName + "_TranLog.sql");
+            await _Http.RespStreamToFileA(ms, tables[0].DbName + "_TranLog.sql");
             return true;
             #endregion
 
         lab_error:
-            await _Log.ErrorRootA("GenLogSqlService.cs Run() failed: " + error);
+            await _Log.ErrorRootA("GenLogSqlSvc.cs RunA() failed: " + error);
             return false;
         }
     }

@@ -51,7 +51,7 @@ _me = {
                 { data: 'CreatorName', orderable: true },
                 { data: '_Fun' },
                 { data: 'Status', orderable: true },
-                { data: '_Crud' },
+                { data: '_Fun' },
             ],
             columnDefs: [
                 { targets: [4], render(data, type, full) {

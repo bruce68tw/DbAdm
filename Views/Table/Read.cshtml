@@ -6,20 +6,20 @@
         <!-- condition -->
         <form id='formRead' class='x-form mb-0'>
             <div class="row">
-                @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true })
-                @await Component.InvokeAsync("XgFindTbar", new XgFindTbarDto { HasReset = true, HasFind2 = true })
+                <vc:xi-select dto='new() { Title = "專案", Fid = "ProjectId", Rows = ViewBag.Projects, InRow = true }' />
+                <vc:xg-find-tbar dto='new() { HasReset = true, HasFind2 = true }' />
             </div>
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "資料表", Fid = "Code", MaxLen = 30 })
+            <vc:xi-text dto='new() { Title = "資料表", Fid = "Code", MaxLen = 30 }' />
         </form>
         <form id='formRead2' class='x-form'>
-            @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "資料表名稱", Fid = "Name", MaxLen = 30 })
-            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "異動記錄", Fid = "TranLog", Rows = ViewBag.YesNos })
-            @await Component.InvokeAsync(XiEstr.Select, new XiSelectDto { Title = "資料狀態", Fid = "Status", Rows = ViewBag.Statuses })
+            <vc:xi-text dto='new() { Title = "資料表名稱", Fid = "Name", MaxLen = 30 }' />
+            <vc:xi-select dto='new() { Title = "異動記錄", Fid = "TranLog", Rows = ViewBag.YesNos }' />
+            <vc:xi-select dto='new() { Title = "資料狀態", Fid = "Status", Rows = ViewBag.Statuses }' />
         </form>
 
         <div class='x-btns-box mt-1'>
-            @await Component.InvokeAsync("XgCreate")
-            @await Component.InvokeAsync("XgExport")
+            <vc:xg-create />
+            <vc:xg-export />
             <button type="button" class="btn btn-secondary" data-onclick="_vo.onGenWord">產生文件</button>
         </div>
 

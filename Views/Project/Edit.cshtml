@@ -3,22 +3,21 @@
 }
 
 <form class='x-form mb-2' id='eform'>
-    @await Component.InvokeAsync(XiEstr.Hide, new XiHideDto { Fid = "Id" })
-    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "名稱", Fid = "Name", Value = "", MaxLen = 20, Required = true })
-    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "專案代碼", Fid = "Code", Value = "", MaxLen = 30, Required = true })
-    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "資料庫", Fid = "DbName", Value = "", MaxLen = 20, Required = true })
-    @await Component.InvokeAsync(XiEstr.Check, new XiCheckDto { Title = "資料狀態", Fid = "Status", IsCheck = true, Value = "1", Label = "啟用" })
-    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "專案路徑", Fid = "ProjectPath", MaxLen = 255, Required = true, Cols = longCols })
-    @await Component.InvokeAsync(XiEstr.Text, new XiTextDto { Title = "DB連線字串", Fid = "ConnectStr", MaxLen = 255, Required = true, Cols = longCols })
+    <vc:xi-hide dto='new() { Fid = "Id" }' />
+    <vc:xi-text dto='new() { Title = "名稱", Fid = "Name", Value = "", MaxLen = 20, Required = true }' />
+    <vc:xi-text dto='new() { Title = "專案代碼", Fid = "Code", Value = "", MaxLen = 30, Required = true }' />
+    <vc:xi-text dto='new() { Title = "資料庫", Fid = "DbName", Value = "", MaxLen = 20, Required = true }' />
+    <vc:xi-check dto='new() { Title = "資料狀態", Fid = "Status", IsCheck = true, Value = "1", Label = "啟用" }' />
+    <vc:xi-text dto='new() { Title = "專案路徑", Fid = "ProjectPath", MaxLen = 255, Required = true, Cols = longCols }' />
+    <vc:xi-text dto='new() { Title = "DB連線字串", Fid = "ConnectStr", MaxLen = 255, Required = true, Cols = longCols }' />
 
     <div class="row">
-        @await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Title = "建檔人員", Fid = "CreatorName", InRow = true, Cols = "2,3" })
-        @await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Title = "修改人員", Fid = "ReviserName", InRow = true, Cols = "2,3" })
+        <vc:xi-read dto='new() { Title = "建檔人員", Fid = "CreatorName", InRow = true }' />
+        <vc:xi-read dto='new() { Title = "修改人員", Fid = "ReviserName", InRow = true }' />
     </div>
     <div class="row">
-        @await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Title = "建檔時間", Fid = "Created", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
-        @await Component.InvokeAsync(XiEstr.Read, new XiReadDto { Title = "修改時間", Fid = "Revised", Format = BrFormatEstr.Dt, InRow = true, Cols = "2,3" })
+        <vc:xi-read dto='new() { Title = "建檔時間", Fid = "Created", Format = BrFormatEstr.Dt, InRow = true }' />
+        <vc:xi-read dto='new() { Title = "修改時間", Fid = "Revised", Format = BrFormatEstr.Dt, InRow = true }' />
     </div>
 </form>
-
 <vc:xg-save2 />
